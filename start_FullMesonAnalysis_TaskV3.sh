@@ -153,10 +153,10 @@ function AskForTHnSparseOption()
     echo "Do you want to use THnSparse for the background? Yes/No?";
     read answer
     if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-        echo "--> Will use THnSparse for the background ...";
+        echo -e "--> Will use THnSparse for the background ...\n";
         USETHNSPARSE=1
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-        echo "--> Will NOT use THnSparse for the background ...";
+        echo -e "--> Will NOT use THnSparse for the background ...\n";
         USETHNSPARSE=0
     else
         echo "--> Command \"$answer\" not found. Please try again."
@@ -170,11 +170,11 @@ function AskForMinBiasEffiOnly()
     read answer
     if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
         OPTMINBIASEFF="MinBiasEffOnly"
-        echo "--> Calculating MinBias Efficiecy only ...";
+        echo -e "--> Calculating MinBias Efficiecy only ...\n";
         CORRECT=1
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
         OPTMINBIASEFF=""
-        echo "--> Nothing to be done ...";
+        echo -e "--> Nothing to be done ...\n";
         CORRECT=1
     else
         echo "--> Command \"$answer\" not found. Please try again."
@@ -587,10 +587,11 @@ if [ $ONLYCUTS -eq 1 ]; then
     echo "Which name should your CutStudies have? None/*name*"
     read answer
     if [ $answer = "None" ]; then
+        echo -e "--> No name for CutStudies selected...\n";
         CORRECT=1
     else
         NAMECUTSTUDIES=$answer
-        echo "--> You have selcted the name: " $NAMECUTSTUDIES;
+        echo -e "--> You have selcted the name: $NAMECUTSTUDIES\n";
         CORRECT=1
     fi
     done
@@ -610,10 +611,11 @@ if [ $ONLYCUTS -eq 1 ]; then
     done
 fi
 
+echo -e "\n____________________________"
+echo -e "READING ANSWERS TO QUESTIONS\n"
+
 # Inquire the mode
 CORRECT=0
-echo "" # break line for questions
-echo "READING ANSWERS TO QUESTIONS FROM fullTaskFile"
 while [ $CORRECT -eq 0 ]
 do
   echo "Which mode are you running?
@@ -633,17 +635,17 @@ do
     # Set heavy meson configuration
     if [ $answer -ge 100 ]; then
         DOPI0=0
-        DOETA=0
+        DOETA=1
         DOETAPRIME=1
         DOPI0INETABINS=0
-        echo ""
-        echo "Set options for EtaPrime mode (mode >100)"
-        echo "DOPI0=$DOPI0"
-        echo "DOETA=$DOETA"
-        echo "DOETAPRIME=$DOETAPRIME"
+        echo "  Set options for EtaPrime mode (mode >100)"
+        echo "    DOPI0=$DOPI0"
+        echo "    DOETA=$DOETA"
+        echo "    DOETAPRIME=$DOETAPRIME"
+        echo "    DOPI0INETABINS=$DOPI0INETABINS"
     fi
     if [ $answer = "0" ] || [ $answer = "100" ]; then
-        echo "--> You are analysing PCM-PCM output";
+        echo -e "--> You are analysing PCM-PCM output\n";
         NEVTSTOY=1e7
         MINPTTOY=0
         MAXPTTOY=50
@@ -657,67 +659,68 @@ do
         MAXPTTOY=50
         CORRECT=0
     elif [ $answer = "2" ] || [ $answer = "102" ]; then
-        echo "--> You are analysing PCM-EMCAL output";
+        echo -e "--> You are analysing PCM-EMCAL output\n";
         MODE=$answer
 #        ADVMESONQA="AdvancedMesonQA"
         CORRECT=1
     elif [ $answer = "3" ] || [ $answer = "103" ]; then
-        echo "--> You are analysing PCM-PHOS output";
+        echo -e "--> You are analysing PCM-PHOS output\n";
         MODE=$answer
         ADVMESONQA="AdvancedMesonQA"
         CORRECT=1
     elif [ $answer = "4" ] || [ $answer = "104" ]; then
-        echo "--> You are analysing EMCAL-EMCAL output";
+        echo -e "--> You are analysing EMCAL-EMCAL output\n";
         MODE=$answer
         ADVMESONQA="AdvancedMesonQA"
         CORRECT=1
     elif [ $answer = "5" ] || [ $answer = "105" ]; then
-        echo "--> You are analysing PHOS-PHOS output";
+        echo -e "--> You are analysing PHOS-PHOS output\n";
         MODE=$answer
         ADVMESONQA="AdvancedMesonQA"
         CORRECT=1
     elif [ $answer = "10" ] || [ $answer = "110" ]; then
-        echo "--> You are analysing EMC-merged output";
+        echo -e "--> You are analysing EMC-merged output\n";
         MODE=$answer
         CORRECT=1
         DOETA=0;
         DOPI0INETABINS=0;
     elif [ $answer = "11" ] || [ $answer = "111" ]; then
-        echo "--> You are analysing PHOS-merged output";
+        echo -e "--> You are analysing PHOS-merged output\n";
         MODE=$answer
         CORRECT=1
         DOETA=0;
         DOPI0INETABINS=0;
     elif [ $answer = "9" ] || [ $answer = "109" ]; then
-        echo "--> You are analysing the old output of PCM-PCM";
+        echo -e "--> You are analysing the old output of PCM-PCM\n";
         MODE=$answer
         CORRECT=1
     elif [ $answer = "12" ] || [ $answer = "112" ]; then
-        echo "--> You are analysing DCAL-DCAL output";
+        echo -e "--> You are analysing DCAL-DCAL output\n";
         MODE=$answer
         ADVMESONQA=""#"AdvancedMesonQA"
         CORRECT=1
     elif [ $answer = "13" ] || [ $answer = "113" ]; then
-        echo "--> You are analysing PCM-DCAL output";
+        echo -e "--> You are analysing PCM-DCAL output\n";
         MODE=$answer
         ADVMESONQA=""#"AdvancedMesonQA"
         CORRECT=1
     else
-        echo "--> Command \"$answer\" not found. Please try again."
+        echo -e "--> Command \"$answer\" not found. Please try again.\n"
     fi
 done
 
-
+# Inquire cut
 CORRECT=0
 while [ $CORRECT -eq 0 ]
 do
     echo "Do you want to take an already exitsting CutSelection.log-file. Yes/No"
     read answer
     if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-        echo "--> Chosen already existing logfile ..."
+        echo -e "--> Chosen already existing logfile ...\n"
         cat CutSelection.log
         CORRECT=1
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+        echo -e "--> Generating new CutSelection.log file ...\n"
         if [ $DATAFILEOK -eq 1 ] ; then
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DATAROOTFILE\"\,\"CutSelection.log\"\,$MODE\)
             CORRECT=1
@@ -730,10 +733,11 @@ do
     fi
 done
 
+# Inquire collision system
 CORRECT=0
 while [ $CORRECT -eq 0 ]
 do
-    echo -e "Which collision system do you want to process?
+    echo -e "\nWhich collision system do you want to process?
           pp Systems:
           \t 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), 5TeV2017 (2017 pp@5.02TeV), 7TeV (pp@7TeV),  8TeV (pp@8TeV), 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 13TeVRBins (pp@13TeV)
           pPb Systems:
@@ -790,7 +794,7 @@ do
         ENERGY="pPb_8TeV";
         EXTINPUTFILE="";
     fi
-    echo "--> The collision system has been selected to be $ENERGY."
+    echo -e "--> The collision system has been selected to be $ENERGY.\n"
 
     echo "Is a cocktail file available? Yes/No?"
     read answer
@@ -798,17 +802,17 @@ do
         echo "Please enter the filepath of the cocktail file."
             read COCKROOTFILE
             if [ -f $COCKROOTFILE ]; then
-                echo "--> The cocktail file specified is $COCKROOTFILE"
+                echo -e "--> The cocktail file specified is $COCKROOTFILE\n"
                 USECOCK=1
                     echo "Please enter the rapidity used in the cocktail, e.g. 0.80"
                     read COCKRAP
-                    echo "--> Rapidity of $COCKRAP has been chosen."
+                    echo -e "--> Rapidity of $COCKRAP has been chosen.\n"
             else
-                echo "--> No cocktail file specified, it will not be used."
+                echo -e "--> No cocktail file specified, it will not be used.\n"
                 USECOCK=0
             fi
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-        echo "--> Will not use cocktail input for secondary correction or double ratio."
+        echo -e "--> Will not use cocktail input for secondary correction or double ratio.\n"
         USECOCK=0
     fi
 
@@ -824,35 +828,35 @@ do
         DOPI0INETABINS=0
         DOETAPRIME=0
         DOGAMMA=1
-        echo "--> Switching off eta, pi0 in eta binnings ...";
+        echo -e "--> Switching off eta, pi0 in eta binnings ...\n";
 
         if [ $MODE = 2 ] || [ $MODE = 3 ]; then
             echo "Do you want to run Pi0-tagging instead of DR? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "--> Running pi0-tagging ...";
+                echo -e "--> Running pi0-tagging ...\n";
                 DIRECTPHOTON="directPhotonTagging"
                 DOPI0TAG=1
                 DOPI0=0
                 DOGAMMA=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "--> Running standard DR ...";
+                echo -e "--> Running standard DR ...\n";
                 DOPI0TAG=0
             else
                 echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $answer = "YesPCMEMC" ] || [ $answer = "YPCMEMC" ] || [ $answer = "yPCMEMC" ] || [ $answer = "yesPCMEMC" ]; then
-        echo "--> Will produce Direct Photon plots with special PCMEMC binning...";
+        echo -e "--> Will produce Direct Photon plots with special PCMEMC binning...\n";
         DIRECTPHOTON="directPhotonA"
         DOPI0=1
         DOETA=0
         DOPI0INETABINS=0
         DOETAPRIME=0
         DOGAMMA=1
-        echo "--> Switching off eta, pi0 in eta binnings ...";
+        echo -e "--> Switching off eta, pi0 in eta binnings ...\n";
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-        echo "--> No special modifications have been done to the settings."
+        echo -e "--> No special modifications have been done to the settings.\n"
     else
         echo "--> Command \"$answer\" not found. Please try again."
     fi
@@ -949,11 +953,11 @@ if [ $MODE -eq 0 ] || [ $MODE -eq 9 ] ; then
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             ESTIMATEPILEUP="EstimateTrainPileUp"
-            echo "--> Running with additional histos ...";
+            echo -e "--> Running with additional histos ...\n";
             CORRECT=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             ESTIMATEPILEUP=""
-            echo "--> Running in Normal mode ...";
+            echo -e "--> Running in Normal mode ...\n";
             CORRECT=1
         else
             echo "--> Command \"$answer\" not found. Please try again."
@@ -961,11 +965,9 @@ if [ $MODE -eq 0 ] || [ $MODE -eq 9 ] ; then
     done
 fi
 
-echo "--> Chosen mode: $MODE"
-
 echo "Checking if mode $MODE is standard mode...";
 if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; then
-    echo "--> I went into standard modes";
+    echo -e "--> I went into standard modes\n";
     if [ $ONLYCORRECTION -eq 0 ];  then
         # echo "Extraction will be done using modified Gaussian.";
         # crystal=Gaussian
@@ -976,11 +978,11 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
             echo "Which fit do you want to do? CrystalBall or gaussian convoluted with an exponential function? CrystalBall/Gaussian?";
             read answer
             if [ $answer = "CrystalBall" ] || [ $answer = "C" ] || [ $answer = "c" ]; then
-                echo "--> CrystalBall chosen ...";
+                echo -e "--> CrystalBall chosen ...\n";
                 CORRECT=1
                 crystal=CrystalBall
             elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
-                echo "--> Gaussian chosen ...";
+                echo -e "--> Gaussian chosen ...\n";
                 CORRECT=1
                 crystal=Gaussian
             else
@@ -996,21 +998,18 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
         echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Remember at first all gamma cutstudies will be carried out. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "--> Continuing ...";
+            echo -e "--> Continuing ...\n";
             CORRECT=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "--> Aborting ...";
+            echo -e "--> Aborting ...\n";
             exit
         else
             echo "--> Command \"$answer\" not found. Please try again."
         fi
     done
 
-    echo "DOPI0=$DOPI0"
-    echo "DOPI0INETABINS=$DOPI0INETABINS"
-    echo "DOETA=$DOETA"
-    echo "DOETAPRIME=$DOETAPRIME"
-#Read the different cuts form the Cut selection log file
+
+# Read the different cuts form the Cut selection log file
     CutSelections=`cat CutSelection.log`
     for CUTSELECTION in $CutSelections; do
         if [ -d $CUTSELECTION ]; then
@@ -1047,6 +1046,8 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $CUTSELECTION";
                 if [ $DOPI0 -eq 1 ]; then
+                    echo -e "\n\n_________________________"
+                    echo -e "EXTRACTING SIGNAL FOR PI0\n"
                     OPTIONSPI0DATA=\"Pi0\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,kFALSE
                     echo $DATAROOTFILE
                     if [ -f $DATAROOTFILE ]; then
@@ -1100,6 +1101,8 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                     fi
                 fi
                 if [ $DOGAMMA -eq 1 ]; then
+                    echo -e "\n\n_________________________"
+                    echo -e "EXTRACTING SIGNAL FOR GAMMA\n"
                     OPTIONSPI0DATA=\"Pi0\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BINSPTPI0\,kFALSE
                     if [ $NEWGAMMAMACROS == 0 ]; then
                         ExtractSignalGamma $OPTIONSPI0DATA
@@ -1117,8 +1120,9 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         fi
                     fi
                 fi
-
                 if [ $DOPI0INETABINS -eq 1 ]; then
+                    echo -e "\n\n____________________________"
+                    echo -e "EXTRACTING SIGNAL FOR PI0-ETA\n"
                     if [ -f $DATAROOTFILE ]; then
                         OPTIONSPI0ETADATA=\"Pi0EtaBinning\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,kFALSE
                         ExtractSignal $OPTIONSPI0ETADATA
@@ -1164,10 +1168,14 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                             fi
                         fi
 
+                        echo -e "\n________________________"
+                        echo -e "COMPARE MESON QUANTITIES\n"
                         root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
                     fi
                 fi
                 if [ $DOETA -eq 1 ]; then
+                    echo -e "\n\n_________________________"
+                    echo -e "EXTRACTING SIGNAL FOR ETA\n"
                     if [ -f $DATAROOTFILE ]; then
                         OPTIONSETADATA=\"Eta\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,kFALSE
                         ExtractSignal $OPTIONSETADATA
@@ -1219,6 +1227,8 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                     fi
                 fi
                 if [ $DOETAPRIME -eq 1 ]; then
+                    echo -e "\n\n_______________________________"
+                    echo -e "EXTRACTING SIGNAL FOR ETA PRIME\n"
                     if [ -f $DATAROOTFILE ]; then
                         OPTIONSETAPRIMEDATA=\"EtaPrime\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETAPRIME\,kFALSE
                         ExtractSignal $OPTIONSETAPRIMEDATA
@@ -1398,19 +1408,25 @@ else
         echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "--> Continuing ...";
+            echo -e "--> Continuing ...\n";
             correct=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "--> Aborting ...";
+            echo -e "--> Aborting ...\n";
             exit
         else
             echo "--> Command \"$answer\" not found. Please try again."
         fi
     done
 
-    echo "DOPI0=$DOPI0"
-    echo "DOETA=$DOETA"
-    echo "DOETAPRIME=$DOETAPRIME"
+
+echo -e "\n_____________________"
+echo -e "STARTING ANALYSIS ...\n"
+echo "  DOPI0=$DOPI0"
+echo "  DOETA=$DOETA"
+echo "  DOETAPRIME=$DOETAPRIME"
+echo "  DOPI0INETABINS=$DOPI0INETABINS"
+echo ""
+
     #Read the different cuts form the Cut selection log file
     CutSelections=`cat CutSelection.log`
     for CUTSELECTION in $CutSelections; do

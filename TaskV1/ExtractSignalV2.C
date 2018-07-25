@@ -491,7 +491,7 @@ void ExtractSignalV2(   TString meson                   = "",
 
         // loading histograms for eta
         if( fMesonId == 221){
-            // if( fModeHeavy<100 ) {
+            if( fModeHeavy<100 ) {
                 // histos without acceptance requirement
                 fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
                 fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
@@ -502,18 +502,18 @@ void ExtractSignalV2(   TString meson                   = "",
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
                 cout << "line " << __LINE__ << endl;
-            // } else {
-            //     // histos without acceptance requirement
-            //     fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
-            //     fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
-            //     fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOEvtWeights.Data());
+            } else {
+                // histos without acceptance requirement
+                fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+                fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
+                fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOEvtWeights.Data());
 
-            //     // histos with gamma's in acceptance
-            //     fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
-            //     fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
-            //     fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
-            //     cout << "line " << __LINE__ << endl;
-            // }
+                // histos with gamma's in acceptance
+                fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
+                fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
+                cout << "line " << __LINE__ << endl;
+            }
         }
 
         // loading histograms for EtaPrime
@@ -2302,7 +2302,6 @@ void ExtractSignalV2(   TString meson                   = "",
         // Rebin MC histograms for acceptance and input with possible weights
         FillHistosArrayMC(fHistoMCMesonPtWithinAcceptance, fHistoMCMesonPt, fDeltaPt);
         // Rebin MC histograms for acceptance and input without weights
-        cout << "came till here" << endl;
         if (fHistoMCMesonPtWithinAcceptanceWOWeights) FillHistosArrayMCWOWeights(fHistoMCMesonPtWithinAcceptanceWOWeights, fHistoMCMesonPtWOWeights, fDeltaPt);
         if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights) FillHistosArrayMCWOEvtWeights(fHistoMCMesonPtWithinAcceptanceWOEvtWeights, fHistoMCMesonPtWOEvtWeights, fDeltaPt);
 

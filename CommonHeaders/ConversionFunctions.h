@@ -3283,7 +3283,7 @@
                                     TGraphAsymmErrors** graphRpPbSystErr,
                                     Double_t tAA,
                                     Double_t tAAErr,
-                                    vector<TString>nameSysTakeOut,
+                                    vector<TString> nameSysTakeOut,
                                     TString fileNameSysPPb                  = "",
                                     TString fileNameSysPP                   = "",
                                     TString fileNameSysOut                  = ""

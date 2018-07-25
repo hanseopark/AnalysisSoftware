@@ -459,7 +459,7 @@
         TF1* fitPi0InvMassSig;
         TF1* fitPi0InvMassSigRemBG;
         TF1* fitPi0InvMassBG;
-        cout << "histoInvMassSubtracted" <<histoInvMassSubtracted << endl;
+
         histoPi0InvMassSig               = (TH1D*)histoInvMassSubtracted->Clone("InvMassSig_PtBin07");
         histoPi0InvMassSigRemBG          = (TH1D*)histoInvMassSubtracted->Clone("InvMassSigPlRemBG_PtBin07");
         histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07");

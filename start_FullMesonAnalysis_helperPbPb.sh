@@ -30,7 +30,6 @@ function GiveBinningPbPb2760()
         echo "How many p_T bins do you want to use for Eta? 8(8GeV), 9(10GeV), 10(12GeV), 11(15GeV), 12(20GeV), 13(25GeV), 14(30GeV)";
         read answer
         if [ $answer -ge 8 ] && [ $answer -lt 15 ] ; then
-        if [ $answer = 8 ]; then
             echo "--> $answer Bins";
             CORRECTETA=1
             BINSPTETA=$answer

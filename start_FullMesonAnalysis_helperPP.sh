@@ -284,7 +284,7 @@ function GiveBinning13TeV()
         echo "  for other modes: max 37";
         read BINSPTPI0
         CORRECTPI0=1
-        echo "--> You have chosen $BINSPTPI0 bins";
+        echo -e "--> You have chosen $BINSPTPI0 bins\n";
         BINSPTGAMMA=$BINSPTPI0
     fi
 
@@ -294,7 +294,7 @@ function GiveBinning13TeV()
         echo "  for other modes: max 24";
         read BINSPTETA
         CORRECTETA=1
-        echo "--> You have chosen $BINSPTETA bins";
+        echo -e "--> You have chosen $BINSPTETA bins\n";
 
     fi
     if [ $DOETAPRIME -eq 1 ]; then
@@ -303,6 +303,6 @@ function GiveBinning13TeV()
         echo "  fFor other modes: max 24";
         read BINSPTETAPRIME
         CORRECTETAPrime=1
-        echo "--> You have chosen $BINSPTETAPRIME bins";
+        echo -e "--> You have chosen $BINSPTETAPRIME bins\n";
     fi
 }
