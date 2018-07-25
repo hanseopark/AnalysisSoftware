@@ -116,8 +116,8 @@
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[10]       = {4,4,4,4,4,4,4,4,4,4};
 
     // omega->pi+pi-pi0
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,5,5,5,5,5,5,10,13};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,5,5,5,5,5,5,10,10};
 
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[11]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,10.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[10]       = {10,10,10,10,10,10,8,8,7,7};

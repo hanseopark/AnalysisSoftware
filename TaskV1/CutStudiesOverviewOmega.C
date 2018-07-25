@@ -1225,8 +1225,8 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
                 // Set ratio min and max
-                Double_t minYRatio = 0.8;
-                Double_t maxYRatio = 1.2;
+                Double_t minYRatio = 0.65;
+                Double_t maxYRatio = 1.65;
                 //                 if(optionMult.CompareTo("Mult")==0) {
                 //                     if( optionEnergy.Contains("Pb")){
                 //                         minYRatio = 0.005;        maxYRatio = 2.1;

@@ -193,10 +193,11 @@ else
     MCFILE=0
 fi
 elif [[ "$1" == -d* ]] ; then
-    ONLYCORRECTION=1
+    #ONLYCORRECTION=1
     ONLYCUTS=1
     DataRootFile=$2
-    Suffix=$3;
+    MCRootFile=$3
+    Suffix=$4;
 elif [[ "$1" == *-r* ]] ; then
     ONLYCORRECTION=1
     ONLYRESULTS=1
@@ -655,4 +656,6 @@ if [ $ONLYRESULTS = 0 ] ; then
 
     root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
     root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
 fi

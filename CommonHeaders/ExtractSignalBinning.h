@@ -1401,7 +1401,7 @@
               }
             } else if (energy.CompareTo("7TeV") == 0){
                 if (mode == 40){
-                    startPtBin     = 4;
+                    startPtBin     = 6;
                 } else if (mode == 41){
                     startPtBin     = 6;
                 } else if (mode == 42){

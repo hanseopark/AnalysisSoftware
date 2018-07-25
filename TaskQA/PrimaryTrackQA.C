@@ -158,7 +158,8 @@ void PrimaryTrackQA(
         fPionCutSelection[i]        = "";
         fNeutralPionCutSelection[i] = "";
         fMesonCutSelection[i]       = "";
-        fMode=ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection[i], fTypeCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i],fPionCutSelection[i], fNeutralPionCutSelection[i], fMesonCutSelection[i]);
+        // Dirty fix, because cut string has wrong ordering!!
+        fMode=ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection[i], fTypeCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fNeutralPionCutSelection[i],fPionCutSelection[i], fMesonCutSelection[i]);
         if(fMode!=mode){
             cout << "ERROR: Chosen mode ("<<mode<<") is not identical to mode extracted from cutstring ("<<fMode<<")! " << endl;
             return;
@@ -465,7 +466,12 @@ void PrimaryTrackQA(
         if(ConvEventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection[i].Data()) << " not found in File" << endl; return;}
         else if(ConvEventCutsContainer) ConvEventCutsContainer->SetOwner(kTRUE);
         //PionCutsContainer; PionCuts directory in the "Cut Number" directory with the chosen cut number
-        TString fPionCutsContainerCutString=Form("%s_%s_%s_%s_%s",fEventCutSelection[i].Data(),fGammaCutSelection[i].Data(),fNeutralPionCutSelection[i].Data(),fPionCutSelection[i].Data(),fMesonCutSelection[i].Data());
+        TString fPionCutsContainerCutString=Form("%s_%s_%s_%s_%s",fEventCutSelection[i].Data(),fGammaCutSelection[i].Data(),fPionCutSelection[i].Data(),fNeutralPionCutSelection[i].Data(),fMesonCutSelection[i].Data()); // default for mode 40
+        if((fMode==41)||(fMode==42)){
+            fPionCutsContainerCutString=Form("%s_%s_%s_%s_%s_%s",fEventCutSelection[i].Data(),fGammaCutSelection[i].Data(),fClusterCutSelection[i].Data(),fPionCutSelection[i].Data(),fNeutralPionCutSelection[i].Data(),fMesonCutSelection[i].Data());
+        } else if ((fMode==44)||(fMode==45)){
+            fPionCutsContainerCutString=Form("%s_%s_%s_%s_%s",fEventCutSelection[i].Data(),fClusterCutSelection[i].Data(),fPionCutSelection[i].Data(),fNeutralPionCutSelection[i].Data(),fMesonCutSelection[i].Data());
+        }
         TList* PionCutsContainer       = (TList*) TopContainer->FindObject(Form("PionCuts_%s",fPionCutsContainerCutString.Data()));
         if(PionCutsContainer == NULL) {cout << "ERROR: " << Form("PionCuts_%s",fPionCutsContainerCutString.Data()) << " not found in File" << endl; return;}
         else if(PionCutsContainer) PionCutsContainer->SetOwner(kTRUE);

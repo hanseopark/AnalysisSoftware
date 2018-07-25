@@ -850,7 +850,14 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         }
 
         // Initialize default Plot default integration ranges
-        if(mode == 40 || mode == 41 || mode == 42 || mode == 45){
+        if(mode == 40 ){
+            fMesonIntDeltaRange[0]      = -0.03;
+            fMesonIntDeltaRange[1]      =  0.03;
+            fMesonIntDeltaRangeWide[0]  = -0.05;
+            fMesonIntDeltaRangeWide[1]  = 0.05;
+            fMesonIntDeltaRangeNarrow[0]= -0.02;
+            fMesonIntDeltaRangeNarrow[1]= 0.02;
+        } else if(mode == 41 || mode == 42 || mode == 45){
             fMesonIntDeltaRange[0]      = -0.04;
             fMesonIntDeltaRange[1]      =  0.05;
             fMesonIntDeltaRangeWide[0]  = -0.06;
