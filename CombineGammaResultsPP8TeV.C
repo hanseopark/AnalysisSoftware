@@ -644,9 +644,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombDRRelTot->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphCombDRRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+        DrawGammaSetMarkerTGraphAsym(graphCombDRRelStat, markerStyleComb, markerSizeComb, kGray+3 , kGray+3);
         graphCombDRRelStat->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombDRRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        DrawGammaSetMarkerTGraphAsym(graphCombDRRelSys, markerStyleComb, markerSizeComb, kGray+1, kGray+1);
         graphCombDRRelSys->SetLineStyle(7);
         graphCombDRRelSys->Draw("l,x0,same,e1");
 
@@ -835,8 +835,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     //  ************************************ Visualize relative errors ******************************************************
     //  *********************************************************************************************************************
 
-    canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
     canvasRelSysErr->SetLogx();
 
     histo2DRelSysErr;
@@ -920,9 +918,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombDRNonFitRelTot->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+        DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitRelStat, markerStyleComb, markerSizeComb, kGray+3, kGray+3);
         graphCombDRNonFitRelStat->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitRelSys, markerStyleComb, markerSizeComb, kGray+1, kGray+1);
         graphCombDRNonFitRelSys->SetLineStyle(7);
         graphCombDRNonFitRelSys->Draw("l,x0,same,e1");
 
@@ -1306,9 +1304,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombIncGammaRelTot->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+        DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelStat, markerStyleComb, markerSizeComb, kGray+3, kGray+3);
         graphCombIncGammaRelStat->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelSys, markerStyleComb, markerSizeComb, kGray+1, kGray+1);
         graphCombIncGammaRelSys->SetLineStyle(7);
         graphCombIncGammaRelSys->Draw("l,x0,same,e1");
 
@@ -1339,9 +1337,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
         DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombPCMIncGammaRelTot->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelStat, markerStyleComb, markerSizeComb, kGray+3, kGray+3);
         graphCombPCMIncGammaRelStat->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelSys, markerStyleComb, markerSizeComb, kGray+1, kGray+1);
         graphCombPCMIncGammaRelSys->SetLineStyle(7);
         graphCombPCMIncGammaRelSys->Draw("l,x0,same,e1");
 
