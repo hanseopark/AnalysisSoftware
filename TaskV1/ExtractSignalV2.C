@@ -187,6 +187,8 @@ void ExtractSignalV2(   TString meson                   = "",
         // set to full MB cut in pPb
         if (fEventCutSelectionRead.BeginsWith("a")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("c")) fEventCutSelectionRead.Replace(0,1,"8");
+        if (fEventCutSelectionRead.BeginsWith("9")) fEventCutSelectionRead.Replace(0,1,"8");
+        if (fEventCutSelectionRead.BeginsWith("e")) fEventCutSelectionRead.Replace(0,1,"8");
         cout << fEventCutSelectionRead.Data() << endl;
         if (mode==0 || mode==100)
             fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
