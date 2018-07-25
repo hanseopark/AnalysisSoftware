@@ -8,9 +8,20 @@ void read_pcm() {
     // read PCM inclusive photon v2 and Rgamma
     // and prepare input for merging macro
 
+    // reduce uncertinaties to make projections for the yellow report
+    bool projection_for_yellow_report = true;
+    const Double_t reduction_factor_staterr = 1./3.;
+    const Double_t reduction_factor_Rgamma_comb_syserr = 1./2.;
+    
     // define correlation coefficient for systematic uncertainties (0 = no correlation, 1 = fully positively correlated)
-    const Double_t corr_coeff_v2inc = 0.;
-    const Double_t corr_coeff_Rgam = 0.;
+    const Double_t corr_coeff_v2inc = 1.;
+    // const Double_t corr_coeff_Rgam = 0.25; // estimated in a meeting with Dmitri and Mike on April 22, 2018
+    // const Double_t corr_coeff_v2inc = 0.5; // estimated in a meeting with Dmitri and Mike on April 22, 2018
+
+    const Double_t corr_coeff_Rgam = 1.; // a check
+
+    Double_t pt_bin_min_Rgam_corr = 0; // default
+    // Double_t pt_bin_min_Rgam_corr = 3; // no correlation in Rgamma for bins below this bin (just a test)
     
     const Int_t n_pt_bins = 16;
 
@@ -48,6 +59,7 @@ void read_pcm() {
         // get graphs / histograms
         TString name_graph_v2inc_syserr = "graphTotalSystErrors_" + centr[i_centr];
         TString name_graph_v2inc_toterr = "graphTotalErrors_" + centr[i_centr];
+	
         TString name_graph_Rgamma_comb_toterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/DR_comb_totErr";
         TString name_graph_Rgamma_comb_staterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/DR_comb_StatErr";
         TString name_histo_Rgamma_staterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/hDR_PCM_StatErr";
@@ -97,10 +109,20 @@ void read_pcm() {
             // Rgamma uncertainty
             Double_t sigma_Rgamma_comb_toterr = g_Rgamma_comb_toterr->GetEYhigh()[i_pt_bin];
             Double_t sigma_Rgamma_comb_staterr = g_Rgamma_comb_staterr->GetEYhigh()[i_pt_bin];
-            cov_Rgamma_comb_toterr(i_pt_bin, i_pt_bin) = sigma_Rgamma_comb_toterr * sigma_Rgamma_comb_toterr;
+	    Double_t sigma_Rgamma_comb_syserr = sigma_Rgamma_comb_toterr * sigma_Rgamma_comb_toterr -
+		sigma_Rgamma_comb_staterr * sigma_Rgamma_comb_staterr;
+	    	    
+	    if (projection_for_yellow_report) {
+		cout << "ATTENTION: reduced uncertainties (projections for yellow report)" << endl;
+		sigma_Rgamma_comb_staterr *= reduction_factor_staterr;
+		sigma_Rgamma_comb_syserr *= reduction_factor_Rgamma_comb_syserr;
+		sigma_Rgamma_comb_toterr =
+		    TMath::Sqrt(sigma_Rgamma_comb_staterr * sigma_Rgamma_comb_staterr + sigma_Rgamma_comb_syserr * sigma_Rgamma_comb_syserr);
+	    }
+
+	    cov_Rgamma_comb_toterr(i_pt_bin, i_pt_bin) = sigma_Rgamma_comb_toterr * sigma_Rgamma_comb_toterr;
             cov_Rgamma_comb_staterr(i_pt_bin, i_pt_bin) = sigma_Rgamma_comb_staterr * sigma_Rgamma_comb_staterr;
-            cov_Rgamma_comb_syserr(i_pt_bin, i_pt_bin) = sigma_Rgamma_comb_toterr * sigma_Rgamma_comb_toterr -
-                                                         sigma_Rgamma_comb_staterr * sigma_Rgamma_comb_staterr;
+            cov_Rgamma_comb_syserr(i_pt_bin, i_pt_bin) = sigma_Rgamma_comb_syserr * sigma_Rgamma_comb_syserr;
 
             Double_t sys_err_A = g_Rgamma_sysAerr->GetEYhigh()[i_pt_bin];
             Double_t sys_err_B = g_Rgamma_sysBerr->GetEYhigh()[i_pt_bin];
@@ -126,6 +148,13 @@ void read_pcm() {
             Double_t sigma_v2inc_tot = g_v2inc_toterr->GetEYhigh()[i_bin_offset + i_pt_bin];
             Double_t sigma_v2inc_stat =
                 TMath::Sqrt(sigma_v2inc_tot * sigma_v2inc_tot - sigma_v2inc_sys * sigma_v2inc_sys);
+
+	    if (projection_for_yellow_report) {
+		cout << "ATTENTION: reduced uncertainties (projections for yellow report)" << endl;
+		sigma_v2inc_stat *= reduction_factor_staterr;
+		sigma_v2inc_tot = TMath::Sqrt(sigma_v2inc_stat * sigma_v2inc_stat + sigma_v2inc_sys * sigma_v2inc_sys);
+	    }
+	    
             cov_v2_inc_syserr(i_pt_bin, i_pt_bin) = sigma_v2inc_sys * sigma_v2inc_sys;
             cov_v2_inc_toterr(i_pt_bin, i_pt_bin) = sigma_v2inc_tot * sigma_v2inc_tot;
             cov_v2_inc_staterr(i_pt_bin, i_pt_bin) = sigma_v2inc_stat * sigma_v2inc_stat;
@@ -140,15 +169,16 @@ void read_pcm() {
         //
         bool correlated_uncertainties = true;
         if (correlated_uncertainties) {
-            for (Int_t i_pt_bin = 0; i_pt_bin < n_pt_bins; ++i_pt_bin) {
+            for (Int_t i_pt_bin =  0; i_pt_bin < n_pt_bins; ++i_pt_bin) {
                 for (Int_t j_pt_bin = 0; j_pt_bin < n_pt_bins; ++j_pt_bin) {
                     if (i_pt_bin != j_pt_bin) {
 
                         // Rgamma
                         Double_t sig_i_Rgamma_syserr = TMath::Sqrt(cov_Rgamma_comb_syserr(i_pt_bin, i_pt_bin));
                         Double_t sig_j_Rgamma_syserr = TMath::Sqrt(cov_Rgamma_comb_syserr(j_pt_bin, j_pt_bin));
-                        cov_Rgamma_comb_toterr(i_pt_bin, j_pt_bin) = corr_coeff_Rgam * sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
-
+			if (i_pt_bin >= pt_bin_min_Rgam_corr && j_pt_bin >= pt_bin_min_Rgam_corr)
+			    cov_Rgamma_comb_toterr(i_pt_bin, j_pt_bin) = corr_coeff_Rgam * sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
+						
                         Double_t sig_i_Rgamma_pcm_syserr = TMath::Sqrt(cov_Rgamma_pcm_syserr(i_pt_bin, i_pt_bin));
                         Double_t sig_j_Rgamma_pcm_syserr = TMath::Sqrt(cov_Rgamma_pcm_syserr(j_pt_bin, j_pt_bin));
                         cov_Rgamma_pcm_toterr(i_pt_bin, j_pt_bin) = corr_coeff_Rgam * sig_i_Rgamma_pcm_syserr * sig_j_Rgamma_pcm_syserr;

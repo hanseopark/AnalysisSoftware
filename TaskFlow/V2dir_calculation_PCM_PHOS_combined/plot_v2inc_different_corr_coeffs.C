@@ -1,7 +1,7 @@
 void plot_v2inc_different_corr_coeffs() {
 
-    // TString centr = "00-20";
-    TString centr = "20-40";
+    TString centr = "00-20";
+    // TString centr = "20-40";
 
     TString fn_corr_coeff_1 = "./output_corr_coeff_1/v2dir_pcm_phos_comb_" + centr + ".root";
     TString fn_corr_coeff_05 = "./output_corr_coeff_05/v2dir_pcm_phos_comb_" + centr + ".root";
@@ -61,7 +61,7 @@ void plot_v2inc_different_corr_coeffs() {
 
     TCanvas* c1 = new TCanvas("c1", "c1", 700, 500);
     TH2F fr("fr", "fr", 1, 0., 6.0, 1, 0., 0.3);
-    fr.SetXTitle("#it{p}_{T}");
+    fr.SetXTitle("#it{p}_{T} (GeV/#it{c})");
     fr.SetYTitle("#it{v}_{2,inc}");
     fr.DrawCopy();
 

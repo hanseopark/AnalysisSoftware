@@ -1,5 +1,4 @@
 
-
 const Int_t n_bins = 16;
 
 Double_t DotProduct(const TVectorD &a, const TVectorD &b);
@@ -7,11 +6,15 @@ Double_t chi2(const TVectorD &x, const TVectorD &mu, const TMatrixDSym &V);
 
 void plot_v2dir_correlation_matrix() {
 
-    TString centr = "00-20";
-    // TString centr = "20-40";
+    // TString centr = "00-20";
+    TString centr = "20-40";
 
-    TString fn = "./output/v2dir_pcm_phos_comb_" + centr + ".root";
-	
+    // TString fn = "./output/v2dir_pcm_phos_comb_" + centr + ".root";
+    // TString fn = "./output_new_rgam_corr_coeff_1/v2dir_pcm_phos_comb_" + centr + ".root";
+    // TString fn = "./output_corr_coeff_1/v2dir_pcm_phos_comb_" + centr + ".root";
+    // TString fn = "./output_rgam_corr_coeff_025_2018_07_04/v2dir_pcm_phos_comb_" + centr + ".root";
+    TString fn = "./output_test/v2dir_pcm_phos_comb_" + centr + ".root";
+    
     TFile f(fn.Data());
     TMatrixDSym corr_v2_dir_comb_toterr = *(TMatrixDSym *)f.Get("corr_v2_dir_comb_toterr");
     corr_v2_dir_comb_toterr.Print();
@@ -53,6 +56,11 @@ void plot_v2dir_correlation_matrix() {
     TString fout = "corr_matrix_v2_dir_comb_" + centr + ".pdf";
     c1->SaveAs(fout);
 
+    // correlated uncertainties with respect to first pt bin (faction w.r.t to total uncerainty)
+    for (Int_t i = 0; i < n_bins; ++i) {
+	cout << TMath::Sqrt(corr_v2_dir_comb_toterr(0, i)) << endl;
+    }
+    
 }
 
 Double_t DotProduct(const TVectorD &a, const TVectorD &b) {

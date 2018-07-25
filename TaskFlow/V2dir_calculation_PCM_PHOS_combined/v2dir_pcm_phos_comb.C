@@ -66,6 +66,10 @@ Double_t chi2(const TVectorD &x, const TVectorD &mu, const TMatrixDSym &V);
 
 Double_t p_value_to_n_sigma(const Double_t &pvalue);
 
+Double_t cdf_standard_normal_distr(const Double_t& x);
+
+Double_t inverse_cdf_standard_normal_distr(const Double_t& x);
+
 // number of pT bins
 const Int_t nPtBins = 16;
 
@@ -714,14 +718,21 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
     // write also Rgamma
     TGraphErrors g_Rgamma_toterr(nPtBins);
+    TGraphErrors g_Rgamma_staterr(nPtBins);
     for (Int_t i = 0; i < nPtBins; ++i) {
         g_Rgamma_toterr.SetPoint(i, pt(i), Rgamma_meas_vec_comb(i));
         g_Rgamma_toterr.SetPointError(i, 0, TMath::Sqrt(cov_Rgamma_comb_toterr(i, i)));
+        g_Rgamma_staterr.SetPoint(i, pt(i), Rgamma_meas_vec_comb(i));
+        g_Rgamma_staterr.SetPointError(i, 0, TMath::Sqrt(cov_Rgamma_comb_staterr(i, i)));
     }
 
     g_Rgamma_toterr.SetName("g_Rgamma_toterr");
     g_Rgamma_toterr.SetTitle("g_Rgamma_toterr");
     g_Rgamma_toterr.Write();
+
+    g_Rgamma_staterr.SetName("g_Rgamma_staterr");
+    g_Rgamma_staterr.SetTitle("g_Rgamma_staterr");
+    g_Rgamma_staterr.Write();
 
     correlation_coeff_v2inc_pcm.Write("correlation_coeff_v2inc_pcm");
     correlation_coeff_v2inc_phos.Write("correlation_coeff_v2inc_phos");
@@ -1067,7 +1078,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     // along with central value directly calculated from the
     // measured values, i.e., v2dir = (Rgamma,meas * v2,inc,meas - v2,dec) / (Rgamma,meas - 1)
     //
-    TCanvas *c3h = new TCanvas("c3c", "c3c", 700, 500, 700, 500);
+    TCanvas *c3h = new TCanvas("c3h", "c3h", 700, 500, 700, 500);
     frame.DrawCopy();
 
     ly0.DrawClone();
@@ -1332,7 +1343,9 @@ void v2_dir_central_value_and_error_from_v2dir_distribution(TH1 *h_v2dir_distr, 
 
     // determine median and errors
     const Int_t n_quant = 3;
-    Double_t prob_integrals[n_quant] = {0.15865, 0.5, 0.84135};
+    Double_t prob_integrals[n_quant] = {0.15865, 0.5, 0.84135}; // +- 1 sigma
+    // Double_t prob_integrals[n_quant] = {0.05, 0.5, 0.95}; // +- 1.64 sigma
+    // Double_t prob_integrals[n_quant] = {0.0455/2., 0.5, 1. - 0.0455/2.}; // 2 sigma
     Double_t quantiles[n_quant];
 
     h_v2dir_distr->GetQuantiles(n_quant, quantiles, prob_integrals);
@@ -1446,7 +1459,7 @@ void v2dir(const Int_t nPtBins, const Int_t nSamples, const TVectorD &RgamMeasVe
         RgamMeas.add(*RgamMeasVar);
 
         char *nameTrue = Form("Rgam%d", i);
-        RgamVar = new RooRealVar(nameTrue, nameTrue, 1., 1., 10.);
+        RgamVar = new RooRealVar(nameTrue, nameTrue, 1., 0., 10.);  // new: no limt Rgam > 1 here (limit implemented further below)
         Rgam.add(*RgamVar);
     }
 
@@ -1536,11 +1549,18 @@ void v2dir(const Int_t nPtBins, const Int_t nSamples, const TVectorD &RgamMeasVe
 
             Double_t vnIncVal = vnIncRow->getVal();
             Double_t vnDecVal = vnDecRow->getVal();
-            Double_t RgamVal = RgamRow->getVal();
+            Double_t RgamValNoLimit = RgamRow->getVal();
+
+	    // new: take into account physical limit for Rgamma here (Rgamma > 1)
+	    Double_t n_sigma_RgamValNoLimt =  (RgamValNoLimit - RgamMeasVec[i]) / TMath::Sqrt(covRgam(i,i));
+	    Double_t n_sigma_1 = (1. - RgamMeasVec[i]) / TMath::Sqrt(covRgam(i,i));
+	    Double_t RgamValNoLimitQuantile = (1. - cdf_standard_normal_distr(n_sigma_1)) * 
+		cdf_standard_normal_distr(n_sigma_RgamValNoLimt) + cdf_standard_normal_distr(n_sigma_1);
+	    Double_t RgamVal = TMath::Sqrt(covRgam(i,i)) * inverse_cdf_standard_normal_distr(RgamValNoLimitQuantile) + RgamMeasVec[i];
 
             Double_t vnDirVal = (RgamVal * vnIncVal - vnDecVal) / (RgamVal - 1.);
 
-            // cout << vnIncVal << " " << vnDecVal << " " << RgamVal << endl;
+            // cout << i << " " << vnIncVal << " " << vnDecVal << " " << RgamVal << " " << RgamValNoLimit << endl;
             // cout << vnDirVal << endl;
 
             vnDirTmp(i) = vnDirVal;
@@ -1655,3 +1675,19 @@ Double_t p_value_to_n_sigma(const Double_t &pvalue) {
 
     return nsigma;
 }
+
+Double_t cdf_standard_normal_distr(const Double_t& x) {
+    return 1. - 0.5 * TMath::Erfc(x / TMath::Sqrt(2));
+}
+
+Double_t inverse_cdf_standard_normal_distr(const Double_t& x) {
+    if (x < 0 || x > 1) {
+	cout << "ERROR in inverse_cdf_standard_normal_distr: argument out of range" << endl;
+	return -999.;
+    }
+    else {
+	return TMath::Sqrt(2) * TMath::ErfcInverse(2. * (1. - x));
+    }
+}
+
+

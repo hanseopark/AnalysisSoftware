@@ -10,14 +10,14 @@ void v2_dir_central_value_and_error_from_v2dir_distribution(TH1 *h_v2dir_distr, 
 const Int_t n_bins = 16;
 
 // select pt bin (starting from 0)
-Int_t ibin = 2;  // 1.4 GeV
+// Int_t ibin = 2;  // 1.4 GeV
 // Int_t ibin = 5;  // 2.0 GeV
-// Int_t ibin = 5;
+Int_t ibin = 3;
 
 void v2dir_vs_Rgamma() {
 
     TString cen_string = "20-40%";
-    TFile *f = new TFile("./output/v2dir_pcm_phos_comb_20-40.root");
+    TFile *f = new TFile("./output_rgam_corr_coeff_025/v2dir_pcm_phos_comb_20-40.root");
 
     TGraphAsymmErrors *g_v2_inc_comb_toterr = (TGraphAsymmErrors *)f->Get("g_v2_inc_comb_toterr");
     TGraphAsymmErrors *g_v2_dec_comb = (TGraphAsymmErrors *)f->Get("g_v2_dec_comb");
@@ -34,7 +34,7 @@ void v2dir_vs_Rgamma() {
     // get also the actual Rgamma for the given pT bin
     Double_t Rgamma_meas = g_Rgamma_toterr->GetY()[ibin];
     Double_t Rgamma_meas_err = g_Rgamma_toterr->GetEY()[ibin];
-    TF1* fGaus = new TF1("fGaus", "gaus/(x-1)^2", 1., 1.3);
+    TF1* fGaus = new TF1("fGaus", "gaus", 1., 1.3);
     fGaus->SetParameters(0.1, Rgamma_meas, Rgamma_meas_err);
 
     // print values
@@ -159,7 +159,12 @@ void v2dir_vs_Rgamma() {
     TLatex* la2 = new TLatex(0.18, 0.83, la1_string);
     la2->SetNDC();
     la2->Draw("same");
-    
+
+    // cross check (probability corresponding to the +/- 2 sigma interval, 95.45% for a Gaussian)
+    Double_t v2dir_bin_2sigma_min = h_v2dir_posterior_distr->FindBin(v2dir_central_value - 2. * v2dir_err_low);
+    Double_t v2dir_bin_2sigma_max = h_v2dir_posterior_distr->FindBin(v2dir_central_value + 2. * v2dir_err_up);
+    cout << "2 sigma interval: " << h_v2dir_posterior_distr->Integral(v2dir_bin_2sigma_min, v2dir_bin_2sigma_max, "width") << endl;
+
     c2->SaveAs("v2dir_posterior_distr.pdf");
 
     //

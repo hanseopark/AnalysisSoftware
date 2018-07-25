@@ -30,13 +30,27 @@ void test_v2dir_significance_different_methods() {
     gRandom->SetSeed(0);
 
     // 20-40%, pt bin 2 (pT = 1.4 GeV)
-    const Double_t Rgam_meas = 1.06129;
-    const Double_t Rgam_err = 0.0484595;
-    const Double_t v2inc_meas = 0.181394;
-    const Double_t v2inc_err = 0.00279544;
-    const Double_t v2dec_meas = 0.182441;
-    const Double_t v2dec_err = 0.00463759;
+    // const Double_t Rgam_meas = 1.06129;
+    // const Double_t Rgam_meas = 1.05;
+    // const Double_t Rgam_err = 0.0484595;
+    // const Double_t Rgam_err = 0.;
 
+    // const Double_t v2inc_meas = 0.181394;
+    // const Double_t v2inc_err = 0.00279544;
+    // const Double_t v2inc_err = 0;
+    
+    // const Double_t v2dec_meas = 0.182441;
+    // const Double_t v2dec_err = 0.00463759;
+    // const Double_t v2dec_err = 0;
+
+    // toy values
+    const Double_t Rgam_meas = 1.1;
+    const Double_t Rgam_err = 0.04; // "2.5 sigma"
+    const Double_t v2inc_meas = 0.1;
+    const Double_t v2inc_err = v2inc_meas * 0.001;
+    const Double_t v2dec_meas = 0.1;
+    const Double_t v2dec_err = v2dec_meas * 0.001;
+     
     // // Observed values
     // const Double_t v2inc_meas = 0.10 ;  //Inclusive photons
     // const Double_t v2dec_meas = 0.105 ; //Decay photons
@@ -58,6 +72,10 @@ void test_v2dir_significance_different_methods() {
 
     const Double_t v2dir_hyp = 0.;
 
+    gaussian_error_propagation(v2dir_hyp, Rgam_meas, Rgam_err,
+			       v2inc_meas, v2inc_err,
+    			       v2dec_meas, v2dec_err);
+	
     bayes(v2dir_hyp, Rgam_meas, Rgam_err,
    	  v2inc_meas, v2inc_err,
     	  v2dec_meas, v2dec_err);
@@ -70,9 +88,6 @@ void test_v2dir_significance_different_methods() {
     //  				     v2inc_meas, v2inc_err,
     // 				     v2dec_meas, v2dec_err);
 
-    gaussian_error_propagation(v2dir_hyp, Rgam_meas, Rgam_err,
-			       v2inc_meas, v2inc_err,
-    			       v2dec_meas, v2dec_err);
 
     // neyman_construction(v2dir_hyp, Rgam_meas, Rgam_err,
     //			v2inc_meas, v2inc_err,
@@ -84,21 +99,31 @@ void bayes(const Double_t &v2dir_hyp, const Double_t &Rgam_meas, const Double_t 
 	   const Double_t &v2inc_meas, const Double_t &v2inc_err,
 	   const Double_t &v2dec_meas, const Double_t &v2dec_err) {
 
-    TH1F h_v2dir_check("h_v2dir_check", "h_v2dir_check", 100, -0.5, 0.5);
+    // TH1F h_v2dir_check("h_v2dir_check", "h_v2dir_check", 100, -0.5, 0.5);
+    TH1F h_v2dir_check("h_v2dir_check", "h_v2dir_check", 1000, -2, 2);
 
-    TF1 f_Rgam("f_Rgam", "gaus", 1., 5.);
+    TF1 f_Rgam("f_Rgam", "gaus", 1., 3.);
     f_Rgam.SetParameters(1., Rgam_meas, Rgam_err);
 
-    for (Int_t i=0; i<100000; ++i) {
+    for (Int_t i=0; i<10000000; ++i) {
 
-	Double_t Rgam_s = f_Rgam.GetRandom();
-	Double_t v2inc_s = gRandom->Gaus(v2inc_meas, v2inc_err);
-	Double_t v2dec_s = gRandom->Gaus(v2dec_meas, v2dec_err);
+	Double_t Rgam_s = 0;
+	if (Rgam_err != 0) Rgam_s = f_Rgam.GetRandom();
+	else Rgam_s = Rgam_meas;
+
+	Double_t v2inc_s = 0;
+	if (v2inc_err != 0) v2inc_s = gRandom->Gaus(v2inc_meas, v2inc_err);
+	else v2inc_s = v2inc_meas;
+
+	Double_t v2dec_s = 0;
+	if (v2dec_err != 0) v2dec_s = gRandom->Gaus(v2dec_meas, v2dec_err);
+	else v2dec_s = v2dec_meas;
 
 	Double_t v2dir_s = (Rgam_s * v2inc_s - v2dec_s) / (Rgam_s - 1.);
 
-	if (TMath::Abs(v2dir_s) < 0.5) h_v2dir_check.Fill(v2dir_s);
-
+	//	if (TMath::Abs(v2dir_s) < 0.5) h_v2dir_check.Fill(v2dir_s);
+	h_v2dir_check.Fill(v2dir_s);
+	
     }
 
     Double_t v2dir_central_value, v2dir_err_low, v2dir_err_up;
@@ -107,7 +132,36 @@ void bayes(const Double_t &v2dir_hyp, const Double_t &Rgam_meas, const Double_t 
 
     cout << endl << "Bayesian method:" << endl;
     cout << "v2dir = " << v2dir_central_value << " + " << v2dir_err_up << " - " << v2dir_err_low << endl;
+    cout << "v2dir_central_value / v2dir_err_low  = " <<  v2dir_central_value / v2dir_err_low << endl;
 
+    Int_t bin_v2dir0 = h_v2dir_check.GetXaxis()->FindBin(0.);
+    Double_t p_less_then_0 = h_v2dir_check.Integral(1, bin_v2dir0) / h_v2dir_check.Integral();
+    cout << "p_less_then_0 = " << p_less_then_0 << ", 2 * p_less_then_0 = " << 2. * p_less_then_0 << endl;
+    
+    // draw distribution of the test statistic
+    // style settings
+    TStyle *myStyle = new TStyle("myStyle", "My root style");
+    myStyle->SetOptStat(kFALSE);
+    myStyle->SetLabelOffset(0.005, "x"); // 0.005 = root default
+    myStyle->SetLabelOffset(0.005, "y"); // 0.005 = root default
+    myStyle->SetTitleXSize(0.04);        // 0.04  = root default
+    myStyle->SetTitleYSize(0.04);        // 0.04  = root default
+    myStyle->SetTitleXOffset(1.2);
+    myStyle->SetTitleYOffset(1.3);
+    myStyle->SetPadLeftMargin(0.15);
+    myStyle->SetPadRightMargin(0.12); // 0.1 = root default
+    myStyle->SetPadTopMargin(0.1);
+    myStyle->SetPadBottomMargin(0.12);
+    myStyle->SetCanvasColor(0);
+    myStyle->SetPadColor(0);
+    myStyle->SetCanvasBorderMode(0);
+    myStyle->SetPadBorderMode(0);
+    myStyle->SetOptTitle(0);
+    gROOT->SetStyle("myStyle");
+
+    TCanvas* c2 = new TCanvas("c2");
+    h_v2dir_check.DrawCopy();
+    
 };
 
 
@@ -137,27 +191,32 @@ void v2dir_significance_marginalized_likelihood(const Double_t &v2dir_hyp, const
     // const Double_t v2inc_pred_central_value = ((Rgam_meas - 1.) * v2dir_hyp + v2dec_meas) / Rgam_meas;
     // cout << "v2inc_pred_central_value = " << v2inc_pred_central_value << endl;
 
-    TF1 f_Rgam("f_Rgam", "gaus", 1., 1.5);
+    TF1 f_Rgam("f_Rgam", "gaus", 1., Rgam_meas + 5. * Rgam_err);
     f_Rgam.SetParameters(1., Rgam_meas, Rgam_err);
 
-    TF1 f_v2dec("f_v2dec", "gaus", -0.5, 0.5);
+    TF1 f_v2dec("f_v2dec", "gaus", v2dec_meas - 5. * v2dec_err, v2dec_meas + 5. * v2dec_err);
     f_v2dec.SetParameters(1., v2dec_meas, v2dec_err);
 
-    // TF1 f_v2inc("f_v2inc", "gaus", -0.5, 0.5);
-    // f_v2inc.SetParameters(1., v2inc_meas, v2inc_err);
+    TF1 f_v2inc("f_v2inc", "gaus", 0., 0.3);
+ 
+    for (Int_t i=0; i<5000000; ++i) {
 
-    for (Int_t i=0; i<1000000; ++i) {
+	Double_t Rgam_sampled = 0;
+	if (Rgam_err != 0) Rgam_sampled = f_Rgam.GetRandom();
+	else Rgam_sampled = Rgam_meas;
 
-	Double_t Rgam_sampled = f_Rgam.GetRandom();
-	// Double_t Rgam_sampled = Rgam_meas;
-
-	Double_t v2dec_sampled = f_v2dec.GetRandom();
-
+	Double_t v2dec_sampled = 0;
+	if (v2dec_err != 0) v2dec_sampled = f_v2dec.GetRandom();
+	else v2dec_sampled = v2dec_meas;
+		 
 	Double_t v2inc_sampled = ((Rgam_sampled - 1.) * v2dir_hyp + v2dec_sampled) / Rgam_sampled;
 
 	// generate toy data from v2inc_sampled
-	for (Int_t j=0; j<1000; ++j) {
-	    Double_t v2inc_pseudo_data = gRandom->Gaus(v2inc_sampled, v2inc_err);
+	f_v2inc.SetParameters(1., v2inc_sampled, v2inc_err);
+	for (Int_t j=0; j<1; ++j) {
+	    Double_t v2inc_pseudo_data = 0;
+	    if (v2inc_err != 0) v2inc_pseudo_data = f_v2inc.GetRandom();
+	    else v2inc_pseudo_data = v2inc_sampled;
 	    h_v2inc_pseudo_data.Fill(v2inc_pseudo_data);
 	}
 
@@ -193,6 +252,10 @@ void v2dir_significance_marginalized_likelihood(const Double_t &v2dir_hyp, const
     Double_t dev = TMath::Abs(v2inc_meas - mean) / sigma;
     cout << "approx. number of standard deviations:" << dev << endl;
 
+    const Int_t n_bins = h_v2inc_pseudo_data.GetNbinsX();
+    Double_t p_v2inc_gt_v2inc_meas = h_v2inc_pseudo_data.Integral(bin_v2inc_meas, n_bins) / h_v2inc_pseudo_data.Integral(1, n_bins);
+    cout << "p_v2inc_gt_v2inc_meas = " << p_v2inc_gt_v2inc_meas << endl;
+    
     // draw distribution of the test statistic
     // style settings
     TStyle *myStyle = new TStyle("myStyle", "My root style");
@@ -221,7 +284,8 @@ void v2dir_significance_marginalized_likelihood(const Double_t &v2dir_hyp, const
     // h_v2inc_pseudo_data.SetYTitle("L(v_{2,inc}^{m})");
 		h_v2inc_pseudo_data.SetXTitle("v_{2,inc,m}");
     h_v2inc_pseudo_data.SetYTitle("L(v_{2,inc,m})");
-		h_v2inc_pseudo_data.SetAxisRange(0.14, 0.2);
+    h_v2inc_pseudo_data.SetAxisRange(0.1, 0.25);
+    // h_v2inc_pseudo_data.SetAxisRange(-0.1, 0.3);
     h_v2inc_pseudo_data.DrawCopy("hist");
 
     TLine* line_v2inc_meas = new TLine(v2inc_meas, 0, v2inc_meas, 30);
@@ -229,23 +293,23 @@ void v2dir_significance_marginalized_likelihood(const Double_t &v2dir_hyp, const
     line_v2inc_meas->SetLineColor(kRed);
     line_v2inc_meas->Draw();
 
-		// highlight integration range to obtain the p-value
-		Double_t v2inc_meas_lim1 = 0;
-		Double_t v2inc_meas_lim2 = 0;
-		Double_t L_obs = h_v2inc_pseudo_data.GetBinContent(h_v2inc_pseudo_data.FindBin(v2inc_meas));
-		for (Int_t ib=2; ib<=h_v2inc_pseudo_data.GetNbinsX(); ib++) {
-				Double_t L_current_bin = h_v2inc_pseudo_data.GetBinContent(ib);
-				Double_t L_previous_bin = h_v2inc_pseudo_data.GetBinContent(ib-1);
-				if (L_previous_bin < L_obs && L_current_bin >= L_obs) v2inc_meas_lim1 = h_v2inc_pseudo_data.GetBinCenter(ib-1);
-				if (L_previous_bin >= L_obs && L_current_bin < L_obs) v2inc_meas_lim2 = h_v2inc_pseudo_data.GetBinCenter(ib);
-		}
-		cout << "v2inc_meas_lim2 = " << v2inc_meas_lim2 << endl;
-		h_v2inc_pseudo_data.SetFillStyle(1001);
-		h_v2inc_pseudo_data.SetFillColorAlpha(kRed, 0.3);
-		h_v2inc_pseudo_data.SetAxisRange(0.14, v2inc_meas_lim1);
-		h_v2inc_pseudo_data.DrawCopy("same hist");
-		h_v2inc_pseudo_data.SetAxisRange(v2inc_meas_lim2, 0.2);
-		h_v2inc_pseudo_data.DrawCopy("same hist");
+    // highlight integration range to obtain the p-value
+    Double_t v2inc_meas_lim1 = 0;
+    Double_t v2inc_meas_lim2 = 0;
+    Double_t L_obs = h_v2inc_pseudo_data.GetBinContent(h_v2inc_pseudo_data.FindBin(v2inc_meas));
+    for (Int_t ib=2; ib<=h_v2inc_pseudo_data.GetNbinsX(); ib++) {
+	Double_t L_current_bin = h_v2inc_pseudo_data.GetBinContent(ib);
+	Double_t L_previous_bin = h_v2inc_pseudo_data.GetBinContent(ib-1);
+	if (L_previous_bin < L_obs && L_current_bin >= L_obs) v2inc_meas_lim1 = h_v2inc_pseudo_data.GetBinCenter(ib-1);
+	if (L_previous_bin >= L_obs && L_current_bin < L_obs) v2inc_meas_lim2 = h_v2inc_pseudo_data.GetBinCenter(ib);
+    }
+    cout << "v2inc_meas_lim2 = " << v2inc_meas_lim2 << endl;
+    h_v2inc_pseudo_data.SetFillStyle(1001);
+    h_v2inc_pseudo_data.SetFillColorAlpha(kRed, 0.3);
+    h_v2inc_pseudo_data.SetAxisRange(0.14, v2inc_meas_lim1);
+    h_v2inc_pseudo_data.DrawCopy("same hist");
+    h_v2inc_pseudo_data.SetAxisRange(v2inc_meas_lim2, 0.2);
+    h_v2inc_pseudo_data.DrawCopy("same hist");
 
 }
 
@@ -290,7 +354,7 @@ void v2dir_significance_3d_likelihood(const Double_t &v2dir_hyp, const Double_t 
     TF1 f_v2dec("f_v2dec", "gaus", v2_meas_min, v2_meas_max);
     TF1 f_Rgam("f_Rgam", "gaus", Rgam_meas_min, Rgam_meas_max);
 
-    for (Int_t i=0; i<5000000; ++i) {
+    for (Int_t i=0; i<10000000; ++i) {
 
 	// uniform distribution of niusance parameters
 	// Double_t Rgam_sampled = gRandom->Uniform(Rgam_true_min, Rgam_true_max);
@@ -307,7 +371,7 @@ void v2dir_significance_3d_likelihood(const Double_t &v2dir_hyp, const Double_t 
 	f_v2dec.SetParameters(1., v2dec_sampled, v2dec_err);
 	f_Rgam.SetParameters(1., Rgam_sampled, Rgam_err);
 
-	for (Int_t j=0; j<100; ++j) {
+	for (Int_t j=0; j<500; ++j) {
 	    Double_t v2inc_pseudo_data = f_v2inc.GetRandom();
 	    Double_t v2dec_pseudo_data = f_v2dec.GetRandom();
 	    Double_t Rgam_pseudo_data = f_Rgam.GetRandom();

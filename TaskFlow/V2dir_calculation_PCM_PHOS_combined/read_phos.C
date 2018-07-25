@@ -14,9 +14,13 @@ void read_phos() {
     TString fn_out = "data_phos/data_phos.root";
     TFile f_out(fn_out, "recreate");
 
+    // reduce uncertinaties to make projections for the yellow report
+    bool projection_for_yellow_report = true;
+    const Double_t reduction_factor_staterr = 1./3.;
+    
     // define correlation coefficient for systematic uncertainties (0 = no correlation, 1 = fully positively correlated)
-    const Double_t corr_coeff_v2inc = 0.;
-    const Double_t corr_coeff_Rgam = 0.;
+    const Double_t corr_coeff_v2inc = 1.;
+    const Double_t corr_coeff_Rgam = 0.25;  // not relevant for combined Rgamma
     
     const Int_t n_pt_bins = 16;
 
@@ -105,8 +109,16 @@ void read_phos() {
 
             // inclusive photon covariance matrix
             Double_t sigma_v2inc_stat = h_v2inc_staterr->GetBinError(ibin_first_v2inc + i_pt_bin);
+	    // Double_t sigma_v2inc_stat = h_v2inc_staterr->GetBinError(ibin_first_v2inc + i_pt_bin);  // just a check
             Double_t sigma_v2inc_sys = h_v2inc_syserr->GetBinError(ibin_first_v2inc + i_pt_bin);
+
+	    if (projection_for_yellow_report) {
+		cout << "ATTENTION: reduced uncertainties (projections for yellow report)" << endl;
+		sigma_v2inc_stat *= reduction_factor_staterr;
+	    }
+
             Double_t sigma_v2inc_tot_squared = sigma_v2inc_stat * sigma_v2inc_stat + sigma_v2inc_sys * sigma_v2inc_sys;
+	    
             cov_v2_inc_staterr(i_pt_bin, i_pt_bin) = sigma_v2inc_stat * sigma_v2inc_stat;
             cov_v2_inc_syserr(i_pt_bin, i_pt_bin) = sigma_v2inc_sys * sigma_v2inc_sys;
             cov_v2_inc_toterr(i_pt_bin, i_pt_bin) = sigma_v2inc_tot_squared;
