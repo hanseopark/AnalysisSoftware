@@ -37,7 +37,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
     elif [ $1 = "jlueh" ]; then
         BASEDIR=~/Daten/GridDownload
     elif [ $1 = "redeboer" ]; then
-        BASEDIR=~/alice/Gridoutput
+        BASEDIR=~/alice/GridOutput
     else
         echo "NO VALID USER NAME GIVEN"
         exit 1

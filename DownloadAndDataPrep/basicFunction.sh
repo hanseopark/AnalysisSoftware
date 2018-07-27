@@ -17,14 +17,12 @@ SEPARATEONLYConv=1
 
 function GetFileNumberMerging()
 {
-#     echo $1
     NCurrSub=$3
     number1=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $NCurrSub | cut -d "." -f1`
     number2=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $((NCurrSub+1)) | cut -d "." -f1`
     if [ -z "$number2" ]; then
         number=$number1
     else
-#         echo $number2
         number=$number1\_$number2
     fi
 }
@@ -66,17 +64,12 @@ function GetFileNumberListSpecial()
 
 function GetFileNumberListPCM()
 {
-    echo "GetPCMfilelist"
-    echo $1
     ls $1/GammaConvV1_*.root > filesTemp.txt
-
-
-    cat filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
         if [ $4 -eq 0 ]; then
-            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+            number=`echo $fileName | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
         else
             GetFileNumberMerging $fileName $2 2
         fi
@@ -94,7 +87,24 @@ function GetFileNumberListPCMCalo()
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
         if [ $4 -eq 0 ]; then
-            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+            number=`echo $fileName | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        else
+            GetFileNumberMerging $fileName $2 2
+        fi
+        echo $number >> fileNumbers.txt
+    done
+    sort -u fileNumbers.txt > $3
+    cat $3
+}
+
+function GetFileNumberListCalo()
+{
+    ls $1/GammaCalo*.root > filesTemp.txt
+    fileNumbers=`cat filesTemp.txt`
+    rm -f fileNumbers.txt
+    for fileName in $fileNumbers; do
+        if [ $4 -eq 0 ]; then
+            number=`echo $fileName | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
         else
             GetFileNumberMerging $fileName $2 2
         fi
@@ -112,25 +122,6 @@ function GetFileNumberListHeavy()
     for fileName in $fileNumbers; do
         number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
         number+=\_`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 3 | cut -d "." -f1`
-        echo $number >> fileNumbers.txt
-    done
-    sort -u fileNumbers.txt > $3
-    cat $3
-}
-
-function GetFileNumberListCalo()
-{
-    echo "-> GetFileList Calo and separate"
-    ls $1/GammaCalo*.root > filesTemp.txt
-#     cat filesTemp.txt
-    fileNumbers=`cat filesTemp.txt`
-    rm -f fileNumbers.txt
-    for fileName in $fileNumbers; do
-        if [ $4 -eq 0 ]; then
-            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
-        else
-            GetFileNumberMerging $fileName $2 2
-        fi
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $3
@@ -245,13 +236,13 @@ function CopyFileIfNonExisitent()
                 SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2 $5
             done;
             rm -f fileNumbers2.txt
-#             GetFileNumberListCalo $1 $3 fileNumbers2.txt 0
-#             fileNumbers=`cat fileNumbers2.txt`
-#             for fileNumber in $fileNumbers; do
-#                 echo $fileNumber
-#                 SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
-#             done;
-#             rm -f fileNumbers2.txt
+            # GetFileNumberListCalo $1 $3 fileNumbers2.txt 0
+            # fileNumbers=`cat fileNumbers2.txt`
+            # for fileNumber in $fileNumbers; do
+            #     echo $fileNumber
+            #     SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
+            # done;
+            # rm -f fileNumbers2.txt
         fi
     fi
 }
@@ -259,13 +250,16 @@ function CopyFileIfNonExisitent()
 
 function CopyFileIfNonExisitentDiffList()
 {
+    # Print function arguments
     echo "Arguments for CopyFileIfNonExisitentDiffList:"
-    echo "  file path: "$1
-    echo "  alien path: " $2
-    echo "  list: " $3
-    echo "  number of subdirectories: " $4
-    echo "  detailed path subdirs: " $5
-    echo "  separate also the tree: " $6
+    echo "  file path:                \"$1\""
+    echo "  alien path:               \"$2\""
+    echo "  list:                     \"$3\""
+    echo "  number of subdirectories: \"$4\""
+    echo "  detailed path subdirs:    \"$5\""
+    echo "  separate also the tree:   \"$6\""
+
+    # Download and copy with proper file name
     if [ $DOWNLOADON == 1 ]; then
         if [ -f $1/$3/root_archive.zip ] && [ -s $1/$3/root_archive.zip ]; then
             echo "$1/$3/root_archive.zip exists";
@@ -326,6 +320,7 @@ function CopyFileIfNonExisitentDiffList()
         unzip -u $1/$3/root_archive.zip -d $1/$3/
     fi
 
+    # Seperate if required
     if [ $SEPARATEON == 1 ]; then
         rm -f fileNumbers2.txt
         GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt 0
@@ -341,13 +336,13 @@ function CopyFileIfNonExisitentDiffList()
             echo $fileNumber
             SeparateCutsIfNeeded $1/$3/GammaConvCalo_$fileNumber 2 $6
         done;
-#         rm -f fileNumbers2.txt
-#         GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt 0
-#         fileNumbers=`cat fileNumbers2.txt`
-#         for fileNumber in $fileNumbers; do
-#             echo $fileNumber
-#             SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
-#         done;
+        # rm -f fileNumbers2.txt
+        # GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt 0
+        # fileNumbers=`cat fileNumbers2.txt`
+        # for fileNumber in $fileNumbers; do
+        #     echo $fileNumber
+        #     SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
+        # done;
         rm -f fileNumbers2.txt
         GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt 0
         fileNumbers=`cat fileNumbers2.txt`
@@ -357,31 +352,25 @@ function CopyFileIfNonExisitentDiffList()
         rm -f fileNumbers2.txt
     fi
 
+    # Copy to main directory
     rm -f fileNumbers2.txt
     GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt 1
-    fileNumbers=`cat fileNumbers2.txt`
-    for fileNumber in $fileNumbers; do
-        echo $fileNumber
+    for fileNumber in `cat fileNumbers2.txt`; do
         cp $1/$3/GammaConvV1_$fileNumber.root $1/GammaConvV1-$3\_$fileNumber.root
     done;
     rm -f fileNumbers2.txt
     GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt 1
-    fileNumbers=`cat fileNumbers2.txt`
-    for fileNumber in $fileNumbers; do
-        echo $fileNumber
+    for fileNumber in `cat fileNumbers2.txt`; do
         cp $1/$3/GammaConvCalo_$fileNumber.root $1/GammaConvCalo-$3\_$fileNumber.root
     done;
-    rm -f fileNumbers2-Calo.txt
-    GetFileNumberListCalo $1/$3 $4 fileNumbers2-Calo.txt 1
-    fileNumbers=`cat fileNumbers2-Calo.txt`
-    for fileNumber in $fileNumbers; do
-        echo $fileNumber
+    rm -f fileNumbers2.txt
+    GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt 1
+    for fileNumber in `cat fileNumbers2.txt`; do
         cp $1/$3/GammaCalo_$fileNumber.root $1/GammaCalo-$3\_$fileNumber.root
     done;
     rm -f fileNumbers2.txt
     GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt 1
-    fileNumbers=`cat fileNumbers2.txt`
-    for fileNumber in $fileNumbers; do
+    for fileNumber in `cat fileNumbers2.txt`; do
         cp $1/$3/HeavyNeutralMesonToGG_$fileNumber.root $1/HeavyNeutralMesonToGG-$3\_$fileNumber.root
     done
     rm -f fileNumbers2.txt
@@ -391,14 +380,13 @@ function CopyFileIfNonExisitentDiffList()
 function ChangeStructureIfNeededPCM()
 {
     if [[ $1 == *"Basic.root"* ]]; then
-        echo "Nothing to be done"
+        echo "Nothing to be done: Basis.root"
     else
-        echo $1
         GetFileNumberMerging $1 $3 2
-        echo $number
         cp $2/GammaConvV1$5_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
-            echo "nothing to be done";
+        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&
+           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
+            echo "Nothing to be done: \"CutSelection_GammaConvV1_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log\"\,0\)
         fi
@@ -408,14 +396,13 @@ function ChangeStructureIfNeededPCM()
 function ChangeStructureIfNeededPCMCalo()
 {
     if [[ $1 == *"Basic.root"* ]]; then
-        echo "Nothing to be done"
+        echo "Nothing to be done: Basis.root"
     else
-        echo $1
         GetFileNumberMerging $1 $3 2
-        echo $number
         cp $2/GammaConvCalo$5_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
-            echo "nothing to be done";
+        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&
+           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
+            echo "Nothing to be done: \"CutSelection_GammaConvCalo_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log\"\,2\)
         fi
@@ -425,14 +412,13 @@ function ChangeStructureIfNeededPCMCalo()
 function ChangeStructureIfNeededCalo()
 {
     if [[ $1 == *"Basic.root"* ]]; then
-        echo "Nothing to be done"
+        echo "Nothing to be done: Basis.root"
     else
-        echo $1
         GetFileNumberMerging $1 $3 2
-        echo $number
         cp $2/GammaCalo$5_$number.root $OUTPUTDIR/GammaCalo_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
-            echo "nothing to be done";
+        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&
+           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
+            echo "Nothing to be done: \"CutSelection_GammaCalo_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log\"\,4\)
         fi
@@ -442,7 +428,7 @@ function ChangeStructureIfNeededCalo()
 function ChangeStructureIfNeededCaloMerged()
 {
     if [[ $1 == *"Basic.root"* ]]; then
-        echo "Nothing to be done"
+        echo "Nothing to be done: Basis.root"
     else
         number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
         number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
@@ -465,7 +451,7 @@ function ChangeStructureIfNeededCaloMerged()
 function ChangeStructureIfNeededHeavy()
 {
     if [[ $1 == *"Basic.root"* ]]; then
-        echo "Nothing to be done"
+        echo "Nothing to be done: Basis.root"
     else
         number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
         number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`

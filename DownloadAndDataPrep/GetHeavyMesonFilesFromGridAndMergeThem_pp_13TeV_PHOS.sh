@@ -78,33 +78,33 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d16MC=""
         LHC17d18MC=""
     # LHC data files
-        LHC16Data="2374" # comment: "eta' test"
-        # LHC16dData="child_1"
-        # LHC16gData="child_2"
-        # LHC16hData="child_3"
-        # LHC16iData="child_4"
+        LHC16Data="2422" # comment: "Remco & Hannah request"
+        LHC16dData="child_1"
+        LHC16gData="child_2"
+        LHC16hData="child_3"
+        LHC16iData="child_4"
         LHC16jData="child_5"
         LHC16kData="child_6"
         LHC16lData="child_7"
-        # LHC16oData="child_8"
-        # LHC16pData="child_9"
-        # LHC16eData="child_10"
+        LHC16oData="child_8"
+        LHC16pData="child_9"
+        LHC16eData="child_10"
     # Monte Carlo data files
-        LHC17MC="3341" # comment: "omega + eta'"
+        # LHC17MC="3341" # comment: "omega + eta'"
         # LHC17f6MC="child_1"    # anch LHC16d
         # LHC17f9MC="child_2"    # anch LHC16e
         # LHC17d17MC="child_3"   # anch LHC16g
         # LHC17f5MC="child_4"    # anch LHC16h
         # LHC17d3MC="child_5"    # anch LHC16i
-        LHC17e5MC="child_6"    # anch LHC16j
-        LHC17d20a1MC="child_7" # anch LHC16k
-        LHC17d20a2MC="child_8" # anch LHC16l
+        # LHC17e5MC="child_6"    # anch LHC16j
+        # LHC17d20a1MC="child_7" # anch LHC16k
+        # LHC17d20a2MC="child_8" # anch LHC16l
         # LHC17d16MC="child_9"   # anch LHC16o
         # LHC17d18MC="child_10"  # anch LHC16p
 #
 
 #Set output directory
-    TRAINDIR="vAN-20180123-1" # local main directory to which the files will be downloaded
+    TRAINDIR="vAN-20180727-1" # local main directory to which the files will be downloaded
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
