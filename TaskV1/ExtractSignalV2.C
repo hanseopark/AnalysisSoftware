@@ -6247,14 +6247,14 @@ void SaveCorrectionHistos(TString cutID, TString prefix3){
     }
     if (fHistoMCMesonPt){
         fHistoMCMesonPt->SetName("MC_Meson_genPt_oldBin");
-        fHistoMCMesonPt->Scale(1./fHistoMCMesonPt->GetBinWidth(5));
+	DivideTH1ByBinWidth(fHistoMCMesonPt);
         fHistoMCMesonPt->Write();
     }
 
     // write input spectra w/o particle weights
     if (fHistoMCMesonPtWOWeights){
         fHistoMCMesonPtWOWeights->SetName("MC_Meson_genPt_WOWeights");
-        fHistoMCMesonPtWOWeights->Scale(1./fHistoMCMesonPtWOWeights->GetBinWidth(5));
+	DivideTH1ByBinWidth(fHistoMCMesonPtWOWeights);
         fHistoMCMesonPtWOWeights->Write();
     }
     // write particle weights
