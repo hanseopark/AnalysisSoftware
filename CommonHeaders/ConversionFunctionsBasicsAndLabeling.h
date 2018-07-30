@@ -567,7 +567,7 @@
     //**** Decodes from the mode the respective reco process and return correct label ****
     //************************************************************************************
     TString ReturnTextReconstructionProcess(Int_t mode){
-        mode -= 100;
+        if( mode>=100 ) mode -= 100;
         switch (mode){
             case 0:
                 return "PCM";
@@ -628,6 +628,7 @@
     //**** This method is used for filename text.                                     ****
     //************************************************************************************
     TString ReturnTextReconstructionProcessWrite(Int_t mode){
+        if( mode>=100 ) mode -= 100;
         switch (mode){
             case 0:
                 return "PCM";
@@ -674,16 +675,6 @@
                 return "Pi0PHOS-Dal";
             case 50:
                 return "Pi0DCAL-Dal";
-            case 100:
-                return "PCM heavy meson";
-            case 101:
-                return "PCM-#gamma^{*}#gamma heavy meson";
-            case 102:
-                return "PCM-EMC heavy meson";
-            case 103:
-                return "PCM-PHOS heavy meson";
-            case 104:
-                return "EMC heavy meson";
             default:
                 return "not known";
         }
