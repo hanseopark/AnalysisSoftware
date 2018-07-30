@@ -5341,11 +5341,11 @@
         //********************************** Binning for Eta' *********************************************
         //*************************************************************************************************
         } else if (setPi0.CompareTo("EtaPrime") == 0){
-            // Initialise 
+            // Initialise members
             fNBinsPt           = numberOfBins;
             fBinsPt            = new Double_t[30];
             fNRebin            = new Int_t[29];
-            fStartPtBin        = GetStartBin("EtaPrime","7TeV",modi);
+            fStartPtBin        = GetStartBin( "EtaPrime", energy, modi );
             Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi);
             // Set binning according to energy/mode/trigger cases
             if     (energy.EqualTo("7TeV"))  CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);

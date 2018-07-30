@@ -139,7 +139,7 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
-    fDetectionProcess   = ReturnFullTextReconstructionProcess(fMode);
+    fDetectionProcess   = ReturnFullTextReconstructionProcess(mode);
     //**************************** Determine Centrality *************************************************************
     centralityString        = GetCentralityString(fEventCutSelection);
     cout << "Centrality: " << centralityString.Data() << endl;
@@ -491,30 +491,37 @@ void ExtractSignalV2(   TString meson                   = "",
 
         // Loading histograms for Eta
         if( fMesonId == 221){
-            // histos without acceptance requirement
-            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());
-                // (not the best; better having a 2D Pt_vs_Rapid in case we change limits)
-            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
-            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
-
-            // histos with gamma's in acceptance
-            fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
-            fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
-            fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
+            if( mode<100 ) { // (heavy meson mode has different file naming scheme)
+                // Histograms without acceptance requirement
+                fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data()); // (not the best; better having a 2D Pt_vs_Rapid in case we change limits)
+                fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
+                fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
+                // Histograms with gammas in acceptance
+                fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
+                fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
+            } else {
+                // Histograms without acceptance requirement
+                fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMeson.Data()); // (not the best; better having a 2D Pt_vs_Rapid in case we change limits)
+                fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonWOWeights.Data());
+                fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonWOEvtWeights.Data());
+                // Histograms with gammas in acceptance
+                fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAcc.Data());
+                fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAccWOEvtWeights.Data());
+            }
         }
 
         // Loading histograms for EtaPrime
         else if( fMesonId == 331 ){
-            // histos without acceptance requirement
-            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());
-                // (not the best; better having a 2D Pt_vs_Rapid in case we change limits)
-            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
-            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOEvtWeights.Data());
-
-            // histos with gamma's in acceptance
-            fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
-            fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
-            fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
+            // Histograms without acceptance requirement
+            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMeson.Data()); // (not the best; better having a 2D Pt_vs_Rapid in case we change limits)
+            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonWOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonWOEvtWeights.Data());
+            // Histograms with gammas in acceptance
+            fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAcc.Data());
+            fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAccWOWeights.Data());
+            fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCHeavyMesonAccWOEvtWeights.Data());
         }
 
         // prepare histos for correct error calculation
@@ -3175,18 +3182,18 @@ void SetCorrectMCHistogrammNames(TString mesonType){
         ObjectNameMCEta                     = "MC_Eta_Pt";
         ObjectNameMCEtaWOWeights            = "MC_Eta_WOWeights_Pt";
         ObjectNameMCEtaWOEvtWeights         = "MC_Eta_WOEventWeights_Pt";
-    // EtaPrime
-        ObjectNameMCEtaPrimeAcc                  = "MC_MesonInAcc_Pt";
-        ObjectNameMCEtaPrimeAccWOWeights         = "MC_MesonWOWeightInAcc_Pt";
+    // EtaPrime / Heavy meson
+        ObjectNameMCHeavyMesonAcc                  = "MC_MesonInAcc_Pt";
+        ObjectNameMCHeavyMesonAccWOWeights         = "MC_MesonWOWeightInAcc_Pt";
         if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) )
-            ObjectNameMCEtaPrimeAccWOWeights = "MC_MesonInAcc_Pt";
+            ObjectNameMCHeavyMesonAccWOWeights = "MC_MesonInAcc_Pt";
         if(fMode == 4 || fMode == 12 || fMode == 5)
-            ObjectNameMCEtaPrimeAccWOEvtWeights    = "MC_MesonWOEvtWeightInAcc_Pt";
+            ObjectNameMCHeavyMesonAccWOEvtWeights    = "MC_MesonWOEvtWeightInAcc_Pt";
         else
-            ObjectNameMCEtaPrimeAccWOEvtWeights    = "MC_Meson_WOEventWeightsInAcc_Pt";
-        ObjectNameMCEtaPrime                = "MC_Meson_Pt";
-        ObjectNameMCEtaPrimeWOWeights       = "MC_Meson_WOWeights_Pt";
-        ObjectNameMCEtaPrimeWOEvtWeights    = "MC_Meson_WOEventWeights_Pt";
+            ObjectNameMCHeavyMesonAccWOEvtWeights    = "MC_Meson_WOEventWeightsInAcc_Pt";
+        ObjectNameMCHeavyMeson                = "MC_Meson_Pt";
+        ObjectNameMCHeavyMesonWOWeights       = "MC_Meson_WOWeights_Pt";
+        ObjectNameMCHeavyMesonWOEvtWeights    = "MC_Meson_WOEventWeights_Pt";
 
     // MC histograms secondaries
     if (mesonType.Contains("Pi0")){
