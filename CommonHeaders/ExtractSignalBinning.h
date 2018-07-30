@@ -171,9 +171,6 @@
                                                     TString centrality                  = ""
                                                ){
 
-        // Heavy meson mode fix
-        if( mode>=100 ) mode -= 100;
-
         if (triggerSet != -1){
             if (energy.CompareTo("2.76TeV") == 0){
                 if (triggerSet == 1)
