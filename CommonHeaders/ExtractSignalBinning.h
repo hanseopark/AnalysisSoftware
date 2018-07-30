@@ -57,25 +57,28 @@
                                                         25.0,30.0};
 
     //*************************************************************************************************
-    //******************** CopyArrayAndSize as helper function for GetBinning *************************
+    //******************** CopyVectorToArray as helper function for Get/InitializeBinning *************
     //*************************************************************************************************
+    // Function that COMPLETELY copies a vector containing bin definition to a C array
+    // !!! Use return value to set binningMax, like so:
+    //     binningMax = CopyVectorToArray (fBinsEtaPrime7TeVPt, binning );
     template<class TYPE_t>
-    void CopyVectorToArray( vector<TYPE_t> arrayFrom, TYPE_t* arrayTo ) {
-        for( size_t i=0; i<arrayFrom.size(); ++i ) arrayTo[i] = arrayFrom[i];
+    size_t CopyVectorToArray( vector<TYPE_t> vectorFrom, TYPE_t* arrayTo ) {
+        for( size_t i=0; i<vectorFrom.size(); ++i ) arrayTo[i] = vectorFrom[i];
+        return vectorFrom.size();
     }
+    // Function that copies a vector containing bin definition to a C array, UP TO A USER-DEFINED SIZE
+    // !!! Use return value to set maxNBins, like so:
+    //     maxNBins = CopyVectorToArray( fBinsEtaPrime7TeVPt, binning, 10 );
     template<class TYPE_t>
-    void CopyVectorToArrayMax( vector<TYPE_t> arrayFrom, TYPE_t* arrayTo, size_t maxBin ) {
-        if( maxBin>arrayFrom.size() ) {
-            cout << "Max bin too large (" << maxBin <<
-            "), so set to vector size (" << arrayFrom.size() << ")" << endl;
-            maxBin = arrayFrom.size();
+    size_t CopyVectorToArray( vector<TYPE_t> vectorFrom, TYPE_t* arrayTo, size_t maxNBins ) {
+        if( maxNBins>vectorFrom.size() ) {
+            cout << "Max bin too large (" << maxNBins <<
+            "), so set to vector size (" << vectorFrom.size() << ")" << endl;
+            maxNBins = vectorFrom.size();
         }
-        for( size_t i=0; i<maxBin; ++i ) arrayTo[i] = arrayFrom[i];
-    }
-    template<class TYPE_t>
-    void CopyArrayAndSize( vector<TYPE_t> arrayFrom, TYPE_t* arrayTo, Int_t& n ) {
-        n = arrayFrom.size() - 1;
-        CopyVectorToArray(arrayFrom,arrayTo);
+        for( size_t i=0; i<maxNBins; ++i ) arrayTo[i] = vectorFrom[i];
+        return maxNBins;
     }
 
     //*************************************************************************************************
@@ -1942,30 +1945,30 @@
                 cout<<"Get Binning(), Pi0 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
                 if (DCAcase==kTRUE) CopyVectorToArray(fBinsPi013TeVPCMTrigINT7PtDCA,binning);
                 else if( mode==0 ) {
-                    if (SpecialTrigger == -1) CopyVectorToArray(fBinsPi013TeVPCMTrigCombPt,binning);
+                    if (SpecialTrigger == -1) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigCombPt,binning);
                     else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
-                        if( energy.Contains("RBins")) CopyVectorToArray(fBinsPi013TeVPCMTrigINT7RBinsPt,binning);
-                        else CopyVectorToArray(fBinsPi013TeVPCMTrigINT7Pt,binning);
+                        if( energy.Contains("RBins")) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigINT7RBinsPt,binning);
+                        else maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigINT7Pt,binning);
                     }
-                    else if (SpecialTrigger==1) CopyVectorToArray(fBinsPi013TeVPCMTrigEMC7Pt,binning);
-                    else if (SpecialTrigger==2) CopyVectorToArray(fBinsPi013TeVPCMTrigEG1Pt, binning);
-                    else if (SpecialTrigger==3) CopyVectorToArray(fBinsPi013TeVPCMTrigEG2Pt, binning);
+                    else if (SpecialTrigger==1) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigEMC7Pt,binning);
+                    else if (SpecialTrigger==2) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigEG1Pt, binning);
+                    else if (SpecialTrigger==3) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMTrigEG2Pt, binning);
                         } else if (mode==2){
                     if( SpecialTrigger == 0 ||
                         SpecialTrigger == 4 ||
-                        SpecialTrigger == 5 )     CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
-                    else if (SpecialTrigger == 3) CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG2Pt, binning);
-                    else if (SpecialTrigger == 2) CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG1Pt, binning);
+                        SpecialTrigger == 5 )     maxNBins = CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
+                    else if (SpecialTrigger == 3) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG2Pt, binning);
+                    else if (SpecialTrigger == 2) maxNBins = CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG1Pt, binning);
                 } else if( mode==4 ) {
                     if( SpecialTrigger == 0 ||
                         SpecialTrigger == 4 ||
-                        SpecialTrigger == 5 )     CopyVectorToArray(fBinsPi013TeVEMCTrigINT7Pt,binning);
-                    else if (SpecialTrigger == 1) CopyVectorToArray(fBinsPi013TeVEMCTrigEMC7Pt,binning);
-                    else if (SpecialTrigger == 3) CopyVectorToArray(fBinsPi013TeVEMCTrigEG2Pt, binning);
-                    else if (SpecialTrigger == 2) CopyVectorToArray(fBinsPi013TeVEMCTrigEG1Pt, binning);
-                    else                          CopyVectorToArray(fBinsPi013TeVEMCTrigCombPt,binning);
-                } else if (mode==10) CopyVectorToArray(fBinsPi013TeVPtmEMC,binning);
-                else CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
+                        SpecialTrigger == 5 )     maxNBins = CopyVectorToArray(fBinsPi013TeVEMCTrigINT7Pt,binning);
+                    else if (SpecialTrigger == 1) maxNBins = CopyVectorToArray(fBinsPi013TeVEMCTrigEMC7Pt,binning);
+                    else if (SpecialTrigger == 3) maxNBins = CopyVectorToArray(fBinsPi013TeVEMCTrigEG2Pt, binning);
+                    else if (SpecialTrigger == 2) maxNBins = CopyVectorToArray(fBinsPi013TeVEMCTrigEG1Pt, binning);
+                    else                          maxNBins = CopyVectorToArray(fBinsPi013TeVEMCTrigCombPt,binning);
+                } else if (mode==10) maxNBins = CopyVectorToArray(fBinsPi013TeVPtmEMC,binning);
+                else maxNBins = CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
                 for( Int_t i=0; i<binningMax+1; i++ ) cout << binning[i] << ", ";
                 cout << endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
@@ -2644,7 +2647,7 @@
                     }
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
-                if( mode==0 ) CopyVectorToArray(fBinsEta13TeVLowBPt,binning);
+                if( mode==0 ) maxNBins = CopyVectorToArray(fBinsEta13TeVLowBPt,binning);
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
                     maxNBins = 26;
@@ -2917,8 +2920,8 @@
                 }
             }
         } else if ( meson.CompareTo("EtaPrime") == 0) {
-            if     (energy.EqualTo("7TeV"))  CopyArrayAndSize(fBinsEtaPrime7TeVPt, binning,binningMax);
-            else if(energy.EqualTo("13TeV")) CopyArrayAndSize(fBinsEtaPrime13TeVPt,binning,binningMax);
+            if     (energy.EqualTo("7TeV"))  maxNBins =  = CopyVectorToArray(fBinsEtaPrime7TeVPt, binning);
+            else if(energy.EqualTo("13TeV")) maxNBins =  = CopyVectorToArray(fBinsEtaPrime13TeVPt,binning);
         } else if (meson.Contains("Omega")){
             if (energy.CompareTo("7TeV") == 0){
                 if(mode == 40){
