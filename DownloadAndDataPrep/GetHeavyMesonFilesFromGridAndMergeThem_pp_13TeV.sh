@@ -13,7 +13,7 @@
 #! /bin/bash
 source basicFunction.sh
 
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 SEPARATEON=0 # used in basisFunctions.sh?
 CLEANUP=1 # used in basisFunctions.sh?
@@ -76,8 +76,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d16MC=""
         LHC17d18MC=""
     # LHC data files
-        LHC16Data="2374" # comment: "eta' test"
-        LHC16Data="2374" # comment: "eta' test"
+        # LHC16Data="2374" # comment: "eta' test"
+        LHC16Data="2422" # comment: "Remco PHOS request"
         LHC16dData="child_1"
         LHC16gData="child_2"
         LHC16hData="child_3"
@@ -89,7 +89,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC16pData="child_9"
         LHC16eData="child_10"
     # Monte Carlo data files
-        LHC17MC="3341" # comment: "omega + eta'"
+        # LHC17MC="3341" # comment: "omega + eta'"
+        LHC17MC="3398" # comment: "Remco PHOS request"
+        # LHC17MC="3399" # comment: "Remco PHOS request" EXTRA
         LHC17f6MC="child_1"
         LHC17f9MC="child_2"
         LHC17d17MC="child_3"
@@ -103,124 +105,161 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 #
 
 # Set output directory (offline and remote)
-    TRAINDIR="vAN-20180123-1" # comment: "eta' test"
-    TRAINDIR="vAN-20180123-1" # comment: "Remco PHOS request"
+    # TRAINDIR="vAN-20180123-1" # comment: "eta' test"
+    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
 # Set local and GRID directory names
-    echo ""
-    echo "--> Setting GRID and local output directories..."
+    echo -e "\n\n--== SETTING REMOTE AND LOCAL OUTPUT DIRECTORIES ==--\n"
     mkdir -p $OUTPUTDIR/CutSelections # this folder will contain txt files with cutnumbers
     # LHC data files
         if [ -n "$LHC16dData" ]; then # child 1
             LHC16dData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16dData$"`
             OUTPUTDIR_LHC16d=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16dData
-            echo "Output dir LHC16d: $OUTPUTDIR_LHC16d"
+            echo "Directories for LHC16d:"
+            echo "  remote \"$LHC16dData\""
+            echo "  local  \"$OUTPUTDIR_LHC16d\""
         fi
         if [ -n "$LHC16gData" ]; then # child 2
             LHC16gData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16gData$"`
             OUTPUTDIR_LHC16g=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16gData
-            echo "Output dir LHC16g: $OUTPUTDIR_LHC16g"
+            echo "Directories for LHC16g:"
+            echo "  remote \"$LHC16gData\""
+            echo "  local  \"$OUTPUTDIR_LHC16g\""
         fi
         if [ -n "$LHC16hData" ]; then # child 3
             LHC16hData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16hData$"`
             OUTPUTDIR_LHC16h=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16hData
-            echo "Output dir LHC16h: $OUTPUTDIR_LHC16h"
+            echo "Directories for LHC16h:"
+            echo "  remote \"$LHC16hData\""
+            echo "  local  \"$OUTPUTDIR_LHC16h\""
         fi
         if [ -n "$LHC16iData" ]; then # child 4
             LHC16iData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16iData$"`
             OUTPUTDIR_LHC16i=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16iData
-            echo "Output dir LHC16i: $OUTPUTDIR_LHC16i"
+            echo "Directories for LHC16i:"
+            echo "  remote \"$LHC16iData\""
+            echo "  local  \"$OUTPUTDIR_LHC16i\""
         fi
         if [ -n "$LHC16jData" ]; then # child 5
             LHC16jData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16jData$"`
             OUTPUTDIR_LHC16j=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16jData
-            echo "Output dir LHC16j: $OUTPUTDIR_LHC16j"
+            echo "Directories for LHC16j:"
+            echo "  remote \"$LHC16jData\""
+            echo "  local  \"$OUTPUTDIR_LHC16j\""
         fi
         if [ -n "$LHC16kData" ]; then # child 6
             LHC16kData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16kData$"`
             OUTPUTDIR_LHC16k=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16kData
-            echo "Output dir LHC16k: $OUTPUTDIR_LHC16k"
+            echo "Directories for LHC16k:"
+            echo "  remote \"$LHC16kData\""
+            echo "  local  \"$OUTPUTDIR_LHC16k\""
         fi
         if [ -n "$LHC16lData" ]; then # child 7
             LHC16lData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16lData$"`
             OUTPUTDIR_LHC16l=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16lData
-            echo "Output dir LHC16l: $OUTPUTDIR_LHC16l"
+            echo "Directories for LHC16l:"
+            echo "  remote \"$LHC16lData\""
+            echo "  local  \"$OUTPUTDIR_LHC16l\""
         fi
         if [ -n "$LHC16oData" ]; then # child 8
             LHC16oData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16oData$"`
             OUTPUTDIR_LHC16o=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16oData
-            echo "Output dir LHC16o: $OUTPUTDIR_LHC16o"
+            echo "Directories for LHC16o:"
+            echo "  remote \"$LHC16oData\""
+            echo "  local  \"$OUTPUTDIR_LHC16o\""
         fi
         if [ -n "$LHC16pData" ]; then # child 9
             LHC16pData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16pData$"`
             OUTPUTDIR_LHC16p=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16pData
-            echo "Output dir LHC16p: $OUTPUTDIR_LHC16p"
+            echo "Directories for LHC16p:"
+            echo "  remote \"$LHC16pData\""
+            echo "  local  \"$OUTPUTDIR_LHC16p\""
         fi
         if [ -n "$LHC16eData" ]; then # child 10
             LHC16eData=`alien_ls $AliTrainDirDt/ | grep "^$LHC16Data.*$LHC16eData$"`
             OUTPUTDIR_LHC16e=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirDt)-$LHC16eData
-            echo "Output dir LHC16e: $OUTPUTDIR_LHC16e"
+            echo "Directories for LHC16e:"
+            echo "  remote \"$LHC16eData\""
+            echo "  local  \"$OUTPUTDIR_LHC16e\""
         fi
     # Monte Carlo files
         if [ -n "$LHC17f6MC" ]; then # child 1
             LHC17f6MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f6MC$"`
             OUTPUTDIR_LHC17f6=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f6MC
-            echo "Output dir LHC17f6: $OUTPUTDIR_LHC17f6"
+            echo "Directories for LHC17f6:"
+            echo "  remote \"$LHC17f6MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17f6\""
         fi
         if [ -n "$LHC17f9MC" ]; then # child 2
             LHC17f9MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f9MC$"`
             OUTPUTDIR_LHC17f9=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f9MC
-            echo "Output dir LHC17f9: $OUTPUTDIR_LHC17f9"
+            echo "Directories for LHC17f9:"
+            echo "  remote \"$LHC17f9MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17f9\""
         fi
         if [ -n "$LHC17d17MC" ]; then # child 3
             LHC17d17MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d17MC$"`
             OUTPUTDIR_LHC17d17=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d17MC
-            echo "Output dir LHC17d17: $OUTPUTDIR_LHC17d17"
+            echo "Directories for LHC17d17:"
+            echo "  remote \"$LHC17d17MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d17\""
         fi
         if [ -n "$LHC17f5MC" ]; then # child 4
             LHC17f5MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f5MC$"`
             OUTPUTDIR_LHC17f5=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f5MC
-            echo "Output dir LHC17f5: $OUTPUTDIR_LHC17f5"
+            echo "Directories for LHC17f5:"
+            echo "  remote \"$LHC17f5MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17f5\""
         fi
         if [ -n "$LHC17d3MC" ]; then # child 5
             LHC17d3MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d3MC$"`
             OUTPUTDIR_LHC17d3=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d3MC
-            echo "Output dir LHC17d3: $OUTPUTDIR_LHC17d3"
+            echo "Directories for LHC17d3:"
+            echo "  remote \"$LHC17d3MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d3\""
         fi
         if [ -n "$LHC17e5MC" ]; then # child 6
             LHC17e5MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17e5MC$"`
             OUTPUTDIR_LHC17e5=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17e5MC
-            echo "Output dir LHC17e5: $OUTPUTDIR_LHC17e5"
+            echo "Directories for LHC17e5:"
+            echo "  remote \"$LHC17e5MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17e5\""
         fi
         if [ -n "$LHC17d20a1MC" ]; then # child 7
             LHC17d20a1MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d20a1MC$"`
             OUTPUTDIR_LHC17d20a1=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a1MC
-            echo "Output dir LHC17d20a1: $OUTPUTDIR_LHC17d20a1"
+            echo "Directories for LHC17d20a1:"
+            echo "  remote \"$LHC17d20a1MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d20a1\""
         fi
         if [ -n "$LHC17d20a2MC" ]; then # child 8
             LHC17d20a2MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d20a2MC$"`
             OUTPUTDIR_LHC17d20a2=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a2MC
-            echo "Output dir LHC17d20a2: $OUTPUTDIR_LHC17d20a2"
+            echo "Directories for LHC17d20a2:"
+            echo "  remote \"$LHC17d20a2MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d20a2\""
         fi
         if [ -n "$LHC17d16MC" ]; then # child 9
             LHC17d16MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d16MC$"`
             OUTPUTDIR_LHC17d16=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d16MC
-            echo "Output dir LHC17d16: $OUTPUTDIR_LHC17d16"
+            echo "Directories for LHC17d16:"
+            echo "  remote \"$LHC17d16MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d16\""
         fi
         if [ -n "$LHC17d18MC" ]; then # child 10
             LHC17d18MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d18MC$"`
             OUTPUTDIR_LHC17d18=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d18MC
-            echo "Output dir LHC17d18: $OUTPUTDIR_LHC17d18"
+            echo "Directories for LHC17d18:"
+            echo "  remote \"$LHC17d18MC\""
+            echo "  local  \"$OUTPUTDIR_LHC17d18\""
         fi
 #
 
 # Download files from the GRID!
     if [ $DOWNLOADON == 1 ]; then
-        echo ""
-        echo ""
-        echo "--> Downloading files from the GRID..."
+        echo -e "\n\n--== DOWNLOADING FILES FROM THE GRID ==--\n"
     # LHC data files
         if [ -n "$LHC16dData" ]; then # child 1
             echo ""
@@ -356,9 +395,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 #
 
 # Copy files with proper name
-        echo ""
-        echo ""
-        echo "--> Changing structure if needed..."
+        echo -e "\n\n--== CHANGING STRUCTURE IF NEEDED ==--\n"
     # LHC data files
         if [ -n "$LHC16dData" ]; then # child 1
             for fileName in `ls $OUTPUTDIR_LHC16d/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
@@ -480,17 +517,13 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             done
         fi
         if [ -n "$LHC17f9MC" ]; then    # child 2
-            echo "Testen"
             for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                echo fileName $fileName
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
             for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
-                echo fileName $fileName
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTracks" "-DPGTracks"
             done
             for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
-                echo fileName $fileName
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
         fi
@@ -539,7 +572,6 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             done
         fi
         if [ -n "$LHC17d20a1MC" ]; then # child 7
-            echo $OUTPUTDIR_LHC17d20a1
             for fileName in `ls $OUTPUTDIR_LHC17d20a1/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1 $NSlashes "MC_LHC17d20a1-anchor16k-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
@@ -587,9 +619,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 
 # Merge ROOT files
     if [ $MERGEON == 1 ]; then
-        echo ""
-        echo ""
-        echo "--> Merging ROOT files"
+        echo -e "\n\n--== MERGING ROOT FILES ==--\n"
         filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16d-pass$passNr-DPGTracks\_*.root` # will be used to get the number, so period doesn't matter
         # LHC data files
             echo ""
