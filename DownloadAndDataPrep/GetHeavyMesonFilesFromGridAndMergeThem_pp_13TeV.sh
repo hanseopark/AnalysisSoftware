@@ -77,6 +77,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC=""
     # LHC data files
         LHC16Data="2374" # comment: "eta' test"
+        LHC16Data="2374" # comment: "eta' test"
         LHC16dData="child_1"
         LHC16gData="child_2"
         LHC16hData="child_3"
@@ -101,8 +102,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC="child_10"
 #
 
-#Set output directory
-    TRAINDIR="vAN-20180123-1" # local main directory to which the files will be downloaded
+# Set output directory (offline and remote)
+    TRAINDIR="vAN-20180123-1" # comment: "eta' test"
+    TRAINDIR="vAN-20180123-1" # comment: "Remco PHOS request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
