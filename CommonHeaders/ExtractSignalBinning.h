@@ -1478,7 +1478,6 @@
                 else if( mode==42 ) startPtBin = 4;
                 else if( mode==44 ) startPtBin = 9;
                 else if( mode==45 ) startPtBin = 7;
-                else if( mode>=100) startPtBin = 3;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
                     startPtBin     = 3;
@@ -3227,9 +3226,6 @@
                             Int_t modi,
                             TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1, Bool_t isDCA = kFALSE, TString centDCA = "", TString periodDCA = "", TString photonCutSelection = ""){
 
-        // Heavy meson fix
-        if( modi>=100 ) modi -= 100;
-
         //*************************************************************************************************
         //************************************ Binning for Cluster ****************************************
         //*************************************************************************************************
@@ -4863,8 +4859,7 @@
                             specialTrigg == 5 )  CopyVectorToArray(fBinsPi0Eta13TeVPtEMCTrigINT7Rebin,fNRebin);
                         else if(specialTrigg==3) CopyVectorToArray(fBinsPi0Eta13TeVEMCTrigEG2PtRebin, fNRebin);
                         else if(specialTrigg==2) CopyVectorToArray(fBinsPi0Eta13TeVEMCTrigEG1PtRebin, fNRebin);
-                    } else if( modi>=100 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
-                    else CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin);
+                    } else CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin);
                 }
                 if ( setPi0.EqualTo("Pi0EtaBinning") ) nIterBGFit = 12;
 
