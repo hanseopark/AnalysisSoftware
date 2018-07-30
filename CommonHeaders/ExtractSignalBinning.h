@@ -2920,8 +2920,8 @@
                 }
             }
         } else if ( meson.CompareTo("EtaPrime") == 0) {
-            if     (energy.EqualTo("7TeV"))  maxNBins =  = CopyVectorToArray(fBinsEtaPrime7TeVPt, binning);
-            else if(energy.EqualTo("13TeV")) maxNBins =  = CopyVectorToArray(fBinsEtaPrime13TeVPt,binning);
+            if     (energy.EqualTo("7TeV"))  maxNBins = CopyVectorToArray(fBinsEtaPrime7TeVPt, binning);
+            else if(energy.EqualTo("13TeV")) maxNBins = CopyVectorToArray(fBinsEtaPrime13TeVPt,binning);
         } else if (meson.Contains("Omega")){
             if (energy.CompareTo("7TeV") == 0){
                 if(mode == 40){
@@ -3215,33 +3215,6 @@
             }
         }
         return  triggerSetTemp;
-    }
-
-    //*************************************************************************************************
-    //******************** SetReBinning as helper function for InitializeBinning **********************
-    //*************************************************************************************************
-    // C array version
-    // template <ptrdiff_t ArrayLenBins, ptrdiff_t ArrayLenRebins>
-    // void SetReBinning( Int_t startBin, Double_t (&binArray)[ArrayLenBins], Int_t (&rebinArray)[ArrayLenRebins] ) {
-    // StdLibrary version
-    void SetReBinning( Int_t startBin, vector<Double_t> binArray, vector<Int_t> rebinArray, TString meson, TString directPhoton ) {
-        // Set start p_T bin
-        fStartPtBin = startBin;
-        // Check number of bins and reset if needed
-        const Int_t maxNBins = binArray.size() - 1;
-        if (fNBinsPt > maxNBins) {
-            if (directPhoton) cout << "You have chosen directphoton Plots. ";
-            cout << "The number of bins you chose for " << meson << " (" << fNBinsPt
-                << " bins) has been reduced to the maximum number of " << maxNBins << " bins.";
-            fNBinsPt = maxNBins;
-        }
-        // Copy bin and rebin arrays
-        for( Int_t i=0; i<=fNBinsPt; i++ ) {
-            fBinsPt[i] = binArray[i];
-            if(i<=fNBinsPt) fNRebin[i] = rebinArray[i];
-        }
-        // Set number of columns and rows
-        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
     }
 
     //*************************************************************************************************
@@ -5368,11 +5341,17 @@
         //********************************** Binning for Eta' *********************************************
         //*************************************************************************************************
         } else if (setPi0.CompareTo("EtaPrime") == 0){
-            fNBinsPt                = numberOfBins;
-            fBinsPt                 = new Double_t[20];
-            fNRebin                 = new Int_t[19];
-            if     (energy.EqualTo("7TeV"))  SetReBinning(1,fBinsEtaPrime7TeVPt, fBinsEtaPrime7TeVPtRebin ,setPi0,directPhoton);
-            else if(energy.EqualTo("13TeV")) SetReBinning(1,fBinsEtaPrime13TeVPt,fBinsEtaPrime13TeVPtRebin,setPi0,directPhoton);
+            // Initialise 
+            fNBinsPt           = numberOfBins;
+            fBinsPt            = new Double_t[30];
+            fNRebin            = new Int_t[29];
+            fStartPtBin        = GetStartBin("EtaPrime","7TeV",modi);
+            Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi);
+            // Set binning according to energy/mode/trigger cases
+            if     (energy.EqualTo("7TeV"))  CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
+            else if(energy.EqualTo("13TeV")) CopyVectorToArray(fBinsEtaPrime13TeVPtRebin,fNRebin);
+            // Set optimum columns and rows
+            GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
         //*************************************************************************************************
         //********************************** Binning for Omega ********************************************
         //*************************************************************************************************
