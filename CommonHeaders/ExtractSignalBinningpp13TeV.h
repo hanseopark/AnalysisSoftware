@@ -437,7 +437,7 @@
                                                            8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                            8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                            8, 8,10,10,10,10,10,16,16,16,
-                                                           16, 16, 16};
+                                                           16, 16, 16}; // size: 83
 
     // ---------------------------------------------------------
     // Combined all triggers - eta
@@ -463,12 +463,12 @@
     Int_t fBinsPi0Eta13TeVDalitzPtRebin[9]              = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
     // PCM
     std::vector<Int_t> fBinsPi0Eta13TeVPtPCMTrigINT7Rebin { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
-                                                            4, 4, 4 };
+                                                            4, 4, 4 }; // size: 13
     // EMC
     std::vector<Int_t> fBinsPi0Eta13TeVPtEMCTrigINT7Rebin { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                             2, 2, 4, 4, 4, 4, 4, 4, 4, 4,
                                                             4, 4, 5, 5, 5, 8, 8, 8, 8, 8,
-                                                            10, 10, 20, 20};
+                                                            10, 10, 20, 20}; // size: 34
     std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigEG2PtRebin { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -476,7 +476,7 @@
                                                            4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                            4, 4, 4, 4, 4, 8, 8, 8, 8, 8,
                                                            8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                                                           8, 8, 10, 10, 20};
+                                                           8, 8, 10, 10, 20}; // size: 75
     std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigEG1PtRebin { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -485,12 +485,12 @@
                                                            4, 4, 4, 4, 4, 8, 8, 8, 8, 8,
                                                            8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                            8, 8, 8, 8, 8, 8, 8, 16, 16, 16,
-                                                           16 };
+                                                           16 }; // size: 81
     // PCM-EMC
     std::vector<Int_t> fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin { 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                               2, 4, 4, 8, 8, 10, 10, 10 };
+                                                               2, 4, 4, 8, 8, 10, 10, 10 }; // size: 39
     std::vector<Int_t> fBinsPi0Eta13TeVPCMEMCTrigEG2PtRebin { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                               2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                               2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -499,7 +499,7 @@
                                                               4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                               6, 6, 6, 6, 6, 6, 6, 6, 6, 8,
                                                               8, 8, 8, 8, 8, 8, 8, 8,10,15,
-                                                              20, 20 };
+                                                              20, 20 }; // size: 82
     std::vector<Int_t> fBinsPi0Eta13TeVPCMEMCTrigEG1PtRebin { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                               2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                               2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -508,7 +508,7 @@
                                                               4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                               4, 4, 4, 4, 8, 8, 8, 8, 8, 8,
                                                               8, 8,10,10,10,10,10,16,16,16,
-                                                              16, 16, 16 };
+                                                              16, 16, 16 }; // size: 83
 
     // ---------------------------------------------------------
     // Direct photon binnings
@@ -554,10 +554,10 @@
 
     vector<Double_t> fBinsEta13TeVLowBPt { 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 0.9, 1.0, 1.1, 1.2,
                                            1.3, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
-                                           6.0, 15. };
+                                           6.0, 15. }; // size: 22
     vector<Int_t> fBinsEta13TeVLowBPtRebin { 16, 16, 16, 16, 16, 10, 10, 10, 10, 10,
                                              10, 10, 10, 10, 12, 15, 16, 16, 16, 16,
-                                             16 };
+                                             16 }; // size: 21
     Double_t fBinsEta13TeVLowBPtDCA[5]              = { 0., 0.4, 2., 3., 6.};
 
     Int_t fBinsPi0Eta13TeVLowBPtRebin[6]            = { 4, 4, 2, 4, 4, 4 };
@@ -575,15 +575,9 @@
     //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
     //****************************************************************************************************
 
-    // std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 20.0};
-    // std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 4, 4, 4, 4, 4, 4, 4};
-    std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
-    std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 12, 12, 12, 12, 12, 12, 12 };
-
-    // For lower statistics -- do not use when comparing Eta in other modes
-    // std::vector<Double_t> fBinsEta13TeVHeavyMesonPt   { 0.0, 0.1, 0.2, 0.4, 0.8, 1.0, 1.2, 1.4, 1.7, 2.0,
-    //                                                     2.5, 3.0, 5.5, 9.0, 20. };
-    // std::vector<Int_t> fBinsEta13TeVHeavyMesonPtRebin {  16,  16,  16,  10,  10,  10,  12,  15,  16,  16,
-    //                                                      16,  16,  16,  16 };
+    // std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 20.0}; // size: 8
+    // std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 4, 4, 4, 4, 4, 4, 4}; // size: 7
+    std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 }; // size: 8
+    std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 12, 12, 12, 12, 12, 12, 12 }; // size 7
 
 #endif
