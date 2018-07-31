@@ -1857,7 +1857,7 @@ elif [ $2 = "yes" ]; then
         fileNumbers=`cat fileLHC18d6b_fast.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_fast_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
         done;
@@ -1869,7 +1869,7 @@ elif [ $2 = "yes" ]; then
         fileNumbers=`cat fileLHC18d6b_woSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_woSDD_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
         done;
@@ -1881,7 +1881,7 @@ elif [ $2 = "yes" ]; then
         fileNumbers=`cat fileLHC18d6b_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
         done;
@@ -2099,7 +2099,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC18d6b_fast.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -2111,7 +2111,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC18d6b_woSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -2123,7 +2123,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC18d6b_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
