@@ -795,7 +795,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
     if [ $HAVELHC17g8aF == 1 ]; then
         echo "LHC17g8a fast"
-            if [ $SINGLERUN == 1 ]; then
+        if [ $SINGLERUN == 1 ]; then
                 runNumbers=`cat runlists/runNumbersLHC17g8a_fast.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do

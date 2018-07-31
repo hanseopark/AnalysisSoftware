@@ -11,13 +11,13 @@
 source basicFunction.sh
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
 MERGEONMC=1
-SINGLERUN=0
+SINGLERUN=1
 SEPARATEON=0
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEMC=1
 SPECIALMERGE=0
 ISADDDOWNLOAD=0
 ADDDOWNLOADALREADY=0
@@ -105,7 +105,7 @@ function ParseJDLFilesDownloadAndMerge()
                 if [ $SEPARATEON == 1 ]; then
                     if [[ $TOMERGE == *"GammaCalo_"* ]]; then
                         SeparateCutsIfNeeded $TOMERGE2 2
-                    elif [[ $TOMERGE == *"GammaConvV1_"* ]]; then
+                    elif [[ $TOMERGE == *"GammaV1_"* ]]; then
                         SeparateCutsIfNeededConv $TOMERGE2 0
                     elif [[ $TOMERGE == *"GammaCalo_"* ]]; then
                         SeparateCutsIfNeededCalo $TOMERGE2 4
@@ -143,6 +143,8 @@ HAVELHC13b2efixp3=1
 HAVELHC13b2efixp4=1
 HAVETOBUILDMC=0
 HAVELHC13e7=1
+HAVELHC13b4fix=1
+HAVELHC13b4plus=1
 
 # default trainconfigurations
 LHC13bcData="";
@@ -158,14 +160,17 @@ LHC13b2_efix_p1MC="";
 LHC13b2_efix_p2MC="";
 LHC13b2_efix_p3MC="" ;
 LHC13b2_efix_p4MC="";
+LHC13b4fixMC="";
+LHC13b4plusMC="";
 
 passNr="2";
 
 NSlashes=10;
 
 if [ $1 = "fbock" ]; then
-    BASEDIR=/media/fbock/Elements/OutputLegoTrains/pPb
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pPb
+elif [ $1 = "fbockExt" ]; then
+    BASEDIR=/media/fbock/Elements/OutputLegoTrains/pPb
 elif [ $1 = "fbockGSI" ]; then
     BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pPb
 elif [ $1 = "leardini" ]; then
@@ -253,14 +258,14 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13bData="660"; #pass 3
 # LHC13cData="661"; #pass 2
 
-TRAINDIR=Legotrain-vAN20180607-trigg2
-LHC13bcData="765"; #pass 3
-LHC13bData="child_1"; #pass 3
-LHC13cData="child_2"; #pass 2
-LHC13deData="766"; #pass 3
-LHC13dData="child_1"; #pass 3
-LHC13eData="child_2"; #pass 2
-LHC13fData="761"; #pass 2
+# TRAINDIR=Legotrain-vAN20180607-trigg2
+# LHC13bcData="765"; #pass 3
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+# LHC13deData="766"; #pass 3
+# LHC13dData="child_1"; #pass 3
+# LHC13eData="child_2"; #pass 2
+# LHC13fData="761"; #pass 2
 
 # TRAINDIR=Legotrain-vAN20180618-dirGamma
 # LHC13bcData="759"; #pass 3
@@ -276,10 +281,22 @@ LHC13fData="761"; #pass 2
 # LHC13b2_efix_p3MC="child_3";
 # LHC13b2_efix_p4MC="child_4";
 
+TRAINDIR=Legotrain-vAN20180718-triggQA
+# LHC13bcData="765"; #pass 3
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+# LHC13deData="763"; #pass 3
+# LHC13dData="child_1"; #pass 4
+# LHC13eData="child_2"; #pass 4
+# LHC13fData="764"; #pass 4
+LHC13b4fixMC="1286";
+LHC13b4plusMC="1287";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections
 mkdir -p $OUTPUTDIR/SingleFiles
+mkdir -p $OUTPUTDIR/JJMCSingleBins
 
 if [ "$LHC13bData" == "" ]; then
     HAVELHC13b=0;
@@ -324,6 +341,13 @@ fi
 if [ "$LHC13e7MC" = "" ]; then
     HAVELHC13e7=0;
 fi
+if [ "$LHC13b4fixMC" = "" ]; then
+    HAVELHC13b4fix=0;
+fi
+if [ "$LHC13b4plusMC" = "" ]; then
+    HAVELHC13b4plus=0;
+fi
+
 
 # parse grid directories for correct train output dir for LHC13bc
 if [ $HAVELHC13b == 1 ]; then
@@ -445,6 +469,22 @@ if [ $HAVELHC13e7 == 1 ]; then
         OUTPUTDIR_LHC13e7=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13e7MC
     fi
 fi
+if [ $HAVELHC13b4fix == 1 ]; then
+    LHC13b4fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4fixMC\_`
+    if [ "$LHC13b4fixMC" == "" ]; then
+        HAVELHC13b4fix=0;
+    else
+        OUTPUTDIR_LHC13b4fix=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b4fixMC
+    fi
+fi
+if [ $HAVELHC13b4plus == 1 ]; then
+    LHC13b4plusMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4plusMC\_`
+    if [ "$LHC13b4plusMC" == "" ]; then
+        HAVELHC13b4plus=0;
+    else
+        OUTPUTDIR_LHC13b4plus=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b4plusMC
+    fi
+fi
 
 if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC13b == 1 ]; then
@@ -455,7 +495,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b/$runNumber "/alice/data/2013/LHC13b/000$runNumber/ESDs/pass3/PWGGA/GA_pPb/$LHC13bData" $NSlashes3
             done;
-            if [ $MERGEONSINGLEData == 1 ] && [ ! -f $OUTPUTDIR_LHC13b/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEData == 1 ] && [ ! -f $OUTPUTDIR_LHC13b/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b.txt`
                 ls $OUTPUTDIR_LHC13b/$firstrunNumber/GammaCalo_*.root > fileLHC13b.txt
                 fileNumbers=`cat fileLHC13b.txt`
@@ -475,7 +515,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13b/GammaCalo_$number.root $OUTPUTDIR_LHC13b/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13b/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13b/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13bData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -491,7 +531,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13c/$runNumber "/alice/data/2013/LHC13c/000$runNumber/ESDs/pass2/PWGGA/GA_pPb/$LHC13cData" $NSlashes3
             done;
-            if [ $MERGEONSINGLEData == 1 ]  && [ ! -f $OUTPUTDIR_LHC13c/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEData == 1 ]  && [ ! -f $OUTPUTDIR_LHC13c/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13c.txt`
                 ls $OUTPUTDIR_LHC13c/$firstrunNumber/GammaCalo_*.root > fileLHC13c.txt
                 fileNumbers=`cat fileLHC13c.txt`
@@ -511,7 +551,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13c/GammaCalo_$number.root $OUTPUTDIR_LHC13c/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13c/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13c/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13cData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -521,18 +561,109 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
     if [ $HAVELHC13d == 1 ]; then
         echo "downloading LHC13d"
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" PHOSGood $NSlashes3 "" kFALSE
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13d_pass4.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13d/$runNumber "/alice/data/2013/LHC13d/000$runNumber/pass4/PWGGA/GA_pPb/$LHC13dData" $NSlashes3
+            done;
+            if [ $MERGEONSINGLEData == 1 ]  && [ ! -f $OUTPUTDIR_LHC13d/mergedAllCalo.txt ]; then
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13d_pass4.txt`
+                ls $OUTPUTDIR_LHC13d/$firstrunNumber/GammaCalo_*.root > fileLHC13d.txt
+                fileNumbers=`cat fileLHC13d.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                    if [ -z "$alpha" ]; then
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
+                    else
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                        number=$number\_$alpha
+                        echo $number
+                    fi
+                    echo $number
+                    hadd -f $OUTPUTDIR_LHC13d/GammaCalo_$number.root $OUTPUTDIR_LHC13d/*/GammaCalo_$number.root
+                done;
+                echo "done" > $OUTPUTDIR_LHC13d/mergedAllCalo.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
     fi
+
     if [ $HAVELHC13e == 1 ]; then
         echo "downloading LHC13e"
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" EMCandPCMGood $NSlashes3 "" kFALSE
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13e_pass4_DPGTracks.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13e/$runNumber "/alice/data/2013/LHC13e/000$runNumber/pass4/PWGGA/GA_pPb/$LHC13eData" $NSlashes3
+            done;
+            if [ $MERGEONSINGLEData == 1 ]  && [ ! -f $OUTPUTDIR_LHC13e/mergedAllCalo.txt ]; then
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13e_pass4_DPGTracks.txt`
+                ls $OUTPUTDIR_LHC13e/$firstrunNumber/GammaCalo_*.root > fileLHC13e.txt
+                fileNumbers=`cat fileLHC13e.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                    if [ -z "$alpha" ]; then
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
+                    else
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                        number=$number\_$alpha
+                        echo $number
+                    fi
+                    echo $number
+                    hadd -f $OUTPUTDIR_LHC13e/GammaCalo_$number.root $OUTPUTDIR_LHC13e/*/GammaCalo_$number.root
+                done;
+                echo "done" > $OUTPUTDIR_LHC13e/mergedAllCalo.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+        fi
     fi
     if [ $HAVELHC13f == 1 ]; then
         echo "downloading LHC13f"
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" PHOSGood $NSlashes3 "" kFALSE
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13f_pass4.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13f/$runNumber "/alice/data/2013/LHC13f/000$runNumber/pass4/PWGGA/GA_pPb/$LHC13fData" $NSlashes3
+            done;
+            if [ $MERGEONSINGLEData == 1 ]  && [ ! -f $OUTPUTDIR_LHC13f/mergedAllCalo.txt ]; then
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13f_pass4.txt`
+                ls $OUTPUTDIR_LHC13f/$firstrunNumber/GammaCalo_*.root > fileLHC13f.txt
+                fileNumbers=`cat fileLHC13f.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                    if [ -z "$alpha" ]; then
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
+                    else
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                        number=$number\_$alpha
+                        echo $number
+                    fi
+                    echo $number
+                    hadd -f $OUTPUTDIR_LHC13f/GammaCalo_$number.root $OUTPUTDIR_LHC13f/*/GammaCalo_$number.root
+                done;
+                echo "done" > $OUTPUTDIR_LHC13f/mergedAllCalo.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
     fi
 
     if [ $HAVELHC13b2efixp1 == 1 ]; then
@@ -543,7 +674,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p1/$runNumber "/alice/sim/2013/LHC13b2_efix_p1/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC" $NSlashes3
             done;
-            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p1/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p1/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix1.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p1/$firstrunNumber/GammaCalo_*.root > fileLHC13b2_efix_p1.txt
                 fileNumbers=`cat fileLHC13b2_efix_p1.txt`
@@ -563,7 +694,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13b2_efix_p1/GammaCalo_$number.root $OUTPUTDIR_LHC13b2_efix_p1/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13b2_efix_p1/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13b2_efix_p1/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -580,7 +711,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2/$runNumber "/alice/sim/2013/LHC13b2_efix_p2/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC" $NSlashes3
             done;
-            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p2/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p2/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix2.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p2/$firstrunNumber/GammaCalo_*.root > fileLHC13b2_efix_p2.txt
                 fileNumbers=`cat fileLHC13b2_efix_p2.txt`
@@ -589,7 +720,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
                     if [ -z "$alpha" ]; then
                         echo $alpha
-                echo "done" > $OUTPUTDIR_LHC13b2_efix_p2/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13b2_efix_p2/mergedAllCalo.txt
                         number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
                         echo $number
                     else
@@ -617,7 +748,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3/$runNumber "/alice/sim/2013/LHC13b2_efix_p3/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC" $NSlashes3
             done;
-            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p3/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p3/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix3.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p3/$firstrunNumber/GammaCalo_*.root > fileLHC13b2_efix_p3.txt
                 fileNumbers=`cat fileLHC13b2_efix_p3.txt`
@@ -637,7 +768,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13b2_efix_p3/GammaCalo_$number.root $OUTPUTDIR_LHC13b2_efix_p3/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13b2_efix_p3/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13b2_efix_p3/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -653,7 +784,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4/$runNumber "/alice/sim/2013/LHC13b2_efix_p4/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC" $NSlashes3
             done;
-            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p4/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b2_efix_p4/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix4.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p4/$firstrunNumber/GammaCalo_*.root > fileLHC13b2_efix_p4.txt
                 fileNumbers=`cat fileLHC13b2_efix_p4.txt`
@@ -673,7 +804,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13b2_efix_p4/GammaCalo_$number.root $OUTPUTDIR_LHC13b2_efix_p4/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13b2_efix_p4/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13b2_efix_p4/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -689,7 +820,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7/$runNumber "/alice/sim/2013/LHC13e7/$runNumber/PWGGA/GA_pPb_MC/$LHC13e7MC" $NSlashes3
             done;
-            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13e7/mergedAllConvCalo.txt ]; then
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13e7/mergedAllCalo.txt ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13e7.txt`
                 ls $OUTPUTDIR_LHC13e7/$firstrunNumber/GammaCalo_*.root > fileLHC13e7.txt
                 fileNumbers=`cat fileLHC13e7.txt`
@@ -709,7 +840,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13e7/GammaCalo_$number.root $OUTPUTDIR_LHC13e7/*/GammaCalo_$number.root
                 done;
-                echo "done" > $OUTPUTDIR_LHC13e7/mergedAllConvCalo.txt
+                echo "done" > $OUTPUTDIR_LHC13e7/mergedAllCalo.txt
             fi
         else
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" EMCandPCMGood $NSlashes3 "" kFALSE
@@ -717,6 +848,69 @@ if [ $CLEANUPMAYOR == 0 ]; then
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13e7.txt  $OUTPUTDIR_LHC13e7
     fi
+
+    currentDir=$PWD
+    if [ $HAVELHC13b4fix == 1 ]; then
+        echo "downloading LHC13b4fix"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13b4_fix.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber
+                binNumbersJJ=`cat runlists/binsJetJetLHC13b4.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+#                     CopyFileIfNonExisitent $OUTPUTDIR_LHC13b4fix/$binNumber/$runNumber "/alice/sim/2013/LHC13b4_fix/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4fixMC" $NSlashes3 "/alice/sim/2013/LHC13b4_fix/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4fixMC/" kTRUE
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b4fix/$binNumber/$runNumber "/alice/sim/2013/LHC13b4_fix/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4fixMC" $NSlashes3 "none" kTRUE
+                done;
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b4fix/mergedAllCalo.txt ]; then
+                echo "HERERRE"
+                cd $currentDir
+                rm $OUTPUTDIR_LHC13b4fix/GammaCalo*.root*
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13b4_fix.txt`
+                firstbinNumber=`head -n1 runlists/binsJetJetLHC13b4.txt`
+                ls $OUTPUTDIR_LHC13b4fix/$firstbinNumber/$firstrunNumber/GammaCalo_*.root > fileLHC13b4.txt
+                fileNumbers=`cat fileLHC13b4.txt`
+                MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4fix $NSlashes4 GammaCalo EMCandPCMGood runlists/runNumbersLHC13b4_fix.txt runlists/binsJetJetLHC13b4.txt
+                MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4fix $NSlashes4 GammaCalo PHOSGood runlists/runNumbersLHC13b4_fix.txt runlists/binsJetJetLHC13b4.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_fix/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_fix/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
+    fi
+    if [ $HAVELHC13b4plus == 1 ]; then
+        echo "downloading LHC13b4plus"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13b4_plus.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber
+                binNumbersJJ=`cat runlists/binsJetJetLHC13b4.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+#                     CopyFileIfNonExisitent $OUTPUTDIR_LHC13b4plus/$binNumber/$runNumber "/alice/sim/2013/LHC13b4_plus/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4plusMC" $NSlashes3 "/alice/sim/2013/LHC13b4_plus/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4plusMC/" kTRUE
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b4plus/$binNumber/$runNumber "/alice/sim/2013/LHC13b4_plus/$runNumber/$binNumber/PWGGA/GA_pPb_MC/$LHC13b4plusMC" $NSlashes3 "none" kTRUE
+                done;
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC13b4plus/mergedAllCalo.txt ]; then
+                echo "HERERRE"
+                cd $currentDir
+                rm $OUTPUTDIR_LHC13b4plus/GammaCalo*.root*
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13b4_plus.txt`
+                firstbinNumber=`head -n1 runlists/binsJetJetLHC13b4.txt`
+                ls $OUTPUTDIR_LHC13b4plus/$firstbinNumber/$firstrunNumber/GammaCalo_*.root > fileLHC13b4.txt
+                fileNumbers=`cat fileLHC13b4.txt`
+                MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4plus $NSlashes4 GammaCalo EMCandPCMGood runlists/runNumbersLHC13b4_plus.txt runlists/binsJetJetLHC13b4.txt
+                MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4plus $NSlashes4 GammaCalo PHOSGood runlists/runNumbersLHC13b4_plus.txt runlists/binsJetJetLHC13b4.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_plus/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_plus/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
+    fi
+
 
     echo -e "EMCandPCMGood\nPHOSGood" > runlistsToMerge.txt
     listsToMerge=`cat runlistsToMerge.txt`
@@ -812,6 +1006,45 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC13e7 $NSlashes "MC_LHC13e7-$runListName" "-$runListName"
             done;
         fi
+
+        if [ $HAVELHC13b4fix == 1 ]; then
+            ls $OUTPUTDIR_LHC13b4fix/GammaCalo-$runListName\_*.root > fileLHC13b4fix.txt
+            fileNumbers=`cat fileLHC13b4fix.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC13b4fix $NSlashes "MC_LHC13b4fix-$runListName" "-$runListName"
+            done;
+            for binNumber in $binNumbersJJ; do
+                echo $binNumber
+                ls $OUTPUTDIR_LHC13b4fix/GammaCalo-$runListName\_*.root > fileLHC13b4fix.txt
+                fileNumbers=`cat fileLHC13b4fix.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes)) 2
+                    cp $OUTPUTDIR_LHC13b4fix/$binNumber/GammaCalo-$runListName\_$number.root  $OUTPUTDIR/JJMCSingleBins/GammaCalo_MC_LHC13b4fix-$binNumber\_$runListName\_$number.root
+                done
+            done;
+        fi
+        if [ $HAVELHC13b4plus == 1 ]; then
+            ls $OUTPUTDIR_LHC13b4plus/GammaCalo-$runListName\_*.root > fileLHC13b4plus.txt
+            fileNumbers=`cat fileLHC13b4plus.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC13b4plus $NSlashes "MC_LHC13b4plus-$runListName" "-$runListName"
+            done;
+            for binNumber in $binNumbersJJ; do
+                echo $binNumber
+                ls $OUTPUTDIR_LHC13b4plus/GammaCalo-$runListName\_*.root > fileLHC13b4plus.txt
+                fileNumbers=`cat fileLHC13b4plus.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes)) 2
+                    cp $OUTPUTDIR_LHC13b4plus/$binNumber/GammaCalo-$runListName\_$number.root  $OUTPUTDIR/JJMCSingleBins/GammaCalo_MC_LHC13b4plus-$binNumber\_$runListName\_$number.root
+                done
+            done;
+        fi
+
+
     done
     echo "--> rewrite of files done"
 
@@ -984,6 +1217,50 @@ if [ $CLEANUPMAYOR == 0 ]; then
                         hadd -f $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_LHC13e7-$runListName_$number.root $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4-$runListName\_$number.root $OUTPUTDIR/GammaCalo_MC_LHC13e7_$number.root
                     fi
                 done
+
+                if [ $HAVELHC13b4fix == 1 ] && [ $HAVELHC13b4plus == 1 ]; then
+                    ls $OUTPUTDIR/GammaCalo_MC_LHC13b4fix-$runListName\_*.root > filesForMerging.txt
+                    filesForMerging=`cat filesForMerging.txt`
+                    periodList=`echo -e "LHC13b4fix\nLHC13b4plus"`
+                    for fileName in $filesForMerging; do
+                        echo $fileName
+                        GetFileNumberMerging $fileName $((NSlashes-1)) 4 "bla" 1
+                        echo "number:"$number
+                        rm listCurrMerge.txt
+                        nameOut=""
+                        for periodID in $periodList; do
+                            echo $periodID
+                            currFile=$OUTPUTDIR/GammaCalo_MC_$periodID-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                nameOut+="_"$periodID
+                                echo -e "$currFile\n" >> listCurrMerge.txt
+                            fi
+                        done
+                        MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaCalo_MC$nameOut-$runListName\_$number.root
+                        fileList=`cat listCurrMerge.txt`
+                        for currFile in $fileList; do
+                            mv $currFile $OUTPUTDIR/SingleFiles/
+                        done
+
+                        binNumbersJJ=`cat runlists/binsJetJetLHC13b4.txt`
+                        for binNumber in $binNumbersJJ; do
+                            echo $binNumber
+                            nameOut=""
+                            rm listCurrMerge.txt
+                            for periodID in $periodList; do
+#                                 echo $periodID
+                                currFile=$OUTPUTDIR/JJMCSingleBins/GammaCalo_MC_$periodID-$binNumber\_$runListName\_$number.root
+#                                 echo $currFile
+                                if [ -f $currFile ]; then
+                                    nameOut+="_"$periodID
+                                    echo -e "$currFile\n" >> listCurrMerge.txt
+                                fi
+                            done
+                            MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/JJMCSingleBins/GammaCalo_MC$nameOut-$binNumber\_$runListName\_$number.root
+                        done
+
+                    done
+                fi
             done
         fi
         echo "--> Merging done"

@@ -246,6 +246,10 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     Double_t maxPt      = 35;
     if (mode == 4 && period.Contains("LHC17g8")){
         maxPt           = 60;
+    } else if (mode == 2 && period.Contains("LHC13b4")){
+        maxPt           = 50;
+    } else if (mode == 2){
+        maxPt           = 30;
     } else if (mode == 2){
         maxPt           = 30;
     } else if (mode == 10){
@@ -300,23 +304,25 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     TString anchoredTo                  = "LHC11a";
     if (period.Contains("LHC13b4_fix"))
         anchoredTo                      = "LHC13[b-c]";
-    if (period.Contains("LHC13b4_plus"))
-        anchoredTo                      = "LHC13[d-e]";
-    if (period.Contains("LHC15a3"))
+    else if (period.Contains("LHC13b4_plus"))
+        anchoredTo                      = "LHC13[d-f]";
+    else if (period.Contains("LHC13b4"))
+        anchoredTo                      = "LHC13[b-f]";
+    else if (period.Contains("LHC15a3"))
         anchoredTo                      = "LHC13g";
-    if (period.Contains("LHC16c2"))
+    else if (period.Contains("LHC16c2"))
         anchoredTo                      = "LHC12[c-i]";
-    if (period.Contains("LHC16h3"))
+    else if (period.Contains("LHC16h3"))
         anchoredTo                      = "LHC15n";
-    if (period.Contains("LHC17g8a"))
+    else if (period.Contains("LHC17g8a"))
         anchoredTo                      = "LHC16qt";
-    if (period.Contains("LHC17g8b"))
+    else if (period.Contains("LHC17g8b"))
         anchoredTo                      = "LHC16r";
-    if (period.Contains("LHC17g8c"))
+    else if (period.Contains("LHC17g8c"))
         anchoredTo                      = "LHC16s";
-    if (period.Contains("LHC18b8"))
+    else if (period.Contains("LHC18b8"))
         anchoredTo                      = "LHC17pq";
-    if (period.Contains("LHC18b9"))
+    else if (period.Contains("LHC18b9"))
         anchoredTo                      = "LHC16qt";
 
     TString acceptanceOf = "";
@@ -472,7 +478,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     //***************************************************************************************************************
     //************************************Plotting unscaled inputs **************************************************
     //***************************************************************************************************************
-    TCanvas* canvasInputUnscaled = new TCanvas("canvasInputUnscaled","",0,0,1350,1000);  // gives the page size
+    TCanvas* canvasInputUnscaled = new TCanvas("canvasInputUnscaled","",0,0,1000,1350);  // gives the page size
     DrawGammaCanvasSettings( canvasInputUnscaled, 0.1, 0.015, 0.015, 0.07);
     canvasInputUnscaled->SetLogy();
 
@@ -500,9 +506,9 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
         histoMCPi0InputW0EvtWeigth[i]->DrawCopy("e1,same");
     }
-    TLatex *labelMCName = new TLatex(0.45,0.99-(1.15*(nrOfPtHardBins/2+1)*0.032),Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
-    SetStyleTLatex( labelMCName, 32,4);
-    labelMCName->SetTextFont(43);
+
+    TLatex *labelMCName = new TLatex(0.95,0.99-(1.15*(nrOfPtHardBins/2+1)*0.032),Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
+    SetStyleTLatex( labelMCName, 32, 4, 1, 43, kTRUE, 31);
     labelMCName->Draw();
 
 
@@ -552,9 +558,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         }
         legendUnscaledDLog->Draw();
 
-        TLatex *labelMCNameDLog = new TLatex(0.5,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
-        SetStyleTLatex( labelMCNameDLog, 32,4);
-        labelMCNameDLog->SetTextFont(43);
+        TLatex *labelMCNameDLog = new TLatex(0.95,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
+        SetStyleTLatex( labelMCNameDLog, 32, 4, 1, 43, kTRUE, 31);
         labelMCNameDLog->Draw();
 
         histo2DInputUnscaledPi0->Draw("same,axis");
@@ -595,7 +600,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     //***************************************************************************************************************
     //************************************Plotting scaled inputs **************************************************
     //***************************************************************************************************************
-    TCanvas* canvasInputScaled = new TCanvas("canvasInputScaled","",0,0,1350,1000);  // gives the page size
+    TCanvas* canvasInputScaled = new TCanvas("canvasInputScaled","",0,0,1000,1350);  // gives the page size
     DrawGammaCanvasSettings( canvasInputScaled, 0.1, 0.015, 0.015, 0.07);
     canvasInputScaled->SetLogy();
     Float_t maximumPi0Scaled = FindLargestEntryIn1D(histoMCPi0Input[0])*10;
@@ -634,9 +639,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         histoMCPi0InputAcc[i]->DrawCopy("e1,same");
     }
     labelMCName->Draw();
-    TLatex *labelAcceptance = new TLatex(0.45,0.99-(1.15*(nrOfPtHardBins/2+2)*0.032),Form("%s",acceptanceOf.Data()));
-    SetStyleTLatex( labelAcceptance, 32,4);
-    labelAcceptance->SetTextFont(43);
+    TLatex *labelAcceptance = new TLatex(0.95,0.99-(1.15*(nrOfPtHardBins/2+2)*0.032),Form("%s",acceptanceOf.Data()));
+    SetStyleTLatex( labelAcceptance, 32, 4, 1, 43, kTRUE, 31);
     labelAcceptance->Draw();
 
 
@@ -697,9 +701,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
                 legendScaledDLog->AddEntry(histoMCPi0Input[i],Form("%1.0f GeV/#it{c} < #it{p}^{hard}_{T} < %1.0f GeV/#it{c}", minPtHard[i], maxPtHard[i]),"p");
             }
 //             legendScaledDLog->Draw();
-            TLatex *labelMCNameDLog = new TLatex(0.5,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
-            SetStyleTLatex( labelMCNameDLog, 32,4);
-            labelMCNameDLog->SetTextFont(43);
+            TLatex *labelMCNameDLog = new TLatex(0.95,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
+            SetStyleTLatex( labelMCNameDLog, 32, 4, 1, 43, kTRUE, 31);
             labelMCNameDLog->Draw();
 
         canvasInputScaled->Update();
