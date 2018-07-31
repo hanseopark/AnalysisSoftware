@@ -180,8 +180,8 @@ function CopyFileIfNonExisitent()
                 echo "copied correctly"
             else
                 rm -f locallog.txt
-                if [ $4 != "none" ]; then
-                    if [ $4 == "*Stage*" ]; then
+                if [ "$4" != "none" ]; then
+                    if [ "$4" == "*Stage*" ]; then
                         alien_ls -F $4/ | grep "/" > locallog.txt
                     else
                         alien_ls -F $4/ | grep "/" | grep -v "Stage" > locallog.txt
@@ -281,8 +281,8 @@ function CopyFileIfNonExisitentDiffList()
                 echo "copied correctly"
             else
                 rm -f locallog.txt
-                if [ $5 != "none" ]; then
-                    if [ $5 == "*Stage*" ]; then
+                if [ "$5" != "none" ]; then
+                    if [ "$5" == "*Stage*" ]; then
                         alien_ls -F $5/ | grep "/" > locallog.txt
                     else
                         alien_ls -F $5/ | grep "/" | grep -v "Stage" > locallog.txt
