@@ -811,12 +811,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxPtFitSec[2]                                              = 50.;
         }
     }else if(energy.Contains("8TeV") && directPhoton.Contains("Tagging") && mode == 2){
-      minPtFitSec[0]                                              = 1.;
-      maxPtFitSec[0]                                              = 12.;
-      minPtFitSec[1]                                              = 2.;
-      maxPtFitSec[1]                                              = 12.;
-      minPtFitSec[2]                                              = 0.5;
-      maxPtFitSec[2]                                              = 12.;
+        minPtFitSec[0]                                              = 1.;
+        maxPtFitSec[0]                                              = 12.;
+        minPtFitSec[1]                                              = 2.;
+        maxPtFitSec[1]                                              = 12.;
+        minPtFitSec[2]                                              = 0.5;
+        maxPtFitSec[2]                                              = 12.;
     }
 
     if ( hasCocktailInput && isPCM ) {
@@ -1227,23 +1227,23 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         // scale reconstructed gamma with secondaries
         if (!isRunMC){
-          if(isPCM){
-              if (histoFracAllGammaToSecFromX_Pt[k]) {
-                  histoGammaTrueSecConvGammaFromX_Pt[k]->Multiply(histoFracAllGammaToSecFromX_Pt[k]);
-                  histoGammaTrueSecConvGammaFromX_Pt[k]->Scale(1./nEvt);
-              } else histoGammaTrueSecConvGammaFromX_Pt[k] = NULL;
-          }else if (isCalo && !isPCM){
-              if (histoFracAllGammaToSecFromX_Pt[k]) {
-                  histoGammaTrueSecCaloGammaFromX_Pt[k]->Multiply(histoFracAllGammaToSecFromX_Pt[k]);
-                  histoGammaTrueSecCaloGammaFromX_Pt[k]->Scale(1./nEvt);
-              } else histoGammaTrueSecCaloGammaFromX_Pt[k] = NULL;
-          }
+            if(isPCM){
+                if (histoFracAllGammaToSecFromX_Pt[k]) {
+                    histoGammaTrueSecConvGammaFromX_Pt[k]->Multiply(histoFracAllGammaToSecFromX_Pt[k]);
+                    histoGammaTrueSecConvGammaFromX_Pt[k]->Scale(1./nEvt);
+                } else histoGammaTrueSecConvGammaFromX_Pt[k] = NULL;
+            }else if (isCalo && !isPCM){
+                if (histoFracAllGammaToSecFromX_Pt[k]) {
+                    histoGammaTrueSecCaloGammaFromX_Pt[k]->Multiply(histoFracAllGammaToSecFromX_Pt[k]);
+                    histoGammaTrueSecCaloGammaFromX_Pt[k]->Scale(1./nEvt);
+                } else histoGammaTrueSecCaloGammaFromX_Pt[k] = NULL;
+            }
         }else{
-          if (isPCM ) {
-              histoGammaTrueSecConvGammaFromX_Pt[k]->Scale(1./nEvtMC);
-          } else if (isCalo && !isPCM) {
-              histoGammaTrueSecCaloGammaFromX_Pt[k]->Scale(1./nEvtMC);
-          }
+            if (isPCM ) {
+                histoGammaTrueSecConvGammaFromX_Pt[k]->Scale(1./nEvtMC);
+            } else if (isCalo && !isPCM) {
+                histoGammaTrueSecCaloGammaFromX_Pt[k]->Scale(1./nEvtMC);
+            }
         }
 
         // secondary spectra original binning
@@ -1268,19 +1268,19 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******** cocktail: use pileup corrected "rest" contribution for PCM in doPileUp case *****
     //******************************************************************************************
     if (hasCocktailInput && isPCM && doPileUpCorr) {
-      if(histoGammaTrueSecCocktailGammaFromX_Pt[3])
-        delete histoGammaTrueSecCocktailGammaFromX_Pt[3];
-      if(histoGammaTrueSecCocktailGammaFromX_PtOrBin[3])
-        delete histoGammaTrueSecCocktailGammaFromX_PtOrBin[3];
+        if(histoGammaTrueSecCocktailGammaFromX_Pt[3])
+            delete histoGammaTrueSecCocktailGammaFromX_Pt[3];
+        if(histoGammaTrueSecCocktailGammaFromX_PtOrBin[3])
+            delete histoGammaTrueSecCocktailGammaFromX_PtOrBin[3];
 
-      histoGammaTrueSecCocktailGammaFromX_Pt[3]          = (TH1D*)histoESDConvGammaPtPileUp->Clone("TrueSecondaryConvGammaCocktailFromXFromRest_Pt");
-      if(histoGammaTrueSecCocktailGammaFromX_Pt[3])
-         histoGammaTrueSecCocktailGammaFromX_Pt[3]->Multiply(histoFracAllGammaToSecFromX_PileUp_Pt[3]);
+        histoGammaTrueSecCocktailGammaFromX_Pt[3]          = (TH1D*)histoESDConvGammaPtPileUp->Clone("TrueSecondaryConvGammaCocktailFromXFromRest_Pt");
+        if(histoGammaTrueSecCocktailGammaFromX_Pt[3])
+            histoGammaTrueSecCocktailGammaFromX_Pt[3]->Multiply(histoFracAllGammaToSecFromX_PileUp_Pt[3]);
 
-      histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]     = (TH1D*)histoESDConvGammaPt_OrBin->Clone("TrueSecondaryConvGammaCocktailFromXFromRest_Pt_OriginalBinning");
-      if(histoGammaTrueSecCocktailGammaFromX_PtOrBin[3])
-         histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]->Multiply(histoPileUpCorrectionFactor_Pt_OrBin);
-         histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]->Multiply(histoFracAllGammaToSecFromX_Pt_OrBin[3]); // histoFracAllGammaToSecFromX_PileUp_Pt_OrBin should be used here, could be constructed in the future (small difference)
+        histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]     = (TH1D*)histoESDConvGammaPt_OrBin->Clone("TrueSecondaryConvGammaCocktailFromXFromRest_Pt_OriginalBinning");
+        if(histoGammaTrueSecCocktailGammaFromX_PtOrBin[3])
+            histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]->Multiply(histoPileUpCorrectionFactor_Pt_OrBin);
+            histoGammaTrueSecCocktailGammaFromX_PtOrBin[3]->Multiply(histoFracAllGammaToSecFromX_Pt_OrBin[3]); // histoFracAllGammaToSecFromX_PileUp_Pt_OrBin should be used here, could be constructed in the future (small difference)
     }
 
     //******************************************************************************************
@@ -1517,13 +1517,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             plotYrange[1] = 35.e-3;
         }
         if(energy.CompareTo("8TeV")==0){
-          if(mode==2){
-            plotYrange[0] = 0.;
-            plotYrange[1] = 35.e-3;
-          }else if(mode==4){
-            plotYrange[0] = 0.;
-            plotYrange[1] = 80.e-3;
-          }
+            if(mode==2){
+                plotYrange[0] = 0.;
+                plotYrange[1] = 35.e-3;
+            }else if(mode==4){
+                plotYrange[0] = 0.;
+                plotYrange[1] = 80.e-3;
+            }
         }
         Int_t nColumnsSec                   = 1;
         Double_t startXSecLegend            = 0.65;
@@ -1810,7 +1810,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             cout << "Responsematrix conv entries: "<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0) << "\t"<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum() << endl;
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetZaxis()->SetRangeUser(histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0), 2*histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum());
             SetStyleHistoTH2ForGraphs(  histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0], "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,
-                                      0.035, 0.04, 0.9, 1.0, 510, 510);
+                                        0.035, 0.04, 0.9, 1.0, 510, 510);
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetYaxis()->SetRangeUser(0,25);
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetXaxis()->SetRangeUser(0,25);
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->Draw("colz");
@@ -1981,10 +1981,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaRaw_PileUpPuritySecondaryCorrected_Pt             = RebinTH1D(histoGammaRaw_PileUpPuritySecondaryCorrected_Pt,histoESDCaloGammaPt,kTRUE);
         histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->Scale(1./nEvt);
         for(Int_t iBin=0; iBin<histoGammaRawSpectrum_Pt->GetNbinsX(); iBin++){
-          if(histoGammaRawSpectrum_Pt->GetBinContent(iBin)==0){
-            histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->SetBinContent(iBin,0);
-            histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->SetBinError(iBin,0);
-          }
+            if(histoGammaRawSpectrum_Pt->GetBinContent(iBin)==0){
+                histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->SetBinContent(iBin,0);
+                histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->SetBinError(iBin,0);
+            }
         }
 
         // Unfolding setup:
@@ -2022,19 +2022,19 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     deltaEtaCalo,
                                     scalingCalo,
                                     nEvt
-                               );
+                                );
         CorrectGammaUnfoldResol(    histoMCrecGammaCorr_Pt,
                                     histoGammaPrimaryRecoEff_MCPt,
                                     deltaEtaCalo,
                                     scalingCalo,
                                     nEvt
-                               );
+                                );
         CorrectGammaUnfoldResol(    histoGammaCorrUnfoldReso_BinByBin_Pt,
                                     histoGammaPrimaryRecoEff_MCPt,
                                     deltaEtaCalo,
                                     scalingCalo,
                                     nEvt
-                               );
+                                );
 
         SetHistogramm(histoGammaCorrUnfoldReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
                       histoGammaCorrUnfoldReso_Pt->GetMinimum(0)/100., histoGammaCorrUnfoldReso_Pt->GetMaximum()*10, 1.0, 1.7);
@@ -2189,7 +2189,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         padCompRecoEffRatio->cd();
         SetStyleHistoTH1ForGraphs(  histoGammaCaloResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
-                                  0.12, 0.10,  0.85, 0.4, 510, 505);
+                                    0.12, 0.10,  0.85, 0.4, 510, 505);
         histoGammaCaloResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
 
         histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
@@ -2285,7 +2285,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     histoGammaConvProb_MCPt,
                                     histoGammaPrimaryRecoEff_Pt,
                                     deltaEta, scaling, nEvt
-                                 );
+                                    );
         else
             CorrectGammaEffiResolCocktail(  histoGammaCorrEffiReso_Pt,
                                             histoGammaSecGammaFromX_Cocktail_Raw_Pt,    // already scaled per event
@@ -2294,7 +2294,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                             histoGammaConvProb_MCPt,
                                             histoGammaPrimaryRecoEff_Pt,
                                             deltaEta, scaling, nEvt
-                                         );
+                                            );
     }
     // correct alternate way for calo reco
     if (isCalo && !isPCM) {
@@ -2306,15 +2306,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     histoGammaTruePurity_Pt,
                                     histoGammaPrimaryRecoEff_Pt,
                                     deltaEtaCalo, scalingCalo, nEvt
-                                 );
+                                    );
         else
-            CorrectGammaEffiResolCocktail(histoGammaCorrEffiReso_Pt,
-                                          histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // already scaled per event
-                                          histoGammaTrueSecCocktailGammaFromX_Pt[3],    // already scaled per event
-                                          histoGammaTruePurity_Pt,
-                                          histoGammaPrimaryRecoEff_Pt,
-                                          deltaEtaCalo, scalingCalo, nEvt
-                                         );
+            CorrectGammaEffiResolCocktail(  histoGammaCorrEffiReso_Pt,
+                                            histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // already scaled per event
+                                            histoGammaTrueSecCocktailGammaFromX_Pt[3],    // already scaled per event
+                                            histoGammaTruePurity_Pt,
+                                            histoGammaPrimaryRecoEff_Pt,
+                                            deltaEtaCalo, scalingCalo, nEvt
+                                            );
     }
 
     DrawGammaSetMarker(histoGammaCorrEffiReso_Pt, 20, 1.0, kGreen+2, kGreen+2);
@@ -2345,16 +2345,16 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     histoGammaConvProb_MCPt,
                                     histoGammaPrimaryRecoEff_PileUp_Pt,
                                     deltaEta, scaling, nEvt
-                                 );
+                                    );
         } else {
-            CorrectGammaEffiResolCocktail(histoGammaCorrEffiReso_PileUp_Pt,
-                                          histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
-                                          histoSecondaryGammaFromXSpecPileUpPt[3],
-                                          histoGammaTruePurity_PileUp_Pt,
-                                          histoGammaConvProb_MCPt,
-                                          histoGammaPrimaryRecoEff_PileUp_Pt,
-                                          deltaEta, scaling, nEvt
-                                          );
+            CorrectGammaEffiResolCocktail(  histoGammaCorrEffiReso_PileUp_Pt,
+                                            histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
+                                            histoSecondaryGammaFromXSpecPileUpPt[3],
+                                            histoGammaTruePurity_PileUp_Pt,
+                                            histoGammaConvProb_MCPt,
+                                            histoGammaPrimaryRecoEff_PileUp_Pt,
+                                            deltaEta, scaling, nEvt
+                                        );
         }
 
         DrawGammaSetMarker(histoGammaCorrEffiReso_PileUp_Pt, 20, 1.0, kMagenta, kMagenta);
@@ -2380,16 +2380,16 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     histoGammaConvProb_MCPt,
                                     histoGammaPrimaryRecoEff_Pt,
                                     deltaEta, scaling, nEvt
-                                 );
+                                );
         } else {
-            CorrectGammaEffiResolCocktail( histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt,
-                                           histoGammaSecGammaFromX_Cocktail_Raw_Pt,     // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
-                                           histoGammaTrueSecCocktailGammaFromX_Pt[3],
-                                           histoGammaTruePurity_Pt,
-                                           histoGammaConvProb_MCPt,
-                                           histoGammaPrimaryRecoEff_Pt,
-                                           deltaEta, scaling, nEvt
-                                         );
+            CorrectGammaEffiResolCocktail(  histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt,
+                                            histoGammaSecGammaFromX_Cocktail_Raw_Pt,     // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
+                                            histoGammaTrueSecCocktailGammaFromX_Pt[3],
+                                            histoGammaTruePurity_Pt,
+                                            histoGammaConvProb_MCPt,
+                                            histoGammaPrimaryRecoEff_Pt,
+                                            deltaEta, scaling, nEvt
+                                        );
         }
 
         DrawGammaSetMarker(histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt, 20, 1.0, kBlue+2, kBlue+2);

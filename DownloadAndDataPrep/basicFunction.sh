@@ -215,8 +215,8 @@ function CopyFileIfNonExisitent()
                     cd -
                 fi
             fi
-      fi
-      unzip -u $1/root_archive.zip -d $1/
+        fi
+        unzip -u $1/root_archive.zip -d $1/
     fi
 
     if [ $SEPARATEON == 1 ]; then
@@ -384,13 +384,13 @@ function ChangeStructureIfNeededPCM()
     else
         GetFileNumberMerging $1 $3 2
         cp $2/GammaConvV1$5_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&
-           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
+        if  [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&
+            [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
             echo "Nothing to be done: \"CutSelection_GammaConvV1_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log\"\,0\)
         fi
-   fi
+    fi
 }
 
 function ChangeStructureIfNeededPCMCalo()
@@ -400,13 +400,13 @@ function ChangeStructureIfNeededPCMCalo()
     else
         GetFileNumberMerging $1 $3 2
         cp $2/GammaConvCalo$5_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&
-           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
+        if  [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&
+            [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
             echo "Nothing to be done: \"CutSelection_GammaConvCalo_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log\"\,2\)
         fi
-   fi
+    fi
 }
 
 function ChangeStructureIfNeededCalo()
@@ -416,13 +416,13 @@ function ChangeStructureIfNeededCalo()
     else
         GetFileNumberMerging $1 $3 2
         cp $2/GammaCalo$5_$number.root $OUTPUTDIR/GammaCalo_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&
-           [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
+        if  [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&
+            [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
             echo "Nothing to be done: \"CutSelection_GammaCalo_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log\"\,4\)
         fi
-   fi
+    fi
 }
 
 function ChangeStructureIfNeededCaloMerged()
@@ -445,7 +445,7 @@ function ChangeStructureIfNeededCaloMerged()
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log\"\,10\)
         fi
-   fi
+    fi
 }
 
 function ChangeStructureIfNeededHeavy()

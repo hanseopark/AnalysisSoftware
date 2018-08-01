@@ -70,7 +70,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 TString directPhoton            = "",
                                 Int_t numberOfBins              = 25,
                                 Int_t mode                      = 0
-                           )
+                            )
 {
     gROOT->Reset();
     // mode:    0 // new output PCM-PCM
