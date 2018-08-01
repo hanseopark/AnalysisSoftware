@@ -30,6 +30,8 @@ elif [ $1 = "amechler" ]; then
     PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
 elif [ $1 = "redeboer" ]; then
     PHOTONCONVDIR=~/alice/AnalysisSoftware
+elif [ $1 = "jlietave" ]; then
+    PHOTONCONVDIR=/home/jakub/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
@@ -89,7 +91,7 @@ if [ $1 = "fjonas" ]; then
     ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
-if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ] || [ $1 = "redeboer" ]; then
+if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ] || [ $1 = "jlietave" ] || [ $1 = "redeboer" ]; then
     ln -sf $PHOTONCONVDIR/TaskV1/* TaskV1/
     ln -sf $PHOTONCONVDIR/TaskQA/* TaskQA/
 fi

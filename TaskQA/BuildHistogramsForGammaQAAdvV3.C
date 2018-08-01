@@ -144,6 +144,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         minPtPhotonCut              = 0.2;
     } else if (minPtCutNumber.CompareTo("4") == 0 ){
         minPtPhotonCut              = 0.3;
+    } else if (minPtCutNumber.CompareTo("5") == 0 ){
+        minPtPhotonCut              = 0.02;
     }
     cout<< "Min pt for tracks: " << minPtPhotonCut << endl;
 
