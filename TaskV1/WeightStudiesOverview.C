@@ -311,7 +311,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histo2DDummy->GetYaxis()->SetRangeUser(0.81,1.39);
         histo2DDummy->Draw("copy");
 
-        TLegend* legendWeight = GetAndSetLegend2(0.3,0.93-1.15*0.04*NumberOfCuts,0.9,0.93,36);
+        TLegend* legendWeight = GetAndSetLegend2(0.3,0.93-1.15*0.04*NumberOfCuts,0.65,0.93,36);
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
 //                 SetStyleHistoTH1ForGraphs(histWeight[i], "R (cm)", "Weight", 0.04, 0.06, 0.03, 0.05, 0.75, 0.5, 510,505);
@@ -363,8 +363,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TCanvas* canvasWeightDiff = new TCanvas("canvasWeightDiff","",1300,900);
     DrawGammaCanvasSettings( canvasWeightDiff, 0.08, 0.03, 0.035, 0.09);
 
-        Double_t minYDiff = -0.105;
-        Double_t maxYDiff = 0.32; //qui
+        Double_t minYDiff = -0.15;
+        Double_t maxYDiff = 0.15; //qui
         TH2F * histo2DDummyDiff = new TH2F("","",1000,0.,180.,1000,-1.5,1.);
         SetStyleHistoTH2ForGraphs(histo2DDummyDiff, "R (cm)", "modified - standard",0.04,0.04, 0.04,0.04, 1.,1.);
         histo2DDummyDiff->GetYaxis()->SetRangeUser(minYDiff,maxYDiff);
