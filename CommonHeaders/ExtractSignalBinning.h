@@ -3865,11 +3865,52 @@
                             }
                         }
                     }
-                    nIterBGFit                  = 7;
-                    fMaxYFracBGOverIntHist      = 60;
-                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
-                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+
+
+		    // 		    nIterBGFit                  = 7;
+		    //		    fMaxYFracBGOverIntHist      = 60;
+		    //		    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+		    //		    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+		    //		    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+		    TString rBin = photonCutSelection(2,1);
+
+		    if (rBin.CompareTo("2") ==0){
+                      nIterBGFit                  = 6;
+                      fMaxYFracBGOverIntHist      = 100;
+                      //                      optionBGSmoothingStandard   = "BackDecreasingWindow,NoSmoothing";
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    }else if( rBin.CompareTo("a") ==0){
+                      nIterBGFit                  = 7;
+                      fMaxYFracBGOverIntHist      = 100;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    }else if( rBin.CompareTo("b") ==0){
+                      nIterBGFit                  = 7;
+                      fMaxYFracBGOverIntHist      = 100;
+                      //                      optionBGSmoothingStandard   = "BackDecreasingWindow,NoSmoothing";
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    }else if( rBin.CompareTo("c") ==0){
+                      nIterBGFit                  = 5;
+                      fMaxYFracBGOverIntHist      = 110;
+                      //optionBGSmoothingStandard   = "BackDecreasingWindow,NoSmoothing";
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+                      //fStartPtBin  = 1;
+                    }else{
+                      nIterBGFit                  = 6;
+                      fMaxYFracBGOverIntHist      = 100;
+                      //                      optionBGSmoothingStandard   = "BackDecreasingWindow,NoSmoothing";
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+		    }
+>>>>>>> changes for RBin studies and modifications to run QA in root6
 
                 }
             //*********************************************************************************************

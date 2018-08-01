@@ -133,7 +133,8 @@ void AnalyseDCADist(    TString meson           ="",
     gSystem->Exec("mkdir -p "+outputDir);
 
     // Initialize histogram arrays & different ranges for fitting, extraction ...
-    InitializeBinning(meson, numberOfBins, fEnergyFlag, "", mode, fEventCutSelection, fClusterCutSelection, -1, kTRUE, intermediate, optionPeriod);
+
+    InitializeBinning(meson, numberOfBins, fEnergyFlag, "", mode, fEventCutSelection, fClusterCutSelection, -1, kTRUE, intermediate, optionPeriod,fGammaCutSelection);
     InitializeIntRange(meson.Data());
 
     // Set expected mass
@@ -996,8 +997,14 @@ void AnalyseDCADist(    TString meson           ="",
         TLatex *labelMeson              = new TLatex(0.12,0.86, Form("%s candidates", fMesonType.Data()));
         SetStyleTLatex( labelMeson, 0.04,4);
 
+	Int_t nCatFit=3;
+	TString rBin = fGammaCutSelection(2,1);
+	if((rBin.CompareTo("c") ==0) && (kMC==1)){
+ 	  nCatFit=2;
+ 	}
+
         for (Int_t k = 0; k< 5; k++){
-            for (Int_t i = 0; i< 3; i++){
+            for (Int_t i = 0; i< nCatFit; i++){
 	         if (i == 0){
                     DrawAutoGammaMesonHistos(   fHistFracIntHistBGvsPt[k][0],
                                                 "", Form("#it{p}_{T,%s} (GeV/#it{c})",fMesonType.Data()), "BG/Total (%)",

@@ -2,7 +2,56 @@
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
  ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
  *******************************************************************************/
-
+#include "TH1F.h"
+#include "TH1D.h"
+#include "TH2F.h"
+#include "TProfile2D.h"
+#include "TF1.h"
+#include <TStyle.h>
+#include <TImage.h>
+#include <TASImage.h>
+#include <Riostream.h>
+#include <Riostream.h>
+#include <fstream>
+#include "TMath.h"
+#include <stdlib.h>
+#include <fstream>
+#include <math.h>
+#include <TROOT.h>
+#include <TApplication.h>
+#include <TPaveLabel.h>
+#include <TSystem.h>
+#include <TFrame.h>
+#include <TStyle.h>
+#include <TString.h>
+#include "TGaxis.h"
+#include "TFile.h"
+#include "TH1F.h"
+#include "TH1D.h"
+#include "TH2F.h"
+#include "TF1.h"
+#include "TVirtualFitter.h"
+#include "TObject.h"
+#include "TCanvas.h"
+#include "TMultiGraph.h"
+#include "TLegend.h"
+#include "TDatabasePDG.h"
+#include "TMinuit.h"
+#include "TBenchmark.h"
+#include "TRandom.h"
+#include "TLatex.h"
+#include "TPostScript.h"
+#include "TGraphErrors.h"
+#include "TFitResultPtr.h"
+#include "TFitResult.h"
+#include "TMatrixDSym.h"
+#include "TArrow.h"
+#include "TGraphAsymmErrors.h"
+#include "TGaxis.h"
+#include "TMarker.h"
+#include "TASImage.h"
+#include "TRandom3.h"
+#include <queue>
 #include "QA.h"
 #include "EventQA_Runwise.C"
 #include "PhotonQA_Runwise.C"
