@@ -77,7 +77,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC=""
     # LHC data files
         # LHC16Data="2374" # comment: "eta' test"
-        LHC16Data="2422" # comment: "Remco PHOS request"
+        # LHC16Data="2422" # comment: "Remco PHOS request"
+        LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"
         LHC16dData="child_1"
         LHC16gData="child_2"
         LHC16hData="child_3"
@@ -106,7 +107,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 
 # Set output directory (offline and remote)
     # TRAINDIR="vAN-20180123-1" # comment: "eta' test"
-    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
+    # TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
+    TRAINDIR="vAN-20180730-1" # comment: "Remco & Hannah, Joshua request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
