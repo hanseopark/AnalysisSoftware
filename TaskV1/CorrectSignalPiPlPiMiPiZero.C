@@ -1051,7 +1051,6 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	}
 	fitTrueEffi->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
     TFitResultPtr resultEffi = histoTrueEffiPt->Fit(fitTrueEffi,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
-    cout << "histoTrueEffiPt="<< histoTrueEffiPt<< endl;
 	TH1D* histoTrueEffiPtFit = (TH1D*)histoTrueEffiPt->Clone("histoTrueEffiPtFit");
 	for (Int_t i = histoTrueEffiPt->GetXaxis()->FindBin(minPtMesonEffFit)+1; i < histoTrueEffiPt->GetXaxis()->FindBin(maxPtMesonEffFit)+offsetCorrectionHighPt; i++){
 		Double_t ptStart = histoTrueEffiPt->GetXaxis()->GetBinLowEdge(i);
@@ -1380,11 +1379,11 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	padCorrectedYieldHistos->cd();
 	padCorrectedYieldHistos->SetLogy();    
 
-	DrawAutoGammaMesonHistos( histoCorrectedYieldTrue, 
-								"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
-								kTRUE, 3., 4e-10, kTRUE,
-								kFALSE, 0., 0.7, 
-								kTRUE, 0., 25.);
+    DrawAutoGammaMesonHistos( histoCorrectedYieldTrue,
+                                "", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}",
+                                kTRUE, 3., 4e-10, kFALSE,
+                                kFALSE, 0., 0.7,
+                                kFALSE, 0., 25.);
 	DrawGammaSetMarker(histoCorrectedYieldTrue, 22, 1., kBlack, kBlack);                             
 	histoCorrectedYieldTrue->DrawCopy("e1");  
 
@@ -1841,19 +1840,19 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		}
 
 		//Find biggest Deviation
-		if (TMath::Abs(relDifferenceLeft[i]) < 75. ){
-			if(differenceLeft[i] < 0){
-				largestDifferenceNeg[i] =     differenceLeft[i];
-				largestDifferenceNegError[i] =   differenceLeftError[i];
-				relLargestDifferenceNeg[i] =     relDifferenceLeft[i];
-				relLargestDifferenceNegError[i] =   relDifferenceLeftError[i];
-			}else{   
-				largestDifferencePos[i] =     differenceLeft[i]; 
-				largestDifferencePosError[i] =   differenceLeftError[i]; 
-				relLargestDifferencePos[i] =     relDifferenceLeft[i]; 
-				relLargestDifferencePosError[i] =   relDifferenceLeftError[i]; 
-			}  
-		}
+        if (TMath::Abs(relDifferenceLeft[i]) < 75. ){
+            if(differenceLeft[i] < 0){
+                largestDifferenceNeg[i] =     differenceLeft[i];
+                largestDifferenceNegError[i] =   differenceLeftError[i];
+                relLargestDifferenceNeg[i] =     relDifferenceLeft[i];
+                relLargestDifferenceNegError[i] =   relDifferenceLeftError[i];
+            }else{
+                largestDifferencePos[i] =     differenceLeft[i];
+                largestDifferencePosError[i] =   differenceLeftError[i];
+                relLargestDifferencePos[i] =     relDifferenceLeft[i];
+                relLargestDifferencePosError[i] =   relDifferenceLeftError[i];
+            }
+        }
 		if (TMath::Abs(relDifferenceNarrow[i]) < 75.){
 			if(differenceNarrow[i] < 0){
 				if(differenceNarrow[i] < largestDifferenceNeg[i]){
@@ -1887,7 +1886,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 				relLargestDifferencePosError[i] =   relDifferenceWideError[i]; 
 				}
 			}
-		}
+        }
 	}  
 
 	cout << "done filling" << endl;
@@ -1956,9 +1955,9 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	SystErrGraphPos->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",nameMeson.Data(),centralityString.Data()),TObject::kOverwrite);
 	SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",nameMeson.Data(),centralityString.Data()),TObject::kOverwrite);
 	if(histoCorrectionFactorsHistvsPtCatA)histoCorrectionFactorsHistvsPtCatA->Write("PileupContamination");
-	histoCorrectedYieldTrue->Write();
+    histoCorrectedYieldTrue->Write();
 	histoCorrectedYieldTrueNarrow->Write();
-	histoCorrectedYieldTrueWide->Write();
+    histoCorrectedYieldTrueWide->Write();
 	histoCorrectedYieldFixed->Write();
 	histoCorrectedYieldNarrowFixed->Write();
 	histoCorrectedYieldWideFixed->Write();
@@ -1975,7 +1974,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	histoCorrectedYieldTrueLeftWideFitted->Write();
 	histoCorrectedYieldTrueLeftNarrowFitted->Write();
 	
-	
+
 	histoUnCorrectedYield->Write();
 
 	histoFWHMMeson->Write();

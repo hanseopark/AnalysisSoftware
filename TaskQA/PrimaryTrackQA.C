@@ -416,6 +416,19 @@ void PrimaryTrackQA(
     Bool_t isMinMaxSPD  = kTRUE;
     MesonFit fitter;
     TString StrNameOfHistogram;
+
+    //-------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------
+    Double_t NmbSelectedMCPosPions     = 0.;
+    Double_t NmbSelectedMCNegPions     = 0.;
+    Double_t NmbSelectedPosPions       = 0.;
+    Double_t NmbSelectedNegPions       = 0.;
+    Double_t NmbOutPions               = 0.;
+    Double_t NmbSelectedTruePosPions   = 0.;
+    Double_t NmbSelectedTrueNegPions   = 0.;
+    Double_t efficiency                = 0.;
+    Double_t validatedefficiency       = 0.;
+    Double_t purity                    = 0.;
     //*****************************************************************************************************
     //*****************************************************************************************************
     //****************************** Looping over DataSets ************************************************
@@ -581,6 +594,7 @@ void PrimaryTrackQA(
             //WriteHistogram(fHistESD_PrimaryNegPions_Pt);
             SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryNegPions_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryNegPions_Pt.push_back(new TH1D(*fHistESD_PrimaryNegPions_Pt));
+            NmbSelectedNegPions = fHistESD_PrimaryNegPions_Pt->GetEntries();
         } else cout << "INFO: Object |fHistESD_PrimaryNegPions_Pt| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // ESD_PrimaryPosPions_Pt
@@ -596,6 +610,7 @@ void PrimaryTrackQA(
             //WriteHistogram(fHistESD_PrimaryPosPions_Pt);
             SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryPosPions_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPosPions_Pt.push_back(new TH1D(*fHistESD_PrimaryPosPions_Pt));
+            NmbSelectedPosPions = fHistESD_PrimaryPosPions_Pt->GetEntries();
         } else cout << "INFO: Object |fHistESD_PrimaryPosPions_Pt| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // ESD_PrimaryNegPions_Phi
@@ -1036,6 +1051,7 @@ void PrimaryTrackQA(
                 //WriteHistogram(fHistMC_AllPosPions_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistMC_AllPosPions_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
                 vecMC_AllPosPions_Pt.push_back(new TH1D(*fHistMC_AllPosPions_Pt));
+                NmbSelectedMCPosPions = fHistMC_AllPosPions_Pt->GetEntries();
             } else cout << "INFO: Object |: MC_AllPosPions_Pt| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
             // MC_AllNegPions_Pt
@@ -1051,6 +1067,7 @@ void PrimaryTrackQA(
                 //WriteHistogram(fHistMC_AllNegPions_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistMC_AllNegPions_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
                 vecMC_AllNegPions_Pt.push_back(new TH1D(*fHistMC_AllNegPions_Pt));
+                NmbSelectedMCNegPions = fHistMC_AllNegPions_Pt->GetEntries();
             } else cout << "INFO: Object |: MC_AllNegPions_Pt| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
             // MC_PosPionsFromNeutralMeson_Pt
@@ -1103,6 +1120,7 @@ void PrimaryTrackQA(
                 //WriteHistogram(fHistESD_TruePosPion_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TruePosPion_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
                 vecESD_TruePosPion_Pt.push_back(new TH1D(*fHistESD_TruePosPion_Pt));
+                NmbSelectedTruePosPions = fHistESD_TruePosPion_Pt->GetEntries();
             } else cout << "INFO: Object |: ESD_TruePosPion_Pt| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
             // ESD_TrueNegPion_Pt
@@ -1118,6 +1136,7 @@ void PrimaryTrackQA(
                 //WriteHistogram(fHistESD_TrueNegPion_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TrueNegPion_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
                 vecESD_TrueNegPion_Pt.push_back(new TH1D(*fHistESD_TrueNegPion_Pt));
+                NmbSelectedTrueNegPions = fHistESD_TrueNegPion_Pt->GetEntries();
             } else cout << "INFO: Object |: ESD_TrueNegPion_Pt| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
             // ESD_TruePosPionFromNeutralMeson_Pt
@@ -1170,6 +1189,7 @@ void PrimaryTrackQA(
             //WriteHistogram(fHistIsPionSelected_AfterQA);
             SaveCanvasAndWriteHistogram(canvas, fHistIsPionSelected_AfterQA, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecIsPionSelected_AfterQA.push_back(new TH1D(*fHistIsPionSelected_AfterQA));
+            NmbOutPions = fHistIsPionSelected_AfterQA->GetBinContent(4);
         } else cout << "INFO: Object |AfterQA: fHistIsPionSelected_AfterQA| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // PionCutsContainer: dEdxCuts
@@ -1441,7 +1461,8 @@ void PrimaryTrackQA(
             GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA,minB,maxB);
             SetXRange(fHistPion_dEdxSignal_after_AfterQA,minB-1,maxB+1);
             GetMinMaxBinY(fHistPion_dEdxSignal_after_AfterQA,minYB,maxYB);
-            SetYRange(fHistPion_dEdxSignal_after_AfterQA,minYB,maxYB+1);
+            SetYRange(fHistPion_dEdxSignal_after_AfterQA,fHistPion_dEdxSignal_after_AfterQA->FindBin(0.),fHistPion_dEdxSignal_after_AfterQA->FindBin(200.));
+            fHistPion_dEdxSignal_after_AfterQA->SetAxisRange(0.,200,"Y");
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_AfterQA,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdxSignal_after_AfterQA,"",
@@ -2931,6 +2952,29 @@ void PrimaryTrackQA(
         fOutput->Close();
         delete fOutput;
         fOutput=NULL;
+
+        //-------------------------------------------------------------------
+        // display some useful values, to get a rough idea what is going on
+
+        if(MCContainer&&TrueContainer){
+            validatedefficiency = (NmbSelectedTruePosPions+NmbSelectedTrueNegPions)/(NmbSelectedMCPosPions+NmbSelectedMCNegPions);
+            purity = (NmbSelectedTrueNegPions+NmbSelectedTruePosPions)/(NmbSelectedPosPions+NmbSelectedNegPions);
+            cout << "--------------------------------" << endl;
+            cout << "Selected Pos Pions = " << NmbSelectedPosPions << endl;
+            cout << "Selected MC Pos Pions = " << NmbSelectedMCPosPions << endl;
+            cout << "Selected True Pos Pions = " << NmbSelectedTruePosPions << endl;
+            cout << "Selected Neg Pions = " << NmbSelectedNegPions << endl;
+            cout << "Selected MC Neg Pions = " << NmbSelectedMCNegPions << endl;
+            cout << "Selected True Neg Pions = " << NmbSelectedTrueNegPions << endl;
+            cout << "Selected MC Pos + MC Neg Pions = " << NmbSelectedMCNegPions + NmbSelectedMCPosPions<< endl;
+            cout << "Selected Pos + Pions = " << NmbSelectedNegPions + NmbSelectedPosPions<< endl;
+            cout << "Pions Out = " << NmbOutPions << endl;
+            cout << "--------------------------------" << endl;
+            cout << "Integrated validated efficiency = " << validatedefficiency << endl;
+            cout << "Integrated purity = " << purity << endl;
+        }
+
+
     }
     //*****************************************************************************************************
     //*****************************************************************************************************
