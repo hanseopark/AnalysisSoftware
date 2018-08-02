@@ -3910,8 +3910,6 @@
                       optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                       optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 		    }
->>>>>>> changes for RBin studies and modifications to run QA in root6
-
                 }
             //*********************************************************************************************
             //**************************************** Pi0 for 13TeV low B field **************************
