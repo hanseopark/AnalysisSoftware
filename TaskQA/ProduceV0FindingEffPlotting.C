@@ -33,11 +33,11 @@
 #include "TGraphAsymmErrors.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
-#include "CommonHeaders/PlottingGammaConversionHistos.h"
-#include "CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "CommonHeaders/FittingGammaConversion.h"
-#include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-#include "CommonHeaders/ConversionFunctions.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ConversionFunctions.h"
 
 
 
@@ -219,6 +219,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
                                  TString nameFolder ="",
                                  TString cutString_OnFly = "",
                                  TString cutString_Offline = "",
+                                 TString fEnergyFlag = "",
                                  TString outputDir = "V0EfficiencyStudies"
 ){
 
@@ -229,6 +230,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
     SetPlotStyle();
 
     gSystem->Exec(Form("mkdir -p %s",outputDir.Data()));
+    TString fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
 
 	TFile *file_OnFly              = new TFile(filename_OnFly.Data());
 	TList *list_OnFly              = (TList*) file_OnFly->Get(nameFolder.Data());
@@ -549,7 +551,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGamma_Pt_Offline->Draw("same,l");
 
         TLegend* legendV0Finder = GetAndSetLegend2(0.2,0.14,0.5,0.14+0.04*3.5,36);
-        legendV0Finder->SetHeader("pp, #sqrt{s} = 5 TeV (2017)");
+        legendV0Finder->SetHeader(fCollisionSystem.Data());
         legendV0Finder->AddEntry(histoRatioRecConvGamma_Pt_OnFly,"On-the-Fly","pl");
         legendV0Finder->AddEntry(histoRatioRecConvGamma_Pt_Offline,"Offline","pl");
         legendV0Finder->Draw();
@@ -590,7 +592,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGamma_R_Offline->Draw("same,l");
 
         TLegend* legendV0Finder_R = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
-        legendV0Finder_R->SetHeader("pp, #sqrt{s} = 5 TeV (2017)");
+        legendV0Finder_R->SetHeader(fCollisionSystem.Data());
         legendV0Finder_R->AddEntry(histoRatioRecConvGamma_R_OnFly,"On-the-Fly","pl");
         legendV0Finder_R->AddEntry(histoRatioRecConvGamma_R_Offline,"Offline","pl");
         legendV0Finder_R->Draw();
@@ -670,7 +672,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGamma_Phi_Offline->Draw("same,l");
 
         TLegend* legendV0Finder_Phi = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
-        legendV0Finder_Phi->SetHeader("pp, #sqrt{s} = 5 TeV (2017)");
+        legendV0Finder_Phi->SetHeader(fCollisionSystem.Data());
         legendV0Finder_Phi->AddEntry(histoRatioRecConvGamma_Phi_OnFly,"On-the-Fly","pl");
         legendV0Finder_Phi->AddEntry(histoRatioRecConvGamma_Phi_Offline,"Offline","pl");
         legendV0Finder_Phi->Draw();
@@ -693,7 +695,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGamma_Eta_Offline->Draw("same,l");
 
         TLegend* legendV0Finder_Eta = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
-        legendV0Finder_Eta->SetHeader("pp, #sqrt{s} = 5 TeV (2017)");
+        legendV0Finder_Eta->SetHeader(fCollisionSystem.Data());
         legendV0Finder_Eta->AddEntry(histoRatioRecConvGamma_Eta_OnFly,"On-the-Fly","pl");
         legendV0Finder_Eta->AddEntry(histoRatioRecConvGamma_Eta_Offline,"Offline","pl");
         legendV0Finder_Eta->Draw();
@@ -715,7 +717,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         ratioV0Finders->Draw("same,l");
 
         TLegend* legendV0FinderRatio = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
-        legendV0FinderRatio->SetHeader("pp, #sqrt{s} = 5 TeV (2017)");
+        legendV0FinderRatio->SetHeader(fCollisionSystem.Data());
         legendV0FinderRatio->AddEntry(ratioV0Finders,"#frac{Offline}{On-the-Fly}","pl");
         legendV0FinderRatio->Draw();
 
