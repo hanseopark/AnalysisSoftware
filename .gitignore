@@ -1,5 +1,7 @@
 *.d
 *.so
+*_C_ACLiC_*
+
 *.creator
 *.config
 *.files
@@ -14,4 +16,17 @@ DirectPhotonPlots/
 *.pcm
 *.kate-swp
 *.eps
+
 .vscode/*
+
+*.log
+debugOutput*.txt
+
+fullTaskFile
+fileNumbers.txt
+fileNumbers2.txt
+filesTemp.txt
+listCurrMerge.txt
+runlistsToMerge.txt
+templog.txt
+locallog.txt

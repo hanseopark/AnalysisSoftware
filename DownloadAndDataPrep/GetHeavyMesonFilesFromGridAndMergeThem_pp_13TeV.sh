@@ -77,8 +77,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC=""
     # LHC data files
         # LHC16Data="2374" # comment: "eta' test"
-        # LHC16Data="2422" # comment: "Remco PHOS request"
-        LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"
+        LHC16Data="2422" # comment: "Remco PHOS request"
+        # LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"
         LHC16dData="child_1"
         LHC16gData="child_2"
         LHC16hData="child_3"
@@ -107,8 +107,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 
 # Set output directory (offline and remote)
     # TRAINDIR="vAN-20180123-1" # comment: "eta' test"
-    # TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
-    TRAINDIR="vAN-20180730-1" # comment: "Remco & Hannah, Joshua request"
+    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
+    # TRAINDIR="vAN-20180730-1" # comment: "Remco & Hannah, Joshua request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
@@ -264,132 +264,112 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         echo -e "\n\n--== DOWNLOADING FILES FROM THE GRID ==--\n"
     # LHC data files
         if [ -n "$LHC16dData" ]; then # child 1
-            echo ""
-            echo "--> Downloading LHC16d..."
+            echo -e "\n--> Downloading LHC16d..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16d "$AliTrainDirDt/$LHC16dData/merge" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16d "$AliTrainDirDt/$LHC16dData/merge" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16gData" ]; then # child 2
-            echo ""
-            echo "--> Downloading LHC16g..."
+            echo -e "\n--> Downloading LHC16g..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16g "$AliTrainDirDt/$LHC16gData/merge" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16g "$AliTrainDirDt/$LHC16gData/merge" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16hData" ]; then # child 3
-            echo ""
-            echo "--> Downloading LHC16h..."
+            echo -e "\n--> Downloading LHC16h..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16iData" ]; then # child 4
-            echo ""
-            echo "--> Downloading LHC16i..."
+            echo -e "\n--> Downloading LHC16i..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16jData" ]; then # child 5
-            echo ""
-            echo "--> Downloading LHC16j..."
+            echo -e "\n--> Downloading LHC16j..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16kData" ]; then # child 6
-            echo ""
-            echo "--> Downloading LHC16k..."
+            echo -e "\n--> Downloading LHC16k..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16lData" ]; then # child 7
-            echo ""
-            echo "--> Downloading LHC16l..."
+            echo -e "\n--> Downloading LHC16l..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16oData" ]; then # child 8
-            echo ""
-            echo "--> Downloading LHC16o..."
+            echo -e "\n--> Downloading LHC16o..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16o "$AliTrainDirDt/$LHC16oData/merge" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16o "$AliTrainDirDt/$LHC16oData/merge" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16pData" ]; then # child 9
-            echo ""
-            echo "--> Downloading LHC16p..."
+            echo -e "\n--> Downloading LHC16p..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16p "$AliTrainDirDt/$LHC16pData/merge" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16p "$AliTrainDirDt/$LHC16pData/merge" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16eData" ]; then # child 10
-            echo ""
-            echo "--> Downloading LHC16e..."
+            echo -e "\n--> Downloading LHC16e..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16e "$AliTrainDirDt/$LHC16eData/merge" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16e "$AliTrainDirDt/$LHC16eData/merge" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
     # Monte Carlo files
         if [ -n "$LHC17f6MC" ]; then # child 1
-            echo ""
-            echo "--> Downloading LHC17f6..."
+            echo -e "\n--> Downloading LHC17f6..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6 "$AliTrainDirMC/$LHC17f6MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6 "$AliTrainDirMC/$LHC17f6MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6 "$AliTrainDirMC/$LHC17f6MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17f9MC" ]; then # child 2
-            echo ""
-            echo "--> Downloading LHC17f9..."
+            echo -e "\n--> Downloading LHC17f9..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9 "$AliTrainDirMC/$LHC17f9MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9 "$AliTrainDirMC/$LHC17f9MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9 "$AliTrainDirMC/$LHC17f9MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d17MC" ]; then # child 3 (has no IncAcc)
-            echo ""
-            echo "--> Downloading LHC17d17..."
+            echo -e "\n--> Downloading LHC17d17..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17 "$AliTrainDirMC/$LHC17d17MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17 "$AliTrainDirMC/$LHC17d17MC/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17 "$AliTrainDirMC/$LHC17d17MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17f5MC" ]; then # child 4
-            echo ""
-            echo "--> Downloading LHC17f5..."
+            echo -e "\n--> Downloading LHC17f5..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5 "$AliTrainDirMC/$LHC17f5MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5 "$AliTrainDirMC/$LHC17f5MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5 "$AliTrainDirMC/$LHC17f5MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d3MC" ]; then # child 5
-            echo ""
-            echo "--> Downloading LHC17d3..."
+            echo -e "\n--> Downloading LHC17d3..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3 "$AliTrainDirMC/$LHC17d3MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3 "$AliTrainDirMC/$LHC17d3MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3 "$AliTrainDirMC/$LHC17d3MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17e5MC" ]; then # child 6
-            echo ""
-            echo "--> Downloading LHC17e5..."
+            echo -e "\n--> Downloading LHC17e5..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5 "$AliTrainDirMC/$LHC17e5MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5 "$AliTrainDirMC/$LHC17e5MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5 "$AliTrainDirMC/$LHC17e5MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d20a1MC" ]; then # child 7
-            echo ""
-            echo "--> Downloading LHC17d20a1..."
+            echo -e "\n--> Downloading LHC17d20a1..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1 "$AliTrainDirMC/$LHC17d20a1MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1 "$AliTrainDirMC/$LHC17d20a1MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1 "$AliTrainDirMC/$LHC17d20a1MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d20a2MC" ]; then # child 8
-            echo ""
-            echo "--> Downloading LHC17d20a2..."
+            echo -e "\n--> Downloading LHC17d20a2..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2 "$AliTrainDirMC/$LHC17d20a2MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2 "$AliTrainDirMC/$LHC17d20a2MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2 "$AliTrainDirMC/$LHC17d20a2MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d16MC" ]; then # child 9
-            echo ""
-            echo "--> Downloading LHC17d16..."
+            echo -e "\n--> Downloading LHC17d16..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16 "$AliTrainDirMC/$LHC17d16MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16 "$AliTrainDirMC/$LHC17d16MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16 "$AliTrainDirMC/$LHC17d16MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC17d18MC" ]; then # child 10
-            echo ""
-            echo "--> Downloading LHC17d18..."
+            echo -e "\n--> Downloading LHC17d18..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
@@ -624,8 +604,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         echo -e "\n\n--== MERGING ROOT FILES ==--\n"
         filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16d-pass$passNr-DPGTracks\_*.root` # will be used to get the number, so period doesn't matter
         # LHC data files
-            echo ""
-            echo "--> Merging LHC data files"
+            echo -e "\n--> Merging LHC data files"
             periodList=(
                 d # child 1
                 e # child 10
@@ -660,8 +639,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
                 done
             done
         # Monte Carlo files
-            echo ""
-            echo "--> Merging Monte Carlo files"
+            echo -e "\n--> Merging Monte Carlo files"
             periodListMC=(
                 f6    # child 1  --> anchored to LHC16d
                 f9    # child 2  --> anchored to LHC16e
@@ -681,8 +659,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             listsToMerge=`cat runlistsToMerge.txt`
             for fileName in $filesForMerging; do
                 GetFileNumberMerging $fileName $((NSlashes-1)) 3
-                echo ""
-                echo "--> Merging $number"
+                echo -e "\n--> Merging $number"
                 for runListName in $listsToMerge; do
                     rm -f listCurrMerge.txt
                     nameOut=""
@@ -703,8 +680,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 
 # Clean ROOT files
     if [ $CLEANUPMAYOR == 1 ]; then
-        echo ""
-        echo "--> Cleaning up ROOT files"
+        echo -e "\n--> Cleaning up ROOT files"
         # LHC data files
             if [ -n "$LHC16dData" ]; then # child 1
                 echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16d"
