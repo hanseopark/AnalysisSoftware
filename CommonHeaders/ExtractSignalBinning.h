@@ -2990,7 +2990,12 @@
 
 
     void InitializeClusterBinning (TString energy, Int_t modi ){
-        if(modi>=100) modi -= 100; // heavy meson analysis
+
+        // For heavy meson analysis
+        Int_t modeHeavy = modi;
+        if(modi>=100) modi -= 100;
+
+        // Set fBinsClusterPt according to cases
         fBinsClusterPt          = new Double_t[400];
         if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 ||  energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0 || energy.CompareTo("pPb_8TeV") == 0 ){
             fNBinsClusterPt       = fNBinsCluster2760GeVPt;
@@ -3021,36 +3026,37 @@
             }
           }
 
-        } else if( ( energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVLowB") == 0 ) && modi != 0){
-            fNBinsClusterPt            = fNBinsCluster13TeVPt;
-
-            for(Int_t i=0; i<fNBinsCluster13TeVPt+1;i++){
-                if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
-                else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
-                else if(i<225) fBinsCluster13TeVPt[i]      = 3.+0.1*(i-55);
-                else if(i<265) fBinsCluster13TeVPt[i]      = 20.+0.25*(i-225);
-                else if(i<305) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-265);
-                else if(i<325) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-305);
-                else if(i<335) fBinsCluster13TeVPt[i]      = 70.+2.5*(i-325);
-                else fBinsCluster13TeVPt[i]                = 100;
-            }
-            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster13TeVPt[iPt];
-            }
-        } else if( ( energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVLowB") == 0 ) && modi == 0){
-            fNBinsClusterPt        = fNBinsCluster13TeVPCMPt;
-            for(Int_t i=0; i<fNBinsCluster13TeVPCMPt+1;i++){
-                if (i < 1) fBinsCluster13TeVPCMPt[i]          = 0.3*i;
-                else if(i<55) fBinsCluster13TeVPCMPt[i]       = 0.3+0.05*(i-1);
-                else if(i<125) fBinsCluster13TeVPCMPt[i]      = 3.+0.1*(i-55);
-                else if(i<155) fBinsCluster13TeVPCMPt[i]      = 10.+0.2*(i-125);
-                else if(i<211) fBinsCluster13TeVPCMPt[i]      = 16.+0.25*(i-155);
-                else if(i<251) fBinsCluster13TeVPCMPt[i]      = 30.+0.5*(i-211);
-                else if(i<301) fBinsCluster13TeVPCMPt[i]      = 50.+1.0*(i-251);
-                else fBinsCluster13TeVPCMPt[i]                = 100;
-            }
-            for(Int_t iPt=0;iPt<=fNBinsCluster13TeVPCMPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster13TeVPCMPt[iPt];
+        } else if( energy.EqualTo("13TeV") || energy.EqualTo("13TeVLowB") ) {
+            if( modi!=0 && modeHeavy<100 ) {
+                fNBinsClusterPt            = fNBinsCluster13TeVPt; //335
+                for(Int_t i=0; i<=fNBinsCluster13TeVPt; i++ ){
+                    if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
+                    else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
+                    else if(i<225) fBinsCluster13TeVPt[i]      = 3.+0.1*(i-55);
+                    else if(i<265) fBinsCluster13TeVPt[i]      = 20.+0.25*(i-225);
+                    else if(i<305) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-265);
+                    else if(i<325) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-305);
+                    else if(i<335) fBinsCluster13TeVPt[i]      = 70.+2.5*(i-325);
+                    else fBinsCluster13TeVPt[i]                = 100;
+                }
+                for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                    fBinsClusterPt[iPt] = fBinsCluster13TeVPt[iPt];
+                }
+            } else if( modi==0 || modeHeavy>=100 ){
+                fNBinsClusterPt        = fNBinsCluster13TeVPCMPt; // 301
+                for(Int_t i=0; i<=fNBinsCluster13TeVPCMPt; i++ ){
+                    if (i < 1) fBinsCluster13TeVPCMPt[i]          = 0.3*i;
+                    else if(i<55) fBinsCluster13TeVPCMPt[i]       = 0.3+0.05*(i-1);
+                    else if(i<125) fBinsCluster13TeVPCMPt[i]      = 3.+0.1*(i-55);
+                    else if(i<155) fBinsCluster13TeVPCMPt[i]      = 10.+0.2*(i-125);
+                    else if(i<211) fBinsCluster13TeVPCMPt[i]      = 16.+0.25*(i-155);
+                    else if(i<251) fBinsCluster13TeVPCMPt[i]      = 30.+0.5*(i-211);
+                    else if(i<301) fBinsCluster13TeVPCMPt[i]      = 50.+1.0*(i-251);
+                    else fBinsCluster13TeVPCMPt[i]                = 100;
+                }
+                for(Int_t iPt=0;iPt<=fNBinsCluster13TeVPCMPt;iPt++){
+                    fBinsClusterPt[iPt] = fBinsCluster13TeVPCMPt[iPt];
+                }
             }
         } else if(  energy.CompareTo("XeXe_5.44TeV") == 0 ){
             fNBinsClusterPt       = fNBinsClusterXeXe5440GeVPt;
