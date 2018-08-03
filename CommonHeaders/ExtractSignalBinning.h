@@ -76,7 +76,7 @@
             cout << "WARNING: Max bin too large (" << maxNBins << "), so set to maximum number of bins (" << vectorFrom.size()-1 << ")" << endl;
             maxNBins = vectorFrom.size()-1;
         }
-        for( size_t i=0; i<maxNBins; ++i ) arrayTo[i] = vectorFrom[i];
+        for( size_t i=0; i<=maxNBins; ++i ) arrayTo[i] = vectorFrom[i];
         return maxNBins;
     }
     // Function that copies a vector, with or without a user-defined maximum, and also sets binningMax
