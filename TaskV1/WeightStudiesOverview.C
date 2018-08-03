@@ -168,7 +168,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TProfile* profileWeight            [ConstNumberOfCuts];
     TH1F * histWeight                  [ConstNumberOfCuts];
     TH1F * histoRatioWeightCut         [ConstNumberOfCuts];
-    TH1F * histoDiffWeightCut         [ConstNumberOfCuts];
+    TH1F * histoDiffWeightCut          [ConstNumberOfCuts];
+    TH1F * histRelUncWeightCut         [ConstNumberOfCuts];
     TH1F * rData [ConstNumberOfCuts];
 
     for (Int_t i=0; i< NumberOfCuts; i++){
@@ -200,6 +201,19 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             histoDiffWeightCut[i]->Sumw2();
             histoDiffWeightCut[i]->Add(histWeight[2],-1.);
         }
+
+
+        histRelUncWeightCut[i]                               = (TH1F*)histWeight[i]->Clone("histRelUncWeight");
+        for (Int_t k = 1; k < histRelUncWeightCut[i]->GetNbinsX()+1; k++){
+            if (histRelUncWeightCut[i]->GetBinContent(k) != 0){
+                histRelUncWeightCut[i]->SetBinContent(k, histRelUncWeightCut[i]->GetBinError(k)/histRelUncWeightCut[i]->GetBinContent(k)*100);
+                histRelUncWeightCut[i]->SetBinError(k, 0);
+            } else {
+                histRelUncWeightCut[i]->SetBinContent(k, 0);
+                histRelUncWeightCut[i]->SetBinError(k, 0);
+            }
+        }
+
     }
     cout << "line " << __LINE__ << endl;
 
@@ -342,22 +356,41 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,0.98, 0.98,1.1,kBlack,2);
 
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i == 0){
-//                 SetStyleHistoTH1ForGraphs(histoRatioWeightCut[i], "R (cm)", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-                DrawGammaSetMarker(histoRatioWeightCut[i], 20, 1.5,color[i],color[i]);
-                histoRatioWeightCut[i]->Draw("same");
-
-            } else {
-                if(i<20)  DrawGammaSetMarker(histoRatioWeightCut[i], 20, 1.5,color[i],color[i]);
-                else      DrawGammaSetMarker(histoRatioWeightCut[i], 20, 1.5,color[i-20],color[i-20]);
-                histoRatioWeightCut[i]->Draw("same");
-            }
+            if(i<20)  DrawGammaSetMarker(histoRatioWeightCut[i], 20, 1.5,color[i],color[i]);
+            else      DrawGammaSetMarker(histoRatioWeightCut[i], 20, 1.5,color[i-20],color[i-20]);
+            histoRatioWeightCut[i]->Draw("same");
         }
 
     canvasWeight->Update();
     canvasWeight->SaveAs(Form("%s/Weight_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
     delete canvasWeight;
 
+
+    TCanvas* canvasRelUncWeight = new TCanvas("canvasRelUncWeight","",1300,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasRelUncWeight,  0.08, 0.03, 0.02, 0.08);
+    canvasRelUncWeight->SetGridy();
+
+        Double_t maxYRel    = 0;
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if (histRelUncWeightCut[i]->GetMaximum() > maxYRel)
+                maxYRel = histRelUncWeightCut[i]->GetMaximum();
+        }
+        if (maxYRel > 60) maxYRel = 60;
+        TH2F* histo1DDummy2              = new TH2F("histo1DDummy2","histo1DDummy2",1000, 0., 180.,1000,0,100.);
+        SetStyleHistoTH1ForGraphs(histo1DDummy2,  "R (cm)", Form("Weight rel unc. (%s)", "%"), 0.035 ,0.04, 0.035,0.04, 0.9, 1.,510,540);
+        histo1DDummy2->GetYaxis()->SetRangeUser(0,maxYRel*1.05);
+        histo1DDummy2->DrawCopy();
+
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i<20) DrawGammaSetMarker(histRelUncWeightCut[i], 20, 1.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histRelUncWeightCut[i], 20, 1.5,color[i-20],color[i-20]);
+            histRelUncWeightCut[i]->DrawCopy("same,c,p");
+        }
+        legendWeight->Draw();
+
+    canvasRelUncWeight->Update();
+    canvasRelUncWeight->SaveAs(Form("%s/WeightRelUncertainty_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
+    delete canvasRelUncWeight;
 
 
     TCanvas* canvasWeightDiff = new TCanvas("canvasWeightDiff","",1300,900);
@@ -375,15 +408,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,-0.02, -0.02,1.1,kBlack,2);
 
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i == 0){
-    //             SetStyleHistoTH1ForGraphs(histoDiffWeightCut[i], "R (cm)", "mod.-stand.", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-                DrawGammaSetMarker(histoDiffWeightCut[i], 20, 1.5,color[i],color[i]);
-                histoDiffWeightCut[i]->Draw("same");
-            } else {
-                if(i<20) DrawGammaSetMarker(histoDiffWeightCut[i], 20, 1.5,color[i],color[i]);
-                else     DrawGammaSetMarker(histoDiffWeightCut[i], 20, 1.5,color[i-20],color[i-20]);
-                histoDiffWeightCut[i]->Draw("same");
-            }
+            if(i<20) DrawGammaSetMarker(histoDiffWeightCut[i], 20, 1.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histoDiffWeightCut[i], 20, 1.5,color[i-20],color[i-20]);
+            histoDiffWeightCut[i]->Draw("same");
         }
         legendWeight->Draw();
 

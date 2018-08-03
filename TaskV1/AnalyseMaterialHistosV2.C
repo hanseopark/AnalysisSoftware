@@ -142,7 +142,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoRRejLargeData      = (TH1F*)ESDContainer->FindObject("ESD_Conversion_RLarge");
     TH1F *histoRRejSmallData      = (TH1F*)ESDContainer->FindObject("ESD_Conversion_RSmall");
     TH2F *histoAsymPData          = (TH2F*)ESDContainer->FindObject("ESD_ConversionMapping_AsymP");
- 
+
     //________________________ MC ________________________
     TFile fMC(fileNameMC.Data());
     TList *TopDirMC =(TList*)fMC.Get(nameMainDir.Data());
@@ -156,7 +156,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         return;
     }
     TList *ESDContainerMC         = (TList*)HistosGammaConversionMC->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
- 
+
 
     TH1F* histoEventQualityMC     = (TH1F*)ESDContainerMC->FindObject("NEvents");
     TH1F *histoGoodESDTracksMC    = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksEta09");
@@ -173,11 +173,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoRRejLargeMC        = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_RLarge");
     TH1F *histoRRejSmallMC        = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_RSmall");
 
-  
+
     TList *MCContainer            = (TList*)HistosGammaConversionMC->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
     TH2F * histoConvRPtMC          = (TH2F*)MCContainer->FindObject("MC_Conversion_RPt");      // All Converted
 
-    
+
     TList *TrueMCContainer        = (TList*)HistosGammaConversionMC->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
     TH2F *histoRPhiTrueMC         = (TH2F*)TrueMCContainer->FindObject("ESD_TrueConversion_RPhi");
     TH2F *histoREtaTrueMC         = (TH2F*)TrueMCContainer->FindObject("ESD_TrueConversion_REta");
@@ -206,7 +206,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     Float_t numberGoodEventsData  = histoEventQualityData->GetBinContent(1);
 
     Double_t meanMultData         = histoGoodESDTracksData->GetMean();
-  
+
 
     Float_t normFactorReconstData = 1./(numberGoodEventsData*meanMultData);
     //    normFactorReconstData = 1;
@@ -289,7 +289,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoAsymPDataLowP = (TH1F*)histoAsymPData->ProjectionY("histoAsymPDataLowP",
 							    1,
 							    histoAsymPData->GetXaxis()->FindBin(0.4-0.001),"e");
-							   
+
     histoAsymPDataHighP = (TH1F*)histoAsymPData->ProjectionY("histoAsymPDataHighP",
 							     histoAsymPData->GetXaxis()->FindBin(0.4+0.001),
 							     histoAsymPData->GetNbinsX(),"e");
@@ -383,7 +383,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoAsymPTrueMCLowP = (TH1F*)histoAsymPTrueMC->ProjectionY("histoAsymPTrueMCLowP",
 							    1,
 							    histoAsymPTrueMC->GetXaxis()->FindBin(0.4-0.001),"e");
-							   
+
     histoAsymPTrueMCHighP = (TH1F*)histoAsymPTrueMC->ProjectionY("histoAsymPTrueMCHighP",
 							     histoAsymPTrueMC->GetXaxis()->FindBin(0.4+0.001),
 							     histoAsymPTrueMC->GetNbinsX(),"e");
@@ -415,12 +415,12 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoIntegralGasData02      = new TH1D("histoIntegralGasData02", "histoIntegralGasData02", nBinsR, arrayRBins);
     histoIntegralGasData03      = new TH1D("histoIntegralGasData03", "histoIntegralGasData03", nBinsR, arrayRBins);
 
- 
+
 
     for(Int_t i=1; i<nBinsR+1; i++){
       histoIntegralGasData->SetBinContent(i,nconvInRangeData);
       histoIntegralGasData->SetBinError(i,dataStatErrorGas);
- 
+
       histoIntegralGasData01->SetBinContent(i,nconvInRangeData01);
       histoIntegralGasData01->SetBinError(i,dataStatErrorGas01);
 
@@ -429,13 +429,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
       histoIntegralGasData03->SetBinContent(i,nconvInRangeData03);
       histoIntegralGasData03->SetBinError(i,dataStatErrorGas03);
-    } 
+    }
 
     TH1F* histoIntegralGasDataWide = (TH1F*) histoRData->Clone("histoIntegralGasDataWide");
     for(Int_t i=1; i<histoIntegralGasDataWide->GetNbinsX()+1; i++){
       histoIntegralGasDataWide->SetBinContent(i,nconvInRangeData);
       histoIntegralGasDataWide->SetBinError(i,dataStatErrorGas);
-    } 
+    }
 
     //new TH1D("histoIntegralGasData", "histoIntegralGasData", nBinsR, arrayRBins);
 
@@ -464,13 +464,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoRinPtBinDataScaledToGasRebin03= (TH1F*)histoRinPtBinDataRebin03->Clone("histoRinPtBinDataScaledToGasRebin03");
     histoRinPtBinDataScaledToGasRebin03->Divide(histoRinPtBinDataRebin03,histoIntegralGasData03,1.0,1.0,"E");
 
- 
-   
+
+
     cout << "MC scaling to Nconv in gas:" << endl;
     Double_t nconvInRangeMC = CalculateIntegralWithinLimits(histoRMC, rMinGas+eps, rMaxGas-eps, mcGasCorrectionFactor);
     Double_t mcStatErrorGas = TMath::Sqrt(nconvInRangeMC);
     Double_t mcStatRelErrorGas = TMath::Sqrt(nconvInRangeMC)/nconvInRangeMC;
- 
+
     Double_t nconvInRangeMC01 = CalculateIntegralWithinLimits(histoRinPtBinMC[0], rMinGas+eps, rMaxGas-eps, mcGasCorrectionFactor);
     Double_t mcStatErrorGas01 = TMath::Sqrt(nconvInRangeMC01);
     Double_t mcStatRelErrorGas01 = TMath::Sqrt(nconvInRangeMC01)/nconvInRangeMC01;
@@ -487,11 +487,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoIntegralGasMC01      = new TH1D("histoIntegralGasMC01", "histoIntegralGasMC01", nBinsR, arrayRBins);
     histoIntegralGasMC02      = new TH1D("histoIntegralGasMC02", "histoIntegralGasMC02", nBinsR, arrayRBins);
     histoIntegralGasMC03      = new TH1D("histoIntegralGasMC03", "histoIntegralGasMC03", nBinsR, arrayRBins);
-    
+
     for(Int_t i=1; i<nBinsR+1; i++){
       histoIntegralGasMC->SetBinContent(i,nconvInRangeMC);
       histoIntegralGasMC->SetBinError(i,mcStatErrorGas);
-      
+
       histoIntegralGasMC01->SetBinContent(i,nconvInRangeMC01);
       histoIntegralGasMC01->SetBinError(i,mcStatErrorGas01);
 
@@ -500,22 +500,22 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
       histoIntegralGasMC03->SetBinContent(i,nconvInRangeMC03);
       histoIntegralGasMC03->SetBinError(i,mcStatErrorGas03);
-    } 
+    }
 
     TH1F* histoIntegralGasMCWide = (TH1F*) histoRData->Clone("histoIntegralGasMCWide");
     for(Int_t i=1; i<histoIntegralGasMCWide->GetNbinsX()+1; i++){
       histoIntegralGasMCWide->SetBinContent(i,nconvInRangeMC);
       histoIntegralGasMCWide->SetBinError(i,mcStatErrorGas);
-    } 
+    }
 
     histoRMCScaledToGas = (TH1F*) histoRMC->Clone("histoRMCScaledToGas");
     histoRMCScaledToGas->Sumw2();
     histoRMCScaledToGas->Divide(histoRMCScaledToGas , histoIntegralGasMCWide,1.0,1.0,"E");
- 
+
 
     histoRMCRebin   = (TH1F*)histoRMC->Rebin(nBinsR,"histoRMCRebin", arrayRBins);
     histoRMCRebin->Sumw2();
- 
+
     histoRMCScaledToGasRebin =(TH1F*)histoRMCRebin->Clone("histoRMCScaledToGasRebin");
     histoRMCScaledToGasRebin->Divide(histoRMCRebin,histoIntegralGasMC,1.0,1.0,"E");
 
@@ -605,7 +605,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     for(Int_t i=0; i<3; i++){
       GammaScalingHistogramm(histoPtinRBinMC[i],normFactorReconstMC);
       GammaScalingHistogramm(histoPtinRBinTrueMC[i],normFactorReconstMC);
-    } 
+    }
 
 
     // - AM calculation of efficiencies
@@ -638,7 +638,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
 
-    //- AM  calculation of quantities only related to MC. 
+    //- AM  calculation of quantities only related to MC.
     histoPurityR                 = (TH1F*)histoRTrueMC->Clone("histoPurityR");
     histoPurityR->Sumw2();
     histoPurityR->Divide(histoRTrueMC,histoRMC,1.,1.,"B");
@@ -658,7 +658,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoPurityPt5cm = (TH1F*)histoPt5cmTrueMC->Clone("histoPurityPt5cm");
     histoPurityPt5cm->Sumw2();
     histoPurityPt5cm->Divide(histoPt5cmTrueMC,histoPt5cmMC,1.,1.,"B");
- 
+
     //- AM  Start comparison Data-MC without scaling to gas. Normalization to number of events should be inserted here
 
     histoDataMCRatioR            = (TH1F*)histoRData->Clone("histoDataMCRatioR");
@@ -713,21 +713,21 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasNTracks->SetLogy(1);
     TH2F * histoDummyNTracks = new TH2F("histoDummyNTracks","histoDummyNTracks",1000,0.,2000.,1000,1.e-10,10);
     SetStyleHistoTH2ForGraphs(histoDummyNTracks, "Good TPC tracks","Counts", 0.035,0.04,0.035,0.04,1.,1.);
-    if ( (optionEnergy.CompareTo("13TeV") == 0) || (optionEnergy.CompareTo("5TeV") == 0)  ) { 
+    if ( (optionEnergy.CompareTo("13TeV") == 0) || (optionEnergy.CompareTo("5TeV") == 0)  ) {
        histoDummyNTracks->GetXaxis()->SetRangeUser(0.,100);
     }
     histoDummyNTracks->DrawCopy();
-	
+
     DrawGammaSetMarker(histoGoodESDTracksData, 20, markerSize, colorData, colorData);
     histoGoodESDTracksData->Draw("same,hist");
     DrawGammaSetMarker(histoGoodESDTracksMC, 20, markerSize, colorMC, colorMC);
     histoGoodESDTracksMC->Draw("same,hist");
-    
+
     TLegend* legend = GetAndSetLegend(0.75,0.75,2);
     legend->AddEntry(histoGoodESDTracksData,"Data","l");
     legend->AddEntry(histoGoodESDTracksMC,"MC","l");
     legend->Draw();
-    
+
     canvasNTracks->Print(Form("%s/NGoodESDTracks%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     //______________________________________ Pt _________________________________________
@@ -738,17 +738,17 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH2F * histoDummyPt = new TH2F("histoDummyPt","histoDummyPt",1000,0.,15.,1000,1.e-10,1.e-2);
     SetStyleHistoTH2ForGraphs(histoDummyPt, "pT (GeV)","Counts/(Nev. MeanMult)", 0.035,0.04,0.035,0.04,1.,1.);
     histoDummyPt->DrawCopy();
-	
+
     DrawGammaSetMarker(histoPtData, 20, markerSize, colorData, colorData);
     histoPtData->Draw("same,hist");
     DrawGammaSetMarker(histoPtMC, 20, markerSize, colorMC, colorMC);
     histoPtMC->Draw("same,hist");
-    
+
     TLegend* legendPt = GetAndSetLegend(0.75,0.75,2);
     legendPt->AddEntry(histoPtData,"Data","l");
     legendPt->AddEntry(histoPtMC,"MC","l");
     legendPt->Draw();
-    
+
     canvasPt->Print(Form("%s/pT%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     //______________________________________ R distrib scaled to gas __________________________________
@@ -785,7 +785,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
       textsizeLabelsDown = (Double_t)textSizeLabels/padLower->YtoPixel(padLower->GetY1());
       textsizeFacDown = (Double_t)1./padLower->YtoPixel(padLower->GetY1());
     }
-    
+
     TH2F *histoDummyTwoPanelsUp = new TH2F("histoDummyTwoPanelsUp","histoDummyTwoPanelsUp",1000,0.,180.,1000,-0.1,5.);
     if ((optionEnergy.CompareTo("13TeV") == 0) || (optionEnergy.CompareTo("5TeV") == 0)) {
       histoDummyTwoPanelsUp->GetYaxis()->SetRangeUser(-0.1,2.5);
@@ -799,7 +799,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     if ((optionEnergy.CompareTo("13TeV") == 0 ) || (optionEnergy.CompareTo("5TeV") == 0)){
       histoDummyTwoPanelsDown->GetYaxis()->SetRangeUser(0.8,1.55);
     }
-    
+
     padUpper->cd();
     histoDummyTwoPanelsUp->DrawCopy();
 
@@ -817,7 +817,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     padLower->cd();
     histoDummyTwoPanelsDown->DrawCopy();
-    
+
     DrawGammaLines(0.,180,1., 1.,1.,kGray,1);
     DrawGammaLines(0.,180,1.15, 1.15,1.,kGray,4);
     DrawGammaLines(0.,180,1.1, 1.1,1.,kGray,2);
@@ -833,76 +833,76 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoDataMCRatioRinPtBinScaledToGas01->Draw("same,pE");
     histoDataMCRatioRinPtBinScaledToGas02->Draw("same,pE");
     histoDataMCRatioRinPtBinScaledToGas03->Draw("same,pE");
-    
+
     TLegend* legenLowPanel = GetAndSetLegend2(0.5, 0.85-(4*0.9*textsizeLabelsDown), 0.7, 0.85, textSizeLabels);
     TString legendWithPeriod = Form("From proj, Period %s",optionPeriod.Data());
-    
+
     legenLowPanel->AddEntry(histoDataMCRatioRScaledToGas,legendWithPeriod.Data(),"lp");
     legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas01,"pT>0.15 GeV","lp");
     legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas02,"pT>0.3 GeV","lp");
     legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas03,"pT>0.4 GeV","lp");
     legenLowPanel->Draw();
 
- 
-    
+
+
     histoDummyTwoPanelsDown->Draw("same,axis");
     canvasTwoPanels->Print(Form("%s/PhotonConvRScaledToGas%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
 
     TCanvas * canvasPhiR = new TCanvas("canvasPhiR","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasPhiR, 0.09, 0.105, 0.02, 0.085);
     canvasPhiR->SetLogz(1);
     canvasPhiR->cd();
-    
+
     SetStyleHistoTH2ForGraphs(  histoRPhiData, "#varphi (rad)","R (cm)", 0.035, 0.04,
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoRPhiData->GetYaxis()->SetRangeUser(0,200.);
     histoRPhiData->GetXaxis()->SetRangeUser(0.,2*TMath::Pi());
-    
+
     histoRPhiData->Draw("colz");
-    
+
     canvasPhiR->Print(Form("%s/PhotonConvRPhi%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
     TCanvas * canvasEtaR = new TCanvas("canvasEtaR","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasEtaR, 0.09, 0.105, 0.02, 0.085);
     canvasEtaR->SetLogz(1);
     canvasEtaR->cd();
-    
+
     SetStyleHistoTH2ForGraphs(  histoREtaData, "#eta","R (cm)", 0.035, 0.04,
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoREtaData->GetYaxis()->SetRangeUser(0,200.);
     histoREtaData->GetXaxis()->SetRangeUser(-2., 2.);
-    
+
     histoREtaData->Draw("colz");
-    
+
     canvasEtaR->Print(Form("%s/PhotonConvREta%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
     TCanvas * canvasZR = new TCanvas("canvasZR","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasZR, 0.09, 0.105, 0.02, 0.085);
     canvasZR->SetLogz(1);
     canvasZR->cd();
-    
+
     SetStyleHistoTH2ForGraphs(  histoRZData, "Z (cm)","R (cm)", 0.035, 0.04,
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoRZData->GetYaxis()->SetRangeUser(0,200.);
     histoRZData->GetXaxis()->SetRangeUser(-180., 180.);
-    
+
     histoRZData->Draw("colz");
-    
+
     canvasZR->Print(Form("%s/PhotonConvRZ%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
     TCanvas * canvasPtR = new TCanvas("canvasPtR","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasPtR, 0.09, 0.105, 0.02, 0.085);
     canvasPtR->SetLogz(1);
     canvasPtR->cd();
-    
+
     SetStyleHistoTH2ForGraphs(  histoRPtData, "#it{p}_{T} (GeV/#it{c})","R (cm)", 0.035, 0.04,
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoRPtData->GetYaxis()->SetRangeUser(0,200.);
     histoRPtData->GetXaxis()->SetRangeUser(0., 20.);
-    
+
     histoRPtData->Draw("colz");
-    
+
     canvasPtR->Print(Form("%s/PhotonConvRPt%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     TCanvas * canvasElecdEdxR = new TCanvas("canvasElecdEdxR","",480,440);  // gives the page size
@@ -914,25 +914,25 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoRElecdEdxData->GetYaxis()->SetRangeUser(0,200.);
     histoRElecdEdxData->GetXaxis()->SetRangeUser(0.,200.);
-    
+
     histoRElecdEdxData->Draw("colz");
-    
+
     canvasElecdEdxR->Print(Form("%s/PhotonConvRElecdEdx%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
     TCanvas * canvasElecNSdEdxR = new TCanvas("canvasElecNSdEdxR","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasElecNSdEdxR, 0.09, 0.105, 0.02, 0.085);
     canvasElecNSdEdxR->SetLogz(1);
     canvasElecNSdEdxR->cd();
-    
+
     SetStyleHistoTH2ForGraphs(  histoRElecNSdEdxData, "electron n#sigma dEdx","R (cm)", 0.035, 0.04,
 				0.035, 0.04, 0.9, 1.0, 510, 510);
     histoRElecNSdEdxData->GetYaxis()->SetRangeUser(0,200.);
     histoRElecNSdEdxData->GetXaxis()->SetRangeUser(-10., 10.);
-    
+
     histoRElecNSdEdxData->Draw("colz");
-    
+
     canvasElecNSdEdxR->Print(Form("%s/PhotonConvRElecNSdEdx%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
 
     //______________________________________ R distribution ______________________________
     Double_t arrayXRdistrib[3];
@@ -989,7 +989,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     for(Int_t iR = 1; iR < nBinsR; iR++)
       DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
-    
+
     DrawGammaSetMarker(histoRData, 20, markerSize, colorData, colorData);
     histoRData->Draw("same,hist");
     DrawGammaSetMarker(histoRMC, 20, markerSize, colorMC, colorMC);
@@ -1007,49 +1007,49 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoEtaDalRTrueMC->SetFillColor(kBlue-3);
     histoEtaDalRTrueMC->SetFillStyle(3002);
     histoEtaDalRTrueMC->DrawCopy("same,hist");
-    
-    TLegend* legenRdistrib = GetAndSetLegend2(0.63, 0.9-(6*0.9*textsizeLabelsUp), 0.9, 0.9, textSizeLabels);
+
+    TLegend* legenRdistrib = GetAndSetLegend2(0.6, 0.93-(6*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
     legenRdistrib->AddEntry(histoRData,"Data","l");
     legenRdistrib->AddEntry(histoRMC,"MC","l");
     legenRdistrib->AddEntry(histoRTrueMC,"True MC","l");
-    legenRdistrib->AddEntry(histoCombRTrueMC,"True comb MC","l");
+    legenRdistrib->AddEntry(histoCombRTrueMC,"True MC comb.","l");
     legenRdistrib->AddEntry(histoPi0DalRTrueMC,"True MC #pi^{0} Dal.","lf");
     legenRdistrib->AddEntry(histoEtaDalRTrueMC,"True MC #eta Dal.","fl");
     legenRdistrib->Draw();
-    
+
     histoDummy4PanelsUp->Draw("axis,same");
     padRDistribLowerLeft->cd();
     histoDummy4PanelsDown->DrawCopy();
-    
+
     for(Int_t iR = 1; iR < nBinsR; iR++)
       DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
     DrawGammaLines(0.,180,1., 1.,1.,kGray);
-    
+
     DrawGammaSetMarker(histoDataMCRatioR, 20, markerSize, colorData, colorData);
     histoDataMCRatioR->Draw("same,histo");
-    
+
     histoDummy4PanelsDown->Draw("axis,same");
     padRDistribUpperRight->cd();
     padRDistribUpperRight->SetLogy();
     histoDummy4PanelsUp->DrawCopy();
-    
+
     for(Int_t iR = 1; iR < nBinsR; iR++)
       DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
-    
+
     histoRData->Draw("same,histo");
     histoRMC->Draw("same,histo");
     histoRTrueMC->Draw("same,histo");
-    
+
     for(Int_t i=0; i<6; i++){
       Int_t colorDataPt=i+1;
       DrawGammaSetMarker(histoRinPtBinData[i], 20, markerSize, colorDataPt, colorDataPt);
       histoRinPtBinData[i]->SetLineStyle(2);
       histoRinPtBinData[i]->DrawCopy("same,histo");
-      
+
       DrawGammaSetMarker(histoRinPtBinMC[i], 20, markerSize, colorMC, colorMC);
       histoRinPtBinMC[i]->SetLineStyle(2);
       histoRinPtBinMC[i]->DrawCopy("same,histo");
-      
+
       DrawGammaSetMarker(histoRinPtBinTrueMC[i], 20, markerSize, colorTrueMC, colorTrueMC);
       histoRinPtBinTrueMC[i]->SetLineStyle(2);
       histoRinPtBinTrueMC[i]->DrawCopy("same,histo");
@@ -1063,7 +1063,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     legenRdistribPtcuts->AddEntry(histoRinPtBinMC[1],"MC, 0.4 < #it{p}_{T} < 1.5 GeV/#it{c}","lf");
     legenRdistribPtcuts->AddEntry(histoRinPtBinTrueMC[1],"True MC, 0.4 < #it{p}_{T} < 1.5 GeV/#it{c}","fl");
     // legenRdistribPtcuts->Draw();
-    
+
     histoDummy4PanelsUp->Draw("axis,same");
     padRDistribLowerRight->cd();
 
@@ -1072,13 +1072,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     for(Int_t iR = 1; iR < nBinsR; iR++)
       DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.1,kGray);
     DrawGammaLines(0.,180,1., 1.,1.,kGray);
-    
+
     histoDataMCRatioR->Draw("same,histo");
-    
+
     TLegend* legenRdistribPtcutsRatio = GetAndSetLegend2(0.05, 0.27-(2*0.9*textsizeLabelsDown), 0.35, 0.27, textSizeLabels);
     legenRdistribPtcutsRatio->AddEntry(histoDataMCRatioR,"No #it{p}_{T} cut","l");
     legenRdistribPtcutsRatio->Draw();
-    
+
     TLatex *latexPeriod = new TLatex(0.05,0.85,Form("Period %s (%s)",optionPeriod.Data(), fCutSelection.Data()));
     SetStyleTLatex( latexPeriod, sizeTextNameBins,2);
     latexPeriod->Draw();
@@ -1086,7 +1086,36 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     histoDummy4PanelsDown->Draw("axis,same");
     canvasPhotonR->Print(Form("%s/PhotonConvR%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-    
+
+    //_____________________________________________________________________________________________________________
+    TCanvas* canvasPhotonR_siglepad = new TCanvas("canvasPhotonR_siglepad","",0,0,1300,1000);
+    DrawGammaCanvasSettings( canvasPhotonR_siglepad,  0.08, 0.02, 0.02, 0.09);
+    canvasPhotonR_siglepad->SetLogy();
+
+    TH2F *histoDummySinglePad = new TH2F("histoDummySinglePad","histoDummySinglePad",1000,0.,184.,1000,1.5e-9,1.);
+    SetStyleHistoTH2ForGraphs(histoDummySinglePad, "R (cm)","Counts", 0.035 ,0.04, 0.035,0.04, 0.9, 1.);
+    histoDummySinglePad->GetYaxis()->SetRangeUser(1.5e-9,2e-3);
+    histoDummySinglePad->Draw("copy");
+
+        for(Int_t iR = 1; iR < nBinsR; iR++) DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
+
+        histoRData->SetLineWidth(2);
+        histoRData->Draw("same,hist");
+        histoRMC->SetLineWidth(2);
+        histoRMC->Draw("same,hist");
+        histoRTrueMC->SetLineWidth(2);
+        histoRTrueMC->Draw("same,hist");
+        histoCombRTrueMC->SetLineWidth(2);
+        histoCombRTrueMC->DrawCopy("same,hist");
+        histoPi0DalRTrueMC->SetLineWidth(2);
+        histoPi0DalRTrueMC->DrawCopy("same,hist");
+        histoEtaDalRTrueMC->SetLineWidth(2);
+        histoEtaDalRTrueMC->DrawCopy("same,hist");
+
+        legenRdistrib->Draw();
+
+    histoDummySinglePad->Draw("axis,same");
+    canvasPhotonR_siglepad->Print(Form("%s/PhotonConvRsingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     //______________________________________ Purity _________________________________
     Double_t arrayXpurity[2];
@@ -1129,7 +1158,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         TH2F *histoDummyPurityPt =  new TH2F("histoDummyPurityPt","histoDummyPurityPt",1000,0.,8.,1000,0.,1.2);
         SetStyleHistoTH2ForGraphs(histoDummyPurityPt, "p_{T} (GeV/c)","Purity", 0.9*textsizeLabelsDownpurity, textsizeLabelsDownpurity,0.9*textsizeLabelsDownpurity,textsizeLabelsDownpurity, 0.9,0.1/(textsizeFacDownpurity*marginXRatio));
 //         histoDummyPurityPt->GetYaxis()->SetLabelOffset(+0.01);
-        histoDummyPurityPt->GetYaxis()->SetRangeUser(0.5,1.2);
+        histoDummyPurityPt->GetYaxis()->SetRangeUser(0.6,1.1);
 
     padUpperPurity->cd();
     histoDummyPurityR->DrawCopy();
@@ -1144,7 +1173,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
         TLegend* legenPurity = GetAndSetLegend2(0.15, 0.9-(1*0.9*textsizeLabelsUppurity), 0.7, 0.9, textSizeLabels);
         legenPurity->AddEntry((TObject*)0,Form("Cut: %s",fCutSelectionRead.Data()),"");
-        legenPurity->Draw();
+//         legenPurity->Draw();
 
     histoDummyPurityR->Draw("same,axis");
 
@@ -1157,7 +1186,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         DrawGammaSetMarker(histoPurityPt5cm, 20, markerSize, kGreen+2, kGreen+2);
         histoPurityPt5cm->Draw("same,hist");
 
-        TLegend* legenPurityPt = GetAndSetLegend2(0.75, 0.55-(2*0.9*textsizeLabelsUppurity), 0.9, 0.55, textSizeLabels);
+        TLegend* legenPurityPt = GetAndSetLegend2(0.13, 0.2+(2*0.9*textsizeLabelsUppurity), 0.5, 0.2, textSizeLabels);
         legenPurityPt->AddEntry(histoPurityPt,"no R cut","l");
         legenPurityPt->AddEntry(histoPurityPt5cm,"R > 5 cm","l");
         legenPurityPt->Draw();
@@ -1229,7 +1258,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH2F * histoDummyMass = new TH2F("histoDummyMass","histoDummyMass",1000,0.,0.2,10000,1.e-6,1.);
     SetStyleHistoTH2ForGraphs(histoDummyMass, "Mass (GeV)","Counts ", 0.85*textsizeLabelsDown, textsizeLabelsDown,0.85*textsizeLabelsDown,textsizeLabelsDown, 0.9,0.92);
     histoDummyMass->GetYaxis()->SetRangeUser(1.e-6,2e-3);
-    if ( (optionEnergy.CompareTo("13TeV") == 0) || (optionEnergy.CompareTo("5TeV") == 0)  ) { 
+    if ( (optionEnergy.CompareTo("13TeV") == 0) || (optionEnergy.CompareTo("5TeV") == 0)  ) {
        histoDummyMass->GetYaxis()->SetRangeUser(1.e-6,2e-2);
     }
 
@@ -1468,7 +1497,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoEffiR->DrawCopy("same");
     canvasSingleEffR->Print(Form("%s/PhotonEffiRSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
-    
+
     TCanvas * canvasSingleAsymDataMCLowP = new TCanvas("canvasSingleAsymDataMCLowP","",1200,1000);
     DrawGammaCanvasSettings( canvasSingleAsymDataMCLowP,  0.15, 0.02, 0.07, 0.12);
     DrawGammaSetMarker(histoAsymPDataLowP, 20, markerSize, colorData, colorData);
@@ -1542,7 +1571,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     }
     cout<< endl;
     // pT>0.4 declared as default
- 
+
     TProfile* fProfileContainingMaterialBudgetWeights = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBins","profileContainingMaterialBudgetWeights_manyRadialBins",nBinsR,arrayRBins);
     fProfileContainingMaterialBudgetWeights->GetXaxis()->SetTitle("R (cm)");
     fProfileContainingMaterialBudgetWeights->GetYaxis()->SetTitle("weight_per_gamma, p_{T} > 0.4 GeV/c");
@@ -1585,5 +1614,5 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     outFile.Close();
 
-   
+
 }
