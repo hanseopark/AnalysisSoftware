@@ -3062,7 +3062,7 @@
              legendRatioTheorypp_3Parted->Draw();
 
              TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.91,0.59,0.96, 0.85* textSizeLabelsPixel);
-             legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
+             legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 5.0%","l");
              legendRatioTheoryNormUnc->Draw();
 
              TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.79,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
@@ -3122,7 +3122,7 @@
          legendRatioTheorypp_3Parted2->Draw();
 
          TLegend* legendRatioTheoryNormUnc2 = GetAndSetLegend2(0.34,0.902,0.59,0.952, 0.85* textSizeLabelsPixel);
-         legendRatioTheoryNormUnc2->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
+         legendRatioTheoryNormUnc2->AddEntry(boxErrorSigmaRatio,"norm. unc. 5.0%","l");
          legendRatioTheoryNormUnc2->Draw();
 
          labelRatioTheoryPP->Draw();
@@ -3186,7 +3186,7 @@
              legendRatioTheoryppEta_3Parted->Draw();
 
              TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.9,0.56,0.96, 0.85* textSizeLabelsPixel);
-             legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
+             legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 5.0%","l");
              legendRatioTheoryNormUncEta->Draw();
 
              TLatex *labelRatioTheoryPP2   = new TLatex(0.75,0.925,collisionSystem900GeV.Data());
@@ -3310,7 +3310,7 @@
              legendXsectionPaper->SetNColumns(1);
              legendXsectionPaper->SetMargin(0.2);
              legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSys,"Data","pf");
-             legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
+             legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 5.0%","l");
              legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0,"TCM fit","l");
              legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
              legendXsectionPaper->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
@@ -3338,7 +3338,7 @@
              ratio2DNLO->DrawCopy();
 
      //        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-     //        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","f");
+     //        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 5.0%","f");
      //        legendXsectionPaperPi02->Draw();
 
      //        graphRatioPi0CombNLODSS07->RemovePoint(0);
@@ -3450,7 +3450,7 @@
              legendXsectionPaperEta->SetNColumns(1);
              legendXsectionPaperEta->SetMargin(0.2);
              legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSys,"Data","pf");
-             legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 3.5%", "l");
+             legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 5.0%", "l");
              legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Tsallis fit","l");
              legendXsectionPaperEta->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
              legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
@@ -3633,7 +3633,7 @@
              TLatex *labelALICEXSectionPaperAll  = new TLatex(0.18,0.12+0.04*5,"ALICE");
              SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
              labelALICEXSectionPaperAll->Draw();
-             TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.12+0.04*4+0.003,"norm. unc. 3.5%");
+             TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.12+0.04*4+0.003,"norm. unc. 5.0%");
              SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
              labelALICENormUnPaperAll->Draw();
 

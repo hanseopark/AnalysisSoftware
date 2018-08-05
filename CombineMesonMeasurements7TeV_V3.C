@@ -696,7 +696,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEta[11]                        =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
+    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEta[2]    = 4;
       offSetsSysEta[2] = 9;
@@ -713,7 +713,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEtaToPi0[11]                   =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
+    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEtaToPi0[2]    = 4;
       offSetsSysEtaToPi0[2] = 9;
@@ -3205,6 +3205,39 @@ fileNameEMCAL2="";
 
     canvasAcceptanceTimesEff->Update();
     canvasAcceptanceTimesEff->Print(Form("%s/Pi0_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+
+        TH2F * histo2DAccEffEta;
+        histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, minPtEta, maxPtEta, 1000, 3e-6, 2 );
+        SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
+        histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
+        histo2DAccEffEta->GetXaxis()->SetNoExponent();
+        histo2DAccEffEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+        histo2DAccEffEta->DrawCopy();
+
+        for (Int_t i = 0; i < 11; i++){
+            if(histoEtaAccTimesEff[i]){
+                DrawGammaSetMarker(histoEtaAccTimesEff[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+                histoEtaAccTimesEff[i]->Draw("p,same,e");
+            }
+        }
+
+        TLegend* legendEffiAccEta           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        for (Int_t i = 0; i < 11; i++){
+            if(histoEtaAccTimesEff[i]){
+                legendEffiAccEta->AddEntry(histoEtaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
+            }
+        }
+        legendEffiAccEta->Draw();
+
+        drawLatexAdd("ALICE performance",0.15,0.92,textSizeLabelsRel,kFALSE);
+        drawLatexAdd(collisionSystem7TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+        drawLatexAdd("#eta #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Eta_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // ******************************** Cross section for pi0 single measurement 7TeV ************************************
