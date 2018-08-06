@@ -562,9 +562,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
     canvasRelSysErr->SetLogx();
 
-    TH2F * histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    TH2F * histo2DRelSysErr = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetNoExponent();
@@ -598,9 +597,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     DrawGammaCanvasSettings( canvasRelStatErr, 0.08, 0.02, 0.035, 0.09);
     canvasRelStatErr->SetLogx();
 
-    TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    TH2F * histo2DRelStatErr = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,35.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetNoExponent();
@@ -634,9 +632,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     TGraphAsymmErrors* graphCombDRRelTot        = CalculateRelErrUpAsymmGraph( graphCombDRTot, "relativeTotalErrorDR");
 
     canvasRelSysErr->cd();
-        TH2F * histo2DRelErr;
-        histo2DRelErr                    = new TH2F("histo2DRelErr","histo2DRelErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+        TH2F * histo2DRelErr = new TH2F("histo2DRelErr","histo2DRelErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
+        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
         histo2DRelErr->GetYaxis()->SetRangeUser(0,35.5);
         histo2DRelErr->GetXaxis()->SetMoreLogLabels();
         histo2DRelErr->GetXaxis()->SetNoExponent();
@@ -651,9 +648,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         graphCombDRRelSys->Draw("l,x0,same,e1");
 
         TLegend* legendRelTotErr       = GetAndSetLegend2(0.22, 0.92-(0.035*3), 0.45, 0.92, 32);
-        legendRelTotErr->AddEntry(graphCombDRRelTot,"tot","p");
-        legendRelTotErr->AddEntry(graphCombDRRelStat,"stat","l");
-        legendRelTotErr->AddEntry(graphCombDRRelSys,"sys","l");
+        legendRelTotErr->AddEntry(graphCombDRRelTot,"Total","p");
+        legendRelTotErr->AddEntry(graphCombDRRelStat,"Statistical","l");
+        legendRelTotErr->AddEntry(graphCombDRRelSys,"Systematic","l");
         legendRelTotErr->Draw();
 
         TLatex *labelRelTotErrEnergy   = new TLatex(0.95,0.89,collisionSystempp8TeV.Data());
@@ -800,8 +797,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     DrawGammaCanvasSettings( canvasWeights, 0.08, 0.01, 0.01, 0.09);
     canvasWeights->SetLogx();
 
-    histo2DDRWeights;
-    histo2DDRWeights = new TH2F("histo2DDRWeights","histo2DDRWeights",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DDRWeights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DDRWeights->GetXaxis()->SetMoreLogLabels();
     histo2DDRWeights->GetXaxis()->SetNoExponent();
@@ -835,11 +830,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     //  ************************************ Visualize relative errors ******************************************************
     //  *********************************************************************************************************************
 
+    canvasRelSysErr->cd();
     canvasRelSysErr->SetLogx();
 
-    histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetNoExponent();
@@ -869,13 +863,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     //  *********************************************************************************************************************
     //  ************************************ Visualize relative errors ******************************************************
     //  *********************************************************************************************************************
-    canvasRelStatErr           = new TCanvas("canvasRelStatErr","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasRelStatErr, 0.08, 0.02, 0.035, 0.09);
-    canvasRelStatErr->SetLogx();
 
-    histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    canvasRelStatErr->cd();
+
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetNoExponent();
@@ -909,8 +900,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     TGraphAsymmErrors* graphCombDRNonFitRelTot        = CalculateRelErrUpAsymmGraph( graphCombDRNonFitTot, "relativeTotalErrorDR");
 
     canvasRelSysErr->cd();
-        histo2DRelErr                    = new TH2F("histo2DRelErr","histo2DRelErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
         histo2DRelErr->GetYaxis()->SetRangeUser(0,30.5);
         histo2DRelErr->GetXaxis()->SetMoreLogLabels();
         histo2DRelErr->GetXaxis()->SetNoExponent();
@@ -925,9 +915,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         graphCombDRNonFitRelSys->Draw("l,x0,same,e1");
 
         legendRelTotErr       = GetAndSetLegend2(0.14, 0.92-(0.035*3), 0.45, 0.92, 32);
-        legendRelTotErr->AddEntry(graphCombDRNonFitRelTot,"tot","p");
-        legendRelTotErr->AddEntry(graphCombDRNonFitRelStat,"stat","l");
-        legendRelTotErr->AddEntry(graphCombDRNonFitRelSys,"sys","l");
+        legendRelTotErr->AddEntry(graphCombDRNonFitRelTot,"Total","p");
+        legendRelTotErr->AddEntry(graphCombDRNonFitRelStat,"Statistical","l");
+        legendRelTotErr->AddEntry(graphCombDRNonFitRelSys,"Systematic","l");
         legendRelTotErr->Draw();
 
         labelRelTotErrEnergy   = new TLatex(0.95,0.89,collisionSystempp8TeV.Data());

@@ -1484,7 +1484,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelSysErr;
     histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetNoExponent(kTRUE);
     //histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1534,7 +1534,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelStatErr;
     histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetNoExponent(kTRUE);
     //histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1586,7 +1586,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelTotErrPi0;
     histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrPi0->GetXaxis()->SetNoExponent(kTRUE);
     //histo2DRelTotErrPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -1624,7 +1624,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErrZoomed.%s",outputDir.Data(),suffix.Data()));
 
     histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,35.5);
-    histo2DRelTotErrPi0->GetYaxis()->SetTitle("Err (%)");
+    histo2DRelTotErrPi0->GetYaxis()->SetTitle("Uncertainty (%)");
     histo2DRelTotErrPi0->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionRelTotA, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1636,9 +1636,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphCombPi0InvXSectionRelSysA->Draw("l,x0,same,e1");
 
         TLegend* legendRelTotErr3       = GetAndSetLegend2(0.27, 0.92-(0.035*3), 0.58, 0.92, 32);
-        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelTotA,"tot","p");
-        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelStatA,"stat","l");
-        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelSysA,"sys","l");
+        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelTotA,"Total","p");
+        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelStatA,"Statistical","l");
+        legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelSysA,"Systematic","l");
         legendRelTotErr3->Draw();
 
         labelRelTotErrEnergy->Draw();
@@ -2809,7 +2809,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelSysErrEta;
     histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.33,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEta->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelSysErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2854,7 +2854,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelStatErrEta;
     histo2DRelStatErrEta                = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.33,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelStatErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2902,7 +2902,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEta;
     histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.33,50.,1000,0,80.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEta->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelTotErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2934,7 +2934,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelTotErrZoomed.%s",outputDir.Data(),suffix.Data()));
 
     histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,65.5);
-    histo2DRelTotErrEta->GetYaxis()->SetTitle("Err (%)");
+    histo2DRelTotErrEta->GetYaxis()->SetTitle("Uncertainty (%)");
     histo2DRelTotErrEta->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionRelTotA, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -3976,7 +3976,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelSysErrEtaToPi0;
     histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.33,30.,1000,0,40.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelSysErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -4008,7 +4008,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TH2F * histo2DRelStatErrEtaToPi0;
     histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.33,30.,1000,0,65.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelStatErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -4044,7 +4044,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
     histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,30.,1000,0,65.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelTotErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -4065,7 +4065,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
 
     histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,65.5);
-    histo2DRelTotErrEtaToPi0->GetYaxis()->SetTitle("Err (%)");
+    histo2DRelTotErrEtaToPi0->GetYaxis()->SetTitle("Uncertainty (%)");
     histo2DRelTotErrEtaToPi0->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelTotA, markerStyleComb, markerSizeComb, colorComb , colorComb);

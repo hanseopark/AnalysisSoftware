@@ -5418,7 +5418,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                 labelWeightsEta->SetTextFont(43);
                 labelWeightsEta->Draw();
-                TLatex *labelDetProcWeights    = new TLatex(0.05, 0.16,detectionProcess.Data());
+                TLatex *labelDetProcWeights    = new TLatex(0.95, 0.16,detectionProcess.Data());
                 SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                 labelDetProcWeights->SetTextFont(43);
                 labelDetProcWeights->Draw();

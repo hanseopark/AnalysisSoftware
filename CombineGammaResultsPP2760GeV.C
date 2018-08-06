@@ -562,7 +562,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     TH2F * histo2DRelSysErr;
     histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetNoExponent();
@@ -598,7 +598,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     TH2F * histo2DRelStatErr;
     histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetNoExponent();
@@ -634,7 +634,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasRelSysErr->cd();
         TH2F * histo2DRelErr;
         histo2DRelErr                    = new TH2F("histo2DRelErr","histo2DRelErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
-        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+        SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
         histo2DRelErr->GetYaxis()->SetRangeUser(0,30.5);
         histo2DRelErr->GetXaxis()->SetMoreLogLabels();
         histo2DRelErr->GetXaxis()->SetNoExponent();
@@ -649,9 +649,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombDRRelSys->Draw("l,x0,same,e1");
 
         TLegend* legendRelTotErr       = GetAndSetLegend2(0.14, 0.92-(0.035*3), 0.45, 0.92, 32);
-        legendRelTotErr->AddEntry(graphCombDRRelTot,"tot","p");
-        legendRelTotErr->AddEntry(graphCombDRRelStat,"stat","l");
-        legendRelTotErr->AddEntry(graphCombDRRelSys,"sys","l");
+        legendRelTotErr->AddEntry(graphCombDRRelTot,"Total","p");
+        legendRelTotErr->AddEntry(graphCombDRRelStat,"Statistical","l");
+        legendRelTotErr->AddEntry(graphCombDRRelSys,"Systematic","l");
         legendRelTotErr->Draw();
 
         TLatex *labelRelTotErrEnergy   = new TLatex(0.95,0.89,collisionSystempp2760GeV.Data());
@@ -874,9 +874,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombDRNonFitRelSys->Draw("l,x0,same,e1");
 
         TLegend* legenDRNonFitelTotErr       = GetAndSetLegend2(0.14, 0.92-(0.035*3), 0.45, 0.92, 32);
-        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelTot,"tot","p");
-        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelStat,"stat","l");
-        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelSys,"sys","l");
+        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelTot,"Total","p");
+        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelStat,"Statistical","l");
+        legenDRNonFitelTotErr->AddEntry(graphCombDRNonFitRelSys,"Systematic","l");
         legenDRNonFitelTotErr->Draw();
 
         labelRelTotErrEnergy->Draw();

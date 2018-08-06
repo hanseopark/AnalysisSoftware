@@ -795,7 +795,7 @@
       canvasRelSysErr->SetLogx();
 
       TH2F * histo2DRelSysErr = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,minPtPi0,maxPtPi0,1000,0,80.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
       histo2DRelSysErr->GetXaxis()->SetNoExponent();
       histo2DRelSysErr->GetYaxis()->SetRangeUser(0,45.5);
@@ -830,7 +830,7 @@
       canvasRelStatErr->SetLogx();
 
       TH2F * histo2DRelStatErr = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,minPtPi0,maxPtPi0,1000,0,87.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
       histo2DRelStatErr->GetXaxis()->SetNoExponent();
       histo2DRelStatErr->GetYaxis()->SetRangeUser(0,87.5);
@@ -882,12 +882,12 @@
 
       TH2F * histo2DRelTotErr;
       histo2DRelTotErr                            = new TH2F("histo2DRelTotErr","histo2DRelTotErr",11000,minPtPi0,maxPtPi0,1000,0,87.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelTotErr, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelTotErr, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelTotErr->GetXaxis()->SetMoreLogLabels();
       histo2DRelTotErr->GetXaxis()->SetNoExponent();
 
       histo2DRelTotErr->GetYaxis()->SetRangeUser(0,87.5);
-      histo2DRelTotErr->GetYaxis()->SetTitle("Err (%)");
+      histo2DRelTotErr->GetYaxis()->SetTitle("Uncertainty (%)");
       histo2DRelTotErr->Draw("copy");
 
       DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -899,9 +899,9 @@
       graphCombPi0InvXSectionRelSys->Draw("l,x0,same,e1");
 
       TLegend* legendRelTotErr2 = GetAndSetLegend2(0.14, 0.94-(0.035*3*1.35), 0.45, 0.94, 32);
-      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelTot,"tot","p");
-      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelStat,"stat","l");
-      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelSys,"sys","l");
+      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelTot,"Total","p");
+      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelStat,"Statistical","l");
+      legendRelTotErr2->AddEntry(graphCombPi0InvXSectionRelSys,"Systematic","l");
       legendRelTotErr2->Draw();
 
       TLatex *labelRelTotErrEnergy            = new TLatex(0.75,0.89,collisionSystem900GeV.Data());
@@ -1023,7 +1023,7 @@
       canvasRelSysErrEta->SetLogx();
 
       TH2F * histo2DRelSysErrEta = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,minPtEta,maxPtEta,1000,0,80.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
       histo2DRelSysErr->GetXaxis()->SetNoExponent();
       histo2DRelSysErr->GetYaxis()->SetRangeUser(0,45.5);
@@ -1058,7 +1058,7 @@
       canvasRelStatErrEta->SetLogx();
 
       TH2F * histo2DRelStatErrEta = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,minPtEta,maxPtEta,1000,0,80.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
       histo2DRelStatErrEta->GetXaxis()->SetNoExponent();
       histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,65.5);
@@ -1109,12 +1109,12 @@
       canvasRelTotErrEta->SetLogx();
 
       TH2F * histo2DRelTotErrEta = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,minPtEta,maxPtEta,1000,0,77.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelTotErrEta->GetXaxis()->SetMoreLogLabels();
       histo2DRelTotErrEta->GetXaxis()->SetNoExponent();
 
       histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,77.5);
-      histo2DRelTotErrEta->GetYaxis()->SetTitle("Err (%)");
+      histo2DRelTotErrEta->GetYaxis()->SetTitle("Uncertainty (%)");
       histo2DRelTotErrEta->Draw("copy");
 
       DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1126,9 +1126,9 @@
       graphCombEtaInvXSectionRelSys->Draw("l,x0,same,e1");
 
       TLegend* legendRelTotErr2Eta = GetAndSetLegend2(0.14, 0.94-(0.035*3*1.35), 0.45, 0.94, 32);
-      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelTot,"tot","p");
-      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelStat,"stat","l");
-      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelSys,"sys","l");
+      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelTot,"Total","p");
+      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelStat,"Statistical","l");
+      legendRelTotErr2Eta->AddEntry(graphCombEtaInvXSectionRelSys,"Systematic","l");
       legendRelTotErr2Eta->Draw();
 
       TLatex *labelRelTotErrEnergyEta            = new TLatex(0.75,0.89,collisionSystem900GeV.Data());
@@ -1248,7 +1248,7 @@
       canvasRelSysErrEtaToPi0->SetLogx();
 
       TH2F * histo2DRelSysErrEtaToPi0 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,minPtEta,maxPtEta,1000,0,80.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Systematic uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
       histo2DRelSysErr->GetXaxis()->SetNoExponent();
       histo2DRelSysErr->GetYaxis()->SetRangeUser(0,45.5);
@@ -1283,7 +1283,7 @@
       canvasRelStatErrEtaToPi0->SetLogx();
 
       TH2F * histo2DRelStatErrEtaToPi0 = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,minPtEta,maxPtEta,1000,0,80.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Statistical uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelStatErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
       histo2DRelStatErrEtaToPi0->GetXaxis()->SetNoExponent();
       histo2DRelStatErrEtaToPi0->GetYaxis()->SetRangeUser(0,75.5);
@@ -1334,12 +1334,12 @@
       canvasRelTotErrEtaToPi0->SetLogx();
 
       TH2F * histo2DRelTotErrEtaToPi0 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,minPtEta,maxPtEta,1000,0,87.5);
-      SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+      SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","Total uncertainty (%)",0.035,0.04, 0.035,0.04, 1.,1.);
       histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
       histo2DRelTotErrEtaToPi0->GetXaxis()->SetNoExponent();
 
       histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,77.5);
-      histo2DRelTotErrEtaToPi0->GetYaxis()->SetTitle("Err (%)");
+      histo2DRelTotErrEtaToPi0->GetYaxis()->SetTitle("Uncertainty (%)");
       histo2DRelTotErrEtaToPi0->Draw("copy");
 
       DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1351,9 +1351,9 @@
       graphCombEtaToPi0RelSys->Draw("l,x0,same,e1");
 
       TLegend* legendRelTotErr2EtaToPi0 = GetAndSetLegend2(0.14, 0.94-(0.035*3*1.35), 0.45, 0.94, 32);
-      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelTot,"tot","p");
-      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelStat,"stat","l");
-      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelSys,"sys","l");
+      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelTot,"Total","p");
+      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelStat,"Statistical","l");
+      legendRelTotErr2EtaToPi0->AddEntry(graphCombEtaToPi0RelSys,"Systematic","l");
       legendRelTotErr2EtaToPi0->Draw();
 
       TLatex *labelRelTotErrEnergyEtaToPi0            = new TLatex(0.75,0.89,collisionSystem900GeV.Data());
