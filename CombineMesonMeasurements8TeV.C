@@ -4025,7 +4025,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRelStatErrEtaToPi0->Draw();
 
         labelRelStatErrEnergy->Draw();
-        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta/#pi^{0}");
         SetStyleTLatex( labelRelStatErrEtaToPi0, 0.85*textSizeLabelsPixel,4);
         labelRelStatErrEtaToPi0->SetTextFont(43);
         labelRelStatErrEtaToPi0->Draw();
