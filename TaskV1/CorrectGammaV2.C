@@ -2604,7 +2604,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     SummedSmallContributionsCombBack->Add(histoSignalToCombBackgroundRatio[i]);
                 }
                 histoSignalToCombBackgroundRatio[i]->Divide(histoSignalToCombBackgroundRatio[i],histoGammaTruePrimaryConv_Pt,1,1,"");
-                SetHistogramm(histoSignalToCombBackgroundRatio[i],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
+                SetHistogramm(histoSignalToCombBackgroundRatio[i],"#it{p}_{T} (GeV/#it{c})","#it{C}_{i}",10,5e7);
                 histoSignalToCombBackgroundRatio[i]->SetMinimum(1e-5);
 
                 if(i==0){
