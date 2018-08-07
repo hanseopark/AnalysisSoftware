@@ -15,8 +15,8 @@ source basicFunction.sh
 
 DOWNLOADON=1
 MERGEON=1
-SEPARATEON=0 # used in basisFunctions.sh?
-CLEANUP=1 # used in basisFunctions.sh?
+SEPARATEON=0
+CLEANUP=1
 CLEANUPMAYOR=0
 number=""
 AliTrainDirDt="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp" # data train path on the GRID
@@ -75,10 +75,22 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d20a2MC=""
         LHC17d16MC=""
         LHC17d18MC=""
+    # DEFAULT Monte Carlo EXTRA data files (for if you comment below input)
+        LHC17MCextra=""
+        LHC17f6MCextra=""
+        LHC17f9MCextra=""
+        LHC17d17MCextra=""
+        LHC17f5MCextra=""
+        LHC17d3MCextra=""
+        LHC17e5MCextra=""
+        LHC17d20a1MCextra=""
+        LHC17d20a2MCextra=""
+        LHC17d16MCextra=""
+        LHC17d18MCextra=""
     # LHC data files
-        # LHC16Data="2374" # comment: "eta' test"
-        LHC16Data="2422" # comment: "Remco PHOS request"
-        # LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"
+        # LHC16Data="2374" # comment: "omega + eta'"                    --> PCM+EMC (test!)
+        LHC16Data="2422" # comment: "Remco PHOS request"              --> PCM+PHOS
+        # LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"  --> PCM+EMC
         LHC16dData="child_1"
         LHC16gData="child_2"
         LHC16hData="child_3"
@@ -90,25 +102,37 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC16pData="child_9"
         LHC16eData="child_10"
     # Monte Carlo data files
-        # LHC17MC="3341" # comment: "omega + eta'"
-        LHC17MC="3398" # comment: "Remco PHOS request"
-        # LHC17MC="3399" # comment: "Remco PHOS request" EXTRA
-        LHC17f6MC="child_1"
-        LHC17f9MC="child_2"
-        LHC17d17MC="child_3"
-        LHC17f5MC="child_4"
-        LHC17d3MC="child_5"
-        LHC17e5MC="child_6"
-        LHC17d20a1MC="child_7"
-        LHC17d20a2MC="child_8"
-        LHC17d16MC="child_9"
-        LHC17d18MC="child_10"
-#
+        # LHC17MC="3341" # comment: "eta' test"                --> PCM+EMC (test!)
+        LHC17MC="3398" # comment: "Remco request PHOS"       --> PCM+PHOS
+        # LHC17MC="3409" # comment: "Remco request - EMC+PCM"  --> PCM+EMC
+        LHC17f6MC="child_1"    # anchored to LHC16d (child 1)
+        LHC17f9MC="child_2"    # anchored to LHC16e (child 10)
+        LHC17d17MC="child_3"   # anchored to LHC16g (child 2)
+        LHC17f5MC="child_4"    # anchored to LHC16h (child 3)
+        LHC17d3MC="child_5"    # anchored to LHC16i (child 4)
+        LHC17e5MC="child_6"    # anchored to LHC16j (child 5)
+        LHC17d20a1MC="child_7" # anchored to LHC16k (child 6)
+        LHC17d20a2MC="child_8" # anchored to LHC16l (child 7)
+        LHC17d16MC="child_9"   # anchored to LHC16o (child 8)
+        LHC17d18MC="child_10"  # anchored to LHC16p (child 9)
+    # Monte Carlo data files EXTRA
+        LHC17MCextra="3399" # comment: "Remco request PHOS"       --> PCM+PHOS
+        # LHC17MCextra="3410" # comment: "Remco request - EMC+PCM"  --> PCM+EMC
+        LHC17f6MCextra=$LHC17f6MC    # anchored to LHC16d (child 1)
+        LHC17f9MCextra=$LHC17f9MC    # anchored to LHC16e (child 10)
+        LHC17d17MCextra=$LHC17d17MC   # anchored to LHC16g (child 2)
+        LHC17f5MCextra=$LHC17f5MC    # anchored to LHC16h (child 3)
+        LHC17d3MCextra=$LHC17d3MC    # anchored to LHC16i (child 4)
+        LHC17e5MCextra=$LHC17e5MC    # anchored to LHC16j (child 5)
+        LHC17d20a1MCextra=$LHC17d20a1MC # anchored to LHC16k (child 6)
+        LHC17d20a2MCextra=$LHC17d20a2MC # anchored to LHC16l (child 7)
+        LHC17d16MCextra=$LHC17d16MC   # anchored to LHC16o (child 8)
+        LHC17d18MCextra=$LHC17d18MC  # anchored to LHC16p (child 9)
+# #
 
 # Set output directory (offline and remote)
-    # TRAINDIR="vAN-20180123-1" # comment: "eta' test"
-    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request"
-    # TRAINDIR="vAN-20180730-1" # comment: "Remco & Hannah, Joshua request"
+    # TRAINDIR="vAN-20180617-1-jkl" # comment: "eta' test"
+    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request" or "Remco & Hannah, Joshua request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
@@ -190,72 +214,143 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         if [ -n "$LHC17f6MC" ]; then # child 1
             LHC17f6MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f6MC$"`
             OUTPUTDIR_LHC17f6=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f6MC
-            echo "Directories for LHC17f6:"
+            echo "Directories for LHC17f6 (MC):"
             echo "  remote \"$LHC17f6MC\""
             echo "  local  \"$OUTPUTDIR_LHC17f6\""
         fi
         if [ -n "$LHC17f9MC" ]; then # child 2
             LHC17f9MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f9MC$"`
             OUTPUTDIR_LHC17f9=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f9MC
-            echo "Directories for LHC17f9:"
+            echo "Directories for LHC17f9 (MC):"
             echo "  remote \"$LHC17f9MC\""
             echo "  local  \"$OUTPUTDIR_LHC17f9\""
         fi
         if [ -n "$LHC17d17MC" ]; then # child 3
             LHC17d17MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d17MC$"`
             OUTPUTDIR_LHC17d17=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d17MC
-            echo "Directories for LHC17d17:"
+            echo "Directories for LHC17d17 (MC):"
             echo "  remote \"$LHC17d17MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d17\""
         fi
         if [ -n "$LHC17f5MC" ]; then # child 4
             LHC17f5MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17f5MC$"`
             OUTPUTDIR_LHC17f5=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f5MC
-            echo "Directories for LHC17f5:"
+            echo "Directories for LHC17f5 (MC):"
             echo "  remote \"$LHC17f5MC\""
             echo "  local  \"$OUTPUTDIR_LHC17f5\""
         fi
         if [ -n "$LHC17d3MC" ]; then # child 5
             LHC17d3MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d3MC$"`
             OUTPUTDIR_LHC17d3=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d3MC
-            echo "Directories for LHC17d3:"
+            echo "Directories for LHC17d3 (MC):"
             echo "  remote \"$LHC17d3MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d3\""
         fi
         if [ -n "$LHC17e5MC" ]; then # child 6
             LHC17e5MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17e5MC$"`
             OUTPUTDIR_LHC17e5=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17e5MC
-            echo "Directories for LHC17e5:"
+            echo "Directories for LHC17e5 (MC):"
             echo "  remote \"$LHC17e5MC\""
             echo "  local  \"$OUTPUTDIR_LHC17e5\""
         fi
         if [ -n "$LHC17d20a1MC" ]; then # child 7
             LHC17d20a1MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d20a1MC$"`
             OUTPUTDIR_LHC17d20a1=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a1MC
-            echo "Directories for LHC17d20a1:"
+            echo "Directories for LHC17d20a1 (MC):"
             echo "  remote \"$LHC17d20a1MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d20a1\""
         fi
         if [ -n "$LHC17d20a2MC" ]; then # child 8
             LHC17d20a2MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d20a2MC$"`
             OUTPUTDIR_LHC17d20a2=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a2MC
-            echo "Directories for LHC17d20a2:"
+            echo "Directories for LHC17d20a2 (MC):"
             echo "  remote \"$LHC17d20a2MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d20a2\""
         fi
         if [ -n "$LHC17d16MC" ]; then # child 9
             LHC17d16MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d16MC$"`
             OUTPUTDIR_LHC17d16=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d16MC
-            echo "Directories for LHC17d16:"
+            echo "Directories for LHC17d16 (MC):"
             echo "  remote \"$LHC17d16MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d16\""
         fi
         if [ -n "$LHC17d18MC" ]; then # child 10
             LHC17d18MC=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MC.*$LHC17d18MC$"`
             OUTPUTDIR_LHC17d18=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d18MC
-            echo "Directories for LHC17d18:"
+            echo "Directories for LHC17d18 (MC):"
             echo "  remote \"$LHC17d18MC\""
             echo "  local  \"$OUTPUTDIR_LHC17d18\""
+        fi
+    # Monte Carlo files EXTRA
+        if [ -n "$LHC17f6MCextra" ]; then # child 1
+            LHC17f6MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17f6MCextra$"`
+            OUTPUTDIR_LHC17f6extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f6MCextra
+            echo "Directories for LHC17f6 (MC extra):"
+            echo "  remote \"$LHC17f6MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17f6extra\""
+        fi
+        if [ -n "$LHC17f9MCextra" ]; then # child 2
+            LHC17f9MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17f9MCextra$"`
+            OUTPUTDIR_LHC17f9extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f9MCextra
+            echo "Directories for LHC17f9 (MC extra):"
+            echo "  remote \"$LHC17f9MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17f9extra\""
+        fi
+        if [ -n "$LHC17d17MCextra" ]; then # child 3
+            LHC17d17MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d17MCextra$"`
+            OUTPUTDIR_LHC17d17extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d17MCextra
+            echo "Directories for LHC17d17 (MC extra):"
+            echo "  remote \"$LHC17d17MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d17extra\""
+        fi
+        if [ -n "$LHC17f5MCextra" ]; then # child 4
+            LHC17f5MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17f5MCextra$"`
+            OUTPUTDIR_LHC17f5extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17f5MCextra
+            echo "Directories for LHC17f5 (MC extra):"
+            echo "  remote \"$LHC17f5MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17f5extra\""
+        fi
+        if [ -n "$LHC17d3MCextra" ]; then # child 5
+            LHC17d3MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d3MCextra$"`
+            OUTPUTDIR_LHC17d3extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d3MCextra
+            echo "Directories for LHC17d3 (MC extra):"
+            echo "  remote \"$LHC17d3MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d3extra\""
+        fi
+        if [ -n "$LHC17e5MCextra" ]; then # child 6
+            LHC17e5MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17e5MCextra$"`
+            OUTPUTDIR_LHC17e5extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17e5MCextra
+            echo "Directories for LHC17e5 (MC extra):"
+            echo "  remote \"$LHC17e5MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17e5extra\""
+        fi
+        if [ -n "$LHC17d20a1MCextra" ]; then # child 7
+            LHC17d20a1MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d20a1MCextra$"`
+            OUTPUTDIR_LHC17d20a1extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a1MCextra
+            echo "Directories for LHC17d20a1 (MC extra):"
+            echo "  remote \"$LHC17d20a1MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d20a1extra\""
+        fi
+        if [ -n "$LHC17d20a2MCextra" ]; then # child 8
+            LHC17d20a2MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d20a2MCextra$"`
+            OUTPUTDIR_LHC17d20a2extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d20a2MCextra
+            echo "Directories for LHC17d20a2 (MC extra):"
+            echo "  remote \"$LHC17d20a2MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d20a2extra\""
+        fi
+        if [ -n "$LHC17d16MCextra" ]; then # child 9
+            LHC17d16MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d16MCextra$"`
+            OUTPUTDIR_LHC17d16extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d16MCextra
+            echo "Directories for LHC17d16 (MC extra):"
+            echo "  remote \"$LHC17d16MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d16extra\""
+        fi
+        if [ -n "$LHC17d18MCextra" ]; then # child 10
+            LHC17d18MCextra=`alien_ls $AliTrainDirMC/ | grep "^$LHC17MCextra.*$LHC17d18MCextra$"`
+            OUTPUTDIR_LHC17d18extra=$BASEDIR/$TRAINDIR/$(basename $AliTrainDirMC)-$LHC17d18MCextra
+            echo "Directories for LHC17d18 (MC extra):"
+            echo "  remote \"$LHC17d18MCextra\""
+            echo "  local  \"$OUTPUTDIR_LHC17d18extra\""
         fi
 #
 
@@ -373,6 +468,67 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+    # Monte Carlo files EXTRA
+        if [ -n "$LHC17f6MCextra" ]; then # child 1 EXTRA
+            echo -e "\n--> Downloading LHC17f6 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6extra "$AliTrainDirMC/$LHC17f6MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6extra "$AliTrainDirMC/$LHC17f6MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6extra "$AliTrainDirMC/$LHC17f6MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17f9MCextra" ]; then # child 2 EXTRA
+            echo -e "\n--> Downloading LHC17f9 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9extra "$AliTrainDirMC/$LHC17f9MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9extra "$AliTrainDirMC/$LHC17f9MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f9extra "$AliTrainDirMC/$LHC17f9MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d17MCextra" ]; then # child 3 (has no IncAcc) EXTRA
+            echo -e "\n--> Downloading LHC17d17 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17extra "$AliTrainDirMC/$LHC17d17MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17extra "$AliTrainDirMC/$LHC17d17MCextra/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d17extra "$AliTrainDirMC/$LHC17d17MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17f5MCextra" ]; then # child 4 EXTRA
+            echo -e "\n--> Downloading LHC17f5 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5extra "$AliTrainDirMC/$LHC17f5MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5extra "$AliTrainDirMC/$LHC17f5MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f5extra "$AliTrainDirMC/$LHC17f5MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d3MCextra" ]; then # child 5 EXTRA
+            echo -e "\n--> Downloading LHC17d3 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3extra "$AliTrainDirMC/$LHC17d3MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3extra "$AliTrainDirMC/$LHC17d3MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d3extra "$AliTrainDirMC/$LHC17d3MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17e5MCextra" ]; then # child 6 EXTRA
+            echo -e "\n--> Downloading LHC17e5 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5extra "$AliTrainDirMC/$LHC17e5MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5extra "$AliTrainDirMC/$LHC17e5MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17e5extra "$AliTrainDirMC/$LHC17e5MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d20a1MCextra" ]; then # child 7 EXTRA
+            echo -e "\n--> Downloading LHC17d20a1 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1extra "$AliTrainDirMC/$LHC17d20a1MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1extra "$AliTrainDirMC/$LHC17d20a1MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a1extra "$AliTrainDirMC/$LHC17d20a1MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d20a2MCextra" ]; then # child 8 EXTRA
+            echo -e "\n--> Downloading LHC17d20a2 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2extra "$AliTrainDirMC/$LHC17d20a2MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2extra "$AliTrainDirMC/$LHC17d20a2MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d20a2extra "$AliTrainDirMC/$LHC17d20a2MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d16MCextra" ]; then # child 9 EXTRA
+            echo -e "\n--> Downloading LHC17d16 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16extra "$AliTrainDirMC/$LHC17d16MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16extra "$AliTrainDirMC/$LHC17d16MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d16extra "$AliTrainDirMC/$LHC17d16MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
+        fi
+        if [ -n "$LHC17d18MCextra" ]; then # child 10 EXTRA
+            echo -e "\n--> Downloading LHC17d18 extra..."
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18extra "$AliTrainDirMC/$LHC17d18MCextra/merge_runlist_2" DPGTracks $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18extra "$AliTrainDirMC/$LHC17d18MCextra/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18extra "$AliTrainDirMC/$LHC17d18MCextra/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
 #
 
@@ -597,6 +753,117 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
         fi
+    # Monte Carlo files EXTRA
+        if [ -n "$LHC17f6MCextra" ]; then    # child 1 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17f6extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root` $fileNumbers; do
+            ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6extra $NSlashes "MCextra_LHC17f6-anchor16d-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f6extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6extra $NSlashes "MCextra_LHC17f6-anchor16d-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f6extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6extra $NSlashes "MCextra_LHC17f6-anchor16d-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17f9MCextra" ]; then    # child 2 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17f9extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9extra $NSlashes "MCextra_LHC17f9-anchor16e-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f9extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9extra $NSlashes "MCextra_LHC17f9-anchor16e-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f9extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9extra $NSlashes "MCextra_LHC17f9-anchor16e-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d17MCextra" ]; then   # child 3 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17f5MCextra" ]; then    # child 4 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17f5extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5extra $NSlashes "MCextra_LHC17f5-anchor16h-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f5extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5extra $NSlashes "MCextra_LHC17f5-anchor16h-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17f5extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5extra $NSlashes "MCextra_LHC17f5-anchor16h-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d3MCextra" ]; then    # child 5 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d3extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3extra $NSlashes "MCextra_LHC17d3-anchor16i-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d3extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3extra $NSlashes "MCextra_LHC17d3-anchor16i-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d3extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3extra $NSlashes "MCextra_LHC17d3-anchor16i-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17e5MCextra" ]; then    # child 6 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17e5extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5extra $NSlashes "MCextra_LHC17e5-anchor16j-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17e5extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5extra $NSlashes "MCextra_LHC17e5-anchor16j-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17e5extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5extra $NSlashes "MCextra_LHC17e5-anchor16j-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d20a1MCextra" ]; then # child 7 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d20a1extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1extra $NSlashes "MCextra_LHC17d20a1-anchor16k-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d20a1extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1extra $NSlashes "MCextra_LHC17d20a1-anchor16k-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d20a1extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1extra $NSlashes "MCextra_LHC17d20a1-anchor16k-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d20a2MCextra" ]; then # child 8 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d20a2extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a2extra $NSlashes "MCextra_LHC17d20a2-anchor16l-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d20a2extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a2extra $NSlashes "MCextra_LHC17d20a2-anchor16l-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d20a2extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a2extra $NSlashes "MCextra_LHC17d20a2-anchor16l-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d16MCextra" ]; then   # child 9 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d16extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16extra $NSlashes "MCextra_LHC17d16-anchor16o-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d16extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16extra $NSlashes "MCextra_LHC17d16-anchor16o-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d16extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16extra $NSlashes "MCextra_LHC17d16-anchor16o-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
+        if [ -n "$LHC17d18MCextra" ]; then   # child 10 EXTRA
+            for fileName in `ls $OUTPUTDIR_LHC17d18extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18extra $NSlashes "MCextra_LHC17d18-anchor16p-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d18extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18extra $NSlashes "MCextra_LHC17d18-anchor16p-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d18extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18extra $NSlashes "MCextra_LHC17d18-anchor16p-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+        fi
     fi # end of [ $DOWNLOADON == 1 ]
 
 # Merge ROOT files
@@ -623,14 +890,15 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             listsToMerge=`cat runlistsToMerge.txt`
             for fileName in $filesForMerging; do
                 GetFileNumberMerging $fileName $((NSlashes-1)) 3
-                echo "$fileName --> number: $number"
+                echo "$(basename $fileName) --> number: $number"
                 for runListName in $listsToMerge; do
+                    echo -e "\nMerging runlist \"$runListName\""
                     rm -f listCurrMerge.txt
                     nameOut=""
                     for periodID in ${periodList[@]}; do
-                        echo "Period ID: $periodID"
                         currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC16$periodID-pass$passNr-$runListName\_$number.root
                         if [ -f $currFile ]; then
+                            echo "Period ID: $periodID"
                             nameOut+=$periodID
                             echo -e "$currFile" >> listCurrMerge.txt
                         fi
@@ -664,11 +932,19 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
                     rm -f listCurrMerge.txt
                     nameOut=""
                     for ((i = 0; i < ${#periodListMC[@]}; i++)); do
-                        echo "Period ID: 17${periodListMC[i]}-anchor16${periodList[i]}"
+                        # 'Normal' Monte Carlo
                         currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17${periodListMC[i]}-anchor16${periodList[i]}-$runListName\_$number.root
                         if [ -f $currFile ]; then
+                            echo "Period ID: 17${periodListMC[i]}-anchor16${periodList[i]}"
                             nameOut+=${periodListMC[i]}
-                            echo -e "$currFile" >> listCurrMerge.txt # maybe "$currFile\n"?
+                            echo -e "$currFile" >> listCurrMerge.txt
+                        fi
+                        # Extra Monte Carlo files
+                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MCextra_LHC17${periodListMC[i]}-anchor16${periodList[i]}-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            echo "Period ID: 17${periodListMC[i]}-anchor16${periodList[i]}"
+                            nameOut+=${periodListMC[i]}
+                            echo -e "$currFile" >> listCurrMerge.txt
                         fi
                     done
                     MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17$nameOut\-$runListName\_$number.root
@@ -681,106 +957,157 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 # Clean ROOT files
     if [ $CLEANUPMAYOR == 1 ]; then
         echo -e "\n--> Cleaning up ROOT files"
-        # LHC data files
-            if [ -n "$LHC16dData" ]; then # child 1
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16d"
-                rm $OUTPUTDIR_LHC16d/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16d/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16gData" ]; then # child 2
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16g"
-                rm $OUTPUTDIR_LHC16g/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16g/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16hData" ]; then # child 3
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16h"
-                rm $OUTPUTDIR_LHC16h/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16h/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16iData" ]; then # child 4
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16i"
-                rm $OUTPUTDIR_LHC16i/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16i/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16jData" ]; then # child 5
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16j"
-                rm $OUTPUTDIR_LHC16j/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16j/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16kData" ]; then # child 6
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16k"
-                rm $OUTPUTDIR_LHC16k/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16k/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16lData" ]; then # child 7
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16l"
-                rm $OUTPUTDIR_LHC16l/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16l/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16oData" ]; then # child 8
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16o"
-                rm $OUTPUTDIR_LHC16o/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16o/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16pData" ]; then # child 9
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16p"
-                rm $OUTPUTDIR_LHC16p/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16p/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC16eData" ]; then # child 10
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e"
-                rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-        # Monte Carlo files
-            if [ -n "$LHC17f6MC" ]; then    # child 1
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f6MC"
-                rm $OUTPUTDIR_LHC17f6/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17f6/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17f9MC" ]; then    # child 2
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f9MC"
-                rm $OUTPUTDIR_LHC17f9/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17f9/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d17MC" ]; then   # child 3
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d17MC"
-                rm $OUTPUTDIR_LHC17d17/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d17/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17f5MC" ]; then    # child 4
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f5MC"
-                rm $OUTPUTDIR_LHC17f5/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17f5/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d3MC" ]; then    # child 5
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d3MC"
-                rm $OUTPUTDIR_LHC17d3/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d3/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17e5MC" ]; then    # child 6
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17e5MC"
-                rm $OUTPUTDIR_LHC17e5/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17e5/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d20a1MC" ]; then # child 7
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a1MC"
-                rm $OUTPUTDIR_LHC17d20a1/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d20a1/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d20a2MC" ]; then # child 8
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a2MC"
-                rm $OUTPUTDIR_LHC17d20a2/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d20a2/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d16MC" ]; then   # child 9
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d16MC"
-                rm $OUTPUTDIR_LHC17d16/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d16/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
-            if [ -n "$LHC17d18MC" ]; then   # child 10
-                echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d18MC"
-                rm $OUTPUTDIR_LHC17d18/*/HeavyNeutralMesonToGG_*.root
-                rm $OUTPUTDIR_LHC17d18/*/*/*HeavyNeutralMesonToGG_*.root
-            fi
+    # LHC data files
+        if [ -n "$LHC16dData" ]; then # child 1
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16d"
+            rm $OUTPUTDIR_LHC16d/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16d/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16gData" ]; then # child 2
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16g"
+            rm $OUTPUTDIR_LHC16g/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16g/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16hData" ]; then # child 3
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16h"
+            rm $OUTPUTDIR_LHC16h/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16h/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16iData" ]; then # child 4
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16i"
+            rm $OUTPUTDIR_LHC16i/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16i/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16jData" ]; then # child 5
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16j"
+            rm $OUTPUTDIR_LHC16j/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16j/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16kData" ]; then # child 6
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16k"
+            rm $OUTPUTDIR_LHC16k/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16k/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16lData" ]; then # child 7
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16l"
+            rm $OUTPUTDIR_LHC16l/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16l/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16oData" ]; then # child 8
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16o"
+            rm $OUTPUTDIR_LHC16o/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16o/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16pData" ]; then # child 9
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16p"
+            rm $OUTPUTDIR_LHC16p/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16p/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC16eData" ]; then # child 10
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e"
+            rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+    # Monte Carlo files
+        if [ -n "$LHC17f6MC" ]; then    # child 1
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f6MC"
+            rm $OUTPUTDIR_LHC17f6/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f6/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17f9MC" ]; then    # child 2
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f9MC"
+            rm $OUTPUTDIR_LHC17f9/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f9/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d17MC" ]; then   # child 3
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d17MC"
+            rm $OUTPUTDIR_LHC17d17/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d17/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17f5MC" ]; then    # child 4
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f5MC"
+            rm $OUTPUTDIR_LHC17f5/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f5/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d3MC" ]; then    # child 5
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d3MC"
+            rm $OUTPUTDIR_LHC17d3/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d3/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17e5MC" ]; then    # child 6
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17e5MC"
+            rm $OUTPUTDIR_LHC17e5/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17e5/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d20a1MC" ]; then # child 7
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a1MC"
+            rm $OUTPUTDIR_LHC17d20a1/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d20a1/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d20a2MC" ]; then # child 8
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a2MC"
+            rm $OUTPUTDIR_LHC17d20a2/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d20a2/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d16MC" ]; then   # child 9
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d16MC"
+            rm $OUTPUTDIR_LHC17d16/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d16/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d18MC" ]; then   # child 10
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d18MC"
+            rm $OUTPUTDIR_LHC17d18/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d18/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+    # Monte Carlo files EXTRA
+        if [ -n "$LHC17f6MCextra" ]; then    # child 1 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f6MCextra"
+            rm $OUTPUTDIR_LHC17f6extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f6extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17f9MCextra" ]; then    # child 2 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f9MCextra"
+            rm $OUTPUTDIR_LHC17f9extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f9extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d17MCextra" ]; then   # child 3 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d17MCextra"
+            rm $OUTPUTDIR_LHC17d17extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d17extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17f5MCextra" ]; then    # child 4 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17f5MCextra"
+            rm $OUTPUTDIR_LHC17f5extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17f5extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d3MCextra" ]; then    # child 5 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d3MCextra"
+            rm $OUTPUTDIR_LHC17d3extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d3extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17e5MCextra" ]; then    # child 6 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17e5MCextra"
+            rm $OUTPUTDIR_LHC17e5extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17e5extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d20a1MCextra" ]; then # child 7 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a1MCextra"
+            rm $OUTPUTDIR_LHC17d20a1extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d20a1extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d20a2MCextra" ]; then # child 8 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a2MCextra"
+            rm $OUTPUTDIR_LHC17d20a2extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d20a2extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d16MCextra" ]; then   # child 9 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d16MCextra"
+            rm $OUTPUTDIR_LHC17d16extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d16extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
+        if [ -n "$LHC17d18MCextra" ]; then   # child 10 EXTRA
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d18MCextra"
+            rm $OUTPUTDIR_LHC17d18extra/*/HeavyNeutralMesonToGG_*.root
+            rm $OUTPUTDIR_LHC17d18extra/*/*/*HeavyNeutralMesonToGG_*.root
+        fi
     fi # end of [ $CLEANUPMAYOR == 1 ]
