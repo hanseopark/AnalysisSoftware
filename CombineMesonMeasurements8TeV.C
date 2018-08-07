@@ -1373,9 +1373,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }
     // remove bin from 0-0.3 (should have been done automatically in principle)
-    graphCombPi0InvXSectionStatA->RemovePoint(0);
-    graphCombPi0InvXSectionSysA->RemovePoint(0);
-    graphCombPi0InvXSectionTotA->RemovePoint(0);
+//    graphCombPi0InvXSectionStatA->RemovePoint(0);
+//    graphCombPi0InvXSectionSysA->RemovePoint(0);
+//    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;
@@ -1790,7 +1790,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         Size_t textSizeSpectra          = 0.04;
         TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.23, 40.);
-        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted #it{p}_{T} / no shift",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
         histoBinShift->GetXaxis()->SetMoreLogLabels(1);
         histoBinShift->GetXaxis()->SetNoExponent(kTRUE);
@@ -3047,7 +3047,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         Size_t textSizeSpectra          = 0.04;
         TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.33, 40.);
-        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted #it{p}_{T} / no shift",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
         histoBinShift->GetXaxis()->SetMoreLogLabels(1);
         histoBinShift->GetXaxis()->SetNoExponent(kTRUE);

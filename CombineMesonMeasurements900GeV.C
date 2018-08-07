@@ -1436,7 +1436,7 @@
 
           Size_t textSizeSpectra          = 0.04;
           TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,minPtPi0, maxPtPi0);
-          SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+          SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted #it{p}_{T} / no shift",
                                   0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
           histoBinShift->GetXaxis()->SetMoreLogLabels(1);
           histoBinShift->GetXaxis()->SetNoExponent(kTRUE);

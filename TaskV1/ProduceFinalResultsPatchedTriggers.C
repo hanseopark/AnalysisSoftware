@@ -4385,7 +4385,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           canvasEffi->SetLogy(0);
           canvasEffi->SetLogx(1);
           TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
-          SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
+          SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted ratio / no shift",
                                   0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
           histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalPi0,maxPtGlobalPi0);
           histoBinShift->GetXaxis()->SetMoreLogLabels();
@@ -6743,7 +6743,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                   canvasEffi->SetLogx(1);
 
                   TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
-                  SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
+                  SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted ratio / no shift",
                                           0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
                   histoBinShift->GetXaxis()->SetMoreLogLabels();
                   histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);

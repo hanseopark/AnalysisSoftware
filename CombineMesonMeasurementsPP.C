@@ -63,7 +63,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     if(useNewMeasurements)
                     fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaperPP900GeV_2017_11_17.root";
     else            fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaper7TeVand900GeV_IncludingPP2760YShiftedPrelim_Pub2012.root";
-    /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
+    /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer.root";
     /*  5TeV    */  fileName[2]                 = "CombinationInputPP/5TeV/CombinedResultsPaperPP5TeV_2018_04_27.root";
     /*  7TeV    */
     if(useNewMeasurements)
@@ -72,10 +72,12 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     /*  8TeV    */  fileName[4]                 = "CombinationInputPP/8TeV/CombinedResultsPaperPP8TeV_2017_11_16.root";
     /*  13TeV   */  fileName[5]                 = "CombinationInputPP/13TeV/";
     TString         fileNameTheory              = "ExternalInput/Theory/TheoryCompilationPP.root";
-    TString         suffix                      = "pdf";
+    TString         suffix                      = "eps";
 
-    Int_t includeEnergy[6]                      = {1,1,1,1,1,0};
-    Int_t numActiveMeas                         = 5;
+    Int_t includeEnergy[6]                      = {1,1,0,1,1,0};
+    Int_t numActiveMeas                         = 4;
+
+    TString label                               = "ALICE";
 
     Double_t xSectionsINEL[6]                   = {   52.5*1e9,
                                                       62.8*1e9,
@@ -1063,14 +1065,16 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
         }
     }
     Double_t rightalignDouble = 0.93;
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     // TLegend* legendInvariantCrossSectionPi0    = GetAndSetLegend2(0.17, 0.03, 0.5, 0.03+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     TLegend* legendInvariantCrossSectionPi0    = GetAndSetLegend2(0.17, 0.03+textsizeLabelsXSec[0], 0.5, 0.03+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantCrossSectionPi0->SetNColumns(1);
     legendInvariantCrossSectionPi0->SetMargin(0.2);
-    TString legendScalingString[6] = {"", " (x10)"," [Prelim.] (x10^{2})"," (x10^{3})"," (x10^{4})"," (x10^{5})"};
+    TString prelimStr = " [Prelim.] (x10^{2})";
+    if(useNewMeasurements) prelimStr = " (x10^{2})";
+    TString legendScalingString[6] = {"", " (x10)",prelimStr," (x10^{3})"," (x10^{4})"," (x10^{5})"};
     Int_t legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
@@ -1123,7 +1127,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantXSecTheoryPi0    = GetAndSetLegend2(0.17, 0.03+3*textsizeLabelsXSec[0], 0.5, 0.03+textsizeLabelsXSec[0]*numActiveMeas+3*textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -1191,7 +1195,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantXSecPi0    = GetAndSetLegend2(0.17, 0.03+textsizeLabelsXSec[0]*2, 0.5, 0.03+textsizeLabelsXSec[0]*numActiveMeas+3*textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -1259,7 +1263,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi044    = GetAndSetLegend2(0.696, 0.652, 0.94, 0.652+textsizeLabelsXSec[0]*(numActiveMeas-2)+textsizeLabelsXSec[0], 0.9*textSizeLabelsPixel);
@@ -1320,7 +1324,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     legendInvariantCrossSectionPi0->Draw();
@@ -1365,7 +1369,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi02    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0], 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1), textSizeLabelsPixel);
@@ -1409,7 +1413,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
@@ -1446,7 +1450,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi03    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0]*2, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+2), textSizeLabelsPixel);
@@ -1493,7 +1497,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     legendInvariantCrossSectionPi044->Draw();
@@ -1501,6 +1505,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     drawLatexAdd("PDF:CTEQ6M5", 0.7,0.78,0.9*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
     drawLatexAdd("FF:DSS07",    0.7,0.75,0.9*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
     legendInvariantCrossSectionPi03->Draw();
+    legendInvariantCrossSectionPi03Fit->Draw();
+    legendInvariantCrossSectionPi03Pyt->Draw();
 
     canvasXSectionPi0->Print(Form("%s/Pi0_XSec_Pythia_TheoryDSS07.%s",outputDir.Data(),suffix.Data()));
 
@@ -1523,7 +1529,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi05    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0]*3, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+3), textSizeLabelsPixel);
@@ -1631,7 +1637,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }
             for (Int_t j = 0; j < 10; j++){
@@ -1667,14 +1673,14 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }
             if(graphPi0InvariantCrossSectionSys[i][10]&&graphPi0InvariantCrossSectionStat[i][10]){
                 graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");
                 graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][10]->Draw("p,same");
-                if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
-                else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
+                if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
                 legendRatiosEnergy[i]->SetNColumns(1);
                 legendRatiosEnergy[i]->SetMargin(0.2);
                 if(i!=2)
@@ -1711,11 +1717,11 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }else if(padCounter==3){
               // legendRatiosPythia = GetAndSetLegend2(0.7, 0.74, 0.95, 0.74+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
-              legendRatiosPythia = GetAndSetLegend2(0.7, 0.7, 0.95, 0.7+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              legendRatiosPythia = GetAndSetLegend2(0.7, 0.74, 0.95, 0.74+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosPythia->SetNColumns(1);
               legendRatiosPythia->SetMargin(0.2);
               legendRatiosPythia->AddEntry(tempPythia,"PYTHIA 8.2,","l");
@@ -1731,8 +1737,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               histoRatioPythiaToCombFitPi0[i]->Draw("same,hist,l");
               graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");
               graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][10]->Draw("p,same");
-              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
-              else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
+              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosEnergy[i]->SetNColumns(1);
               legendRatiosEnergy[i]->SetMargin(0.2);
               if(i!=2)
@@ -1770,12 +1776,12 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }else if(padCounter==3){
               if(legendRatiosPythia) legendRatiosPythia->Draw();
               // legendInvariantXSecTheoryPi0 = GetAndSetLegend2(0.52, 0.69, 0.69, 0.69+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
-              legendInvariantXSecTheoryPi0 = GetAndSetLegend2(0.52, 0.65, 0.69, 0.65+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              legendInvariantXSecTheoryPi0 = GetAndSetLegend2(0.52, 0.69, 0.69, 0.69+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendInvariantXSecTheoryPi0->SetNColumns(1);
               legendInvariantXSecTheoryPi0->SetMargin(0.2);
               legendInvariantXSecTheoryPi0->AddEntry(graphNLODSS14InvCrossSectionPi0[exampleActiveMeas],"NLO,","f");
@@ -1790,8 +1796,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               histoRatioPythiaToCombFitPi0[i]->Draw("same,hist,l");
               graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");
               graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][10]->Draw("p,same");
-              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
-              else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
+              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosEnergy[i]->SetNColumns(1);
               legendRatiosEnergy[i]->SetMargin(0.2);
               if(i!=2)
@@ -1829,7 +1835,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }else if(padCounter==3){
               legendRatiosPythia = GetAndSetLegend2(0.15, 0.6, 0.5, 0.6+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -1860,7 +1866,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               histoRatioPythiaToCombFitPi0[i]->Draw("same,hist,l");
               graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");
               graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][10]->Draw("p,same");
-              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosEnergy[i]->SetNColumns(1);
               legendRatiosEnergy[i]->SetMargin(0.2);
@@ -1955,7 +1961,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta    = GetAndSetLegend2(0.17, 0.03, 0.5, 0.03+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -2008,7 +2014,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantXSecEta    = GetAndSetLegend2(0.17, 0.03, 0.5, 0.03+textsizeLabelsXSec[0]*numActiveMeas+4*textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -2072,7 +2078,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta44    = GetAndSetLegend2(0.696, 0.652, 0.94, 0.652+textsizeLabelsXSec[0]*(numActiveMeas-2)+textsizeLabelsXSec[0], 0.9*textSizeLabelsPixel);
@@ -2135,7 +2141,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     legendInvariantCrossSectionEta->Draw();
@@ -2179,7 +2185,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta2    = GetAndSetLegend2(0.17, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -2222,7 +2228,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvYieldEta2    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -2260,7 +2266,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta3    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0]*2, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+2), textSizeLabelsPixel);
@@ -2307,10 +2313,12 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
         }
     }
-    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     legendInvariantCrossSectionEta3->Draw();
+    legendInvariantCrossSectionEta3Fit->Draw();
+    legendInvariantCrossSectionEta3Pyt->Draw();
     TLegend* legendInvariantCrossSectionEta4    = GetAndSetLegend2(0.696, 0.652, 0.94, 0.652+textsizeLabelsXSec[0]*(numActiveMeas-2)+textsizeLabelsXSec[0], 0.9*textSizeLabelsPixel);
     legendInvariantCrossSectionEta4->SetNColumns(1);
     legendInvariantCrossSectionEta4->SetMargin(0.2);
@@ -2369,8 +2377,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",0.27,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-              drawLatexAdd("#eta #rightarrow #gamma#gamma",0.28,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,0.18,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
+              drawLatexAdd("#eta #rightarrow #gamma#gamma",0.18,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
             }
             for (Int_t j = 0; j < 10; j++){
                 if(graphEtaInvariantCrossSectionSys[i][j]&&graphEtaInvariantCrossSectionStat[i][j]){
@@ -2397,6 +2405,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     for(Int_t i=0;i<numActiveMeas;i++){
         padRatios[i]->cd();
         padRatios[i]->SetLogx(1);
+        histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data, Theory}{TCM fit}");
+        if(i==3) histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data, Theory}{Tsallis fit}");
         histoRatiosDummy[i]->DrawCopy();
     }
     padCounter = 0;
@@ -2405,7 +2415,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }
             if(graphEtaInvariantCrossSectionSys[i][10]&&graphEtaInvariantCrossSectionStat[i][10]){
@@ -2446,8 +2456,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",0.27,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-              drawLatexAdd("#eta #rightarrow #gamma#gamma",0.28,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,0.18,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
+              drawLatexAdd("#eta #rightarrow #gamma#gamma",0.18,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kFALSE);
             }else if(padCounter==3){
               legendRatiosPythia = GetAndSetLegend2(0.15, 0.735, 0.4, 0.735+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosPythia->SetNColumns(1);
@@ -2500,7 +2510,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             padRatios[padCounter]->cd();
             DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
             if(padCounter==0){
-              drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
             }else if(padCounter==3){
               legendRatiosPythia = GetAndSetLegend2(0.15, 0.605, 0.5, 0.605+textsizeLabelsXSec[0]*(numActiveMeas)+textsizeLabelsXSec[0], textSizeLabelsPixel);
@@ -2586,7 +2596,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
         }
     }
 
-    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0]*1.5,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(label,rightalignDouble,0.91,textsizeLabelsXSec[0]*1.5,kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantEtaToPi0    = GetAndSetLegend2(0.12, 0.72, 0.5, 0.72+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantEtaToPi0->SetNColumns(1);
@@ -2630,7 +2640,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
         }
     }
 
-    TLegend* legendInvariantEtaToPi02    = GetAndSetLegend2(0.43, 0.15, 0.95, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvariantEtaToPi02    = GetAndSetLegend2(0.53, 0.15, 0.95, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantEtaToPi02->SetNColumns(1);
     legendInvariantEtaToPi02->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
@@ -2644,7 +2654,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
 
     legendInvariantEtaToPi02->Draw();
 
-    drawLatexAdd("ALICE, (#eta/#pi^{0})_{data}/(#eta/#pi^{0})_{m_{T}}",0.5,0.91,textsizeLabelsXSec[0]*1.5,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(Form("%s, (#eta/#pi^{0})_{data}/(#eta/#pi^{0})_{m_{T}}",label.Data()),0.12,0.91,textsizeLabelsXSec[0]*1.5,kFALSE,kFALSE,kFALSE);
 
 
 
@@ -2675,6 +2685,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
       for(Int_t i=0;i<numActiveMeas;i++){
           padRatios[i]->cd();
           padRatios[i]->SetLogx(1);
+          histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data}{TCM fit}");
           histoRatiosDummy[i]->DrawCopy();
       }
       Int_t counterAvailMeas = 0.;
@@ -2684,7 +2695,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               padRatios[padCounter]->cd();
               DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
               if(padCounter==0){
-                drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
                 drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
                 if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.62,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               }
@@ -2723,7 +2734,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               }else bAvailMeas[i] = kFALSE;
           }
       }
-      drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
       drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
       if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.84,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
@@ -2757,7 +2768,6 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
       for(Int_t i=0;i<numActiveMeas;i++){
           padRatios[i]->cd();
           padRatios[i]->SetLogx(1);
-          histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data}{TCM fit}");
           histoRatiosDummy[i]->DrawCopy();
       }
       Int_t counterAvailMeas = 0.;
@@ -2767,7 +2777,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               padRatios[padCounter]->cd();
               DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
               if(padCounter==0){
-                drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                drawLatexAdd(label,rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
                 drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
                 if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.62,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               }
@@ -2805,7 +2815,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
               }else bAvailMeas2[i] = kFALSE;
           }
       }
-      drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      drawLatexAdd(label,rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
       drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
       if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.84,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
