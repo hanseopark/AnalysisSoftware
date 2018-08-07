@@ -3014,21 +3014,21 @@
                 fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
             }
         } else if( energy.CompareTo("8TeV") == 0 || energy.CompareTo("pPb_8TeV") == 0){
-          if(modi == 2 || modi == 4){
-            fNBinsClusterPt       = fNBinsCluster8TeVPt;
-            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+            if(modi == 2 || modi == 4){
+                fNBinsClusterPt       = fNBinsCluster8TeVPt;
+                for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                    fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+                }
+            }else{
+                fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
+                for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                    fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
+                }
             }
-          }else{
-            fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
-            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
-            }
-          }
 
         } else if( energy.EqualTo("13TeV") || energy.EqualTo("13TeVLowB") ) {
             if( modi!=0 && modeHeavy<100 ) {
-                fNBinsClusterPt            = fNBinsCluster13TeVPt; //335
+                fNBinsClusterPt            = fNBinsCluster13TeVPt; // 335
                 for(Int_t i=0; i<=fNBinsCluster13TeVPt; i++ ){
                     if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
                     else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
@@ -3160,10 +3160,15 @@
         //************************************ Binning for Cluster ****************************************
         //*************************************************************************************************
 
-        InitializeClusterBinning(energy, modi);
+        // Heavy meson analysis
+        Int_t modeHeavy = modi;
+        if( modi>=100 ) modi -= 100;
+
+        InitializeClusterBinning(energy, modeHeavy);
+
         //get centrality
         TString centrality      = GetCentralityString(eventCutSelection);
-         // set trigger string
+        // set trigger string
         TString trigger         = eventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
         Int_t specialTrigg      = 0;
         Int_t maxPtBinAvail     = 0;
