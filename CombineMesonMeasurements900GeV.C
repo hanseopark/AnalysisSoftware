@@ -488,7 +488,7 @@
           histoPythia8EtaToPi0->Divide(histoPythia8InvXSection);
           histoPythia8EtaToPi0->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
           TGraphErrors* graphPythia8EtaToPi0                  = new TGraphErrors(histoPythia8EtaToPi0);
-          while(graphPythia8EtaToPi0->GetX()[0] < 0.4) graphPythia8EtaToPi0->RemovePoint(0);
+          while(graphPythia8EtaToPi0->GetX()[0] < minPtEta) graphPythia8EtaToPi0->RemovePoint(0);
           while(graphPythia8EtaToPi0->GetX()[graphPythia8EtaToPi0->GetN()-1] > 5.) graphPythia8EtaToPi0->RemovePoint(graphPythia8EtaToPi0->GetN()-1);
 
           // *******************************************************************************************************
@@ -838,22 +838,13 @@
 
           TLegend* legendRelStatErr               = GetAndSetLegend2(0.14, 0.94-(0.035*nMeasSet*1.35), 0.45, 0.94, 32);
           for (Int_t i = 0; i < nMeasSet; i++){
-              if (availableMeas[i]== 2){
                   DrawGammaSetMarker(statErrorRelCollection[availableMeas[i]], markerStyleDet[availableMeas[i]], markerSizeDet[availableMeas[i]]*0.5, colorDet[availableMeas[i]] ,
                               colorDet[availableMeas[i]]);
                   TGraphAsymmErrors* graphDummy   = new TGraphAsymmErrors(statErrorRelCollection[availableMeas[i]]);
                   DrawGammaSetMarkerTGraphAsym(graphDummy, markerStyleDet[availableMeas[i]], markerSizeDet[availableMeas[i]]*0.5, colorDet[availableMeas[i]],
                                       colorDet[availableMeas[i]]);
-                  graphDummy->Draw("same,p,x0");
+                  graphDummy->Draw("same,p,e1");
                   legendRelStatErr->AddEntry(graphDummy,nameMeasGlobal[availableMeas[i]],"p");
-
-              } else {
-                  DrawGammaSetMarker(statErrorRelCollection[availableMeas[i]], markerStyleDet[availableMeas[i]], markerSizeDet[availableMeas[i]]*0.5, colorDet[availableMeas[i]] ,
-                              colorDet[availableMeas[i]]);
-                  statErrorRelCollection[availableMeas[i]]->Draw("p,same,e1");
-                  legendRelStatErr->AddEntry(statErrorRelCollection[availableMeas[i]],nameMeasGlobal[availableMeas[i]],"p");
-
-              }
           }
           legendRelStatErr->Draw();
 
@@ -1066,22 +1057,13 @@
 
           TLegend* legendRelStatErrEta               = GetAndSetLegend2(0.14, 0.94-(0.035*nMeasSet*1.35), 0.45, 0.94, 32);
           for (Int_t i = 0; i < nMeasSet; i++){
-              if (availableMeasEta[i]== 2){
                   DrawGammaSetMarker(statErrorRelCollectionEta[availableMeasEta[i]], markerStyleDet[availableMeasEta[i]], markerSizeDet[availableMeasEta[i]]*0.5, colorDet[availableMeasEta[i]] ,
                               colorDet[availableMeasEta[i]]);
                   TGraphAsymmErrors* graphDummy   = new TGraphAsymmErrors(statErrorRelCollectionEta[availableMeasEta[i]]);
                   DrawGammaSetMarkerTGraphAsym(graphDummy, markerStyleDet[availableMeasEta[i]], markerSizeDet[availableMeasEta[i]]*0.5, colorDet[availableMeasEta[i]],
                                       colorDet[availableMeasEta[i]]);
-                  graphDummy->Draw("same,p,x0");
+                  graphDummy->Draw("same,p,e1");
                   legendRelStatErrEta->AddEntry(graphDummy,nameMeasGlobal[availableMeasEta[i]],"p");
-
-              } else {
-                  DrawGammaSetMarker(statErrorRelCollectionEta[availableMeasEta[i]], markerStyleDet[availableMeasEta[i]], markerSizeDet[availableMeasEta[i]]*0.5, colorDet[availableMeasEta[i]] ,
-                              colorDet[availableMeasEta[i]]);
-                  statErrorRelCollectionEta[availableMeasEta[i]]->Draw("p,same,e1");
-                  legendRelStatErrEta->AddEntry(statErrorRelCollectionEta[availableMeasEta[i]],nameMeasGlobal[availableMeasEta[i]],"p");
-
-              }
           }
           legendRelStatErrEta->Draw();
 
@@ -1291,22 +1273,13 @@
 
           TLegend* legendRelStatErrEtaToPi0               = GetAndSetLegend2(0.14, 0.94-(0.035*nMeasSet*1.35), 0.45, 0.94, 32);
           for (Int_t i = 0; i < nMeasSet; i++){
-              if (availableMeasEtaToPi0[i]== 2){
                   DrawGammaSetMarker(statErrorRelCollectionEtaToPi0[availableMeasEtaToPi0[i]], markerStyleDet[availableMeasEtaToPi0[i]], markerSizeDet[availableMeasEtaToPi0[i]]*0.5, colorDet[availableMeasEtaToPi0[i]] ,
                               colorDet[availableMeasEtaToPi0[i]]);
                   TGraphAsymmErrors* graphDummy   = new TGraphAsymmErrors(statErrorRelCollectionEtaToPi0[availableMeasEtaToPi0[i]]);
                   DrawGammaSetMarkerTGraphAsym(graphDummy, markerStyleDet[availableMeasEtaToPi0[i]], markerSizeDet[availableMeasEtaToPi0[i]]*0.5, colorDet[availableMeasEtaToPi0[i]],
                                       colorDet[availableMeasEtaToPi0[i]]);
-                  graphDummy->Draw("same,p,x0");
+                  graphDummy->Draw("same,p,e1");
                   legendRelStatErrEtaToPi0->AddEntry(graphDummy,nameMeasGlobal[availableMeasEtaToPi0[i]],"p");
-
-              } else {
-                  DrawGammaSetMarker(statErrorRelCollectionEtaToPi0[availableMeasEtaToPi0[i]], markerStyleDet[availableMeasEtaToPi0[i]], markerSizeDet[availableMeasEtaToPi0[i]]*0.5, colorDet[availableMeasEtaToPi0[i]] ,
-                              colorDet[availableMeasEtaToPi0[i]]);
-                  statErrorRelCollectionEtaToPi0[availableMeasEtaToPi0[i]]->Draw("p,same,e1");
-                  legendRelStatErrEtaToPi0->AddEntry(statErrorRelCollectionEtaToPi0[availableMeasEtaToPi0[i]],nameMeasGlobal[availableMeasEtaToPi0[i]],"p");
-
-              }
           }
           legendRelStatErrEtaToPi0->Draw();
 

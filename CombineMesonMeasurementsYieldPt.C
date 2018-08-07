@@ -55,7 +55,7 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
 
     TString date = ReturnDateString(kTRUE);
 
-    TString ALICEperfor = "ALICE performance";
+    TString labelALICE = "ALICE";
     
     gROOT->Reset();
     gROOT->SetStyle("Plain");
@@ -198,8 +198,8 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       legend2->Draw();
 
 
-      TLatex *labelpp                     = new TLatex(0.31, 0.3, "ALICE, pp");
-      SetStyleTLatex( labelpp, 0.04,4, 1, 42, kTRUE, 31);
+      TLatex *labelpp                     = new TLatex(0.14, 0.3, Form("%s, pp",labelALICE.Data()));
+      SetStyleTLatex( labelpp, 0.04,4, 1, 42, kTRUE, 11);
       labelpp->Draw();
 
       TLatex *labelpp2                     = new TLatex(0.36, 0.25, "#sqrt{#it{s}} = 2.76TeV");
@@ -440,8 +440,8 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       SetStyleTLatex( label_2, 0.04,4, 1, 42, kTRUE, 31);
       label_2->Draw();
 
-      TLatex *labelpp_                     = new TLatex(0.36, 0.3, "ALICE, pp@#sqrt{#it{s}}");
-      SetStyleTLatex( labelpp_, 0.04,4, 1, 42, kTRUE, 31);
+      TLatex *labelpp_                     = new TLatex(0.11, 0.3, Form("%s, pp@#sqrt{#it{s}}",labelALICE.Data()));
+      SetStyleTLatex( labelpp_, 0.04,4, 1, 42, kTRUE, 11);
       labelpp_->Draw();
 
       TLatex *labelpp2_                     = new TLatex(0.25, 0.25, "2.76TeV");
@@ -578,8 +578,8 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       SetStyleTLatex( label1_2, 0.04,4, 1, 42, kTRUE, 31);
       label1_2->Draw();
 
-      TLatex *labelpp1_                     = new TLatex(0.35, 0.3, "ALICE, pp@#sqrt{#it{s}}");
-      SetStyleTLatex( labelpp1_, 0.04,4, 1, 42, kTRUE, 31);
+      TLatex *labelpp1_                     = new TLatex(0.105, 0.3, Form("%s, pp@#sqrt{#it{s}}",labelALICE.Data()));
+      SetStyleTLatex( labelpp1_, 0.04,4, 1, 42, kTRUE, 11);
       labelpp1_->Draw();
 
       TLatex *labelpp122_                     = new TLatex(0.22, 0.25, "0.9TeV");
@@ -597,7 +597,6 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       TLatex *labelpp13_                     = new TLatex(0.59, 0.25, "8TeV");
       SetStyleTLatex( labelpp13_, 0.04,4, 1, 42, kTRUE, 31);
       labelpp13_->Draw();
-      labelpp1_->Draw();
 
       yieldSys8TeV->DrawClone("e||");
 
@@ -799,7 +798,6 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       labelpp12_->Draw();
       labelpp12_1->Draw();
       labelpp13_->Draw();
-      labelpp1_->Draw();
 
 
       meanPtSys8TeV->DrawClone("e||");

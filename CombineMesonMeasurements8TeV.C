@@ -77,6 +77,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                         Bool_t plotDate = kFALSE
                                     ){
 
+    Bool_t bEnergyDiffRatio = kFALSE;
+
     TString date = ReturnDateString(kTRUE);
 
     TString ALICEperfor = "ALICE performance";
@@ -2642,13 +2644,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     sysErrorCollectionEta[2]        = (TGraphAsymmErrors*)graphEMCALEtaInvXSectionSys->Clone("sysErrEMCALEta");
     sysErrorCollectionEta[4]        = (TGraphAsymmErrors*)graphPCMEMCALEtaInvXSectionSys->Clone("sysErrPCMEMCALEta");
 
-    TH1D* statErrorRelCollectionEta[11];
+    TGraphAsymmErrors* statErrorRelCollectionEta[11];
     for (Int_t i = 0; i< 11; i++){
         statErrorRelCollectionEta[i]        = NULL;
     }
     for (Int_t i = 0; i < 11; i++){
-        if (statErrorCollectionEta[i])
-            statErrorRelCollectionEta[i]    = CalculateRelErrUpTH1D( statErrorCollectionEta[i], Form("relativeStatErrorEta_%s", nameMeasGlobal[i].Data()));
+        if (statErrorCollectionEta[i]){
+            statErrorRelCollectionEta[i]    = new TGraphAsymmErrors(statErrorCollectionEta[i]);
+            statErrorRelCollectionEta[i]    = CalculateRelErrUpAsymmGraph(statErrorRelCollectionEta[i], Form("relativeStatErrorEta_%s", nameMeasGlobal[i].Data()));
+        }
     }
 
     TGraphAsymmErrors* sysErrorRelCollectionEta[11];
@@ -2863,7 +2867,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendRelStatErrEta       = GetAndSetLegend2(0.24, 0.92-(0.035*nMeasSetEtaA), 0.55, 0.92, 32);
         for (Int_t i = 0; i < nMeasSetEtaA; i++){
-            DrawGammaSetMarker(statErrorRelCollectionEta[availableEtaMeasA[i]], markerStyleDet[availableEtaMeasA[i]], markerSizeDet[availableEtaMeasA[i]]*0.5, colorDet[availableEtaMeasA[i]] ,
+            DrawGammaSetMarkerTGraph(statErrorRelCollectionEta[availableEtaMeasA[i]], markerStyleDet[availableEtaMeasA[i]], markerSizeDet[availableEtaMeasA[i]]*0.5, colorDet[availableEtaMeasA[i]] ,
                                colorDet[availableEtaMeasA[i]]);
             statErrorRelCollectionEta[availableEtaMeasA[i]]->Draw("p,same,z");
             legendRelStatErrEta->AddEntry(statErrorRelCollectionEta[availableEtaMeasA[i]],nameMeasGlobal[availableEtaMeasA[i]],"p");
@@ -3788,13 +3792,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     sysErrorCollectionEtaToPi0[2]        = (TGraphAsymmErrors*)graphEMCALEtaToPi0Sys->Clone("sysErrEMCALEta");
     sysErrorCollectionEtaToPi0[4]        = (TGraphAsymmErrors*)graphPCMEMCALEtaToPi0Sys->Clone("sysErrPCMEMCALEtaToPi0");
 
-    TH1D* statErrorRelCollectionEtaToPi0[11];
+    TGraphAsymmErrors* statErrorRelCollectionEtaToPi0[11];
     for (Int_t i = 0; i< 11; i++){
         statErrorRelCollectionEtaToPi0[i]        = NULL;
     }
     for (Int_t i = 0; i < 11; i++){
-        if (statErrorCollectionEtaToPi0[i])
-            statErrorRelCollectionEtaToPi0[i]    = CalculateRelErrUpTH1D( statErrorCollectionEtaToPi0[i], Form("relativeStatErrorEtaToPi0_%s", nameMeasGlobal[i].Data()));
+        if (statErrorCollectionEtaToPi0[i]){
+            statErrorRelCollectionEtaToPi0[i]    = new TGraphAsymmErrors(statErrorCollectionEtaToPi0[i]);
+            statErrorRelCollectionEtaToPi0[i]    = CalculateRelErrUpAsymmGraph( statErrorRelCollectionEtaToPi0[i], Form("relativeStatErrorEtaToPi0_%s", nameMeasGlobal[i].Data()));
+        }
     }
 
     TGraphAsymmErrors* sysErrorRelCollectionEtaToPi0[11];
@@ -4017,7 +4023,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendRelStatErrEtaToPi0       = GetAndSetLegend2(0.24, 0.92-(0.035*nMeasSetEtaToPi0A), 0.55, 0.92, 32);
         for (Int_t i = 0; i < nMeasSetEtaToPi0A; i++){
-            DrawGammaSetMarker(statErrorRelCollectionEtaToPi0[availableEtaToPi0MeasA[i]], markerStyleDet[availableEtaToPi0MeasA[i]], markerSizeDet[availableEtaToPi0MeasA[i]]*0.5,
+            DrawGammaSetMarkerTGraph(statErrorRelCollectionEtaToPi0[availableEtaToPi0MeasA[i]], markerStyleDet[availableEtaToPi0MeasA[i]], markerSizeDet[availableEtaToPi0MeasA[i]]*0.5,
                                colorDet[availableEtaToPi0MeasA[i]] , colorDet[availableEtaToPi0MeasA[i]]);
             statErrorRelCollectionEtaToPi0[availableEtaToPi0MeasA[i]]->Draw("p,same,z");
             legendRelStatErrEtaToPi0->AddEntry(statErrorRelCollectionEtaToPi0[availableEtaToPi0MeasA[i]],nameMeasGlobal[availableEtaToPi0MeasA[i]],"p");
@@ -6669,6 +6675,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //*************************************************************************************************************
     //*************************************************************************************************************
 
+if(bEnergyDiffRatio){
+
     canvasEtatoPi0combo->cd();
     canvasEtatoPi0combo->SetLogx();
 
@@ -7529,7 +7537,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     canvasDummyATLAS->Update();
     canvasDummyATLAS->Print(Form("%s/ChPion_ComparisonWithFit.%s",outputDir.Data(),suffix.Data()));
-
+}
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
     // **********************************************************************************************************************
