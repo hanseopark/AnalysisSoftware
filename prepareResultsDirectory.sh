@@ -1,33 +1,35 @@
 if [ $1 = "fbock" ]; then
-   PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT
+    PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT
 elif [ $1 = "leardini" ]; then
-   PHOTONCONVDIR=/home/admin1/leardini/newSoftware/AnalysisSoftware
+    PHOTONCONVDIR=/home/admin1/leardini/newSoftware/AnalysisSoftware
 elif [ $1 = "dmuhlhei" ]; then
-   PHOTONCONVDIR=/home/daniel/data/work/pcgGit/AnalysisSoftware
+    PHOTONCONVDIR=/home/daniel/data/work/pcgGit/AnalysisSoftware
 elif [ $1 = "msas" ]; then
-   PHOTONCONVDIR=/home/mike/git_afterburner/AnalysisSoftware
+    PHOTONCONVDIR=/home/mike/git_afterburner/AnalysisSoftware
 elif [ $1 = "jlueh" ]; then
-   PHOTONCONVDIR=/home/jens/Programme_und_Skripte/alice-pcg/AnalysisSoftware
+    PHOTONCONVDIR=/home/jens/Programme_und_Skripte/alice-pcg/AnalysisSoftware
 elif [ $1 = "jokonig" ]; then
-   PHOTONCONVDIR=/home/joshua/AnalysisSoftware/AnalysisSoftware
+    PHOTONCONVDIR=/home/joshua/AnalysisSoftware/AnalysisSoftware
 elif [ $1 = "mdanisch" ]; then
-   PHOTONCONVDIR=/home/meike/analysis/software/photonconv/AnalysisSoftware
+    PHOTONCONVDIR=/home/meike/analysis/software/photonconv/AnalysisSoftware
 elif [ $1 = "loizides" ]; then
-   PHOTONCONVDIR=/home/loizides/sw/pcm_git
+    PHOTONCONVDIR=/home/loizides/sw/pcm_git
 elif [ $1 = "amechler" ]; then
-   PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
+    PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
 elif [ $1 = "hannahbossi" ]; then
-   PHOTONCONVDIR=/Users/hannahbossi/analysis/AnalysisSoftware
+    PHOTONCONVDIR=/Users/hannahbossi/analysis/AnalysisSoftware
 elif [ $1 = "ahornung" ]; then
-   PHOTONCONVDIR=/Users/andreahornung/pcg-software/AnalysisSoftware
+    PHOTONCONVDIR=/Users/andreahornung/pcg-software/AnalysisSoftware
 elif [ $1 = "nschmidt" ]; then
-   PHOTONCONVDIR=/home/nschmidt/AnalysisSoftware
+    PHOTONCONVDIR=/home/nschmidt/AnalysisSoftware
 elif [ $1 = "fjonas" ]; then
-   PHOTONCONVDIR=/home/florianjonas/tools/alice/AnalysisSoftware
+    PHOTONCONVDIR=/home/florianjonas/tools/alice/AnalysisSoftware
 elif [ $1 = "amarin" ]; then
-   PHOTONCONVDIR=/Users/marin/analysis/GIT/AnalysisSoftware
+    PHOTONCONVDIR=/Users/marin/analysis/GIT/AnalysisSoftware
 elif [ $1 = "amechler" ]; then
-   PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
+    PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
+elif [ $1 = "redeboer" ]; then
+    PHOTONCONVDIR=~/alice/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
@@ -87,7 +89,7 @@ if [ $1 = "fjonas" ]; then
     ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
-if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ]; then
+if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ] || [ $1 = "redeboer" ]; then
     ln -sf $PHOTONCONVDIR/TaskV1/* TaskV1/
     ln -sf $PHOTONCONVDIR/TaskQA/* TaskQA/
 fi
@@ -96,7 +98,7 @@ ln -sf $PHOTONCONVDIR/*.C .
 ln -sf $PHOTONCONVDIR/*.h .
 ln -sf $PHOTONCONVDIR/*.sh .
 
-if [ $2 = "pp2760GeV" ]; then
+if [ "$2" = "pp2760GeV" ]; then
     rm *PbPb*
     rm *pPb*
     rm *7TeV*
@@ -104,7 +106,7 @@ if [ $2 = "pp2760GeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "pPb5TeV" ]; then
+elif [ "$2" = "pPb5TeV" ]; then
     rm *PbPb*
     rm *pp*
     rm *2760*
@@ -113,7 +115,7 @@ elif [ $2 = "pPb5TeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "pp7TeV" ]; then
+elif [ "$2" = "pp7TeV" ]; then
     rm *PbPb*
     rm *pPb*
     rm *2760*
@@ -122,7 +124,7 @@ elif [ $2 = "pp7TeV" ]; then
     rm *LHC11h*
     rm *LHC10h*
     rm *LHC12*
-elif [ $2 = "pp8TeV" ]; then
+elif [ "$2" = "pp8TeV" ]; then
     rm *PbPb*
     rm *pPb*
     rm *2760*
@@ -130,7 +132,7 @@ elif [ $2 = "pp8TeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "pp13TeV" ]; then
+elif [ "$2" = "pp13TeV" ]; then
     rm *PbPb*
     rm *pPb*
     rm *2760*
@@ -138,7 +140,7 @@ elif [ $2 = "pp13TeV" ]; then
     rm *8TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "pp5TeV" ]; then
+elif [ "$2" = "pp5TeV" ]; then
     rm *PbPb*
     rm *pPb*
     rm *2760*
@@ -146,7 +148,7 @@ elif [ $2 = "pp5TeV" ]; then
     rm *8TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "PbPb5TeV" ]; then
+elif [ "$2" = "PbPb5TeV" ]; then
     rm *PP*
     rm *pp*
     rm -r *pPb*
@@ -156,7 +158,7 @@ elif [ $2 = "PbPb5TeV" ]; then
     rm *8TeV*
     rm *13TeV*
     rm *LHC11h*
-elif [ $2 = "pPb8TeV" ]; then
+elif [ "$2" = "pPb8TeV" ]; then
     rm *PP*
     rm *PbPb*
     rm *pp*
