@@ -2840,7 +2840,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
     cout << "meson in intialize function" <<  setPi0.Data() << endl;
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fModeHeavy, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection);
 
     TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
     InitializeWindows(setPi0, fMode, trigger, triggerSet);

@@ -844,7 +844,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             nEffHistSec++;
         }
     }
-//     return;
+    // return;
 
     if (histoAcceptanceWOWeights && histoTrueEffiPtWOWeights[0] && histoTrueEffiPtWOWeights[1] && histoTrueEffiPtWOWeights[2]){
         containsWOWeights                           = kTRUE;
@@ -1185,7 +1185,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if (haveSecUsed[j]) nSecCompUsed++;
     }
 
-//     return;
+    // return;
 
     //*******************************************************************************************************
     //******************************* Read pileup correction file data **************************************
@@ -3108,7 +3108,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         CompileFullCorrectionFactor( histoCompleteCorr, histoAcceptance, deltaRapid);
     }
 
-//     return;
+    // return;
     // **************************************************************************************
     // ************** Plot corrected yield with differnt yield extraction methods ***********
     // **************************************************************************************
@@ -3148,10 +3148,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     padCorrectedYieldRatios->SetLogy(0);
 
         Double_t rangeRatioPt[2]    = {0.8, 1.23};
-//         if (kIsEta){
-//             rangeRatioPt[0]         = 0.4
-//             rangeRatioPt[1]         = 1.63;
-//         }
+        // if (kIsEta){
+            // rangeRatioPt[0]         = 0.4
+            // rangeRatioPt[1]         = 1.63;
+        // }
         TH2F* histo2DDummyRatioPt;
         histo2DDummyRatioPt         = new TH2F("histo2DDummyRatioPt","histo2DDummyRatioPt",1000,0, histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),
                                                                                 1000, rangeRatioPt[0], rangeRatioPt[1]);
