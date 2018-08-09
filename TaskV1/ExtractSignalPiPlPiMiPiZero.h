@@ -865,12 +865,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonIntDeltaRangeNarrow[0]= -0.03;
             fMesonIntDeltaRangeNarrow[1]= 0.03;           
         } else if(mode == 44){
-            fMesonIntDeltaRange[0]      = -0.09;
-            fMesonIntDeltaRange[1]      =  0.06;
-            fMesonIntDeltaRangeWide[0]  = -0.11;
-            fMesonIntDeltaRangeWide[1]  = 0.11;
-            fMesonIntDeltaRangeNarrow[0]= -0.03;
-            fMesonIntDeltaRangeNarrow[1]= 0.03;
+            fMesonIntDeltaRange[0]      = -0.03;
+            fMesonIntDeltaRange[1]      =  0.03;
+            fMesonIntDeltaRangeWide[0]  = -0.05;
+            fMesonIntDeltaRangeWide[1]  = 0.05;
+            fMesonIntDeltaRangeNarrow[0]= -0.025;
+            fMesonIntDeltaRangeNarrow[1]= 0.02;
         }
 
         // Set meson mass ranges (here same for fitting and plotting)
