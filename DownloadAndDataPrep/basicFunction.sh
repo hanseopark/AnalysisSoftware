@@ -441,7 +441,7 @@ function ChangeStructureIfNeededCaloMerged()
         echo $number
         cp $2/GammaCaloMerged$5_$number.root $OUTPUTDIR/GammaCaloMerged_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ]; then
-            echo "nothing to be done";
+            echo "Nothing to be done (CutSelection_GammaCaloMerged_$4_$number)";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log\"\,10\)
         fi
@@ -464,7 +464,7 @@ function ChangeStructureIfNeededHeavy()
         # echo $number
         cp $2/HeavyNeutralMesonToGG$5_$number.root $OUTPUTDIR/HeavyNeutralMesonToGG_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log ]; then
-            echo "nothing to be done";
+            echo "Nothing to be done (CutSelection_HeavyNeutralMesonToGG_$4_$number)";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/HeavyNeutralMesonToGG_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log\"\,100\)
         fi

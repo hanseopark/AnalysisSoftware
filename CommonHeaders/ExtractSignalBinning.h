@@ -4,6 +4,7 @@
 #define GAMMACONV_ExtractSignalBinning
 
     #include <iostream>
+    #include <stdio.h>
     using namespace std;
 
     #include "ConversionFunctionsBasicsAndLabeling.h"
@@ -2555,6 +2556,12 @@
                             case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
                         }
                         break;
+                    case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning ); break;
+                    case 40:
+                    case 41:
+                    case 42:
+                    case 44:
+                    case 45: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPiPlPiMiPiZero13TevPtPCM, binning, 17 ); break;
                     default:
                         switch(SpecialTrigger) {
                             case 2:  maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1Pt, binning ); break;
@@ -2562,12 +2569,6 @@
                             default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigCombPt, binning, 155 ); break;
                         }
                         break;
-                    case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning ); break;
-                    case 40:
-                    case 41:
-                    case 42:
-                    case 44:
-                    case 45: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPiPlPiMiPiZero13TevPtPCM, binning, 17 ); break;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 if( mode==0 ) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPt, binning );
@@ -2843,8 +2844,17 @@
                 }
             }
         } else if ( meson.CompareTo("EtaPrime") == 0) {
-            if     (energy.EqualTo("7TeV"))  maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime7TeVPt, binning );
-            else if(energy.EqualTo("13TeV")) maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeVPt, binning );
+            if     (energy.EqualTo("7TeV")) {
+                maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime7TeVPt, binning );
+            } else if(energy.EqualTo("13TeV")) {
+                switch(mode) {
+                    case 0: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCM_Pt,     binning ); break;
+                    case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMEMC_Pt,  binning ); break;
+                    case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMPHOS_Pt, binning ); break;
+                    case 4: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_EMC_Pt,     binning ); break;
+                    case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PHOS_Pt,    binning ); break;
+                }
+            }
         } else if (meson.Contains("Omega")){
             if (energy.CompareTo("7TeV") == 0){
                 if(mode == 40){
@@ -5337,8 +5347,17 @@
             fStartPtBin        = GetStartBin( "EtaPrime", energy, modi );
             Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi);
             // Set binning according to energy/mode/trigger cases
-            if     (energy.EqualTo("7TeV"))  CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
-            else if(energy.EqualTo("13TeV")) CopyVectorToArray(fBinsEtaPrime13TeVPtRebin,fNRebin);
+            if     (energy.EqualTo("7TeV")) {
+                CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
+            } else if(energy.EqualTo("13TeV")) {
+                switch(modi) {
+                    case 0: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
+                    case 2: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 3: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
+                    case 4: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 5: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
+                }
+            }
             // Set optimum columns and rows
             GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
         //*************************************************************************************************

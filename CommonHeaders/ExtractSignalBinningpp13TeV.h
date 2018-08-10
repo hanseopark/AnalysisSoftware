@@ -780,10 +780,30 @@
     //****************************************************************************************************
     //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
     //****************************************************************************************************
-
-    // std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 20.0}; // size: 8
-    // std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 4, 4, 4, 4, 4, 4, 4}; // size: 7
-    std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 }; // size: 8
-    std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 12, 12, 12, 12, 12, 12, 12 }; // size 7
+    // PCM-PCM
+    std::vector<Double_t> fBinsEtaPrime13TeV_PCM_Pt   { // size: 8
+        0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeV_PCM_PtRebin { // size 7
+        12, 12, 12, 12, 12, 12, 12 };
+    // PCM-EMC
+    std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_Pt   { // size: 8
+        0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeV_PCMEMC_PtRebin { // size 7
+        12, 12, 12, 12, 12, 12, 12 };
+    // EMC-EMC
+    std::vector<Double_t> fBinsEtaPrime13TeV_EMC_Pt   { // size: 8
+        0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeV_EMC_PtRebin { // size 7
+        12, 12, 12, 12, 12, 12, 12 };
+    // PCM-PHOS
+    std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_Pt   { // size: 8
+        0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeV_PCMPHOS_PtRebin { // size 7
+        12, 12, 12, 12, 12, 12, 12 };
+    // PHOS-PHOS
+    std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_Pt   { // size: 8
+        0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeV_PHOS_PtRebin { // size 7
+        12, 12, 12, 12, 12, 12, 12 };
 
 #endif
