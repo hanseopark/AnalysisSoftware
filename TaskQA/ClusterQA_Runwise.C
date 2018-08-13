@@ -222,10 +222,10 @@ void ClusterQA_Runwise(
         calo                        = "PHOS";
         iCalo                       = 2;
         nCaloModules                = 4;
-        nCaloCells                  = 12544;
-        if((vecDataSet.at(0)).Contains("LHC10") || (vecDataSet.at(0)).Contains("LHC11") || (vecDataSet.at(0)).Contains("LHC12") || (vecDataSet.at(0)).Contains("LHC13")){
-            nCaloModules            = 3;
-            nCaloCells              = 10752;
+        nCaloCells                  = 10752;
+        if((vecDataSet.at(0)).Contains("LHC15") || (vecDataSet.at(0)).Contains("LHC16") || (vecDataSet.at(0)).Contains("LHC17") || (vecDataSet.at(0)).Contains("LHC18")){
+            nCaloModules            = 5;
+            nCaloCells              = 14336;
         }
     } else if(fClusterCutSelection.BeginsWith('3')){
         calo                        = "DCal";

@@ -270,9 +270,9 @@ void ClusterQA(
             nCaloModules    = 5;
             nCaloCells      = 10700;
         }
-        if(DataSets[0].Contains("LHC15")){
+        if(DataSets[0].Contains("LHC15") || DataSets[0].Contains("LHC16") || DataSets[0].Contains("LHC17")|| DataSets[0].Contains("LHC18")){
             nCaloModules    = 5;
-            nCaloCells      = 14300;
+            nCaloCells      = 14336;
         }
     } else if(fClusterCutSelection[0].BeginsWith('3')){
         calo                = "DCal";

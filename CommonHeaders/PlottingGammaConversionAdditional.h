@@ -3021,7 +3021,7 @@
                 return kRed;
             } else if (!generator.CompareTo("LHC15g3c3_AOD") || generator.Contains("LHC18c_wSDD")) {
                 return kGreen+2;
-            } else if (generator.Contains("LHC17k1") || generator.Contains("LHC17d1")){
+            } else if (generator.Contains("LHC17k1") || generator.Contains("LHC17d1") || generator.Contains("LHC17h3")){
                 return kGreen+2;
             } else if (generator.Contains("Phytia")) {
                 return kGreen+4;
@@ -3037,6 +3037,8 @@
                 return kGreen-2;
             } else if (generator.Contains("LHC16e")||generator.Contains("LHC17e")) {
                 return 601;
+            } else if (generator.Contains("LHC16f")) {
+                return kRed+1;
             } else if (generator.Contains("LHC16g")||generator.Contains("LHC17f")) {
                 return kCyan+3;
             } else if (generator.Contains("LHC16h")||generator.Contains("LHC17h")) {
@@ -3052,7 +3054,9 @@
             } else if (generator.Contains("LHC16o")||generator.Contains("LHC17m")) {
                 return 418;
             } else if (generator.Contains("LHC16p")||generator.Contains("LHC17o")) {
-                return 435;
+                return 435;            
+            } else if (generator.Contains("LHC17g")) {
+                return kCyan+3;
             } else if (generator.Contains("LHC17r")) {
                 return kMagenta+2;
             } else {
@@ -3493,7 +3497,9 @@
                 return 30;
             } else if (generator.Contains("Phojet")) {
                 return 27;
-            } else if (generator.Contains("LHC17k1") || generator.Contains("LHC17d1") || generator.Contains("LHC17h3")){
+            } else if (generator.Contains("LHC17k1")) {
+                return 28;
+            } else if (generator.Contains("LHC17d1") || generator.Contains("LHC17h3")) {
                 return 28;
             } else if ((generator.Contains("LHC16d")) || (generator.Contains("LHC16e")) || (generator.Contains("LHC16g")) || (generator.Contains("LHC16h")) || (generator.Contains("LHC16i")) || (generator.Contains("LHC16j")) || (generator.Contains("LHC16k")) || (generator.Contains("LHC16l")) || (generator.Contains("LHC16o")) || (generator.Contains("LHC16p"))) {
                 return 29;
