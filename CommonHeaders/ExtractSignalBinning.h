@@ -4828,12 +4828,12 @@
             } else if (energy.CompareTo("13TeV") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg);
                 Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
-                if (fNBinsPt > maxPtBinAvail) {
+                if (fNBinsPt > maxPtBinTheo) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
                     cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinAvail << " bins, this is not possible, it will be reduced to " << maxPtBinAvail << endl;
                     cout << "**************************************************************************************************************************************" << endl;
-                    fNBinsPt    = maxPtBinAvail;
+                    fNBinsPt    = maxPtBinTheo;
                 }
 
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -5376,6 +5376,13 @@
             fNRebin            = new Int_t[29];
             fStartPtBin        = GetStartBin( "EtaPrime", energy, modi, specialTrigg );
             Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi, specialTrigg);
+            if (fNBinsPt > maxPtBinTheo) {
+                cout << "**************************************************************************************************************************************" << endl;
+                cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinAvail << " bins, this is not possible, it will be reduced to " << maxPtBinAvail << endl;
+                cout << "**************************************************************************************************************************************" << endl;
+                fNBinsPt    = maxPtBinTheo;
+            }
             // Set binning according to energy/mode/trigger cases
             if     (energy.EqualTo("7TeV")) {
                 CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
