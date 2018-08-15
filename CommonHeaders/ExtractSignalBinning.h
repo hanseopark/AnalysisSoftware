@@ -2545,6 +2545,7 @@
                             case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning, 38 ); break;
                             case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG2Pt, binning, 78 ); break;
                             case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG1Pt, binning ); break;
+                            default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning ); break;
                         }
                         break;
                     case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMPHOSTrigINT7Pt, binning ); break;
@@ -2554,6 +2555,7 @@
                             case 0:
                             case 4:
                             case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
+                            default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
                         }
                         break;
                     case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning ); break;

@@ -781,73 +781,76 @@
     //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
     //****************************************************************************************************
     // PCM-PCM   (mode 100)
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_INT7_Pt   { // size: 8
-            0.4, 0.8, 1.5, 2.5, 5.0, 8.0, 12.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCM_INT7_PtRebin { // size: 7
-            4, 8, 12, 8, 12, 16, 20 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_L0_Pt   {   // size: 5
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_INT7_Pt {      // size: 7
+            0.4, 0.8, 1.5, 2.5, 5.0, 10.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_INT7_PtRebin { // bins: 6
+            4, 8, 12, 12, 16, 20 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_L0_Pt {        // size: 5
             4.0, 7.0, 10.0, 20.0, 30. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCM_L0_PtRebin {   // size: 4
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_L0_PtRebin {   // bins: 4
             12, 12, 16, 16 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_EG1_Pt   {  // size: 9
-            4.0, 5.0, 6.0, 7.0, 8.0, 10.0, 15.0, 20.0, 30. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCM_EG1_PtRebin {  // size: 8
-            8, 8, 10, 10, 10, 12, 20, 20 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_EG2_Pt   {  // size: 9
-            4.0, 5.0, 6.0, 7.0, 8.0, 10.0, 15.0, 20.0, 30. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCM_EG2_PtRebin {  // size: 8
-            8, 8, 10, 10, 10, 12, 20, 20 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_EG1_Pt {       // size: 6
+            7.0, 8.0, 10.0, 15.0, 20.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_EG1_PtRebin {  // bins: 5
+            10, 10, 12, 20, 20 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCM_EG2_Pt {       // size: 6
+            4.0, 6.0, 8.0, 10.0, 15.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_EG2_PtRebin {  // bins: 5
+            8, 10, 10, 12, 20 };
     // PCM-EMC   (mode 102)
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_INT7_Pt   { // size: 10
-            0.8, 1.2, 1.6, 2.0, 2.5, 3.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMEMC_INT7_PtRebin { // size: 9
-            8, 8, 8, 12, 12, 16, 20, 20, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_L0_Pt   {   // size: 9
-            0.8, 1.5, 2.0, 2.5, 3.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMEMC_L0_PtRebin {   // size: 8
-            20, 20, 16, 12, 16, 20, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_EG1_Pt   {  // size: 9
-            0.8, 1.5, 2.0, 2.5, 3.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMEMC_EG1_PtRebin {  // size: 8
-            20, 20, 16, 12, 16, 20, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_EG2_Pt   {  // size: 9
-            0.8, 1.5, 2.0, 2.5, 3.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMEMC_EG2_PtRebin {  // size: 8
-            20, 20, 16, 12, 16, 20, 25, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_INT7_Pt {      // size: 9
+            0.8, 1.2, 1.6, 2.0, 2.5, 3.0, 5.0, 10.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_INT7_PtRebin { // bins: 8
+            8, 12, 12, 12, 12, 12, 16, 20 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_L0_Pt {        // size: 9
+            0.8, 1.2, 1.6, 2.0, 2.5, 3.0, 5.0, 10.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_L0_PtRebin {   // bins: 8
+            16, 16, 16, 12, 12, 12, 16, 20 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_EG1_Pt {       // size: 8
+            7.0, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0, 30.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_EG1_PtRebin {  // bins: 7
+            20, 16, 12, 16, 20, 25, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_EG2_Pt {       // size: 10
+            4.0, 5.0, 6.0, 7.0, 8.0, 10.0, 12.0, 15.0, 20.0, 30.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_EG2_PtRebin {  // bins: 9
+            10, 10, 12, 12, 12, 16, 16, 25, 25, 25 };
     // PCM-PHOS  (mode 103)
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_MinBias_Pt   { // size: 8
-            0.8, 1.5, 2.5, 4.0, 8.0, 15.0, 20.0, 100. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMPHOS_MinBias_PtRebin { // size: 7
-            16, 20, 10, 20, 25, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_VZERO_Pt   {   // size: 8
-            0.8, 1.5, 2.5, 4.0, 8.0, 15.0, 20.0, 100. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PCMPHOS_VZERO_PtRebin {   // size: 7
-            16, 20, 10, 20, 25, 25, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_MinBias_Pt {      // size: 6
+            0.8, 1.5, 2.5, 5.0, 15.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMPHOS_MinBias_PtRebin { // size: 5
+            20, 20, 16, 20, 25, 25, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_VZERO_Pt {        // size: 7
+            5.5, 6.0, 6.5, 7.0, 8.0, 15.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PCMPHOS_VZERO_PtRebin {   // size: 6
+            20, 20, 20, 20, 20, 25 };
     // EMC-EMC   (mode 104)
-        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_INT7_Pt   { // size: 8
-            1.4, 2.2, 3.0, 4.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_EMC_INT7_PtRebin { // size: 7
-            20, 20, 20, 16, 25, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_L0_Pt   {   // size: 8
-            1.4, 2.2, 3.0, 4.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_EMC_L0_PtRebin {   // size: 7
-            20, 20, 20, 16, 25, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_EG1_Pt   {  // size: 8
-            1.4, 2.2, 3.0, 4.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_EMC_EG1_PtRebin {  // size: 7
-            20, 20, 20, 16, 25, 25, 25 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_EG2_Pt   {  // size: 8
-            1.4, 2.2, 3.0, 4.0, 5.0, 8.0, 15.0, 20.0 };
-        std::vector<Int_t> fBinsEtaPrime13TeV_EMC_EG2_PtRebin {  // size: 7
-            20, 20, 20, 16, 25, 25, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_INT7_Pt {      // size: 9
+            1.4, 2.2, 3.0, 3.5, 4.0, 5.0, 8.0, 15.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_INT7_PtRebin { // bins: 8
+            12, 10, 8, 8, 8, 12, 16, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_L0_Pt {        // size: 6
+            3.0, 4.0, 5.0, 8.0, 15.0, 30.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_L0_PtRebin {   // bins: 5
+            16, 16, 16, 20, 25 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_EG1_Pt {       // size: 15
+            7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0,
+            13.0, 14.0, 16.0, 20.0, 30.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_EG1_PtRebin {  // bins: 14
+            4, 4, 4, 4, 4, 8, 8, 8, 8, 8,
+            10, 10, 10, 10 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_EMC_EG2_Pt {       // size: 12
+            4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 10.0, 15.0, 20.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_EG2_PtRebin {  // bins: 11
+            8, 8, 8, 8, 8, 8, 10, 10, 10, 12,
+            16 };
     // PHOS-PHOS (mode 105)
-        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_MinBias_Pt   { // size: 4
+        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_MinBias_Pt {      // size: 4
             1.4, 4.0, 6.0, 10.0};
-        std::vector<Int_t> fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin { // size: 3
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin { // bins: 3
             16, 8, 8 };
-        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_VZERO_Pt   {   // size: 8
+        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_VZERO_Pt {        // size: 8
             6.0, 7.0, 8.0, 10.0, 12.5, 15.0, 20.0, 30. };
-        std::vector<Int_t> fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin {   // size: 7
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin {   // bins: 7
             4, 4, 8, 8, 8, 8, 12 };
 
 #endif
