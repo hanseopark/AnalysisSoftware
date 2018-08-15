@@ -777,8 +777,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
         // Initialize default BG fit range right & left
         if(mode == 40){
-            fBGFitRange[0]                = 0.82;
-            fBGFitRange[1]                = 0.87;
+            fBGFitRange[0]                = 0.83;
+            fBGFitRange[1]                = 0.88;
             fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
             fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
@@ -857,7 +857,14 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonIntDeltaRangeWide[1]  = 0.05;
             fMesonIntDeltaRangeNarrow[0]= -0.02;
             fMesonIntDeltaRangeNarrow[1]= 0.02;
-        } else if(mode == 41 || mode == 42 || mode == 45){
+        } else if(mode == 41){
+            fMesonIntDeltaRange[0]      = -0.03;
+            fMesonIntDeltaRange[1]      =  0.03;
+            fMesonIntDeltaRangeWide[0]  = -0.05;
+            fMesonIntDeltaRangeWide[1]  = 0.05;
+            fMesonIntDeltaRangeNarrow[0]= -0.025;
+            fMesonIntDeltaRangeNarrow[1]= 0.025;
+        } else if(mode == 42 || mode == 45){
             fMesonIntDeltaRange[0]      = -0.04;
             fMesonIntDeltaRange[1]      =  0.05;
             fMesonIntDeltaRangeWide[0]  = -0.06;
