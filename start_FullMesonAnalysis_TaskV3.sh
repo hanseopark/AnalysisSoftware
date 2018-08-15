@@ -83,6 +83,13 @@ function ExtractSignal()
     root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$MODE\,$USETHNSPARSE\)
 }
 
+# Compile directly with G++ incl fsanitize (prototype)
+function ExtractSignalGpp()
+{
+    g++ "TaskV1/ExtractSignalV2.C" -I$(root-config --incdir) $(root-config --libs) -fsanitize=address -o "TaskV1/ExtractSignalV2.o"
+    TaskV1/ExtractSignalV2.o $1 $MODE $USETHNSPARSE
+}
+
 function ExtractSignalGamma()
 {
     if [ $ISROOT6 -eq 0 ]; then

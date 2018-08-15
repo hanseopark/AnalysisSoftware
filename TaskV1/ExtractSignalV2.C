@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <math.h>
 #include <TROOT.h>
 #include <TApplication.h>
@@ -46,7 +47,7 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
-
+using namespace std;
 
 //****************************************************************************
 //************** Main function for extraction of signal **********************
@@ -6735,4 +6736,79 @@ void Delete(){
     }
     if (fFileCocktailInput)                                     delete fFileCocktailInput;
 
+}
+
+// MAIN FUNCTION for non-ROOT compilation (prototype)
+int main( int argc, char* argv[] )
+{
+    // Default arguments for ExtractSignal
+        TString meson                   = "";
+        TString file                    = "";
+        TString cutSelection            = "";
+        TString Suffix                  = "";
+        TString optionMC                = "";
+        TString optionEnergy            = "";
+        TString optionCrystalBall       = "";
+        TString directphotonPlots       = "";
+        TString optionUseMinBiasEff     = "";
+        TString optionPeriod            = "";
+        TString optionAdvancedMesonQA   = "";
+        Int_t numberOfBins              = 30;
+        Bool_t addSig                   = kFALSE;
+        Int_t mode                      = 9;
+        Bool_t UseTHnSparse             = kTRUE;
+        Int_t triggerSet                = -1;
+
+    // Import main call arguments
+        TString import;
+        if( argc >  1 ) meson                 = argv[1];
+        if( argc >  2 ) file                  = argv[2];
+        if( argc >  3 ) cutSelection          = argv[3];
+        if( argc >  4 ) Suffix                = argv[4];
+        if( argc >  5 ) optionMC              = argv[5];
+        if( argc >  6 ) optionEnergy          = argv[6];
+        if( argc >  7 ) optionCrystalBall     = argv[7];
+        if( argc >  8 ) directphotonPlots     = argv[8];
+        if( argc >  9 ) optionUseMinBiasEff   = argv[9];
+        if( argc > 10 ) optionPeriod          = argv[10];
+        if( argc > 11 ) optionAdvancedMesonQA = argv[11];
+        if( argc > 12 ) { // numberOfBins
+            istringstream sstr(argv[12]);
+            sstr >> numberOfBins;
+        } if( argc > 13 ) { // addSig
+            import = argv[13];
+            if( import.EqualTo("kTRUE") )  addSig = kTRUE;
+            if( import.EqualTo("kFALSE") ) addSig = kFALSE;
+        } if( argc > 14 ) { // mode
+            istringstream sstr(argv[14]);
+            sstr >> mode;
+        } if( argc > 15 ) { // UseTHnSparse
+            import = argv[15];
+            if( import.EqualTo("kTRUE") )  UseTHnSparse = kTRUE;
+            if( import.EqualTo("kFALSE") ) UseTHnSparse = kFALSE;
+        } if( argc > 16 ) { // triggerSet
+            istringstream sstr(argv[16]);
+            sstr >> triggerSet;
+        }
+    return 0;
+
+    // Function call ExtractSignalV2
+        ExtractSignalV2(
+            meson,
+            file,
+            cutSelection,
+            Suffix,
+            optionMC,
+            optionEnergy,
+            optionCrystalBall,
+            directphotonPlots,
+            optionUseMinBiasEff,
+            optionPeriod,
+            optionAdvancedMesonQA,
+            numberOfBins,
+            addSig,
+            mode,
+            UseTHnSparse,
+            triggerSet
+        );
 }

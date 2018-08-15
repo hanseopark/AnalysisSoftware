@@ -6,6 +6,7 @@
 #ifndef GAMMACONV_PlottingGeneral
 #define GAMMACONV_PlottingGeneral
 
+using namespace std; // necessary for non-ROOT compilation
 
     /************************************************************************************************
     ************************************************************************************************
