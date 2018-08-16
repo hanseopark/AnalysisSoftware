@@ -1807,7 +1807,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         canvasResponseMatrixSec->cd();
 
         if (isPCM || isCalo){
-            cout << "Responsematrix conv entries: "<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0) << "\t"<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum() << endl;
+            cout << "Secondary responsematrix entries: "<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0) << "\t"<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum() << endl;
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetZaxis()->SetRangeUser(histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0), 2*histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum());
             SetStyleHistoTH2ForGraphs(  histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0], "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,
                                         0.035, 0.04, 0.9, 1.0, 510, 510);

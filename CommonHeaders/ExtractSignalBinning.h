@@ -1822,7 +1822,7 @@
                       }
                   } else if ( mode == 2 || mode == 20){
                       if(energy.Contains("2017")){
-                          maxNBins = 34;
+                          maxNBins = 84;
                           for(Int_t i = 0; i < maxNBins+1; i++){
                               binning[i] = fBinsPi05TeV2017PCMEMCPt[i];
                           }

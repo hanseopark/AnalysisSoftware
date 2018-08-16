@@ -413,15 +413,10 @@ void CorrectCaloNonLinearityV4(
     //*******************************************************************************
     //********************* setting hist names to be loaded *************************
     //*******************************************************************************
-    TString nameSignalHisto     = "";
-    TString nameBGHisto         = "";
-    if(mode==2||mode==3||mode==13){
-        nameSignalHisto         = "ESD_Mother_InvMass_E_Calib";
-        nameBGHisto             = "ESD_Background_InvMass_E_Calib";
-    } else {
-        nameSignalHisto         = "ESD_Mother_InvMass_vs_Pt_Alpha";
-        nameBGHisto             = "ESD_Background_InvMass_vs_Pt_Alpha";
-    }
+    TString nameSignalHisto      = "ESD_Mother_InvMass_E_Calib";
+    TString nameBGHisto          = "ESD_Background_InvMass_E_Calib";
+    TString nameSignalHisto2     = "ESD_Mother_InvMass_vs_Pt_Alpha"; // for old files
+    TString nameBGHisto2         = "ESD_Background_InvMass_vs_Pt_Alpha"; // for old files
 
     //*******************************************************************************
     //**********************  create output histos **********************************
@@ -470,10 +465,26 @@ void CorrectCaloNonLinearityV4(
     TH2F* dataBGInvMassPt  = (TH2F*) dataESDContainer->FindObject(nameBGHisto.Data());
     TH2F* mcInvMassPt      = (TH2F*) mcESDContainer->FindObject(nameSignalHisto.Data());
     TH2F* mcBGInvMassPt    = (TH2F*) mcESDContainer->FindObject(nameBGHisto.Data());
-    if(!dataInvMassPt){cout << "did not find ESD_Mother_InvMass_E_Calib in data" << endl; return;}
-    if(!dataBGInvMassPt){cout << "did not find ESD_Background_InvMass_E_Calib in data" << endl; return;}
-    if(!mcInvMassPt){cout << "did not find ESD_Mother_InvMass_E_Calib in mc" << endl; return;}
-    if(!mcBGInvMassPt){cout << "did not find ESD_Background_InvMass_E_Calib in mc" << endl; return;}
+    if(!dataInvMassPt){
+        cout << "did not find ESD_Mother_InvMass_E_Calib in data... trying ESD_Mother_InvMass_vs_Pt_Alpha instead" << endl;
+        dataInvMassPt    = (TH2F*) dataESDContainer->FindObject(nameSignalHisto2.Data());
+        if(!dataInvMassPt){cout << "... also did not find ESD_Mother_InvMass_vs_Pt_Alpha!" << endl; return;}
+    }
+    if(!dataBGInvMassPt){
+        cout << "did not find ESD_Background_InvMass_E_Calib in data... trying ESD_Background_InvMass_vs_Pt_Alpha instead" << endl;
+        dataBGInvMassPt    = (TH2F*) dataESDContainer->FindObject(nameBGHisto2.Data());
+        if(!dataBGInvMassPt){cout << "... also did not find ESD_Background_InvMass_vs_Pt_Alpha!" << endl; return;}
+    }
+    if(!mcInvMassPt){
+        cout << "did not find ESD_Mother_InvMass_E_Calib in MC... trying ESD_Mother_InvMass_vs_Pt_Alpha instead" << endl;
+        mcInvMassPt    = (TH2F*) mcESDContainer->FindObject(nameSignalHisto2.Data());
+        if(!mcInvMassPt){cout << "... also did not find ESD_Mother_InvMass_vs_Pt_Alpha!" << endl; return;}
+    }
+    if(!mcBGInvMassPt){
+        cout << "did not find ESD_Background_InvMass_E_Calib in MC... trying ESD_Background_InvMass_vs_Pt_Alpha instead" << endl;
+        mcBGInvMassPt    = (TH2F*) mcESDContainer->FindObject(nameBGHisto2.Data());
+        if(!mcBGInvMassPt){cout << "... also did not find ESD_Background_InvMass_vs_Pt_Alpha!" << endl; return;}
+    }
 
 
     // storing 2D hists in output root file
@@ -524,10 +535,28 @@ void CorrectCaloNonLinearityV4(
             dataBGInvMassPt    = (TH2F*) dataESDContainer->FindObject(nameBGHisto.Data());
             mcInvMassPt        = (TH2F*) mcESDContainer->FindObject(nameSignalHisto.Data());
             mcBGInvMassPt      = (TH2F*) mcESDContainer->FindObject(nameBGHisto.Data());
-            if(!dataInvMassPt){cout << "did not find ESD_Mother_InvMass_E_Calib in triggered data" << endl; return;}
-            if(!dataBGInvMassPt){cout << "did not find ESD_Background_InvMass_E_Calib in triggered data" << endl; return;}
-            if(!mcInvMassPt){cout << "did not find ESD_Mother_InvMass_E_Calib in trigger mc" << endl; return;}
-            if(!mcBGInvMassPt){cout << "did not find ESD_Background_InvMass_E_Calib in trigger mc" << endl; return;}
+
+            if(!dataInvMassPt){
+                cout << "did not find ESD_Mother_InvMass_E_Calib in data... trying ESD_Mother_InvMass_vs_Pt_Alpha instead" << endl;
+                dataInvMassPt    = (TH2F*) dataESDContainer->FindObject(nameSignalHisto2.Data());
+                if(!dataInvMassPt){cout << "... also did not find ESD_Mother_InvMass_vs_Pt_Alpha!" << endl; return;}
+            }
+            if(!dataBGInvMassPt){
+                cout << "did not find ESD_Background_InvMass_E_Calib in data... trying ESD_Background_InvMass_vs_Pt_Alpha instead" << endl;
+                dataBGInvMassPt    = (TH2F*) dataESDContainer->FindObject(nameBGHisto2.Data());
+                if(!dataBGInvMassPt){cout << "... also did not find ESD_Background_InvMass_vs_Pt_Alpha!" << endl; return;}
+            }
+            if(!mcInvMassPt){
+                cout << "did not find ESD_Mother_InvMass_E_Calib in MC... trying ESD_Mother_InvMass_vs_Pt_Alpha instead" << endl;
+                mcInvMassPt    = (TH2F*) mcESDContainer->FindObject(nameSignalHisto2.Data());
+                if(!mcInvMassPt){cout << "... also did not find ESD_Mother_InvMass_vs_Pt_Alpha!" << endl; return;}
+            }
+            if(!mcBGInvMassPt){
+                cout << "did not find ESD_Background_InvMass_E_Calib in MC... trying ESD_Background_InvMass_vs_Pt_Alpha instead" << endl;
+                mcBGInvMassPt    = (TH2F*) mcESDContainer->FindObject(nameBGHisto2.Data());
+                if(!mcBGInvMassPt){cout << "... also did not find ESD_Background_InvMass_vs_Pt_Alpha!" << endl; return;}
+            }
+
 
             triggerSel++;
             fOutput->cd();

@@ -1416,7 +1416,7 @@ else
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo -e "--> Continuing ...\n";
-            correct=1
+            CORRECT=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo -e "--> Aborting ...\n";
             exit
