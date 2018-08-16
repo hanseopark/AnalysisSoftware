@@ -1072,7 +1072,6 @@
         //********************** Start setting eta prime example bins ***************************
         //***************************************************************************************
         } else if (meson.CompareTo("EtaPrime") == 0) {
-cout << "ETA PRIME TRIG: " << trigger << endl;
             switch( mode ) {
                 case 0: // PCM-PCM
                     switch( trigger ) {
