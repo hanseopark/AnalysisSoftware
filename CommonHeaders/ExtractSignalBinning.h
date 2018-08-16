@@ -102,7 +102,7 @@
     //*************************************************************************************************
     //*********************  determine optimum number of rows and columns *****************************
     //*************************************************************************************************
-    void GetOptimumNColumnsAndRows (Int_t totBins, Int_t startBin, Int_t &columns, Int_t &rows){
+    void GetOptimumNColumnsAndRows( Int_t totBins, Int_t startBin, Int_t &columns, Int_t &rows ) {
         if ( (totBins+1-startBin) < 5){
             columns     = 2;
             rows        = 2;
@@ -179,15 +179,19 @@
     //*************************************************************************************************
     //******************** Initialize Single bin for invariant mass plot ******************************
     //*************************************************************************************************
-    Int_t ReturnSingleInvariantMassBinPlotting (    TString meson,
-                                                    TString energy,
-                                                    Int_t mode,
-                                                    Int_t trigger,
-                                                    Double_t &scaleFac,
-                                                    Int_t triggerSet                    = -1,
-                                                    TString directPhotonRunningOption   = "",
-                                                    TString centrality                  = ""
-    ){
+    Int_t ReturnSingleInvariantMassBinPlotting(
+        TString meson,
+        TString energy,
+        Int_t mode,
+        Int_t trigger,
+        Double_t &scaleFac,
+        Int_t triggerSet                    = -1,
+        TString directPhotonRunningOption   = "",
+        TString centrality                  = ""
+    ) {
+
+        // Heavy meson fix
+        if( mode>=100 ) mode -= 100;
 
         if (triggerSet != -1){
             if (energy.CompareTo("2.76TeV") == 0){
@@ -1064,8 +1068,48 @@
                 else
                     return 6;
             }
+        //***************************************************************************************
+        //********************** Start setting eta prime example bins ***************************
+        //***************************************************************************************
         } else if (meson.CompareTo("EtaPrime") == 0) {
-            return 0;
+cout << "ETA PRIME TRIG: " << trigger << endl;
+            switch( mode ) {
+                case 0: // PCM-PCM
+                    switch( trigger ) {
+                        case 10: return 3; // INT7
+                        case 52: return 1; // L0
+                        case 83: return 2; // EG1
+                        case 85: return 2; // EG2
+                    } break;
+                case 2: // PCM-EMC
+                    switch( trigger ) {
+                        case 10: return 4; // INT7
+                        case 52: return 1; // L0
+                        case 83: return 4; // EG1
+                        case 85: return 6; // EG2
+                    } break;
+                case 3: // PCM-PHOS
+                    switch( trigger ) {
+                        case 10: return 3; // INT7
+                        case 62: return 2; // PHI7
+                    } break;
+                case 4: // EMC-EMC
+                    switch( trigger ) {
+                        case 10: return 2; // INT7
+                        case 52: return 1; // L0
+                        case 83: return 3; // EG1
+                        case 85: return 3; // EG2
+                    } break;
+                case 5: // PHOS-PHOS
+                    switch( trigger ) {
+                        case 10: return 2; // INT7
+                        case 62: return 1; // PHI7 (maybe 6 is nice?)
+                    } break;
+                default: return 1;
+            }
+        //***************************************************************************************
+        //********************** Start setting omega example bins *******************************
+        //***************************************************************************************
         } else if (meson.Contains("Omega")) {
             if(energy.CompareTo("13TeV") == 0) {
                 if(mode == 40){
@@ -1095,22 +1139,22 @@
             }
 
         } else {
-            cout << "single bin for meson not defined" << endl;
+            cout << "Single example bin for meson \"" << meson << "\" not defined" << endl;
             return 1;
         }
-        cout << "ERROR: meson \"" << meson << "\" not defined" << endl;
-        return 0;
+        return 0; // in case of switch fall through
     }
 
     //*************************************************************************************************
     //******************** GetStartBin for general combination ****************************************
     //*************************************************************************************************
-    Int_t GetStartBin(  TString   meson,
-                        TString   energy,
-                        Int_t     mode,
-                        Int_t     specialTrigg  =-1,
-                        TString   centrality    = "",
-                        TString   minECut       = ""
+    Int_t GetStartBin(
+        TString   meson,
+        TString   energy,
+        Int_t     mode,
+        Int_t     specialTrigg  =-1,
+        TString   centrality    = "",
+        TString   minECut       = ""
     ){
 
         // Heavy meson fix
@@ -1602,11 +1646,11 @@
                 }
             }
         //*************************************************************************************************
-        //******************** Determine startbin for Eta  ************************************************
+        //******************** Determine startbin for Eta Prime *******************************************
         //*************************************************************************************************
         } else if (meson.EqualTo("EtaPrime") ){
             if(      energy.EqualTo("7TeV")  ) startPtBin = 1;
-            else if( energy.EqualTo("13TeV") ) startPtBin = 0;
+            else if( energy.EqualTo("13TeV") ) startPtBin = 1;
         //*************************************************************************************************
         //******************** Determine startbin for Omega  **********************************************
         //*************************************************************************************************
@@ -1663,14 +1707,15 @@
     //*************************************************************************************************
     //******************** GetBinning for general combination *****************************************
     //*************************************************************************************************
-    Int_t GetBinning(   Double_t*   binning,
-                        Int_t       &binningMax,
-                        TString     meson           = "Pi0",
-                        TString     energy          = "2.76TeV",
-                        Int_t       mode            = 2,
-                        Int_t       SpecialTrigger  = -1,
-                        Bool_t      DCAcase         = kFALSE,
-                        TString     centrality      = ""
+    Int_t GetBinning(
+        Double_t*   binning,
+        Int_t       &binningMax,
+        TString     meson           = "Pi0",
+        TString     energy          = "2.76TeV",
+        Int_t       mode            = 2,
+        Int_t       SpecialTrigger  = -1,
+        Bool_t      DCAcase         = kFALSE,
+        TString     centrality      = ""
     ){
         Int_t maxNBins      = 0;
         binningMax          = 0;
@@ -3027,7 +3072,7 @@
     }
 
 
-    void InitializeClusterBinning (TString energy, Int_t modi ){
+    void InitializeClusterBinning( TString energy, Int_t modi ){
 
         // For heavy meson analysis
         Int_t modeHeavy = modi;
