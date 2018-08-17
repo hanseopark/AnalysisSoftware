@@ -923,6 +923,7 @@
     Int_t GetEventCentralityMinCutPosition ()               {return 1;}
     Int_t GetEventCentralityMaxCutPosition ()               {return 2;}
     Int_t GetEventSelectSpecialTriggerCutPosition ()        {return 3;}
+    Int_t GetEventSelectSpecialTriggerCutPositionHeavy ()   {return 5;}
     Int_t GetEventSelectSpecialSubTriggerCutPosition ()     {return 4;}
     Int_t GetEventRemovePileUpCutPosition ()                {return 5;}
     Int_t GetEventRejectExtraSignalsCutPosition ()          {return 6;}
