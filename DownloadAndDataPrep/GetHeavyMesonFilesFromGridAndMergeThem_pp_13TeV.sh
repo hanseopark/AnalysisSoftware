@@ -13,7 +13,7 @@
 #! /bin/bash
 source basicFunction.sh
 
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
 SEPARATEON=0
 CLEANUP=1
@@ -91,8 +91,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         # LHC16Data="2374" # comment: "omega + eta'"                    --> PCM+EMC (test!)
         # LHC16Data="2422" # comment: "Remco PHOS request"              --> PCM+PHOS
         LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"  --> PCM+EMC
-        # LHC16dData="child_1"
-        # LHC16gData="child_2"
+        LHC16dData="child_1"
+        LHC16gData="child_2"
         LHC16hData="child_3"
         LHC16iData="child_4"
         LHC16jData="child_5"
@@ -100,14 +100,14 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC16lData="child_7"
         LHC16oData="child_8"
         LHC16pData="child_9"
-        # LHC16eData="child_10"
+        LHC16eData="child_10"
     # Monte Carlo data files
         # LHC17MC="3341" # comment: "eta' test"                --> PCM+EMC (test!)
         # LHC17MC="3398" # comment: "Remco request PHOS"       --> PCM+PHOS
         LHC17MC="3409" # comment: "Remco request - PCM+EMC"  --> PCM+EMC
-        # LHC17f6MC="child_1"    # anchored to LHC16d (child 1)
-        # LHC17f9MC="child_2"    # anchored to LHC16e (child 10)
-        # LHC17d17MC="child_3"   # anchored to LHC16g (child 2)
+        LHC17f6MC="child_1"    # anchored to LHC16d (child 1)
+        LHC17f9MC="child_2"    # anchored to LHC16e (child 10)
+        LHC17d17MC="child_3"   # anchored to LHC16g (child 2)
         LHC17f5MC="child_4"    # anchored to LHC16h (child 3)
         LHC17d3MC="child_5"    # anchored to LHC16i (child 4)
         LHC17e5MC="child_6"    # anchored to LHC16j (child 5)
@@ -117,22 +117,47 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC="child_10"  # anchored to LHC16p (child 9)
     # Monte Carlo data files EXTRA
         # LHC17MCextra="3399" # comment: "Remco request PHOS"       --> PCM+PHOS
-        # LHC17MCextra="3410" # comment: "Remco request - PCM+EMC"  --> PCM+EMC
-        # LHC17f6MCextra=$LHC17f6MC    # anchored to LHC16d (child 1)
-        # LHC17f9MCextra=$LHC17f9MC    # anchored to LHC16e (child 10)
-        # LHC17d17MCextra=$LHC17d17MC   # anchored to LHC16g (child 2)
-        # LHC17f5MCextra=$LHC17f5MC    # anchored to LHC16h (child 3)
-        # LHC17d3MCextra=$LHC17d3MC    # anchored to LHC16i (child 4)
-        # LHC17e5MCextra=$LHC17e5MC    # anchored to LHC16j (child 5)
-        # LHC17d20a1MCextra=$LHC17d20a1MC # anchored to LHC16k (child 6)
-        # LHC17d20a2MCextra=$LHC17d20a2MC # anchored to LHC16l (child 7)
-        # LHC17d16MCextra=$LHC17d16MC   # anchored to LHC16o (child 8)
-        # LHC17d18MCextra=$LHC17d18MC  # anchored to LHC16p (child 9)
+        LHC17MCextra="3410" # comment: "Remco request - PCM+EMC"  --> PCM+EMC
+        LHC17f6MCextra=$LHC17f6MC    # anchored to LHC16d (child 1)
+        LHC17f9MCextra=$LHC17f9MC    # anchored to LHC16e (child 10)
+        LHC17d17MCextra=$LHC17d17MC   # anchored to LHC16g (child 2)
+        LHC17f5MCextra=$LHC17f5MC    # anchored to LHC16h (child 3)
+        LHC17d3MCextra=$LHC17d3MC    # anchored to LHC16i (child 4)
+        LHC17e5MCextra=$LHC17e5MC    # anchored to LHC16j (child 5)
+        LHC17d20a1MCextra=$LHC17d20a1MC # anchored to LHC16k (child 6)
+        LHC17d20a2MCextra=$LHC17d20a2MC # anchored to LHC16l (child 7)
+        LHC17d16MCextra=$LHC17d16MC   # anchored to LHC16o (child 8)
+        LHC17d18MCextra=$LHC17d18MC  # anchored to LHC16p (child 9)
+    # Set these as well: which periods do you want to merge?
+        periodList=(
+            # d # child 1
+            # e # child 10
+            # g # child 2
+            h # child 3
+            i # child 4
+            j # child 5
+            k # child 6
+            l # child 7
+            o # child 8
+            p # child 9
+        )
+        periodListMC=(
+            # f6    # child 1  --> anchored to LHC16d
+            # f9    # child 2  --> anchored to LHC16e
+            # d17   # child 3  --> anchored to LHC16g
+            f5    # child 4  --> anchored to LHC16h
+            d3    # child 5  --> anchored to LHC16i
+            e5    # child 6  --> anchored to LHC16j
+            d20a1 # child 7  --> anchored to LHC16k
+            d20a2 # child 8  --> anchored to LHC16l
+            d16   # child 9  --> anchored to LHC16o
+            d18   # child 10 --> anchored to LHC16p
+        )
 #
 
 # Set output directory (offline and remote)
-    # TRAINDIR="vAN-20180617-1-jkl" # comment: "eta' test"
-    TRAINDIR="vAN-20180727-1-hijklop" # comment: "Remco PHOS request" or "Remco & Hannah, Joshua request"
+    # TRAINDIR="vAN-20180617-1" # comment: "eta' test"
+    TRAINDIR="vAN-20180727-1" # comment: "Remco PHOS request" or "Remco & Hannah, Joshua request"
     OUTPUTDIR=$BASEDIR/$TRAINDIR
 #
 
@@ -771,18 +796,6 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         echo -e "\n\n--== MERGING ROOT FILES ==--\n"
     # LHC data files
         echo -e "\n--> Merging LHC data files"
-        periodList=(
-            d # child 1
-            e # child 10
-            g # child 2
-            h # child 3
-            i # child 4
-            j # child 5
-            k # child 6
-            l # child 7
-            o # child 8
-            p # child 9
-        )
         rm -f runlistsToMerge.txt
         echo -e "DPGTracks" >> runlistsToMerge.txt
         echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
@@ -811,18 +824,6 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         done
     # Monte Carlo files
         echo -e "\n--> Merging Monte Carlo files"
-        periodListMC=(
-            f6    # child 1  --> anchored to LHC16d
-            f9    # child 2  --> anchored to LHC16e
-            d17   # child 3  --> anchored to LHC16g
-            f5    # child 4  --> anchored to LHC16h
-            d3    # child 5  --> anchored to LHC16i
-            e5    # child 6  --> anchored to LHC16j
-            d20a1 # child 7  --> anchored to LHC16k
-            d20a2 # child 8  --> anchored to LHC16l
-            d16   # child 9  --> anchored to LHC16o
-            d18   # child 10 --> anchored to LHC16p
-        )
         rm -f runlistsToMerge.txt
         echo -e "DPGTracks" >> runlistsToMerge.txt
         echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
@@ -1019,19 +1020,3 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             rm $OUTPUTDIR_LHC17d18extra/*/*/*HeavyNeutralMesonToGG_*.root
         fi
     fi # end of [ $CLEANUPMAYOR == 1 ]
-*/*/*HeavyNeutralMesonToGG_*.root
-        fi
-        if [ -n "$LHC17d20a2MCextra" ]; then # child 8 EXTRA
-            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a2MCextra"
-            rm $OUTPUTDIR_LHC17d20a2extra/*/HeavyNeutralMesonToGG_*.root
-            rm $OUTPUTDIR_LHC17d20a2extra/*/*/*HeavyNeutralMesonToGG_*.root
-        fi
-        if [ -n "$LHC17d16MCextra" ]; then   # child 9 EXTRA
-            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d16MCextra"
-            rm $OUTPUTDIR_LHC17d16extra/*/HeavyNeutralMesonToGG_*.root
-            rm $OUTPUTDIR_LHC17d16extra/*/*/*HeavyNeutralMesonToGG_*.root
-        fi
-        if [ -n "$LHC17d18MCextra" ]; then   # child 10 EXTRA
-            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d18MCextra"
-            rm $OUTPUTDIR_LHC17d18extra/*/HeavyNeutralMesonToGG_*.root
-            rm $OUTPUTDIR_LHC17d18extr
