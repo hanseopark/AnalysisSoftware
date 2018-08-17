@@ -4582,6 +4582,8 @@
             return "EMC1";
         } else if (trigger == 52){                          // EMC7
             return "EMC7";
+        } else if (trigger == 62){                          // PHOS L0, INT7
+            return "PHI7";
         } else if (trigger == 71){                          // SHM1
             return "SHM1";
         } else if (trigger == 72){                          // SHM1
