@@ -1257,128 +1257,136 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 # Merge ROOT files
     if [ $MERGEON == 1 ]; then
         echo -e "\n\n--== MERGING ROOT FILES ==--\n"
-    # LHC16_13TeV_pass1 data files
-        echo -e "\n--> Merging LHC16_13TeV_pass1 data files"
-        rm -f runlistsToMerge.txt
-        echo -e "DPGTracks" >> runlistsToMerge.txt
-        echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
-        listsToMerge=`cat runlistsToMerge.txt`
-        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16h-pass$passNr-DPGTracks\_*.root`
-        echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
-        for fileName in $filesForMerging; do
-            GetFileNumberMerging $fileName $((NSlashes-1)) 3
-            echo "$(basename $fileName) --> number: $number"
-            if [ -n "$LHC16Data" ]; then
-                for runListName in $listsToMerge; do
-                    echo -e "\nMerging runlist \"$runListName\""
-                    rm -f listCurrMerge.txt
-                    nameOut=""
-                    for periodID in ${periodList[@]}; do
-                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC16$periodID-pass$passNr-$runListName\_$number.root
-                        if [ -f $currFile ]; then
-                            echo "Period ID: $periodID"
-                            nameOut+=$periodID
-                            echo -e "$currFile" >> listCurrMerge.txt
-                        fi
+        # LHC16_13TeV_pass1 data files
+        if [ ${#periodList16[@]} -gt 0 ]; then
+            echo -e "\n--> Merging LHC16_13TeV_pass1 data files"
+            rm -f runlistsToMerge.txt
+            echo -e "DPGTracks" >> runlistsToMerge.txt
+            echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
+            listsToMerge=`cat runlistsToMerge.txt`
+            filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16h-pass$passNr-DPGTracks\_*.root`
+            echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
+            for fileName in $filesForMerging; do
+                GetFileNumberMerging $fileName $((NSlashes-1)) 3
+                echo "$(basename $fileName) --> number: $number"
+                if [ -n "$LHC16Data" ]; then
+                    for runListName in $listsToMerge; do
+                        echo -e "\nMerging runlist \"$runListName\""
+                        rm -f listCurrMerge.txt
+                        nameOut=""
+                        for periodID in ${periodList16[@]}; do
+                            currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC16$periodID-pass$passNr-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                echo "Period ID: $periodID"
+                                nameOut+=$periodID
+                                echo -e "$currFile" >> listCurrMerge.txt
+                            fi
+                        done
+                        MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16$nameOut\-pass$passNr-$runListName\_$number.root
                     done
-                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16$nameOut\-pass$passNr-$runListName\_$number.root
-                done
-            fi
-        done
-    # LHC17_13TeV_pass1 data files
-        echo -e "\n--> Merging LHC17_13TeV_pass1 data files"
-        rm -f runlistsToMerge.txt
-        echo -e "DPGTracks" >> runlistsToMerge.txt
-        echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
-        listsToMerge=`cat runlistsToMerge.txt`
-        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC17c-pass$passNr-DPGTracks\_*.root`
-        echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
-        for fileName in $filesForMerging; do
-            GetFileNumberMerging $fileName $((NSlashes-1)) 3
-            echo "$(basename $fileName) --> number: $number"
-            if [ -n "$LHC17Data" ]; then
-                for runListName in $listsToMerge; do
-                    echo -e "\nMerging runlist \"$runListName\""
-                    rm -f listCurrMerge.txt
-                    nameOut=""
-                    for periodID in ${periodList[@]}; do
-                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC17$periodID-pass$passNr-$runListName\_$number.root
-                        if [ -f $currFile ]; then
-                            echo "Period ID: $periodID"
-                            nameOut+=$periodID
-                            echo -e "$currFile" >> listCurrMerge.txt
-                        fi
-                    done
-                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC17$nameOut\-pass$passNr-$runListName\_$number.root
-                done
-            fi
-        done
-    # LHC18_13TeV_pass1 data files
-        echo -e "\n--> Merging LHC18_13TeV_pass1 data files"
-        rm -f runlistsToMerge.txt
-        echo -e "DPGTracks" >> runlistsToMerge.txt
-        echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
-        listsToMerge=`cat runlistsToMerge.txt`
-        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC18b-pass$passNr-DPGTracks\_*.root`
-        echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
-        for fileName in $filesForMerging; do
-            GetFileNumberMerging $fileName $((NSlashes-1)) 3
-            echo "$(basename $fileName) --> number: $number"
-            if [ -n "$LHC18Data" ]; then
-                for runListName in $listsToMerge; do
-                    echo -e "\nMerging runlist \"$runListName\""
-                    rm -f listCurrMerge.txt
-                    nameOut=""
-                    for periodID in ${periodList[@]}; do
-                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC18$periodID-pass$passNr-$runListName\_$number.root
-                        if [ -f $currFile ]; then
-                            echo "Period ID: $periodID"
-                            nameOut+=$periodID
-                            echo -e "$currFile" >> listCurrMerge.txt
-                        fi
-                    done
-                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC18$nameOut\-pass$passNr-$runListName\_$number.root
-                done
-            fi
-        done
-    # Monte Carlo LHC17_PYT8_13TeV_anchLHC16 and LHC17_PYT8_13TeV_anchLHC16_extra files
-        echo -e "\n--> Merging Monte Carlo files"
-        rm -f runlistsToMerge.txt
-        echo -e "DPGTracks" >> runlistsToMerge.txt
-        echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
-        listsToMerge=`cat runlistsToMerge.txt`
-        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17d20a2-anchor16*-DPGTracks\_*.root`
-        echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
-        for fileName in $filesForMerging; do
-            GetFileNumberMerging $fileName $((NSlashes-1)) 4
-            echo -e "\n--> Merging $number"
-            for runListName in $listsToMerge; do
-                rm -f listCurrMerge.txt
-                nameOut=""
-                for ((i = 0; i < ${#periodListMC[@]}; i++)); do
-                    # 'Normal' Monte Carlo
-                    if [ -n "$LHC17MC" ]; then
-                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17${periodListMC[i]}-anchor16${periodList[i]}-$runListName\_$number.root
-                        if [ -f $currFile ]; then
-                            echo "Period ID: 17${periodListMC[i]}-anchor16${periodList[i]}"
-                            nameOut+=${periodListMC[i]}
-                            echo -e "$currFile" >> listCurrMerge.txt
-                        fi
-                    fi
-                    # Extra Monte Carlo files
-                    if [ -n "$LHC17MCextra" ]; then
-                        currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MCextra_LHC17${periodListMC[i]}-anchor16${periodList[i]}-$runListName\_$number.root
-                        if [ -f $currFile ]; then
-                            echo "Period ID: 17${periodListMC[i]}-anchor16${periodList[i]}"
-                            # nameOut+=${periodListMC[i]}
-                            echo -e "$currFile" >> listCurrMerge.txt
-                        fi
-                    fi
-                done
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17$nameOut\-$runListName\_$number.root
+                fi
             done
-        done
-        echo "--> Merging done"
+        fi
+        # LHC17_13TeV_pass1 data files
+        if [ ${#periodList17[@]} -gt 0 ]; then
+            echo -e "\n--> Merging LHC17_13TeV_pass1 data files"
+            rm -f runlistsToMerge.txt
+            echo -e "DPGTracks" >> runlistsToMerge.txt
+            echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
+            listsToMerge=`cat runlistsToMerge.txt`
+            filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC17c-pass$passNr-DPGTracks\_*.root`
+            echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
+            for fileName in $filesForMerging; do
+                GetFileNumberMerging $fileName $((NSlashes-1)) 3
+                echo "$(basename $fileName) --> number: $number"
+                if [ -n "$LHC17Data" ]; then
+                    for runListName in $listsToMerge; do
+                        echo -e "\nMerging runlist \"$runListName\""
+                        rm -f listCurrMerge.txt
+                        nameOut=""
+                        for periodID in ${periodList17[@]}; do
+                            currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC17$periodID-pass$passNr-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                echo "Period ID: $periodID"
+                                nameOut+=$periodID
+                                echo -e "$currFile" >> listCurrMerge.txt
+                            fi
+                        done
+                        MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC17$nameOut\-pass$passNr-$runListName\_$number.root
+                    done
+                fi
+            done
+        fi
+        # LHC18_13TeV_pass1 data files
+        if [ ${#periodList18[@]} -gt 0 ]; then
+            echo -e "\n--> Merging LHC18_13TeV_pass1 data files"
+            rm -f runlistsToMerge.txt
+            echo -e "DPGTracks" >> runlistsToMerge.txt
+            echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
+            listsToMerge=`cat runlistsToMerge.txt`
+            filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC18b-pass$passNr-DPGTracks\_*.root`
+            echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
+            for fileName in $filesForMerging; do
+                GetFileNumberMerging $fileName $((NSlashes-1)) 3
+                echo "$(basename $fileName) --> number: $number"
+                if [ -n "$LHC18Data" ]; then
+                    for runListName in $listsToMerge; do
+                        echo -e "\nMerging runlist \"$runListName\""
+                        rm -f listCurrMerge.txt
+                        nameOut=""
+                        for periodID in ${periodList18[@]}; do
+                            currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_LHC18$periodID-pass$passNr-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                echo "Period ID: $periodID"
+                                nameOut+=$periodID
+                                echo -e "$currFile" >> listCurrMerge.txt
+                            fi
+                        done
+                        MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_LHC18$nameOut\-pass$passNr-$runListName\_$number.root
+                    done
+                fi
+            done
+        fi
+        # Monte Carlo LHC17_PYT8_13TeV_anchLHC16 and LHC17_PYT8_13TeV_anchLHC16_extra files
+        if [ ${#periodList17MC[@]} -gt 0 ]; then
+            echo -e "\n--> Merging Monte Carlo files"
+            rm -f runlistsToMerge.txt
+            echo -e "DPGTracks" >> runlistsToMerge.txt
+            echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
+            listsToMerge=`cat runlistsToMerge.txt`
+            filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17d20a2-anchor16*-DPGTracks\_*.root`
+            echo "!! \"filesForMerging\" contains ${#filesForMerging[@]} files"
+            for fileName in $filesForMerging; do
+                GetFileNumberMerging $fileName $((NSlashes-1)) 4
+                echo -e "\n--> Merging $number"
+                for runListName in $listsToMerge; do
+                    rm -f listCurrMerge.txt
+                    nameOut=""
+                    for ((i = 0; i < ${#periodListMC[@]}; i++)); do
+                        # 'Normal' Monte Carlo
+                        if [ -n "$LHC17MC" ]; then
+                            currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17${periodList17MC[i]}-anchor16${periodList16[i]}-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                echo "Period ID: 17${periodList17MC[i]}-anchor16${periodList16[i]}"
+                                nameOut+=${periodListMC[i]}
+                                echo -e "$currFile" >> listCurrMerge.txt
+                            fi
+                        fi
+                        # Extra Monte Carlo files
+                        if [ -n "$LHC17MCextra" ]; then
+                            currFile=$OUTPUTDIR/HeavyNeutralMesonToGG_MCextra_LHC17${periodList17MC[i]}-anchor16${periodList16[i]}-$runListName\_$number.root
+                            if [ -f $currFile ]; then
+                                echo "Period ID: 17${periodList17MC[i]}-anchor16${periodList16[i]}"
+                                # nameOut+=${periodListMC[i]}
+                                echo -e "$currFile" >> listCurrMerge.txt
+                            fi
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/HeavyNeutralMesonToGG_MC_LHC17$nameOut\-$runListName\_$number.root
+                done
+            done
+            echo "--> Merging done"
+        fi
     fi # end of [ $MERGEON == 1 ]
 #
 
