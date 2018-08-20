@@ -1,4 +1,4 @@
-# WARNING: this script uses regular expressions (e.g. ^...$). Checkout if your terminal uses the same regex version!
+# WARNING: this script uses regular expressions (e.g. ^...$). Check if your terminal uses the same regex version!
 
 # Run as:
 # bash GetHeavyMesonFilesFromGridAndMergeThem_pp_13TeV.sh <your_username>
@@ -13,8 +13,8 @@
 #! /bin/bash
 source basicFunction.sh
 
-DOWNLOADON=1
-MERGEON=0
+DOWNLOADON=0
+MERGEON=1
 SEPARATEON=0
 CLEANUP=1
 CLEANUPMAYOR=0
@@ -113,7 +113,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
                 LHC17d20a2MCextra=""
                 LHC17d16MCextra=""
                 LHC17d18MCextra=""
-    # !! LHC16_13TeV_pass1 data files
+    # !! LHC16_13TeV_pass1 DATA files
         # LHC16Data="2374" # comment: "omega + eta'"                    --> PCM+EMC (test!)
         # LHC16Data="2422" # comment: "Remco PHOS request"              --> PCM+PHOS
         # LHC16Data="2423" # comment: "Remco & Hannah, Joshua request"  --> PCM+EMC
@@ -128,7 +128,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         # LHC16oData="child_8"
         # LHC16pData="child_9"
         # LHC16eData="child_10"
-    # !! LHC17_13TeV_pass1 data files
+    # !! LHC17_13TeV_pass1 DATA files
         LHC17Data="2444" # comment: "Remco, Hannah request" --> PCMEMC + EMC
         # LHC17Data="2446" # comment: "Remco, Jens request"   --> PCM + PCMPHOS + PHOSPHOS
         LHC17cData="child_1"
@@ -142,7 +142,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17oData="child_9"
         LHC17rData="child_10"
         LHC17hData="child_11"
-    # !! LHC18_13TeV_pass1 data files
+    # !! LHC18_13TeV_pass1 DATA files
         # LHC18Data="2445" # comment: "Remco request" --> PCMEMC + EMC
         # LHC18Data="2449" # comment: "Remco request" --> PCM + PCMPHOS + PHOSPHOS
         # LHC18bData="child_1"
