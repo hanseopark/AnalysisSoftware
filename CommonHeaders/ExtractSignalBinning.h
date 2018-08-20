@@ -1075,36 +1075,36 @@
             switch( mode ) {
                 case 0: // PCM-PCM
                     switch( trigger ) {
-                        case 10: return 3; // INT7
-                        case 52: return 1; // L0
-                        case 83: return 2; // EG1
-                        case 85: return 2; // EG2
+                        case 10: scaleFac = 8.;  return 3; // INT7
+                        case 52: scaleFac = 1.;  return 1; // L0
+                        case 83: scaleFac = 1.;  return 2; // EG1
+                        case 85: scaleFac = 1.;  return 2; // EG2
                     } break;
                 case 2: // PCM-EMC
                     switch( trigger ) {
-                        case 10: return 4; // INT7
-                        case 52: return 1; // L0
-                        case 83: return 4; // EG1
-                        case 85: return 6; // EG2
+                        case 10: scaleFac = 10.; return 7; // INT7 (maybe bin 4?)
+                        case 52: scaleFac = 1.;  return 1; // L0
+                        case 83: scaleFac = 4.;  return 4; // EG1
+                        case 85: scaleFac = 4.;  return 6; // EG2
                     } break;
                 case 3: // PCM-PHOS
                     switch( trigger ) {
-                        case 10: return 3; // INT7
-                        case 62: return 2; // PHI7
+                        case 10: scaleFac = 4.;  return 3; // INT7
+                        case 62: scaleFac = 8.;  return 2; // PHI7
                     } break;
                 case 4: // EMC-EMC
                     switch( trigger ) {
-                        case 10: return 2; // INT7
-                        case 52: return 1; // L0
-                        case 83: return 3; // EG1
-                        case 85: return 3; // EG2
+                        case 10: scaleFac = 4.;  return 2; // INT7
+                        case 52: scaleFac = 1.;  return 1; // L0
+                        case 83: scaleFac = 4.;  return 3; // EG1
+                        case 85: scaleFac = 2.;  return 3; // EG2
                     } break;
                 case 5: // PHOS-PHOS
                     switch( trigger ) {
-                        case 10: return 2; // INT7
-                        case 62: return 1; // PHI7 (maybe 6 is nice?)
+                        case 10: scaleFac = 1.;  return 2; // INT7
+                        case 62: scaleFac = 1.;  return 6; // PHI7 (maybe 1 or 3 are nice?)
                     } break;
-                default: return 1;
+                default: scaleFac = 1.; return 1;
             }
         //***************************************************************************************
         //********************** Start setting omega example bins *******************************
