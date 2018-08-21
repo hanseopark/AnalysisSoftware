@@ -571,3 +571,112 @@ function MergeAccordingToList()
         cp $TOMERGE $2
     fi
 }
+
+# MergeFilesAccrosYears merges all files in a folder that have the same period and the same train config number
+# TODO $1: input folder
+# TODO $2: file name in that folder that will be used to find all runlists and all train config numbers
+function MergeFilesAccrossYears()
+{
+
+    # Import function arguments
+    cd "$1"
+    local filenameToUse="$2"
+
+    # Variable names
+        if [ ! -f "$filenameToUse" ]; then
+            echo "ERROR: File \"$filenameToUse\" does not exist!"
+            echo "--> Check this script or check folder \"$1\""
+            exit
+        fi
+        local analysisType=${filenameToUse/_LHC1*-pass?-*_*.root}
+        local periodToCheck=${filenameToUse/${analysisType}_}
+        periodToCheck=${periodToCheck/-pass?-*_*.root}
+        local passNrToCheck=${filenameToUse/${analysisType}_${periodToCheck}-pass}
+        passNrToCheck=${passNrToCheck/-*_*.root}
+        local runlistToCheck=${filenameToUse/${analysisType}_${periodToCheck}-pass${passNrToCheck}-}
+        runlistToCheck=${runlistToCheck/_*.root}
+        local cutnumberToCheck=${filenameToUse/${analysisType}_${periodToCheck}-pass${passNrToCheck}-${runlistToCheck}_}
+        cutnumberToCheck=${cutnumberToCheck/.root}
+        echo -e "The following test file name is used for merging:"
+        echo -e "  \"$filenameToUse\""
+        echo -e "  (modify this one in the script if needed)\n"
+        echo -e "Derived parameters:"
+        echo -e " - Analysis type:  \"$analysisType\""
+        echo -e " - Period name:    \"$periodToCheck\""
+        echo -e " - Pass number:    \"$passNrToCheck\""
+        echo -e " - Cut number:     \"$cutnumberToCheck\""
+        echo -e " - Runlist:        \"$runlistToCheck\""
+    #
+
+    # Create list of cut numbers to be merged
+        rm -f temp_RunLists.txt
+        local beginString="${analysisType}_${periodToCheck}-pass?-"
+        local endString="_${cutnumberToCheck}.root"
+        local newString=""
+        for i in `ls $beginString*$endString`; do
+            newString=$i
+            newString=${newString/$endString}
+            newString=${newString/$beginString}
+            echo "$newString" >> temp_RunLists.txt
+        done
+        runLists=`cat temp_RunLists.txt`
+        echo -e "\nFound the following runlists:"
+        echo -e "$runLists"
+    #
+
+    # Create list of cut numbers to be merged
+        rm -f temp_CutNumbers.txt
+        beginString="${analysisType}_${periodToCheck}-pass?-${runlistToCheck}_"
+        endString=".root"
+        for i in `ls $beginString*$endString`; do
+            newString=$i
+            newString=${newString/$endString}
+            newString=${newString/$beginString}
+            echo "$newString" >> temp_CutNumbers.txt
+        done
+        local cutnumberList=`cat temp_CutNumbers.txt`
+        echo -e "\nFound th following cut numbers:"
+        echo -e "$cutnumberList\n"
+        read -p "Press enter if this is ok..."
+        echo ""
+    #
+
+    # Get period names from files
+        beginString="${analysisType}_LHC"
+        local fileNames
+        local mergeperiods
+        local newName
+        for runList in $runLists; do
+            for cutNr in $cutnumberList; do
+                # echo -e "\n\n---=== Adding runlist \"${runList}\", cut number \"${cutNr}\" ===---"
+                endString="-pass?-${runList}_${cutNr}.root"   
+                fileNames=`ls ${beginString}*${endString}`
+                mergePeriods=""
+                echo "" > temp_YearList.txt
+                for fileName in $fileNames; do
+                    # Get period name from fileName
+                    newString=${fileName/$beginString}
+                    newString=${newString/$endString}
+                    # Remove year (but not the first)
+                    for year in `cat temp_YearList.txt`; do
+                        newString=${newString/$year}
+                    done
+                    echo "${newString:0:2}" >> temp_YearList.txt
+                    # * Add period name to mergePeriods
+                    if [ -n newString ]; then
+                        mergePeriods+=$newString
+                    fi
+                done
+                newName=$beginString$mergePeriods$endString
+                newName=${newName/-pass?} # remove pass number
+                # echo "Output merged file name: \"$newName\""
+                # * Merge ROOT files
+                hadd -f $newName $fileNames
+            done
+        done
+
+    # Remove temporary list files
+        rm -f temp_RunLists.txt
+        rm -f temp_CutNumbers.txt
+        rm -f temp_YearList.txt
+}
