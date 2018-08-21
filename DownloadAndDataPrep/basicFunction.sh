@@ -679,4 +679,6 @@ function MergeFilesAccrossYears()
         rm -f temp_RunLists.txt
         rm -f temp_CutNumbers.txt
         rm -f temp_YearList.txt
+
+    cd -
 }
