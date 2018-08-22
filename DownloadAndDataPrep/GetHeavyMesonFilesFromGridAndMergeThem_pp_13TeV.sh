@@ -48,7 +48,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
     NSlashes4=`expr $NSlashes + 2`
 #
 
-# TODO: Train configurations
+# NOTE: Train configurations
     passNr="1"
     # DEFAULT (for if you comment below input)
         # Data files
@@ -112,28 +112,28 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
                 LHC17d20a2MCextra=""
                 LHC17d16MCextra=""
                 LHC17d18MCextra=""
-    # TODO: LHC16_13TeV_pass1 DATA files
+    # NOTE: LHC16_13TeV_pass1 DATA files
         # * vAN-20180614
             # LHC16Data="2374" # PCM + PCMEMC + EMC (2018/07/18) # ! test
         # * vAN-20180727
             # LHC16Data="2422" # PCMPHOS + PHOSPHOS (2018/07/27)
             # LHC16Data="2423" # PCMMEC + EMC (2018/07/30)
         # * vAN-20180814
-            LHC16Data="2462" # PCM (2018/08/20)
-        LHC16dData="child_1"
-        LHC16gData="child_2"
-        LHC16hData="child_3"
-        LHC16iData="child_4"
-        LHC16jData="child_5"
-        LHC16kData="child_6"
-        LHC16lData="child_7"
-        LHC16oData="child_8"
-        LHC16pData="child_9"
-        LHC16eData="child_10"
-    # TODO: LHC17_13TeV_pass1 DATA files
+            # LHC16Data="2462" # PCM (2018/08/20)
+        # LHC16dData="child_1"
+        # LHC16gData="child_2"
+        # LHC16hData="child_3"
+        # LHC16iData="child_4"
+        # LHC16jData="child_5"
+        # LHC16kData="child_6"
+        # LHC16lData="child_7"
+        # LHC16oData="child_8"
+        # LHC16pData="child_9"
+        # LHC16eData="child_10"
+    # NOTE: LHC17_13TeV_pass1 DATA files
         # * vAN-20180814
             LHC17Data="2444" # PCMEMC + EMC (2018/08/15)
-            # LHC17Data="2446" # PCM + PCMPHOS + PHOSPHOS (2018/08/15) # ! misses children 5, 6, 7, 8, 9, 10
+            # LHC17Data="2446" # PCM + PCMPHOS + PHOSPHOS (2018/08/15) # ! misses children 6, 7, 8, 9, 10
         LHC17cData="child_1"
         LHC17eData="child_2"
         LHC17fData="child_3"
@@ -145,7 +145,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17oData="child_9"
         LHC17rData="child_10"
         LHC17hData="child_11"
-    # TODO: LHC18_13TeV_pass1 DATA files
+    # NOTE: LHC18_13TeV_pass1 DATA files
         # * vAN-20180814
             # LHC18Data="2445" # PCMEMC + EMC (2018/08/16)
             # LHC18Data="2449" # PCM + PCMPHOS + PHOSPHOS (2018/08/16)
@@ -157,39 +157,39 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         # LHC18hData="child_6"
         # LHC18iData="child_7"
         # LHC18jData="child_8"
-    # TODO: Monte Carlo LHC17_PYT8_13TeV_anchLHC16 files
+    # NOTE: Monte Carlo LHC17_PYT8_13TeV_anchLHC16 files
         # * vAN-20180727
             # LHC17MC="3341" # PCM + EMC  (2018/06/18) # ! test
         # * vAN-20180727
             # LHC17MC="3398" # PCM + PHOS (2018/07/27)
         # * vAN-20180727
-            LHC17MC="3409" # PCM + EMC  (2018/08/02)
-        LHC17f6MC="child_1"    # anchored to LHC16d (child 1)
-        LHC17f9MC="child_2"    # anchored to LHC16e (child 10)
-        LHC17d17MC="child_3"   # anchored to LHC16g (child 2)
-        LHC17f5MC="child_4"    # anchored to LHC16h (child 3)
-        LHC17d3MC="child_5"    # anchored to LHC16i (child 4)
-        LHC17e5MC="child_6"    # anchored to LHC16j (child 5)
-        LHC17d20a1MC="child_7" # anchored to LHC16k (child 6)
-        LHC17d20a2MC="child_8" # anchored to LHC16l (child 7)
-        LHC17d16MC="child_9"   # anchored to LHC16o (child 8)
-        LHC17d18MC="child_10"  # anchored to LHC16p (child 9)
-    # TODO: Monte Carlo LHC17_PYT8_13TeV_anchLHC16_extra files EXTRA
+            # LHC17MC="3409" # PCM + EMC  (2018/08/02)
+        # LHC17f6MC="child_1"    # anchored to LHC16d (child 1)
+        # LHC17f9MC="child_2"    # anchored to LHC16e (child 10)
+        # LHC17d17MC="child_3"   # anchored to LHC16g (child 2)
+        # LHC17f5MC="child_4"    # anchored to LHC16h (child 3)
+        # LHC17d3MC="child_5"    # anchored to LHC16i (child 4)
+        # LHC17e5MC="child_6"    # anchored to LHC16j (child 5)
+        # LHC17d20a1MC="child_7" # anchored to LHC16k (child 6)
+        # LHC17d20a2MC="child_8" # anchored to LHC16l (child 7)
+        # LHC17d16MC="child_9"   # anchored to LHC16o (child 8)
+        # LHC17d18MC="child_10"  # anchored to LHC16p (child 9)
+    # NOTE: Monte Carlo LHC17_PYT8_13TeV_anchLHC16_extra files EXTRA
         # * vAN-20180727
             # LHC17MCextra="3399" # PCM + PHOS (2018/07/30)
         # * vAN-20180731
-            LHC17MCextra="3410" # PCM + EMC (2018/08/02)
-        LHC17f6MCextra=$LHC17f6MC       # anchored to LHC16d (child 1)
-        LHC17f9MCextra=$LHC17f9MC       # anchored to LHC16e (child 10)
-        LHC17d17MCextra=$LHC17d17MC     # anchored to LHC16g (child 2)
-        LHC17f5MCextra=$LHC17f5MC       # anchored to LHC16h (child 3)
-        LHC17d3MCextra=$LHC17d3MC       # anchored to LHC16i (child 4)
-        LHC17e5MCextra=$LHC17e5MC       # anchored to LHC16j (child 5)
-        LHC17d20a1MCextra=$LHC17d20a1MC # anchored to LHC16k (child 6)
-        LHC17d20a2MCextra=$LHC17d20a2MC # anchored to LHC16l (child 7)
-        LHC17d16MCextra=$LHC17d16MC     # anchored to LHC16o (child 8)
-        LHC17d18MCextra=$LHC17d18MC     # anchored to LHC16p (child 9)
-    # TODO: Which periods do you want to merge?
+            # LHC17MCextra="3410" # PCM + EMC (2018/08/02)
+        # LHC17f6MCextra=$LHC17f6MC       # anchored to LHC16d (child 1)
+        # LHC17f9MCextra=$LHC17f9MC       # anchored to LHC16e (child 10)
+        # LHC17d17MCextra=$LHC17d17MC     # anchored to LHC16g (child 2)
+        # LHC17f5MCextra=$LHC17f5MC       # anchored to LHC16h (child 3)
+        # LHC17d3MCextra=$LHC17d3MC       # anchored to LHC16i (child 4)
+        # LHC17e5MCextra=$LHC17e5MC       # anchored to LHC16j (child 5)
+        # LHC17d20a1MCextra=$LHC17d20a1MC # anchored to LHC16k (child 6)
+        # LHC17d20a2MCextra=$LHC17d20a2MC # anchored to LHC16l (child 7)
+        # LHC17d16MCextra=$LHC17d16MC     # anchored to LHC16o (child 8)
+        # LHC17d18MCextra=$LHC17d18MC     # anchored to LHC16p (child 9)
+    # NOTE: Which periods do you want to merge?
         periodList16=(
             d # child 1
             g # child 2
@@ -239,7 +239,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         )
 #
 
-# TODO: Set output directory (offline and remote)
+# NOTE: Set output directory (offline and remote)
     # TRAINDIR="vAN-20180617-1" # 1st EtaPrime analysis # ! test run
     # TRAINDIR="vAN-20180727-1" # 2nd EtaPrime analysis run: includes 2016 data and 2017 MC only
     TRAINDIR="vAN-20180814-1" # 3rd EtaPrime analysis run: includes all DATA from 2016, 2017, and 2018
@@ -617,7 +617,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 # * Download files from the GRID *
     if [ $DOWNLOADON == 1 ]; then
         echo -e "\n\n--== DOWNLOADING FILES FROM THE GRID ==--\n"
-    # LHC16_13TeV_pass1 data files # ! misses DPGTracksIncAcc
+    # * LHC16_13TeV_pass1 data files # ! misses DPGTracksIncAcc # ! EMCgood == DPGTracksAndCalo
         if [ -n "$LHC16dData" ]; then # child 1  # ! misses EMCgood
             echo -e "\n--> Downloading LHC16d..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16d "$AliTrainDirDt/$LHC16dData/merge" DPGTracks       $NSlashes3 "" kFALSE
@@ -630,33 +630,33 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         fi
         if [ -n "$LHC16hData" ]; then # child 3
             echo -e "\n--> Downloading LHC16h..."
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_2" DPGTracks       $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_3" EMCgood   $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16h "$AliTrainDirDt/$LHC16hData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16iData" ]; then # child 4
             echo -e "\n--> Downloading LHC16i..."
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_2" DPGTracks       $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_3" EMCgood   $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16i "$AliTrainDirDt/$LHC16iData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16jData" ]; then # child 5
             echo -e "\n--> Downloading LHC16j..."
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_2" DPGTracks       $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_3" EMCgood   $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16j "$AliTrainDirDt/$LHC16jData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16kData" ]; then # child 6
             echo -e "\n--> Downloading LHC16k..."
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_2" DPGTracks       $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_4" EMCgood   $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16k "$AliTrainDirDt/$LHC16kData/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16lData" ]; then # child 7
             echo -e "\n--> Downloading LHC16l..."
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_2" DPGTracks       $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_2" DPGTracksIncAcc $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_3" EMCgood   $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16l "$AliTrainDirDt/$LHC16lData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
         if [ -n "$LHC16oData" ]; then # child 8  # ! misses EMCgood
             echo -e "\n--> Downloading LHC16o..."
@@ -673,7 +673,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16e "$AliTrainDirDt/$LHC16eData/merge" DPGTracks       $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16e "$AliTrainDirDt/$LHC16eData/merge" DPGTracksIncAcc $NSlashes3 "" kFALSE
         fi
-    # LHC17_13TeV_pass1 data files
+    # * LHC17_13TeV_pass1 data files
         if [ -n "$LHC17cData" ]; then # child 1  # ! misses IncAcc
             echo -e "\n--> Downloading LHC17c..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17c "$AliTrainDirDt/$LHC17cData/merge_runlist_2" DPGTracks        $NSlashes3 "" kFALSE
@@ -740,7 +740,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17h "$AliTrainDirDt/$LHC17hData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17h "$AliTrainDirDt/$LHC17hData/merge_runlist_4" DPGTracksIncAcc  $NSlashes3 "" kFALSE
         fi
-    # LHC18_13TeV_pass1 data files # ! DPGTracksIncTPC == DPGTracksIncAcc
+    # * LHC18_13TeV_pass1 data files # ! DPGTracksIncTPC == DPGTracksIncAcc
         if [ -n "$LHC18bData" ]; then # child 1
             echo -e "\n--> Downloading LHC18b..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC18b "$AliTrainDirDt/$LHC18bData/merge_runlist_1" DPGTracks        $NSlashes3 "" kFALSE
@@ -789,7 +789,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC18j "$AliTrainDirDt/$LHC18jData/merge_runlist_2" DPGTracksIncAcc  $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC18j "$AliTrainDirDt/$LHC18jData/merge_runlist_3" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
-    # Monte Carlo LHC17_PYT8_13TeV_anchLHC16 files
+    # * Monte Carlo LHC17_PYT8_13TeV_anchLHC16 files
         if [ -n "$LHC17f6MC" ]; then    # child 1  # ! misses EMCgood
             echo -e "\n--> Downloading LHC17f6..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6 "$AliTrainDirMC/$LHC17f6MC/merge_runlist_1" ListAll          $NSlashes3 "" kFALSE
@@ -880,7 +880,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_5" HadronPID        $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_4" EMCgood          $NSlashes3 "" kFALSE
         fi
-    # Monte Carlo LHC17_PYT8_13TeV_anchLHC16_extra files EXTRA
+    # * Monte Carlo LHC17_PYT8_13TeV_anchLHC16_extra files EXTRA
         if [ -n "$LHC17f6MCextra" ]; then    # child 1 EXTRA # ! misses EMCgood
             echo -e "\n--> Downloading LHC17f6 extra..."
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f6extra "$AliTrainDirMC/$LHC17f6MCextra/merge_runlist_1" ListAll          $NSlashes3 "" kFALSE
@@ -974,65 +974,110 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC16d/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-DPGTracks" "-DPGTracks"
             done
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC16gData" ]; then # child 2 # ! misses EMCgood
             for fileName in `ls $OUTPUTDIR_LHC16g/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16hData" ]; then # child 3 # ! misses EMCgood
             for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-EMCgood_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-EMCgood" "-EMCgood"
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16iData" ]; then # child 4
             for fileName in `ls $OUTPUTDIR_LHC16i/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC16i/HeavyNeutralMesonToGG-EMCgood_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-EMCgood" "-EMCgood"
+            for fileName in `ls $OUTPUTDIR_LHC16i/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16i/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16jData" ]; then # child 5
             for fileName in `ls $OUTPUTDIR_LHC16j/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC16j/HeavyNeutralMesonToGG-EMCgood_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-EMCgood" "-EMCgood"
+            for fileName in `ls $OUTPUTDIR_LHC16j/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16j/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16kData" ]; then # child 6 # !! PASS 2, check expr addition below
             for fileName in `ls $OUTPUTDIR_LHC16k/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass`expr $passNr + 1`-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC16k/HeavyNeutralMesonToGG-EMCgood_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass`expr $passNr + 1`-EMCgood" "-EMCgood"
+            for fileName in `ls $OUTPUTDIR_LHC16k/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass`expr $passNr + 1`-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16k/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass`expr $passNr + 1`-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16lData" ]; then # child 7 # !! PASS 2, check expr addition below
             for fileName in `ls $OUTPUTDIR_LHC16l/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass`expr $passNr + 1`-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC16l/HeavyNeutralMesonToGG-EMCgood_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass`expr $passNr + 1`-EMCgood" "-EMCgood"
+            for fileName in `ls $OUTPUTDIR_LHC16l/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass`expr $passNr + 1`-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16l/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass`expr $passNr + 1`-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC16oData" ]; then # child 8 # ! misses EMCgood
             for fileName in `ls $OUTPUTDIR_LHC16o/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-DPGTracks" "-DPGTracks"
             done
+            for fileName in `ls $OUTPUTDIR_LHC16o/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16o/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC16pData" ]; then # child 9 # ! misses EMCgood
             for fileName in `ls $OUTPUTDIR_LHC16p/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-DPGTracks" "-DPGTracks"
             done
+            for fileName in `ls $OUTPUTDIR_LHC16p/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16p/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC16eData" ]; then # child 10 # ! misses EMCgood
             for fileName in `ls $OUTPUTDIR_LHC16e/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16e/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC16e/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
     # LHC17_13TeV_pass1 data files
@@ -1043,6 +1088,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC17c/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17c $NSlashes "LHC17c-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
+            for fileName in `ls $OUTPUTDIR_LHC17c/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17c $NSlashes "LHC17c-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC17eData" ]; then # child 2 # ! misses IncAcc
             for fileName in `ls $OUTPUTDIR_LHC17e/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
@@ -1050,6 +1098,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             done
             for fileName in `ls $OUTPUTDIR_LHC17e/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e $NSlashes "LHC17e-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17e/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e $NSlashes "LHC17e-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC17fData" ]; then # child 3
@@ -1081,6 +1132,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC17j/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17j $NSlashes "LHC17j-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
+            for fileName in `ls $OUTPUTDIR_LHC17j/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17j $NSlashes "LHC17j-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC17kData" ]; then # child 6
             for fileName in `ls $OUTPUTDIR_LHC17k/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
@@ -1111,6 +1165,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC17m/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17m $NSlashes "LHC17m-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
+            for fileName in `ls $OUTPUTDIR_LHC17m/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17m $NSlashes "LHC17m-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC17oData" ]; then # child 9
             for fileName in `ls $OUTPUTDIR_LHC17o/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
@@ -1130,6 +1187,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC17r/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17r $NSlashes "LHC17r-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
+            for fileName in `ls $OUTPUTDIR_LHC17r/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17r $NSlashes "LHC17r-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
         fi
         if [ -n "$LHC17hData" ]; then # child 11
             for fileName in `ls $OUTPUTDIR_LHC17h/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
@@ -1147,88 +1207,88 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC18b/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18b $NSlashes "LHC18b-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18b/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18b $NSlashes "LHC18b-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18b/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18b $NSlashes "LHC18b-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18b/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18b $NSlashes "LHC18b-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18dData" ]; then # child 2
             for fileName in `ls $OUTPUTDIR_LHC18d/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18d $NSlashes "LHC18d-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18d/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18d $NSlashes "LHC18d-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18d/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18d $NSlashes "LHC18d-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18d/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18d $NSlashes "LHC18d-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18eData" ]; then # child 3
             for fileName in `ls $OUTPUTDIR_LHC18e/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18e $NSlashes "LHC18e-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18e/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18e $NSlashes "LHC18e-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18e/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18e $NSlashes "LHC18e-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18e/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18e $NSlashes "LHC18e-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18fData" ]; then # child 4
             for fileName in `ls $OUTPUTDIR_LHC18f/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18f $NSlashes "LHC18f-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18f/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18f $NSlashes "LHC18f-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18f/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18f $NSlashes "LHC18f-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18f/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18f $NSlashes "LHC18f-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18gData" ]; then # child 5
             for fileName in `ls $OUTPUTDIR_LHC18g/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18g $NSlashes "LHC18g-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18g/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18g $NSlashes "LHC18g-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18g/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18g $NSlashes "LHC18g-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18g/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18g $NSlashes "LHC18g-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18hData" ]; then # child 6
             for fileName in `ls $OUTPUTDIR_LHC18h/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18h $NSlashes "LHC18h-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18h/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18h $NSlashes "LHC18h-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18h/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18h $NSlashes "LHC18h-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18h/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18h $NSlashes "LHC18h-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18iData" ]; then # child 7
             for fileName in `ls $OUTPUTDIR_LHC18i/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18i $NSlashes "LHC18i-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18i/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18i $NSlashes "LHC18i-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18i/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18i $NSlashes "LHC18i-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18i/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18i $NSlashes "LHC18i-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
         if [ -n "$LHC18jData" ]; then # child 8
             for fileName in `ls $OUTPUTDIR_LHC18j/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18j $NSlashes "LHC18j-pass$passNr-DPGTracks" "-DPGTracks"
             done
-            for fileName in `ls $OUTPUTDIR_LHC18j/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18j $NSlashes "LHC18j-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
-            done
             for fileName in `ls $OUTPUTDIR_LHC18j/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18j $NSlashes "LHC18j-pass$passNr-DPGTracksAndCalo" "-DPGTracksAndCalo"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC18j/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC18j $NSlashes "LHC18j-pass$passNr-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
         fi
     # Monte Carlo LHC17_PYT8_13TeV_anchLHC16 files
@@ -1272,6 +1332,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             done
             for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTracks" "-DPGTracks"
+            done
+            for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTracksIncAcc" "-DPGTracksIncAcc"
             done
             for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTracksAndCalo" "-DPGTracksAndCalo"
@@ -1456,6 +1519,9 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracks_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracks" "-DPGTracks"
             done
+            for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracksIncAcc_*.root`; do
+                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracksIncAcc" "-DPGTracksIncAcc"
+            done
             for fileName in `ls $OUTPUTDIR_LHC17d17extra/HeavyNeutralMesonToGG-DPGTracksAndCalo_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17extra $NSlashes "MCextra_LHC17d17-anchor16g-DPGTracksAndCalo" "-DPGTracksAndCalo"
             done
@@ -1601,15 +1667,16 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 #
 
 # * Merge ROOT files *
-# TODO: Change period name in ls command: choose one of the periods you have downloaded
+# NOTE: Change period name in ls command: choose one of the periods you have downloaded
     if [ $MERGEON == 1 ]; then
         echo -e "\n\n--== MERGING ROOT FILES ==--\n"
         # LHC16_13TeV_pass1 data files
         if [ ${#periodList16[@]} -gt 0 ]; then
             echo -e "\n--> Merging LHC16_13TeV_pass1 data files"
             rm -f runlistsToMerge.txt
-            echo -e "DPGTracks" >> runlistsToMerge.txt
-            echo -e "EMCgood"   >> runlistsToMerge.txt
+            echo -e "DPGTracks"        >> runlistsToMerge.txt
+            echo -e "DPGTracksAndCalo" >> runlistsToMerge.txt
+            echo -e "DPGTracksIncAcc"  >> runlistsToMerge.txt
             listsToMerge=`cat runlistsToMerge.txt`
             filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16h-pass$passNr-DPGTracks\_*.root`
             # ! Be careful with pass nr here: periods k and l are pass2
@@ -2002,8 +2069,8 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
 #
 
 # * Merge periods accross years *
-# TODO: 2nd argument should be a file name that exists in the download output you generate
+# NOTE: 2nd argument should be a file name that exists in the download output you generate
     if [ $MERGEACCROSSYEARS == 1 ]; then
-        MergeFilesAccrossYears "$BASEDIR/$TRAINDIR" "HeavyNeutralMesonToGG_LHC17c-pass1-DPGTracksAndCalo_1_400.root"
+        MergeFilesAccrossYears "$BASEDIR/$TRAINDIR" "HeavyNeutralMesonToGG_LHC17c-pass1-DPGTracks_1_400.root"
     fi
 #
