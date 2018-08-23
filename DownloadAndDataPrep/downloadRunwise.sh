@@ -1,10 +1,14 @@
 # Script that downloads files runwise from the GRID and merges them
 # In principle, you only need to set arguments in the first NOTE section below, but also carefully check the initial terminal output before you continue running the script
 
+DOWNLOADON=1
+MERGEON=0
+
 # NOTE: Set input arguments
     downloadFolder="$1" # e.g. "vAN-20180727-1"
     trainNr="$2"        # e.g. "2445"
     periodName="$3"     # e.g. "LHC18d"
+    startsWith="$4"     # e.g. "HeavyNeutralMesonToGG_"
     # * DPG runlists *
         softwareDir=$(pwd)
         runlists=(
@@ -13,7 +17,6 @@
             DPGTracksIncAcc
         )
     # * Other arguments
-        startsWith="HeavyNeutralMesonToGG_"
         passNr="1"
         searchForFile="root_archive.zip"
         URLs="/alice/data/*/${periodName}/*/pass${passNr}/PWGGA/GA_pp/${trainNr}_201?????-*_child_*/${searchForFile}"
@@ -66,20 +69,22 @@
 # * Download files from GRID and extract *
     echo "" > temp_Modes.txt
     for i in $(cat temp_GridFiles.txt); do
-        # * Get run number and make subdirectory in non-existent
-        runNr=$(echo ${i} | cut -d "/" -f 6)
-        if [ ! -d "${runNr}" ]; then
-            mkdir "${runNr}"
+        if [ $DOWNLOADON == 1 ]; then
+            # * Get run number and make subdirectory in non-existent
+            runNr=$(echo ${i} | cut -d "/" -f 6)
+            if [ ! -d "${runNr}" ]; then
+                mkdir "${runNr}"
+            fi
+            # * Copy file from GRID
+            if [ -s "${runNr}/$(basename ${i})" ]; then
+                echo "File \"${runNr}/$(basename ${i})\" already exists -- no need to copy from GRID"
+            else
+                echo -e "\nCopying run number \"${runNr}\" from GRID..."
+                alien_cp alien:${i} file:${runNr}/
+            fi
+            # * Extract files
+            unzip -uoqq "${runNr}/$(basename ${i})" -d "${runNr}"
         fi
-        # * Copy file from GRID
-        if [ -s "${runNr}/$(basename ${i})" ]; then
-            echo "File \"${runNr}/$(basename ${i})\" already exists -- no need to copy from GRID"
-        else
-            echo -e "\nCopying run number \"${runNr}\" from GRID..."
-            alien_cp alien:${i} file:${runNr}/
-        fi
-        # * Extract files
-        unzip -uoqq "${runNr}/$(basename ${i})" -d "${runNr}"
         # * Make list of ROOT filenames (representing modes) to be merged
         for filename in $(ls ${runNr}/${startsWith}*); do
             filenameToAdd=$(basename ${filename})
@@ -95,38 +100,40 @@
     done
 #
 
-# * Download files from GRID and extract *
-    # * LOOP over DPG runlists
-    for runlist in ${runlists[@]}; do
-        # * Get list of DPG checked run numbers
-        runlistFile="${softwareDir}/runlists/runNumbers${periodName}_${runlist}.txt"
-        if [ -s "${runlistFile}" ]; then
-            echo -e "\n\n---=== Merging according to runlist file \"$(basename ${runlistFile})\" ===---"
-            # * LOOP over file names (modes)
-            for mode in $(cat temp_Modes.txt); do
-                # * Create empty file
-                echo "" > temp_FilesToMerge.txt
-                # * LOOP over run numbers
-                for run in $(cat "${runlistFile}"); do
-                    # * Add leading zeros to run number
-                    runNr=$(printf "%09d\n" ${run})
-                    # * Add file name to respective list files
-                    if [ -s "${runNr}/${mode}" ]; then
-                        echo "${runNr}/${mode}" >> temp_FilesToMerge.txt
-                    # else
-                    #     echo "\"${runNr}/${mode}\" does not exist!"
-                    fi
-                done # end of ${run} LOOP
-                # * Generate output merge filename
-                outputFile=${mode/${startsWith}/${startsWith}${periodName}-pass${passNr}-${runlist}_}
-                # * Merge files
-                echo ""
-                hadd -f ${outputFile} $(cat temp_FilesToMerge.txt)
-            done # end of ${mode} LOOP
-        else
-            echo "Runlist file \"$(basename ${runlistFile})\" does not exist!"
-        fi
-    done # end of ${runlist} LOOP
+# * Merge files *
+    if [ $MERGEON == 1 ]; then
+        # * LOOP over DPG runlists
+        for runlist in ${runlists[@]}; do
+            # * Get list of DPG checked run numbers
+            runlistFile="${softwareDir}/runlists/runNumbers${periodName}_${runlist}.txt"
+            if [ -s "${runlistFile}" ]; then
+                echo -e "\n\n---=== Merging according to runlist file \"$(basename ${runlistFile})\" ===---"
+                # * LOOP over file names (modes)
+                for mode in $(cat temp_Modes.txt); do
+                    # * Create empty file
+                    echo "" > temp_FilesToMerge.txt
+                    # * LOOP over run numbers
+                    for run in $(cat "${runlistFile}"); do
+                        # * Add leading zeros to run number
+                        runNr=$(printf "%09d\n" ${run})
+                        # * Add file name to respective list files
+                        if [ -s "${runNr}/${mode}" ]; then
+                            echo "${runNr}/${mode}" >> temp_FilesToMerge.txt
+                        # else
+                        #     echo "\"${runNr}/${mode}\" does not exist!"
+                        fi
+                    done # end of ${run} LOOP
+                    # * Generate output merge filename
+                    outputFile=${mode/${startsWith}/${startsWith}${periodName}-pass${passNr}-${runlist}_}
+                    # * Merge files
+                    echo ""
+                    hadd -f ${outputFile} $(cat temp_FilesToMerge.txt)
+                done # end of ${mode} LOOP
+            else
+                echo "Runlist file \"$(basename ${runlistFile})\" does not exist!"
+            fi
+        done # end of ${runlist} LOOP
+    fi
 #
 
 # * Remove temporary files *
