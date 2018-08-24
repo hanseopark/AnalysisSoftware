@@ -913,7 +913,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
          // Set meson fit range
          if(mode == 40){
-             fMesonFitRange[0]                 = 0.65;
+             fMesonFitRange[0]                 = 0.69;
              fMesonFitRange[1]                 = 0.87;
 
              fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];

@@ -150,6 +150,25 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     Size_t  sizeMarkerNLO                       = 1;
     Width_t widthLineNLO                        = 2.;
 
+
+    // load external histos
+    TString localOutputQuantity                             = "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-2})";
+
+    TFile* fFileOmegaMesonPHOS7TeV                          = new TFile("/home/florianjonas/tools/alice/cocktail_input/pp/PHOS_pp_omega_7TeV_07082012.root");
+
+    TGraphAsymmErrors* graphOmegaXSecPHOS7TeVStat           = (TGraphAsymmErrors*)fFileOmegaMesonPHOS7TeV->Get("graphOmegaStat");
+    TGraphAsymmErrors* graphOmegaXSecPHOS7TeVSys            = (TGraphAsymmErrors*)fFileOmegaMesonPHOS7TeV->Get("graphOmegaSyst");
+
+    TGraphAsymmErrors* graphOmegaToPi0Comb7TeVStatTemp      = (TGraphAsymmErrors*)fFileOmegaMesonPHOS7TeV->Get("omega_to_pi0_stat_err");
+    Int_t nPoints                                           = graphOmegaToPi0Comb7TeVStatTemp->GetN();
+    Double_t* xVal                                          = graphOmegaToPi0Comb7TeVStatTemp->GetX();
+    Double_t* xErrUp                                        = graphOmegaXSecPHOS7TeVStat->GetEXhigh();
+    Double_t* xErrDown                                      = graphOmegaXSecPHOS7TeVStat->GetEXlow();
+    Double_t* yVal                                          = graphOmegaToPi0Comb7TeVStatTemp->GetY();
+    Double_t* yErr                                          = graphOmegaToPi0Comb7TeVStatTemp->GetEY();
+    TGraphAsymmErrors* graphOmegaToPi0Comb7TeVStat          = new TGraphAsymmErrors(nPoints, xVal, yVal, xErrDown, xErrUp, yErr, yErr);
+    TGraphAsymmErrors* graphOmegaToPi0Comb7TeVSys           = (TGraphAsymmErrors*)graphOmegaToPi0Comb7TeVStat->Clone("graphOmegaToPi0Comb7TeVSys");
+
     for (Int_t i = 0; i < 11; i++){
         colorDet[i]                             = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kFALSE, kFALSE, kTRUE);
         colorDetMC[i]                           = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kTRUE, kFALSE, kTRUE);
@@ -339,9 +358,19 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         graphEtaToOmegaPCMSys               = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToOmegaSystError");
 
         // Get Eta->gamma gamma cross section
+        cout << "loading INvCrossSecionEta" << endl;
         histoEtaGGInvCrossSection[i]        = (TH1D*)directoryEtaGG[i]->Get("InvCrossSectionEta");
+        cout << "loaded INvCrossSecionEta" << endl;
+        cout << "loading GrahpINvCrossSection" << endl;
         graphEtaGGInvCrossSectionStat[i]    = (TGraphAsymmErrors*)directoryEtaGG[i]->Get("graphInvCrossSectionEta");
+        cout << "loaded GrahpINvCrossSection" << endl;
+        cout << "loading sys" << endl;
         graphEtaGGInvCrossSectionSys[i]     = (TGraphAsymmErrors*)directoryEtaGG[i]->Get("InvCrossSectionEtaSys");
+        cout << "loaded sys" << endl;
+
+
+
+        cout << "I GOT HERE" << endl;
 
         // Get Eta->gamma gamma cross section combined
         graphInvCrossSectionEtaComb7TeVA = (TGraphAsymmErrors*)directoryEtaCombined->Get("graphInvCrossSectionEtaComb7TeVA");
@@ -414,6 +443,8 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         if (statErrorCollection[i]) statErrorRelCollection[i] = CalculateRelErrUpTH1D( statErrorCollection[i], Form("relativeStatErrorOmega_%s", nameMeasGlobal[i].Data()));
         if (sysErrorCollection[i]) sysErrorRelCollection[i]   = CalculateRelErrUpAsymmGraph( sysErrorCollection[i], Form("relativeSysErrorOmega_%s", nameMeasGlobal[i].Data()));
     }
+    cout << "TEEEEEEEEEEEEEEEEEEEEEST" << endl;
+    statErrorCollection[0]->Print();
     // FOR eta:
     TH1D* statErrorCollectionEta[11];
     TGraphAsymmErrors* sysErrorCollectionEta[11];
@@ -443,6 +474,130 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         if (statErrorCollectionEta[i]) statErrorRelCollectionEta[i] = CalculateRelErrUpTH1D( statErrorCollectionEta[i], Form("relativeStatErrorEta_%s", nameMeasGlobal[i].Data()));
         if (sysErrorCollectionEta[i]) sysErrorRelCollectionEta[i]   = CalculateRelErrUpAsymmGraph( sysErrorCollectionEta[i], Form("relativeSysErrorEta_%s", nameMeasGlobal[i].Data()));  
     }
+
+
+    // *******************************************************************************************************
+    // ************************** Combination of different measurements **************************************
+    // *******************************************************************************************************
+
+    Int_t nBinsOmega = 15;
+    Double_t xPtLimits[16]                      =  {0,1,1.4,1.6, 1.8, 2.0, 2.5,3.0,3.5,4,5.,6.,8.
+                                                     ,10,13,16};
+
+//    Int_t nBinsEta = 17;
+//    Double_t xPtLimitsEta[49]                   =  { 0.0, 0.4, 0.6, 0.8, 1.0,
+//                                                     1.4, 1.8, 2.2, 2.6, 3.0,
+//                                                     3.5, 4.0, 5.0, 6.0, 8.0,
+//                                                     10.0, 12.0, 14.0, 15.0, 16.0 ,
+//                                                     18.0, 20.0, 25.0, 35.0
+//                                                   };
+//    Double_t xPtLimitsOmegaToPi0[49]              =  { 0.0, 0.4, 0.6, 0.8, 1.0,
+//                                                     1.4, 1.8, 2.2, 2.6, 3.0,
+//                                                     3.5, 4.0, 5.0, 6.0, 8.0,
+//                                                     10.0, 12.0, 14.0, 15.0, 16.0,
+//                                                     18.0, 20.0, 25.0, 35.0
+//                                                   };
+
+
+    // *******************************************************************************************************
+    // ************************** Combination of different measurements **************************************
+    // *******************************************************************************************************
+    // REMARKS:
+    //       - order of measurements defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
+    //       - correlations are defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
+    //       - currently only PCM-EMCAL vs others fully implemeted energy independent
+    //       - extendable to other energies
+    //       - offsets have to be determined manually, see cout's in shell from combination function
+
+
+
+    // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match
+    //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,        EMC
+    Int_t offSets[11]                           =  {0,    8,  2,     2,     5, 0,0,0,   6,0,0};
+    Int_t offSetsSys[11]                        =  {4,    8, 10,     2,     6, 0,0,0,   6,0,0};
+
+
+    // needed for later binshifting
+    Int_t offSetOmegaShifting[11]     = { 0,  0,  0,  0,  0,
+                                        0,  0,  0,  0,  0,
+                                        0 };
+    Int_t nComBinsOmegaShifting[11]   = { 0,  0,  0,  0,  0,
+                                        0,  0,  0,  0,  0,
+                                        0 };
+
+    //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
+    Int_t offSetsEta[11]                        =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
+    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
+
+
+    Int_t offSetEtaShifting[11]     = { 0,  0,  0,  0,  0,
+                                        0,  0,  0,  0,  0,
+                                        0 };
+    Int_t nComBinsEtaShifting[11]   = { 0,  0,  0,  0,  0,
+                                        0,  0,  0,  0,  0,
+                                        0 };
+
+    //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
+    //Int_t offSetsOmegaToPi0[11]                   =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
+    //Int_t offSetsSysOmegaToPi0[11]                =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
+
+    //**********************************************************************************************************************
+    //**********************************************************************************************************************
+    //**********************************************************************************************************************
+
+
+    TGraph* graphWeights[11];
+    TGraph* graphWeightsEta[11];
+    // TGraph* graphWeightsOmgeaToPi0[11];
+    for (Int_t i = 0; i< 11; i++){
+        graphWeights[i] = NULL;
+        graphWeightsEta[i] = NULL;
+       // graphWeightsEtaToPi0[i] = NULL;
+    }
+
+    // Declaration & calculation of combined spectrum
+    TString fileNameOutputWeighting                       = Form("%s/Weighting.dat",outputDir.Data());
+    TString fileNameOutputWeightingEta                    = Form("%s/WeightingEta.dat",outputDir.Data());
+    //TString fileNameOutputWeightingEtaToPi0               = Form("%s/WeightingEtaToPi0.dat",outputDir.Data());
+
+    TGraphAsymmErrors* graphCombOmegaInvXSectionStat= NULL;
+    TGraphAsymmErrors* graphCombOmegaInvXSectionSys = NULL;
+    TGraphAsymmErrors* graphCombOmegaInvXSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollection, sysErrorCollection,
+                                                                                           xPtLimits, nBinsOmega,
+                                                                                           offSets, offSetsSys,
+                                                                                           graphCombOmegaInvXSectionStat, graphCombOmegaInvXSectionSys,
+                                                                                           fileNameOutputWeighting,"7TeV", "Omega", kTRUE,
+                                                                                           0x0, ""
+                                                                                          );
+
+    //return;
+    graphCombOmegaInvXSectionStat->Print();
+
+//    TGraphAsymmErrors* graphCombEtaInvXSectionStat= NULL;
+//    TGraphAsymmErrors* graphCombEtaInvXSectionSys = NULL;
+//    TGraphAsymmErrors* graphCombEtaInvXSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEta, sysErrorCollectionEta,
+//                                                                                           xPtLimitsEta, nBinsEta,
+//                                                                                           offSetsEta, offSetsSysEta,
+//                                                                                           graphCombEtaInvXSectionStat, graphCombEtaInvXSectionSys,
+//                                                                                           fileNameOutputWeightingEta,"7TeV", "Eta", kTRUE,
+//                                                                                           0x0, ""
+//                                                                                         );
+//    //return;
+//    graphCombEtaInvXSectionStat->Print();
+
+
+//    TGraphAsymmErrors* graphCombEtaToPi0Stat= NULL;
+//    TGraphAsymmErrors* graphCombEtaToPi0Sys = NULL;
+//    TGraphAsymmErrors* graphCombEtaToPi0Tot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEtaToPi0, sysErrorCollectionEtaToPi0,
+//                                                                                 xPtLimitsEtaToPi0, nBinsEta-1,
+//                                                                                 offSetsEtaToPi0, offSetsSysEtaToPi0,
+//                                                                                 graphCombEtaToPi0Stat, graphCombEtaToPi0Sys,
+//                                                                                 fileNameOutputWeightingEtaToPi0,"7TeV", "EtaToPi0", kTRUE,
+//                                                                                 0x0, ""
+//                                                                               );
+//    //return;
+//    if(doOutput) graphCombEtaToPi0Stat->Print();
+
 
 
     Double_t minX                               = 1.5;
@@ -503,6 +658,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
             // }
             // DrawGammaSetMarkerTGraphAsym(graphOmegaInvCrossSectionSysInterpolation[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDetMC[i] , colorDetMC[i], widthLinesBoxes, kTRUE);
             // graphOmegaInvCrossSectionSysInterpolation[i]     ->Draw("E2same");
+
             DrawGammaSetMarkerTGraphAsym(graphOmegaInvCrossSectionSysClone[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i], widthLinesBoxes, kTRUE);
             graphOmegaInvCrossSectionSysClone[i]     ->Draw("E2same");
             if(legendScalingFactor==0){
@@ -524,6 +680,17 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
             // legendScalingFactor--;
           }
         }
+
+        // Draw PHOS AnalysisNote
+        DrawGammaSetMarkerTGraphAsym(graphOmegaXSecPHOS7TeVSys, 24, 2.2*0.55,kOrange+1, kOrange+1, widthLinesBoxes, kTRUE);
+        graphOmegaXSecPHOS7TeVSys     ->Draw("E2same");
+        legendCrossSectionOmega->AddEntry(graphOmegaXSecPHOS7TeVSys,"PHOS Public Note","p");
+
+        DrawGammaSetMarkerTGraph(graphOmegaXSecPHOS7TeVStat,  24, 2.2*0.55,kOrange+1 , kOrange+1);
+        graphOmegaXSecPHOS7TeVStat->Draw("p,same,z");
+        // --
+
+
         legendCrossSectionOmega->Draw();
 
 
@@ -538,6 +705,39 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         histoDummyCrossSection->Draw("sameaxis");
     canvasCrossSectionOmega->Update();
     canvasCrossSectionOmega->Print(Form("%s/Omega_InvariantCrossSectionMeas.%s",outputDir.Data(),suffix.Data()));
+
+
+
+    //********************************************************************************************************
+    // Plotting combined inv cross section
+    //********************************************************************************************************
+    TCanvas* canvasCrossSectionOmegaCombined      = new TCanvas("canvasCrossSectionOmegaCombined", "", 0,0,1250,1250);  // gives the page size
+    DrawGammaCanvasSettings( canvasCrossSectionOmegaCombined,  0.14, 0.01, 0.01, 0.08);
+    canvasCrossSectionOmegaCombined->SetLogy(1);
+    canvasCrossSectionOmegaCombined->SetLogx(1);
+    TH2F* histoDummyCrossSectionCombined  = new TH2F("histoDummyCrossSectionCombined", "histoDummyCrossSectionCombined",1000, minX,  maxX, 1000, 1e3, 9e8 );
+    SetStyleHistoTH2ForGraphs( histoDummyCrossSectionCombined, "#it{p}_{T} (GeV/#it{c})", "#it{E}#frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2}#it{c}^{3})",
+                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.4);//(#times #epsilon_{pur})
+
+    histoDummyCrossSectionCombined->GetYaxis()->SetLabelOffset(0.001);
+    histoDummyCrossSectionCombined->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyCrossSectionCombined->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histoDummyCrossSectionCombined->DrawCopy();
+
+
+    DrawGammaSetMarkerTGraphAsym(graphCombOmegaInvXSectionSys, markerStyleDet[0], markerSizeDet[0]*0.3,kBlack, kBlack, widthLinesBoxes, kTRUE);
+    graphCombOmegaInvXSectionSys     ->Draw("E2same");
+    //legendCrossSectionOmega->AddEntry(graphOmegaXSecPHOS7TeVSys,"PHOS Public Note","p");
+
+    DrawGammaSetMarkerTGraph(graphCombOmegaInvXSectionStat,  markerStyleDet[0], markerSizeDet[0]*0.3,kBlack, kBlack);
+    graphCombOmegaInvXSectionStat->Draw("p,same,z");
+            // --
+    canvasCrossSectionOmegaCombined->Update();
+    canvasCrossSectionOmegaCombined->Print(Form("%s/Omega_InvariantCrossSectionCombined.%s",outputDir.Data(),suffix.Data()));
+
+
+
+    //********************************************************************************************************
     
     // **********************************************************************************************************************
     // ******************************************* Eta invariant cross section       ****************************************

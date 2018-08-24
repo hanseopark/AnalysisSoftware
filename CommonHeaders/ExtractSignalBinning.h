@@ -2604,26 +2604,31 @@
                     }
                 } else if(mode == 40){
                     maxNBins = 13;
+                    binningMax  = 13;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCM[i];
                     }
                 } else if(mode == 41){
                     maxNBins = 10;
+                    binningMax  = 10;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[i];
                     }
                 } else if(mode == 42){
                     maxNBins = 11;
+                    binningMax  = 11;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                     }
                 } else if(mode == 44){
-                    maxNBins = 15;
+                    maxNBins = 13;
+                    binningMax  = 13;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
                     }
                 } else if(mode == 45){
                     maxNBins = 10;
+                    binningMax  = 10;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
                     }
@@ -3027,8 +3032,8 @@
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                     }
                 } else if(mode == 44){
-                    maxNBins    = 15;
-                    binningMax  = 15;
+                    maxNBins    = 13;
+                    binningMax  = 13;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                     }

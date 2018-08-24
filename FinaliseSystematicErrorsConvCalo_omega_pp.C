@@ -976,7 +976,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
 
     for (Int_t l=0; l< nPtBins-1; l++){
-        SysErrDatAver  << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
+        SysErrDatAver << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
     }
     SysErrDatAver.close();
 

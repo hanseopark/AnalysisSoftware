@@ -353,7 +353,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.3;
+                        errorReset = 2.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -368,7 +368,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 0.6;
+                        errorReset = 1.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -398,7 +398,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.0;
+                        errorReset = 1.8;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -413,7 +413,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       =1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.0;
+                        errorReset = 1.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -428,7 +428,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.0;
+                        errorReset = 1.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -520,7 +520,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 2.5;
+                        errorReset = 4.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -565,7 +565,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = 1.8;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 4.5;
+                        errorReset = 5.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -880,7 +880,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
-    for (Int_t l=0; l< nPtBins-1; l++){
+    for (Int_t l=0; l< nPtBins; l++){
         SysErrDat << ptBins[l] <<"\t" << errorsNegCorrMatSummed[l] << "\t" <<errorsPosCorrMatSummed[l] << "\t"  <<errorsNegCorrSummed[l] << "\t" <<errorsPosCorrSummed[l]  << endl;
     }
     SysErrDat.close();
@@ -890,8 +890,8 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
 
-    for (Int_t l=0; l< nPtBins-1; l++){
-        SysErrDatAver  << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
+    for (Int_t l=0; l< nPtBins; l++){
+        SysErrDatAver  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
     }
     SysErrDatAver.close();
 
@@ -910,7 +910,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     if(meson.CompareTo("EtaToPi0"))
         SysErrDatAverSingle << "Material";
     SysErrDatAverSingle << endl;
-    for (Int_t l=0;l< nPtBins-1;l++){
+    for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
             if(!meson.CompareTo("EtaToPi0")&&i==1)

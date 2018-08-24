@@ -842,7 +842,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
-    for (Int_t l=0; l< nPtBins-1; l++){
+    for (Int_t l=0; l< nPtBins; l++){
         SysErrDat << ptBins[l] <<"\t" << errorsNegCorrMatSummed[l] << "\t" <<errorsPosCorrMatSummed[l] << "\t"  <<errorsNegCorrSummed[l] << "\t" <<errorsPosCorrSummed[l]  << endl;
     }
     SysErrDat.close();
@@ -852,8 +852,8 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
 
-    for (Int_t l=0; l< nPtBins-1; l++){
-        SysErrDatAver  << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
+    for (Int_t l=0; l< nPtBins; l++){
+        SysErrDatAver << ptBins[l] << "\t" <<  "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
     }
     SysErrDatAver.close();
 
@@ -872,7 +872,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
     if(meson.CompareTo("EtaToPi0"))
         SysErrDatAverSingle << "Material";
     SysErrDatAverSingle << endl;
-    for (Int_t l=0;l< nPtBins-1;l++){
+    for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
             if(!meson.CompareTo("EtaToPi0")&&i==1)

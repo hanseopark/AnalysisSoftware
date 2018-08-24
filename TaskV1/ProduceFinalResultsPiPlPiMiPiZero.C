@@ -206,7 +206,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     //********************************** setting correct histo names ************************************************
     //***************************************************************************************************************
     // Variable to quickly change which type of Inv mass plot is used
-    TString InvMassTypeEnding = "_FixedPzPiZero";
+    TString InvMassTypeEnding = "_SubPiZero";
 
     TString nameCorrectedYield                          = Form("CorrectedYieldTrueEff%s",InvMassTypeEnding.Data());
     TString nameEfficiency                              = Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data());
@@ -229,6 +229,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
     //***************************************************************************************************************
     //********************************** settings for secondary pion corrs ******************************************
+    //***************************************************************************************************************
+    // Note: secondary correction is not used for omega! However, this is left in here in case it is needed later
                                                         //    0      1     2        3     4       5     6     7     8     9     10      11    12    2
     Double_t maxYEffSecCorr[4][14]                      = { { 0.080, 0.3 , 0.03000, 0.04, 0.0600, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15,   0.15, 0.12, 0.04},
                                                             { 0.001, 0.3 , 0.00010, 0.04, 0.0050, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.002,  0.15, 0.12, 0.04},
@@ -3400,48 +3402,6 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/Omega_SecEfficiency_Weighted.%s",outputDir.Data(), suffix.Data()));
-    }
-
-    if (nSecCorrs >0){
-        canvasEffi->cd();
-        canvasEffi->SetLogy(0);
-        canvasEffi->SetLeftMargin(0.1);
-        canvasEffi->SetTopMargin(0.04);
-        TH2F* histo2DEffectiveSecCorr2 = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr", 1000,0., maxPtGlobalOmega,10000,0, maxYEffSecCorr[0][mode]*1.1);
-        SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr2, "#it{p}_{T} (GeV/#it{c})","r_{sec #omega from X}",
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.19);
-        histo2DEffectiveSecCorr2->DrawCopy();
-
-        TLegend* legendSecEffectCorr = GetAndSetLegend2(0.15, 0.92-(Int_t((nSecCorrs+1)/2)*0.85*textSizeSpectra), 0.50, 0.92,32,2,"",43,0.2);
-        for (Int_t k = 0; k < 4; k++){
-            if (graphEffectSecCorrOmegaWeighted[k]){
-                DrawGammaSetMarkerTGraphAsym(graphEffectSecCorrOmegaWeighted[k], markerStyleSec[k], markerSizeSec[k], colorSec[k], colorSec[k]);
-                graphEffectSecCorrOmegaWeighted[k]->Draw("p,e1,same");
-                legendSecEffectCorr->AddEntry(graphEffectSecCorrOmegaWeighted[k], Form("X = %s",nameSecOmegaPartLabel[k].Data()), "p");
-            }
-        }
-        legendSecEffectCorr->Draw();
-
-        TLatex *labelEnergyEffSec = new TLatex(0.95, 0.93-(0.98*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
-        labelEnergyEffSec->Draw();
-
-        TLatex *labelOmegaEffSec = new TLatex(0.95,  0.93-(2*textSizeSpectra*0.85),"#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelOmegaEffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
-        labelOmegaEffSec->Draw();
-
-        TLatex *labelDetProcEffSec = new TLatex(0.95, 0.93-(3*textSizeSpectra*0.85),detectionProcess.Data());
-        SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4, 1, 42, kTRUE, 31);
-        labelDetProcEffSec->Draw();
-
-        canvasEffi->Update();
-        canvasEffi->SaveAs(Form("%s/Omega_EffectiveSecCorr_Weighted.%s",outputDir.Data(), suffix.Data()));
-        canvasEffi->SetLogy(1);
-        canvasEffi->SetLeftMargin(0.09);
-        canvasEffi->SetTopMargin(0.015);
-        delete labelEnergyEffSec;
-        delete labelOmegaEffSec;
-        delete labelDetProcEffSec;
     }
 
     //***************************************************************************************************************
