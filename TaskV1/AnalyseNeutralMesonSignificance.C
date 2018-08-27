@@ -170,15 +170,20 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
 //**********************************************************************************
 //************ Main function to plot addition meson distributions ******************
 //**********************************************************************************
-void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
-                                        TString fileNameMC      = "myOutput", 
-                                        TString cutSel          = "", 
-                                        TString suffix          = "gif", 
-                                        TString optEnergy       = "", 
-                                        TString optPeriod       = "", 
-                                        TString optGenerator    = "", 
-                                        Int_t mode              = 9
-                                    ){
+void AnalyseNeutralMesonSignificance(
+    TString fileNameData    = "myOutput",
+    TString fileNameMC      = "myOutput", 
+    TString cutSel          = "", 
+    TString suffix          = "gif", 
+    TString optEnergy       = "", 
+    TString optPeriod       = "", 
+    TString optGenerator    = "", 
+    Int_t mode              = 9
+){
+
+    // Heavy neutral meson fix
+    Int_t modeHeavy = mode;
+    if( modeHeavy>=100 ) modeHeavy -= 100;
 
     //**********************************************************************************
     //**************************** Set global variables ********************************
@@ -218,6 +223,8 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     if (mode == 2 )startBinEta          = 4;
     if (mode == 4 )startBinEta          = 6; 
     if (mode == 10 )startBinEta         = 12;
+
+    Int_t startBinEtaPrime              = 0;
     
     Double_t ptBins[22]                 = { 0.2, 0.3, 0.4, 0.5, 0.6, 
                                             0.8, 1.0, 1.5, 2.0, 3.0, 
