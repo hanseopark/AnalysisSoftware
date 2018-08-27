@@ -846,10 +846,10 @@
             10, 8, 8, 8, 8,     8, 8, 10, 10, 10,
             12, 16 };
     // PHOS-PHOS (mode 105)
-        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_MinBias_Pt {      // size: 5
-            0.0, 1.4, 4.0, 6.0, 10.0};
-        std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin { // bins: 4
-            10, 16, 8, 8 };
+        std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_MinBias_Pt {      // size: 6
+            0.0, 1.4, 4.0, 6.0, 10.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin { // bins: 5
+            10, 16, 8, 8, 8 };
         std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_VZERO_Pt {        // size: 9
             0.0, 6.0, 7.0, 8.0, 10.0,       12.5, 15.0, 20.0, 30. };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin {   // bins: 8
