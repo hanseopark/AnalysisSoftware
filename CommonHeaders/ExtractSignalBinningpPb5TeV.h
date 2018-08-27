@@ -435,4 +435,26 @@
                                                         20,  22.5, 25, 27.5, 30, 35, 40,  45, 50,  60,
                                                         70,  80,  90,  100};
 
+    //****************************************************************************************************
+    //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
+    //****************************************************************************************************
+
+    // * PCM-PCM   (mode 100) *
+        std::vector<Double_t> fBinsEtaPrimepPb5TeV_PCM_INT7_Pt {      // size: 8
+            0.0, 0.4, 0.8, 1.5, 2.5,    5.0, 10.0, 20.0 };
+        std::vector<Int_t>    fBinsEtaPrimepPb5TeV_PCM_INT7_PtRebin { // bins: 7
+            10, 4, 8, 12, 12,     16, 20 };
+        std::vector<Double_t> fBinsEtaPrimepPb5TeV_PCM_L0_Pt {        // size: 6
+            0.0, 4.0, 7.0, 10.0, 20.0,     30. };
+        std::vector<Int_t>    fBinsEtaPrimepPb5TeV_PCM_L0_PtRebin {   // bins: 5
+            10, 12, 12, 16, 16 };
+        std::vector<Double_t> fBinsEtaPrimepPb5TeV_PCM_EG1_Pt {       // size: 7
+            0.0, 7.0, 8.0, 10.0, 15.0,       20.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrimepPb5TeV_PCM_EG1_PtRebin {  // bins: 6
+            10, 10, 10, 12, 20,      20 };
+        std::vector<Double_t> fBinsEtaPrimepPb5TeV_PCM_EG2_Pt {       // size: 7
+            0.0, 4.0, 6.0, 8.0, 10.0,       15.0, 30. };
+        std::vector<Int_t>    fBinsEtaPrimepPb5TeV_PCM_EG2_PtRebin {  // bins: 6
+            10, 8, 10, 10, 12,      20 };
+
 #endif

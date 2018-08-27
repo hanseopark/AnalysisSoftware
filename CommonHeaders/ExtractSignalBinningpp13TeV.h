@@ -780,7 +780,8 @@
     //****************************************************************************************************
     //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
     //****************************************************************************************************
-    // PCM-PCM   (mode 100)
+
+    // * PCM-PCM   (mode 100) *
         std::vector<Double_t> fBinsEtaPrime13TeV_PCM_INT7_Pt {      // size: 8
             0.0, 0.4, 0.8, 1.5, 2.5,    5.0, 10.0, 20.0 };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_INT7_PtRebin { // bins: 7
@@ -797,7 +798,8 @@
             0.0, 4.0, 6.0, 8.0, 10.0,       15.0, 30. };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCM_EG2_PtRebin {  // bins: 6
             10, 8, 10, 10, 12,      20 };
-    // PCM-EMC   (mode 102)
+
+    // * PCM-EMC   (mode 102) *
         std::vector<Double_t> fBinsEtaPrime13TeV_PCMEMC_INT7_Pt {      // size: 10
             0.0, 0.8, 1.2, 1.6, 2.0,       2.5, 3.0, 5.0, 10.0, 20.0 };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_INT7_PtRebin { // bins: 9
@@ -815,7 +817,8 @@
             30.0 };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCMEMC_EG2_PtRebin {  // bins: 10
             10, 10, 10, 12, 12,            12, 16, 16, 25, 25, 25 };
-    // PCM-PHOS  (mode 103)
+
+    // * PCM-PHOS  (mode 103) *
         std::vector<Double_t> fBinsEtaPrime13TeV_PCMPHOS_MinBias_Pt {      // size: 7
             0.0, 0.8, 1.5, 2.5, 5.0,        15.0, 30. };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCMPHOS_MinBias_PtRebin { // bins: 6
@@ -824,7 +827,8 @@
             0.0, 5.5, 6.0, 6.5, 7.0,        8.0, 15.0, 30. };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PCMPHOS_VZERO_PtRebin {   // bins: 7
             10, 20, 20, 20, 20,         20, 25 };
-    // EMC-EMC   (mode 104)
+
+    // * EMC-EMC   (mode 104) *
         std::vector<Double_t> fBinsEtaPrime13TeV_EMC_INT7_Pt {      // size: 10
             0.0, 1.4, 2.2, 3.0, 3.5,        4.0, 5.0, 8.0, 15.0, 20.0 };
         std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_INT7_PtRebin { // bins: 9
@@ -845,7 +849,8 @@
         std::vector<Int_t>    fBinsEtaPrime13TeV_EMC_EG2_PtRebin {  // bins: 12
             10, 8, 8, 8, 8,     8, 8, 10, 10, 10,
             12, 16 };
-    // PHOS-PHOS (mode 105)
+
+    // * PHOS-PHOS (mode 105) *
         std::vector<Double_t> fBinsEtaPrime13TeV_PHOS_MinBias_Pt {      // size: 6
             0.0, 1.4, 4.0, 6.0, 10.0, 20.0 };
         std::vector<Int_t>    fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin { // bins: 5
