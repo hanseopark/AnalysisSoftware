@@ -15,6 +15,40 @@ number=""
 minFileSize=1000
 SEPARATEONLYConv=1
 
+tempDir=""
+tempPath=""
+tempBool=1
+
+function FindCorrectTrainDirectory()
+{
+  tempDir=""
+  tempPath=""
+  tempBool=1
+  if [ "$1" == "" ]; then
+    tempBool=0;
+  fi
+
+  testSub=0
+  if [ $# -gt 3 ]; then
+    if [ "$4" != "" ]; then
+      testSub=1;
+    fi
+  fi
+
+  if [ $tempBool == 1 ]; then
+      if [ $testSub == 1 ]; then
+          tempDir=`alien_ls $3 | grep $4\_ | grep $1`
+      else
+          tempDir=`alien_ls $3 | grep $1\_`
+      fi
+      if [ "$tempDir" == "" ]; then
+          tempBool=0;
+      else
+          tempPath="$2-$tempDir"
+      fi
+  fi
+}
+
 function GetFileNumberMerging()
 {
     NCurrSub=$3

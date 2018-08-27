@@ -2317,7 +2317,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             optionEnergy.CompareTo("2.76TeV") == 0     ||
             optionEnergy.CompareTo("5TeV2017") == 0    ||
             optionEnergy.CompareTo("13TeV") == 0       ||
-            optionEnergy.CompareTo("13TeVRBins") == 0  
+            optionEnergy.CompareTo("13TeVRBins") == 0
         )
         scaleTrueEffiWithFit        = kFALSE;
 
@@ -2343,7 +2343,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
             }else{
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",3.5,maxPtMeson);
-		cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
+                cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
             }
             cout << "fitting ratio norm/true eff with pol0" << endl;
             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;

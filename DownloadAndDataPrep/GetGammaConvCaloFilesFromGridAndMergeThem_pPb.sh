@@ -11,13 +11,13 @@
 source basicFunction.sh
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 MERGEONMC=1
 SINGLERUN=1
 SEPARATEON=0
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEMC=1
 SPECIALMERGE=0
 ISADDDOWNLOAD=0
 ADDDOWNLOADALREADY=0
@@ -128,24 +128,6 @@ function ParseJDLFilesDownloadAndMerge()
    fi
 }
 
-
-# check if train configuration has actually been given
-HAVELHC13b=1
-HAVELHC13c=1
-HAVETOBUILDLHC13bc=0
-HAVELHC13d=1
-HAVELHC13e=1
-HAVELHC13f=1
-HAVETOBUILDLHC13de=0
-HAVELHC13b2efixp1=1
-HAVELHC13b2efixp2=1
-HAVELHC13b2efixp3=1
-HAVELHC13b2efixp4=1
-HAVETOBUILDMC=0
-HAVELHC13e7=1
-HAVELHC13b4fix=1
-HAVELHC13b4plus=1
-
 # default trainconfigurations
 LHC13bcData="";
 LHC13bData="";
@@ -162,6 +144,10 @@ LHC13b2_efix_p3MC="" ;
 LHC13b2_efix_p4MC="";
 LHC13b4fixMC="";
 LHC13b4plusMC="";
+LHC16c3aMC="";
+LHC16c3a2MC="";
+LHC16c3bMC="";
+LHC16c3b2MC="";
 
 passNr="2";
 
@@ -289,202 +275,123 @@ TRAINDIR=Legotrain-vAN20180718-triggQA
 # LHC13dData="child_1"; #pass 4
 # LHC13eData="child_2"; #pass 4
 # LHC13fData="764"; #pass 4
-LHC13b4fixMC="1286";
-LHC13b4plusMC="1287";
-
+# LHC13b4fixMC="1286";
+# LHC13b4plusMC="1287";
+# LHC16c3aMC="1290";
+LHC16c3a2MC="1292";
+# LHC16c3bMC="1291";
+# LHC16c3b2MC="1293";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
+OUTPUTDIRMC=$BASEDIR/$TRAINDIR/GA_pPb_MC
+OUTPUTDIRData=$BASEDIR/$TRAINDIR/GA_pPb
+ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/"
+ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/"
 mkdir -p $OUTPUTDIR/CutSelections
 mkdir -p $OUTPUTDIR/SingleFiles
 mkdir -p $OUTPUTDIR/JJMCSingleBins
 
-if [ "$LHC13bData" == "" ]; then
-    HAVELHC13b=0;
-fi
-if [ "$LHC13cData" = "" ]; then
-    HAVELHC13c=0;
-fi
-if [ "$LHC13bcData" != "" ]; then
-    HAVETOBUILDLHC13bc=1;
-fi
-
-
-if [ "$LHC13dData" = "" ]; then
-    HAVELHC13d=0;
-fi
-if [ "$LHC13eData" = "" ]; then
-    HAVELHC13e=0;
-fi
-if [ "$LHC13fData" = "" ]; then
-    HAVELHC13f=0;
-fi
-if [ "$LHC13deData" != "" ]; then
-    HAVETOBUILDLHC13de=1;
-fi
-
-if [ "$LHC13b2_efix" != "" ]; then
-    HAVETOBUILDMC=1;
-fi
-
-if [ "$LHC13b2_efix_p1MC" = "" ]; then
-    HAVELHC13b2efixp1=0;
-fi
-if [ "$LHC13b2_efix_p2MC" = "" ]; then
-    HAVELHC13b2efixp2=0;
-fi
-if [ "$LHC13b2_efix_p3MC" = "" ]; then
-    HAVELHC13b2efixp3=0;
-fi
-if [ "$LHC13b2_efix_p4MC" = "" ]; then
-    HAVELHC13b2efixp4=0;
-fi
-if [ "$LHC13e7MC" = "" ]; then
-    HAVELHC13e7=0;
-fi
-if [ "$LHC13b4fixMC" = "" ]; then
-    HAVELHC13b4fix=0;
-fi
-if [ "$LHC13b4plusMC" = "" ]; then
-    HAVELHC13b4plus=0;
-fi
-
-
 # parse grid directories for correct train output dir for LHC13bc
-if [ $HAVELHC13b == 1 ]; then
-    if [ $HAVETOBUILDLHC13bc == 1 ]; then
-        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_ | grep $LHC13bData`
-    else
-        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bData\_`
-    fi
-    if [ "$LHC13bData" == "" ]; then
-        HAVELHC13b=0;
-    else
-        OUTPUTDIR_LHC13b=$BASEDIR/$TRAINDIR/GA_pPb-$LHC13bData
-    fi
-    echo $OUTPUTDIR_LHC13b
-fi
-if [ $HAVELHC13c == 1 ]; then
-    if [ $HAVETOBUILDLHC13bc == 1 ]; then
-        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_ | grep $LHC13cData`
-    else
-        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13cData\_`
-    fi
-    if [ "$LHC13cData" == "" ]; then
-        HAVELHC13c=0;
-    else
-        OUTPUTDIR_LHC13c=$BASEDIR/$TRAINDIR/GA_pPb-$LHC13cData
-    fi
-    echo $OUTPUTDIR_LHC13c
-fi
-# parse grid directories for correct train output dir for LHC13de
-if [ $HAVELHC13d == 1 ]; then
-    if [ $HAVETOBUILDLHC13de == 1 ]; then
-        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13dData`
-    else
-        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13dData\_`
-    fi
-    if [ "$LHC13dData" == "" ]; then
-        HAVELHC13d=0;
-    else
-        OUTPUTDIR_LHC13d=$BASEDIR/$TRAINDIR/GA_pPb-$LHC13dData
-    fi
-    echo $OUTPUTDIR_LHC13d
-fi
-if [ $HAVELHC13e == 1 ]; then
-    if [ $HAVETOBUILDLHC13de == 1 ]; then
-        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13eData`
-    else
-        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13eData\_`
-    fi
-    if [ "$LHC13eData" == "" ]; then
-        HAVELHC13e=0;
-    else
-        OUTPUTDIR_LHC13e=$BASEDIR/$TRAINDIR/GA_pPb-$LHC13eData
-    fi
-    echo $OUTPUTDIR_LHC13e
-fi
-if [ $HAVELHC13f == 1 ]; then
-    LHC13fData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13fData\_`
-    if [ "$LHC13fData" == "" ]; then
-        HAVELHC13f=0;
-    else
-        OUTPUTDIR_LHC13f=$BASEDIR/$TRAINDIR/GA_pPb-$LHC13fData
-    fi
-    echo $OUTPUTDIR_LHC13f
-fi
+FindCorrectTrainDirectory $LHC13bData $OUTPUTDIRData $ALIENDIRData $LHC13bcData
+HAVELHC13b=$tempBool
+LHC13bData=$tempDir
+OUTPUTDIR_LHC13b=$tempPath
+echo "$HAVELHC13b $LHC13bData $OUTPUTDIR_LHC13b"
 
-if [ $HAVELHC13b2efixp1 == 1 ]; then
-    if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p1MC`
-    else
-        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p1MC\_`
-    fi
-    if [ "$LHC13b2_efix_p1MC" == "" ]; then
-        HAVELHC13b2efixp1=0;
-    else
-        OUTPUTDIR_LHC13b2_efix_p1=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p1MC
-    fi
-fi
-if [ $HAVELHC13b2efixp2 == 1 ]; then
-    if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p2MC`
-    else
-        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p2MC\_`
-    fi
-    if [ "$LHC13b2_efix_p2MC" == "" ]; then
-        HAVELHC13b2efixp2=0;
-    else
-        OUTPUTDIR_LHC13b2_efix_p2=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p2MC
-    fi
-fi
-if [ $HAVELHC13b2efixp3 == 1 ]; then
-    if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p3MC`
-    else
-        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p3MC\_`
-    fi
-    if [ "$LHC13b2_efix_p3MC" == "" ]; then
-        HAVELHC13b2efixp3=0;
-    else
-        OUTPUTDIR_LHC13b2_efix_p3=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p3MC
-    fi
-fi
-if [ $HAVELHC13b2efixp4 == 1 ]; then
-    if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p4MC`
-    else
-        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p4MC\_`
-    fi
-    if [ "$LHC13b2_efix_p4MC" == "" ]; then
-        HAVELHC13b2efixp4=0;
-    else
-        OUTPUTDIR_LHC13b2_efix_p4=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p4MC
-    fi
-fi
-if [ $HAVELHC13e7 == 1 ]; then
-    LHC13e7MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_`
-    if [ "$LHC13e7MC" == "" ]; then
-        HAVELHC13e7=0;
-    else
-        OUTPUTDIR_LHC13e7=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13e7MC
-    fi
-fi
-if [ $HAVELHC13b4fix == 1 ]; then
-    LHC13b4fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4fixMC\_`
-    if [ "$LHC13b4fixMC" == "" ]; then
-        HAVELHC13b4fix=0;
-    else
-        OUTPUTDIR_LHC13b4fix=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b4fixMC
-    fi
-fi
-if [ $HAVELHC13b4plus == 1 ]; then
-    LHC13b4plusMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4plusMC\_`
-    if [ "$LHC13b4plusMC" == "" ]; then
-        HAVELHC13b4plus=0;
-    else
-        OUTPUTDIR_LHC13b4plus=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b4plusMC
-    fi
-fi
+FindCorrectTrainDirectory $LHC13cData $OUTPUTDIRData $ALIENDIRData $LHC13bcData
+HAVELHC13c=$tempBool
+LHC13cData=$tempDir
+OUTPUTDIR_LHC13c=$tempPath
+echo "$HAVELHC13c $LHC13cData $OUTPUTDIR_LHC13c"
+
+# parse grid directories for correct train output dir for LHC13de
+FindCorrectTrainDirectory $LHC13dData $OUTPUTDIRData $ALIENDIRData $LHC13deData
+HAVELHC13d=$tempBool
+LHC13dData=$tempDir
+OUTPUTDIR_LHC13d=$tempPath
+echo "$HAVELHC13d $LHC13dData $OUTPUTDIR_LHC13d"
+
+FindCorrectTrainDirectory $LHC13eData $OUTPUTDIRData $ALIENDIRData $LHC13deData
+HAVELHC13e=$tempBool
+LHC13eData=$tempDir
+OUTPUTDIR_LHC13e=$tempPath
+echo "$HAVELHC13e $LHC13eData $OUTPUTDIR_LHC13e"
+
+# parse grid directories for correct train output dir for LHC13f
+FindCorrectTrainDirectory $LHC13fData $OUTPUTDIRData $ALIENDIRData
+HAVELHC13f=$tempBool
+LHC13fData=$tempDir
+OUTPUTDIR_LHC13f=$tempPath
+echo "$HAVELHC13f $LHC13fData $OUTPUTDIR_LHC13f"
+
+# Settting directories for LHC13b2_efix productions
+FindCorrectTrainDirectory $LHC13b2_efix_p1MC $OUTPUTDIRMC $ALIENDIRMC $LHC13b2_efix
+HAVELHC13b2efixp1=$tempBool
+LHC13b2_efix_p1MC=$tempDir
+OUTPUTDIR_LHC13b2_efix_p1=$tempPath
+echo "$HAVELHC13b2efixp1 $LHC13b2_efix_p1MC $OUTPUTDIR_LHC13b2_efix_p1"
+
+FindCorrectTrainDirectory $LHC13b2_efix_p2MC $OUTPUTDIRMC $ALIENDIRMC $LHC13b2_efix
+HAVELHC13b2efixp2=$tempBool
+LHC13b2_efix_p2MC=$tempDir
+OUTPUTDIR_LHC13b2_efix_p2=$tempPath
+echo "$HAVELHC13b2efixp2 $LHC13b2_efix_p2MC $OUTPUTDIR_LHC13b2_efix_p2"
+
+FindCorrectTrainDirectory $LHC13b2_efix_p3MC $OUTPUTDIRMC $ALIENDIRMC $LHC13b2_efix
+HAVELHC13b2efixp3=$tempBool
+LHC13b2_efix_p3MC=$tempDir
+OUTPUTDIR_LHC13b2_efix_p3=$tempPath
+echo "$HAVELHC13b2efixp3 $LHC13b2_efix_p3MC $OUTPUTDIR_LHC13b2_efix_p3"
+
+FindCorrectTrainDirectory $LHC13b2_efix_p4MC $OUTPUTDIRMC $ALIENDIRMC $LHC13b2_efix
+HAVELHC13b2efixp4=$tempBool
+LHC13b2_efix_p4MC=$tempDir
+OUTPUTDIR_LHC13b2_efix_p4=$tempPath
+echo "$HAVELHC13b2efixp4 $LHC13b2_efix_p4MC $OUTPUTDIR_LHC13b2_efix_p4"
+
+# Settting directories for LHC13e7 production
+FindCorrectTrainDirectory $LHC13e7MC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC13e7=$tempBool
+LHC13e7MC=$tempDir
+OUTPUTDIR_LHC13e7=$tempPath
+echo "$HAVELHC13e7 $LHC13e7MC $OUTPUTDIR_LHC13e7"
+
+# Settting directories for JJ production
+FindCorrectTrainDirectory $LHC13b4fixMC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC13b4fix=$tempBool
+LHC13b4fixMC=$tempDir
+OUTPUTDIR_LHC13b4fix=$tempPath
+echo "$HAVELHC13b4fix $LHC13b4fixMC $OUTPUTDIR_LHC13b4fix"
+
+FindCorrectTrainDirectory $LHC13b4plusMC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC13b4plus=$tempBool
+LHC13b4plusMC=$tempDir
+OUTPUTDIR_LHC13b4plus=$tempPath
+echo "$HAVELHC13b4plus $LHC13b4plusMC $OUTPUTDIR_LHC13b4plus"
+
+FindCorrectTrainDirectory $LHC16c3aMC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC16c3a=$tempBool
+LHC16c3aMC=$tempDir
+OUTPUTDIR_LHC16c3a=$tempPath
+echo "$HAVELHC16c3a $LHC16c3aMC $OUTPUTDIR_LHC16c3a"
+
+FindCorrectTrainDirectory $LHC16c3a2MC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC16c3a2=$tempBool
+LHC16c3a2MC=$tempDir
+OUTPUTDIR_LHC16c3a2=$tempPath
+echo "$HAVELHC16c3a2 $LHC16c3a2MC $OUTPUTDIR_LHC16c3a2"
+
+FindCorrectTrainDirectory $LHC16c3bMC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC16c3b=$tempBool
+LHC16c3bMC=$tempDir
+OUTPUTDIR_LHC16c3b=$tempPath
+echo "$HAVELHC16c3b $LHC16c3bMC $OUTPUTDIR_LHC16c3b"
+
+FindCorrectTrainDirectory $LHC16c3b2MC $OUTPUTDIRMC $ALIENDIRMC
+HAVELHC16c3b2=$tempBool
+LHC16c3b2MC=$tempDir
+OUTPUTDIR_LHC16c3b2=$tempPath
+echo "$HAVELHC16c3b2 $LHC16c3b2MC $OUTPUTDIR_LHC16c3b2"
 
 if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC13b == 1 ]; then
@@ -518,8 +425,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13bData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13bData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b "$ALIENDIRData$LHC13bData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b "$ALIENDIRData$LHC13bData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
 
@@ -554,8 +461,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13c/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13cData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13cData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13c "$ALIENDIRData$LHC13cData/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13c "$ALIENDIRData$LHC13cData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
 
     fi
@@ -590,8 +497,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13d/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13dData/merge" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "$ALIENDIRData$LHC13dData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13d "$ALIENDIRData$LHC13dData/merge" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
 
@@ -626,8 +533,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13e/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13eData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "$ALIENDIRData$LHC13eData/merge_runlist_2" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e "$ALIENDIRData$LHC13eData/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
     if [ $HAVELHC13f == 1 ]; then
@@ -661,8 +568,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13f/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "$ALIENDIRData$LHC13fData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "$ALIENDIRData$LHC13fData/merge" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
 
@@ -697,8 +604,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p1/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p1 "$ALIENDIRMC$LHC13b2_efix_p1MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p1 "$ALIENDIRMC$LHC13b2_efix_p1MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p1.txt  $OUTPUTDIR_LHC13b2_efix_p1
 
@@ -734,8 +641,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p2 "$ALIENDIRMC$LHC13b2_efix_p2MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p2 "$ALIENDIRMC$LHC13b2_efix_p2MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p2.txt  $OUTPUTDIR_LHC13b2_efix_p2
     fi
@@ -771,8 +678,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p3/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p3 "$ALIENDIRMC$LHC13b2_efix_p3MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p3 "$ALIENDIRMC$LHC13b2_efix_p3MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p3.txt  $OUTPUTDIR_LHC13b2_efix_p3
     fi
@@ -807,8 +714,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p4/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p4 "$ALIENDIRMC$LHC13b2_efix_p4MC/merge_runlist_1" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b2_efix_p4 "$ALIENDIRMC$LHC13b2_efix_p4MC/merge_runlist_2" PHOSGood $NSlashes3 "" kFALSE
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p4.txt  $OUTPUTDIR_LHC13b2_efix_p4
     fi
@@ -843,8 +750,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13e7/mergedAllConvCalo.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e7 "$ALIENDIRMC$LHC13e7MC/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13e7 "$ALIENDIRMC$LHC13e7MC/merge" PHOSGood $NSlashes3 "" kFALSE
         fi
         ParseJDLFilesDownloadAndMerge missingMergesLHC13e7.txt  $OUTPUTDIR_LHC13e7
     fi
@@ -876,8 +783,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4fix $NSlashes4 GammaConvCalo PHOSGood runlists/runNumbersLHC13b4_fix.txt runlists/binsJetJetLHC13b4.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_fix/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_fix/merge" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "$ALIENDIRMC$LHC13b4_fix/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4fix "$ALIENDIRMC$LHC13b4_fix/merge" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
     if [ $HAVELHC13b4plus == 1 ]; then
@@ -906,11 +813,73 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC13b4.txt $OUTPUTDIR_LHC13b4plus $NSlashes4 GammaConvCalo PHOSGood runlists/runNumbersLHC13b4_plus.txt runlists/binsJetJetLHC13b4.txt
             fi
         else
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_plus/merge" EMCandPCMGood $NSlashes3 "" kFALSE
-            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b4_plus/merge" PHOSGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "$ALIENDIRMC$LHC13b4_plus/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13b4plus "$ALIENDIRMC$LHC13b4_plus/merge" PHOSGood $NSlashes3 "" kFALSE
         fi
     fi
 
+    if [ $HAVELHC16c3a == 1 ]; then
+        echo "downloading LHC16c3a"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC16c3a.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber
+                binNumbersJJ=`cat runlists/binsJetJetLHC16c3a.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+#                     CopyFileIfNonExisitent $OUTPUTDIR_LHC16c3a/$binNumber/$runNumber "/alice/sim/2016/LHC16c3a/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3aMC" $NSlashes3 "/alice/sim/2016/LHC16c3a/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3aMC/" kTRUE
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC16c3a/$binNumber/$runNumber "/alice/sim/2016/LHC16c3a/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3aMC" $NSlashes3 "none" kTRUE
+                done;
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC16c3a/mergedAllConvCalo.txt ]; then
+                echo "HERERRE"
+                cd $currentDir
+                rm $OUTPUTDIR_LHC16c3a/GammaConvCalo*.root*
+                firstrunNumber=`head -n1 runlists/runNumbersLHC16c3a.txt`
+                firstbinNumber=`head -n1 runlists/binsJetJetLHC16c3a.txt`
+                ls $OUTPUTDIR_LHC16c3a/$firstbinNumber/$firstrunNumber/GammaConvCalo_*.root > fileLHC16c3a.txt
+                fileNumbers=`cat fileLHC16c3a.txt`
+                MergeAccordingToSpecificRunlist fileLHC16c3a.txt $OUTPUTDIR_LHC16c3a $NSlashes4 GammaConvCalo EMCandPCMGood runlists/runNumbersLHC16c3a.txt runlists/binsJetJetLHC16c3a.txt
+                MergeAccordingToSpecificRunlist fileLHC16c3a.txt $OUTPUTDIR_LHC16c3a $NSlashes4 GammaConvCalo PHOSGood runlists/runNumbersLHC16c3a.txt runlists/binsJetJetLHC16c3a.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16c3a "$ALIENDIRMC$LHC16c3a/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16c3a "$ALIENDIRMC$LHC16c3a/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
+    fi
+
+
+    if [ $HAVELHC16c3a2 == 1 ]; then
+        echo "downloading LHC16c3a2"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC16c3a2.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber
+                binNumbersJJ=`cat runlists/binsJetJetLHC16c3a.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+#                     CopyFileIfNonExisitent $OUTPUTDIR_LHC16c3a2/$binNumber/$runNumber "/alice/sim/2016/LHC16c3a2/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3a2MC" $NSlashes3 "/alice/sim/2016/LHC16c3a2/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3a2MC/" kTRUE
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC16c3a2/$binNumber/$runNumber "/alice/sim/2016/LHC16c3a2/$binNumber/$runNumber/PWGGA/GA_pPb_MC/$LHC16c3a2MC" $NSlashes3 "none" kTRUE
+                done;
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC16c3a2/mergedAllConvCalo.txt ]; then
+                echo "HERERRE"
+                cd $currentDir
+                rm $OUTPUTDIR_LHC16c3a2/GammaConvCalo*.root*
+                firstrunNumber=`head -n1 runlists/runNumbersLHC16c3a2.txt`
+                firstbinNumber=`head -n1 runlists/binsJetJetLHC16c3a.txt`
+                ls $OUTPUTDIR_LHC16c3a2/$firstbinNumber/$firstrunNumber/GammaConvCalo_*.root > fileLHC16c3a2.txt
+                fileNumbers=`cat fileLHC16c3a2.txt`
+                MergeAccordingToSpecificRunlist fileLHC16c3a2.txt $OUTPUTDIR_LHC16c3a2 $NSlashes4 GammaConvCalo EMCandPCMGood runlists/runNumbersLHC16c3a2.txt runlists/binsJetJetLHC16c3a.txt
+                MergeAccordingToSpecificRunlist fileLHC16c3a2.txt $OUTPUTDIR_LHC16c3a2 $NSlashes4 GammaConvCalo PHOSGood runlists/runNumbersLHC16c3a2.txt runlists/binsJetJetLHC16c3a.txt
+            fi
+        else
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16c3a2 "$ALIENDIRMC$LHC16c3a2/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16c3a2 "$ALIENDIRMC$LHC16c3a2/merge" PHOSGood $NSlashes3 "" kFALSE
+        fi
+    fi
 
     echo -e "EMCandPCMGood\nPHOSGood" > runlistsToMerge.txt
     listsToMerge=`cat runlistsToMerge.txt`
@@ -1044,6 +1013,24 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done;
         fi
 
+        if [ $HAVELHC16c3a == 1 ]; then
+            ls $OUTPUTDIR_LHC16c3a/GammaConvCalo-$runListName\_*.root > fileLHC16c3a.txt
+            fileNumbers=`cat fileLHC16c3a.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16c3a $NSlashes "MC_LHC16c3a-$runListName" "-$runListName"
+            done;
+            for binNumber in $binNumbersJJ; do
+                echo $binNumber
+                ls $OUTPUTDIR_LHC16c3a/GammaConvCalo-$runListName\_*.root > fileLHC16c3a.txt
+                fileNumbers=`cat fileLHC16c3a.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes)) 2
+                    cp $OUTPUTDIR_LHC16c3a/$binNumber/GammaConvCalo-$runListName\_$number.root  $OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC16c3a-$binNumber\_$runListName\_$number.root
+                done
+            done;
+        fi
 
     done
     echo "--> rewrite of files done"

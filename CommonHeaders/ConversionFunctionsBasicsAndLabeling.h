@@ -3538,17 +3538,17 @@
             case 0:
                 return "No Ncells cut";
             case 1:
-                return "n Cells > 1";
+                return "n Cells #geq 1";
             case 2:
-                return "n Cells > 2";
+                return "n Cells #geq 2";
             case 3:
-                return "n Cells > 3";
+                return "n Cells #geq 3";
             case 4:
-                return "n Cells > 4";
+                return "n Cells #geq 4";
             case 5:
-                return "n Cells > 5";
+                return "n Cells #geq 5";
             case 6:
-                return "n Cells > 6";
+                return "n Cells #geq 6";
             default:
                 return "n Cells cut not defined";
         }
