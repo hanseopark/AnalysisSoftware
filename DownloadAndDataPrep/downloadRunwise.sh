@@ -6,12 +6,12 @@
 # (add the piped echo to avoid having to press enter)
 
 # folder="~/alice/GridOutput/vAN-20180727"
-# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17c" "1" "HeavyNeutralMesonToGG_"
-# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17k" "1" "HeavyNeutralMesonToGG_"
-# echo | bash downloadRunwise.sh $folder "GA_pp" "2445" "LHC18d" "1" "HeavyNeutralMesonToGG_"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17c" "pass1" "HeavyNeutralMesonToGG_"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17k" "pass1" "HeavyNeutralMesonToGG_"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2445" "LHC18d" "pass1" "HeavyNeutralMesonToGG_"
 
 DOWNLOADON=1
-MERGEON=0
+MERGEON=1
 
 # NOTE: Set input arguments
     downloadFolder="$1" # e.g. "vAN-20180727-1"
@@ -23,9 +23,17 @@ MERGEON=0
     # * DPG runlists *
         softwareDir=$(pwd)
         runlists=(
-            DPGTracks
-            DPGTracksAndCalo
-            DPGTracksIncAcc
+            # pp
+                # DPGTracks
+                # DPGTracksAndCalo
+                # DPGTracksIncAcc
+            # p-Pb
+                fast_all
+                fast_dpgTracks
+                fast_dpgTracksAndCalo
+                woSDD_all
+                woSDD_dpgTracks
+                woSDD_dpgTracksAndCalo
         )
     # * Other arguments
         searchForFile="root_archive.zip"

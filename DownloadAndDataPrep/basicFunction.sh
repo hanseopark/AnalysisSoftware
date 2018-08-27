@@ -583,6 +583,7 @@ function MergeFilesAccrossYears()
         local filenameToUse="$2" # e.g."HeavyNeutralMesonToGG_LHC17e-pass1-DPGTracks_1_400.root
 
     # * Variable names *
+        local currentDir="$(pwd)"
         local outputFolder="merged"
         if [ ! -f "$filenameToUse" ]; then
             echo "ERROR: File \"$filenameToUse\" does not exist!"
@@ -695,5 +696,5 @@ function MergeFilesAccrossYears()
         rm -f temp_YearList.txt
 
     # * Go back to former working directory
-        cd -
+        cd "${currentDir}"
 }
