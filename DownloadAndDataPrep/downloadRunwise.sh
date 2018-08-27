@@ -1,14 +1,25 @@
 # Script that downloads files runwise from the GRID and merges them
 # In principle, you only need to set arguments in the first NOTE section below, but also carefully check the initial terminal output before you continue running the script
 
+# Tip:
+# You can run this script in batch mode by doing this, for instance:
+# (add the piped echo to avoid having to press enter)
+
+# folder="~/alice/GridOutput/vAN-20180727"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17c" "1" "HeavyNeutralMesonToGG_"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2446" "LHC17k" "1" "HeavyNeutralMesonToGG_"
+# echo | bash downloadRunwise.sh $folder "GA_pp" "2445" "LHC18d" "1" "HeavyNeutralMesonToGG_"
+
 DOWNLOADON=1
 MERGEON=0
 
 # NOTE: Set input arguments
     downloadFolder="$1" # e.g. "vAN-20180727-1"
-    trainNr="$2"        # e.g. "2445"
-    periodName="$3"     # e.g. "LHC18d"
-    startsWith="$4"     # e.g. "HeavyNeutralMesonToGG_"
+    System="$2"         # e.g. "GA_pp"
+    trainNr="$3"        # e.g. "2445"
+    periodName="$4"     # e.g. "LHC18d"
+    passNr="$5"         # e.g. "pass1" or "pass1_CENT_woSDD"
+    startsWith="$6"     # e.g. "HeavyNeutralMesonToGG_"
     # * DPG runlists *
         softwareDir=$(pwd)
         runlists=(
@@ -17,24 +28,29 @@ MERGEON=0
             DPGTracksIncAcc
         )
     # * Other arguments
-        passNr="1"
         searchForFile="root_archive.zip"
-        URLs="/alice/data/*/${periodName}/*/pass${passNr}/PWGGA/GA_pp/${trainNr}_201?????-*_child_*/${searchForFile}"
-        checkFinalFormat="^HeavyNeutralMesonToGG_LHC1.*-DPG.*-pass${passNr}-.*.root\$" # REGEX, used to check if upward copy file name is correct
+        URLs="/alice/data/*/${periodName}/*/${passNr}/PWGGA/${System}/${trainNr}_201?????-*_child_*/${searchForFile}"
+        checkFinalFormat="^HeavyNeutralMesonToGG_LHC1.*-DPG.*-${passNr}-.*.root\$" # REGEX, used to check if upward copy file name is correct
 #
 
 # * Set script parameters *
     sampleHit=$(alien_ls -b ${URLs} | head -n 1)
     year=$(echo ${sampleHit} | cut -d "/" -f 4)
-    child=$(echo ${sampleHit} | cut -d "/" -f 10)
-    child=${child/${child%child_*}}
-    subfolder="${trainNr}-${child}"
+    anaSystem=$(echo ${sampleHit} | cut -d "/" -f 8)
+    colSystem=$(echo ${sampleHit} | cut -d "/" -f 9)
+    childFolder=$(echo ${sampleHit} | cut -d "/" -f 10)
+    child=${childFolder/${childFolder%child_*}}
+    subfolder="${colSystem}-${childFolder}"
 #
 
 # * Check input *
+    echo -e "\nDownloading to:"
+    echo -e "\"${downloadFolder}\""
     echo -e "\nSearching for files of format:"
     echo -e "\"${URLs}\"\n"
     echo "Results in following parameters:"
+    echo " - Analysis:     ${colSystem}"
+    echo " - System:       ${colSystem}"
     echo " - Train number: ${trainNr}"
     echo " - Year:         ${year}"
     echo " - Period:       ${periodName} (${child})"
@@ -43,9 +59,14 @@ MERGEON=0
 #
 
 # * Make download directory and navigate to it *
-    # Remove possible final slash from input argument
+    # * Move to download folder
+    if [ ! -d "${downloadFolder}" ]; then
+        mkdir "${downloadFolder}"
+    fi
+    cd "${downloadFolder}"
+    # * Remove possible final slash from input argument
     folder="$(dirname $1)/$(basename $1)"
-    # Make directory and navigate
+    # * Make directory and navigate
     if [ ! -d "${folder}/${subfolder}" ]; then
         mkdir "${folder}/${subfolder}"
     fi
@@ -124,10 +145,10 @@ MERGEON=0
                         fi
                     done # end of ${run} LOOP
                     # * Generate output merge filename
-                    outputFile=${mode/${startsWith}/${startsWith}${periodName}-pass${passNr}-${runlist}_}
+                    outputFile=${mode/${startsWith}/${startsWith}${periodName}-${passNr}-${runlist}_}
                     # * Merge files
                     echo ""
-                    hadd -f ${outputFile} $(cat temp_FilesToMerge.txt)
+                    hadd -f "../${outputFile}" $(cat temp_FilesToMerge.txt)
                 done # end of ${mode} LOOP
             else
                 echo "Runlist file \"$(basename ${runlistFile})\" does not exist!"
@@ -144,6 +165,6 @@ MERGEON=0
 
 # * Navigate back to original working directory *
     echo -e "\nNavigating back to original working directory:"
-    cd -
+    cd ${softwareDir}
     echo ""
 #
