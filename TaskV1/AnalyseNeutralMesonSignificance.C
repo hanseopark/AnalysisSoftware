@@ -46,20 +46,20 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "THnSparse.h"
 
-TString collisionSystem;
-TString date;
+TString fCollisionSystem;
+TString fData;
 TString fDetectionProcess ="";
 
 void SetZMinMaxTH2(TH2* hist, Int_t minX, Int_t maxX, Int_t minY, Int_t maxY, Bool_t setZero = kFALSE){
     if(hist->GetEntries()<2) return;
 
     if(setZero){
-      for(Int_t iX=minX; iX<=maxX; iX++){
-        for(Int_t iY=minY; iY<=maxY; iY++){
-          Double_t temp = hist->GetBinContent(iX,iY);
-          if(temp<=0.) hist->SetBinContent(iX,iY,0.);
+        for(Int_t iX=minX; iX<=maxX; iX++){
+            for(Int_t iY=minY; iY<=maxY; iY++){
+                Double_t temp = hist->GetBinContent(iX,iY);
+                if(temp<=0.) hist->SetBinContent(iX,iY,0.);
+            }
         }
-      }
     }
 
     Double_t min = 0;
@@ -70,13 +70,13 @@ void SetZMinMaxTH2(TH2* hist, Int_t minX, Int_t maxX, Int_t minY, Int_t maxY, Bo
         for(Int_t iY=minY; iY<=maxY; iY++){
             Double_t temp = hist->GetBinContent(iX,iY);
             if(temp!=0.){
-              if(bSet){
-                min = temp;
-                max = temp;
-                bSet = kFALSE;
-              }
-              if(temp > max) max = temp;
-              if(temp < min) min = temp;
+                if(bSet){
+                    min = temp;
+                    max = temp;
+                    bSet = kFALSE;
+                }
+                if(temp > max) max = temp;
+                if(temp < min) min = temp;
             }
         }
     }
@@ -143,28 +143,26 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
     canvasStandard->SetTopMargin(0.04);       
     canvasStandard->cd();
     histo2D->SetTitle("");
-    DrawAutoGammaHisto2D(   histo2D,
-                            title.Data(), xTitle.Data(), yTitle.Data(),"",kRangeY, startY, endY, kRangeX, startX, endX);
+    DrawAutoGammaHisto2D( histo2D, title.Data(), xTitle.Data(), yTitle.Data(),"",kRangeY, startY, endY, kRangeX, startX, endX);
     histo2D->GetXaxis()->SetTitleOffset(1.05);
-    //    cout << histo2D->GetYaxis()->GetTitleOffset() << endl;
+    // cout << histo2D->GetYaxis()->GetTitleOffset() << endl;
     histo2D->GetYaxis()->SetTitleOffset(1.35);
     if (logX==1){
-    //       cout << histo2D->GetXaxis()->GetLabelOffset() << endl;
+        // cout << histo2D->GetXaxis()->GetLabelOffset() << endl;
         histo2D->GetXaxis()->SetLabelOffset(0.);
     }   
         
     histo2D->Draw("colz");
-    DrawLabelsEvents(floatLogo[0],floatLogo[1],floatLogo[2], 0.00, collisionSystem, generator, period);
+    DrawLabelsEvents(floatLogo[0],floatLogo[1],floatLogo[2], 0.00, fCollisionSystem, generator, period);
     TLatex *detprocess = new TLatex(floatLogo[0], floatLogo[1] - 3.2*floatLogo[2], fDetectionProcess);
     detprocess->SetNDC(); 
     detprocess->SetTextColor(1);
     detprocess->SetTextSize(floatLogo[2]);
     detprocess->Draw();
 
-   
-   canvasStandard->Update();
-   canvasStandard->SaveAs(nameOutput.Data());
-   delete canvasStandard;
+    canvasStandard->Update();
+    canvasStandard->SaveAs(nameOutput.Data());
+    delete canvasStandard;
 }
 
 //**********************************************************************************
@@ -172,18 +170,19 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
 //**********************************************************************************
 void AnalyseNeutralMesonSignificance(
     TString fileNameData    = "myOutput",
-    TString fileNameMC      = "myOutput", 
-    TString cutSel          = "", 
-    TString suffix          = "gif", 
-    TString optEnergy       = "", 
-    TString optPeriod       = "", 
-    TString optGenerator    = "", 
+    TString fileNameMC      = "myOutput",
+    TString cutSel          = "",
+    TString suffix          = "gif",
+    TString optEnergy       = "",
+    TString optPeriod       = "",
+    TString optGenerator    = "",
+    TString mesons          = "",
     Int_t mode              = 9
 ){
 
     // Heavy neutral meson fix
     Int_t modeHeavy = mode;
-    if( modeHeavy>=100 ) modeHeavy -= 100;
+    if( mode>=100 ) mode -= 100;
 
     //**********************************************************************************
     //**************************** Set global variables ********************************
@@ -191,14 +190,14 @@ void AnalyseNeutralMesonSignificance(
     gROOT->Reset();   
     gROOT->SetStyle("Plain");
     
-    TString optGeneratorForLabels       = optGenerator;
+    TString optGeneratorForLabels = optGenerator;
     optGeneratorForLabels.ReplaceAll("_"," ");
     
     StyleSettingsThesis();  
     SetPlotStyle();
     
-    date                                = ReturnDateString();
-    collisionSystem                     = ReturnFullCollisionsSystem(optEnergy);
+    fData                               = ReturnDateString();
+    fCollisionSystem                    = ReturnFullCollisionsSystem(optEnergy);
     TString centralityString            = GetCentralityString(cutSel.Data());
     fDetectionProcess                   = ReturnFullTextReconstructionProcess(mode);
     
@@ -226,23 +225,24 @@ void AnalyseNeutralMesonSignificance(
 
     Int_t startBinEtaPrime              = 0;
     
-    Double_t ptBins[22]                 = { 0.2, 0.3, 0.4, 0.5, 0.6, 
-                                            0.8, 1.0, 1.5, 2.0, 3.0, 
-                                            4.0, 6.0, 8.0, 10.0, 15.0, 
-                                            20.0, 25., 30., 35., 40.,
-                                            45., 50. };
+    Double_t ptBins[22]                 = {
+        0.2, 0.3, 0.4, 0.5, 0.6, 
+        0.8, 1.0, 1.5, 2.0, 3.0, 
+        4.0, 6.0, 8.0, 10.0, 15.0, 
+        20.0, 25., 30., 35., 40.,
+        45., 50. };
     Int_t maxNbins                      = 15;
     if (mode == 10) maxNbins            = 21;
 
 
     Double_t rangeMaxPt = 20;
     if(optEnergy.CompareTo("8TeV")==0){
-      maxNbins = 13;
-      rangeMaxPt = 20;
-      if(optGenerator.Contains("JetJet")){
-        maxNbins = 17;
-        rangeMaxPt = 29.9;
-      }
+        maxNbins = 13;
+        rangeMaxPt = 20;
+        if(optGenerator.Contains("JetJet")){
+            maxNbins = 17;
+            rangeMaxPt = 29.9;
+        }
     }
                                             
     //**********************************************************************************
@@ -251,21 +251,25 @@ void AnalyseNeutralMesonSignificance(
     TFile* fileData                         = new TFile(fileNameData);
     TString autoDetectedMainDir             = AutoDetectMainTList(mode , fileData);
     if (autoDetectedMainDir.CompareTo("") == 0){
-        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;
         return;
     }
 
     TList *TopDirData =(TList*)fileData->Get(autoDetectedMainDir.Data());
     if(TopDirData == NULL){
-        cout<<"ERROR: TopDirData not Found"<<endl;
+        cout << "ERROR: TopDirData \"" << autoDetectedMainDir << "\" not found"<<endl;
         return;
     }
-    TList *HistosGammaConversionData     = (TList*)TopDirData->FindObject(Form("Cut Number %s",cutSel.Data()));
+    TList *HistosGammaConversionData = (TList*)TopDirData->FindObject(Form("Cut Number %s",cutSel.Data()));
     if(HistosGammaConversionData == NULL){
-        cout<<"ERROR: " << Form("Cut Number %s",cutSel.Data()) << " not Found in File"<<endl;
+        cout << "ERROR: \"" << Form("Cut Number %s",cutSel.Data()) << "\" not found in file" << endl;
         return;
     }
-    TList *ESDContainerData             = (TList*) HistosGammaConversionData->FindObject(Form("%s ESD histograms",cutSel.Data()));
+    TList *ESDContainerData = (TList*)HistosGammaConversionData->FindObject( Form("%s ESD histograms",cutSel.Data()) );
+    if(ESDContainerData == nullptr){
+        cout << "ERROR: \"" << Form("%s ESD histograms",cutSel.Data()) << "\" not found in File" << endl;
+        return;
+    }
 
     TH1D* fEventQualityData             = (TH1D*)ESDContainerData->FindObject("NEvents");
     Double_t nEventsData                = 0;
@@ -275,23 +279,23 @@ void AnalyseNeutralMesonSignificance(
         nEventsData                     =  GetNEvents(fEventQualityData);
     }
 
-    TString nameMesonHistoPtY           = "ESD_MotherPi0_Pt_Y";
-    if (mode == 10) 
-        nameMesonHistoPtY               = "ESD_Mother_Pt_Y";
-    TString nameMesonHistoPtAlpha       = "ESD_MotherPi0_Pt_Alpha";
-    if (mode == 10) 
-        nameMesonHistoPtAlpha           = "ESD_Mother_Pt_Alpha";
-    TString nameMesonHistoPtOpen        = "ESD_MotherPi0_Pt_OpenAngle";
-    if (mode == 10) 
-        nameMesonHistoPtOpen            = "ESD_Mother_Pt_OpenAngle";
+    TString nameMesonHistoPtY             = "ESD_MotherPi0_Pt_Y";
+    TString nameMesonHistoPtAlpha         = "ESD_MotherPi0_Pt_Alpha";
+    TString nameMesonHistoPtOpen          = "ESD_MotherPi0_Pt_OpenAngle";
+    if (mode == 10) {
+        nameMesonHistoPtY     = "ESD_Mother_Pt_Y";
+        nameMesonHistoPtAlpha = "ESD_Mother_Pt_Alpha";
+        nameMesonHistoPtOpen  = "ESD_Mother_Pt_OpenAngle";
+    }
 
     TH2F* histoPi0RapidityPtData        = (TH2F*) ESDContainerData->FindObject(nameMesonHistoPtY.Data());
     histoPi0RapidityPtData->Sumw2();
     TH1D* histoRecPi0RapidityPtDatapTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoRecPi0RapidityPtDatapTBins[i]  = (TH1D*)histoPi0RapidityPtData->ProjectionY(Form("histoRecPi0RapidityPtData_%dBin",i),
-                                                                                        histoPi0RapidityPtData->GetXaxis()->FindBin(ptBins[i]),
-                                                                                        histoPi0RapidityPtData->GetXaxis()->FindBin(ptBins[i+1]));
+        histoRecPi0RapidityPtDatapTBins[i]  = (TH1D*)histoPi0RapidityPtData->ProjectionY(
+            Form("histoRecPi0RapidityPtData_%dBin",i),
+            histoPi0RapidityPtData->GetXaxis()->FindBin(ptBins[i]),
+            histoPi0RapidityPtData->GetXaxis()->FindBin(ptBins[i+1]));
         histoRecPi0RapidityPtDatapTBins[i]->Scale(1./nEventsData);
     }
 
@@ -300,9 +304,10 @@ void AnalyseNeutralMesonSignificance(
     histoPi0AlphaPtData->Sumw2();
     TH1D* histoRecPi0AlphaPtDatapTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoRecPi0AlphaPtDatapTBins[i]  = (TH1D*)histoPi0AlphaPtData->ProjectionY(Form("histoRecPi0AlphaPtData_%dBin",i),
-                                                                                        histoPi0AlphaPtData->GetXaxis()->FindBin(ptBins[i]),
-                                                                                        histoPi0AlphaPtData->GetXaxis()->FindBin(ptBins[i+1]));
+        histoRecPi0AlphaPtDatapTBins[i]  = (TH1D*)histoPi0AlphaPtData->ProjectionY(
+            Form("histoRecPi0AlphaPtData_%dBin",i),
+            histoPi0AlphaPtData->GetXaxis()->FindBin(ptBins[i]),
+            histoPi0AlphaPtData->GetXaxis()->FindBin(ptBins[i+1]));
         histoRecPi0AlphaPtDatapTBins[i]->Sumw2();
         histoRecPi0AlphaPtDatapTBins[i]->Scale(1./nEventsData);
     }
@@ -320,12 +325,12 @@ void AnalyseNeutralMesonSignificance(
     TFile* fileMC                       = new TFile(fileNameMC.Data());
     TList *TopDirMC                     = (TList*)fileMC->Get(autoDetectedMainDir.Data());
     if(TopDirMC == NULL){
-        cout<<"ERROR: TopDirMC not Found"<<endl;
+        cout << "ERROR: TopDirMC not Found"<<endl;
         return;
     }
     TList *HistosGammaConversionMC      = (TList*)TopDirMC->FindObject(Form("Cut Number %s",cutSel.Data()));
     if(HistosGammaConversionMC == NULL){
-        cout<<"ERROR: " << Form("Cut Number %s",cutSel.Data()) << " not Found in File"<<endl;
+        cout << "ERROR: " << Form("Cut Number %s",cutSel.Data()) << " not Found in File"<<endl;
         return;
     }
     TList *ESDContainerMC               = (TList*) HistosGammaConversionMC->FindObject(Form("%s ESD histograms",cutSel.Data()));
@@ -343,9 +348,12 @@ void AnalyseNeutralMesonSignificance(
     
     TH1D* histoRecPi0RapidityPtMCpTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoRecPi0RapidityPtMCpTBins[i]    = (TH1D*)histoPi0RapidityPtMC->ProjectionY(Form("histoRecPi0RapidityPtMC_%dBin",i),
-                                                                                   histoPi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                   histoPi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+        histoRecPi0RapidityPtMCpTBins[i]    = (TH1D*)histoPi0RapidityPtMC->ProjectionY(
+            Form( "histoRecPi0RapidityPtMC_%dBin",i),
+            histoPi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
+            histoPi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),
+            "e"
+        );
         histoRecPi0RapidityPtMCpTBins[i]->Scale(1./nEventsMC);
     }    
 
@@ -354,9 +362,11 @@ void AnalyseNeutralMesonSignificance(
 
     TH1D* histoRecPi0AlphaPtMCpTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoRecPi0AlphaPtMCpTBins[i]       = (TH1D*)histoPi0AlphaPtMC->ProjectionY(Form("histoRecPi0AlphaPtMC_%dBin",i),
-                                                                                   histoPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                   histoPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+        histoRecPi0AlphaPtMCpTBins[i]       = (TH1D*)histoPi0AlphaPtMC->ProjectionY(
+            Form("histoRecPi0AlphaPtMC_%dBin",i),
+            histoPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+            histoPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),
+            "e" );
         histoRecPi0AlphaPtMCpTBins[i]->Sumw2();
         histoRecPi0AlphaPtMCpTBins[i]->Scale(1./nEventsMC);
     }    
@@ -395,70 +405,85 @@ void AnalyseNeutralMesonSignificance(
     if (histoTruePi0CaloConvPhotonConvRPtE) 
         enableExtConvCaloQA                     = kTRUE;
     if (enableExtConvCaloQA){
-        histoTruePi0CaloConvPhotonPtE_FullR     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(    "histoTruePi0CaloConvPhotonPtE_FullR",
-                                                                                                            0, -1, "e");
-        histoTruePi0CaloConvPhotonPtE_RL180     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(    "histoTruePi0CaloConvPhotonPtE_RL180",
-                                                                                                            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(180),
-                                                                                                            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(460),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonPtE_RS180     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(    "histoTruePi0CaloConvPhotonPtE_RS180",
-                                                                                                            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(0.),
-                                                                                                            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(180),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonConvR         = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionX(    "histoTruePi0CaloConvPhotonConvR",
-                                                                                                            0, -1, "e");
+        histoTruePi0CaloConvPhotonPtE_FullR     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(
+            "histoTruePi0CaloConvPhotonPtE_FullR",
+            0, -1, "e");
+        histoTruePi0CaloConvPhotonPtE_RL180     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(
+            "histoTruePi0CaloConvPhotonPtE_RL180",
+            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(180),
+            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(460),
+            "e");
+        histoTruePi0CaloConvPhotonPtE_RS180     = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionY(
+            "histoTruePi0CaloConvPhotonPtE_RS180",
+            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(0.),
+            histoTruePi0CaloConvPhotonConvRPtE->GetXaxis()->FindBin(180),
+            "e");
+        histoTruePi0CaloConvPhotonConvR         = (TH1D*)histoTruePi0CaloConvPhotonConvRPtE->ProjectionX(
+            "histoTruePi0CaloConvPhotonConvR",
+            0, -1, "e");
         histoTruePi0CaloConvPhotonConvR->Rebin(2);
         histoTruePi0CaloConvPhotonConvRAlphaE   = (TH2F*) TrueContainerMC->FindObject("ESD_TruePi0CaloConvPhoton_ConvR_AlphaE"); 
-        histoTruePi0CaloConvPhotonAlphaE_FullR  = (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_FullR",
-                                                                                                            0, -1, "e");
-        histoTruePi0CaloConvPhotonAlphaE_R180360= (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_R180360",
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(180),
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(360),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonAlphaE_R360460= (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_R360460",
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(360),
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(460),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonAlphaE_RS180  = (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_RS180",
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(0.),
-                                                                                                            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(180),
-                                                                                                            "e");
+        histoTruePi0CaloConvPhotonAlphaE_FullR  = (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_FullR",
+            0, -1, "e");
+        histoTruePi0CaloConvPhotonAlphaE_R180360= (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_R180360",
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(180),
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(360),
+            "e");
+        histoTruePi0CaloConvPhotonAlphaE_R360460= (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_R360460",
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(360),
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(460),
+            "e");
+        histoTruePi0CaloConvPhotonAlphaE_RS180  = (TH1D*)histoTruePi0CaloConvPhotonConvRAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_RS180",
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(0.),
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetXaxis()->FindBin(180),
+            "e");
         
         histoTruePi0CaloConvPhotonPtEAlphaE     = (TH2F*) TrueContainerMC->FindObject("ESD_TruePi0CaloConvPhoton_PtE_AlphaE"); 
-        histoTruePi0CaloConvPhotonAlphaE_FullPt = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_FullPt",
-                                                                                                            0, -1, "e");
-        histoTruePi0CaloConvPhotonAlphaE_Pt0T500= (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_Pt0T500",
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.),
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.5),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonAlphaE_Pt500T1= (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_Pt500T1",
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.5),
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(1.),
-                                                                                                            "e");
-        histoTruePi0CaloConvPhotonAlphaE_Pt1T2  = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_Pt1T2",
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(1.),
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(2.),
-                                                                                                            "e");
+        histoTruePi0CaloConvPhotonAlphaE_FullPt = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_FullPt",
+            0, -1, "e");
+        histoTruePi0CaloConvPhotonAlphaE_Pt0T500= (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_Pt0T500",
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.),
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.5),
+            "e");
+        histoTruePi0CaloConvPhotonAlphaE_Pt500T1= (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_Pt500T1",
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(0.5),
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(1.),
+            "e");
+        histoTruePi0CaloConvPhotonAlphaE_Pt1T2  = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_Pt1T2",
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(1.),
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(2.),
+            "e");
         
-        histoTruePi0CaloConvPhotonAlphaE_PtA2   = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY("histoTruePi0CaloConvPhotonAlphaE_PtA2",
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(2.),
-                                                                                                            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(35.),
-                                                                                                            "e");
+        histoTruePi0CaloConvPhotonAlphaE_PtA2   = (TH1D*)histoTruePi0CaloConvPhotonPtEAlphaE->ProjectionY(
+            "histoTruePi0CaloConvPhotonAlphaE_PtA2",
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(2.),
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetXaxis()->FindBin(35.),
+            "e");
     }
     
     TH1D* histoTruePi0RapidityPtMCpTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoTruePi0RapidityPtMCpTBins[i]   = (TH1D*)histoTruePi0RapidityPtMC->ProjectionY(Form("histoTruePi0RapidityPtMC_%dBin",i),
-                                                                                   histoTruePi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                   histoTruePi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]), "e");
+        histoTruePi0RapidityPtMCpTBins[i]   = (TH1D*)histoTruePi0RapidityPtMC->ProjectionY(
+            Form("histoTruePi0RapidityPtMC_%dBin",i),
+            histoTruePi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
+            histoTruePi0RapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]), "e");
         histoTruePi0RapidityPtMCpTBins[i]->Scale(1./nEventsMC);
     }
                             
     TH1D* histoTruePi0AlphaPtMCpTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoTruePi0AlphaPtMCpTBins[i]      = (TH1D*)histoTruePi0AlphaPtMC->ProjectionY(Form("histoTruePi0AlphaPtMC_%dBin",i),
-                                                                                   histoTruePi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                   histoTruePi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+        histoTruePi0AlphaPtMCpTBins[i]      = (TH1D*)histoTruePi0AlphaPtMC->ProjectionY(
+            Form("histoTruePi0AlphaPtMC_%dBin",i),
+            histoTruePi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+            histoTruePi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
         histoTruePi0AlphaPtMCpTBins[i]->Scale(1./nEventsMC);
     }
 
@@ -475,9 +500,10 @@ void AnalyseNeutralMesonSignificance(
     
     TH1D* histoBGPi0AlphaPtMCCpTBins[maxNbins];
     for (Int_t i =startBinPi0; i < maxNbins; i++){
-        histoBGPi0AlphaPtMCCpTBins[i]       = (TH1D*)histoBGPi0AlphaPtMC->ProjectionY(Form("histoBGPi0AlphaPtMC_%dBin",i),
-                                                                                   histoBGPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                   histoBGPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+        histoBGPi0AlphaPtMCCpTBins[i]       = (TH1D*)histoBGPi0AlphaPtMC->ProjectionY(
+            Form("histoBGPi0AlphaPtMC_%dBin",i),
+            histoBGPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+            histoBGPi0AlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
         histoBGPi0AlphaPtMCCpTBins[i]->Scale(1./nEventsMC);
     }
     
@@ -525,150 +551,169 @@ void AnalyseNeutralMesonSignificance(
     //**************************** Plot 2D distributions *******************************
     //**********************************************************************************
     if(rangeMaxPt>0){
-      histoPi0RapidityPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0RapidityPtData,1,histoPi0RapidityPtData->GetNbinsX(),1,histoPi0RapidityPtData->GetNbinsY());
+        histoPi0RapidityPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0RapidityPtData,1,histoPi0RapidityPtData->GetNbinsX(),1,histoPi0RapidityPtData->GetNbinsY());
     }else histoPi0RapidityPtData->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
-    PlotStandard2D( histoPi0RapidityPtData , 
-                    Form("%s/RecPi0_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,"Data", optPeriod);
+    PlotStandard2D(
+        histoPi0RapidityPtData , 
+        Form("%s/RecPi0_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,"Data", optPeriod);
     if(rangeMaxPt>0){
-      histoPi0AlphaPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0AlphaPtData,1,histoPi0AlphaPtData->GetNbinsX(),1,histoPi0AlphaPtData->GetNbinsY());
+        histoPi0AlphaPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0AlphaPtData,1,histoPi0AlphaPtData->GetNbinsX(),1,histoPi0AlphaPtData->GetNbinsY());
     }else histoPi0AlphaPtData->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
-    PlotStandard2D( histoPi0AlphaPtData ,
-                    Form("%s/RecPi0_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,"Data", optPeriod);
+    PlotStandard2D(
+        histoPi0AlphaPtData ,
+        Form("%s/RecPi0_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,"Data", optPeriod);
     if(rangeMaxPt>0){
-      histoPi0OpenPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0OpenPtData,1,histoPi0OpenPtData->GetNbinsX(),1,histoPi0OpenPtData->GetNbinsY());
+        histoPi0OpenPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0OpenPtData,1,histoPi0OpenPtData->GetNbinsX(),1,histoPi0OpenPtData->GetNbinsY());
     }else histoPi0OpenPtData->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
-    PlotStandard2D( histoPi0OpenPtData ,
-                    Form("%s/RecPi0_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,"Data", optPeriod);
+    PlotStandard2D(
+        histoPi0OpenPtData ,
+        Form("%s/RecPi0_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,"Data", optPeriod);
     
     if(rangeMaxPt>0){
-      histoPi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0RapidityPtMC,1,histoPi0RapidityPtMC->GetNbinsX(),1,histoPi0RapidityPtMC->GetNbinsY());
+        histoPi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0RapidityPtMC,1,histoPi0RapidityPtMC->GetNbinsX(),1,histoPi0RapidityPtMC->GetNbinsY());
     }else histoPi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
-    PlotStandard2D( histoPi0RapidityPtMC , 
-                    Form("%s/RecPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoPi0RapidityPtMC , 
+        Form("%s/RecPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoPi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0AlphaPtMC,1,histoPi0AlphaPtMC->GetNbinsX(),1,histoPi0AlphaPtMC->GetNbinsY());
+        histoPi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0AlphaPtMC,1,histoPi0AlphaPtMC->GetNbinsX(),1,histoPi0AlphaPtMC->GetNbinsY());
     }else histoPi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
-    PlotStandard2D( histoPi0AlphaPtMC , 
-                    Form("%s/RecPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoPi0AlphaPtMC , 
+        Form("%s/RecPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoPi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoPi0OpenPtMC,1,histoPi0OpenPtMC->GetNbinsX(),1,histoPi0OpenPtMC->GetNbinsY());
+        histoPi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoPi0OpenPtMC,1,histoPi0OpenPtMC->GetNbinsX(),1,histoPi0OpenPtMC->GetNbinsY());
     }else histoPi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
-    PlotStandard2D( histoPi0OpenPtMC , 
-                    Form("%s/RecPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoPi0OpenPtMC , 
+        Form("%s/RecPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     
     if(rangeMaxPt>0){
-      histoTruePi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoTruePi0RapidityPtMC,1,histoTruePi0RapidityPtMC->GetNbinsX(),1,histoTruePi0RapidityPtMC->GetNbinsY());
+        histoTruePi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoTruePi0RapidityPtMC,1,histoTruePi0RapidityPtMC->GetNbinsX(),1,histoTruePi0RapidityPtMC->GetNbinsY());
     }else histoTruePi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
-    PlotStandard2D( histoTruePi0RapidityPtMC ,
-                    Form("%s/TruePi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoTruePi0RapidityPtMC ,
+        Form("%s/TruePi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",   
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoTruePi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoTruePi0AlphaPtMC,1,histoTruePi0AlphaPtMC->GetNbinsX(),1,histoTruePi0AlphaPtMC->GetNbinsY());
+        histoTruePi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoTruePi0AlphaPtMC,1,histoTruePi0AlphaPtMC->GetNbinsX(),1,histoTruePi0AlphaPtMC->GetNbinsY());
     }else histoTruePi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
-    PlotStandard2D( histoTruePi0AlphaPtMC , 
-                    Form("%s/TruePi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoTruePi0AlphaPtMC , 
+        Form("%s/TruePi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoTruePi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoTruePi0OpenPtMC,1,histoTruePi0OpenPtMC->GetNbinsX(),1,histoTruePi0OpenPtMC->GetNbinsY());
+        histoTruePi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoTruePi0OpenPtMC,1,histoTruePi0OpenPtMC->GetNbinsX(),1,histoTruePi0OpenPtMC->GetNbinsY());
     }else histoTruePi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
-    PlotStandard2D( histoTruePi0OpenPtMC , 
-                    Form("%s/TruePi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
-    
+    PlotStandard2D(
+        histoTruePi0OpenPtMC , 
+        Form("%s/TruePi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+
     if(rangeMaxPt>0){
-      histoBGPi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoBGPi0RapidityPtMC,1,histoBGPi0RapidityPtMC->GetNbinsX(),1,histoBGPi0RapidityPtMC->GetNbinsY());
+        histoBGPi0RapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoBGPi0RapidityPtMC,1,histoBGPi0RapidityPtMC->GetNbinsX(),1,histoBGPi0RapidityPtMC->GetNbinsY());
     }else histoBGPi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
-    PlotStandard2D( histoBGPi0RapidityPtMC , 
-                    Form("%s/BGPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoBGPi0RapidityPtMC , 
+        Form("%s/BGPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoBGPi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoBGPi0AlphaPtMC,1,histoBGPi0AlphaPtMC->GetNbinsX(),1,histoBGPi0AlphaPtMC->GetNbinsY());
+        histoBGPi0AlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoBGPi0AlphaPtMC,1,histoBGPi0AlphaPtMC->GetNbinsX(),1,histoBGPi0AlphaPtMC->GetNbinsY());
     }else histoBGPi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
-    PlotStandard2D( histoBGPi0AlphaPtMC , 
-                    Form("%s/BGPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{BG #pi^{0} mass window}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoBGPi0AlphaPtMC , 
+        Form("%s/BGPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{BG #pi^{0} mass window}",  
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     if(rangeMaxPt>0){
-      histoBGPi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-      SetZMinMaxTH2(histoBGPi0OpenPtMC,1,histoBGPi0OpenPtMC->GetNbinsX(),1,histoBGPi0OpenPtMC->GetNbinsY());
+        histoBGPi0OpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+        SetZMinMaxTH2(histoBGPi0OpenPtMC,1,histoBGPi0OpenPtMC->GetNbinsX(),1,histoBGPi0OpenPtMC->GetNbinsY());
     }else histoBGPi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
-    PlotStandard2D( histoBGPi0OpenPtMC , 
-                    Form("%s/BGPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                    "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                    floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+    PlotStandard2D(
+        histoBGPi0OpenPtMC , 
+        Form("%s/BGPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+        "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
+        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     
     if (enableExtConvCaloQA){
         cout << "line " << __LINE__ << endl;
-        histoTruePi0CaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRPtE), 
-                                                                     histoTruePi0CaloConvPhotonConvRPtE->GetMaximum());
+        histoTruePi0CaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(
+            FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRPtE), 
+            histoTruePi0CaloConvPhotonConvRPtE->GetMaximum());
         if(rangeMaxPt>0){
-          SetZMinMaxTH2(histoTruePi0CaloConvPhotonConvRPtE,1,histoTruePi0CaloConvPhotonConvRPtE->GetNbinsX(),1,histoTruePi0CaloConvPhotonConvRPtE->GetNbinsY());
-        }else histoTruePi0CaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRPtE),
-                                                                                   histoTruePi0CaloConvPhotonConvRPtE->GetMaximum());
-        PlotStandard2D( histoTruePi0CaloConvPhotonConvRPtE ,
-                        Form("%s/TruePi0CaloConvPhoton_ConvR_PtElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{R}_{conv, cluster}", "#it{p}_{T, e clus}",   
-                        kTRUE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+            SetZMinMaxTH2(histoTruePi0CaloConvPhotonConvRPtE,1,histoTruePi0CaloConvPhotonConvRPtE->GetNbinsX(),1,histoTruePi0CaloConvPhotonConvRPtE->GetNbinsY());
+        }else histoTruePi0CaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(
+            FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRPtE),
+            histoTruePi0CaloConvPhotonConvRPtE->GetMaximum());
+        PlotStandard2D(
+            histoTruePi0CaloConvPhotonConvRPtE ,
+            Form("%s/TruePi0CaloConvPhoton_ConvR_PtElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{R}_{conv, cluster}", "#it{p}_{T, e clus}",   
+            kTRUE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     
         if(rangeMaxPt>0){
-          SetZMinMaxTH2(histoTruePi0CaloConvPhotonConvRAlphaE,1,histoTruePi0CaloConvPhotonConvRAlphaE->GetNbinsX(),1,histoTruePi0CaloConvPhotonConvRAlphaE->GetNbinsY());
-        }else histoTruePi0CaloConvPhotonConvRAlphaE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRAlphaE),
-                                                                     histoTruePi0CaloConvPhotonConvRAlphaE->GetMaximum());
+            SetZMinMaxTH2(histoTruePi0CaloConvPhotonConvRAlphaE,1,histoTruePi0CaloConvPhotonConvRAlphaE->GetNbinsX(),1,histoTruePi0CaloConvPhotonConvRAlphaE->GetNbinsY());
+        }else histoTruePi0CaloConvPhotonConvRAlphaE->GetZaxis()->SetRangeUser(
+            FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonConvRAlphaE),
+            histoTruePi0CaloConvPhotonConvRAlphaE->GetMaximum());
 
-        PlotStandard2D( histoTruePi0CaloConvPhotonConvRAlphaE , 
-                        Form("%s/TruePi0CaloConvPhoton_ConvR_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{R}_{conv, cluster}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
-                        kFALSE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
-                        floatLocationLeftDown2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoTruePi0CaloConvPhotonConvRAlphaE , 
+            Form("%s/TruePi0CaloConvPhoton_ConvR_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{R}_{conv, cluster}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
+            kFALSE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
+            floatLocationLeftDown2D,500,500,optGeneratorForLabels, optPeriod);
                 
         cout << "line " << __LINE__ << endl;
         if(rangeMaxPt>0){
-          SetZMinMaxTH2(histoTruePi0CaloConvPhotonPtEAlphaE,1,histoTruePi0CaloConvPhotonPtEAlphaE->GetNbinsX(),1,histoTruePi0CaloConvPhotonPtEAlphaE->GetNbinsY());
-        }else histoTruePi0CaloConvPhotonPtEAlphaE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonPtEAlphaE),
-                                                                     histoTruePi0CaloConvPhotonPtEAlphaE->GetMaximum());
-        PlotStandard2D( histoTruePi0CaloConvPhotonPtEAlphaE , 
-                        Form("%s/TruePi0CaloConvPhoton_PtElectron_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{T, e clus}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
-                        kFALSE, 0.0, 10., kTRUE, 0., 15., 0, 0, 1, 
-                        floatLocationRightDown2D,500,500,optGeneratorForLabels, optPeriod);
+            SetZMinMaxTH2(histoTruePi0CaloConvPhotonPtEAlphaE,1,histoTruePi0CaloConvPhotonPtEAlphaE->GetNbinsX(),1,histoTruePi0CaloConvPhotonPtEAlphaE->GetNbinsY());
+        }else histoTruePi0CaloConvPhotonPtEAlphaE->GetZaxis()->SetRangeUser(
+            FindSmallestEntryIn2D(histoTruePi0CaloConvPhotonPtEAlphaE),
+            histoTruePi0CaloConvPhotonPtEAlphaE->GetMaximum());
+        PlotStandard2D(
+            histoTruePi0CaloConvPhotonPtEAlphaE , 
+            Form("%s/TruePi0CaloConvPhoton_PtElectron_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{T, e clus}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
+            kFALSE, 0.0, 10., kTRUE, 0., 15., 0, 0, 1, 
+            floatLocationRightDown2D,500,500,optGeneratorForLabels, optPeriod);
         
     }    
 
@@ -711,17 +756,18 @@ void AnalyseNeutralMesonSignificance(
         canvasSinglePtSlice->Update();
         canvasSinglePtSlice->SaveAs(Form("%s/Pi0_TrueAlpha_%s_pTBin%d.%s",outputDirectory.Data(), optGenerator.Data(), i,suffix.Data()));
     }
-   
+
     //**********************************************************************************
     //****************** Plot 1D projections for pi0 alpha distributions data vs MC ****
     //**********************************************************************************        
     for (Int_t i = startBinPi0; i < maxNbins; i++){
         DrawGammaSetMarker(histoRecPi0AlphaPtDatapTBins[i],20,0.8, kBlack , kBlack);
-        DrawAutoGammaHisto( histoRecPi0AlphaPtDatapTBins[i],
-                        "", "#it{#alpha} ","dN/d#it{#alpha}",
-                        kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]),
-                        kTRUE,FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]), FindLargestEntryIn1D(histoRecPi0AlphaPtDatapTBins[i]) ,
-                        kFALSE, 0.,60.);  
+        DrawAutoGammaHisto(
+            histoRecPi0AlphaPtDatapTBins[i],
+            "", "#it{#alpha} ","dN/d#it{#alpha}",
+            kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]),
+            kTRUE,FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]), FindLargestEntryIn1D(histoRecPi0AlphaPtDatapTBins[i]) ,
+            kFALSE, 0.,60.);  
         histoRecPi0AlphaPtDatapTBins[i]->GetXaxis()->SetTitleOffset(0.7);
         histoRecPi0AlphaPtDatapTBins[i]->Draw("hist,e1");
         DrawGammaSetMarker(histoRecPi0AlphaPtMCpTBins[i],24,0.8, kBlue+1 , kBlue+1);
@@ -752,11 +798,12 @@ void AnalyseNeutralMesonSignificance(
     //**********************************************************************************        
     for (Int_t i = startBinPi0; i < maxNbins; i++){
         DrawGammaSetMarker(histoRecPi0RapidityPtDatapTBins[i],20,0.8, kBlack , kBlack);
-        DrawAutoGammaHisto( histoRecPi0RapidityPtDatapTBins[i],
-                        "", "y ","dN/dy",
-                        kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]),
-                        kTRUE,FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]), FindLargestEntryIn1D(histoRecPi0RapidityPtDatapTBins[i]) ,
-                        kFALSE, 0.,60.);  
+        DrawAutoGammaHisto(
+            histoRecPi0RapidityPtDatapTBins[i],
+            "", "y ","dN/dy",
+            kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]),
+            kTRUE,FindSmallestEntryIn1D(histoTruePi0AlphaPtMCpTBins[i]), FindLargestEntryIn1D(histoRecPi0RapidityPtDatapTBins[i]) ,
+            kFALSE, 0.,60.);  
         histoRecPi0RapidityPtDatapTBins[i]->Draw("hist,e1");
         DrawGammaSetMarker(histoRecPi0RapidityPtMCpTBins[i],24,0.8, kBlue+1 , kBlue+1);
         histoRecPi0RapidityPtMCpTBins[i]->Draw("hist,e1,same");
@@ -790,18 +837,20 @@ void AnalyseNeutralMesonSignificance(
         histoEtaRapidityPtData->Sumw2();
         TH1D* histoRecEtaRapidityPtDatapTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoRecEtaRapidityPtDatapTBins[i]  = (TH1D*)histoEtaRapidityPtData->ProjectionY(Form("histoRecEtaRapidityPtData_%dBin",i),
-                                                                                            histoEtaRapidityPtData->GetXaxis()->FindBin(ptBins[i]),
-                                                                                            histoEtaRapidityPtData->GetXaxis()->FindBin(ptBins[i+1]));
+            histoRecEtaRapidityPtDatapTBins[i]  = (TH1D*)histoEtaRapidityPtData->ProjectionY(
+                Form("histoRecEtaRapidityPtData_%dBin",i),
+                histoEtaRapidityPtData->GetXaxis()->FindBin(ptBins[i]),
+                histoEtaRapidityPtData->GetXaxis()->FindBin(ptBins[i+1]));
             histoRecEtaRapidityPtDatapTBins[i]->Scale(1./nEventsData);
         }
         TH2F* histoEtaAlphaPtData           = (TH2F*) ESDContainerData->FindObject("ESD_MotherEta_Pt_Alpha");
         histoEtaAlphaPtData->Sumw2();
         TH1D* histoRecEtaAlphaPtDatapTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoRecEtaAlphaPtDatapTBins[i]  = (TH1D*)histoEtaAlphaPtData->ProjectionY(Form("histoRecEtaAlphaPtData_%dBin",i),
-                                                                                            histoEtaAlphaPtData->GetXaxis()->FindBin(ptBins[i]),
-                                                                                            histoEtaAlphaPtData->GetXaxis()->FindBin(ptBins[i+1]));
+            histoRecEtaAlphaPtDatapTBins[i]  = (TH1D*)histoEtaAlphaPtData->ProjectionY(
+                Form("histoRecEtaAlphaPtData_%dBin",i),
+                histoEtaAlphaPtData->GetXaxis()->FindBin(ptBins[i]),
+                histoEtaAlphaPtData->GetXaxis()->FindBin(ptBins[i+1]));
             histoRecEtaAlphaPtDatapTBins[i]->Sumw2();
             histoRecEtaAlphaPtDatapTBins[i]->Scale(1./nEventsData);
         }
@@ -816,9 +865,10 @@ void AnalyseNeutralMesonSignificance(
         histoEtaRapidityPtMC->Sumw2();
         TH1D* histoRecEtaRapidityPtMCpTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoRecEtaRapidityPtMCpTBins[i]    = (TH1D*)histoEtaRapidityPtMC->ProjectionY(Form("histoRecEtaRapidityPtMC_%dBin",i),
-                                                                                    histoEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                    histoEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+            histoRecEtaRapidityPtMCpTBins[i]    = (TH1D*)histoEtaRapidityPtMC->ProjectionY(
+                Form("histoRecEtaRapidityPtMC_%dBin",i),
+        histoEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
+        histoEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
             histoRecEtaRapidityPtMCpTBins[i]->Scale(1./nEventsMC);
         }
         
@@ -826,9 +876,10 @@ void AnalyseNeutralMesonSignificance(
         histoEtaAlphaPtMC->Sumw2();        
         TH1D* histoRecEtaAlphaPtMCpTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoRecEtaAlphaPtMCpTBins[i]       = (TH1D*)histoEtaAlphaPtMC->ProjectionY(Form("histoRecEtaAlphaPtMC_%dBin",i),
-                                                                                    histoEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                    histoEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+            histoRecEtaAlphaPtMCpTBins[i]       = (TH1D*)histoEtaAlphaPtMC->ProjectionY(
+                Form("histoRecEtaAlphaPtMC_%dBin",i),
+        histoEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+        histoEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
             histoRecEtaAlphaPtMCpTBins[i]->Sumw2();
             histoRecEtaAlphaPtMCpTBins[i]->Scale(1./nEventsMC);
         }
@@ -861,17 +912,19 @@ void AnalyseNeutralMesonSignificance(
 
         TH1D* histoTrueEtaRapidityPtMCpTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoTrueEtaRapidityPtMCpTBins[i]   = (TH1D*)histoTrueEtaRapidityPtMC->ProjectionY(Form("histoTrueEtaRapidityPtMC_%dBin",i),
-                                                                                    histoTrueEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                    histoTrueEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+            histoTrueEtaRapidityPtMCpTBins[i]   = (TH1D*)histoTrueEtaRapidityPtMC->ProjectionY(
+                Form("histoTrueEtaRapidityPtMC_%dBin",i),
+                histoTrueEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i]),
+                histoTrueEtaRapidityPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
             histoTrueEtaRapidityPtMCpTBins[i]->Scale(1./nEventsMC);
         }
 
         TH1D* histoTrueEtaAlphaPtMCpTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoTrueEtaAlphaPtMCpTBins[i]      = (TH1D*)histoTrueEtaAlphaPtMC->ProjectionY(Form("histoTrueEtaAlphaPtMC_%dBin",i),
-                                                                                    histoTrueEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                    histoTrueEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+            histoTrueEtaAlphaPtMCpTBins[i]      = (TH1D*)histoTrueEtaAlphaPtMC->ProjectionY(
+                Form("histoTrueEtaAlphaPtMC_%dBin",i),
+                histoTrueEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+                histoTrueEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
             histoTrueEtaAlphaPtMCpTBins[i]->Scale(1./nEventsMC);
         }        
             
@@ -888,9 +941,10 @@ void AnalyseNeutralMesonSignificance(
 
         TH1D* histoBGEtaAlphaPtMCCpTBins[maxNbins];
         for (Int_t i =startBinEta; i < maxNbins; i++){
-            histoBGEtaAlphaPtMCCpTBins[i]       = (TH1D*)histoBGEtaAlphaPtMC->ProjectionY(Form("histoBGEtaAlphaPtMC_%dBin",i),
-                                                                                    histoBGEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
-                                                                                    histoBGEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
+            histoBGEtaAlphaPtMCCpTBins[i]       = (TH1D*)histoBGEtaAlphaPtMC->ProjectionY(
+                Form("histoBGEtaAlphaPtMC_%dBin",i),
+                histoBGEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i]),
+                histoBGEtaAlphaPtMC->GetXaxis()->FindBin(ptBins[i+1]),"e");
             histoBGEtaAlphaPtMCCpTBins[i]->Scale(1./nEventsMC);
         }
         
@@ -923,151 +977,169 @@ void AnalyseNeutralMesonSignificance(
         //**************************** Plot 2D distributions *******************************
         //**********************************************************************************
         if(rangeMaxPt>0){
-          histoEtaRapidityPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaRapidityPtData,1,histoEtaRapidityPtData->GetNbinsX(),1,histoEtaRapidityPtData->GetNbinsY());
+            histoEtaRapidityPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaRapidityPtData,1,histoEtaRapidityPtData->GetNbinsX(),1,histoEtaRapidityPtData->GetNbinsY());
         }else histoEtaRapidityPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
-        PlotStandard2D( histoEtaRapidityPtData ,
-                        Form("%s/RecEta_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()),
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,"Data", optPeriod);
+        PlotStandard2D(
+            histoEtaRapidityPtData ,
+            Form("%s/RecEta_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()),
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,"Data", optPeriod);
         if(rangeMaxPt>0){
-          histoEtaAlphaPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaAlphaPtData,1,histoEtaAlphaPtData->GetNbinsX(),1,histoEtaAlphaPtData->GetNbinsY());
+            histoEtaAlphaPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaAlphaPtData,1,histoEtaAlphaPtData->GetNbinsX(),1,histoEtaAlphaPtData->GetNbinsY());
         }else histoEtaAlphaPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
-        PlotStandard2D( histoEtaAlphaPtData , 
-                        Form("%s/RecEta_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,"Data", optPeriod);
+        PlotStandard2D(
+            histoEtaAlphaPtData , 
+            Form("%s/RecEta_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,"Data", optPeriod);
         if(rangeMaxPt>0){
-          histoEtaOpenPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaOpenPtData,1,histoEtaOpenPtData->GetNbinsX(),1,histoEtaOpenPtData->GetNbinsY());
+            histoEtaOpenPtData->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaOpenPtData,1,histoEtaOpenPtData->GetNbinsX(),1,histoEtaOpenPtData->GetNbinsY());
         }else histoEtaOpenPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
-        PlotStandard2D( histoEtaOpenPtData , 
-                        Form("%s/RecEta_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,"Data", optPeriod);
+        PlotStandard2D(
+            histoEtaOpenPtData , 
+            Form("%s/RecEta_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,"Data", optPeriod);
 
         if(rangeMaxPt>0){
-          histoEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaRapidityPtMC,1,histoEtaRapidityPtMC->GetNbinsX(),1,histoEtaRapidityPtMC->GetNbinsY());
+            histoEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaRapidityPtMC,1,histoEtaRapidityPtMC->GetNbinsX(),1,histoEtaRapidityPtMC->GetNbinsY());
         }else histoEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
-        PlotStandard2D( histoEtaRapidityPtMC , 
-                        Form("%s/RecEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",   
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoEtaRapidityPtMC , 
+            Form("%s/RecEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",   
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaAlphaPtMC,1,histoEtaAlphaPtMC->GetNbinsX(),1,histoEtaAlphaPtMC->GetNbinsY());
+            histoEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaAlphaPtMC,1,histoEtaAlphaPtMC->GetNbinsX(),1,histoEtaAlphaPtMC->GetNbinsY());
         }else histoEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
-        PlotStandard2D( histoEtaAlphaPtMC , 
-                        Form("%s/RecEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoEtaAlphaPtMC , 
+            Form("%s/RecEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoEtaOpenPtMC,1,histoEtaOpenPtMC->GetNbinsX(),1,histoEtaOpenPtMC->GetNbinsY());
+            histoEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoEtaOpenPtMC,1,histoEtaOpenPtMC->GetNbinsX(),1,histoEtaOpenPtMC->GetNbinsY());
         }else histoEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
-        PlotStandard2D( histoEtaOpenPtMC , 
-                        Form("%s/RecEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoEtaOpenPtMC , 
+            Form("%s/RecEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         
         if(rangeMaxPt>0){
-          histoTrueEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoTrueEtaRapidityPtMC,1,histoTrueEtaRapidityPtMC->GetNbinsX(),1,histoTrueEtaRapidityPtMC->GetNbinsY());
+            histoTrueEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoTrueEtaRapidityPtMC,1,histoTrueEtaRapidityPtMC->GetNbinsX(),1,histoTrueEtaRapidityPtMC->GetNbinsY());
         }else histoTrueEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
-        PlotStandard2D( histoTrueEtaRapidityPtMC , 
-                        Form("%s/TrueEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1,
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoTrueEtaRapidityPtMC , 
+            Form("%s/TrueEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1,
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoTrueEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoTrueEtaAlphaPtMC,1,histoTrueEtaAlphaPtMC->GetNbinsX(),1,histoTrueEtaAlphaPtMC->GetNbinsY());
+            histoTrueEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoTrueEtaAlphaPtMC,1,histoTrueEtaAlphaPtMC->GetNbinsX(),1,histoTrueEtaAlphaPtMC->GetNbinsY());
         }else histoTrueEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
-        PlotStandard2D( histoTrueEtaAlphaPtMC , 
-                        Form("%s/TrueEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoTrueEtaAlphaPtMC , 
+            Form("%s/TrueEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoTrueEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoTrueEtaOpenPtMC,1,histoTrueEtaOpenPtMC->GetNbinsX(),1,histoTrueEtaOpenPtMC->GetNbinsY());
+            histoTrueEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoTrueEtaOpenPtMC,1,histoTrueEtaOpenPtMC->GetNbinsX(),1,histoTrueEtaOpenPtMC->GetNbinsY());
         }else histoTrueEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
-        PlotStandard2D( histoTrueEtaOpenPtMC , 
-                        Form("%s/TrueEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoTrueEtaOpenPtMC , 
+            Form("%s/TrueEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         
         if(rangeMaxPt>0){
-          histoBGEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoBGEtaRapidityPtMC,1,histoBGEtaRapidityPtMC->GetNbinsX(),1,histoBGEtaRapidityPtMC->GetNbinsY());
+            histoBGEtaRapidityPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoBGEtaRapidityPtMC,1,histoBGEtaRapidityPtMC->GetNbinsX(),1,histoBGEtaRapidityPtMC->GetNbinsY());
         }else histoBGEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
-        PlotStandard2D( histoBGEtaRapidityPtMC , 
-                        Form("%s/BGEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoBGEtaRapidityPtMC , 
+            Form("%s/BGEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoBGEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoBGEtaAlphaPtMC,1,histoBGEtaAlphaPtMC->GetNbinsX(),1,histoBGEtaAlphaPtMC->GetNbinsY());
+            histoBGEtaAlphaPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoBGEtaAlphaPtMC,1,histoBGEtaAlphaPtMC->GetNbinsX(),1,histoBGEtaAlphaPtMC->GetNbinsY());
         }else histoBGEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
-        PlotStandard2D( histoBGEtaAlphaPtMC , 
-                        Form("%s/BGEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{BG #eta mass window}",  
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoBGEtaAlphaPtMC , 
+            Form("%s/BGEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{BG #eta mass window}",  
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
         if(rangeMaxPt>0){
-          histoBGEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
-          SetZMinMaxTH2(histoBGEtaOpenPtMC,1,histoBGEtaOpenPtMC->GetNbinsX(),1,histoBGEtaOpenPtMC->GetNbinsY());
+            histoBGEtaOpenPtMC->GetXaxis()->SetRangeUser(0,rangeMaxPt);
+            SetZMinMaxTH2(histoBGEtaOpenPtMC,1,histoBGEtaOpenPtMC->GetNbinsX(),1,histoBGEtaOpenPtMC->GetNbinsY());
         }else histoBGEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
-        PlotStandard2D( histoBGEtaOpenPtMC , 
-                        Form("%s/BGEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                        "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
-                        kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
-                        floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+        PlotStandard2D(
+            histoBGEtaOpenPtMC , 
+            Form("%s/BGEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+            "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
+            kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
             
         if (enableExtConvCaloQA){
             cout << "line " << __LINE__ << endl;
             if(rangeMaxPt>0){
-              SetZMinMaxTH2(histoTrueEtaCaloConvPhotonConvRPtE,1,histoTrueEtaCaloConvPhotonConvRPtE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonConvRPtE->GetNbinsY());
-            }else histoTrueEtaCaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonConvRPtE),
-                                                                        histoTrueEtaCaloConvPhotonConvRPtE->GetMaximum());
+                SetZMinMaxTH2(histoTrueEtaCaloConvPhotonConvRPtE,1,histoTrueEtaCaloConvPhotonConvRPtE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonConvRPtE->GetNbinsY());
+            }else histoTrueEtaCaloConvPhotonConvRPtE->GetZaxis()->SetRangeUser(
+                FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonConvRPtE),
+                histoTrueEtaCaloConvPhotonConvRPtE->GetMaximum());
 
-            PlotStandard2D( histoTrueEtaCaloConvPhotonConvRPtE , 
-                            Form("%s/TrueEtaCaloConvPhoton_ConvR_PtElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                            "", "#it{R}_{conv, cluster}", "#it{p}_{T, e clus}",   
-                            kTRUE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
-                            floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+            PlotStandard2D(
+                histoTrueEtaCaloConvPhotonConvRPtE , 
+                Form("%s/TrueEtaCaloConvPhoton_ConvR_PtElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+                "", "#it{R}_{conv, cluster}", "#it{p}_{T, e clus}",   
+                kTRUE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
+                floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
             cout << "line " << __LINE__ << endl;
             if(rangeMaxPt>0){
-              SetZMinMaxTH2(histoTrueEtaCaloConvPhotonConvRAlphaE,1,histoTrueEtaCaloConvPhotonConvRAlphaE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonConvRAlphaE->GetNbinsY());
-            }else histoTrueEtaCaloConvPhotonConvRAlphaE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonConvRAlphaE),
-                                                                        histoTrueEtaCaloConvPhotonConvRAlphaE->GetMaximum());
-            PlotStandard2D( histoTrueEtaCaloConvPhotonConvRAlphaE , 
-                            Form("%s/TrueEtaCaloConvPhoton_ConvR_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                            "", "#it{R}_{conv, cluster}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
-                            kFALSE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
-                            floatLocationLeftDown2D,500,500,optGeneratorForLabels, optPeriod);
+                SetZMinMaxTH2(histoTrueEtaCaloConvPhotonConvRAlphaE,1,histoTrueEtaCaloConvPhotonConvRAlphaE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonConvRAlphaE->GetNbinsY());
+            }else histoTrueEtaCaloConvPhotonConvRAlphaE->GetZaxis()->SetRangeUser(
+                FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonConvRAlphaE),
+                histoTrueEtaCaloConvPhotonConvRAlphaE->GetMaximum());
+            PlotStandard2D(
+                histoTrueEtaCaloConvPhotonConvRAlphaE , 
+                Form("%s/TrueEtaCaloConvPhoton_ConvR_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+                "", "#it{R}_{conv, cluster}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
+                kFALSE, 0.0, 10., kFALSE, 30., 180., 0, 0, 1, 
+                floatLocationLeftDown2D,500,500,optGeneratorForLabels, optPeriod);
             
             
             cout << "line " << __LINE__ << endl;
             if(rangeMaxPt>0){
-              SetZMinMaxTH2(histoTrueEtaCaloConvPhotonPtEAlphaE,1,histoTrueEtaCaloConvPhotonPtEAlphaE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonPtEAlphaE->GetNbinsY());
-            }else histoTrueEtaCaloConvPhotonPtEAlphaE->GetZaxis()->SetRangeUser(FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonPtEAlphaE),
-                                                                        histoTrueEtaCaloConvPhotonPtEAlphaE->GetMaximum());
-            PlotStandard2D( histoTrueEtaCaloConvPhotonPtEAlphaE , 
-                            Form("%s/TrueEtaCaloConvPhoton_PtElectron_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
-                            "", "#it{p}_{T, e clus}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
-                            kFALSE, 0.0, 10., kTRUE, 0., 15., 0, 0, 1, 
-                            floatLocationRightDown2D,500,500,optGeneratorForLabels, optPeriod);
+                SetZMinMaxTH2(histoTrueEtaCaloConvPhotonPtEAlphaE,1,histoTrueEtaCaloConvPhotonPtEAlphaE->GetNbinsX(),1,histoTrueEtaCaloConvPhotonPtEAlphaE->GetNbinsY());
+            }else histoTrueEtaCaloConvPhotonPtEAlphaE->GetZaxis()->SetRangeUser(
+                FindSmallestEntryIn2D(histoTrueEtaCaloConvPhotonPtEAlphaE),
+                histoTrueEtaCaloConvPhotonPtEAlphaE->GetMaximum());
+            PlotStandard2D(
+                histoTrueEtaCaloConvPhotonPtEAlphaE , 
+                Form("%s/TrueEtaCaloConvPhoton_PtElectron_AlphaElectron_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
+                "", "#it{p}_{T, e clus}", "#it{#it{#alpha}}_{e, clus} to other conversion partner",   
+                kFALSE, 0.0, 10., kTRUE, 0., 15., 0, 0, 1, 
+                floatLocationRightDown2D,500,500,optGeneratorForLabels, optPeriod);
             
         }    
         
@@ -1076,11 +1148,12 @@ void AnalyseNeutralMesonSignificance(
         //**********************************************************************************        
         for (Int_t i = startBinEta; i < maxNbins; i++){
             DrawGammaSetMarker(histoBGEtaAlphaPtMCCpTBins[i],20,0.8, kBlack , kBlack);
-            DrawAutoGammaHisto( histoBGEtaAlphaPtMCCpTBins[i],
-                            "", "#it{#alpha} ","dN/d#it{#alpha}",
-                            kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTrueEtaAlphaPtMCpTBins[i]),
-                            kTRUE,FindSmallestEntryIn1D(histoTrueEtaAlphaPtMCpTBins[i]),FindLargestEntryIn1D(histoBGEtaAlphaPtMCCpTBins[i]) , 
-                            kFALSE, 0.,60.);  
+            DrawAutoGammaHisto(
+                histoBGEtaAlphaPtMCCpTBins[i],
+                "", "#it{#alpha} ","dN/d#it{#alpha}",
+                kFALSE, 1000.,1e5*FindSmallestEntryIn1D(histoTrueEtaAlphaPtMCpTBins[i]),
+                kTRUE,FindSmallestEntryIn1D(histoTrueEtaAlphaPtMCpTBins[i]),FindLargestEntryIn1D(histoBGEtaAlphaPtMCCpTBins[i]) , 
+                kFALSE, 0.,60.);  
             histoBGEtaAlphaPtMCCpTBins[i]->Draw("hist,e1");
             DrawGammaSetMarker(histoTrueEtaAlphaPtMCpTBins[i],20,0.8, kRed+2 , kRed+2);
             histoTrueEtaAlphaPtMCpTBins[i]->Draw("pe1,same");
@@ -1312,8 +1385,6 @@ void AnalyseNeutralMesonSignificance(
             if (cat == 2){
                 hist2DTrueEtaPrim_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
             }
-
-            
         }
         TFile* fOutputGamma = new TFile(Form("%s/outputTreeProjections.root",outputDirectory.Data()),"RECREATE");\
             hist2DTrueGamma_InvMassPrimVtx_InvMassRTof->Write();
