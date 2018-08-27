@@ -117,7 +117,7 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             # LHC16Data="2374" # PCM + PCMEMC + EMC (2018/07/18) # ! test
         # * vAN-20180727
             # LHC16Data="2422" # PCMPHOS + PHOSPHOS (2018/07/27)
-            # LHC16Data="2423" # PCMMEC + EMC (2018/07/30)
+            # LHC16Data="2423" # PCMEMC + EMC (2018/07/30)
         # * vAN-20180814
             # LHC16Data="2462" # PCM (2018/08/20)
         # LHC16dData="child_1"
