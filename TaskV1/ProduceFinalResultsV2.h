@@ -562,6 +562,9 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 	}else if(plotName.Contains("Acc")){
 		DrawGammaCanvasSettings( canvasPlotFinal, 0.1, 0.015, 0.015, 0.08);
 		yTitleOffset = 1.25;
+	}else if(plotName.Contains("RelUnsc")){
+		DrawGammaCanvasSettings( canvasPlotFinal, 0.1, 0.015, 0.015, 0.08);
+		yTitleOffset = 1.25;
 	}else if(plotName.Contains("Raw")||plotName.Contains("Corr")){
 		if(plotName.Contains("Ratio")){
 			DrawGammaCanvasSettings( canvasPlotFinal, 0.09, 0.015, 0.015, 0.08);
@@ -585,6 +588,11 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
     // Set legend and labels for the plots
     TLegend* 	legendPlot;TLatex* 	labelEnergyPlot;TLatex* labelPi0Plot;TLatex* labelDetProcPlot;
     if(plotName.Contains("Acc")||plotName.Contains("Eff")){
+		legendPlot 		= GetAndSetLegend2(0.62, 0.125, 0.95,0.125+0.85*textSizeSpectra,28);
+		labelEnergyPlot = new TLatex(0.62, 0.13+3*0.85*textSizeSpectra,collisionSystem.Data());
+		labelPi0Plot    = new TLatex(0.62, 0.13+2*0.85*textSizeSpectra,Form("%s #rightarrow #gamma#gamma",meson.Data()));
+		labelDetProcPlot= new TLatex(0.62, 0.13+0.85*textSizeSpectra,detectionProcess.Data());
+    } else if(plotName.Contains("RelUnc")){
 		legendPlot 		= GetAndSetLegend2(0.62, 0.125, 0.95,0.125+0.85*textSizeSpectra,28);
 		labelEnergyPlot = new TLatex(0.62, 0.13+3*0.85*textSizeSpectra,collisionSystem.Data());
 		labelPi0Plot    = new TLatex(0.62, 0.13+2*0.85*textSizeSpectra,Form("%s #rightarrow #gamma#gamma",meson.Data()));
@@ -674,7 +682,10 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 			legendPlot->AddEntry(histoMC2, Form("%s %s %s", period.Data(),strEtaBoth.Data(),MCStr2.Data()), "p");
 		}
 
-	}
+	} else if(plotName.Contains("RelUnc")){
+		if(histoData) histoData->DrawCopy("e1,l,same");
+        if(histoMC) histoMC->DrawCopy("e1,l,same");
+    }
 	if(graphSystErr&&plotName.Contains("SysErr"))legendPlot->AddEntry(graphSystErr, "systematic uncertainty", "f");
 	if(plotName.Contains("Fitted")){
 		if(plotName.Contains("Ratio")){

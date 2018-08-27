@@ -176,6 +176,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     TList *MCContainer            = (TList*)HistosGammaConversionMC->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
     TH2F * histoConvRPtMC          = (TH2F*)MCContainer->FindObject("MC_Conversion_RPt");      // All Converted
+    TH2F * histoConvRPhiMC          = (TH2F*)MCContainer->FindObject("MC_Conversion_RPhi");      // All Converted
+    TH2F * histoConvREtaMC          = (TH2F*)MCContainer->FindObject("MC_Conversion_REta");      // All Converted
 
 
     TList *TrueMCContainer        = (TList*)HistosGammaConversionMC->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
@@ -283,9 +285,10 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoPtDataRebin = (TH1F*)histoPtData->Clone("histoPtDataRebin");
     ConvGammaRebinWithBinCorrection(histoPtDataRebin,rebinPtPlots);
 
+    TH1F *histoEtaData        = (TH1F*)histoREtaData->ProjectionX("histoEtaData");
+
     TH1F *histoAsymPDataLowP;
     TH1F *histoAsymPDataHighP;
-
     histoAsymPDataLowP = (TH1F*)histoAsymPData->ProjectionY("histoAsymPDataLowP",
 							    1,
 							    histoAsymPData->GetXaxis()->FindBin(0.4-0.001),"e");
@@ -301,6 +304,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     TH1F *histoConvRMC       = (TH1F*)histoConvRPtMC->ProjectionY("histoConvRMC");
     TH1F *histoConvPtMC      = (TH1F*)histoConvRPtMC->ProjectionX("histoConvPtMC");
+    TH1F *histoConvPhiMC      = (TH1F*)histoConvRPhiMC->ProjectionX("histoConvPhiMC");
+    TH1F *histoConvEtaMC      = (TH1F*)histoConvREtaMC->ProjectionX("histoConvEtaMC");
 
     cout << "******************** projection MC histograms... ******************** " << endl;
     TH1F *histoRMC        = (TH1F*)histoRPtMC->ProjectionY("histoRMC");
@@ -328,6 +333,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoPtMCRebin = (TH1F*)histoPtMC->Clone("histoPtMCRebin");
     ConvGammaRebinWithBinCorrection(histoPtMCRebin,rebinPtPlots);
 
+    TH1F *histoEtaMC       = (TH1F*)histoREtaMC->ProjectionX("histoEtaMC");
 
     cout << "******************** projection true MC histograms... ******************** " << endl;
     TH1F *histoRTrueMC       = (TH1F*)histoRPtTrueMC->ProjectionY("histoRTrueMC");
@@ -376,10 +382,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoCombPtTrueMCRebin   = (TH1F*)histoCombPtTrueMC->Clone("histoCombPtTrueMCRebin");
     ConvGammaRebinWithBinCorrection(histoCombPtTrueMCRebin,rebinPtPlots);
 
-
     TH1F *histoAsymPTrueMCLowP;
     TH1F *histoAsymPTrueMCHighP;
-
     histoAsymPTrueMCLowP = (TH1F*)histoAsymPTrueMC->ProjectionY("histoAsymPTrueMCLowP",
 							    1,
 							    histoAsymPTrueMC->GetXaxis()->FindBin(0.4-0.001),"e");
@@ -569,6 +573,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoRTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoPtTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoPtMC,normFactorReconstMC);
+    GammaScalingHistogramm(histoEtaMC,normFactorReconstMC);
 
 
     GammaScalingHistogramm(histoRMCRTrueMC,normFactorReconstMC);
@@ -583,8 +588,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
 
+    GammaScalingHistogramm(histoEtaData,normFactorReconstData);
     GammaScalingHistogramm(histoPtData,normFactorReconstData);
-
     GammaScalingHistogramm(histoRData,normFactorReconstData);
     GammaScalingHistogramm(histoRMC,normFactorReconstMC);
     GammaScalingHistogramm(histoRPhiData,normFactorReconstData);
@@ -609,33 +614,41 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
     // - AM calculation of efficiencies
-    histoEffiR                 = (TH1F*)histoRMCRTrueMC->Clone("histoEffiR");
+    histoEffiR = (TH1F*)histoRMCRTrueMC->Clone("histoEffiR");
     histoEffiR->Sumw2();
     histoEffiR->Divide(histoRMCRTrueMC,histoConvRMC,1.,1.,"B");
 
     Int_t nBinsPtNew=63;
     Double_t  arrPtBins[nBinsPtNew];
     for(Int_t i=0;i<nBinsPtNew+1;i++){
-      if(i<20){       // 0.05    , 0.-1.
-	arrPtBins[i]=0.05*i;
-      }else if(i<40){     // 0.1  1-3.
-	arrPtBins[i]=1.+0.1*(i-20);
-      }else if(i<45){     // 0.2  3.-4.
-	arrPtBins[i]=3.+0.2*(i-40);
-      }else if(i<49){     // 0.5  4.-6.
-	arrPtBins[i]=4.+0.5*(i-45);
-      }else if(i<nBinsPtNew+1){     // 0.1  1-3.
-	arrPtBins[i]=6.+1.*(i-49);
-      }
-      // cout << "i, pT(i)::"<< i  << "   "<<  arrPtBins[i]<< endl;
+        if(i<20){       // 0.05    , 0.-1.
+            arrPtBins[i]=0.05*i;
+        }else if(i<40){     // 0.1  1-3.
+            arrPtBins[i]=1.+0.1*(i-20);
+        }else if(i<45){     // 0.2  3.-4.
+            arrPtBins[i]=3.+0.2*(i-40);
+        }else if(i<49){     // 0.5  4.-6.
+            arrPtBins[i]=4.+0.5*(i-45);
+        }else if(i<nBinsPtNew+1){     // 0.1  1-3.
+            arrPtBins[i]=6.+1.*(i-49);
+        }
+        // cout << "i, pT(i)::"<< i  << "   "<<  arrPtBins[i]<< endl;
     }
     TH1F * histoPtMCPtTrueMCRebin = (TH1F *) histoPtMCPtTrueMC->Rebin(nBinsPtNew,"histoPtMCPtTrueMCRebin",arrPtBins);
     TH1F * histoConvPtMCRebin = (TH1F *) histoConvPtMC->Rebin(nBinsPtNew,"histoConvPtMCRebin",arrPtBins);
-
     histoEffiPt                 = (TH1F*)histoPtMCPtTrueMCRebin->Clone("histoEffiPt");
     histoEffiPt->Sumw2();
     histoEffiPt->Divide(histoPtMCPtTrueMCRebin,histoConvPtMCRebin,1.,1.,"B");
 
+    TH1F *histoPhiTrueMC       = (TH1F*)histoRPhiTrueMC->ProjectionX("histoPhiTrueMC");
+    histoEffiPhi = (TH1F*)histoPhiTrueMC->Clone("histoEffiR");
+    histoEffiPhi->Sumw2();
+    histoEffiPhi->Divide(histoPhiTrueMC,histoConvPhiMC,1.,1.,"B");
+
+    TH1F *histoEtaTrueMC       = (TH1F*)histoREtaTrueMC->ProjectionX("histoEtaTrueMC");
+    histoEffiEta = (TH1F*)histoEtaTrueMC->Clone("histoEffiR");
+    histoEffiEta->Sumw2();
+    histoEffiEta->Divide(histoEtaTrueMC,histoConvEtaMC,1.,1.,"B");
 
 
     //- AM  calculation of quantities only related to MC.
@@ -1465,6 +1478,100 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
     // Ploting single Canvas
+    cout << "Plotting..." << endl;
+    Double_t EtaRange[2] = {-1.5,1.5};
+    Double_t PhiRange[2] = {0.,6.28};
+    Double_t PtRange[2]  = {0.,15.};
+    Double_t RRange[2]   = {0.,180.};
+
+    Double_t minYRatio = 0.9;
+    Double_t maxYRatio = 1.5;
+
+    Color_t colorOnFly = kRed+1;
+    Color_t colorOffline = kBlue+1;
+
+    TCanvas* canvasV0Finder = new TCanvas("canvasV0Finder","",1300,1000);
+    DrawGammaCanvasSettings( canvasV0Finder,  0.13, 0.02, 0.02, 0.09);
+    TH2F * histo2DDummy = new TH2F("","",1000,0.,200.,1000,0.,2.);
+
+    // draw efficiency vs Pt, smaller eta range
+    canvasV0Finder->SetLogy(1);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#it{p}_{T} (GeV/#it{c})","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.);
+    histo2DDummy->GetXaxis()->SetRangeUser(PtRange[0],PtRange[1]);
+    histo2DDummy->GetYaxis()->SetRangeUser(1e-2,5.);
+    histo2DDummy->Draw("copy");
+
+        DrawGammaSetMarker(histoEffiPt, 20, 1.5,colorOnFly,colorOnFly);
+        histoEffiPt->Draw("same,l");
+
+        TLegend* legendV0Finder = GetAndSetLegend2(0.2,0.14,0.5,0.14+0.04*3.5,36);
+        legendV0Finder->SetHeader(fCollisionSystem.Data());
+        legendV0Finder->AddEntry(histoEffiPt,"","pl");
+//         legendV0Finder->Draw();
+
+
+    histo2DDummy->Draw("same,axis");
+    canvasV0Finder->Update();
+    canvasV0Finder->SaveAs(Form("%s/PhotonEffiPtSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    // draw efficiency vs R
+    canvasV0Finder->SetLogy(0);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"R (cm)","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.);
+    histo2DDummy->GetXaxis()->SetRangeUser(RRange[0],RRange[1]+5.);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,.55);
+    histo2DDummy->Draw("copy");
+
+        DrawGammaSetMarker(histoEffiR, 20, 1.5,colorOnFly,colorOnFly);
+        histoEffiR->Draw("same,l");
+
+        TLegend* legendV0Finder_R = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
+        legendV0Finder_R->SetHeader(fCollisionSystem.Data());
+        legendV0Finder_R->AddEntry(histoEffiR,"","pl");
+//         legendV0Finder_R->Draw();
+
+    histo2DDummy->Draw("same,axis");
+    canvasV0Finder->Update();
+    canvasV0Finder->SaveAs(Form("%s/PhotonEffiRSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    // draw efficiency vs phi
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#phi (rad)","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.3);
+    histo2DDummy->GetXaxis()->SetRangeUser(PhiRange[0],PhiRange[1]);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
+    histo2DDummy->Draw("copy");
+
+        DrawGammaSetMarker(histoEffiPhi, 20, 1.5,colorOnFly,colorOnFly);
+        histoEffiPhi->Draw("same,l");
+
+        TLegend* legendV0Finder_Phi = GetAndSetLegend2(0.17,0.93-0.04*3.5,0.5,0.93,36);
+        legendV0Finder_Phi->SetHeader(fCollisionSystem.Data());
+        legendV0Finder_Phi->AddEntry(histoEffiPhi,"","pl");
+//         legendV0Finder_Phi->Draw();
+
+    histo2DDummy->Draw("same,axis");
+    canvasV0Finder->Update();
+    canvasV0Finder->SaveAs(Form("%s/PhotonEffiEtaSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    // draw efficiency vs eta
+    histo2DDummy = new TH2F("","",1000,-2.,2.,1000,0.,2.);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#eta","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.3);
+    histo2DDummy->GetXaxis()->SetRangeUser(EtaRange[0],EtaRange[1]);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
+    histo2DDummy->Draw("copy");
+
+        DrawGammaSetMarker(histoEffiEta, 20, 1.5,colorOnFly,colorOnFly);
+        histoEffiEta->Draw("same,l");
+
+        TLegend* legendV0Finder_Eta = GetAndSetLegend2(0.17,0.93-0.04*2.5,0.5,0.93,36);
+        legendV0Finder_Eta->SetHeader(fCollisionSystem.Data());
+        legendV0Finder_Eta->AddEntry(histoEffiEta,"","pl");
+//         legendV0Finder_Eta->Draw();
+
+    histo2DDummy->Draw("same,axis");
+    canvasV0Finder->Update();
+    canvasV0Finder->SaveAs(Form("%s/PhotonEffiEtaSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+    delete canvasV0Finder;
+
+
     TCanvas * canvasSinglePtPurity = new TCanvas("canvasSinglePtPurity","",1200,1000);
     DrawGammaCanvasSettings( canvasSinglePtPurity,  0.12, 0.02, 0.02, 0.12);
     DrawGammaSetMarker(histoPurityPt5cm, 20, markerSize, colorMC, colorMC);
@@ -1475,28 +1582,20 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoPurityPt5cm->DrawCopy("same");
     canvasSinglePtPurity->Print(Form("%s/PhotonPuritySingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
-
-    TCanvas * canvasSingleEffPt = new TCanvas("canvasSingleEffPt","",1200,1000);
-    DrawGammaCanvasSettings( canvasSingleEffPt,  0.12, 0.02, 0.02, 0.12);
-    DrawGammaSetMarker(histoEffiPt, 20, markerSize, colorMC, colorMC);
-    TH2F *histoDummyEffiPt =  new TH2F("histoDummyEffiPt","histoDummyEffiPt",1000,0.,10.0,1000,0.0,1.1);
-    SetStyleHistoTH2ForGraphs(histoDummyEffiPt, "p_{T} (GeV/c)","Efficiency",0.05,0.05, 0.05,0.05);
-    // 0.9*textsizeLabelsDownpurity, textsizeLabelsDownpurity,0.9*textsizeLabelsDownpurity,textsizeLabelsDownpurity, 0.9,0.1/(textsizeFacDownpurity*marginXRatio));
-    histoDummyEffiPt->DrawCopy();
-    histoEffiPt->DrawCopy("same");
-    canvasSingleEffPt->Print(Form("%s/PhotonEffiPtSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-
-
-    TCanvas * canvasSingleEffR = new TCanvas("canvasSingleEffR","",1200,1000);
-    DrawGammaCanvasSettings( canvasSingleEffR,  0.12, 0.02, 0.02, 0.12);
-    DrawGammaSetMarker(histoEffiR, 20, markerSize, colorMC, colorMC);
-    TH2F *histoDummyEffiR =  new TH2F("histoDummyEffiR","histoDummyEffiR",1000,0.,200.0,1000,0.0,1.1);
-    SetStyleHistoTH2ForGraphs(histoDummyEffiR, "p_{T} (GeV/c)","Efficiency",0.05,0.05, 0.05,0.05);
-    // 0.9*textsizeLabelsDownpurity, textsizeLabelsDownpurity,0.9*textsizeLabelsDownpurity,textsizeLabelsDownpurity, 0.9,0.1/(textsizeFacDownpurity*marginXRatio));
-    histoDummyEffiR->DrawCopy();
-    histoEffiR->DrawCopy("same");
-    canvasSingleEffR->Print(Form("%s/PhotonEffiRSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
-
+    TCanvas * canvasSingleEtaDataMC = new TCanvas("canvasSingleEtaDataMC","",1200,1000);
+    DrawGammaCanvasSettings( canvasSingleEtaDataMC,  0.15, 0.02, 0.07, 0.12);
+    DrawGammaSetMarker(histoEtaData, 20, markerSize, colorData, colorData);
+    DrawGammaSetMarker(histoEtaMC, 20, markerSize, colorMC, colorMC);
+    TH2F *histoDummyEtaDataMC =  new TH2F("histoDummyEtaDataMC","histoDummyEtaDataMC",1000,-1.1,1.1,1000,0.0,1.2*histoEtaData->GetMaximum());
+    SetStyleHistoTH2ForGraphs(histoDummyEtaDataMC, "#eta","#frac{dN_{#gamma}}{dEta}",0.05,0.05, 0.05,0.05);
+    histoDummyEtaDataMC->DrawCopy();
+    histoEtaData->Draw("same,histo");
+    histoEtaMC->Draw("same,histo");
+    TLegend* legenEta = GetAndSetLegend2(0.15, 0.8-(2*0.9*textsizeLabelsUp), 0.4, 0.8, textSizeLabels);
+    legenEta->AddEntry(histoEtaData,"Data","p");
+    legenEta->AddEntry(histoEtaMC,"MC","p");
+    legenEta->Draw();
+    canvasSingleEtaDataMC->Print(Form("%s/PhotonEtaDataMCSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     TCanvas * canvasSingleAsymDataMCLowP = new TCanvas("canvasSingleAsymDataMCLowP","",1200,1000);
     DrawGammaCanvasSettings( canvasSingleAsymDataMCLowP,  0.15, 0.02, 0.07, 0.12);
@@ -1583,7 +1682,6 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 	//        cout<< arrayRBins[i] << " " << histoDataMCRatioR->GetBinContent(i+1) <<endl;
 	//        fProfileContainingMaterialBudgetWeights->Fill(arrayRBins[i], histoDataMCRatioR->GetBinContent(i+1));
     }
-
 
 
     //Form("%s/PhotonChar_%s.%s",optionPeriod.Data(),fCutSelectionRead.Data() ))

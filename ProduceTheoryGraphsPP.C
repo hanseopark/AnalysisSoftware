@@ -1075,6 +1075,13 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoEtaToPi0RatioPythia8Monash5TeVLego= (TH1F*)histoEtaPythia8MonashInvSec5TeVLego->Clone("histoEtaToPi0RatioPythia8Monash5TeVLego");
     histoEtaToPi0RatioPythia8Monash5TeVLego->Sumw2();
     histoEtaToPi0RatioPythia8Monash5TeVLego->Divide(histoEtaToPi0RatioPythia8Monash5TeVLego,histoPi0Pythia8MonashInvSec5TeVLego);
+    //charged pions
+    TH1F* histoChPionPythia8MonashInvSec5TeVLego = (TH1F*)filePythia8Monash2013_5TeVLego->Get("hPt_PiPl_MB_XSec");
+    histoChPionPythia8MonashInvSec5TeVLego->Add((TH1F*)filePythia8Monash2013_5TeVLego->Get("hPt_PiMi_MB_XSec"),1);
+    histoChPionPythia8MonashInvSec5TeVLego->Scale(0.5);
+    TH1F* histoPi0ToChPionRatioPythia8Monash5TeVLego= (TH1F*)histoPi0Pythia8MonashInvSec5TeVLego->Clone("histoPi0ToChPionRatioPythia8Monash5TeVLego");
+    histoPi0ToChPionRatioPythia8Monash5TeVLego->Sumw2();
+    histoPi0ToChPionRatioPythia8Monash5TeVLego->Divide(histoPi0ToChPionRatioPythia8Monash5TeVLego,histoChPionPythia8MonashInvSec5TeVLego);
 
     //**********************************************************************************************************************
     //***************************** Pythia calculations 7TeV ************************************************************
@@ -1251,9 +1258,9 @@ void ProduceTheoryGraphsPP(){
         histoChPionPythia8MonashInvSec7TeVLego->SetLineWidth(3);
         histoChPionPythia8MonashInvSec7TeVLego->Draw("same,hist,l");
 
-//        DrawGammaSetMarker(histoChPionPythia8MonashInvSec5TeVLego, 1, 1.5, GetColorDefaultColor("5TeV","","") , GetColorDefaultColor("5TeV","",""));
-//        histoChPionPythia8MonashInvSec5TeVLego->SetLineWidth(3);
-//        histoChPionPythia8MonashInvSec5TeVLego->Draw("same,hist,l");
+       DrawGammaSetMarker(histoChPionPythia8MonashInvSec5TeVLego, 1, 1.5, GetColorDefaultColor("5TeV","","") , GetColorDefaultColor("5TeV","",""));
+       histoChPionPythia8MonashInvSec5TeVLego->SetLineWidth(3);
+       histoChPionPythia8MonashInvSec5TeVLego->Draw("same,hist,l");
 
         DrawGammaSetMarker(histoChPionPythia8MonashInvSec2760GeVLego, 1, 1.5, GetColorDefaultColor("2.76TeV","","") , GetColorDefaultColor("2.76TeV","",""));
         histoChPionPythia8MonashInvSec2760GeVLego->SetLineWidth(3);
@@ -1273,7 +1280,7 @@ void ProduceTheoryGraphsPP(){
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec13TeVLego,"pp, #sqrt{s} = 13 TeV","l");
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec8TeVLego,"pp, #sqrt{s} = 8 TeV","l");
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec7TeVLego,"pp, #sqrt{s} = 7 TeV","l");
-//        legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec5TeVLego,"pp, #sqrt{s} = 5 TeV","l");
+       legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec5TeVLego,"pp, #sqrt{s} = 5 TeV","l");
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec2760GeVLego,"pp, #sqrt{s} = 2.76 TeV","l");
 //        legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec900GeVLego,"pp, #sqrt{s} = 0.9 TeV","l");
         legendXSectionChPionDiffFits->Draw();
@@ -1432,6 +1439,8 @@ void ProduceTheoryGraphsPP(){
         histoPi0Pythia8MonashInvSec5TeVLego->Write("histoInvSecPythia8Monash2013LegoPi05TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec5TeVLego->Write("histoInvSecPythia8Monash2013LegoEta5TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash5TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego5TeV", TObject::kOverwrite);
+        histoChPionPythia8MonashInvSec5TeVLego->Write("histoInvSecPythia8Monash2013LegoChPion5TeV", TObject::kOverwrite);
+        histoPi0ToChPionRatioPythia8Monash5TeVLego->Write("histoPi0ToChPionRatioPythia8Monash5TeVLego", TObject::kOverwrite);
 
         //***********************************************************************
         // write  calculations for 7TeV
@@ -1548,7 +1557,7 @@ void ProduceTheoryGraphsPP(){
         graphElecFromJJXSec8TeVEMCal->Write("graphElecFromJJ_8TeV", TObject::kOverwrite);
         graphRatioElecFromWeakBoson->Write("graphRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
         splineRatioElecFromWeakBoson->Write("splineRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
-        
+
         //***********************************************************************
         // write  calculations for 13TeV
         //***********************************************************************

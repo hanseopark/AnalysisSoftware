@@ -165,13 +165,13 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         minPtForFits=0.3;
         minPtForFitsEta=0.4;
 
-        if (useSameBinningPi0Eta.CompareTo("")==0){
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_07_04.dat";
+        if (useSameBinningPi0Eta.CompareTo("")==0){ ///systematic for pbpbp but need to be changed! back to 14th august
+            fileNameSysErrPi0 = "SystematicErrorsCalculatedConv/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_08_21.dat";//"SystematicErrorsNew/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_07_04.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_EtaToPi0_5TeV2017_2018_07_04.dat";
+            fileNameSysErrPi0 = "SystematicErrorsCalculatedConv/SystematicErrorAveragedPCM_EtaToPi0_5TeV2017_2018_08_21.dat";//"SystematicErrorsNew/SystematicErrorAveragedPCM_EtaToPi0_5TeV2017_2018_07_04.dat";
             minPtForFits=0.4;
         }
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_07_04.dat";
+        fileNameSysErrEta = "SystematicErrorsCalculatedConv/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_08_21.dat";//"SystematicErrorsNew/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_07_04.dat";
         cout << "You have chosen 5TeV2017. The systematic errors loaded are still sperimental." << endl;
 
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
@@ -323,6 +323,27 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         histoUncorrectedYieldPi0->Scale(fPileUpCorrectionConv7TeV);
     }
 
+    TH1D *histoPi0DataRelUnc                = (TH1D*)histoUncorrectedYieldPi0->Clone("histoPi0DataRelUnc");
+    for (Int_t k = 1; k < histoPi0DataRelUnc->GetNbinsX()+1; k++){
+        if (histoPi0DataRelUnc->GetBinContent(k) != 0){
+            histoPi0DataRelUnc->SetBinContent(k, histoPi0DataRelUnc->GetBinError(k)/histoPi0DataRelUnc->GetBinContent(k)*100);
+            histoPi0DataRelUnc->SetBinError(k, 0);
+        } else {
+            histoPi0DataRelUnc->SetBinContent(k, 0);
+            histoPi0DataRelUnc->SetBinError(k, 0);
+        }
+    }
+    TH1D *histoPi0MCRelUnc                = (TH1D*)histoTrueEffPtPi0->Clone("histoPi0MCRelUnc");
+    for (Int_t k = 1; k < histoPi0MCRelUnc->GetNbinsX()+1; k++){
+        if (histoPi0MCRelUnc->GetBinContent(k) != 0){
+            histoPi0MCRelUnc->SetBinContent(k, histoPi0MCRelUnc->GetBinError(k)/histoPi0MCRelUnc->GetBinContent(k)*100);
+            histoPi0MCRelUnc->SetBinError(k, 0);
+        } else {
+            histoPi0MCRelUnc->SetBinContent(k, 0);
+            histoPi0MCRelUnc->SetBinError(k, 0);
+        }
+    }
+
     if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb") )
         nEvt =  histoEventQualtityPi0->GetBinContent(1);
     else
@@ -360,6 +381,27 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         cout << "correcting eta for PileUp with factor: " << fPileUpCorrectionConv7TeV << endl;
         histoCorrectedYieldEta->Scale(fPileUpCorrectionConv7TeV);
         histoUnCorrectedYieldEta->Scale(fPileUpCorrectionConv7TeV);
+    }
+
+    TH1D *histoEtaDataRelUnc                = (TH1D*)histoUnCorrectedYieldEta->Clone("histoEtaDataRelUnc");
+    for (Int_t k = 1; k < histoEtaDataRelUnc->GetNbinsX()+1; k++){
+        if (histoEtaDataRelUnc->GetBinContent(k) != 0){
+            histoEtaDataRelUnc->SetBinContent(k, histoEtaDataRelUnc->GetBinError(k)/histoEtaDataRelUnc->GetBinContent(k)*100);
+            histoEtaDataRelUnc->SetBinError(k, 0);
+        } else {
+            histoEtaDataRelUnc->SetBinContent(k, 0);
+            histoEtaDataRelUnc->SetBinError(k, 0);
+        }
+    }
+    TH1D *histoEtaMCRelUnc                = (TH1D*)histoTrueEffPtEta->Clone("histoEtaMCRelUnc");
+    for (Int_t k = 1; k < histoEtaMCRelUnc->GetNbinsX()+1; k++){
+        if (histoEtaMCRelUnc->GetBinContent(k) != 0){
+            histoEtaMCRelUnc->SetBinContent(k, histoEtaMCRelUnc->GetBinError(k)/histoEtaMCRelUnc->GetBinContent(k)*100);
+            histoEtaMCRelUnc->SetBinError(k, 0);
+        } else {
+            histoEtaMCRelUnc->SetBinContent(k, 0);
+            histoEtaMCRelUnc->SetBinError(k, 0);
+        }
     }
 
     fileSysErrEta.open(fileNameSysErrEta,ios_base::in);
@@ -497,6 +539,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		PlotFinalOutput("RawPi0",histoUncorrectedYieldPi0,NULL,NULL,NULL,minYieldRawPi0,maxYieldRawPi0,"#frac{d#it{N}_{#pi_{0}, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("RawEta",histoUnCorrectedYieldEta,NULL,NULL,NULL,minYieldRawEta,maxYieldRawEta,"#frac{d#it{N}_{#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}","#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("RawComb",histoUncorrectedYieldPi0,NULL,histoUnCorrectedYieldEta,NULL,minYieldRawPi0,maxYieldRawPi0,"#frac{d#it{N}_{#pi_{0}/#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
+
+        PlotFinalOutput("RelUncPi0", histoPi0DataRelUnc, histoPi0MCRelUnc, NULL, NULL ,0. ,20., Form("%s","%"), "#pi^{0}", optionEnergy,mode, outputDir, prefix2, useSameBinningPi0Eta, cutSelection,suffix,"");
+        PlotFinalOutput("RelUncEta",histoEtaDataRelUnc,histoEtaMCRelUnc,NULL,NULL,0.,20.,Form("%s","%"),"#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
+
 	}
 
     Double_t minCorrYieldPi0 = 0.2*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX());
@@ -507,8 +553,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
    if( optionEnergy.CompareTo("13TeV") == 0  || optionEnergy.CompareTo("13TeVRBins") == 0 ) {
       minCorrYieldPi0 = 0.02*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX()-2);
       minCorrYieldEta = 0.02*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX()-2);
+    } else if( optionEnergy.CompareTo("5TeV2017") == 0 ) {
+      minCorrYieldPi0 = 0.02*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX()-1);
+      minCorrYieldEta = 0.02*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX()-1);
     }
-
 
     if (!isMC.CompareTo("kFALSE")&&!useSameBinningPi0Eta.CompareTo("")){
 		PlotFinalOutput("CorrPi0",histoCorrectedYieldPi0,NULL,NULL,NULL,minCorrYieldPi0,maxCorrYieldPi0,"#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");

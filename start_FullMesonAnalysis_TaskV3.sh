@@ -357,6 +357,17 @@ elif [[ "$1" == *-mJJ5TeVA* ]] ; then
     minPtMergePi0=7
     minPtMergeEta=8
     ADDEDSIG=2
+elif [[ "$1" == *-mJJ5TeVmergedA* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    SUFFIX=$3
+    DATAROOTFILE=$DIRECTORY/mergedMinBias/GammaConv_Data_A.root
+    MCROOTFILE=$DIRECTORY/mergedMinBias/GammaConv_MC_A.root
+    MCROOTFILEADDSIG=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    MCROOTFILEADDSIGETA=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    minPtMergePi0=2
+    minPtMergeEta=4
+    ADDEDSIG=2
 elif [[ "$1" == *-mAddSigPbPbLHC13d2A* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2

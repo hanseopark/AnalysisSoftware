@@ -151,7 +151,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
           fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
       cout << fCutSelectionRead.Data() << endl;
     }
-    
+
     if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){
         cout << "calculating MinBias Eff" << endl;
         // take out the cent numbers
@@ -2932,6 +2932,16 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
     } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
+        nIterationsShowBackground[0]                    = 9;
+        nIterationsShowBackground[1]                    = 9;
+        nIterationsShowBackground[2]                    = 14;
+        nIterationsShowBackground[3]                    = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+    } else if ((fEnergyFlag.CompareTo("5TeV") == 0 || fEnergyFlag.CompareTo("5TeV2017") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 9;
         nIterationsShowBackground[1]                    = 9;
         nIterationsShowBackground[2]                    = 14;
