@@ -5486,7 +5486,6 @@
                 CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
             } else if(energy.EqualTo("13TeV")) {
                 switch(modi) {
-<<<<<<< 8cc28cb83f6f62242cef06a8880028c2860a360c
                     case 0: // PCM-PCM
                         switch( specialTrigg ) {
                             case 0: CopyVectorToArray(fBinsEtaPrime13TeV_PCM_INT7_PtRebin,fNRebin); break; // 10
@@ -5518,18 +5517,11 @@
                             case 0: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin,fNRebin); break; // 10
                             case 6: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin,  fNRebin); break; // 62
                         } break;
-=======
-                    case 0: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
-                    case 2: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
-                    case 3: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
-                    case 4: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
-                    case 5: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
                     case 60: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
                     case 61: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
                     case 63: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
                     case 64: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
                     case 65: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
->>>>>>> Upload of eta'to pi+pi-eta extraction code and small adjustment for cent estimator labelling
                 }
             }
             // Set optimum columns and rows
