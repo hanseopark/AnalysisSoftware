@@ -4729,6 +4729,9 @@
         else if (mode == 40 || mode == 41 || mode == 42 || mode == 43|| mode == 44 || mode == 45 ||
                  mode == 46 || mode == 47 || mode == 48 || mode == 49|| mode == 50)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
+        else if (mode == 60 || mode == 61 || mode == 62 || mode == 63|| mode == 64 || mode == 65 ||
+                 mode == 66 || mode == 67 || mode == 68 || mode == 69|| mode == 70)
+            nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiNeutralMeson";
         else if (mode>=100) // for heavy meson analysis
             nominalMainDir = "HeavyNeutralMesonToGG";
         return nominalMainDir;

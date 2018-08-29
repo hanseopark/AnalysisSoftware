@@ -342,7 +342,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Int_t fNLMmin           = 0;
     TString fCent           = "";
     TString fCentOutput     = "";
-
+    TString centEstimator   = "";
     // put correct color setting for different triggers
     for (Int_t i = 0; i < numberOfTrigg; i++){
         colorTrigg[i]       = GetDefaultTriggerColorName(triggerName[i], 0, optionEnergy);
@@ -382,12 +382,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")) && i == 0 ){
                 fCent                                   = GetCentralityString(fEventCutSelection);
+                centEstimator                          = GetCentralityEstimatorString(fEventCutSelection);
                 fCentOutput                             = GetCentralityStringOutput(fEventCutSelection);
                 collisionSystem                         = fCent+ " "+collisionSystem;
             }
         } else {
             if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")) && i == 0 ){
                 fCent                                   = GetCentralityString(cutNumber[i]);
+                centEstimator                           = GetCentralityEstimatorString(cutNumber[i]);
                 fCentOutput                             = GetCentralityStringOutput(cutNumber[i]);
                 collisionSystem                         = fCent+ " "+collisionSystem;
             }
@@ -7365,9 +7367,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoRatioRawClusterE[i])           histoRatioRawClusterE[i]->Write(Form("TriggRejectvsE_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
             }
         }
-        fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
-        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
-        fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
+        fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
+        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
+        fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
         if (graphCorrectedYieldWeightedAveragePi0Stat)  graphCorrectedYieldWeightedAveragePi0Stat->Write("graphCorrectedYieldPi0",TObject::kOverwrite);
         if (histoInvYieldWeightedAveragePi0Stat)  histoInvYieldWeightedAveragePi0Stat->Write("CorrectedYieldPi0",TObject::kOverwrite);
         if (graphCorrectedYieldWeightedAveragePi0Sys)   graphCorrectedYieldWeightedAveragePi0Sys->Write("Pi0SystError",TObject::kOverwrite);
@@ -7449,9 +7451,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
 
         if (enableEta && mode != 10){
-          fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
-          TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
-            fileOutputForComparisonFullyCorrected->cd(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
+          fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
+          TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
+            fileOutputForComparisonFullyCorrected->cd(Form("Eta%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
             if (graphCorrectedYieldWeightedAverageEtaStat)  graphCorrectedYieldWeightedAverageEtaStat->Write("graphCorrectedYieldEta",TObject::kOverwrite);
             if (histoInvYieldWeightedAverageEtaStat)  histoInvYieldWeightedAverageEtaStat->Write("CorrectedYieldEta",TObject::kOverwrite);
             if (graphCorrectedYieldWeightedAverageEtaSys)   graphCorrectedYieldWeightedAverageEtaSys->Write("EtaSystError",TObject::kOverwrite);

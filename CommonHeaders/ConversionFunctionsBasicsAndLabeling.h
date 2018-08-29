@@ -324,7 +324,8 @@
                                                  TString& clusterCutNumber,
                                                  TString& pionCutNumber,
                                                  TString& neutralPionCutNumber,
-                                                 TString& mesonCutNumber){
+                                                 TString& mesonCutNumber,
+                                                 Bool_t runningNewTask = kFALSE){
 
         TObjArray *arr;
         arr = cutSel.Tokenize("_");
@@ -355,6 +356,7 @@
             mesonCutNumber = objstrMeson->GetString();
 
             mode = 40;
+            if(runningNewTask) mode = 60;
         } else if (typeCutNumber.CompareTo("1") == 0){ //PCM-calo
             objstrType  = (TObjString*)arr->At(0);
             objstrEvent = (TObjString*)arr->At(1);
@@ -376,12 +378,16 @@
             TString firstLetter(clusterCutNumber(0,1));
             if (firstLetter.CompareTo("1") == 0){        // EMCAL was used as calo
                 mode = 41;
+                if(runningNewTask) mode = 61;
             } else if (firstLetter.CompareTo("2") == 0){ // PHOS was used as calo
                 mode = 42;
+                if(runningNewTask) mode = 62;
             } else if (firstLetter.CompareTo("3") == 0){ // DCAL was used as calo
                 mode = 43;
+                if(runningNewTask) mode = 63;
             } else {
                 mode = 41;
+                if(runningNewTask) mode = 61;
             }
         }  else if (typeCutNumber.CompareTo("2") == 0){ // CALO-CALO
             objstrType  = (TObjString*)arr->At(0);
@@ -402,12 +408,16 @@
             TString firstLetter(clusterCutNumber(0,1));
             if (firstLetter.CompareTo("1") == 0){        // EMCAL was used as calo
                 mode = 44;
+                if(runningNewTask) mode = 64;
             } else if (firstLetter.CompareTo("2") == 0){ // PHOS was used as calo
                 mode = 45;
+                if(runningNewTask) mode = 65;
             } else if (firstLetter.CompareTo("3") == 0){ // DCAL was used as calo
                 mode = 46;
+                if(runningNewTask) mode = 66;
             } else {
                 mode = 44;
+                if(runningNewTask) mode = 64;
             }
         }
 
@@ -2133,6 +2143,23 @@
     }
 
 
+    //************************************************************************************
+    //** Analyzes the eventCutNumber and returns the centrality estimator name for files *
+    //************************************************************************************
+    TString GetCentralityEstimatorString(TString cutNumber){
+        TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
+        if (ppCutNumber.CompareTo("0") ==0){
+            return "";
+        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0){
+            return "_V0M";
+        } else if ( ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("a") ==0 || ppCutNumber.CompareTo("c") ==0){
+            return "_V0A";
+        } else if ( ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("9") ==0 || ppCutNumber.CompareTo("b") ==0 || ppCutNumber.CompareTo("d") ==0 || ppCutNumber.CompareTo("g") ==0){
+            return "_CL1";
+        } else if ( ppCutNumber.CompareTo("e") ==0 || ppCutNumber.CompareTo("f") ==0){
+            return "_ZNA";
+        } else return "";
+    }
     //************************************************************************************
     //** Analyzes the eventCutNumber and returns the centrality name with % for plotting *
     //************************************************************************************

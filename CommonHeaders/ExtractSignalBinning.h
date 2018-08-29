@@ -923,6 +923,9 @@
                 } else if(mode == 40){
                     scaleFac        = 4.;
                     return 2;
+                } else if(mode == 60){
+                    // scaleFac        = 4.;
+                    return 2;
                 } else{
                     return 7;
                 }
@@ -2142,7 +2145,7 @@
                             binning[i] = fBinsPi0pPb5TeVPtDCA[i];
                         else if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") )
                             binning[i]  = fBinsPi0pPb5TeVPCMR2CentPt[i];
-                        else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") || !centrality.CompareTo("0-20%"))
+                        else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") )
                             binning[i]  = fBinsPi0pPb5TeVPCMR2Cent2Pt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVPCMR2Pt[i];
@@ -2900,7 +2903,7 @@
                     binning[i] = fBinsEtaXeXe5440GeVPt[i];
                 }
             }
-        } else if ( meson.CompareTo("EtaPrime") == 0) {
+        } else if (meson.CompareTo("EtaPrime") == 0) {
             if     (energy.EqualTo("7TeV")) {
                 maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime7TeVPt, binning );
             } else if(energy.EqualTo("13TeV")) {
@@ -2936,6 +2939,11 @@
                             case 0: maxNBins = CopyVectorToArray(binningMax,fBinsEtaPrime13TeV_PHOS_MinBias_Pt,binning); break; // 10
                             case 6: maxNBins = CopyVectorToArray(binningMax,fBinsEtaPrime13TeV_PHOS_VZERO_Pt,  binning); break; // 62
                         } break;
+                    case 60: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCM_Pt,     binning ); break;
+                    case 61: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMEMC_Pt,  binning ); break;
+                    case 63: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMPHOS_Pt, binning ); break;
+                    case 64: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_EMC_Pt,     binning ); break;
+                    case 65: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PHOS_Pt,    binning ); break;
                 }
             }
         } else if (meson.Contains("Omega")){
@@ -5478,6 +5486,7 @@
                 CopyVectorToArray(fBinsEtaPrime7TeVPtRebin,fNRebin);
             } else if(energy.EqualTo("13TeV")) {
                 switch(modi) {
+<<<<<<< 8cc28cb83f6f62242cef06a8880028c2860a360c
                     case 0: // PCM-PCM
                         switch( specialTrigg ) {
                             case 0: CopyVectorToArray(fBinsEtaPrime13TeV_PCM_INT7_PtRebin,fNRebin); break; // 10
@@ -5509,6 +5518,18 @@
                             case 0: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin,fNRebin); break; // 10
                             case 6: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin,  fNRebin); break; // 62
                         } break;
+=======
+                    case 0: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
+                    case 2: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 3: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
+                    case 4: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 5: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
+                    case 60: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
+                    case 61: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 63: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
+                    case 64: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
+                    case 65: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
+>>>>>>> Upload of eta'to pi+pi-eta extraction code and small adjustment for cent estimator labelling
                 }
             }
             // Set optimum columns and rows
