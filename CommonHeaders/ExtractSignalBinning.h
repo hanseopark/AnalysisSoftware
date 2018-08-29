@@ -2939,11 +2939,11 @@
                             case 0: maxNBins = CopyVectorToArray(binningMax,fBinsEtaPrime13TeV_PHOS_MinBias_Pt,binning); break; // 10
                             case 6: maxNBins = CopyVectorToArray(binningMax,fBinsEtaPrime13TeV_PHOS_VZERO_Pt,  binning); break; // 62
                         } break;
-                    case 60: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCM_Pt,     binning ); break;
-                    case 61: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMEMC_Pt,  binning ); break;
-                    case 63: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMPHOS_Pt, binning ); break;
-                    case 64: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_EMC_Pt,     binning ); break;
-                    case 65: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PHOS_Pt,    binning ); break;
+                    case 60: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCM_INT7_Pt,     binning ); break;
+                    case 61: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMEMC_INT7_Pt,  binning ); break;
+                    case 63: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PCMPHOS_MinBias_Pt, binning ); break;
+                    case 64: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_EMC_INT7_Pt,     binning ); break;
+                    case 65: maxNBins = CopyVectorToArray( binningMax, fBinsEtaPrime13TeV_PHOS_MinBias_Pt,    binning ); break;
                 }
             }
         } else if (meson.Contains("Omega")){
@@ -5517,11 +5517,11 @@
                             case 0: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin,fNRebin); break; // 10
                             case 6: CopyVectorToArray(fBinsEtaPrime13TeV_PHOS_VZERO_PtRebin,  fNRebin); break; // 62
                         } break;
-                    case 60: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_PtRebin,    fNRebin ); break;
-                    case 61: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
-                    case 63: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_PtRebin,fNRebin ); break;
-                    case 64: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_PtRebin,    fNRebin ); break;
-                    case 65: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_PtRebin,   fNRebin ); break;
+                    case 60: CopyVectorToArray( fBinsEtaPrime13TeV_PCM_INT7_PtRebin,        fNRebin ); break;
+                    case 61: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_INT7_PtRebin,        fNRebin ); break;
+                    case 63: CopyVectorToArray( fBinsEtaPrime13TeV_PCMPHOS_MinBias_PtRebin, fNRebin ); break;
+                    case 64: CopyVectorToArray( fBinsEtaPrime13TeV_EMC_INT7_PtRebin,        fNRebin ); break;
+                    case 65: CopyVectorToArray( fBinsEtaPrime13TeV_PHOS_MinBias_PtRebin,    fNRebin ); break;
                 }
             }
             // Set optimum columns and rows
