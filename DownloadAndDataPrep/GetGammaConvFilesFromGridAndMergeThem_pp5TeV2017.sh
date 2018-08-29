@@ -4,7 +4,7 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180819-1_newV0effPlots;
+TRAINDIR=Legotrain-vAN-20180817-1_2017pp;
 
 ### Data
 LHC17pqMETA=;

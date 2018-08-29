@@ -1496,7 +1496,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     // draw efficiency vs Pt, smaller eta range
     canvasV0Finder->SetLogy(1);
-    SetStyleHistoTH2ForGraphs(histo2DDummy,"#it{p}_{T} (GeV/#it{c})","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#it{p}_{T} (GeV/#it{c})","Efficiency ()",0.04,0.04, 0.04,0.04, 1.,1.);
     histo2DDummy->GetXaxis()->SetRangeUser(PtRange[0],PtRange[1]);
     histo2DDummy->GetYaxis()->SetRangeUser(1e-2,5.);
     histo2DDummy->Draw("copy");
@@ -1516,7 +1516,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     // draw efficiency vs R
     canvasV0Finder->SetLogy(0);
-    SetStyleHistoTH2ForGraphs(histo2DDummy,"R (cm)","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"R (cm)","Efficiency | #eta | < 0.8",0.04,0.04, 0.04,0.04, 1.,1.);
     histo2DDummy->GetXaxis()->SetRangeUser(RRange[0],RRange[1]+5.);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.55);
     histo2DDummy->Draw("copy");
@@ -1534,7 +1534,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasV0Finder->SaveAs(Form("%s/PhotonEffiRSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     // draw efficiency vs phi
-    SetStyleHistoTH2ForGraphs(histo2DDummy,"#phi (rad)","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.3);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#phi (rad)","Efficiency | #eta | < 0.8",0.04,0.04, 0.04,0.04, 1.,1.3);
     histo2DDummy->GetXaxis()->SetRangeUser(PhiRange[0],PhiRange[1]);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
     histo2DDummy->Draw("copy");
@@ -1553,7 +1553,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     // draw efficiency vs eta
     histo2DDummy = new TH2F("","",1000,-2.,2.,1000,0.,2.);
-    SetStyleHistoTH2ForGraphs(histo2DDummy,"#eta","Efficiency",0.04,0.04, 0.04,0.04, 1.,1.3);
+    SetStyleHistoTH2ForGraphs(histo2DDummy,"#eta","Efficiency | #eta | < 0.8",0.04,0.04, 0.04,0.04, 1.,1.3);
     histo2DDummy->GetXaxis()->SetRangeUser(EtaRange[0],EtaRange[1]);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
     histo2DDummy->Draw("copy");
@@ -1570,6 +1570,24 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasV0Finder->Update();
     canvasV0Finder->SaveAs(Form("%s/PhotonEffiEtaSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
     delete canvasV0Finder;
+
+    TCanvas* canvasChi2 = new TCanvas("canvasChi2","",1300,1000);
+    DrawGammaCanvasSettings( canvasChi2,  0.12, 0.02, 0.02, 0.12);
+    canvasChi2->SetLogy(1);
+
+    TH2F * histoDummyChi2Single = new TH2F("histoDummyChi2Single","histoDummyChi2Single",1000,0.,30.,10000,1.e-6,1.);
+    SetStyleHistoTH2ForGraphs(histoDummyChi2Single, "#chi^{2}","Counts ", 0.85*textsizeLabelsDown, textsizeLabelsDown,0.85*textsizeLabelsDown,textsizeLabelsDown, 0.9,0.92);
+    histoDummyChi2Single->GetYaxis()->SetRangeUser(1.e-6,2.e-2);
+    histoDummyChi2Single->DrawCopy();
+
+        DrawGammaSetMarker(histoChi2Data, 20, markerSize, colorData, colorData);
+        histoChi2Data->Draw("same,hist");
+		DrawGammaSetMarker(histoChi2MC, 20, markerSize, colorMC, colorMC);
+        histoChi2MC->Draw("same,hist");
+
+    histoDummyChi2Single->Draw("axis,same");
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/PhotonChi2Single%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
     TCanvas * canvasSinglePtPurity = new TCanvas("canvasSinglePtPurity","",1200,1000);

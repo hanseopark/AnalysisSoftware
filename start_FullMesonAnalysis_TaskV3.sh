@@ -346,7 +346,18 @@ elif [[ "$1" == *-mMerged13g* ]] ; then
     DATAROOTFILE=$DIRECTORY/GammaCaloMerged_LHC13g-pass1_$CONFIG.root
     MCROOTFILE=$DIRECTORY/GammaCaloMerged_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_$CONFIG.root
     MCROOTFILEGJ=$DIRECTORY/GammaCaloMerged_MC_LHC15a3b_$CONFIG.root
-elif [[ "$1" == *-mJJ5TeVA* ]] ; then
+elif [[ "$1" == *-mJJ5TeV2015A* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    SUFFIX=$3
+    DATAROOTFILE=$DIRECTORY/mergedMinBias/GammaConv_Data_A.root
+    MCROOTFILE=$DIRECTORY/mergedMinBias/GammaConv_MC_A.root
+    MCROOTFILEADDSIG=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    MCROOTFILEADDSIGETA=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    minPtMergePi0=5
+    minPtMergeEta=8
+    ADDEDSIG=2
+elif [[ "$1" == *-mJJ5TeV2017A* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
     SUFFIX=$3
