@@ -54,14 +54,14 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
                         TString cutVariationName                = "",
                         Int_t NumberOfCuts                      = 1,
                         Int_t mode                              = 9,
+                        Int_t sequence                          = 0,
                         Bool_t doBarlow                         = kFALSE
                        ){
 
-  // order of cuts should be
-  // 0: Onfly Pythia   (default)
-  // 1: Onfly Phojet
-  // 2: Offline Pythia
-  // 3: Offline Phojet
+  // order of cuts should be if sequence =
+  // 0: Onfly Pythia (default), Onfly Phojet, Offline Pythia, Offline Phojet
+  // 1: Onfly Pythia 13TeV, Onfly Phojet 13TeV, Onfly Pythia 5TeV, Onfly Phojet 5TeV, idem with Offline
+  // 2: Onfly Pythia 5TeV2017, Offline Pythia 5TeV2017, Onfly Pythia 5TeV2015, Offline Pythia 5TeV2015
 
     gROOT->Reset();
     gROOT->SetStyle("Plain");
@@ -91,6 +91,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     Color_t color[12] = { kBlack, kAzure, kGreen+2, kOrange+2,
                           kRed+1, kCyan+2, kYellow+2, kViolet-3,
                           kSpring+10, kMagenta-8, kGray, kGray+3};
+
+    TString label5cm = "#rightarrow R = 5 cm";
 
     // Set collisions system
     TString collisionSystem     = ReturnFullCollisionsSystem(optionEnergy);
@@ -145,7 +147,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         string1 = (TObjString*)arr->At(0);
         period[i] = string1->GetString();
         if(period[i].Contains("LHC16")) periodName[i] = "13 TeV (Ar)";
-        else periodName[i] = "  5 TeV (Ne)";
+        else if(period[i].Contains("LHC17")) periodName[i] = "  5 TeV (Ne)";
+        else periodName[i] = "  5 TeV (Ar)";
         string2 = (TObjString*)arr->At(1);
         clusterName[i] = string2->GetString();
         if(clusterName[i].Contains("fast") || clusterName[i].Contains("wSDD") || clusterName[i].Contains("woSDD")){
@@ -199,6 +202,77 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histoRatioWeightCut[i]->Sumw2();
         histoDiffWeightCut[i] = (TH1F*)histWeight[i]->Clone("histoDiffWeights");
         histoDiffWeightCut[i]->Sumw2();
+        histoRatioWeightEnergyCut[i] = (TH1F*) histWeight[i]->Clone("histoRatioWeightsByEnergy");
+        histoRatioWeightEnergyCut[i]->Sumw2();
+
+        if(sequence==0){
+            if (i != 3){
+                    histoRatioWeightCut[i]->Sumw2();
+                    histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+
+                    //      histoDiffWeightCut[i]         = (TH1D*) histWeight[i]->Clone(Form("histoDiffWeights%d",i));
+                    histoDiffWeightCut[i] = (TH1F*)histWeight[i]->Clone("histoDiffWeights");
+                    histoDiffWeightCut[i]->Sumw2();
+                    histoDiffWeightCut[i]->Add(histWeight[0],-1.);
+            } else {
+                    histoRatioWeightCut[i]->Sumw2();
+                    histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[2],1.,1.,"");
+
+                    //      histoDiffWeightCut[i]         = (TH1D*) histWeight[i]->Clone(Form("histoDiffWeights%d",i));
+                    histoDiffWeightCut[i] = (TH1F*)histWeight[i]->Clone("histoDiffWeights");
+                    histoDiffWeightCut[i]->Sumw2();
+                    histoDiffWeightCut[i]->Add(histWeight[2],-1.);
+            }
+
+        } else if(sequence==1){
+            if ( i <= 4 || V0ReaderName[i].Contains("On-the-Fly") ){
+                histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+                histoDiffWeightCut[i]->Add(histWeight[0],-1.);
+            } else if( i > 4 && V0ReaderName[i].Contains("Offline") ){
+                histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
+                histoDiffWeightCut[i]->Add(histWeight[4],-1.);
+            }
+            if(period[i].Contains("LHC16")){
+                cout << i <<  " 13 TeV" << endl;
+                if ( i != 5 || V0ReaderName[i].Contains("On-the-Fly") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+                else if( i == 5 && V0ReaderName[i].Contains("Offline") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
+            } else if(period[i].Contains("LHC17")){
+                cout << i <<  " 5 TeV" << endl;
+                if ( i != 7 || V0ReaderName[i].Contains("On-the-Fly") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[2],1.,1.,"");
+                else if( i == 7 && V0ReaderName[i].Contains("Offline") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[6],1.,1.,"");
+            }
+
+        } else if(sequence==2){
+
+            if (V0ReaderName[i].Contains("On-the-Fly") ){
+                histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+                histoDiffWeightCut[i]->Add(histWeight[0],-1.);
+            } else if(V0ReaderName[i].Contains("Offline") ){
+                histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
+                histoDiffWeightCut[i]->Add(histWeight[2],-1.);
+            }
+            if(period[i].Contains("LHC17")){
+                cout << i <<  " 5 TeV" << endl;
+                if ( i != 7 || V0ReaderName[i].Contains("On-the-Fly") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[2],1.,1.,"");
+                else if( i == 7 && V0ReaderName[i].Contains("Offline") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[6],1.,1.,"");
+            } else  if(period[i].Contains("LHC15")){
+                cout << i <<  " 5 TeV" << endl;
+                if ( i != 4 || V0ReaderName[i].Contains("On-the-Fly") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+                else if( i == 4 && V0ReaderName[i].Contains("Offline") )
+                    histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[1],1.,1.,"");
+            }
+
+        }
+
+
+
         if ( i <= 4 || V0ReaderName[i].Contains("On-the-Fly") ){
             histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
             histoDiffWeightCut[i]->Add(histWeight[0],-1.);
@@ -206,8 +280,6 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
             histoDiffWeightCut[i]->Add(histWeight[4],-1.);
         }
-        histoRatioWeightEnergyCut[i] = (TH1F*) histWeight[i]->Clone("histoRatioWeightsByEnergy");
-        histoRatioWeightEnergyCut[i]->Sumw2();
         if(period[i].Contains("LHC16")){
             cout << i <<  " 13 TeV" << endl;
             if ( i != 5 || V0ReaderName[i].Contains("On-the-Fly") )
@@ -220,6 +292,12 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
                 histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[2],1.,1.,"");
             else if( i == 7 && V0ReaderName[i].Contains("Offline") )
                 histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[6],1.,1.,"");
+        } else  if(period[i].Contains("LHC15")){
+            cout << i <<  " 5 TeV" << endl;
+            if ( i != 4 || V0ReaderName[i].Contains("On-the-Fly") )
+                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
+            else if( i == 4 && V0ReaderName[i].Contains("Offline") )
+                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[1],1.,1.,"");
         }
 
         histRelUncWeightCut[i] = (TH1F*)histWeight[i]->Clone("histRelUncWeight");
@@ -340,6 +418,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histo2DDummy->GetYaxis()->SetRangeUser(0.875,1.35);
         histo2DDummy->Draw("copy");
 
+        DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
+        TLatex *labelR5cm = new TLatex(0.13,0.10,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.04,4);
+        labelR5cm->Draw();
+
         TLegend* legendWeightOnfly= new TLegend(0.45,0.93-(1+counterOnfly)*0.04,0.7,0.93); //0.17,0.13,0.5,0.24);
         legendWeightOnfly->SetFillColor(0);
         legendWeightOnfly->SetMargin(0.17);
@@ -390,6 +473,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
 
+        DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
+
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i<12)  DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i],color[i]);
             else      DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i-12],color[i-12]);
@@ -405,6 +490,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
         histo2DDummy->Draw("copy");
         DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
+        DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
+        labelR5cm->Draw();
+
         TLegend* legendStd= new TLegend(0.6,0.93-3.5*0.04,0.93,0.93); //0.17,0.13,0.5,0.24);
         legendStd->SetFillColor(0);
         legendStd->SetMargin(0.17);
@@ -431,6 +519,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
+        DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
+//         TLatex *labelR5cm = new TLatex(0.13,0.9,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.04,4);
 
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(generatorName[i].Contains("Pythia") && V0ReaderName[i].Contains("On-the-Fly")){
@@ -471,6 +562,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
 
+        DrawGammaLines(5., 5.,0.93,1.13,1.1,kGray+2,1);
+        labelR5cm = new TLatex(0.15,0.88,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.06,4);
+        labelR5cm->Draw();
+
         TLegend* legend13TeV = new TLegend(0.6,0.93-(1+counterOnfly)*0.06,0.93,0.93); //0.17,0.13,0.5,0.24);
         legend13TeV->SetFillColor(0);
         legend13TeV->SetMargin(0.17);
@@ -500,6 +596,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
+
+        DrawGammaLines(5., 5.,0.93,1.13,1.1,kGray+2,1);
+        labelR5cm = new TLatex(0.15,0.88,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.06,4);
+        labelR5cm->Draw();
 
         TLegend* legend5TeV = new TLegend(0.6,0.93-(1+counterOnfly)*0.06,0.93,0.93); //0.17,0.13,0.5,0.24);
         legend5TeV->SetFillColor(0);
@@ -544,6 +645,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,2., 2.,1.1,kGray+2,2);
         DrawGammaLines(0., maxR,2.5, 2.5,1.1,kGray+2,2);
 
+        DrawGammaLines(5., 5.,0.,4.5,1.1,kGray+2,1);
+        labelR5cm = new TLatex(0.11,0.88,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.035,4);
+        labelR5cm->Draw();
+
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i<12) DrawGammaSetMarker(histRelUncWeightCut[i], marker[i], 1.5,color[i],color[i]);
             else     DrawGammaSetMarker(histRelUncWeightCut[i], marker[i], 1.5,color[i-12],color[i-12]);
@@ -571,6 +677,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,0.02, 0.02,1.1,kGray+1,2);
         DrawGammaLines(0., maxR,-0.02, -0.02,1.1,kGray+1,2);
+
+        DrawGammaLines(5., 5.,minYDiff,maxYDiff,1.1,kGray+2,1);
+        labelR5cm = new TLatex(0.11,0.88,label5cm.Data());
+        SetStyleTLatex( labelR5cm,0.04,4);
+        labelR5cm->Draw();
 
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i<12) DrawGammaSetMarker(histoDiffWeightCut[i], marker[i], 1.5,color[i],color[i]);
