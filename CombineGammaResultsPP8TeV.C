@@ -2501,6 +2501,58 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_pp8TeV.%s", outputDir.Data(), suffix.Data()));
         canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_pp8TeV.pdf", outputDir.Data()));
 
+          hist2DDRDummySingle->DrawCopy();
+
+          TLegend* legendDRTheoryCombTherm        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*7.5,0.5,0.96-textSizeSinglePad*0, textSizeSinglePad, 1, "", 42, 0.15);
+
+          if (graphTheoryNLODRpp8TeV) {
+              graphTheoryNLODRpp8TeV->Draw("3,same");
+              legendDRTheoryCombTherm->AddEntry((TObject*)0,"NLO pQCD","");
+              legendDRTheoryCombTherm->AddEntry(dummyVogelsangforLegend,"#scale[0.75]{PDF: CT10, FF: GRV}","fl");
+          }
+          if (graphTheoryNLODRpp8TeVCenter){
+              graphTheoryNLODRpp8TeVCenter->Draw("lc,same");
+          }
+          if (graphTheoryNLODRpp8TeVPaquett){
+              graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
+              legendDRTheoryCombTherm->AddEntry(graphTheoryNLODRpp8TeVPaquett,"#scale[0.75]{PDF: CTEQ6.1M, FF: BFG2}","l");
+          }
+          if (graphTheoryJETPHOXDRpp8TeV) {
+              graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
+          }
+          if (graphTheoryJETPHOXDRpp8TeVCenter){
+              graphTheoryJETPHOXDRpp8TeVCenter->Draw("lc,same");
+          }
+          if (graphTheoryJETPHOXDRpp8TeV) {
+            legendDRTheoryCombTherm->AddEntry((TObject*)0,"JETPHOX","");
+            legendDRTheoryCombTherm->AddEntry(dummyJETPHOXforLegend,"#scale[0.75]{PDF: NNPDF2.3QED, FF: BFG2}","fl");
+          }
+          if (graphTheoryPOWHEGDRpp8TeV) {
+              graphTheoryPOWHEGDRpp8TeV->Draw("3,same");
+          }
+          if (graphTheoryPOWHEGDRpp8TeVCenter){
+              graphTheoryPOWHEGDRpp8TeVCenter->Draw("lc,same");
+          }
+          if (graphTheoryPOWHEGDRpp8TeV) {
+            legendDRTheoryCombTherm->AddEntry((TObject*)0,"POWHEG","");
+            legendDRTheoryCombTherm->AddEntry(dummyPOWHEGforLegend,"#scale[0.75]{PDF: NNPDF2.3QED + PYTHIA8 PS}","fl");
+          }
+          if (graphTheoryNLODRpp7TeVPromptThermalLiuWerner){
+            graphTheoryNLODRpp7TeVPromptThermalLiuWerner->Draw("lc,same");
+            legendDRTheoryCombTherm->AddEntry(graphTheoryNLODRpp7TeVPromptThermalLiuWerner,"NLO pQCD, #scale[0.75]{Prompt + Thermal}","l");
+            legendDRTheoryCombTherm->AddEntry((TObject*)0,"#scale[0.75]{pp, #sqrt{#it{s}} = 7 TeV - arXiv:1102.1052}","");
+          }
+
+          DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+
+          legendDRTheoryCombTherm->Draw();
+          labelDRSingle->Draw();
+          labelDRSingleALICE->Draw();
+          hist2DDRDummySingle->Draw("same,axis");
+
+      canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_wThermal_pp8TeV.%s", outputDir.Data(), suffix.Data()));
+      canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_wThermal_pp8TeV.pdf", outputDir.Data()));
+
     // **********************************************************************************************************************
     // ******************************** Efficiency for gamma individual measurements ****************************************
     // **********************************************************************************************************************
