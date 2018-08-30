@@ -79,7 +79,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //fDate                                                     = ReturnDateString();
     fEnergyFlag                                                 = option;
     fPeriodFlag                                                 = period;
-    fdirectphoton                                               = directphotonPlots;
+    fDirectPhoton                                               = directphotonPlots;
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
     doWriteGammaRatioFile                                       = produceOutputForPaper;
@@ -1805,7 +1805,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 //************************** Initialize binning *********************************************************************
 void Initialize(TString energy, Int_t numberOfBins){
 
-    InitializeBinning("Pi0", numberOfBins, energy, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection);
+    InitializeBinning("Pi0", numberOfBins, energy, fDirectPhoton, fMode, fEventCutSelection, fClusterCutSelection);
 
     fDeltaPt                                    = new TH1F("deltaPt","",fNBinsPt,fBinsPt);
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){

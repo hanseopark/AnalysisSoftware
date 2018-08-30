@@ -163,7 +163,7 @@ void ExtractSignalInvMassTree(
     fPrefix             = meson;
 
     fPeriodFlag         = optionPeriod;
-    fdirectphoton       = directphotonPlots;
+    fDirectPhoton       = directphotonPlots;
 
     TString outputDir   = Form("theta_%.4f/%s/%s/%s/ExtractSignalInvMassTree",fCutTheta,cutSelection.Data(),optionEnergy.Data(),Suffix.Data());
     TString outputDirMon= Form("theta_%.4f/%s/%s/%s/ExtractSignalInvMassTree/Monitoring/",fCutTheta,cutSelection.Data(),optionEnergy.Data(),Suffix.Data());
@@ -2545,7 +2545,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
 //****************************************************************************
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fDirectPhoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet);
     
     if (setPi0.CompareTo("Pi0") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
         fPeakRange                  = new Double_t[2];

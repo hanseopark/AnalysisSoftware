@@ -83,7 +83,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     //************************** Set global variables ***************************************************************
     fEnergyFlag                                                 = option;
     fPeriodFlag                                                 = period;
-    fdirectphoton                                               = directphotonPlots;
+    fDirectPhoton                                               = directphotonPlots;
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
     frapidityAndeta                                             = rapidityAndeta;
@@ -988,7 +988,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 //************************** Initialize binning *********************************************************************
 void Initialize(TString meson, TString energy, Int_t numberOfBins){
 
-    InitializeBinning(meson, numberOfBins, energy, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection);
+    InitializeBinning(meson, numberOfBins, energy, fDirectPhoton, fMode, fEventCutSelection, fClusterCutSelection);
 
     fDeltaPt                                    = new TH1F("deltaPt","",fNBinsPt,fBinsPt);
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){

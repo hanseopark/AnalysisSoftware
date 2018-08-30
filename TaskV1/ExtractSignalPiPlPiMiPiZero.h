@@ -49,7 +49,7 @@ TString fBackgroundMultCutNumber;
 Int_t   fMode;
 
 
-TString fdirectphoton;
+TString fDirectPhoton;
 TString fThesis                                             = "";
 
 // Output Files
