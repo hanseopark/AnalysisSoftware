@@ -2035,20 +2035,20 @@
                     binning[i] = fBinsPi0pPb5TeVPCMCentPt[i];
                 }
               } else if ( mode == 2 || mode == 13 ) {
-                  maxNBins    = 32;
-                  binningMax  = 36;
+                  maxNBins    = 24;
+                  binningMax  = 24;
                   for(Int_t i = 0; i < binningMax+1; i++){
                     binning[i] = fBinsPi0pPb5TeVEMCCentPt[i];
                   }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins    = 32;
-                    binningMax  = 36;
+                    maxNBins    = 24;
+                    binningMax  = 24;
                     for(Int_t i = 0; i < binningMax+1; i++){
                       binning[i] = fBinsPi0pPb5TeVEMCCentPt[i];
                     }
                 } else if ( mode == 3 || mode == 5 ) {
-                    maxNBins    = 36;
-                    binningMax  = 36;
+                    maxNBins    = 24;
+                    binningMax  = 24;
                     for(Int_t i = 0; i < binningMax+1; i++){
                       binning[i] = fBinsPi0pPb5TeVEMCCentPt[i];
                     }
@@ -2674,20 +2674,20 @@
                           binning[i] = fBinsEtapPb5TeVCentPt[i];
                   }
               } else if (mode == 2 || mode == 13 ){ // PCM-EMC, PCM-DMC
-                    maxNBins    = 18;
-                    binningMax  = 21;
+                    maxNBins    = 17;
+                    binningMax  = 17;
                     for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsEtapPb5TeVCentPt[i];
                     }
                 } else if (mode == 3 ){ // PCM-PHOS
-                    maxNBins    = 14;
-                    binningMax  = 20;
+                    maxNBins    = 17;
+                    binningMax  = 17;
                     for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsEtapPb5TeVCentPt[i];
                     }
                 } else if (mode == 4 || mode == 12 ){ // EMC, DMC
-                    maxNBins    = 19;
-                    binningMax  = 21;
+                    maxNBins    = 17;
+                    binningMax  = 17;
                     for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsEtapPb5TeVCentPt[i];
 
