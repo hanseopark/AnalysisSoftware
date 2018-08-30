@@ -86,7 +86,7 @@ function ExtractSignal()
 # Compile directly with G++ incl fsanitize (prototype)
 function ExtractSignalGpp()
 {
-    g++ "TaskV1/ExtractSignalV2.C" -I$(root-config --incdir) $(root-config --libs) -fsanitize=address -o "TaskV1/ExtractSignalV2.o"
+    g++ "TaskV1/ExtractSignalV2.C" -I$(root-config --incdir) $(root-config --libs --evelibs --glibs) -lMinuit -fsanitize=address -g -o "TaskV1/ExtractSignalV2"
     TaskV1/ExtractSignalV2.o $1 $MODE $USETHNSPARSE
 }
 

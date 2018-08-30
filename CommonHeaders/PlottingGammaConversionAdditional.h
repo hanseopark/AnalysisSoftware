@@ -157,7 +157,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -269,7 +269,7 @@
             myPadLogo->SetTopMargin(0.0);
             myPadLogo->SetBottomMargin(0.0);
             myPadLogo->SetRightMargin(0.0);
-            TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+            TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
             myPadLogo->Draw();  // to take out for not using a logo.
             myPadLogo->cd();
             myAliceLogo->Draw();
@@ -354,7 +354,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -469,7 +469,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -562,7 +562,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -629,7 +629,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -709,7 +709,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -802,7 +802,7 @@
     // 	myPadLogo->SetTopMargin(0.0);
     // 	myPadLogo->SetBottomMargin(0.0);
     // 	myPadLogo->SetRightMargin(0.0);
-    // 	TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+    // 	TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
     // 	myPadLogo->Draw();  // to take out for not using a logo.
     // 	myPadLogo->cd();
     // 	myAliceLogo->Draw();
@@ -875,7 +875,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         //myAliceLogo->Draw();
@@ -973,7 +973,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -1042,7 +1042,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
@@ -1094,7 +1094,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
@@ -1144,7 +1144,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
@@ -1223,7 +1223,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
@@ -1335,7 +1335,7 @@
         myPadLogo->SetTopMargin(0.0);
         myPadLogo->SetBottomMargin(0.0);
         myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+        TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
@@ -2268,7 +2268,7 @@
     myPadLogo->SetTopMargin(0.0);
     myPadLogo->SetBottomMargin(0.0);
     myPadLogo->SetRightMargin(0.0);
-    TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+    TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
     myPadLogo->Draw();  // to take out for not using a logo.
     myPadLogo->cd();
 
@@ -2303,7 +2303,7 @@
     myPadLogo->SetTopMargin(0.0);
     myPadLogo->SetBottomMargin(0.0);
     myPadLogo->SetRightMargin(0.0);
-    TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
+    TImage *myAliceLogo = TImage::Open("ALICE_logo.eps");
     myPadLogo->Draw();  // to take out for not using a logo.
     myPadLogo->cd();
 

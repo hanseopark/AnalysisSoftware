@@ -1,6 +1,7 @@
 #ifndef GAMMACONV_ConversionFunctions
 #define GAMMACONV_ConversionFunctions
 
+    #include <fstream>
     #include "TFitResultPtr.h"
     #include "TObjString.h"
     #include "TString.h"
