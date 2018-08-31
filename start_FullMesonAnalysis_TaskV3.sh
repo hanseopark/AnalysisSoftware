@@ -460,6 +460,14 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1abA* ]] ; then
     MCROOTFILEADDSIG=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_LHC14a1b_MC_Pi0_A.root
     MCROOTFILEADDSIGETA=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_LHC14a1b_MC_Eta_A.root
     ADDEDSIG=1
+elif [[ "$1" == *-mAddSigPbPbLHC16h4* ]] ; then
+    MERGINGMC=1
+    ADDEDSIG=1
+    DATAROOTFILE=$2
+    MCROOTFILE=$3
+    MCROOTFILEADDSIG=$4
+    MCROOTFILEADDSIGETA=$4
+    SUFFIX=$5
 elif [[ "$1" == *-mAddSigPi0ForGammaPbPbLHC14a1aA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
