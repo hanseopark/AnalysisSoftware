@@ -1130,6 +1130,97 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoDummySinglePad->Draw("axis,same");
     canvasPhotonR_siglepad->Print(Form("%s/PhotonConvRsingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
+
+    Double_t arrayXRConv2Pad[2];
+    Double_t arrayYRConv2Pad[3];
+    Double_t relXRConv2Pad[3];
+    Double_t relYRConv2Pad[3];
+    textSizeLabels = 30;
+    Double_t textsizeLabelsDownRConv2Pad = 0;
+    Double_t textsizeFacDownRConv2Pad = 0;
+    Double_t textsizeLabelsUpRConv2Pad = 0;
+    Double_t textsizeFacUpRConv2Pad = 0;
+    ReturnCorrectValuesForCanvasScaling(1300, 1000, 1, 2, 0.08, 0.02, 0.02, 0.05, arrayXRConv2Pad, arrayYRConv2Pad, relXRConv2Pad, relYRConv2Pad);
+    TCanvas * canvasRConv2Pad = new TCanvas("canvasRConv2Pad","",1200,1200);
+
+    TPad* padUpperRConv2Pad = new TPad("","",arrayXRConv2Pad[0], arrayYRConv2Pad[1], arrayXRConv2Pad[1], arrayYRConv2Pad[0],-1, -1, -2);
+    DrawGammaPadSettings( padUpperRConv2Pad, relXRConv2Pad[0], relXRConv2Pad[2], relYRConv2Pad[0], relYRConv2Pad[1]);
+    TPad* padLowerRConv2Pad = new TPad("","",arrayXRConv2Pad[0], arrayYRConv2Pad[2], arrayXRConv2Pad[1], arrayYRConv2Pad[1],-1, -1, -2);
+    DrawGammaPadSettings( padLowerRConv2Pad, relXRConv2Pad[0], relXRConv2Pad[2], relYRConv2Pad[1], relYRConv2Pad[2]);
+    marginXRatio = relXRConv2Pad[0]*1200;
+        if (padUpperRConv2Pad->XtoPixel(padUpperRConv2Pad->GetX2()) < padUpperRConv2Pad->YtoPixel(padUpperRConv2Pad->GetY1())){
+            textsizeLabelsUpRConv2Pad = (Double_t)textSizeLabels/padUpperRConv2Pad->XtoPixel(padUpperRConv2Pad->GetX2()) ;
+            textsizeFacUpRConv2Pad = (Double_t)1./padUpperRConv2Pad->XtoPixel(padUpperRConv2Pad->GetX2()) ;
+        } else {
+            textsizeLabelsUpRConv2Pad = (Double_t)textSizeLabels/padUpperRConv2Pad->YtoPixel(padUpperRConv2Pad->GetY1());
+            textsizeFacUpRConv2Pad = (Double_t)1./padUpperRConv2Pad->YtoPixel(padUpperRConv2Pad->GetY1());
+        }
+        padUpperRConv2Pad->Draw();
+        if (padLowerRConv2Pad->XtoPixel(padLowerRConv2Pad->GetX2()) < padLowerRConv2Pad->YtoPixel(padLowerRConv2Pad->GetY1())){
+            textsizeLabelsDownRConv2Pad = (Double_t)textSizeLabels/padLowerRConv2Pad->XtoPixel(padLowerRConv2Pad->GetX2()) ;
+            textsizeFacDownRConv2Pad = (Double_t)1./padLowerRConv2Pad->XtoPixel(padLowerRConv2Pad->GetX2()) ;
+        } else {
+            textsizeLabelsDownRConv2Pad = (Double_t)textSizeLabels/padLowerRConv2Pad->YtoPixel(padLowerRConv2Pad->GetY1());
+            textsizeFacDownRConv2Pad = (Double_t)1./padLowerRConv2Pad->YtoPixel(padLowerRConv2Pad->GetY1());
+        }
+        padLowerRConv2Pad->Draw();
+
+        TH2F *histoDummyRConv2PadR = new TH2F("histoDummyRConv2PadR","histoDummyRConv2PadR",1000,0.,184.,1000,1.5e-9,1.);
+        SetStyleHistoTH2ForGraphs(histoDummyRConv2PadR, "R (cm)","Counts",0.85*textsizeLabelsUp, textsizeLabelsUp,0.85*textsizeLabelsUp,textsizeLabelsUp,.9, .7);
+        histoDummyRConv2PadR->GetYaxis()->SetRangeUser(1.5e-9,2e-3);
+
+        TH2F *histoDummyRConv2PadPt =  new TH2F("histoDummyRConv2PadPt","histoDummyRConv2PadPt",1000,0.,184.,1000,0.,2.);
+        SetStyleHistoTH2ForGraphs(histoDummyRConv2PadPt,"R (cm)","#frac{Data}{MC}",0.85*textsizeLabelsDown, textsizeLabelsDown,0.85*textsizeLabelsDown,textsizeLabelsDown, 0.9,0.7);
+        histoDummyRConv2PadPt->GetYaxis()->SetRangeUser(0.35,1.65);
+
+    padUpperRConv2Pad->cd();
+    padUpperRConv2Pad->SetLogy();
+    histoDummyRConv2PadR->Draw("copy");
+
+        for(Int_t iR = 1; iR < nBinsR; iR++) DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
+
+        histoRData->SetLineWidth(2);
+        histoRData->Draw("same,hist");
+        histoRMC->SetLineWidth(2);
+        histoRMC->Draw("same,hist");
+        histoRTrueMC->SetLineWidth(2);
+        histoRTrueMC->Draw("same,hist");
+        histoCombRTrueMC->SetLineWidth(2);
+        histoCombRTrueMC->DrawCopy("same,hist");
+        histoPi0DalRTrueMC->SetLineWidth(2);
+        histoPi0DalRTrueMC->DrawCopy("same,hist");
+        histoEtaDalRTrueMC->SetLineWidth(2);
+        histoEtaDalRTrueMC->DrawCopy("same,hist");
+
+        TLegend* legenRdistrib2 = GetAndSetLegend2(0.6, 0.93-(6*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
+        legenRdistrib2->AddEntry(histoRData,"Data","l");
+        legenRdistrib2->AddEntry(histoRMC,"MC","l");
+        legenRdistrib2->AddEntry(histoRTrueMC,"True MC","l");
+        legenRdistrib2->AddEntry(histoCombRTrueMC,"True MC comb.","l");
+        legenRdistrib2->AddEntry(histoPi0DalRTrueMC,"True MC #pi^{0} Dal.","lf");
+        legenRdistrib2->AddEntry(histoEtaDalRTrueMC,"True MC #eta Dal.","fl");
+        legenRdistrib2->Draw();
+
+    histoDummyRConv2PadR->Draw("axis,same");
+    padLowerRConv2Pad->cd();
+    histoDummyRConv2PadPt->Draw("copy");
+
+
+        for(Int_t iR = 1; iR < nBinsR; iR++)
+            DrawGammaLines(arrayRBins[iR],arrayRBins[iR],1.5e-9,2e-3,1.,kGray);
+        DrawGammaLines(0.,180,1., 1.,1.,kGray);
+
+        DrawGammaSetMarker(histoDataMCRatioR, 20, markerSize, colorData, colorData);
+        histoDataMCRatioR->Draw("same,histo");
+
+        histoDummy4PanelsDown->Draw("axis,same");
+
+
+    histoDummyRConv2PadPt->Draw("same,axis");
+    canvasRConv2Pad->Print(Form("%s/PhotonRConv2Pad%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+
+
     //______________________________________ Purity _________________________________
     Double_t arrayXpurity[2];
     Double_t arrayYpurity[3];

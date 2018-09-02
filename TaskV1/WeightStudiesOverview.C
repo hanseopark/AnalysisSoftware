@@ -271,35 +271,6 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
         }
 
-
-
-        if ( i <= 4 || V0ReaderName[i].Contains("On-the-Fly") ){
-            histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
-            histoDiffWeightCut[i]->Add(histWeight[0],-1.);
-        } else if( i > 4 && V0ReaderName[i].Contains("Offline") ){
-            histoRatioWeightCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
-            histoDiffWeightCut[i]->Add(histWeight[4],-1.);
-        }
-        if(period[i].Contains("LHC16")){
-            cout << i <<  " 13 TeV" << endl;
-            if ( i != 5 || V0ReaderName[i].Contains("On-the-Fly") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
-            else if( i == 5 && V0ReaderName[i].Contains("Offline") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[4],1.,1.,"");
-        } else if(period[i].Contains("LHC17")){
-            cout << i <<  " 5 TeV" << endl;
-            if ( i != 7 || V0ReaderName[i].Contains("On-the-Fly") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[2],1.,1.,"");
-            else if( i == 7 && V0ReaderName[i].Contains("Offline") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[6],1.,1.,"");
-        } else  if(period[i].Contains("LHC15")){
-            cout << i <<  " 5 TeV" << endl;
-            if ( i != 4 || V0ReaderName[i].Contains("On-the-Fly") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[0],1.,1.,"");
-            else if( i == 4 && V0ReaderName[i].Contains("Offline") )
-                histoRatioWeightEnergyCut[i]->Divide(histWeight[i],histWeight[1],1.,1.,"");
-        }
-
         histRelUncWeightCut[i] = (TH1F*)histWeight[i]->Clone("histRelUncWeight");
         for (Int_t k = 1; k < histRelUncWeightCut[i]->GetNbinsX()+1; k++){
             if (histRelUncWeightCut[i]->GetBinContent(k) != 0){
