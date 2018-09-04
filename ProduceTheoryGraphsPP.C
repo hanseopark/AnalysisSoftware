@@ -1104,6 +1104,10 @@ void ProduceTheoryGraphsPP(){
     histoChPionPythia8MonashInvSec7TeVLego->Add((TH1F*)filePythia8Monash2013_7TeVLego->Get("hPt_PiMi_MB_XSec"),1);
     histoChPionPythia8MonashInvSec7TeVLego->Scale(0.5);
 
+    //omega
+    TFile *filePythia8Monash2013_7TeV = new TFile("ExternalInput/Theory/Pythia/pythia8_7TeV_compilation_poppenborg.root");
+    TH1F* histoOmegaPythia8MonashInvSec7TeV = (TH1F*)filePythia8Monash2013_7TeV->Get("h_omega_yDefault");
+
     //**********************************************************************************************************************
     //***************************** Pythia calculations 8TeV ************************************************************
     //**********************************************************************************************************************
@@ -1489,6 +1493,9 @@ void ProduceTheoryGraphsPP(){
         histoEtaPythia8MonashInvSec7TeVLego->Write("histoInvSecPythia8Monash2013LegoEta7TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash7TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego7TeV", TObject::kOverwrite);
         histoChPionPythia8MonashInvSec7TeVLego->Write("histoInvSecPythia8Monash2013LegoChPion7TeV", TObject::kOverwrite);
+
+        // omega
+        histoOmegaPythia8MonashInvSec7TeV->Write("histoInvSecPythia8Monash2013Omega7TeV", TObject::kOverwrite);
 
         // pi0, eta, eta/pi0 Pythia 6.4 Perugia2011
         histoPi07TeVPythia6->Write("histoPi0Pythia6_Perugia2011_7000TeV", TObject::kOverwrite);
