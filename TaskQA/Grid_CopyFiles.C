@@ -148,7 +148,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
     const Int_t nFiles = 6;
     TString Files[nFiles] = {
-      "GammaCalo_181", "GammaCalo_182", "GammaCalo_183", "GammaConvCalo_130", "GammaConvCalo_131", "GammaConvCalo_132"
+      "GammaCalo_181", "GammaCalo_182", "GammaCalo_183", "GammaConvCalo_129", "GammaConvCalo_130", "GammaConvCalo_131"
                             };
 
     const Int_t nMerge = 4;
