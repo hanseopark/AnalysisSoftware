@@ -1964,7 +1964,7 @@
                         binning[i] = fBinsPi08TeVPtmEMC[i];
                     }
                 } else if ( mode == 11 ){
-                    maxNBins = 60;
+                    maxNBins = 64;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi08TeVPtmEMCComb[i];
                     }

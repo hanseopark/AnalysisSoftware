@@ -611,11 +611,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         TH1F* histoPythia8_4CInvXSectionEta                 = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Eta");
 
         TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
-        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+//        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
 
         TGraphAsymmErrors* graphPi0DSS14central             = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
-        while (graphPi0DSS14central->GetX()[graphPi0DSS14central->GetN()-1] > 42. ) graphPi0DSS14central->RemovePoint(graphPi0DSS14central->GetN()-1);
-        for(Int_t iBinD = 0; iBinD<graphPi0DSS14central->GetN(); iBinD++){graphPi0DSS14central->SetPointEYhigh(iBinD,0); graphPi0DSS14central->SetPointEYlow(iBinD,0);}
+//        while (graphPi0DSS14central->GetX()[graphPi0DSS14central->GetN()-1] > 42. ) graphPi0DSS14central->RemovePoint(graphPi0DSS14central->GetN()-1);
+//        for(Int_t iBinD = 0; iBinD<graphPi0DSS14central->GetN(); iBinD++){graphPi0DSS14central->SetPointEYhigh(iBinD,0); graphPi0DSS14central->SetPointEYlow(iBinD,0);}
 
         TGraph* graphEtaToPi07000GeV                        = (TGraph*) fileEtaToPi07000GeV->Get("EtaPi0Ratio7000GeV");
         TGraph* graphEtaToPi02760GeV                        = (TGraph*) directoryfileEtaToPi02760GeV->Get("graphRatioEtaToPi0Comb2760GeVTotErr");
@@ -633,12 +633,12 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         //TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
         //TGraphAsymmErrors* graphNLODSS14Calc                = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec8000GeV");
 
-        while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 37. )
-            graphNLOCalcEtaMuHalf->RemovePoint(graphNLOCalcEtaMuHalf->GetN()-1);
-        while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > 37. )
-            graphNLOCalcEtaMuOne->RemovePoint(graphNLOCalcEtaMuOne->GetN()-1);
-        while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 37. )
-            graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
+//        while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 37. )
+//            graphNLOCalcEtaMuHalf->RemovePoint(graphNLOCalcEtaMuHalf->GetN()-1);
+//        while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > 37. )
+//            graphNLOCalcEtaMuOne->RemovePoint(graphNLOCalcEtaMuOne->GetN()-1);
+//        while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 37. )
+//            graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
 
         cout << "mu half" << endl;
         graphNLOEtaToPi0MuHalf->Print();
@@ -879,7 +879,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasWeights->SetLogx();
 
     TH2F * histo2DPi0Weights;
-    histo2DPi0Weights = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,0.23,110.,1000,-0.7,1.3);
+    histo2DPi0Weights = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,0.23,220.,1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
@@ -906,11 +906,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         labelWeightsEnergy->Draw();
         labelWeightsPi0->Draw();
 
-//      DrawGammaLines(0.23, 110. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.23, 110. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.23, 110. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.23, 110. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.23, 110. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.23, 220. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.23, 220. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.23, 220. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.23, 220. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.23, 220. , 0.2, 0.2,0.1, kGray, 3);
 
     canvasWeights->SaveAs(Form("%s/Pi0_WeightsA.%s",outputDir.Data(),suffix.Data()));
 
@@ -923,7 +923,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasRelSysErr->SetLogx();
 
     TH2F * histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23,110.,1000,0,80.5);
+    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23,220.,1000,0,200.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -972,7 +972,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasRelStatErr->SetLogx();
 
     TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23,110.,1000,0,80.5);
+    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23,220.,1000,0,200.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1023,7 +1023,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasRelTotErr->SetLogx();
 
     TH2F * histo2DRelTotErrPi0;
-    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23,110.,1000,0,80.5);
+    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23,220.,1000,0,200.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -1119,15 +1119,15 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 //    graphCombPi0InvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",4,35);
 //    Double_t paramTCMPi0New[5]  = { fitTCMDecomposedL->GetParameter(0),fitTCMDecomposedL->GetParameter(1),
 //                                    fitTCMDecomposedH->GetParameter(0),fitTCMDecomposedH->GetParameter(1),fitTCMDecomposedH->GetParameter(2)};
-    Double_t paramTCMPi0New[5]  = { graphCombPi0InvXSectionTotA->GetY()[0],0.1,
-                                    graphCombPi0InvXSectionTotA->GetY()[3],0.6,3.0};
-    TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionStatA,0.3,100. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+    Double_t paramTCMPi0New[5]  = { graphCombPi0InvXSectionTotA->GetY()[1],0.1,
+                                    graphCombPi0InvXSectionTotA->GetY()[6],0.6,3.0};
+    TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionStatA,0.3,200. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 
-    TF1* fitTCMInvXSectionPi0highPt   = FitObject("tcm","fitTCMInvXSectionPi0highPt","Pi0",graphCombPi0InvXSectionStatA,8.,100. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+    TF1* fitTCMInvXSectionPi0highPt   = FitObject("tcm","fitTCMInvXSectionPi0highPt","Pi0",graphCombPi0InvXSectionStatA,8.,200. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 
     // Tsallis fit
     Double_t paramGraphPi0[3]                              = {5e11, 6., 0.13};
-    TF1* fitInvXSectionPi0                       = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",histoEMCALPi0InvXSectionStat,0.3,100.,paramGraphPi0,"QNRMEX0+");
+    TF1* fitInvXSectionPi0                       = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",histoEMCALPi0InvXSectionStat,0.3,200.,paramGraphPi0,"QNRMEX0+");
     TF1* fitInvXSectionPi0Graph                  = (TF1*)fitInvXSectionPi0->Clone("fitInvCrossSectionPi08TeVGraph");
 
     // *************************************************************************************************************
@@ -1210,7 +1210,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         canvasShift->SetLogx(1);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.23, 110.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.23, 220.);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1,1.2);
         histoBinShift->GetXaxis()->SetMoreLogLabels(1);
@@ -1255,7 +1255,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         canvasDummy2->SetLogy();
         canvasDummy2->SetLogx();
         TH2F * histo2DDummy2;
-        histo2DDummy2               = new TH2F("histo2DDummy2","histo2DDummy2",1000,0.23,110.,1000,1e-2,10e12);
+        histo2DDummy2               = new TH2F("histo2DDummy2","histo2DDummy2",1000,0.23,220.,1000,1e-5,10e12);
         SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 0.8,1.55);
         histo2DDummy2->DrawCopy();
 
@@ -1288,23 +1288,23 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     // redo fitting after binshifts
     // *************************************************************************************************************
     // Tsallis function
-    graphCombPi0InvXSectionTotA->Fit(fitInvXSectionPi0,"QNRMEX0+","",0.3,100.);
-    fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,100.,paramGraphPi0,"QNRMEX0+");
-    fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,100.,paramGraphPi0,"QNRMEX0+");
+    graphCombPi0InvXSectionTotA->Fit(fitInvXSectionPi0,"QNRMEX0+","",0.3,200.);
+    fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,200.,paramGraphPi0,"QNRMEX0+");
+    fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,200.,paramGraphPi0,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionPi0)<< endl;
 
     //Two component model from Bylinkin
-    fitTCMInvXSectionPi0        = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,100. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+    fitTCMInvXSectionPi0        = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,200. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitTCMInvXSectionPi0)<< endl;
 
     TF1* fitTCMInvXSectionPi0Plot = new TF1("twoCompModel_plotting",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mesonMassExpectPi0,mesonMassExpectPi0,mesonMassExpectPi0));
-    fitTCMInvXSectionPi0Plot->SetRange(0.3,100.);
+    fitTCMInvXSectionPi0Plot->SetRange(0.3,200.);
     fitTCMInvXSectionPi0Plot->SetParameters(fitTCMInvXSectionPi0->GetParameters());
     fitTCMInvXSectionPi0Plot->SetParErrors(fitTCMInvXSectionPi0->GetParErrors());
 //     TF1* fitTCMInvXSectionPi02  = FitObject("tcm","fitTCMInvCrossSectionPi08TeV2","Pi0",graphCombPi0InvXSectionTotA,0.4,40.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 //     cout << WriteParameterToFile(fitTCMInvXSectionPi02)<< endl;
 
-    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,5,100. ,NULL,"QNRMEX0+","", kFALSE);
+    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,5,200. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
 
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi08TeV","Pi0",graphPCMPi0InvXSectionStat,0.3,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
@@ -1456,7 +1456,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         cout << textsizeLabelsPP << endl;
 
     TH2F * histo2DPi0RatioToCombFit;
-    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,110.,1000,0.2,4.    );
+    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,220.,1000,0.2,4.    );
     SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
     histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
@@ -1470,9 +1470,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphRatioPi0CombCombFitStatA->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 110. , 1., 1.,0.1, kGray+2);
-        DrawGammaLines(0.23, 110. , 1.1, 1.1,0.1, kGray, 7);
-        DrawGammaLines(0.23, 110. , 0.9, 0.9,0.1, kGray, 7);
+        DrawGammaLines(0.23, 220. , 1., 1.,0.1, kGray+2);
+        DrawGammaLines(0.23, 220. , 1.1, 1.1,0.1, kGray, 7);
+        DrawGammaLines(0.23, 220. , 0.9, 0.9,0.1, kGray, 7);
 
         TLatex *labelRatioToFitEnergy   = new TLatex(0.72, 0.91, collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel,4);
@@ -1519,9 +1519,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0EMCALMergedCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMEMCALCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 110. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 110. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 110. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 220. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 220. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 220. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1627,9 +1627,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0EMCALMergedCombFitStatH->Draw("p,same,z");
         graphRatioPi0PCMEMCALCombFitStatH->Draw("p,same,z");
 
-        DrawGammaLines(7, 110. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(7, 110. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(7, 110. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(7, 220. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(7, 220. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(7, 220. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1661,9 +1661,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0PCMCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMCombFitPCMStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 110. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 110. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 110. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 220. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 220. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 220. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1774,7 +1774,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasDummy2->SetLogy();
     canvasDummy2->SetLogx();
     TH2F* histo2DDummy3;
-    histo2DDummy3               = new TH2F("histo2DDummy3","histo2DDummy3",1000,0.33,110.,1000,1e-2,1e11);
+    histo2DDummy3               = new TH2F("histo2DDummy3","histo2DDummy3",1000,0.33,220.,1000,1e-5,1e11);
     SetStyleHistoTH2ForGraphs(histo2DDummy3, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 0.8,1.55);
 
     TF1* fitTCMDecomposedPi0L                 = new TF1("twoCompModel_DecLow",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mesonMassExpectPi0,mesonMassExpectPi0,mesonMassExpectPi0));
@@ -1785,7 +1785,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     fitTCMDecomposedPi0H->SetParameters(fitTCMInvXSectionPi0Plot->GetParameter(2),fitTCMInvXSectionPi0Plot->GetParameter(3), fitTCMInvXSectionPi0Plot->GetParameter(4));
     fitTCMDecomposedPi0H->SetRange(0.3,110);
 
-    histo2DDummy3               = new TH2F("histo2DDummy2","histo2DDummy2",1000,0.23,110.,1000,1e-2,9e12);
+    histo2DDummy3               = new TH2F("histo2DDummy2","histo2DDummy2",1000,0.23,220.,1000,1e-5,9e12);
     SetStyleHistoTH2ForGraphs(histo2DDummy3, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 0.8,1.55);
     histo2DDummy3->DrawCopy();
 
@@ -1797,7 +1797,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 //    fitInvXSectionPi0->SetLineColor(kBlue+2);
 //    fitInvXSectionPi0->Draw("same");
     fitTCMInvXSectionPi0Plot->SetLineColor(kRed+2);
-    fitTCMInvXSectionPi0Plot->SetRange(0.3,110.);
+    fitTCMInvXSectionPi0Plot->SetRange(0.3,220.);
     fitTCMInvXSectionPi0Plot->Draw("same");
 
     fitTCMDecomposedPi0L->SetLineColor(kAzure);
@@ -2235,7 +2235,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasXSectionPi0->SetLogy();
 
     TH2F * histo2DXSectionPi0;
-    histo2DXSectionPi0          = new TH2F("histo2DXSectionPi0","histo2DXSectionPi0",11000,0.23,110.,1000,1e-2,9e11);
+    histo2DXSectionPi0          = new TH2F("histo2DXSectionPi0","histo2DXSectionPi0",11000,0.23,220.,1000,1e-5,9e11);
     SetStyleHistoTH2ForGraphs(histo2DXSectionPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionPi0->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -2335,7 +2335,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasAcceptanceTimesEff->SetLogx(1);
 
         TH2F * histo2DAccEff;
-        histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  110, 1000, 8e-5, 3 );
+        histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  220, 1000, 8e-5, 5 );
         SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
         histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
@@ -2427,7 +2427,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         }
         cout << textsizeLabelsPP << endl;
 
-        TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23,110.,1000,0.4,2.85);
+        TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23,220.,1000,0.4,2.85);
         SetStyleHistoTH2ForGraphs(ratio2DTheoryPP, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                                   0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
         ratio2DTheoryPP->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -2482,7 +2482,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
         TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+3, 0.3, 1.-(0.0196 ), 0.35, 1.+(0.0196));
         boxErrorSigmaRatio->Draw();
-        DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
+        DrawGammaLines(0.23, 220.,1., 1.,0.1,kGray);
 
         TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.71,0.6,0.97, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
@@ -2508,7 +2508,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
 
 
-    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,110.,1000,0.2,5.2);
+    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,220.,1000,0.2,5.2);
     SetStyleHistoTH2ForGraphs(ratio2DTheoryPP2, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     ratio2DTheoryPP2->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -2550,7 +2550,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     graphRatioPi0CombCombFitStatA->Draw("p,same");
 
     boxErrorSigmaRatio->Draw();
-    DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
+    DrawGammaLines(0.23, 220.,1., 1.,0.1,kGray);
 
     TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
@@ -2717,7 +2717,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
-        TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,0.23,110.,1000,0.55,1.95);
+        TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,0.23,220.,1000,0.55,1.95);
         SetStyleHistoTH2ForGraphs(ratio2DNLO, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
                                   0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio2DNLO->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -2760,11 +2760,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
         boxErrorSigmaRatio->Draw();
-        DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
+        DrawGammaLines(0.23, 220.,1., 1.,0.1,kGray);
 
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
-        TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,0.23,110.,1000,0.55,1.95);
+        TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,0.23,220.,1000,0.55,1.95);
         SetStyleHistoTH2ForGraphs(ratio2DPythia, "#it{p}_{T} (GeV/#it{c})","#frac{Pythia, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                                   0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 505);
         ratio2DPythia->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -2798,7 +2798,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
         boxErrorSigmaRatio->Draw();
-        DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
+        DrawGammaLines(0.23, 220.,1., 1.,0.1,kGray);
 
     canvasInvSectionPaper->Print(Form("%s/Pi0_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
 
@@ -2876,7 +2876,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasDummyATLAS->SetLogy();
     canvasDummyATLAS->SetLogx();
     TH2F* histo2DDummyATLAS;
-    histo2DDummyATLAS               = new TH2F("histo2DDummyATLAS","histo2DDummyATLAS",1000,0.3,110.,1000,1,5e11);
+    histo2DDummyATLAS               = new TH2F("histo2DDummyATLAS","histo2DDummyATLAS",1000,0.3,220.,1000,1,5e11);
     SetStyleHistoTH2ForGraphs(histo2DDummyATLAS, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 0.8,1.55);
     histo2DDummyATLAS->DrawCopy();
 
@@ -2927,9 +2927,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioATLASChargedFit->Draw("E2same");
         graphRatioATLASChargedFit->Draw("p,same,z");
 
-        DrawGammaLines(0.5, 110. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.5, 110. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.5, 110. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.5, 220. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.5, 220. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.5, 220. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         TLatex *labelATLAScharged      = new TLatex(0.82, 0.86, "ATLAS h^{#pm}");
@@ -2953,7 +2953,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasCompYieldPPInd->SetLogx();
 
     TH2F * histo2DCompCombinedRatio2;
-    histo2DCompCombinedRatio2       = new TH2F("histo2DCompCombinedRatio2","histo2DCompCombinedRatio2",1000,0.23,110.,1000,0.1,4.    );
+    histo2DCompCombinedRatio2       = new TH2F("histo2DCompCombinedRatio2","histo2DCompCombinedRatio2",1000,0.23,220.,1000,0.1,4.    );
     SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatio2, "#it{p}_{T} (GeV/#it{c})","#pi^{0}/#pi^{#pm}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     histo2DCompCombinedRatio2->GetYaxis()->SetNoExponent(kTRUE);
@@ -2984,7 +2984,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
     labelRatioTheoryPP->Draw();
 
-    DrawGammaLines(0.23, 110 , 1, 1 ,1, kGray, 1);
+    DrawGammaLines(0.23, 220 , 1, 1 ,1, kGray, 1);
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
@@ -3014,7 +3014,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
     labelRatioTheoryPP->Draw();
 
-    DrawGammaLines(0.23, 110 , 1, 1 ,1, kGray, 1);
+    DrawGammaLines(0.23, 220 , 1, 1 ,1, kGray, 1);
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions2_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
@@ -3043,7 +3043,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
     labelRatioTheoryPP->Draw();
 
-    DrawGammaLines(0.23, 110 , 1, 1 ,1, kGray, 1);
+    DrawGammaLines(0.23, 220 , 1, 1 ,1, kGray, 1);
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPionsWithMerged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
@@ -3266,115 +3266,115 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
       // **************************Plot example invariant mass bin PHOS low pt ***********************************************
       // **********************************************************************************************************************
 
-      TFile* filePHOSMB                                     = new TFile(fileNamePHOSMB.Data());
-      TDirectory* directoryPHOSPi0L                         = (TDirectory*)filePHOSMB->Get("Pi08TeV");
-      TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get("InvMassSigPlusBG_PtBin07");
-      TH1D* histoPHOSTotalBGPi0                             = (TH1D*)directoryPHOSPi0L->Get("InvMassBG_PtBin07");
-      TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get("InvMassSig_PtBin07");
-      TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get("InvMassFinalFit");
+//      TFile* filePHOSMB                                     = new TFile(fileNamePHOSMB.Data());
+//      TDirectory* directoryPHOSPi0L                         = (TDirectory*)filePHOSMB->Get("Pi08TeV");
+//      TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get("InvMassSigPlusBG_PtBin07");
+//      TH1D* histoPHOSTotalBGPi0                             = (TH1D*)directoryPHOSPi0L->Get("InvMassBG_PtBin07");
+//      TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get("InvMassSig_PtBin07");
+//      TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get("InvMassFinalFit");
 
-      canvasInvMassSamplePlot->cd();
-      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),0.9*histoPHOSSignalPi0->GetMaximum());
-      histo2DPi0InvMassDummy->DrawCopy();
+//      canvasInvMassSamplePlot->cd();
+//      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),0.9*histoPHOSSignalPi0->GetMaximum());
+//      histo2DPi0InvMassDummy->DrawCopy();
 
-      TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.9,"#pi^{0}: 1.40 GeV/c < p_{T} < 1.60 GeV/c");
+//      TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.9,"#pi^{0}: 1.40 GeV/c < p_{T} < 1.60 GeV/c");
 
-      DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
-      histoPHOSSignalPlusBGPi0->SetLineWidth(1);
-      histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPHOSTotalBGPi0->Draw("same");
+//      DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+//      histoPHOSSignalPlusBGPi0->SetLineWidth(1);
+//      histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
+//      DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+//      histoPHOSTotalBGPi0->Draw("same");
 
-      DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-      histoPHOSSignalPi0->Draw("same");
-      fitPHOSlow->SetRange(0,0.255);
-      fitPHOSlow->SetLineColor(fitColorInvMassSG);
-      fitPHOSlow->Draw("same");
+//      DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+//      histoPHOSSignalPi0->Draw("same");
+//      fitPHOSlow->SetRange(0,0.255);
+//      fitPHOSlow->SetLineColor(fitColorInvMassSG);
+//      fitPHOSlow->Draw("same");
 
-      //
-      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
-      SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-      labelInvMassEnergy->SetTextFont(43);
-      labelInvMassEnergy->Draw();
+//      //
+//      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+//      SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassEnergy->SetTextFont(43);
+//      labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"INT7 triggered");
-      SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
-      labelInvMassTriggerPHOSl->SetTextFont(43);
-      labelInvMassTriggerPHOSl->Draw();
+//      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"INT7 triggered");
+//      SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassTriggerPHOSl->SetTextFont(43);
+//      labelInvMassTriggerPHOSl->Draw();
 
-      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
-      SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
-      labelInvMassRecoPHOS->SetTextFont(43);
-      labelInvMassRecoPHOS->Draw();
+//      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
+//      SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassRecoPHOS->SetTextFont(43);
+//      labelInvMassRecoPHOS->Draw();
 
-      SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
-      labelInvMassPtRangePHOSl->SetTextAlign(31);
-      labelInvMassPtRangePHOSl->SetTextFont(43);
-      labelInvMassPtRangePHOSl->Draw();
+//      SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassPtRangePHOSl->SetTextAlign(31);
+//      labelInvMassPtRangePHOSl->SetTextFont(43);
+//      labelInvMassPtRangePHOSl->Draw();
 
-      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
-      legendInvMassPHOSl->SetMargin(0.25);
-      legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
-      legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
-      legendInvMassPHOSl->AddEntry((TObject*)0,"corr. BG","");
-      legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
-      legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
-      legendInvMassPHOSl->Draw();
-      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOSlow.%s",outputDir.Data(), suffix.Data()));
+//      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+//      legendInvMassPHOSl->SetMargin(0.25);
+//      legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
+//      legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
+//      legendInvMassPHOSl->AddEntry((TObject*)0,"corr. BG","");
+//      legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
+//      legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
+//      legendInvMassPHOSl->Draw();
+//      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOSlow.%s",outputDir.Data(), suffix.Data()));
 
-      // **********************************************************************************************************************
-      // **************************Plot example invariant mass bin PHOS high pt ***********************************************
-      // **********************************************************************************************************************
+//      // **********************************************************************************************************************
+//      // **************************Plot example invariant mass bin PHOS high pt ***********************************************
+//      // **********************************************************************************************************************
 
-      TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
-      TDirectory* directoryPHOSPi0H                           = (TDirectory*)filePHOSPHOS->Get("Pi08TeV");
-      TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get("InvMassSigPlusBG_PtBin07");
-      TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get("InvMassBG_PtBin07");
-      TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get("InvMassSig_PtBin07");
-      TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get("InvMassFinalFit");
+//      TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
+//      TDirectory* directoryPHOSPi0H                           = (TDirectory*)filePHOSPHOS->Get("Pi08TeV");
+//      TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get("InvMassSigPlusBG_PtBin07");
+//      TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get("InvMassBG_PtBin07");
+//      TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get("InvMassSig_PtBin07");
+//      TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get("InvMassFinalFit");
 
-      canvasInvMassSamplePlot->cd();
-      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
-      histo2DPi0InvMassDummy->DrawCopy();
+//      canvasInvMassSamplePlot->cd();
+//      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
+//      histo2DPi0InvMassDummy->DrawCopy();
 
-      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+//      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
 
-      DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
-      histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
-      histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPHOSHighTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPHOSHighTotalBGPi0->Draw("same");
+//      DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+//      histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
+//      histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
+//      DrawGammaSetMarker(histoPHOSHighTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+//      histoPHOSHighTotalBGPi0->Draw("same");
 
-      DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-      histoPHOSHighSignalPi0->Draw("same");
-      fitPHOShigh->SetRange(0,0.255);
-      fitPHOShigh->SetLineColor(fitColorInvMassSG);
-      fitPHOShigh->Draw("same");
+//      DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+//      histoPHOSHighSignalPi0->Draw("same");
+//      fitPHOShigh->SetRange(0,0.255);
+//      fitPHOShigh->SetLineColor(fitColorInvMassSG);
+//      fitPHOShigh->Draw("same");
 
-      //
-      labelInvMassEnergy->Draw();
+//      //
+//      labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
-      SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
-      labelInvMassTriggerPHOSh->SetTextFont(43);
-      labelInvMassTriggerPHOSh->Draw();
+//      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
+//      SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassTriggerPHOSh->SetTextFont(43);
+//      labelInvMassTriggerPHOSh->Draw();
 
-      labelInvMassRecoPHOS->Draw();
+//      labelInvMassRecoPHOS->Draw();
 
-      SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
-      labelInvMassPtRangePHOSh->SetTextAlign(31);
-      labelInvMassPtRangePHOSh->SetTextFont(43);
-      labelInvMassPtRangePHOSh->Draw();
+//      SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
+//      labelInvMassPtRangePHOSh->SetTextAlign(31);
+//      labelInvMassPtRangePHOSh->SetTextFont(43);
+//      labelInvMassPtRangePHOSh->Draw();
 
-      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
-      legendInvMassPHOSh->SetMargin(0.25);
-      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
-      legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
-      legendInvMassPHOSh->AddEntry((TObject*)0,"corr. BG","");
-      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
-      legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
-      legendInvMassPHOSh->Draw();
-      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOShigh.%s",outputDir.Data(), suffix.Data()));
+//      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+//      legendInvMassPHOSh->SetMargin(0.25);
+//      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
+//      legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
+//      legendInvMassPHOSh->AddEntry((TObject*)0,"corr. BG","");
+//      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
+//      legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
+//      legendInvMassPHOSh->Draw();
+//      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOShigh.%s",outputDir.Data(), suffix.Data()));
 
  // **********************************************************************************************************************
  // ************************* Saving of final results ********************************************************************
