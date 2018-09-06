@@ -170,7 +170,7 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
                                                     0, 1, 1, 0, 0,  1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
-        if (energy.CompareTo("pPb_5.023TeV") == 0){
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0){
             if(!spectrumName.CompareTo("IncRatio")){
                 bsmooth[i]                      = bsmoothIncRatiopPb5TeV[i];
                 benable[i]                      = benableIncRatiopPb5TeV[i];

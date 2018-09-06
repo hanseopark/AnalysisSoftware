@@ -543,7 +543,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     Bool_t      doConstFitSec[3]                                    = {kTRUE, kTRUE, kTRUE};
 
     // adjust settings for different energies and modes
-    if (energy.Contains("pPb")){
+    if (energy.CompareTo("pPb_5.023TeVRun2") == 0 && mode == 0){
+        maxPtFitSec[0]                                              = maxPtGamma;
+        maxPtFitSec[1]                                              = maxPtGamma;
+        maxPtFitSec[2]                                              = 2.5;
+    } else if (energy.Contains("pPb")){
         maxPtFitSec[0]                                              = maxPtGamma;
         maxPtFitSec[1]                                              = maxPtGamma;
         maxPtFitSec[2]                                              = maxPtGamma;
@@ -817,6 +821,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[1]                                              = 12.;
         minPtFitSec[2]                                              = 0.5;
         maxPtFitSec[2]                                              = 12.;
+    } else if(energy.CompareTo("pPb_5.023TeVRun2") == 0 && mode == 0){
+        minPtFitSec[2]                                              = 0.9;
+        maxPtFitSec[2]                                              = 3.0;
     }
 
     if ( hasCocktailInput && isPCM ) {
@@ -1071,7 +1078,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // fit correction factor to get back to original binning
         cout << "fitting ratio gamma raw yield to raw yield after pileup subtraction to extract the pileup correction factor" << endl;
         Double_t rangeShift = 0.;
-        if(energy.Contains("PbPb") || (energy.CompareTo("8TeV")==0 && mode == 2)) rangeShift = 0.5; //otherwise function is null
+        if(energy.Contains("PbPb") || (energy.CompareTo("pPb_5.023TeVRun2")==0 ) || (energy.CompareTo("8TeV")==0 && mode == 2)) rangeShift = 0.5; //otherwise function is null
         Int_t   fitStatus                                           = 0;
                 histoRatioWithWithoutPileUpFit                      = new TF1("histoRatioWithWithoutPileUpFit", "1+[0]/TMath::Power((x-[1]), [2])",
                                                                               histoESDConvGammaPt_OrBin->GetXaxis()->GetXmin()+rangeShift,

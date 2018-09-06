@@ -272,7 +272,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
         if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV")|| !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") ||
-            !fEnergy.CompareTo("pPb_5.023TeV") ||
+            !fEnergy.CompareTo("pPb_5.023TeV")  ||
+            !fEnergy.CompareTo("pPb_5.023TeVRun2") ||
             !fEnergy.CompareTo("PbPb_2.76TeV")){
                 cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
                 cocktailEta                         = (TH1D* )cocktailFile->Get("Eta_Pt");
@@ -867,6 +868,9 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         Double_t maxPtLog                        = 50.;
         Double_t minY                            = 0.85;
         Double_t maxY                            = 1.65;
+        if (mode==0 && fEnergy.CompareTo("pPb_5.023TeVRun2")==0){
+            minY                                 = 0.75;
+        }
         if (mode==2){
             minPt                                = 0.5;
             minY                                 = 0.75;

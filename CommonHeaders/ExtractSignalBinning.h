@@ -1609,9 +1609,7 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if ( mode == 0 ){
-                    if (!centrality.CompareTo("60-100%"))
-                        startPtBin     = 1;
-                    else if (!centrality.CompareTo("0-5%")||!centrality.CompareTo("5-10%")||!centrality.CompareTo("0-1%"))
+                    if (!centrality.CompareTo("0-5%")||!centrality.CompareTo("5-10%")||!centrality.CompareTo("0-1%"))
                         startPtBin     = 3;
                     else if (!centrality.CompareTo("0-1%"))
                         startPtBin     = 4;
@@ -1703,9 +1701,12 @@
         //*************************************************************************************************
         } else if (meson.Contains("directPhoton") ) {
             if (energy.CompareTo("pPb_5.023TeV")==0 || energy.CompareTo("pPb_5.023TeVCent") == 0  || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
-                if (mode == 0)
-                    startPtBin      = 2;
-                else if (mode == 2 && meson.CompareTo("directPhotonA") == 0 )
+                if (mode == 0){
+                    if (!centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%"))
+                        startPtBin      = 2;
+                    else
+                        startPtBin      = 1;
+                }else if (mode == 2 && meson.CompareTo("directPhotonA") == 0 )
                     startPtBin      = 8;
                 else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 )
                     startPtBin      = 1;
@@ -2147,10 +2148,7 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if (mode == 0 ){ // PCM
-                    if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%")){
-                        maxNBins    = 88;
-                        binningMax  = 88;
-                    } else if ( !centrality.CompareTo("0-1%") ){
+                    if ( !centrality.CompareTo("0-1%") ){
                         maxNBins    = 70;
                         binningMax  = 70;
                     } else {
@@ -2161,7 +2159,7 @@
                     for(Int_t i = 0; i < binningMax+1; i++){
                         if (DCAcase)
                             binning[i] = fBinsPi0pPb5TeVPtDCA[i];
-                        else if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") )
+                        else if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || centrality.Contains("40-60") || !centrality.CompareTo("60-100%") )
                             binning[i]  = fBinsPi0pPb5TeVPCMR2CentPt[i];
                         else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") )
                             binning[i]  = fBinsPi0pPb5TeVPCMR2Cent2Pt[i];
@@ -2808,13 +2806,13 @@
                     binningMax  = 35;
                     if (DCAcase)
                         binningMax  = 16;
-                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%"))
+                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || centrality.Contains("40-60") || !centrality.CompareTo("60-100%"))
                         binningMax  = 29;
 
                     for(Int_t i = 0; i < binningMax+1; i++){
                         if (DCAcase)
                             binning[i] = fBinsEtapPb5TeVPtDCA[i];
-                        else if ( !centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%"))
+                        else if ( !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || centrality.Contains("40-60") || !centrality.CompareTo("60-100%"))
                             binning[i] = fBinsEtapPb5TeVPCMR2CentPt[i];
                         else if (!centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%"))
                             binning[i] = fBinsEtapPb5TeVPCMR2Cent2Pt[i];
@@ -3038,10 +3036,49 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0){
-                    maxNBins    = 30;
-                    binningMax  = 30;
-                    for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i]  = fBinsDirGammapPb5TeVPCMPt[i];
+                    if(energy.CompareTo("pPb_5.023TeVRun2") == 0){
+                        if (!centrality.CompareTo("5-10%") ){
+                            maxNBins    = 88;
+                            binningMax  = 88;
+                        }else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || !centrality.CompareTo("40-60%") || !centrality.CompareTo("60-100%")){
+                            maxNBins    = 45;
+                            binningMax  = 45;
+                        } else if ( !centrality.CompareTo("0-2%") || !centrality.CompareTo("0-1%") ){
+                            maxNBins    = 28;
+                            binningMax  = 28;
+                        } else {
+                            maxNBins    = 88;
+                            binningMax  = 88;
+                        }
+                        for(Int_t i = 0; i < binningMax+1; i++){
+                            if ( !centrality.CompareTo("5-10%"))
+                                binning[i]  = fBinsDirGammapPb5TeVR2CentPCMPt[i];
+                            else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || !centrality.CompareTo("40-60%") || !centrality.CompareTo("60-100%"))
+                                binning[i]  = fBinsDirGammapPb5TeVR2Cent2PCMPt[i];
+                            else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") )
+                                binning[i]  = fBinsDirGammapPb5TeVR2Cent3PCMPt[i];
+                            else
+                                binning[i] = fBinsDirGammapPb5TeVR2PCMPt[i];
+                            // if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") )
+                            //     binning[i]  = fBinsDirGammapPb5TeVR2CentPCMPt[i];
+                            // else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") )
+                            //     binning[i]  = fBinsDirGammapPb5TeVR2Cent2PCMPt[i];
+                            // else
+                            //     binning[i] = fBinsDirGammapPb5TeVR2PCMPt[i];
+                        }
+                    }else{
+                        maxNBins    = 30;
+                        binningMax  = 30;
+                        if (centrality.CompareTo("0-100%")){ // applies if it is NOT min bias
+                            maxNBins    = 25;
+                            binningMax  = 25;
+                        }
+                        for(Int_t i = 0; i < binningMax+1; i++){
+                            if (!centrality.CompareTo("0-100%"))
+                                binning[i]  = fBinsDirGammapPb5TeVPCMPt[i];
+                            else
+                                binning[i]  = fBinsDirGammapPb5TeVCentPCMPt[i];
+                        }
                     }
                 } else if (mode == 2){
                     maxNBins    = 32;
@@ -4080,7 +4117,21 @@
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if (modi == 0){
-                            fNRebin[i]  = fBinsDirGammapPb5TeVPCMPtRebin[i];
+                            if(energy.CompareTo("pPb_5.023TeVRun2") == 0){
+                                if(!centrality.CompareTo("0-100%"))
+                                    fNRebin[i]  = fBinsDirGammapPb5TeVPCMPtRebin[i];
+                                else if(!centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%"))
+                                    fNRebin[i]  = fBinsDirGammapPb5TeVR2Cent3PCMPtRebin[i];
+                                else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || !centrality.CompareTo("40-60%") || !centrality.CompareTo("60-100%"))
+                                    fNRebin[i]  = fBinsPi0pPb5TeVPCMR2CentPtRebin[i];
+                                else
+                                    fNRebin[i]  = fBinsPi0pPb5TeVPCMR2CentPtRebin[i];
+                            }else{
+                                if(!centrality.CompareTo("0-100%"))
+                                    fNRebin[i]  = fBinsDirGammapPb5TeVPCMPtRebin[i];
+                                else
+                                    fNRebin[i]  = fBinsDirGammapPb5TeVCentPCMPtRebin[i];
+                            }
                         } else if (modi == 2){
                             fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];
                         } else if (modi == 4){
@@ -4089,11 +4140,19 @@
                             fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
                         }
                     }
-                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
-                    optionBGSmoothingVar2       = "noSmoothing";
-                    nIterBGFit                  = 13;
-                    fMaxYFracBGOverIntHist      = 20;
+                    if(energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0){
+                        optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                        optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                        optionBGSmoothingVar2       = "noSmoothing";
+                        nIterBGFit                  = 13;
+                        fMaxYFracBGOverIntHist      = 20;
+                    }else{
+                        optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                        optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                        optionBGSmoothingVar2       = "noSmoothing";
+                        nIterBGFit                  = 13;
+                        fMaxYFracBGOverIntHist      = 20;
+                    }
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
                     Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
@@ -4195,11 +4254,20 @@
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
                     if (modi == 0){
-                      if( !energy.CompareTo("pPb_5.023TeVRun2") )
-                        nIterBGFit                  = 8;
-                      else if( !energy.CompareTo("pPb_5.023TeV") ){
-                        if(centrality.CompareTo(""))
+                      if( !energy.CompareTo("pPb_5.023TeVRun2") ){
+                        if(centrality.Contains("60-100%"))
+                            nIterBGFit                  = 7;
+                        else
+                            nIterBGFit                  = 8;
+                      }else if( !energy.CompareTo("pPb_5.023TeV") ){
+                        if(centrality.Contains("0-20%") || centrality.Contains("40-60%"))
+                          nIterBGFit                = 6;
+                        else if(centrality.Contains("20-40%"))
+                          nIterBGFit                = 7;
+                        else if(centrality.Contains("60-100%"))
                           nIterBGFit                = 8;
+                        else if(centrality.CompareTo(""))
+                          nIterBGFit                = 7;
                       }
                     }
                     fMaxYFracBGOverIntHist      = 20;
@@ -5075,7 +5143,7 @@
                         else if (modi == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0))
                             fNRebin[i]  = fBinsEtapPb5TeVPCMCentPtRebin[i];
                         else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
-                            (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%")  || !centrality.CompareTo("5-10%") ||  !centrality.CompareTo("60-100%")) )
+                            ( !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%")  || !centrality.CompareTo("5-10%") || !centrality.CompareTo("0-20%") || !centrality.CompareTo("20-40%") || centrality.Contains("40-60") || !centrality.CompareTo("60-100%")) )
                             fNRebin[i]  = fBinsEtapPb5TeVPCMR2CentPtRebin[i];
                         else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
                             (!centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") ) )
@@ -5222,6 +5290,8 @@
                     if (modi == 0){
                       if( !energy.CompareTo("pPb_5.023TeVRun2") )
                         nIterBGFit                  = 8;
+                        if(centrality.Contains("0-100%"))
+                            nIterBGFit                  = 7;
                       else if( !energy.CompareTo("pPb_5.023TeV") ){
                         if(centrality.CompareTo(""))
                           nIterBGFit                = 8;

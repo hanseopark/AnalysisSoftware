@@ -247,8 +247,13 @@ void AnalyseDCADist(    TString meson           ="",
       }
       TList *DCAContainer                     = (TList*) HistosGammaConversion->FindObject(Form("%s Meson DCA tree", fCutSelection.Data()));
       if (!DCAContainer){
-	cout<<"ERROR: " << Form("%s Meson DCA tree",fCutSelection.Data()) << " not Found in File"<<endl;
-	return;
+        TTree * testtree = (TTree*)f->Get(Form("%s Meson DCA tree", fCutSelection.Data()));
+        if(testtree){
+          cout << "found Meson DCA tree in file instead of TList!" << endl;
+        }else{
+          cout<<"ERROR: " << Form("%s Meson DCA tree",fCutSelection.Data()) << " not Found in File"<<endl;
+          return;
+        }
       }
       // get ESD container and NEvents:
       TList *ESDContainer = NULL;
@@ -287,7 +292,11 @@ void AnalyseDCADist(    TString meson           ="",
 
 
       // Read DCA tree from DCA container
-      TTree* dcaTree                          = (TTree*)DCAContainer->FindObject("ESD_Mesons_InvMass_Pt_DcazMin_DcazMax_Flag");
+      TTree* dcaTree;
+      if(DCAContainer)
+        dcaTree                     = (TTree*)DCAContainer->FindObject("ESD_Mesons_InvMass_Pt_DcazMin_DcazMax_Flag");
+      else
+        dcaTree                     = (TTree*)f->Get(Form("%s Meson DCA tree", fCutSelection.Data()));
       Float_t dcaZMin, dcaZMax, pt, invMass;
       UChar_t quality, mesonMCInfo;
       dcaTree->SetBranchAddress("InvMass",&invMass);

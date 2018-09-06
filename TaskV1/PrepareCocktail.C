@@ -2435,7 +2435,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
 
     // get yRange
     Double_t yMin                           = GetYRangeExtremaFromList(list, kTRUE, kFALSE, collSys) * 0.5;
-    Double_t yMax                           = GetYRangeExtremaFromList(list, kTRUE, kTRUE, collSys) * 2;
+    Double_t yMax                           = GetYRangeExtremaFromList(list, kTRUE, kTRUE, collSys) * 12;
 
     TCanvas* canvas                         = GetAndSetCanvas("canvas", 0, 0, 1700, 2000);
     DrawCanvasSettings(canvas, 0.152, 0.015, 0.015, 0.068);
@@ -2472,8 +2472,8 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
 
     // create legend
     Int_t textSizeLabelsPixel                 = 2000*0.038;
-    TLegend* legend                              = GetAndSetLegend2(0.2,  0.09, 0.65, 0.08+(1.05*0.028*nRows),textSizeLabelsPixel, 2, "", 43, 0);
-    TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE, %s", collSys.Data()));
+    TLegend* legend                              = GetAndSetLegend2(0.2,  0.09, 0.65, 0.08+(1.05*0.040*nRows),textSizeLabelsPixel, 2, "", 43, 0);
+    TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE, %s", cent.Data()));
     SetStyleTLatex( labelEnergy, 0.043,4, 1, 42, kTRUE, 31);
 
     if (hasHeavyParticle && xMax < 5 && fEnergyFlag.CompareTo("2.76TeV")){

@@ -357,6 +357,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 FillDCAHistogramsFromTree(dcaTree,kFALSE);
                 CalculatePileUpBackground(kFALSE);
                 pileUpCorrection                                                = kTRUE;
+            } else {
+                dcaTree                                                         = (TTree*)f->Get(Form("%s Photon DCA tree", fCutSelectionRead.Data()));
+                if(dcaTree){
+                    FillDCAHistogramsFromTree(dcaTree,kFALSE);
+                    CalculatePileUpBackground(kFALSE);
+                    pileUpCorrection                                                = kTRUE;
+                }
             }
         }
     }
@@ -2951,11 +2958,27 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
-    } else if ((fEnergyFlag.Contains("pPb_5.023TeV") ) ) {
+    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV")  == 0 || fEnergyFlag.CompareTo("pPb_5.023TeVCent") == 0) ) {
         nIterationsShowBackground[0]                    = 11;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 10;
         nIterationsShowBackground[3]                    = 13;
+        if(centrality.Contains("0-20%") || centrality.Contains("20-40%"))
+          nIterationsShowBackground[1]                  = 11;
+        if(centrality.Contains("40-60%") || centrality.Contains("60-100%"))
+          nIterationsShowBackground[1]                  = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
+        optionShowBackground[3]                         = "BackDecreasingWindow";   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow";   // standard
+    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0 ) ) {
+        nIterationsShowBackground[0]                    = 11;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 10;
+        nIterationsShowBackground[3]                    = 13;
+        if(centrality.Contains("0-5%"))
+          nIterationsShowBackground[1]                  = 9;
         if(centrality.Contains("0-20%") || centrality.Contains("20-40%"))
           nIterationsShowBackground[1]                  = 11;
         if(centrality.Contains("40-60%") || centrality.Contains("60-100%"))
