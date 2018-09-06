@@ -4149,12 +4149,13 @@ void ClusterQA(
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "allCellsBad.size before sort and unique: " << allCellsBad.size() << ".";
         fLog << "allCellsBad.size before sort and unique: " << allCellsBad.size() << ".";
-        if((Int_t)allCellsBad.size()>3000){
+        Int_t iMaximumAmountOfBadCells=3000;
+        if((Int_t)allCellsBad.size()>iMaximumAmountOfBadCells){
             cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-            cout << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!" << endl;
+            cout << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!, Maximum is "<<iMaximumAmountOfBadCells <<  endl;
             cout << "RETURNING..." << endl;
             fLog << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-            fLog << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!" << endl;
+            fLog << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!, Maximum is "<<iMaximumAmountOfBadCells << endl;
             fLog << "RETURNING..." << endl;
             return;
         }
@@ -4180,7 +4181,6 @@ void ClusterQA(
         if((Int_t)allCellsBad.size()>0){
             cout << "start plotting bad cells" << endl;
             PlotBadCellReasons(cellQA,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
-
             PlotBadCellOverview(kTRUE,kFALSE,DataMCHists.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
             PlotBadCellOverview(kFALSE,kFALSE,DataMCHistsTime.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
             for(Int_t j=1; j<nSets; j++){
@@ -4198,7 +4198,6 @@ void ClusterQA(
             PlotBadCellComparisonVecBoth(DataMCHists,DataMCHistsTime,colorCompare,allCellsGood, allCellsGood, nEvents, canvas2NTEO, padL2NTEO, padR2NTEO, outputDir, suffix, fClusters, plotDataSets,
                                          fCollisionSystem, kTRUE, 50,100);
         }
-
         char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());
         TFile* fOutput = new TFile(nameOutput,"UPDATE");
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
