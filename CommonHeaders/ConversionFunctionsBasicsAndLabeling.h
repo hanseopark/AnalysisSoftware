@@ -4720,6 +4720,19 @@
             iActualBinSize    = iMaximalBinSize;}
     }
 
+    template<Int_t ArraySize>
+    Bool_t BinClamper(Double_t (&Array)[ArraySize], Int_t& PreviouslyUsedBins, Bool_t giveCout=kTRUE) {
+      if (ArraySize < PreviouslyUsedBins){
+          if (giveCout){
+              cout <<"You have chosen to have more than "<<ArraySize<<" bins ("<<PreviouslyUsedBins<<"), this is not possible, it will be reduced to "<<ArraySize<<"" << endl;
+          }
+          PreviouslyUsedBins = ArraySize;
+          //std::terminate(1);
+          return kFALSE;
+      }
+      return kTRUE;
+    }
+
     //************************************************************************************
     // Compute single cut number as int
     //************************************************************************************
