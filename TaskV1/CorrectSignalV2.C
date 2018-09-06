@@ -2308,162 +2308,162 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         fitEffiBiasWOWeightsPol1[k]             = new TF1(Form("fitEffiBiasWOWeights%sPol1", nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
     }
 
-    TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);// gives the page size
-    DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
-
-    Bool_t scaleTrueEffiWithFit     = kTRUE;
-    if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
-            (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
-            optionEnergy.CompareTo("2.76TeV") == 0     ||
-            optionEnergy.CompareTo("5TeV2017") == 0    ||
-            optionEnergy.CompareTo("13TeV") == 0       ||
-            optionEnergy.CompareTo("13TeVRBins") == 0
-        )
-        scaleTrueEffiWithFit        = kFALSE;
-
-    if (    (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) ))
-        || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV"))){
-        cout << "\n\n\nINFO:: Entered ratio ftting of efficiency " << endl;
-        if (scaleTrueEffiWithFit)
-            cout << "INFO:: will be scaling true effi with ratio fit of normal/true effi to correct for offset " << endl;
-        // create ratio histos
-        TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
-        TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
-        TH1D* histoRatioEffWOWeightingEffCFPol1[3]  = {NULL, NULL, NULL};
-        for (Int_t k = 0; k < 3; k++){
-            // copy original efficiency
-            histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
-            // calculate ratio of reco-effi and true efficiency
-            if ( !containsWOWeights && mode == 4 ) // exception for mode 4, will normally not be used for scaling
-                histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPt[k], 1., 1., "B");
-            else
-                histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
-            /// fitting of ratio with pol0
-            if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
-            }else{
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",3.5,maxPtMeson);
-                cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
-            }
-            cout << "fitting ratio norm/true eff with pol0" << endl;
-            cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
-            fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
-            fitEffiBiasWOWeightsPol0[k]->SetLineStyle(1);
-
-            // copy ratio hist to create confidence level interval for pol0 fit
-            histoRatioEffWOWeightingEffCFPol0[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone(Form("histoRatioEffWOWeighting%sEffCFPol0",nameIntRange[k].Data()));
-            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol0[k]);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetStats(kFALSE);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetLineColor(colorEffiShadePol0[k]);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetFillStyle(0);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
-
-            // fitting with 2nd functional form
-            if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) )
-                fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
-            if(mode == 0 && optionEnergy.Contains("5TeV2017") ){
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
-            }else if(mode == 0 && optionEnergy.Contains("13TeVLowB") ){
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.7,maxPtMeson    );
-	    }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
-	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
-            }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeV") && ( centralityString.Contains("0-20%") || centralityString.Contains("20-40%") || centralityString.Contains("40-60%") || centralityString.Contains("60-100%"))) {
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.5,maxPtMeson    );
-            }else if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
-            }else{
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",3.5,maxPtMeson    );
-            }
-            cout << "fitting ratio norm/true eff with exp" << endl;
-            cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
-            fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
-            fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
-
-            // copy ratio hist to create confidence level interval for second fit
-            histoRatioEffWOWeightingEffCFPol1[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone("histoRatioEffWOWeightingNormalEffCFPol1");
-            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol1[k]);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetStats(kFALSE);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetFillColor(colorEffiShadePol1[k]);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetLineColor(colorEffiShadePol1[k]);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetFillStyle(3003);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetMarkerSize(0);
-            for (Int_t i=1; i< histoTrueEffiPt[k]->GetNbinsX(); i++){
-                if (histoTrueEffiPt[k]->GetBinContent(i) == 0){
-                    histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,1);
-                    histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,0);
-                    histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,1);
-                    histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,0);
-                }
-            }
-
-                Double_t minYRatioEffis     =  0.8;
-                Double_t maxYRatioEffis     =  1.5;
-                if (optionEnergy.CompareTo("PbPb_5.02TeV") == 0){
-                    minYRatioEffis          =  0.5;
-                }
-                // plotting corresponding ratio with fit function
-                DrawAutoGammaMesonHistos(   histoRatioEffWOWeightingEff[k],
-                                            "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{eff,%s, rec}/#epsilon_{eff,%s, true wo weights} ", textMeson.Data(), textMeson.Data()),
-                                            kFALSE, 1.3, 3e-6, kFALSE,
-                                            kTRUE, minYRatioEffis, maxYRatioEffis,
-                                            kFALSE, 0., 10.);
-                DrawGammaSetMarker(histoRatioEffWOWeightingEff[k], 24, 1., colorEffiRatio[k], colorEffiRatio[k]);
-                histoRatioEffWOWeightingEff[k]->Draw("e1");
-                histoRatioEffWOWeightingEffCFPol0[k]->Draw("e3,same");
-                histoRatioEffWOWeightingEffCFPol1[k]->Draw("e3,same");
-                fitEffiBiasWOWeightsPol0[k]->Draw("same");
-                fitEffiBiasWOWeightsPol1[k]->Draw("same");
-                histoRatioEffWOWeightingEff[k]->Draw("e1,same");
-
-                TLegend* legendRatioNormToTrueEff = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
-                legendRatioNormToTrueEff->SetNColumns(2);
-                legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEff[k],"ratio","pl");
-                legendRatioNormToTrueEff->AddEntry((TObject*)0,"","");
-                legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol0[k],"pol0 fit","l");
-                legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol0[k],"pol0 CI","f");
-                legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol1[k],"exp fit","l");
-                legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol1[k],"exp CI","f");
-                legendRatioNormToTrueEff->Draw();
-
-                PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
-
-            canvasCompEffSimple->Update();
-            canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
-
-            // correct true effi to normal effi
-            histoTrueEffiPt[k]->Sumw2();
-            // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
-            if (scaleTrueEffiWithFit){
-                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV") )
-                    histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
-                else
-                    histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
-            }
-        }
-
-        // plotting of final comparison
-        TH1D* histoRatioEffWOWeightingTrueEffCorr        = (TH1D*) histoEffiPt[0]->Clone();
-        histoRatioEffWOWeightingTrueEffCorr->Divide(histoRatioEffWOWeightingTrueEffCorr, histoTrueEffiPt[0], 1., 1., "B");
-
-        histoRatioEffWOWeightingEff[0]->Draw("e1");
-        DrawGammaSetMarker(histoRatioEffWOWeightingTrueEffCorr, 20, 1.5, kAzure-6, kAzure-6);
-        histoRatioEffWOWeightingTrueEffCorr->Draw("same,e1");
-
-        TLegend* legendAfterFix = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
-        legendAfterFix->AddEntry(histoRatioEffWOWeightingEff[0],"Norm to TrueWOW eff, std interval");
-        legendAfterFix->AddEntry(histoRatioEffWOWeightingTrueEffCorr,"ratio after correction");
-        legendAfterFix->Draw();
-
-        canvasCompEffSimple->Update();
-        canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
-    } else {
-        cout << "\n \n \nINFO:: no efficiency adjustment has been triggered " << endl;
-        cout << "mode: "  << mode << endl;
-        cout << "Meson name: " << nameMeson.Data() << endl;
-        cout << "option energy: " << optionEnergy.Data() << endl;
-        cout << "weights contained: " << containsWOWeights << endl;
-    }
+//     TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);// gives the page size
+//     DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
+// 
+//     Bool_t scaleTrueEffiWithFit     = kTRUE;
+//     if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
+//             (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
+//             optionEnergy.CompareTo("2.76TeV") == 0     ||
+//             optionEnergy.CompareTo("5TeV2017") == 0    ||
+//             optionEnergy.CompareTo("13TeV") == 0       ||
+//             optionEnergy.CompareTo("13TeVRBins") == 0
+//         )
+//         scaleTrueEffiWithFit        = kFALSE;
+// 
+//     if (    (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) ))
+//         || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV"))){
+//         cout << "\n\n\nINFO:: Entered ratio ftting of efficiency " << endl;
+//         if (scaleTrueEffiWithFit)
+//             cout << "INFO:: will be scaling true effi with ratio fit of normal/true effi to correct for offset " << endl;
+//         // create ratio histos
+//         TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
+//         TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
+//         TH1D* histoRatioEffWOWeightingEffCFPol1[3]  = {NULL, NULL, NULL};
+//         for (Int_t k = 0; k < 3; k++){
+//             // copy original efficiency
+//             histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
+//             // calculate ratio of reco-effi and true efficiency
+//             if ( !containsWOWeights && mode == 4 ) // exception for mode 4, will normally not be used for scaling
+//                 histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPt[k], 1., 1., "B");
+//             else
+//                 histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
+//             /// fitting of ratio with pol0
+//             if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
+//             }else{
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",3.5,maxPtMeson);
+//                 cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
+//             }
+//             cout << "fitting ratio norm/true eff with pol0" << endl;
+//             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
+//             fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
+//             fitEffiBiasWOWeightsPol0[k]->SetLineStyle(1);
+// 
+//             // copy ratio hist to create confidence level interval for pol0 fit
+//             histoRatioEffWOWeightingEffCFPol0[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone(Form("histoRatioEffWOWeighting%sEffCFPol0",nameIntRange[k].Data()));
+//             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol0[k]);
+//             histoRatioEffWOWeightingEffCFPol0[k]->SetStats(kFALSE);
+//             histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
+//             histoRatioEffWOWeightingEffCFPol0[k]->SetLineColor(colorEffiShadePol0[k]);
+//             histoRatioEffWOWeightingEffCFPol0[k]->SetFillStyle(0);
+//             histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
+// 
+//             // fitting with 2nd functional form
+//             if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) )
+//                 fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
+//             if(mode == 0 && optionEnergy.Contains("5TeV2017") ){
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
+//             }else if(mode == 0 && optionEnergy.Contains("13TeVLowB") ){
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.7,maxPtMeson    );
+// 	    }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
+// 	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
+//             }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeV") && ( centralityString.Contains("0-20%") || centralityString.Contains("20-40%") || centralityString.Contains("40-60%") || centralityString.Contains("60-100%"))) {
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.5,maxPtMeson    );
+//             }else if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
+//             }else{
+//                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",3.5,maxPtMeson    );
+//             }
+//             cout << "fitting ratio norm/true eff with exp" << endl;
+//             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
+//             fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
+//             fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
+// 
+//             // copy ratio hist to create confidence level interval for second fit
+//             histoRatioEffWOWeightingEffCFPol1[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone("histoRatioEffWOWeightingNormalEffCFPol1");
+//             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol1[k]);
+//             histoRatioEffWOWeightingEffCFPol1[k]->SetStats(kFALSE);
+//             histoRatioEffWOWeightingEffCFPol1[k]->SetFillColor(colorEffiShadePol1[k]);
+//             histoRatioEffWOWeightingEffCFPol1[k]->SetLineColor(colorEffiShadePol1[k]);
+//             histoRatioEffWOWeightingEffCFPol1[k]->SetFillStyle(3003);
+//             histoRatioEffWOWeightingEffCFPol1[k]->SetMarkerSize(0);
+//             for (Int_t i=1; i< histoTrueEffiPt[k]->GetNbinsX(); i++){
+//                 if (histoTrueEffiPt[k]->GetBinContent(i) == 0){
+//                     histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,1);
+//                     histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,0);
+//                     histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,1);
+//                     histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,0);
+//                 }
+//             }
+// 
+//                 Double_t minYRatioEffis     =  0.8;
+//                 Double_t maxYRatioEffis     =  1.5;
+//                 if (optionEnergy.CompareTo("PbPb_5.02TeV") == 0){
+//                     minYRatioEffis          =  0.5;
+//                 }
+//                 // plotting corresponding ratio with fit function
+//                 DrawAutoGammaMesonHistos(   histoRatioEffWOWeightingEff[k],
+//                                             "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{eff,%s, rec}/#epsilon_{eff,%s, true wo weights} ", textMeson.Data(), textMeson.Data()),
+//                                             kFALSE, 1.3, 3e-6, kFALSE,
+//                                             kTRUE, minYRatioEffis, maxYRatioEffis,
+//                                             kFALSE, 0., 10.);
+//                 DrawGammaSetMarker(histoRatioEffWOWeightingEff[k], 24, 1., colorEffiRatio[k], colorEffiRatio[k]);
+//                 histoRatioEffWOWeightingEff[k]->Draw("e1");
+//                 histoRatioEffWOWeightingEffCFPol0[k]->Draw("e3,same");
+//                 histoRatioEffWOWeightingEffCFPol1[k]->Draw("e3,same");
+//                 fitEffiBiasWOWeightsPol0[k]->Draw("same");
+//                 fitEffiBiasWOWeightsPol1[k]->Draw("same");
+//                 histoRatioEffWOWeightingEff[k]->Draw("e1,same");
+// 
+//                 TLegend* legendRatioNormToTrueEff = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
+//                 legendRatioNormToTrueEff->SetNColumns(2);
+//                 legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEff[k],"ratio","pl");
+//                 legendRatioNormToTrueEff->AddEntry((TObject*)0,"","");
+//                 legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol0[k],"pol0 fit","l");
+//                 legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol0[k],"pol0 CI","f");
+//                 legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol1[k],"exp fit","l");
+//                 legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol1[k],"exp CI","f");
+//                 legendRatioNormToTrueEff->Draw();
+// 
+//                 PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
+// 
+//             canvasCompEffSimple->Update();
+//             canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
+// 
+//             // correct true effi to normal effi
+//             histoTrueEffiPt[k]->Sumw2();
+//             // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
+//             if (scaleTrueEffiWithFit){
+//                 if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV") )
+//                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
+//                 else
+//                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
+//             }
+//         }
+// 
+//         // plotting of final comparison
+//         TH1D* histoRatioEffWOWeightingTrueEffCorr        = (TH1D*) histoEffiPt[0]->Clone();
+//         histoRatioEffWOWeightingTrueEffCorr->Divide(histoRatioEffWOWeightingTrueEffCorr, histoTrueEffiPt[0], 1., 1., "B");
+// 
+//         histoRatioEffWOWeightingEff[0]->Draw("e1");
+//         DrawGammaSetMarker(histoRatioEffWOWeightingTrueEffCorr, 20, 1.5, kAzure-6, kAzure-6);
+//         histoRatioEffWOWeightingTrueEffCorr->Draw("same,e1");
+// 
+//         TLegend* legendAfterFix = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
+//         legendAfterFix->AddEntry(histoRatioEffWOWeightingEff[0],"Norm to TrueWOW eff, std interval");
+//         legendAfterFix->AddEntry(histoRatioEffWOWeightingTrueEffCorr,"ratio after correction");
+//         legendAfterFix->Draw();
+// 
+//         canvasCompEffSimple->Update();
+//         canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+//     } else {
+//         cout << "\n \n \nINFO:: no efficiency adjustment has been triggered " << endl;
+//         cout << "mode: "  << mode << endl;
+//         cout << "Meson name: " << nameMeson.Data() << endl;
+//         cout << "option energy: " << optionEnergy.Data() << endl;
+//         cout << "weights contained: " << containsWOWeights << endl;
+//     }
 
     //**********************************************************************************
     //******************** Acceptance Plot *********************************************

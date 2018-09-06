@@ -192,6 +192,7 @@ void ExtractSignalV2(
         if (fEventCutSelectionRead.BeginsWith("c")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("9")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("e")) fEventCutSelectionRead.Replace(0,1,"8");
+        if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeVCent") == 0 ) && (mode == 0 || mode == 2 || mode == 3 || mode == 4 ) ) fEventCutSelectionRead.Replace(3,1,"0");
         cout << fEventCutSelectionRead.Data() << endl;
         if (mode==0 || mode==100)
             fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());

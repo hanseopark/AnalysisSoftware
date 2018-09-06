@@ -62,8 +62,11 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     // ***************************************************************************************************
     // ****************************** Create output directory ********************************************
     // ***************************************************************************************************
+    TString additionalName2 = additionalName;
+    if(additionalName.Contains("ZNA") || additionalName.Contains("CL1")) additionalName2.Replace(3,1,"_");
+    cout << additionalName2.Data() << endl;
     gSystem->Exec("mkdir -p SystematicErrorsCalculatedCalo");
-    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedCalo/%s",additionalName.Data()));
+    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedCalo/%s",additionalName2.Data()));
 
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
@@ -592,7 +595,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     delete canvasSysErrMean;
 
@@ -650,7 +653,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -700,14 +703,14 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             SetStyleTLatex( varationLabel, 0.038, 4, 1, 42, kTRUE, 31);
             varationLabel->Draw();
 
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), cut, nameCutVariationSCCurrent[cut].Data(), suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), cut, nameCutVariationSCCurrent[cut].Data(), suffix.Data()));
         histo2DNewSysErrMean->GetYaxis()->UnZoom();
     }
 
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",additionalName.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",additionalName2.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -717,7 +720,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
 
     SysErrDatAver.close();
 
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",additionalName.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",additionalName2.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
@@ -846,7 +849,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     delete canvasSummedErrMean;
 

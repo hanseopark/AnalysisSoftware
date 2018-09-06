@@ -62,8 +62,11 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     // ***************************************************************************************************
     // ****************************** Create output directory ********************************************
     // ***************************************************************************************************
+    TString additionalName2 = additionalName;
+    if(additionalName.Contains("ZNA") || additionalName.Contains("CL1")) additionalName2.Replace(3,1,"_");
+    cout << additionalName2.Data() << endl;
     gSystem->Exec("mkdir -p SystematicErrorsCalculatedConvCalo");
-    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedConvCalo/%s",additionalName.Data()));
+    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedConvCalo/%s",additionalName2.Data()));
 
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
@@ -1163,7 +1166,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelTrig->Draw();
 
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     delete canvasSysErrMean;
 
@@ -1236,7 +1239,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         meanErrorsCorr[0]->Draw("pX0,csame");
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -1278,13 +1281,13 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             pol1->Draw("same");
             pol0->Draw("same");
 
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
     }
 
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveraged%s_%s_%s%s_%s.dat",additionalName.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveraged%s_%s_%s%s_%s.dat",additionalName2.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -1294,7 +1297,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 
     SysErrDatAver.close();
 
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveragedSingle%s_%s_%s%s_%s.dat",additionalName.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveragedSingle%s_%s_%s%s_%s.dat",additionalName2.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
@@ -1468,7 +1471,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelTrig->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     delete canvasSummedErrMean;
 //
