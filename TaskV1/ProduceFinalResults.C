@@ -93,7 +93,18 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     collisionSystem= ReturnFullCollisionsSystem(optionEnergy);
 
     // original systematic errors were from 18_May_2011 inversion of material error caused changing
-    if(optionEnergy.CompareTo("7TeV") == 0){
+    if(optionEnergy.CompareTo("5TeV2017") == 0){
+        minPtForFits=0.3;
+        minPtForFitsEta=0.4;
+        if (useSameBinningPi0Eta.CompareTo("")==0){
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; //SystematicError_Pi0_7TeV_12_Mar_2012.dat
+        } else {
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_7TeV_24_Apr_2012.dat"; // SystematicError_Pi0EtaBinning_7TeV_12_Mar_2012.dat
+            minPtForFits=0.4;
+        }
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_7TeV_24_Apr_2012.dat";//SystematicError_Eta_7TeV_12_Mar_2012.dat
+        cout << "You have choosen 5TeV2017" << endl;
+    } else if(optionEnergy.CompareTo("7TeV") == 0){
         minPtForFits=0.3;
         minPtForFitsEta=0.4;
         if (useSameBinningPi0Eta.CompareTo("")==0){
@@ -169,6 +180,10 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 3;
+        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+    } else if( optionEnergy.CompareTo("5TeV2017") == 0) {
+        fExampleBinPi0     = 7;
+        fExampleBinEta     = 6;
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         fExampleBinPi0     = 7;

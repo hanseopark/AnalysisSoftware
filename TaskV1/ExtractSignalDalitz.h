@@ -174,6 +174,8 @@ Double_t* fMesonFWHM                        = NULL;
 Double_t* fMesonTrueMass                    = NULL;
 Double_t* fMesonTrueFWHM                    = NULL;
 Double_t* fMesonFWHMAlpha01                 = NULL;
+Double_t*   fMesonYieldsResBckOtherFunc[3]      = { NULL, NULL, NULL};
+Double_t*   fMesonYieldsResBckOtherFuncError[3] = { NULL, NULL, NULL};
 
 Double_t* fMesonTrueGGYields                = NULL;
 Double_t* fMesonTrueGGYieldsError           = NULL;
@@ -358,6 +360,8 @@ TH1D** fHistoMappingSignalInvMassPtBin          = NULL;
 TH1D** fHistoMappingPeakPosInvMassPtBin         = NULL;
 TF1** fFitSignalInvMassPtBin                    = NULL;
 TF1** fFitTrueSignalInvMassPtBin                = NULL;
+TF1**  fFitSignalWithOtherBGInvMassPtBin[3]     = { NULL, NULL, NULL };
+TF1**  fFitBckOtherInvMassPtBin[3]              = { NULL, NULL, NULL };
 TF1** fFitSignalPeakPosInvMassPtBin             = NULL;
 TF1** fFitBckInvMassPtBin                       = NULL;
 TF1** fFitRatioInvMassPtBin                     = NULL;
@@ -391,6 +395,7 @@ TH1D* fDeltaPt                                  = NULL;
 TF1** fFitPeakPosPtBin                          = NULL;
 Double_t* fMesonMassPeakPos                     = NULL;
 Double_t* fMesonMassPeakPosError                = NULL;
+Double_t* fMesonChi2[4]                         = {NULL, NULL, NULL, NULL};
 
 // Histograms for normalization on the left of the peak
 TH1D** fHistoMappingBackNormInvMassLeftPtBin    = NULL;
@@ -485,7 +490,7 @@ TH1D* fHistoYieldTrueGGFracMesonNarrow          = NULL;
 TH1D* fHistoYieldTrueGGFracMesonForData         = NULL;
 TH1D* fHistoYieldTrueGGFracMesonWideForData     = NULL;
 TH1D* fHistoYieldTrueGGFracMesonNarrowForData   = NULL;
-
+TH1D*       fHistoChi2[4]                       = { NULL, NULL, NULL, NULL };
 
 void ProcessEM(TH1D*,TH1D*,Double_t *);
 void FillMassHistosArray(TH2F*);
@@ -499,6 +504,9 @@ void FillGGInvMassW0TruePi0HistosArray();
 void CreatePtHistos();
 void FillPtHistos();
 void FitSubtractedInvMassInPtBins(TH1D* ,Double_t *, Int_t, Bool_t );  // Fits the Invariant Mass histos with a given function
+void FitSubtractedPol2InvMassInPtBins(TH1D*, Double_t*, Int_t, Bool_t );                                    // Fits the invariant mass histos with a gaussian plus exponential plus pol2 BG
+void FitSubtractedExp1InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Double_t* mesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary);
+void FitSubtractedExp2InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Double_t* mesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary);
 void FitTrueInvMassInPtBins(TH1D* ,Double_t *, Int_t);  // Fits the Invariant Mass histos with a given function
 void FitCBSubtractedInvMassInPtBins(TH1D* ,Double_t *, Int_t, Bool_t , TString );  // Fits the Invariant Mass histos with a given function;
 void ProduceBckProperWeighting(TList*,TList*, TList* );
