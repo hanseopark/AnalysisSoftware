@@ -1323,6 +1323,12 @@
         } else if (etaCutNumber.CompareTo("a")==0){
             cout << "using eta for gammas of 0.2-0.9" << endl;
             return 1.4;
+        } else if (etaCutNumber.CompareTo("c")==0){
+            cout << "using eta for gammas of 0.85" << endl;
+            return 1.7;
+        } else if (etaCutNumber.CompareTo("d")==0){
+            cout << "using eta for gammas of 0.8" << endl;
+            return 1.6;
         }
         cout << "Eta Value NOT found!!! using eta for gammas of 0.9" << endl;
         return 1.8;

@@ -4,15 +4,15 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180817-1_2017pp;
+TRAINDIR=Legotrain-vAN-20180830-1_2017ppAOD;
 
 ### Data
-LHC17pqMETA=;
+LHC17pqMETA=2474_20180830-1007; #451_20180831-1144 ,
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
 LHC17q_woSDD=$LHC17pqMETA\_child_4
-LHC17p_wSDD=;
+LHC17p_wSDD=; #2483_20180830-1009;
 LHC17q_wSDD=;
 
 # LHC17p_fast=$LHC17pqMETA\_child_1
@@ -23,13 +23,13 @@ LHC17q_wSDD=;
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
 ### MC
-LHC17lMETA=3478_20180824-0933;
+LHC17lMETA=; #997_20180831-1159;
 LHC17l3b_fast=$LHC17lMETA\_child_1
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
+LHC17l3b_cent=; #3496_20180830-1024;
 LHC17l4b_fast=;#$LHC17lMETA\_child_3
 LHC17l4b_woSDD=; #$LHC17lMETA\_child_4
-# LHC17l3b_cent=;
-# LHC17l4b_cent=;
+LHC17l4b_cent=;
 
 # LHC17l3b_fast=$LHC17lMETA\_child_1
 # LHC17l3b_cent=$LHC17lMETA\_child_2
@@ -38,13 +38,13 @@ LHC17l4b_woSDD=; #$LHC17lMETA\_child_4
 # LHC17l4b_cent=$LHC17lMETA\_child_5
 # LHC17l4b_woSDD=$LHC17lMETA\_child_6
 
-LHC18d6bMETA=3477_20180823-1142;
+LHC18d6bMETA=; #3477_20180823-1142;
 LHC18d6b_fast=;#$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=;#$LHC18d6bMETA\_child_2;
-LHC18d6b_wSDD=;
+LHC18d6b_wSDD=3495_20180830-1024;
 
 ### MC Jet Jet
-LHC18b8META=974_20180817-1718
+LHC18b8META=; #974_20180817-1718
 LHC18b8_fast=$LHC18b8META\_child_1
 LHC18b8_cent=$LHC18b8META\_child_2
 LHC18b8_woSDD=$LHC18b8META\_child_3
@@ -65,6 +65,7 @@ if [ $2 = "jetjet" ]; then
 else
     TRAINPATHMC=GA_pp_MC
 fi
+# TRAINPATHMC=GA_pp_MC_AOD
 
 NSlashes=10 #without mergelist = 9
 NSlashes2=10
@@ -87,7 +88,7 @@ mergeFolder=merge_runlist_1;
 
 
 # fileToDownload=AnalysisResults.root;
-# fileToDownload=GammaConvV1_406.root;
+fileToDownload=GammaConvV1_400.root;
 # fileName=GammaConvV1_406.root;
 
 # fileToDownload=GammaConv_Material_121.root;
@@ -121,8 +122,13 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_fast/$run
-                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/GammaConv* file:$OUTPUTDIR_LHC17p_fast/$run/
+                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileToDownload file:$OUTPUTDIR_LHC17p_fast/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileToDownload ]; then
+                echo "file " $OUTPUTDIR_LHC17p_fast/$run/$fileToDownload "has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17pfastNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17pfastNotMerged.txt`
             for run in $NotMergedruns; do
@@ -131,7 +137,7 @@ elif [ $1 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/GammaConv* file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 if [ $fileName != "AnalysisResults.root" ]; then
@@ -166,6 +172,11 @@ elif [ $1 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17p_wSDD/$run
                 alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHData/$LHC17p_wSDD/$fileToDownload file:$OUTPUTDIR_LHC17p_wSDD/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17pwSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17pwSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -209,6 +220,11 @@ elif [ $1 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run
                 alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17p_woSDD/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17pwoSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17pwoSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -252,6 +268,11 @@ elif [ $1 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17q_fast/$run
                 alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/$fileToDownload file:$OUTPUTDIR_LHC17q_fast/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17qfastNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17qfastNotMerged.txt`
             for run in $NotMergedruns; do
@@ -295,6 +316,11 @@ elif [ $1 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17q_wSDD/$run
                 alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHData/$LHC17q_wSDD/$fileToDownload file:$OUTPUTDIR_LHC17q_wSDD/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17q_wSDD/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17qwSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17qwSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -338,6 +364,11 @@ elif [ $1 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17q_woSDD/$run
                 alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17q_woSDD/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17qwoSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17qwoSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -1061,21 +1092,51 @@ fi
 
 if [ $1 = "mergeAllData" ]; then
 
-    OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/LHC17p_fast
-    OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/LHC17p_wSDD
-    OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/LHC17p_woSDD
+    fileName="GammaConvV1_400.root"
+    OUTPUTDIR_LHC17pq_woSDD=$BASEDIR/$TRAINDIR/LHC17pq_woSDD
+    echo $OUTPUTDIR_LHC17pq_woSDD
+    runs=`cat runlists/runNumbersLHC17p_all.txt`
+    counter=0;
+    for run in $runs; do
+        echo $run
+        if [ -f $OUTPUTDIR_LHC17pq_woSDD/$run/$fileName ]; then
+            echo `ls $OUTPUTDIR_LHC17pq_woSDD/$run/$fileName`
+            if [ $counter = 0 ]; then
+                cp $OUTPUTDIR_LHC17pq_woSDD/$run/$fileName $OUTPUTDIR_LHC17pq_woSDD/intermediate.root
+                counter=$(($counter+1));
+                echo $counter;
+            else
+                hadd -f $OUTPUTDIR_LHC17pq_woSDD/$fileName $OUTPUTDIR_LHC17pq_woSDD/intermediate.root $OUTPUTDIR_LHC17pq_woSDD/$run/$fileName
+                mv $OUTPUTDIR_LHC17pq_woSDD/$fileName $OUTPUTDIR_LHC17pq_woSDD/intermediate.root
+            fi
+        fi
+    done;
+    mv $OUTPUTDIR_LHC17pq_woSDD/intermediate.root $OUTPUTDIR_LHC17pq_woSDD/$fileName
+    ls $OUTPUTDIR_LHC17pq_woSDD/GammaConvV1_*.root > fileLHC17pq_woSDD.txt
+    fileNumbers=`cat fileLHC17p_woSDD.txt`
+    for fileName in $fileNumbers; do
+        echo $fileName
+        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number
+        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17pq_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_woSDD_$number.log\"\)
+    done;
+
+
+#     OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/LHC17p_fast
+#     OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/LHC17p_wSDD
+#     OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/LHC17p_woSDD
 #     mkdir -p $OUTPUTDIR_LHC17p_fast
 #     mkdir -p $OUTPUTDIR_LHC17p_wSDD
 #     mkdir -p $OUTPUTDIR_LHC17p_woSDD
 
-    OUTPUTDIR_LHC17q_fast=$BASEDIR/$TRAINDIR/LHC17q_fast
-    OUTPUTDIR_LHC17q_wSDD=$BASEDIR/$TRAINDIR/LHC17q_wSDD
-    OUTPUTDIR_LHC17q_woSDD=$BASEDIR/$TRAINDIR/LHC17q_woSDD
+#     OUTPUTDIR_LHC17q_fast=$BASEDIR/$TRAINDIR/LHC17q_fast
+#     OUTPUTDIR_LHC17q_wSDD=$BASEDIR/$TRAINDIR/LHC17q_wSDD
+#     OUTPUTDIR_LHC17q_woSDD=$BASEDIR/$TRAINDIR/LHC17q_woSDD
 #     mkdir -p $OUTPUTDIR_LHC17q_fast
 #     mkdir -p $OUTPUTDIR_LHC17q_wSDD
 #     mkdir -p $OUTPUTDIR_LHC17q_woSDD
 
-    fileName="GammaConvV1_408.root"
 
 #
 #     runs=`cat runlists/runNumbersLHC17p_fast.txt`
@@ -1104,66 +1165,66 @@ if [ $1 = "mergeAllData" ]; then
 #         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_fast_$number.log\"\)
 #     done;
 
+#
+#
+#     runs=`cat runlists/runNumbersLHC17p_all.txt`
+#     counter=0;
+#     fileName="GammaConvV1_408.root"
+#
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17p_wSDD/$run/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17p_wSDD/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root $OUTPUTDIR_LHC17p_wSDD/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17p_wSDD/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17p_wSDD/intermediate.root $OUTPUTDIR_LHC17p_wSDD/$fileName
+#     ls $OUTPUTDIR_LHC17p_wSDD/GammaConvV1_*.root > fileLHC17p_wSDD.txt
+#     fileNumbers=`cat fileLHC17p_wSDD.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_wSDD_$number.log\"\)
+#     done;
+#
+#     counter=0;
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
+#             echo `ls $OUTPUTDIR_LHC17p_woSDD/$run/$fileName`
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17p_woSDD/$run/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root $OUTPUTDIR_LHC17p_woSDD/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17p_woSDD/intermediate.root $OUTPUTDIR_LHC17p_woSDD/$fileName
+#     ls $OUTPUTDIR_LHC17p_woSDD/GammaConvV1_*.root > fileLHC17p_woSDD.txt
+#     fileNumbers=`cat fileLHC17p_woSDD.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_woSDD_$number.log\"\)
+#     done;
 
+#     runs=`cat runlists/runNumbersLHC17q_all.txt`
 
-    runs=`cat runlists/runNumbersLHC17p_all.txt`
-    counter=0;
-    fileName="GammaConvV1_408.root"
-
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17p_wSDD/$run/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17p_wSDD/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root $OUTPUTDIR_LHC17p_wSDD/$run/$fileName
-                mv $OUTPUTDIR_LHC17p_wSDD/$fileName $OUTPUTDIR_LHC17p_wSDD/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17p_wSDD/intermediate.root $OUTPUTDIR_LHC17p_wSDD/$fileName
-    ls $OUTPUTDIR_LHC17p_wSDD/GammaConvV1_*.root > fileLHC17p_wSDD.txt
-    fileNumbers=`cat fileLHC17p_wSDD.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_wSDD_$number.log\"\)
-    done;
-
-    counter=0;
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
-            echo `ls $OUTPUTDIR_LHC17p_woSDD/$run/$fileName`
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17p_woSDD/$run/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root $OUTPUTDIR_LHC17p_woSDD/$run/$fileName
-                mv $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17p_woSDD/intermediate.root $OUTPUTDIR_LHC17p_woSDD/$fileName
-    ls $OUTPUTDIR_LHC17p_woSDD/GammaConvV1_*.root > fileLHC17p_woSDD.txt
-    fileNumbers=`cat fileLHC17p_woSDD.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_woSDD_$number.log\"\)
-    done;
-
-    runs=`cat runlists/runNumbersLHC17q_all.txt`
-
-    fileName="GammaConvV1_408.root"
-    counter=0;
+#     fileName="GammaConvV1_408.root"
+#     counter=0;
 #     for run in $runs; do
 #         echo $run
 #         if [ -f $OUTPUTDIR_LHC17q_wSDD/$run/$fileName ]; then
@@ -1188,58 +1249,58 @@ if [ $1 = "mergeAllData" ]; then
 #         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_wSDD_$number.log\"\)
 #     done;
 
-    fileName="GammaConvV1_408.root"
-    counter=0;
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17q_woSDD/$run/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17q_woSDD/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root $OUTPUTDIR_LHC17q_woSDD/$run/$fileName
-                mv $OUTPUTDIR_LHC17q_woSDD/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17q_woSDD/intermediate.root $OUTPUTDIR_LHC17q_woSDD/$fileName
-    ls $OUTPUTDIR_LHC17q_woSDD/GammaConvV1_*.root > fileLHC17q_woSDD.txt
-    fileNumbers=`cat fileLHC17q_woSDD.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_woSDD_$number.log\"\)
-    done;
-
-
-    fileName="GammaConvV1_408.root"
-    counter=0;
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17q_fast/$run/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17q_fast/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root $OUTPUTDIR_LHC17q_fast/$run/$fileName
-                mv $OUTPUTDIR_LHC17q_fast/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17q_fast/intermediate.root $OUTPUTDIR_LHC17q_fast/$fileName
-    ls $OUTPUTDIR_LHC17q_fast/GammaConvV1_*.root > fileLHC17q_fast.txt
-    fileNumbers=`cat fileLHC17q_fast.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_fast_$number.log\"\)
-    done;
+#     fileName="GammaConvV1_408.root"
+#     counter=0;
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17q_woSDD/$run/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17q_woSDD/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root $OUTPUTDIR_LHC17q_woSDD/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17q_woSDD/$fileName $OUTPUTDIR_LHC17q_woSDD/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17q_woSDD/intermediate.root $OUTPUTDIR_LHC17q_woSDD/$fileName
+#     ls $OUTPUTDIR_LHC17q_woSDD/GammaConvV1_*.root > fileLHC17q_woSDD.txt
+#     fileNumbers=`cat fileLHC17q_woSDD.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_woSDD_$number.log\"\)
+#     done;
+#
+#
+#     fileName="GammaConvV1_408.root"
+#     counter=0;
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17q_fast/$run/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17q_fast/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root $OUTPUTDIR_LHC17q_fast/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17q_fast/$fileName $OUTPUTDIR_LHC17q_fast/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17q_fast/intermediate.root $OUTPUTDIR_LHC17q_fast/$fileName
+#     ls $OUTPUTDIR_LHC17q_fast/GammaConvV1_*.root > fileLHC17q_fast.txt
+#     fileNumbers=`cat fileLHC17q_fast.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_fast_$number.log\"\)
+#     done;
 
 fi
 
@@ -1274,8 +1335,13 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run
-                alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/GammaConv* file:$OUTPUTDIR_LHC17l3b_fast/$run/
+                alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileToDownload file:$OUTPUTDIR_LHC17l3b_fast/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17l3bfastNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17l3bfastNotMerged.txt`
             for run in $NotMergedruns; do
@@ -1320,6 +1386,11 @@ elif [ $2 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17l3b_cent/$run
                 alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/GammaConv* file:$OUTPUTDIR_LHC17l3b_cent/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17l3bwSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17l3bwSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -1362,8 +1433,13 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run
-                alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/GammaConv* file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
+                alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
             done;
+            if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileToDownload ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17l3bwoSDDNotMerged.txt
+            fi
 
             NotMergedruns=`cat runNumbersLHC17l3bwoSDDNotMerged.txt`
             for run in $NotMergedruns; do
@@ -2068,14 +2144,9 @@ fi
 
 if [ $2 = "material" ]; then
 
-    OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/Material_LHC17l3b_fast_LowInt
-    mkdir -p $OUTPUTDIR_LHC17l3b_fast
-    OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_woSDD_LowInt
-    mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
-    OUTPUTDIR_LHC17l3b_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_wSDD_LowInt
-    mkdir -p $OUTPUTDIR_LHC17l3b_wSDD
-
     if [ $LHC17l3b_fast != "" ]; then
+        OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/Material_LHC17l3b_fast_LowInt
+        mkdir -p $OUTPUTDIR_LHC17l3b_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_fast/
         ls $OUTPUTDIR_LHC17l3b_fast/GammaConv*Material*.root > fileLHC17l3b_fast.txt
         fileNumbers=`cat fileLHC17l3b_fast.txt`
@@ -2088,6 +2159,8 @@ if [ $2 = "material" ]; then
     fi
 
     if [ $LHC17l3b_woSDD != "" ]; then
+        OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_woSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_woSDD/
         ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConv*Material*.root > fileLHC17l3b_woSDD.txt
         fileNumbers=`cat fileLHC17l3b_woSDD.txt`
@@ -2101,6 +2174,8 @@ if [ $2 = "material" ]; then
 
     LHC17l3b_wSDD=$LHC17l3b_cent
     if [ $LHC17l3b_wSDD != "" ]; then
+        OUTPUTDIR_LHC17l3b_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_wSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC17l3b_wSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_wSDD/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_wSDD/
         ls $OUTPUTDIR_LHC17l3b_wSDD/GammaConv*Material*.root > fileLHC17l3b_wSDD.txt
         fileNumbers=`cat fileLHC17l3b_wSDD.txt`
@@ -2112,15 +2187,9 @@ if [ $2 = "material" ]; then
         done;
     fi
 
-
-    OUTPUTDIR_LHC18d6b_fast=$BASEDIR/$TRAINDIR/Material_LHC18d6b_fast_LowInt
-    mkdir -p $OUTPUTDIR_LHC18d6b_fast
-    OUTPUTDIR_LHC18d6b_woSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6b_woSDD_LowInt
-    mkdir -p $OUTPUTDIR_LHC18d6b_woSDD
-#     OUTPUTDIR_LHC18d6b_wSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6b_wSDD_LowInt
-#     mkdir -p $OUTPUTDIR_LHC18d6b_wSDD
-
     if [ $LHC18d6b_fast != "" ]; then
+        OUTPUTDIR_LHC18d6b_fast=$BASEDIR/$TRAINDIR/Material_LHC18d6b_fast_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6b_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_fast/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6b_fast/
         ls $OUTPUTDIR_LHC18d6b_fast/GammaConv*Material*.root > fileLHC18d6b_fast.txt
         fileNumbers=`cat fileLHC18d6b_fast.txt`
@@ -2133,6 +2202,8 @@ if [ $2 = "material" ]; then
     fi
 
     if [ $LHC18d6b_woSDD != "" ]; then
+        OUTPUTDIR_LHC18d6b_woSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6b_woSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6b_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_woSDD/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6b_woSDD/
         ls $OUTPUTDIR_LHC18d6b_woSDD/GammaConv*Material*.root > fileLHC18d6b_woSDD.txt
         fileNumbers=`cat fileLHC18d6b_woSDD.txt`
@@ -2144,17 +2215,19 @@ if [ $2 = "material" ]; then
         done;
     fi
 
-#     if [ $LHC18d6b_wSDD != "" ]; then
-#         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_wSDD/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6b_wSDD/
-#         ls $OUTPUTDIR_LHC18d6b_wSDD/GammaConv*Material*.root > fileLHC18d6b_wSDD.txt
-#         fileNumbers=`cat fileLHC18d6b_wSDD.txt`
-#         for fileName in $fileNumbers; do
-#             echo $fileName
-#             number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
-#             echo $number
-#             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
-#         done;
-#     fi
+    if [ $LHC18d6b_wSDD != "" ]; then
+        OUTPUTDIR_LHC18d6b_wSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6b_wSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6b_wSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_wSDD/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6b_wSDD/
+        ls $OUTPUTDIR_LHC18d6b_wSDD/GammaConv*Material*.root > fileLHC18d6b_wSDD.txt
+        fileNumbers=`cat fileLHC18d6b_wSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
 
     if [ $3 = "runwise" ]; then
 
@@ -2387,24 +2460,24 @@ fi
 
 if [ $2 = "mergeAllMC" ]; then
 
-    fileName="GammaConv_Material_121.root"
-    OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/LHC17l3b_fast
-    OUTPUTDIR_LHC17l3b_cent=$BASEDIR/$TRAINDIR/LHC17l3b_wSDD
+    fileName="GammaConvV1_400.root"
+#     OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/LHC17l3b_fast
+#     OUTPUTDIR_LHC17l3b_cent=$BASEDIR/$TRAINDIR/LHC17l3b_wSDD
     OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/LHC17l3b_woSDD
 #     mkdir -p $OUTPUTDIR_LHC17l3b_fast
 #     mkdir -p $OUTPUTDIR_LHC17l3b_cent
 #     mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
 
-    OUTPUTDIR_LHC17l4b_fast=$BASEDIR/$TRAINDIR/LHC17l4b_fast
-    OUTPUTDIR_LHC17l4b_cent=$BASEDIR/$TRAINDIR/LHC17l4b_wSDD
-    OUTPUTDIR_LHC17l4b_woSDD=$BASEDIR/$TRAINDIR/LHC17l4b_woSDD
+#     OUTPUTDIR_LHC17l4b_fast=$BASEDIR/$TRAINDIR/LHC17l4b_fast
+#     OUTPUTDIR_LHC17l4b_cent=$BASEDIR/$TRAINDIR/LHC17l4b_wSDD
+#     OUTPUTDIR_LHC17l4b_woSDD=$BASEDIR/$TRAINDIR/LHC17l4b_woSDD
 #     mkdir -p $OUTPUTDIR_LHC17l4b_fast
 #     mkdir -p $OUTPUTDIR_LHC17l4b_cent
 #     mkdir -p $OUTPUTDIR_LHC17l4b_woSDD
 
     runs=`cat runlists/runNumbersLHC17l3b_woSDD.txt`
     counter=0;
-    fileName="GammaConv_Material_121.root"
+    fileName="GammaConvV1_400.root"
     for run in $runs; do
         echo $run
         if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
@@ -2429,143 +2502,143 @@ if [ $2 = "mergeAllMC" ]; then
         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_woSDD_$number.log\"\)
     done;
 
-    runs=`cat runlists/runNumbersLHC17l3b_fast.txt`
-    counter=0;
-    fileName="GammaConv_Material_121.root"
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17l3b_fast/$run/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root $OUTPUTDIR_LHC17l3b_fast/$run/$fileName
-                mv $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17l3b_fast/intermediate.root $OUTPUTDIR_LHC17l3b_fast/$fileName
-    ls $OUTPUTDIR_LHC17l3b_fast/GammaConvV1_*.root > fileLHC17l3b_fast.txt
-    fileNumbers=`cat fileLHC17l3b_fast.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_fast_$number.log\"\)
-    done;
-
-    runs=`cat runlists/runNumbersLHC17l3b_wSDD.txt`
-    counter=0;
-    fileName="GammaConvV1_440.root"
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17l3b_cent/$run/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17l3b_cent/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root $OUTPUTDIR_LHC17l3b_cent/$run/$fileName
-                mv $OUTPUTDIR_LHC17l3b_cent/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17l3b_cent/intermediate.root $OUTPUTDIR_LHC17l3b_cent/$fileName
-    ls $OUTPUTDIR_LHC17l3b_cent/GammaConvV1_*.root > fileLHC17l3b_cent.txt
-    fileNumbers=`cat fileLHC17l3b_cent.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_wSDD_$number.log\"\)
-    done;
-
-
-
-    runs=`cat runlists/runNumbersLHC17l4b_wSDD.txt`
-    counter=0;
-    fileName="GammaConvV1_440.root"
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17l4b_cent/$run/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17l4b_cent/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root $OUTPUTDIR_LHC17l4b_cent/$run/$fileName
-                mv $OUTPUTDIR_LHC17l4b_cent/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17l4b_cent/intermediate.root $OUTPUTDIR_LHC17l4b_cent/$fileName
-    ls $OUTPUTDIR_LHC17l4b_cent/GammaConvV1_*.root > fileLHC17l4b_cent.txt
-    fileNumbers=`cat fileLHC17l4b_cent.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_wSDD_$number.log\"\)
-    done;
-
-    counter=0;
-    fileName="GammaConvV1_440.root"
-    runs=`cat runlists/runNumbersLHC17l4b_woSDD.txt`
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17l4b_woSDD/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName
-                mv $OUTPUTDIR_LHC17l4b_woSDD/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root $OUTPUTDIR_LHC17l4b_woSDD/$fileName
-    ls $OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_*.root > fileLHC17l4b_woSDD.txt
-    fileNumbers=`cat fileLHC17l4b_woSDD.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_woSDD_$number.log\"\)
-    done;
-
-    runs=`cat runlists/runNumbersLHC17l4b_fast.txt`
-
-    counter=0;
-    fileName="GammaConvV1_440.root"
-    for run in $runs; do
-        echo $run
-        if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/$fileName ]; then
-            if [ $counter = 0 ]; then
-                cp $OUTPUTDIR_LHC17l4b_fast/$run/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root
-                counter=$(($counter+1));
-                echo $counter;
-            else
-                hadd -f $OUTPUTDIR_LHC17l4b_fast/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root $OUTPUTDIR_LHC17l4b_fast/$run/$fileName
-                mv $OUTPUTDIR_LHC17l4b_fast/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root
-            fi
-        fi
-    done;
-    mv $OUTPUTDIR_LHC17l4b_fast/intermediate.root $OUTPUTDIR_LHC17l4b_fast/$fileName
-    ls $OUTPUTDIR_LHC17l4b_fast/GammaConvV1_*.root > fileLHC17l4b_fast.txt
-    fileNumbers=`cat fileLHC17l4b_fast.txt`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-        echo $number
-        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_fast_$number.log\"\)
-    done;
+#     runs=`cat runlists/runNumbersLHC17l3b_fast.txt`
+#     counter=0;
+#     fileName="GammaConv_Material_121.root"
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17l3b_fast/$run/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root $OUTPUTDIR_LHC17l3b_fast/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17l3b_fast/intermediate.root $OUTPUTDIR_LHC17l3b_fast/$fileName
+#     ls $OUTPUTDIR_LHC17l3b_fast/GammaConvV1_*.root > fileLHC17l3b_fast.txt
+#     fileNumbers=`cat fileLHC17l3b_fast.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_fast_$number.log\"\)
+#     done;
+#
+#     runs=`cat runlists/runNumbersLHC17l3b_wSDD.txt`
+#     counter=0;
+#     fileName="GammaConvV1_440.root"
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17l3b_cent/$run/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17l3b_cent/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root $OUTPUTDIR_LHC17l3b_cent/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17l3b_cent/$fileName $OUTPUTDIR_LHC17l3b_cent/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17l3b_cent/intermediate.root $OUTPUTDIR_LHC17l3b_cent/$fileName
+#     ls $OUTPUTDIR_LHC17l3b_cent/GammaConvV1_*.root > fileLHC17l3b_cent.txt
+#     fileNumbers=`cat fileLHC17l3b_cent.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_wSDD_$number.log\"\)
+#     done;
+#
+#
+#
+#     runs=`cat runlists/runNumbersLHC17l4b_wSDD.txt`
+#     counter=0;
+#     fileName="GammaConvV1_440.root"
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17l4b_cent/$run/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17l4b_cent/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root $OUTPUTDIR_LHC17l4b_cent/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17l4b_cent/$fileName $OUTPUTDIR_LHC17l4b_cent/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17l4b_cent/intermediate.root $OUTPUTDIR_LHC17l4b_cent/$fileName
+#     ls $OUTPUTDIR_LHC17l4b_cent/GammaConvV1_*.root > fileLHC17l4b_cent.txt
+#     fileNumbers=`cat fileLHC17l4b_cent.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_wSDD_$number.log\"\)
+#     done;
+#
+#     counter=0;
+#     fileName="GammaConvV1_440.root"
+#     runs=`cat runlists/runNumbersLHC17l4b_woSDD.txt`
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17l4b_woSDD/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17l4b_woSDD/$fileName $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17l4b_woSDD/intermediate.root $OUTPUTDIR_LHC17l4b_woSDD/$fileName
+#     ls $OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_*.root > fileLHC17l4b_woSDD.txt
+#     fileNumbers=`cat fileLHC17l4b_woSDD.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_woSDD_$number.log\"\)
+#     done;
+#
+#     runs=`cat runlists/runNumbersLHC17l4b_fast.txt`
+#
+#     counter=0;
+#     fileName="GammaConvV1_440.root"
+#     for run in $runs; do
+#         echo $run
+#         if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/$fileName ]; then
+#             if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC17l4b_fast/$run/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#             else
+#                 hadd -f $OUTPUTDIR_LHC17l4b_fast/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root $OUTPUTDIR_LHC17l4b_fast/$run/$fileName
+#                 mv $OUTPUTDIR_LHC17l4b_fast/$fileName $OUTPUTDIR_LHC17l4b_fast/intermediate.root
+#             fi
+#         fi
+#     done;
+#     mv $OUTPUTDIR_LHC17l4b_fast/intermediate.root $OUTPUTDIR_LHC17l4b_fast/$fileName
+#     ls $OUTPUTDIR_LHC17l4b_fast/GammaConvV1_*.root > fileLHC17l4b_fast.txt
+#     fileNumbers=`cat fileLHC17l4b_fast.txt`
+#     for fileName in $fileNumbers; do
+#         echo $fileName
+#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+#         echo $number
+#         root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_fast_$number.log\"\)
+#     done;
 
 fi
 

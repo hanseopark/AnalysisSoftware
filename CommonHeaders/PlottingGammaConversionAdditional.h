@@ -2876,9 +2876,9 @@
                 return kCyan+1;
             } else if (!generator.CompareTo("LHC17q_woSDD")){
                 return kYellow+2;
-            } else if (generator.Contains("LHC17p")){
+            } else if (generator.Contains("LHC17pq_fast")){
                 return kBlue+1;
-            } else if (generator.Contains("LHC17q")){
+            } else if (generator.Contains("LHC17pq_woSDD")){
                 return kGreen+2;
             } else if (!generator.CompareTo("LHC17l3b_fast")){
                 return kRed+1;
@@ -3054,7 +3054,7 @@
             } else if (generator.Contains("LHC16o")||generator.Contains("LHC17m")) {
                 return 418;
             } else if (generator.Contains("LHC16p")||generator.Contains("LHC17o")) {
-                return 435;            
+                return 435;
             } else if (generator.Contains("LHC17g")) {
                 return kCyan+3;
             } else if (generator.Contains("LHC17r")) {
