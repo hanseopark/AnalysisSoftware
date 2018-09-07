@@ -481,7 +481,8 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 if (mode == 0){
-                    return 7;
+                    scaleFac        = 4.;
+                    return 2;
                 } else {
                 return 2;
                 }
@@ -938,7 +939,14 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 if (mode == 0){
-                    return 7;
+                    scaleFac        = 30.;
+                    return 2;
+                } else if (mode == 4 || mode == 12){
+                    scaleFac        = 4.;
+                    return 14;
+                } else if (mode == 2 || mode == 5){
+                    scaleFac        = 4.;
+                    return 13;
                 } else {
                     return 2;
                 }
@@ -1272,8 +1280,10 @@
                     startPtBin     = 1;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
-                if ( mode == 0 ){
+                if ( mode == 0 || mode == 2 ){
                     startPtBin     = 1;
+                } else if ( mode == 4  || mode == 12 ){
+                    startPtBin     = 2;
                 }
 
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0 ){
@@ -1564,8 +1574,11 @@
                 else if( mode==45 ) startPtBin = 7;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
-                    startPtBin     = 3;
-                }
+                    startPtBin     = 2;
+                } else if ( mode == 4 || mode == 5 || mode == 12){
+                    startPtBin     = 13;
+                } else if ( mode == 2 )
+                    startPtBin     = 13;
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0){
                 if ( mode == 0 ){
                     startPtBin      = 3;
@@ -2018,10 +2031,28 @@
                 cout << endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
-                    maxNBins = 68;
+                    if (DCAcase == kTRUE)
+                        maxNBins = 23;
+                    else
+                        maxNBins = 64;
                     for(Int_t i = 0; i < maxNBins+1; i++){
+                        if (DCAcase == kTRUE) {
+                            binning[i] = fBinsPi013TeVLowBPtDCA[i];
+                        } else
                         binning[i] = fBinsPi013TeVLowBPt[i];
                     }
+                } else if (mode == 4 || mode == 12){ 
+                    maxNBins = 40;
+                    for(Int_t i = 0; i < maxNBins+1; i++)
+                        binning[i] = fBinsPi013TeVLowBEMCPt[i];
+                } else if (mode == 2){
+                    maxNBins = 52;
+                    for(Int_t i = 0; i < maxNBins+1; i++)
+                        binning[i] = fBinsPi013TeVLowBPCMEMCPt[i];
+                } else if ( mode == 5 ){
+                    maxNBins = 52;
+                    for(Int_t i = 0; i < maxNBins+1; i++)
+                        binning[i] = fBinsPi013TeVLowBPHOSPt[i];
                 }
 
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0 ){
@@ -2647,7 +2678,7 @@
                         break;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
-                if( mode==0 ) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPt, binning );
+                if( mode==0 || mode == 2 || mode == 4 || mode == 5 || mode == 12) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPt, binning );
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
                     maxNBins = 26;
@@ -4074,7 +4105,7 @@
                     if (photonCutSelection.CompareTo("")) {
                         if (!((TString)photonCutSelection(GetPhotonSinglePtCutPosition(photonCutSelection),1)).CompareTo("0")){
                             cout << "Increase starting pT for higher minimum track pT cut (50 MeV)" << endl;
-                            fStartPtBin += 4;
+                            fStartPtBin += 0;
                         }
                     }
                     Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
@@ -4090,7 +4121,12 @@
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if ( modi == 0 ) {
                             fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
-                        }
+                        } else if ( modi == 4 || modi == 12) {
+                            fNRebin[i]  = fBinsPi013TeVLowBEMCPtRebin[i];
+                        } else if ( modi == 5 ){
+                            fNRebin[i]  = fBinsPi013TeVLowBPHOSPtRebin[i];
+                        } else if ( modi == 2 )
+                            fNRebin[i]  = fBinsPi013TeVLowBPCMEMCPtRebin[i];
                     }
                     nIterBGFit                  = 10;
                     fMaxYFracBGOverIntHist      = 60;
@@ -5115,7 +5151,7 @@
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                if( modi==0 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
+                if( modi==0 || modi == 2  || modi == 4 || modi == 5 || modi == 12 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
                 nIterBGFit                  = 8;
                 fMaxYFracBGOverIntHist      = 70;
                 optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";

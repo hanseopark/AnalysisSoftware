@@ -941,7 +941,7 @@ do
             fi
         elif [ $ENERGY = "8TeV" ]; then
             GiveBinning8TeV
-        elif [ $ENERGY = "13TeV" ]; then
+        elif [ $ENERGY = "13TeV" ] || [ $ENERGY = "13TeVLowB" ]; then
             GiveBinning13TeV
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption

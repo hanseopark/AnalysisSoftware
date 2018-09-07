@@ -145,7 +145,10 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
                         listOutput2             = new TList();
                         listOutput2->SetName(defaultMainDir.Data());
                     }
-                    listOutput2->Add(listTree);
+                    TList *listToSave2       = new TList();
+                    listToSave2->SetName(dirname.Data());
+                    listToSave2->Add(listTree);
+                    listOutput2->Add(listToSave2);
                     listOutput2->Write("",TObject::kSingleKey);
                     fileOutput2->Close();
                     delete fileOutput2;
@@ -155,7 +158,7 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
         } else {
             cout<< "found:" << dirname<<endl;
             TString nameOutputFile  = Form("%s_Basic.root", nameOutputFileBase.Data());
-            TFile *fileOutput       = new TFile(nameOutputFile.Data(),"UPDATE");
+            TFile *fileOutput       = new TFile(nameOutputFile.Data(),"RECREATE");
                 TList *listOutput       = (TList*)fileOutput->Get(defaultMainDir.Data());
                 Bool_t kNewList         = kFALSE;
                 if (!listOutput){

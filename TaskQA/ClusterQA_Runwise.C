@@ -192,7 +192,7 @@ void ClusterQA_Runwise(
 
 
     //*****************************************************************************************************
-    //**************************** Determine wether to run track matching or not **************************
+    //**************************** Determine whether to run track matching or not *************************
     //*****************************************************************************************************
     Bool_t isTrackMatching          = kTRUE;
     TString trackMatchingCut(fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1));
