@@ -15,29 +15,29 @@ PROGNAME=$0
 
 function GiveBinningDalitz7TeV()
 {
-	echo "How many p_T bins do you want to use for the Pi0? 18(5GeV), 19(6GeV), 20(8GeV), 21(10GeV)";
+	echo "How many p_T bins do you want to use for the Pi0? 19(4GeV), 21(5GeV), 24(8GeV), 26(15GeV)";
 	read answer
-		if [ $answer = 18 ]; then
-		    echo "18 Bins --> Max p_T = 5 GeV ...";
-		    correctPi0=1
-		    BinsPtPi0=18
-		elif [ $answer = 19 ]; then
-		    echo "19 Bins --> Max p_T = 6 GeV ...";
+		if [ $answer = 19 ]; then
+		    echo "19 Bins --> Max p_T = 4 GeV ...";
 		    correctPi0=1
 		    BinsPtPi0=19
-		elif [ $answer = 20 ]; then
-		    echo "20 Bins --> Max p_T = 8 GeV ...";
-		    correctPi0=1
-		    BinsPtPi0=20
 		elif [ $answer = 21 ]; then
-		    echo "21 Bins --> Max p_T = 10 GeV ...";
+		    echo "21 Bins --> Max p_T = 5 GeV ...";
 		    correctPi0=1
 		    BinsPtPi0=21
+		elif [ $answer = 24 ]; then
+		    echo "24 Bins --> Max p_T = 8 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=24
+		elif [ $answer = 26 ]; then
+		    echo "26 Bins --> Max p_T = 15 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=26
 		else
 		    echo "Pi0 Binning was not set correctly. Please try again.";
 		    correctPi0=0
 		fi
- 	echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV)"
+        echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV), 10 (14 GeV)"
  	read answer
 		if [ $answer = 7 ]; then
 		    echo "7 Bins --> Max p_T = 4.4 GeV ...";
@@ -51,6 +51,10 @@ function GiveBinningDalitz7TeV()
 		    echo "9 Bins --> Max p_T = 10 GeV ...";
 		    correctEta=1
 		    BinsPtEta=9
+		elif [ $answer = 10 ]; then
+		    echo "10 Bins --> Max p_T = 14 GeV ...";
+		    correctEta=1
+		    BinsPtEta=10
 		else
 		    echo "Eta Binning was not set correctly. Please try again.";
 		    correctEta=0
@@ -1122,7 +1126,7 @@ done
 echo "bla";
 
 if [ $ONLYRESULTS -eq 0 ]; then
-	echo "Hauptroutine stimmt" 
+	echo "Hauptroutine stimmt -eq On the right path"
 	if [ $ONLYCORRECTION -eq 0 ];  then
 		correct=0
 		while [ $correct -eq 0 ]
@@ -1143,7 +1147,7 @@ if [ $ONLYRESULTS -eq 0 ]; then
 		done
 	fi
 	
-	echo "Hauptroutine stimmt" 
+	echo "Hauptroutine stimmt -eq On the right path"
 	correct=0
 	while [ $correct -eq 0 ]
 	do
@@ -1278,14 +1282,14 @@ if [ $ONLYRESULTS -eq 0 ]; then
 				fi
 				if [ $MCFILE -eq 1 ] && [ $energy != "PbPb_2.76TeV" ]; then 
 	  
-				    root -x -q -l -b TaskV1/ElectronQAv1.C\+\+\(\"$DataRootFile\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"\"\,$mode\)
+				    root -x -q -l -b TaskQA/ElectronQAv1.C\+\+\(\"$DataRootFile\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"\"\,$mode\)
 
 
 				    if [ $MERGINGMC -eq 1 ]; then
 					#DataRootFileBC
 					
-					root -x -q -l -b TaskV1/ElectronQAv1.C\+\+\(\"$DataRootFileBC\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"BC\"\,$mode\)
-					root -x -q -l -b TaskV1/ElectronQAv1.C\+\+\(\"$DataRootFileD\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"D\"\,$mode\)
+					root -x -q -l -b TaskQA/ElectronQAv1.C\+\+\(\"$DataRootFileBC\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"BC\"\,$mode\)
+					root -x -q -l -b TaskQA/ElectronQAv1.C\+\+\(\"$DataRootFileD\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"D\"\,$mode\)
 				
 				
 				    fi				
@@ -1356,6 +1360,9 @@ if [ $ONLYRESULTS -eq 0 ]; then
 				fi
 						
 			fi
+                        if [ "$energy" == "5TeV2017" ]; then
+                                root -x -q -l -b TaskQA/ElectronQAv1.C\+\+\(\"$DataRootFile\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"$energy\"\,\"\"\,$mode\)
+                        fi
 
 		fi
 

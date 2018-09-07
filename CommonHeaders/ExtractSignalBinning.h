@@ -328,6 +328,8 @@
                     return 7;
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
+                if ( mode == 1 )
+                    return 5;
                 if ( mode == 2 )
                     return 9;
                 if ( mode == 4 )
@@ -817,6 +819,8 @@
                     return 4;
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
+                if (mode == 1 )
+                    return 4;
                 if (mode == 2 )
                     return 8;
                 if (mode == 3 )
@@ -1213,6 +1217,8 @@
                 if( energy.Contains("2017")){
                     if ( mode == 0){
                         startPtBin = 1;
+                    } else if ( mode == 1){
+                        startPtBin = 1;
                     } else if ( mode == 2 || mode == 13 ){
                         startPtBin = 3;
                     } else if ( mode == 3){
@@ -1506,6 +1512,8 @@
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
               if( energy.Contains("2017")){
                   if ( mode == 0){
+                      startPtBin = 1;
+                 } else if ( mode == 1 ){
                       startPtBin = 1;
                   } else if ( mode == 2 ){
                       startPtBin = 2;
@@ -1887,7 +1895,7 @@
                           }
                       }
                   } else if ( mode == 1 ) {
-                      maxNBins = 23;
+                      maxNBins = 29;
                       for(Int_t i = 0; i < maxNBins+1; i++){
                           binning[i] = fBinsPi05TeV2017DalitzPt[i];
                       }
@@ -2595,7 +2603,7 @@
                         }
                     }
                 } else if ( mode == 1  ){
-                    maxNBins = 9;
+                    maxNBins = 10;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeV2017DalitzPt[i];
                     }
@@ -4919,6 +4927,8 @@
                                 } else {
                                     fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                                 }
+                            } else if( (modi == 1) && (energy.Contains("2017"))){
+                              fNRebin[i]  = fBinsPi05TeV2017DalitzPtRebin[i];
                             } else if( modi == 2 ){
                               if(energy.Contains("2017"))
                                 fNRebin[i] = fBinsEta5TeV2017PCMEMCPtRebin[i];
