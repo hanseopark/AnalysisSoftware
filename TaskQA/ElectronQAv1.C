@@ -40,7 +40,7 @@
 #include "TGraphErrors.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
-#include "TPolyLine.h";
+#include "TPolyLine.h"
 #include "TGraph2D.h"
 #include "TMatrixDSym.h"
 #include "TArrow.h"
@@ -116,7 +116,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	  
                     Int_t iTrain = 1;
 
-                    while( !GammaConvDalitzV1Data && iTrain <= 100 ) {
+                    while( !GammaConvDalitzV1Data && iTrain <= 300 ) {
                             
                           GammaConvDalitzV1Data = (TList*)fileData.Get(Form("%s_%d",nameOutputDir.Data(),iTrain));
                            
@@ -126,11 +126,11 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
                      
                     if( ! GammaConvDalitzV1Data ) {
 		      
-		        GammaConvDalitzV1Data = (TList*)fileData.Get("GammaConvDalitzV1QA");
+		        GammaConvDalitzV1Data = (TList*)fileData.Get("GammaConvDalitzV1");
 			
 			if( ! GammaConvDalitzV1Data ) {		
 			    cout<<"ERROR Data: GammaConvDalitzV1 is not found in the file"<<endl;
-			    return;
+			  //  return;
 			}
                    }            
         }
@@ -140,9 +140,14 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
         
 	if ( mode == 9  ){
 	  
-		ReturnSeparatedCutNumber(fCutSelection, fGammaCutSelection, fElectronCutSelection,fMesonCutSelection,kTRUE);
-		fEventCutSelection = fGammaCutSelection(0,7);
-		fGammaCutSelection = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
+		ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection,fMesonCutSelection,1);
+                //cout << fCutSelection.Data() <<"CutSelection"<< endl;
+                //cout << fEventCutSelection.Data() <<"Event"<< endl;
+                //cout << fGammaCutSelection.Data() <<"Gamma"<< endl;       //Help with the Debug
+                //cout << fElectronCutSelection.Data() <<"Electron"<< endl;
+                //cout << fMesonCutSelection.Data() <<"Meson"<< endl;
+		//fEventCutSelection = fGammaCutSelection(0,8);
+		//fGammaCutSelection = fGammaCutSelection(8,fGammaCutSelection.Length()-8);
 		cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
 		
 		
@@ -456,7 +461,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 
                     Int_t iTrain = 1;
 
-                    while( !GammaConvDalitzV1MC && iTrain <= 100 ) {
+                    while( !GammaConvDalitzV1MC && iTrain <= 300 ) {
                             
                           GammaConvDalitzV1MC = (TList*)fileMC.Get(Form("%s_%d",nameOutputDir.Data(),iTrain));
                            
@@ -1879,12 +1884,12 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterPtRebin_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterPtRebin_data,
 						hESDDalitzElectronAfterPtRebin_mc, 
-						"",pTLabelN.Data(),textYAxisPtDistE,
+						"","pT",textYAxisPtDistE,
 						kTRUE, 5.,1e-3,
 						kFALSE,1e-5 ,3e-1, 
-						kTRUE, 0.1,10.,1.2);	
+						kTRUE, 0.1,10.);
 	
 	
 	
@@ -1925,13 +1930,15 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterPtRebin_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterPtRebin_data,
 						hESDDalitzPositronAfterPtRebin_mc, 
-						"",pTLabelP.Data(),textYAxisPtDistP,
+						"","pT".Data(),textYAxisPtDistP,
 						kTRUE,5.,1e-3,
 						kFALSE,1e-5 ,6e-1, 
-						kTRUE, 0.1,10.,1.2);	
+						kTRUE, 0.1,10.);
 	
+        void DrawAutoGammaHistos(TH1*, TH1*, TString, TString, TString, Bool_t, Double_t, Double_t, Bool_t, Double_t, Double_t, Bool_t, Double_t, Double_t, Float_t, Float_t);
+
 	//TLatex *process01 = new TLatex(0.63, 0.92,Form(collisionSystem.Data()));
         //process01->SetNDC();
         //process01->SetTextColor(1);
@@ -1975,12 +1982,12 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronPositronAfterPt_mc->Scale(1./hESDDalitzElectronPositronAfterPt_mc->Integral());
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterPt_data,
+	DrawAutoGammaHistos( hESDDalitzElectronPositronAfterPt_data,
 						hESDDalitzElectronPositronAfterPt_mc, 
 						"", "p_{T} e^{#pm} (GeV/c) ",textYAxisPtDistEP,
 						kFALSE, 5.,1e-12,
 						kTRUE,1e-5 ,3e-1, 
-						kTRUE, 0.1,20.,1.3);	
+						kTRUE, 0.1,20.);
 	canvasElectronPositronPt->SetLogy(1);
 	canvasElectronPositronPt->SetLogx(1);
 	canvasElectronPositronPt->Update();
@@ -2022,12 +2029,12 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterEtaRebin_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterEtaRebin_data,
 						hESDDalitzElectronAfterEtaRebin_mc, 
 						"", "#eta",textYAxisEtaDistE,
 						kTRUE, 5.,1e-4,
 						kFALSE,YMinEta ,YMaxEta, 
-						kTRUE, -1.5,1.5);	
+						kTRUE, -1.5,1.5);
 	
 	processSystem->Draw();
 	
@@ -2062,7 +2069,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterEtaPCut_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterEtaPCut_data,
 						hESDDalitzElectronAfterEtaPCut_mc, 
 						"", "#eta",textYAxisEtaDistE,
 						kTRUE, 1.2,1e-3,
@@ -2099,7 +2106,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterEtaRebin_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterEtaRebin_data,
 						hESDDalitzPositronAfterEtaRebin_mc, 
 						"", "#eta",textYAxisEtaDistP,
 						kTRUE, 5.,1e-4,
@@ -2138,7 +2145,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterEtaPCut_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterEtaPCut_data,
 						hESDDalitzPositronAfterEtaPCut_mc, 
 						"", "#eta",textYAxisEtaDistP,
 						kTRUE, 1.2,1e-3,
@@ -2188,7 +2195,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterEta_data,
+	DrawAutoGammaHistos( hESDDalitzElectronPositronAfterEta_data,
 						hESDDalitzElectronPositronAfterEta_mc, 
 						"", "#eta",textYAxisEtaDistEP,
 						kFALSE, 1.,1e-3,
@@ -2226,7 +2233,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDConvGammaEta_data,
+	DrawAutoGammaHistos( hESDConvGammaEta_data,
 						hESDConvGammaEta_mc, 
 						"", "#eta",textYAxisEtaDistGamma,
 						kTRUE, 5.,1e-3,
@@ -2260,7 +2267,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	  hESDDalitzElectronAfterPhiRebin_mc->Scale(1.0/hESDDalitzElectronAfterPhiRebin_mc->Integral());
      
       
-	 /* DrawAutoGammaHistosTemp( hESDDalitzElectronAfterPhiRebin_data,
+	 /* DrawAutoGammaHistos( hESDDalitzElectronAfterPhiRebin_data,
 						hESDDalitzElectronAfterPhiRebin_mc, 
 						"", "#phi (rad) ",textYAxisPhiE,
 						kTRUE,5.0,1e-4,
@@ -2300,7 +2307,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	  hESDDalitzPositronAfterPhiRebin_mc->Scale(1.0/hESDDalitzPositronAfterPhiRebin_mc->Integral());
      
       
-	  DrawAutoGammaHistosTemp( hESDDalitzPositronAfterPhiRebin_data,
+	  DrawAutoGammaHistos( hESDDalitzPositronAfterPhiRebin_data,
 						hESDDalitzPositronAfterPhiRebin_mc, 
 						"", "#phi (rad) ",textYAxisPhiP,
 						kTRUE,5.0,1e-4,
@@ -2345,7 +2352,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronPositronAfterPhi_mc->Scale(1.0/hESDDalitzElectronPositronAfterPhi_mc->Integral());
        
       
-	DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterPhi_data,
+	DrawAutoGammaHistos( hESDDalitzElectronPositronAfterPhi_data,
 						hESDDalitzElectronPositronAfterPhi_mc, 
 						"", "#phi (rad)",textYAxisPhiEP,
 						kFALSE,1.6,1e-4,
@@ -2501,7 +2508,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNFindClsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.3);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNFindClsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNFindClsTPC_Proj_data,
 						hESDDalitzElectronAfterNFindClsTPC_Proj_mc, 
 						"", "N^{found}_{TPC clusters} / N^{Findable}_{TPC clusters}",textYAxisPtDistE,
 						kTRUE,3.1,1e-5,
@@ -2545,7 +2552,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
        
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNFindClsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNFindClsTPCPCut_data,
 						hESDDalitzElectronAfterNFindClsTPCPCut_mc, 
 						"", "N^{found}_{TPC clusters} / N^{Findable}_{TPC clusters}",textYAxisPtDistE,
 						kTRUE,3.1,1e-5,
@@ -2591,7 +2598,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
        
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNFindClsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNFindClsTPC_Proj_data,
 						hESDDalitzPositronAfterNFindClsTPC_Proj_mc, 
 						"", "N^{found}_{TPC clusters} / N^{Findable}_{TPC clusters}",textYAxisPtDistP,
 						kTRUE, 3.1,1e-5,
@@ -2639,7 +2646,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
        
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNFindClsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNFindClsTPCPCut_data,
 						hESDDalitzPositronAfterNFindClsTPCPCut_mc, 
 						"", "N^{found}_{TPC clusters} / N^{Findable}_{TPC clusters}",textYAxisPtDistP,
 						kTRUE, 3.1,1e-5,
@@ -2764,9 +2771,9 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNClsTPC_Proj_mc->GetXaxis()->SetTitleOffset(1.0);
 	hESDDalitzElectronAfterNClsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.0);
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNClsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNClsTPC_Proj_data,
 						hESDDalitzElectronAfterNClsTPC_Proj_mc, 
-						"",textXAxisTPCclsE.Data(),textYAxisTPCclsE,
+						"","textXAxisTPCclsE.Data()",textYAxisTPCclsE,
 						kTRUE, 2.5,1e-4,
 						kFALSE,1e-3 ,15, 
 						kTRUE, 0.,200.);	
@@ -2803,7 +2810,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNClsTPCPCut_mc->GetXaxis()->SetTitleOffset(1.0);
 	hESDDalitzElectronAfterNClsTPCPCut_data->GetXaxis()->SetTitleOffset(1.0);
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNClsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNClsTPCPCut_data,
 						hESDDalitzElectronAfterNClsTPCPCut_mc, 
 						"", "N_{TPC_{cls}} e^{-}",textYAxisTPCclsE,
 						kTRUE,2.5,1e-4,
@@ -2844,9 +2851,9 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPositronAfterNClsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNClsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNClsTPC_Proj_data,
 						hESDDalitzPositronAfterNClsTPC_Proj_mc, 
-						"",textXAxisTPCclsP,textYAxisTPCclsP,
+						"","textXAxisTPCclsP","textYAxisTPCclsP",
 						kTRUE,2.5,1e-4,
 						kFALSE,1e-3 ,15, 
 						kFALSE, 0.,200.);	
@@ -2883,7 +2890,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPositronAfterNClsTPCPCut_mc->GetXaxis()->SetTitleOffset(1.0);
 	hESDDalitzPositronAfterNClsTPCPCut_mc->GetXaxis()->SetTitleOffset(1.0);
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNClsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNClsTPCPCut_data,
 						hESDDalitzPositronAfterNClsTPCPCut_mc, 
 						"", "Number of TPC clusters e^{+}",textYAxisPtDistP,
 						kTRUE,2.5,1e-4,
@@ -2935,7 +2942,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterNClsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzElectronPositronAfterNClsTPC_Proj_data,
 						hESDDalitzElectronPositronAfterNClsTPC_Proj_mc, 
 						"", "N_{TPCcls} e^{#pm}",textYAxisTPCclsEP,
 						kTRUE,1.5,1e-4,
@@ -3081,7 +3088,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPositronAfterNCrossedRowsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNCrossedRowsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNCrossedRowsTPC_Proj_data,
 						hESDDalitzPositronAfterNCrossedRowsTPC_Proj_mc, 
 						"", "N_{TPC_{CrossedRows}} e^{+}",textYAxisTPCcrossedRowsP,
 						kFALSE,2.5,1e-4,
@@ -3121,7 +3128,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPositronAfterNCrossedRowsTPCPCut_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNCrossedRowsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNCrossedRowsTPCPCut_data,
 						hESDDalitzPositronAfterNCrossedRowsTPCPCut_mc, 
 						"", "N_{TPC_{CrossedRows}} e^{+}",textYAxisTPCcrossedRowsP,
 						kFALSE,2.5,1e-4,
@@ -3164,7 +3171,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNCrossedRowsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNCrossedRowsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNCrossedRowsTPC_Proj_data,
 						hESDDalitzElectronAfterNCrossedRowsTPC_Proj_mc, 
 						"", "N_{TPC_{CrossedRows}} e^{-}",textYAxisTPCcrossedRowsE,
 						kFALSE,2.5,1e-4,
@@ -3205,7 +3212,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNCrossedRowsTPCPCut_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNCrossedRowsTPCPCut_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNCrossedRowsTPCPCut_data,
 						hESDDalitzElectronAfterNCrossedRowsTPCPCut_mc, 
 						"", "Number of TPC clusters e^{-} ",textYAxisPtDistE,
 						kTRUE,2.5,1e-4,
@@ -3258,7 +3265,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronPositronAfterNCrossedRowsTPC_Proj_data->GetXaxis()->SetTitleOffset(1.0);
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterNCrossedRowsTPC_Proj_data,
+	DrawAutoGammaHistos( hESDDalitzElectronPositronAfterNCrossedRowsTPC_Proj_data,
 						hESDDalitzElectronPositronAfterNCrossedRowsTPC_Proj_mc, 
 						"", "N_{TPCcrossedRows} e^{#pm}",textYAxisTPCcrossedRowsEP,
 						kTRUE,1.5,1e-4,
@@ -3320,7 +3327,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzElectronAfterNClsITSRebin_mc->Scale(1./hESDDalitzElectronAfterNClsITSRebin_mc->Integral());
 	hESDDalitzElectronAfterNClsITSRebin_data->Scale(1./hESDDalitzElectronAfterNClsITSRebin_data->Integral());
 	
-	DrawAutoGammaHistosTemp( hESDDalitzElectronAfterNClsITSRebin_data,
+	DrawAutoGammaHistos( hESDDalitzElectronAfterNClsITSRebin_data,
 						hESDDalitzElectronAfterNClsITSRebin_mc, 
 						"", "N_{ITS_{cls}} e^{-}",textYAxisITSclsE,
 						kFALSE, 15,1e-2,
@@ -3381,7 +3388,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPositronAfterNClsITSRebin_mc->Scale(1./hESDDalitzPositronAfterNClsITSRebin_mc->Integral());
 	hESDDalitzPositronAfterNClsITSRebin_data->Scale(1./hESDDalitzPositronAfterNClsITSRebin_data->Integral());
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPositronAfterNClsITSRebin_data,
+	DrawAutoGammaHistos( hESDDalitzPositronAfterNClsITSRebin_data,
 						hESDDalitzPositronAfterNClsITSRebin_mc, 
 						"", "N_{ITS_{cls}} e^{+}",textYAxisITSclsP,
 						kFALSE, 15,1e-2,
@@ -3442,7 +3449,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	   hESDDalitzElectronPositronAfterClsITS_mc->Scale(1./hESDDalitzElectronPositronAfterClsITS_mc->Integral());
 	   hESDDalitzElectronPositronAfterClsITS_data->Scale(1./hESDDalitzElectronPositronAfterClsITS_data->Integral());
 	
-	   DrawAutoGammaHistosTemp( hESDDalitzElectronPositronAfterClsITS_data,
+	   DrawAutoGammaHistos( hESDDalitzElectronPositronAfterClsITS_data,
 						hESDDalitzElectronPositronAfterClsITS_mc, 
 						"", "N_{ITS_{cls}} e^{#pm}",textYAxisITSclsEP,
 						kFALSE, 15,1e-3,
@@ -3478,7 +3485,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	
 	
-	DrawAutoGammaHistosTemp( hESDDalitzPosEleAfterDCAxy_Proj_mc,
+	DrawAutoGammaHistos( hESDDalitzPosEleAfterDCAxy_Proj_mc,
 						hESDDalitzPosEleAfterDCAxy_Proj_data, 
 						"", "DCA_{xy} (cm)",textYAxisDCAxy,
 						kTRUE,5.0,1e-5,
@@ -3519,7 +3526,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	hESDDalitzPosEleAfterDCAz_Proj_mc->Scale(1./hESDDalitzPosEleAfterDCAz_Proj_mc->GetEntries());
 	hESDDalitzPosEleAfterDCAz_Proj_data->Scale(1./hESDDalitzPosEleAfterDCAz_Proj_data->GetEntries());
        
-	DrawAutoGammaHistosTemp( hESDDalitzPosEleAfterDCAz_Proj_mc,
+	DrawAutoGammaHistos( hESDDalitzPosEleAfterDCAz_Proj_mc,
 						hESDDalitzPosEleAfterDCAz_Proj_data, 
 						"", "DCA_{z} (cm)",textYAxisDCAz,
 						kTRUE,5.0,1e-5,
@@ -5251,7 +5258,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	legendGammaXY->Draw("same");
 	
-	DrawStructureNew(colorXY);
+	DrawStructureNew();
 	
 	canvasGammaXY_data->Update();
           

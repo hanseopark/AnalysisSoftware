@@ -178,6 +178,8 @@ TH2F* hESDEposEnegTrueEtaDalitzInvMassPt                = 0;
 TH2F* hESDEposEnegTruePhotonInvMassPt			= 0;
 TH2F* hESDEposEnegInvMassPt				= 0;
 TH2F* hESDEposEnegTrueInvMassPt				= 0;
+TH2F* hESDTrueMotherEposEnegInvMassPt                   = 0;
+TH1F* hESDTrueMotherEposEnegInvMass                     = 0;
 
 TH1F* hESDEposEnegTruePi0DalitzPt 			= 0;
 TH1F* hESDEposEnegTrueEtaDalitzPt 			= 0; 

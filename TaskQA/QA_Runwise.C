@@ -922,6 +922,31 @@ void QA_Runwise(
       markerSize=1.5;
       doEquidistantXaxis=kTRUE;
     }
+    else if(select.CompareTo("LHC17p")==0){
+      // pp 5.02TeV
+      mode=0;
+      fEnergyFlag = "5TeV";
+      nSets = 2; //Exp() and MC()
+      nData = 1; //...
+      cutNr = 0; //
+      // filePath= "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";
+      // filePathPhoton = "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";//pp/$select/$runnumber/AnalysisResults
+
+      // filePath= "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";
+      // filePathPhoton = "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";//pp/$select/$runnumber/AnalysisResults
+      // fileName = "GammaConvV1_28.root";
+      // DataSets[0]="LHC15n"; DataSets[1]="LHC16h8a"; DataSets[2]="LHC16h8b";
+      // plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC16h8a PYT8"; plotDataSets[2]="LHC16h8b PYT6";
+
+      filePath= "/media/edgar/450b3ae9-23e2-4330-a2b5-6c8fe304850c/Runwise1/Legotrain-vAN-20180513-5TeV/GA_pp-2341_20180426-0907_byRun";
+      filePathPhoton = "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy";//pp/$select/$runnumber/AnalysisResults
+      fileName = "GammaConvV1_400.root";
+
+      DataSets[0]="LHC17pCENTWOSDD"; DataSets[1]="CENTWOSDD"; //DataSets[2]="FAST"; DataSets[3]="CENTWOSDD";
+      plotDataSets[0]="LHC17p_pass1_CENT"; plotDataSets[1]="LHC17l3b_PYT8_CENT"; //plotDataSets[2]="LHC17l3b_PYT8_Fast"; plotDataSets[3]="LHC17l3b_PYT8_Cent";
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+    }
     //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
