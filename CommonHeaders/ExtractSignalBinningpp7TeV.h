@@ -100,35 +100,35 @@
                                                         5, 5, 5};
 
     // Eta->pi+pi-pi0
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {3,6,6,6,3,3,3,3,3,3,3,3,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.2,1.4,1.5,2,2.5,3,3.5,4,5,6.,8.,12.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {3,6,6,2,2,2,2,2,2,2,2,2,3};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[11]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[10]       = {4,4,4,4,4,4,4,6,6,6};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[10]         = {0,1,1.5,2,2.5,3,3.5,4,5,8.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[9]       = {2,2,2,2,2,2,2,2,2};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[14]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,13,16};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[13]       = {4,4,4,4,4,4,4,4,4,4,4,4,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,12.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[11]       = {4,4,4,4,4,4,4,4,4,4,4};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,7.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {4,4,4,4,4,4,4,4,4,4,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[13]         =  {0,1,1.2,1.4,1.8,2,2.5,3,3.5,4,5,6.,8.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[12]       = {4,4,3,3,3,3,3,3,4,4,4,4};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[11]         = {0,1,1.5,2.,4.,6.,8.,10.,12.,14.,17.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[10]       = {4,4,4,4,4,4,4,4,4,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[11]         = {0,1,1.8,2,2.5,3.,3.5,4.,6.,8.,10};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[10]        = {5,5,5,3,3,3,2,2,2,3};
 
     // omega->pi+pi-pi0
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,5,5,5,5,5,5,10,10};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,4,5,5,5,5,5,10,10};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[11]         = {0,1,1.5,2,2.5,3,3.5,4,5,7.,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[10]       = {10,10,10,10,10,10,8,8,6,6};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[12]         = {0,1,1.5,2,2.5,3,3.5,4,5.,6.,8.,12.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[11]       = {10,10,10,10,10,10,8,8,8,6,6};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[14]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,13,16};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[13]       = {10,10,10,10,10,10,10,10,4,3,4,6,8};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,12.,16};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[12]       = {10,10,10,10,10,10,10,10,4,3,4,6};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {5,5,5,8,8,8, 8,8,10,16,16};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[14]         =  {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[13]       = {4,4,4,4,5,5, 4,4,4,4,4,5,5};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[11]         = {0,1,1.5,2,4.,6.,8.,10.,12.,14.,17.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[10]       = {12,12,12,12,12,12,12,12,12,12};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[10]         = {0,1,1.8,2,2.5,3.,3.5,4.,6.,8.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[9]       = {5,5,5,5,4,4,3,3,3};
 
 #endif

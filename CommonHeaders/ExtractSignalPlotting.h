@@ -506,10 +506,6 @@
               lowBin  = 0.47;
               highBin = 0.65;
             }
-            if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-              lowBin-=0.134;
-              highBin-=0.134;
-            }
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
@@ -538,12 +534,8 @@
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
         } else { //omega
-          Double_t lowBin = 0.645;
+          Double_t lowBin = 0.65;
           Double_t highBin = 0.9;
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            lowBin-=0.134;
-            highBin-=0.134;
-          }
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
@@ -605,11 +597,7 @@
         }
 
         TString xlabel;
-         if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-           xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
-         } else{
-           xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
-         }
+        xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
         TH1F * histo1DInvMassDummy;
         if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
@@ -618,11 +606,6 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            if(titleInvMassSignalWithBG.Contains("SubPiZero")){
-              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.70-0.134);
-              SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-            } else{
               Double_t lowBin  = 0.35;
               Double_t highBin = 0.695;
               if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
@@ -632,7 +615,6 @@
               histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
               SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-            }
 
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
@@ -646,15 +628,10 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.659,0.89);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          } else{
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }
+
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
@@ -673,19 +650,14 @@
             fitPi0InvMassSigRemBG->SetRange(0,0.255);
         } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-            if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-              fitPi0InvMassSig->SetRange(0.46-0.134,0.695-0.134);
-              fitPi0InvMassSigRemBG->SetRange(0.46-0.134,0.695-0.134);
-            } else{
-              Double_t lowBin  = 0.35;
-              Double_t highBin = 0.695;
-              if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
-                lowBin  = 0.46;
-                highBin = 0.70;
-              }
-              fitPi0InvMassSig->SetRange(lowBin,highBin);
-              fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
+            Double_t lowBin  = 0.35;
+            Double_t highBin = 0.695;
+            if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+              lowBin  = 0.46;
+              highBin = 0.70;
             }
+            fitPi0InvMassSig->SetRange(lowBin,highBin);
+            fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
         } else if(fMesonType.CompareTo("EtaPrime") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             Double_t lowBin  = 0.7;
@@ -694,13 +666,9 @@
             fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-              fitPi0InvMassSig->SetRange(0.645-0.134,0.89-0.134);
-              fitPi0InvMassSigRemBG->SetRange(0.645-0.134,0.89-0.134);
-            } else{
-              fitPi0InvMassSig->SetRange(0.645,0.89);
-              fitPi0InvMassSigRemBG->SetRange(0.645,0.89);
-            }
+            fitPi0InvMassSig->SetRange(0.645,0.89);
+            fitPi0InvMassSigRemBG->SetRange(0.645,0.89);
+
         }
         // Set fit colors
         fitPi0InvMassSig->SetNpx(10000);
@@ -750,8 +718,11 @@
 
         TLatex *labelALICE;
         if(fPlottingType.CompareTo("wip")==0){
-            // Work in progress selected
             labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE this thesis");
+        } else if (fPlottingType.CompareTo("performance")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
         } else{
             labelALICE      = new TLatex(0.135,0.9,"ALICE");
         }
@@ -833,10 +804,6 @@
         Double_t mass = fMesonMass[exampleBin];
         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
         Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
-        if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-          intRangeLow-=0.134;
-          intRangeHigh-=0.134;
-        }
         Double_t normalLow              = intRangeLow-(intRangeLow-histoPi0InvMassSigPlusBG->GetXaxis()->GetBinLowEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeLow)));
         Double_t normalUp               = intRangeHigh+(histoPi0InvMassSigPlusBG->GetXaxis()->GetBinUpEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeHigh))-intRangeHigh);
 
@@ -915,7 +882,8 @@
         }
 
        // plot same further split plot for example bin, but with blue box showing BG fit range
-       if(fMesonType.CompareTo("Omega") == 0){
+       if(    ((fMesonType.CompareTo("Omega") == 0) && (decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0 ))
+           || ((fMesonType.CompareTo("Eta") == 0)   && (decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0 ))   ){
            Double_t fBGFitRangeLow     = fBGFitRange[0];
            Double_t fBGFitRangeHigh    = fBGFitRange[1];
 
@@ -924,8 +892,12 @@
                fBGFitRangeHigh         = UsrBckFitRange[1];
            }
 
-           TBox *box               = new TBox(fBGFitRangeLow,histoInvMassSignalWithBG->GetMaximum()*0.43,fBGFitRangeHigh,histoInvMassSignalWithBG->GetMaximum()*0.41);
-           box->SetFillStyle(1001);
+           TBox * box              = NULL;
+           if ((fMesonType.CompareTo("Eta") == 0)   && (decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0 )) {
+               box               = new TBox(fBGFitRangeLow,histoInvMassSignalWithBG->GetMaximum()*0.63,fBGFitRangeHigh,histoInvMassSignalWithBG->GetMaximum()*0.61);
+           } else{
+               box               = new TBox(fBGFitRangeLow,histoInvMassSignalWithBG->GetMaximum()*0.43,fBGFitRangeHigh,histoInvMassSignalWithBG->GetMaximum()*0.41);
+           }
            box->SetFillColor(kAzure+9);
            box->Draw("same");
 
@@ -1085,11 +1057,6 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.695-0.134);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          } else{
             Double_t lowBin  = 0.35;
             Double_t highBin = 0.695;
             if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}")==0){
@@ -1099,7 +1066,7 @@
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }
+
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("EtaPrime") == 0){
@@ -1112,16 +1079,9 @@
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
 
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+          histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
+          SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          } else{
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }
-
           histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
           histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
@@ -1143,7 +1103,16 @@
         }
 
         // Start Drawing
-        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        TLatex *labelALICE      = NULL;
+        if(fPlottingType.CompareTo("wip")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE this thesis");
+        } else if (fPlottingType.CompareTo("performance")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+        } else{
+            labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        }
         SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
         labelALICE->SetTextFont(43);
         labelALICE->Draw();
@@ -1363,7 +1332,16 @@
         }
 
         // Start Drawing
-        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        TLatex *labelALICE      = NULL;
+        if(fPlottingType.CompareTo("wip")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE this thesis");
+        } else if (fPlottingType.CompareTo("performance")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+        } else{
+            labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        }
         SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
         labelALICE->SetTextFont(43);
         labelALICE->Draw();
@@ -1531,12 +1509,6 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.70-0.134);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }else{
             Double_t lowBin   = 0.35;
             Double_t highBin  = 0.695;
             if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
@@ -1546,7 +1518,7 @@
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }
+
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("EtaPrime") == 0){
@@ -1558,15 +1530,10 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+          histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
+          SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          } else{
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-          }
+
           histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
           histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
@@ -1582,17 +1549,13 @@
             fitPi0InvMassSig->SetRange(0,0.255);
         } else if(fMesonType.CompareTo("Eta") == 0){
           labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            fitPi0InvMassSig->SetRange(0.35-0.134,0.695-0.134);
-          } else{
-              Double_t lowBin   = 0.35;
-              Double_t highBin  = 0.695;
-              if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
-                lowBin  = 0.47;
-                highBin = 0.65;
-              }
-            fitPi0InvMassSig->SetRange(lowBin,highBin);
+          Double_t lowBin   = 0.35;
+          Double_t highBin  = 0.695;
+          if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+            lowBin  = 0.47;
+            highBin = 0.65;
           }
+          fitPi0InvMassSig->SetRange(lowBin,highBin);
         } else if(fMesonType.CompareTo("EtaPrime") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             Double_t lowBin   = 0.7;
@@ -1600,13 +1563,8 @@
             fitPi0InvMassSig->SetRange(lowBin,highBin);
         } else { // omega
           labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            fitPi0InvMassSig->SetRange(0.645-0.134,0.89-0.134);
-            fitOmegaInvMassBG->SetRange(0.645-0.134,0.89-0.134);
-          }else{
-            fitPi0InvMassSig->SetRange(0.645,0.89);
-            fitOmegaInvMassBG->SetRange(0.645,0.89);
-          }
+          fitPi0InvMassSig->SetRange(0.645,0.89);
+          fitOmegaInvMassBG->SetRange(0.645,0.89);
         }
         // Scaling
         histoPi0InvMassSig->Scale(scaleFacSignal);
@@ -1624,7 +1582,16 @@
         fitOmegaInvMassBGConfidence->SetFillColorAlpha(kGreen+2,0.4);
 
         // Start Drawing
-        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        TLatex *labelALICE      = NULL;
+        if(fPlottingType.CompareTo("wip")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE this thesis");
+        } else if (fPlottingType.CompareTo("performance")==0){
+            labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+        } else{
+            labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        }
         SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
         labelALICE->SetTextFont(43);
         labelALICE->Draw();
@@ -1854,7 +1821,16 @@
                 fHistoTrueSignalMixed->Draw("same,p,e1");
             }
 
-            TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE simulation");
+            TLatex *labelALICE      = NULL;
+            if(fPlottingType.CompareTo("wip")==0){
+                labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+            } else if (fPlottingType.CompareTo("thesis")==0){
+                labelALICE      = new TLatex(0.135,0.9,"ALICE this thesis");
+            } else if (fPlottingType.CompareTo("performance")==0){
+                labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+            } else{
+                labelALICE      = new TLatex(0.135,0.9,"ALICE simulation");
+            }
             SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
             labelALICE->SetTextFont(43);
             labelALICE->Draw();
@@ -1921,7 +1897,8 @@
                                 TString decayChannel,
                                 TString fDetectionChannel,
                                 TString fEnergy,
-                                Bool_t isVsPtConv               = kFALSE
+                                Bool_t isVsPtConv               = kFALSE,
+                                TString fPlottingType           = ""
                             ){
         TGaxis::SetMaxDigits(3);
 
@@ -1951,7 +1928,17 @@
                 padDataSpectra->cd(place);
 
     //             cout << "entered ALICE plotting" << endl;
-                TString textAlice       = "ALICE performance";
+
+                TString textAlice;
+                if(fPlottingType.CompareTo("wip")==0){
+                    textAlice       = "ALICE work in progress";
+                } else if (fPlottingType.CompareTo("thesis")==0){
+                    textAlice       = "ALICE this thesis";
+                } else if (fPlottingType.CompareTo("performance")==0){
+                    textAlice       = "ALICE performance";
+                } else{
+                    textAlice       = "ALICE";
+                }
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents          = "MC";
@@ -2076,7 +2063,8 @@
                                 TString fDetectionChannel,
                                 TString fEnergy,
                                 Bool_t isVsPtConv               = kFALSE,
-                                Int_t BckNmb                    = 0
+                                Int_t BckNmb                    = 0,
+                                TString fPlottingType           = "performance"
                             ){
         TGaxis::SetMaxDigits(3);
 
@@ -2179,7 +2167,16 @@
         padLegend->Draw();
         padLegend->cd();
 
-        TString textAlice       = "ALICE performance";
+        TString textAlice;
+        if(fPlottingType.CompareTo("wip")==0){
+            textAlice       = "ALICE work in progress";
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            textAlice       = "ALICE this thesis";
+        } else if (fPlottingType.CompareTo("performance")==0){
+            textAlice       = "ALICE performance";
+        } else{
+            textAlice       = "ALICE";
+        }
         TString textEvents;
         if(fMonteCarloInfo){
             textEvents          = "MC";
@@ -2255,7 +2252,8 @@
                                 TString decayChannel,
                                 TString fDetectionChannel,
                                 TString fEnergy,
-                                Bool_t isVsPtConv               = kFALSE
+                                Bool_t isVsPtConv               = kFALSE,
+                                TString fPlottingType ="performance"
                             ){
         TGaxis::SetMaxDigits(3);
 
@@ -2283,7 +2281,16 @@
                 padDataSpectra->cd(place);
 
     //             cout << "entered ALICE plotting" << endl;
-                TString textAlice       = "ALICE performance";
+                TString textAlice;
+                if(fPlottingType.CompareTo("wip")==0){
+                    textAlice       = "ALICE work in progress";
+                } else if (fPlottingType.CompareTo("thesis")==0){
+                    textAlice       = "ALICE this thesis";
+                } else if (fPlottingType.CompareTo("performance")==0){
+                    textAlice       = "ALICE performance";
+                } else{
+                    textAlice       = "ALICE";
+                }
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents          = "MC";
@@ -2868,7 +2875,8 @@
                                             TString fTextFit             = "Fit",
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
                                             Bool_t isVsPtConv            = kFALSE,
-                                            Double_t* MassArray          = NULL
+                                            Double_t* MassArray          = NULL,
+                                            TString fPlottingType        = "performance"
                                             ){
 
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -3054,7 +3062,16 @@
         padLegend->Draw();
         padLegend->cd();
 
-        TString textAlice       = "ALICE performance";
+        TString textAlice;
+        if(fPlottingType.CompareTo("wip")==0){
+            textAlice       = "ALICE work in progress";
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            textAlice       = "ALICE this thesis";
+        } else if (fPlottingType.CompareTo("performance")==0){
+            textAlice       = "ALICE performance";
+        } else{
+            textAlice       = "ALICE";
+        }
         TString textEvents;
         if(fMonteCarloInfo){
             textEvents          = "MC";
@@ -3141,7 +3158,8 @@
                                                     Bool_t labelData            = kTRUE,
                                                     TString fTextFit            = "Fit",
                                                     TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}",
-                                                    Bool_t isVsPtConv           = kFALSE
+                                                    Bool_t isVsPtConv           = kFALSE,
+                                                    TString fPlottingType       = "performance"
                                                 ){
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         DrawGammaCanvasSettings( canvasDataFit, 0, 0, 0, 0);
@@ -3224,7 +3242,16 @@
         padLegend->Draw();
         padLegend->cd();
 
-        TString textAlice       = "ALICE performance";
+        TString textAlice;
+        if(fPlottingType.CompareTo("wip")==0){
+            textAlice       = "ALICE work in progress";
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            textAlice       = "ALICE this thesis";
+        } else if (fPlottingType.CompareTo("performance")==0){
+            textAlice       = "ALICE performance";
+        } else{
+            textAlice       = "ALICE";
+        }
         TString textEvents;
         if(fMonteCarloInfo){
             textEvents          = "MC";
@@ -3320,7 +3347,8 @@
                                             Bool_t labelData             = kTRUE,
                                             TString fTextFit             = "Fit",
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
-                                            Bool_t isVsPtConv            = kFALSE
+                                            Bool_t isVsPtConv            = kFALSE,
+                                            TString fPlottingType        = "performance"
                                             ){
 
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -3494,7 +3522,16 @@
         padLegend->Draw();
         padLegend->cd();
 
-        TString textAlice       = "ALICE performance";
+        TString textAlice;
+        if(fPlottingType.CompareTo("wip")==0){
+            textAlice       = "ALICE work in progress";
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            textAlice       = "ALICE this thesis";
+        } else if (fPlottingType.CompareTo("performance")==0){
+            textAlice       = "ALICE performance";
+        } else{
+            textAlice       = "ALICE";
+        }
         TString textEvents;
         if(fMonteCarloInfo){
             textEvents          = "MC";
@@ -3588,7 +3625,8 @@
                                                     TString decayChannel,
                                                     TString fDetectionChannel,
                                                     TString fEnergy,
-                                                    Bool_t isVsPtConv                                       = kFALSE
+                                                    Bool_t isVsPtConv                                       = kFALSE,
+                                                    TString fPlottingType = "performance"
                                             ){
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         DrawGammaCanvasSettings( canvasDataFit, 0, 0, 0, 0);
@@ -3613,7 +3651,16 @@
                 iPt--;
                 padDataFit->cd(place);
 
-                TString textAlice           = "ALICE performance";
+                TString textAlice;
+                if(fPlottingType.CompareTo("wip")==0){
+                    textAlice       = "ALICE work in progress";
+                } else if (fPlottingType.CompareTo("thesis")==0){
+                    textAlice       = "ALICE this thesis";
+                } else if (fPlottingType.CompareTo("performance")==0){
+                    textAlice       = "ALICE performance";
+                } else{
+                    textAlice       = "ALICE";
+                }
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents              = "MC";
@@ -3731,7 +3778,8 @@
                                             TString decayChannel,
                                             TString fDetectionChannel,
                                             TString fEnergy,
-                                            Bool_t isVsPtConv                                   = kFALSE
+                                            Bool_t isVsPtConv                                   = kFALSE,
+                                            TString fPlottingType = "performance"
                                         ){
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         DrawGammaCanvasSettings( canvasDataFit, 0, 0, 0, 0);
@@ -3756,7 +3804,16 @@
                 iPt--;
                 padDataFit->cd(place);
 
-                TString textAlice       = "ALICE performance";
+                TString textAlice;
+                if(fPlottingType.CompareTo("wip")==0){
+                    textAlice       = "ALICE work in progress";
+                } else if (fPlottingType.CompareTo("thesis")==0){
+                    textAlice       = "ALICE this thesis";
+                } else if (fPlottingType.CompareTo("performance")==0){
+                    textAlice       = "ALICE performance";
+                } else{
+                    textAlice       = "ALICE";
+                }
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents          = "MC";

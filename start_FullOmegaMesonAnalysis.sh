@@ -30,13 +30,23 @@ PERIOD=""
 NORMALCUTS=0
 dataFileOK=0
 
-function GiveBinning7TeV()
+function GiveBinning7TeVOmega()
 {
     echo "How many p_T bins do you want to use for Omega? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
     read answer
     BinsPtOmega=$answer
     correctOmega=1
     echo "You have chosen " $answer " pt bins for Omega";
+
+}
+
+function GiveBinning7TeVEta()
+{
+    echo "How many p_T bins do you want to use for Eta? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
+    read answer
+    BinsPtEta=$answer
+    correctOmega=1
+    echo "You have chosen " $answer " pt bins for Eta";
 
 }
 
@@ -429,7 +439,8 @@ do
 
     elif [ $energy = "7TeV" ] ; then
         if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinning7TeV
+            GiveBinning7TeVOmega
+            GiveBinning7TeVEta
         else
             correctOmega=1
         fi
@@ -566,7 +577,7 @@ if [ $ONLYRESULTS = 0 ] ; then
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $cutSelection";
                 optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode               
-                optionsEtaData=\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+                optionsEtaData=\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode
                 if [ \( $ONLYOMEGA -eq 1 \) -a \( -f $DataRootFile \) ]; then
                         echo "test"
                         ExtractSignal $optionsOmegaData
@@ -588,7 +599,7 @@ if [ $ONLYRESULTS = 0 ] ; then
 
                 if [ $MCFILE -eq 1 ]; then
                     optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
-                    optionsEtaMC=\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+                    optionsEtaMC=\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode
 
                     if [ $ONLYOMEGA -eq 1 ]; then
                         ExtractSignal $optionsOmegaMC
@@ -624,28 +635,28 @@ if [ $ONLYRESULTS = 0 ] ; then
             optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
 
             if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
-
+            echo "Correct Signal Data omega"
                 CorrectSignal $optionsOmegaCorrection
             else
                 PARTLY=1
             fi
 
             if [[ -f $EtadataRAWFILE  &&  -f $EtaMCcorrectionFILE ]]; then
-                echo "DID I JUMP HERE?"
+            echo "Correct Signal Data eta"
                 CorrectSignal $optionsEtaCorrection
             else
                 PARTLY=1
             fi
 
             if [[ -f $OmegaMCRAWFILE  &&   -f $OmegaMCcorrectionFILE ]]; then
-
+            echo "Correct Signal MC omega"
                 CorrectSignal $optionsOmegaCorrectionMC
             else
                 PARTLY=1
             fi
 
             if [[ -f $EtaMCRAWFILE  &&  -f $EtaMCcorrectionFILE  ]]; then
-
+            echo "Correct Signal MC eta"
                 CorrectSignal $optionsEtaCorrectionMC
             else
                 PARTLY=1

@@ -834,19 +834,19 @@
                     return 2;
                 } else if(mode == 40){
                     scaleFac        = 1.;
-                    return 8;
+                    return 7;
                 } else if(mode == 41){
                     scaleFac        = 1.;
-                    return 9;
+                    return 8;
                 } else if(mode == 42){
                     scaleFac        = 1.;
-                    return 7;
+                    return 6;
                 } else if(mode == 44){
                     scaleFac        = 1.;
-                    return 11;
+                    return 10;
                 } else if(mode == 45){
                     scaleFac        = 1.;
-                    return 3;
+                    return 7;
                 } else
                     return 6;
             } else if (energy.CompareTo("8TeV") == 0) {
@@ -1147,19 +1147,19 @@
             } else {
                 if(mode == 40){
                     scaleFac        = 1.;
-                    return 8;
+                    return 9;
                 } else if(mode == 41){
-                    scaleFac        = 3.;
+                    scaleFac        = 2.;
                     return 7;
                 } else if(mode == 42){
-                    scaleFac        = 1.;
-                    return 7;
+                    scaleFac        = 2.;
+                    return 9;
                 } else if(mode == 44){
                     scaleFac        = 1.;
                     return 11;
                 } else if(mode == 45){
-                    scaleFac        = 1.;
-                    return 3;
+                    scaleFac        = 5.;
+                    return 5;
                 } else{
                     scaleFac        = 2.;
                     return 2;
@@ -1532,15 +1532,15 @@
               }
             } else if (energy.CompareTo("7TeV") == 0){
                 if (mode == 40){
-                    startPtBin     = 6;
+                    startPtBin     = 4;
                 } else if (mode == 41){
-                    startPtBin     = 6;
+                    startPtBin     = 7;
                 } else if (mode == 42){
                     startPtBin     = 5;
                 } else if (mode == 44){
                     startPtBin     = 8;
                 } else if (mode == 45){
-                    startPtBin     = 3;
+                    startPtBin     = 4;
                 }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 0 ){
@@ -1702,7 +1702,7 @@
                 } else if (mode == 44){
                     startPtBin     = 8;
                 } else if (mode == 45){
-                    startPtBin     = 3;
+                    startPtBin     = 4;
                 }
             } else if(energy.CompareTo("13TeV") == 0){
                 if (mode == 40){
@@ -2603,26 +2603,26 @@
                         binning[i] = fBinsEta7TeVPt[i];
                     }
                 } else if(mode == 40){
-                    maxNBins = 13;
-                    binningMax  = 13;
+                    maxNBins = 12;
+                    binningMax  = 12;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCM[i];
                     }
                 } else if(mode == 41){
-                    maxNBins = 10;
-                    binningMax  = 10;
+                    maxNBins = 9;
+                    binningMax  = 9;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[i];
                     }
                 } else if(mode == 42){
-                    maxNBins = 11;
-                    binningMax  = 11;
+                    maxNBins = 13;
+                    binningMax  = 13;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                     }
                 } else if(mode == 44){
-                    maxNBins = 13;
-                    binningMax  = 13;
+                    maxNBins = 11;
+                    binningMax  = 11;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
                     }
@@ -3020,26 +3020,26 @@
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                     }
                 } else if(mode == 41){
-                    maxNBins    = 10;
-                    binningMax  = 10;
+                    maxNBins    = 11;
+                    binningMax  = 11;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[i];
                     }
                 } else if(mode == 42){
-                    maxNBins    = 11;
-                    binningMax  = 11;
+                    maxNBins    = 12;
+                    binningMax  = 12;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                     }
                 } else if(mode == 44){
-                    maxNBins    = 13;
-                    binningMax  = 13;
+                    maxNBins    = 12;
+                    binningMax  = 12;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                     }
                 } else if(mode == 45){
-                    maxNBins    = 10;
-                    binningMax  = 10;
+                    maxNBins    = 9;
+                    binningMax  = 9;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                     }
