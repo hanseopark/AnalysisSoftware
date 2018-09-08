@@ -310,7 +310,13 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TVectorF * gammaConvCoord       = new TVectorF;
     TVectorF * gammaPhotonProp      = new TVectorF;
 
-    TTree *PhotonQA                 = (TTree*)treeList->FindObject("PhotonQA");
+    TTree *PhotonQA = NULL;
+    if(treeList)
+        PhotonQA                    = (TTree*)treeList->FindObject("PhotonQA");
+    else{
+        PhotonQA                    = (TTree*)f->Get("PhotonQA");
+        cout << "loading TTree directly from file instead of TList" << endl;
+    }
     PhotonQA->SetBranchAddress("pt",&photonPt);
     PhotonQA->SetBranchAddress("theta",&photonTheta);
     PhotonQA->SetBranchAddress("chi2ndf",&photonChi2Ndf);

@@ -3072,7 +3072,7 @@
                     } else if (!centrality.CompareTo("0-20%")){
                         return kRed+1;
                     } else if (!centrality.CompareTo("0-5%")){
-                        return 807;
+                        return kRed+3;
                     } else if (!centrality.CompareTo("5-10%")){
                         return 807;
                     } else if (!centrality.CompareTo("10-20%")){
