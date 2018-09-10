@@ -289,13 +289,11 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
         if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
 
-        Double_t xbins[vecRuns.size()];
+        Double_t xbins[vecRuns.size()+1];
         std::vector<Double_t> vecRunsInd;
         std::vector<Double_t> vecCellIDs;
         std::vector<Double_t> uniqueCells;
         std::vector<Double_t> vecSigma;
-
-
         // Read in from the Input File
         if (fLogInput_Runwise.good()){
             fLogInput_Runwise.seekg(0L, ios::beg);
@@ -373,45 +371,6 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
             } else if (manualFileLog.CompareTo("") != 0) {
                 cout << "\nThere is an error opening the  manaul cell log file: " << manualFileLog << endl;
             }
-            // Create the binning for the histogram.
-            std::sort(uniqueCells.begin(), uniqueCells.end());
-            Double_t ybins[uniqueCells.size()];
-            for(UInt_t j = 0; j< vecRuns.size()+1; j++){
-                xbins[j] = j;
-            }
-            for(UInt_t h = 0; h< uniqueCells.size()+1; h++){
-                ybins[h] = h;
-            }
-
-            Double_t canvasWidth    = vecRuns.size()*50;
-            if (canvasWidth < 500)
-                canvasWidth         = 500;
-            Double_t canvasHeight   = uniqueCells.size()*20;
-            if (canvasHeight < 500)
-                canvasHeight        = 500;
-
-            // Create the canvas as a function of # of Cells and # of Runs
-            TCanvas* canvas2 = new TCanvas("canvas2","",200,10,canvasWidth,canvasHeight);  // gives the page size
-            Double_t leftMargin = 0.07; Double_t rightMargin = 0.09; Double_t topMargin = 0.04; Double_t bottomMargin = 0.11;
-            DrawGammaCanvasSettings(canvas2, leftMargin, rightMargin, topMargin, bottomMargin);
-            TH2D* RunwiseHist;
-            RunwiseHist = new TH2D(Form("Bad Cells Runwise %s", DataSets[i].Data()), "" ,vecRuns.size(), xbins, uniqueCells.size(), ybins );
-            SetStyleHistoTH2ForGraphs(RunwiseHist, "Run number","CellID",0.035,0.04, 0.015,0.04, 1.4,0.8);
-//             cout << "Setting labels for runs" << endl;
-            Double_t boundLowRange = -1;
-            Double_t boundUpRange  = -1;
-            for(UInt_t z= 1; z< vecRuns.size()+1;z++){
-//                 cout << vecRuns.at(z-1) << endl;
-                RunwiseHist->GetXaxis()->SetBinLabel(z, vecRuns.at(z-1));
-                if (runRange == 1){
-                    if (vecRuns.at(z-1).Atoi() == runStart)
-                        boundLowRange   = (Double_t)z;
-                    if (vecRuns.at(z-1).Atoi() == runEnd)
-                        boundUpRange    = (Double_t)z;
-                }
-            }
-            RunwiseHist->LabelsOption("v", "X");
-
             fstream fLogRunRange;
             fstream fLogRunRangeCleaned;
             TString name;
@@ -432,137 +391,219 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
                 fLogRunRangeCleaned.open(name, ios::out);
 
             }
+            UInt_t iMaximumCellsInOnePlot=250;
+            Double_t dBufferForSizeCalculation1=1.0*uniqueCells.size();
+            Double_t dBufferForSizeCalculation2=1.0*iMaximumCellsInOnePlot;
+            dBufferForSizeCalculation1/=dBufferForSizeCalculation2;
+            dBufferForSizeCalculation1+=1;
+            UInt_t iMaximumNumberOfSeparatedPlots= (uint) dBufferForSizeCalculation1;
+            if (uniqueCells.size()<=iMaximumCellsInOnePlot){iMaximumNumberOfSeparatedPlots=1;}
+            UInt_t iActualMinimumCellIndex;//CellIndex Numbers beginning from 0 to number of clusters to look at; NOT the actual CellID Number
+            UInt_t iActualMaximumCellIndexPl1;
+            UInt_t iCurrentMaximumNumberOfClustersInPlot;
+            std::sort(uniqueCells.begin(), uniqueCells.end());
+            for (UInt_t iActualPlotNumber=0; iActualPlotNumber<iMaximumNumberOfSeparatedPlots;iActualPlotNumber++){
+                //if (iActualPlotNumber==0){continue;}
+                iActualMinimumCellIndex=iActualPlotNumber*iMaximumCellsInOnePlot;
+                iActualMaximumCellIndexPl1=((iActualPlotNumber+1)*iMaximumCellsInOnePlot);
+                if ( (iActualMaximumCellIndexPl1)>uniqueCells.size() || (iMaximumNumberOfSeparatedPlots==1) ){iActualMaximumCellIndexPl1=uniqueCells.size();}
+                iCurrentMaximumNumberOfClustersInPlot=iActualMaximumCellIndexPl1-iActualMinimumCellIndex;
+                // Create the binning for the histogram.
+                std::sort(uniqueCells.begin(), uniqueCells.end());
 
-            if (uniqueCells.size()>500){
-                cout << "----- Histogram labels may not be clear since there are so many cells. Consider cleaning first.-----" << endl;
-            }
-
-//             cout << "setting labels for cells" << endl;
-            for(UInt_t z= 1; z< uniqueCells.size()+1;z++){
-                TString s;
-                s.Form("%.0f", uniqueCells.at(z-1));
-//                 cout << s << endl;
-                RunwiseHist->GetYaxis()->SetBinLabel(z, s);
-            }
-
-            // Loop over runs to populate hist
-            std::vector<Double_t> vecOutput;
-            std::vector<Double_t> vecOutputSigma;
-            Int_t nRunsTot  = vecRuns.size();
-            if (runRange == 1){
-                nRunsTot    = 0;
-                for (UInt_t r= 0; r < vecRuns.size(); r++){
-                    if ( ((TString)vecRuns.at(r)).Atoi() >= runStart && ((TString)vecRuns.at(r)).Atoi() <= runEnd)
-                        nRunsTot++;
+                Double_t ybins[iCurrentMaximumNumberOfClustersInPlot+1];
+                for(UInt_t j = 0; j< vecRuns.size()+1; j++){
+                    xbins[j] = j;
                 }
-                cout << "new number of runs has been calculated: " << nRunsTot << endl;
-            }
+                for(UInt_t h = iActualMinimumCellIndex; h< iActualMaximumCellIndexPl1+1; h++){
+                    ybins[h-iActualMinimumCellIndex] = h;
+                }
 
-            for(UInt_t r= 0; r< vecRunsInd.size();r++){
-                if(runRange == 1){
-                    if ( vecRunsInd.at(r) >= runStart && vecRunsInd.at(r) <= runEnd){
-                        if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
-                            // Do nothing if it is already there.
-                            UInt_t iC = 0;
-                            while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size())
-                                iC++;
-//                             cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
-                            vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
+                Double_t canvasWidth    = vecRuns.size()*50;
+                if (canvasWidth < 500)
+                    canvasWidth         = 500;
+                Double_t canvasHeight   = iCurrentMaximumNumberOfClustersInPlot*20;
+                if (canvasHeight < 500)
+                    canvasHeight        = 500;
+
+                // Create the canvas as a function of # of Cells and # of Runs
+                TCanvas* canvas2 = new TCanvas("canvas2","",200,10,canvasWidth,canvasHeight);  // gives the page size
+                Double_t leftMargin = 0.07; Double_t rightMargin = 0.09; Double_t topMargin = 0.04; Double_t bottomMargin = 0.11;
+                DrawGammaCanvasSettings(canvas2, leftMargin, rightMargin, topMargin, bottomMargin);
+                TH2D* RunwiseHist;
+                if (iMaximumNumberOfSeparatedPlots>1) {
+                    RunwiseHist = new TH2D(Form("Bad Cells Runwise %s Part %i of %i", DataSets[i].Data(), (iActualPlotNumber+1), iMaximumNumberOfSeparatedPlots ), "" ,vecRuns.size(), xbins, iCurrentMaximumNumberOfClustersInPlot, ybins );
+                }
+                else {
+                    RunwiseHist = new TH2D(Form("Bad Cells Runwise %s", DataSets[i].Data()), "" ,vecRuns.size(), xbins, uniqueCells.size(), ybins );
+                    }
+                SetStyleHistoTH2ForGraphs(RunwiseHist, "Run number","CellID",0.035,0.04, 0.015,0.04, 1.4,0.8);
+                //             cout << "Setting labels for runs" << endl;
+                Double_t boundLowRange = -1;
+                Double_t boundUpRange  = -1;
+                for(UInt_t z= 1; z< vecRuns.size()+1;z++){
+                    //                 cout << vecRuns.at(z-1) << endl;
+                    RunwiseHist->GetXaxis()->SetBinLabel(z, vecRuns.at(z-1));
+                    if (runRange == 1){
+                        if (vecRuns.at(z-1).Atoi() == runStart)
+                            boundLowRange   = (Double_t)z;
+                        if (vecRuns.at(z-1).Atoi() == runEnd)
+                            boundUpRange    = (Double_t)z;
+                    }
+                }
+                RunwiseHist->LabelsOption("v", "X");
+
+                if (iCurrentMaximumNumberOfClustersInPlot>500){
+                    cout << "----- Histogram labels may not be clear since there are so many cells. Consider cleaning first.-----" << endl;
+                }
+
+                //             cout << "setting labels for cells" << endl;
+                for(UInt_t z= iActualMinimumCellIndex+1; z< iActualMaximumCellIndexPl1+1;z++){
+                    TString s;
+                    s.Form("%.0f", uniqueCells.at(z-1));
+                    //                 cout << s << endl;
+                    RunwiseHist->GetYaxis()->SetBinLabel(z-iActualMinimumCellIndex, s);
+                }
+
+                // Loop over runs to populate hist
+                std::vector<Double_t> vecOutput;
+                std::vector<Double_t> vecOutputSigma;
+                Int_t nRunsTot  = vecRuns.size();
+                if (runRange == 1){
+                    nRunsTot    = 0;
+                    for (UInt_t r= 0; r < vecRuns.size(); r++){
+                        if ( ((TString)vecRuns.at(r)).Atoi() >= runStart && ((TString)vecRuns.at(r)).Atoi() <= runEnd)
+                            nRunsTot++;
+                    }
+                    cout << "new number of runs has been calculated: " << nRunsTot << endl;
+                }
+
+
+                for(UInt_t r= 0; r< vecRunsInd.size();r++){
+                    UInt_t iUniqueIndex=0;
+                    while (vecCellIDs.at(r) != (uniqueCells.at(iUniqueIndex)) && iUniqueIndex < uniqueCells.size()){
+                        iUniqueIndex++;
+                    }
+                    if ( (iUniqueIndex>=iActualMinimumCellIndex)&&(iUniqueIndex<iActualMaximumCellIndexPl1) ) {
+                        if(runRange == 1){
+                            if ( vecRunsInd.at(r) >= runStart && vecRunsInd.at(r) <= runEnd){
+                                if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
+                                    // Do nothing if it is already there.
+                                    UInt_t iC = 0;
+                                    while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size()){
+                                        iC++;}
+                                    //                             cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
+                                    vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
+                                } else {
+                                    vecOutput.push_back(vecCellIDs.at(r));
+                                    vecOutputSigma.push_back(vecSigma.at(r));
+                                    //                             cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
+                                    fLogRunRange << vecCellIDs.at(r) << endl;
+                                }
+                            } else {
+                                //                         cout << "run: " << vecRunsInd.at(r) << " outside of desired run range!" << endl;
+                            }
                         } else {
-                            vecOutput.push_back(vecCellIDs.at(r));
-                            vecOutputSigma.push_back(vecSigma.at(r));
-//                             cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
-                            fLogRunRange << vecCellIDs.at(r) << endl;
+                            if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
+                                // Do nothing if it is already there.
+                                UInt_t iC = 0;
+                                while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size()){
+                                    iC++;}
+                                //                         cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
+                                vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
+                            } else {
+                                vecOutput.push_back(vecCellIDs.at(r));
+                                vecOutputSigma.push_back(vecSigma.at(r));
+                                //                         cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
+                                fLogRunRange << vecCellIDs.at(r) << endl;
+
+                            }
+                        }
+                    }
+                    Int_t binx  = -1;
+                    Int_t biny  = -1;;
+                    // Get proper bin
+                    for(UInt_t d = 0; d < vecRuns.size(); d++){
+                        if(vecRuns.at(d).Atof() == vecRunsInd.at(r)){
+                            binx = d+1;
+                            break;
+                        }
+                    }
+                    for(UInt_t d = 0; d < uniqueCells.size(); d++){
+                        if( vecCellIDs.at(r) == uniqueCells.at(d)){
+                            biny = d+1;
+                            break;
+                        }
+                    }
+                    if((binx!=-1)&&(biny!=-1)) {
+                        if ( ((biny-1)>=(int)iActualMinimumCellIndex)&&((biny-1)<(int)iActualMaximumCellIndexPl1) ){
+                            RunwiseHist->SetBinContent(binx,biny-iActualMinimumCellIndex, vecSigma.at(r));
+                        }
+                    } else{
+                        cout << "Error filling RunwiseHist!" << endl;
+                        return;
+                    }
+                    //cout << "binx: " << binx << " biny: " << biny << "with value: " << vecSigma.at(r) << endl;
+                }//end of loop over r (vecRunsInd)
+                // Make the bad cells very obvious
+                RunwiseHist->GetZaxis()->SetRangeUser(0,10);
+                RunwiseHist->Draw("COLZ");
+
+                // indicate runRange
+                if (runRange == 1){
+                    DrawGammaLines(boundLowRange-0.99, boundLowRange-0.99 , 0, iCurrentMaximumNumberOfClustersInPlot,3, kBlack, 7 );
+                    DrawGammaLines(boundUpRange-0.01, boundUpRange-0.01 , 0, iCurrentMaximumNumberOfClustersInPlot,3, kBlack, 7 );
+                }
+
+                TLatex *labelHist      = new TLatex(0.5,0.99,Form("Bad Cells Runwise %s", DataSets[i].Data()));
+                SetStyleTLatex( labelHist, 0.035, 4, 1, 42, kTRUE, 23);
+                labelHist->Draw();
+
+                canvas2->Update();
+                if (iMaximumNumberOfSeparatedPlots>1){
+                    canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_%s_Part%iof%i.%s", outputPath.Data(),DataSets[i].Data(), (iActualPlotNumber+1), iMaximumNumberOfSeparatedPlots, suffix.Data()));
+                } else {
+                    canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
+                }
+                for (UInt_t z =0; z < vecOutput.size(); z++){
+                    //cout << "Cell: " << vecOutput.at(z) << " deviates by \t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
+                    UInt_t cc = 0;
+                    while (vecOutput.at(z) != uniqueCells.at(cc) && cc < uniqueCells.size()){
+                        cc++;
+                    }
+                    if (vecOutputSigma.at(z)/(Double_t)nRunsTot > minAverageSigma ){
+                        if ( (cc>=iActualMinimumCellIndex)&&(cc<iActualMaximumCellIndexPl1) ) {
+                            fLogRunRangeCleaned << vecOutput.at(z) << endl;
                         }
                     } else {
-//                         cout << "run: " << vecRunsInd.at(r) << " outside of desired run range!" << endl;
+                        if ( (cc>iActualMinimumCellIndex)&&(cc<iActualMaximumCellIndexPl1) ) {
+                            //cout << "rejected:" << vecOutput.at(z) << "\t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
+                            if (runRange == 1){
+                                DrawGammaLines(boundLowRange-0.99, boundUpRange-0.01 , cc+0.5, cc+0.5,2, kRed+2, 5 );
+                            } else {
+                                DrawGammaLines(0, vecRuns.size() , cc+0.5, cc+0.5,2, kRed+2, 5 );
+                            }
+                        }
                     }
+                }
+                canvas2->Update();
+                if (iMaximumNumberOfSeparatedPlots>1){
+                    canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_withLines_%s_Part%iof%i.%s", outputPath.Data(),DataSets[i].Data(), (iActualPlotNumber+1), iMaximumNumberOfSeparatedPlots, suffix.Data()));
                 } else {
-                    if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
-                        // Do nothing if it is already there.
-                        UInt_t iC = 0;
-                        while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size())
-                            iC++;
-//                         cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
-                        vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
-                    } else {
-                        vecOutput.push_back(vecCellIDs.at(r));
-                        vecOutputSigma.push_back(vecSigma.at(r));
-//                         cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
-                        fLogRunRange << vecCellIDs.at(r) << endl;
-                    }
+                    canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_withLines_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
                 }
-                Int_t binx  = -1;
-                Int_t biny  = -1;;
-                // Get proper bin
-                for(UInt_t d = 0; d < vecRuns.size(); d++){
-                    if(vecRuns.at(d).Atof() == vecRunsInd.at(r)){
-                        binx = d+1;
-                        break;
-                    }
-                }
-                for(UInt_t d = 0; d < uniqueCells.size(); d++){
-                    if( vecCellIDs.at(r) == uniqueCells.at(d)){
-                        biny = d+1;
-                        break;
-                    }
-                }
-
-                if((binx!=-1)&&(biny!=-1)) {
-                    RunwiseHist->SetBinContent(binx,biny, vecSigma.at(r));
-                } else{
-                    cout << "Error filling RunwiseHist!" << endl;
-                    return;
-                }
-                //cout << "binx: " << binx << " biny: " << biny << "with value: " << vecSigma.at(r) << endl;
+                canvas2->Clear();
+                delete RunwiseHist;
+                delete canvas2;
             }
             fLogRunRange.close();
-            // Make the bad cells very obvious
-            RunwiseHist->GetZaxis()->SetRangeUser(0,10);
-            RunwiseHist->Draw("COLZ");
-
-            // indicate runRange
-            if (runRange == 1){
-                DrawGammaLines(boundLowRange-0.99, boundLowRange-0.99 , 0, uniqueCells.size(),3, kBlack, 7 );
-                DrawGammaLines(boundUpRange-0.01, boundUpRange-0.01 , 0, uniqueCells.size(),3, kBlack, 7 );
-            }
-
-            TLatex *labelHist      = new TLatex(0.5,0.99,Form("Bad Cells Runwise %s", DataSets[i].Data()));
-            SetStyleTLatex( labelHist, 0.035, 4, 1, 42, kTRUE, 23);
-            labelHist->Draw();
-
-            canvas2->Update();
-            canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
-
-            for (UInt_t z =0; z < vecOutput.size(); z++){
-                cout << "Cell: " << vecOutput.at(z) << " deviates by \t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
-                if (vecOutputSigma.at(z)/(Double_t)nRunsTot > minAverageSigma ){
-                    fLogRunRangeCleaned << vecOutput.at(z) << endl;
-                } else {
-                    cout << "rejected:" << vecOutput.at(z) << "\t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
-                    UInt_t cc = 0;
-                    while (vecOutput.at(z) != uniqueCells.at(cc) && cc < uniqueCells.size()) cc++;
-                    if (runRange == 1)
-                        DrawGammaLines(boundLowRange-0.99, boundUpRange-0.01 , cc+0.5, cc+0.5,3, kRed+2, 5 );
-                    else
-                        DrawGammaLines(0, vecRuns.size() , cc+0.5, cc+0.5,3, kRed+2, 5 );
-                }
-            }
             fLogRunRangeCleaned.close();
-
-            canvas2->Update();
-            canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_withLines_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
-            canvas2->Clear();
-
-            delete RunwiseHist;
-
-        }
+        }//end of fLogInput_Runwise.good() Condition
         else{
             cout << "\nThere is an error opening the hot cell log file: " << logFileName << endl;
         }
         fLogInput_Runwise.close();
     } // end loop over CellCompareNSets
-
     cout.flush();
     cout << endl;
     cout << "vector.size before sort and unique: " << globalCells.size() << "." << endl;
@@ -577,7 +618,6 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
     globalCells.resize( distance(globalCells.begin(),it) );
     cout << "done" << endl;
     cout << "vector.size after sort and unique: " << globalCells.size() << "." << endl;
-
     if ((Int_t)globalCells.size() > 0){
         // --------------------------- Begin other bad cell plotting ----------------------------------------------------------------------
         TCanvas* canvas = new TCanvas("canvas","",200,10,1350,1800);  // gives the page size
