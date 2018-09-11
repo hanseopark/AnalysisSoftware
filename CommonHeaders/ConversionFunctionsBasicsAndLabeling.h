@@ -2190,8 +2190,14 @@
         } else if ( ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("9") ==0 ){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "CL1 0-100%";
-            } else {
+            } else if( centralityCutNumberEnd.CompareTo("0")!=0){
                 return Form("CL1 %i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+            } else {
+                if (centralityCutNumberEnd.CompareTo("0") == 0){
+                    return Form("CL1 %i-100%s", CutNumberToInteger(centralityCutNumberStart)*10,"%");
+                } else {
+                    return Form("CL1 %i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+                }
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 || ppCutNumber.CompareTo("a") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -2204,6 +2210,18 @@
                 return "0-100%";
             } else {
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd),"%");
+            }
+        } else if ( ppCutNumber.CompareTo("e") ==0 ){
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "ZNA 0-100%";
+            } else if( centralityCutNumberEnd.CompareTo("0")!=0){
+                return Form("ZNA %i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+            } else {
+                if (centralityCutNumberEnd.CompareTo("0") == 0){
+                    return Form("ZNA %i-100%s", CutNumberToInteger(centralityCutNumberStart)*10,"%");
+                } else {
+                    return Form("ZNA %i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+                }
             }
         } else return "";
     }
@@ -2273,9 +2291,15 @@
             }
         } else if ( ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("9") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "CL1_0100";
+                return "CL1_00100";
             } else {
-                return Form("CL1_%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
+                if (centralityCutNumberStart.CompareTo("0") == 0){
+                    return Form("CL1_00%i", CutNumberToInteger(centralityCutNumberEnd)*10);
+                } else if (centralityCutNumberEnd.CompareTo("0") == 0){
+                    return Form("CL1_%i100", CutNumberToInteger(centralityCutNumberStart)*10);
+                } else {
+                    return Form("CL1_%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
+                }
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 || ppCutNumber.CompareTo("a") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -2295,6 +2319,18 @@
                     return Form("00%i", CutNumberToInteger(centralityCutNumberEnd));
                 } else {
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
+                }
+            }
+        } else if ( ppCutNumber.CompareTo("e") ==0 ) {
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "ZNA_00100";
+            } else {
+                if (centralityCutNumberStart.CompareTo("0") == 0){
+                    return Form("ZNA_00%i", CutNumberToInteger(centralityCutNumberEnd)*10);
+                } else if (centralityCutNumberEnd.CompareTo("0") == 0){
+                    return Form("ZNA_%i100", CutNumberToInteger(centralityCutNumberStart)*10);
+                } else {
+                    return Form("ZNA_%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
                 }
             }
         } else return "";
