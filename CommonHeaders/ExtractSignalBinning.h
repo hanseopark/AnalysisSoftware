@@ -3184,6 +3184,12 @@
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i]  = fBinsDirGammapPb5TeVAlter2Pt[i];
                     }
+                } else if (mode == 24) {
+                    maxNBins    = 28;
+                    binningMax  = 28;
+                    for(Int_t i = 0; i < binningMax+1; i++){
+                        binning[i]  = fBinsDirGammapPb5TeVCombinationPt[i];
+                    }
                 }
             } else if (energy.CompareTo("pPb_8TeV") == 0  ){
                 if (mode == 0){

@@ -96,7 +96,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation[0]                 = "Yield extraction #eta";
         nameCutVariation[1]                 = "Yield extraction #pi^{0}";
-        nameCutVariationSC[1]               = "YieldExtraction";
+        nameCutVariationSC[1]               = "YieldExtractionPi0";
         color[1]                            = GetColorSystematics( "YieldExtractionPi0" );
         markerStyle[1]                      = GetMarkerStyleSystematics( "YieldExtractionPi0" );
     }
@@ -112,6 +112,12 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
                                                 1, 1, 0, 0, 0,  0 };
     Bool_t bsmoothMBEtaToPi05TeV[16]        = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
                                                 1, 1, 0, 0, 0,  0 };
+    Bool_t bsmoothCentPi05TeV[16]           = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
+                                                1, 1, 0, 0, 0,  0 };
+    Bool_t bsmoothCentEta5TeV[16]           = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
+                                                1, 1, 0, 0, 0,  0 };
+    Bool_t bsmoothCentEtaToPi05TeV[16]      = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
+                                                1, 1, 0, 0, 0,  0 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ){
@@ -121,6 +127,13 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
                 bsmooth[i]                      = bsmoothMBEta5TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("EtaToPi0")==0){
                 bsmooth[i]                      = bsmoothMBEtaToPi05TeV[i];
+            // for multiplicity bins
+            } else if (additionalNameOutput.CompareTo("") && meson.CompareTo("Pi0")==0){
+                bsmooth[i]                      = bsmoothCentPi05TeV[i];
+            } else if (additionalNameOutput.CompareTo("") && meson.CompareTo("Eta")==0){
+                bsmooth[i]                      = bsmoothCentEta5TeV[i];
+            } else if (additionalNameOutput.CompareTo("") && meson.CompareTo("EtaToPi0")==0){
+                bsmooth[i]                      = bsmoothCentEtaToPi05TeV[i];
             }
         }
     }
