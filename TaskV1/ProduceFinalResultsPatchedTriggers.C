@@ -7367,6 +7367,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoRatioRawClusterE[i])           histoRatioRawClusterE[i]->Write(Form("TriggRejectvsE_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
             }
         }
+        if(fCent.Contains("ZNA ") || fCent.Contains("CL1 ")) fCent.Replace(0,4,"");
         fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
         TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
         fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s%s",fCent.Data(),optionEnergy.Data(),centEstimator.Data()));
