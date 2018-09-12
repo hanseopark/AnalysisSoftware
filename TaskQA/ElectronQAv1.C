@@ -1932,7 +1932,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	
 	DrawAutoGammaHistos( hESDDalitzPositronAfterPtRebin_data,
 						hESDDalitzPositronAfterPtRebin_mc, 
-						"","pT".Data(),textYAxisPtDistP,
+						"","pT",textYAxisPtDistP,
 						kTRUE,5.,1e-3,
 						kFALSE,1e-5 ,6e-1, 
 						kTRUE, 0.1,10.);

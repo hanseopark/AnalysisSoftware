@@ -4928,7 +4928,7 @@
                                     fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                                 }
                             } else if( (modi == 1) && (energy.Contains("2017"))){
-                              fNRebin[i]  = fBinsPi05TeV2017DalitzPtRebin[i];
+                              fNRebin[i]  = fBinsEta5TeV2017DalitzPtRebin[i];
                             } else if( modi == 2 ){
                               if(energy.Contains("2017"))
                                 fNRebin[i] = fBinsEta5TeV2017PCMEMCPtRebin[i];

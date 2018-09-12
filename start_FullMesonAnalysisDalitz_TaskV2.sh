@@ -64,29 +64,29 @@ function GiveBinningDalitz7TeV()
 
 function GiveBinningDalitz5TeV2017()
 {
-	echo "How many p_T bins do you want to use for the Pi0? 19(5GeV), 20(6GeV), 21(8GeV), 22(10GeV)";
+	echo "How many p_T bins do you want to use for the Pi0? 19(4GeV), 21(5GeV), 24(8GeV), 26(15GeV)";
 	read answer
 		if [ $answer = 19 ]; then
-		    echo "19 Bins --> Max p_T = 5 GeV ...";
+		    echo "19 Bins --> Max p_T = 4 GeV ...";
 		    correctPi0=1
 		    BinsPtPi0=19
-		elif [ $answer = 20 ]; then
-		    echo "20 Bins --> Max p_T = 6 GeV ...";
-		    correctPi0=1
-		    BinsPtPi0=20
 		elif [ $answer = 21 ]; then
-		    echo "21 Bins --> Max p_T = 8 GeV ...";
+		    echo "21 Bins --> Max p_T = 5 GeV ...";
 		    correctPi0=1
 		    BinsPtPi0=21
-		elif [ $answer = 22 ]; then
-		    echo "22 Bins --> Max p_T = 10 GeV ...";
+		elif [ $answer = 24 ]; then
+		    echo "24 Bins --> Max p_T = 8 GeV ...";
 		    correctPi0=1
-		    BinsPtPi0=22
+		    BinsPtPi0=24
+		elif [ $answer = 26 ]; then
+		    echo "26 Bins --> Max p_T = 15 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=26
 		else
 		    echo "Pi0 Binning was not set correctly. Please try again.";
 		    correctPi0=0
 		fi
- 	echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV)"
++        echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV), 10 (14 GeV)"
  	read answer
 		if [ $answer = 7 ]; then
 		    echo "7 Bins --> Max p_T = 4.4 GeV ...";
@@ -100,6 +100,10 @@ function GiveBinningDalitz5TeV2017()
 		    echo "9 Bins --> Max p_T = 10 GeV ...";
 		    correctEta=1
 		    BinsPtEta=9
+		elif [ $answer = 10 ]; then
+		    echo "10 Bins --> Max p_T = 14 GeV ...";
+		    correctEta=1
+		    BinsPtEta=10
 		else
 		    echo "Eta Binning was not set correctly. Please try again.";
 		    correctEta=0
