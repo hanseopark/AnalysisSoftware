@@ -3001,6 +3001,11 @@
                         if (nameOfPlot.Contains("True"))
                             mass                        = fMesonTrueMass[iPt];
 
+                        // user is plotting fit of true histo -> use fMesonTrueMass
+                        if (namePlot.Contains("True")){
+                            mass                        = fMesonTrueMass[iPt];
+                        }
+
                         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                         Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                         Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];

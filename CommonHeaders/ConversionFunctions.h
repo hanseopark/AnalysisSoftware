@@ -696,6 +696,43 @@
     }
 
     //**********************************************************************************************************
+    // Calculates the ratio of histo and a graph
+    //**********************************************************************************************************
+    TGraphAsymmErrors* CalculateHistoRatioToGraphErr ( TH1* histo, TGraphAsymmErrors* graph_Org){
+        TGraphAsymmErrors* graph        = (TGraphAsymmErrors*)graph_Org->Clone("Dummy");
+        Double_t * xValueGraph               = graph->GetX();
+        Double_t * yValueGraph               = graph->GetY();
+        Double_t* xErrorLowGraph             = graph->GetEXlow();
+        Double_t* xErrorHighGraph            = graph->GetEXhigh();
+        Double_t* yErrorLowGraph             = graph->GetEYlow();
+        Double_t* yErrorHighGraph            = graph->GetEYhigh();
+        Int_t nPoints                   = graph->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+
+            Double_t yValueHisto        = histo->GetBinContent(histo->FindBin(xValueGraph[i]));
+            Double_t yErrorHisto        = histo->GetBinError(histo->FindBin(xValueGraph[i]));
+
+            // calculate errors
+            Double_t error1High    = yErrorHisto/yValueGraph[i];
+            Double_t error1Low     = yErrorHisto/yValueGraph[i];
+            Double_t error2High    = (yValueHisto*yErrorHighGraph[i])/(TMath::Power(yValueGraph[i],2));
+            Double_t error2Low     = (yValueHisto*yErrorLowGraph[i])/(TMath::Power(yValueGraph[i],2));
+
+            Double_t errorTotLow  = TMath::Sqrt(TMath::Power(error1Low,2)+TMath::Power(error2Low,2));
+            Double_t errorTotHigh = TMath::Sqrt(TMath::Power(error1High,2)+TMath::Power(error2High,2));
+
+            yValueGraph[i]              = yValueHisto/graph->GetY()[i];
+
+            yErrorLowGraph[i]                = errorTotLow;
+            yErrorHighGraph[i]               = errorTotHigh;
+
+
+        }
+        TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValueGraph,yValueGraph,xErrorLowGraph,xErrorHighGraph,yErrorLowGraph,yErrorHighGraph);
+        return returnGraph;
+    }
+
+    //**********************************************************************************************************
     // Calculates the ratio of a graph and a fit
     //**********************************************************************************************************
     TGraph* CalculateGraphRatioToFit (TGraph* graph, TF1* fit){

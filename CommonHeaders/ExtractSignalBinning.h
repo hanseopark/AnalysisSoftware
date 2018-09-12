@@ -834,7 +834,7 @@
                     return 2;
                 } else if(mode == 40){
                     scaleFac        = 1.;
-                    return 7;
+                    return 5;
                 } else if(mode == 41){
                     scaleFac        = 1.;
                     return 8;

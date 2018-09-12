@@ -576,7 +576,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fFittingHistMidPtSignalSub_FixedPzPiZero = fSignal;
     }
     if(fCrysFitting==0){
-        fFileErrLog << "Using exp fit"<<endl;
+        fFileErrLog << "INFO: Using exp fit"<<endl;
         if(fFittingHistMidPtSignalSub){
             FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kFALSE,0);
             fFitSignalInvMassMidPt = fFitReco;
@@ -590,7 +590,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fFitSignalInvMassMidPt_FixedPzPiZero = fFitReco;
         }
     } else {
-        fFileErrLog << "Using Crystal Ball function"<<endl;
+        fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
         if(fFittingHistMidPtSignalSub){
             FitCBSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kTRUE,"SinglefitfunctionMidPt",0);
             fFitSignalInvMassMidPt = fFitReco;
@@ -771,7 +771,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fHistoMappingRatioSBInvMassPtBin_FixedPzPiZero[0][iPt]        = fRatioSB; // only implemented for added background so far
         }
 
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
+        fFileErrLog << "INFO: Doing fitting for " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
 
         fFitSignalInvMassPtBin[iPt]                       = 0x00;
         fFitSignalInvMassPtBin_SubPiZero[iPt]             = 0x00;
@@ -780,8 +780,8 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fFitSignalInvMassBackFitPtBin_SubPiZero[iPt]      = 0x00;
         fFitSignalInvMassBackFitPtBin_FixedPzPiZero[iPt]  = 0x00;
         if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
-            fFileDataLog << "Subtracted mixed event" << endl;
+            fFileErrLog << "INFO: Using exp fit"<<endl;
+            fFileDataLog << "INFO: Subtracted mixed event" << endl;
             if(fHistoMappingSignalInvMassPtBin[iPt]!=NULL){
               FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,0);
               fFitSignalInvMassPtBin[iPt]                     = fFitReco;
@@ -827,7 +827,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         } else {
           if (fHistoMappingSignalInvMassPtBin[iPt] != NULL){
-            fFileErrLog << "Using Crystal Ball function"<<endl;
+            fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),0);
             fFitSignalInvMassPtBin[iPt]                     = fFitReco;
             fFitBckInvMassPtBin[iPt]                        = fFitLinearBck;
@@ -837,7 +837,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
           // Calculation for Inv Mass Pi0 subtracted
           if (fHistoMappingSignalInvMassPtBin_SubPiZero[iPt] != NULL){
-            fFileErrLog << "Using Crystal Ball function"<<endl;
+            fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin_SubPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormal_SubPiZero_Bin%02d",iPt),1);
             fFitSignalInvMassPtBin_SubPiZero[iPt]                     = fFitReco;
             fFitBckInvMassPtBin_SubPiZero[iPt]                        = fFitLinearBck;
@@ -847,7 +847,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
           //Calculation for Pz of Pi0 fixe
           if (fHistoMappingSignalInvMassPtBin_FixedPzPiZero[iPt] != NULL){
-            fFileErrLog << "Using Crystal Ball function"<<endl;
+            fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin_FixedPzPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormal_FixedPzPiZero_Bin%02d",iPt),2);
             fFitSignalInvMassPtBin_FixedPzPiZero[iPt]                     = fFitReco;
             fFitBckInvMassPtBin_FixedPzPiZero[iPt]                        = fFitLinearBck;
@@ -1126,10 +1126,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fFileDataLog<< endl <<"True histo normal range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
                 fFitTrueSignalInvMassPtBin[iPt]=0x00;
                 if(fCrysFitting==0){
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonIntRange,iPt,kFALSE,0);
                 } else {
-                    fFileErrLog << "Using Crystal Ball function"<<endl;
+                    fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
                     FitCBSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonIntRange,iPt,kFALSE,Form("CBFitFuncMCTrueBin%02d",iPt),0);
                 }
 
@@ -1169,10 +1169,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fFileDataLog<< endl <<"True histo normal range (Sub Pi0)" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
                 fFitTrueSignalInvMassPtBin_SubPiZero[iPt]=0x00;
                 if(fCrysFitting==0){
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt],fMesonIntRange,iPt,kFALSE,1);
                 } else {
-                    fFileErrLog << "Using Crystal Ball function"<<endl;
+                    fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
                     FitCBSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt], fMesonIntRange,iPt,kFALSE,Form("CBFitFuncMCTrueBin%02d",iPt),1);
                 }
 
@@ -1211,10 +1211,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fFileDataLog<< endl <<"True histo normal range (Sub Pi0)" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
                 fFitTrueSignalInvMassPtBin_FixedPzPiZero[iPt]=0x00;
                 if(fCrysFitting==0){
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero[iPt], fMesonIntRange,iPt,kFALSE,2);
                 } else {
-                    fFileErrLog << "Using Crystal Ball function"<<endl;
+                    fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
                     FitCBSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero[iPt], fMesonIntRange,iPt,kFALSE,Form("CBFitFuncMCTrueBin%02d",iPt),2);
                 }
 
@@ -1254,7 +1254,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
                 if(fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]){
                     cout << "Using exp fit"<<endl;
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtReweightedBins[iPt], fMesonIntDeltaRange,iPt,kFALSE,0);
 
                     if (fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->GetEntries() !=0){
@@ -1293,7 +1293,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
                 if(fHistoMappingTrueMesonInvMassPtReweightedBins_SubPiZero[iPt]){
                     cout << "Using exp fit"<<endl;
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtReweightedBins_SubPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,1);
 
                     if (fHistoMappingTrueMesonInvMassPtReweightedBins_SubPiZero[iPt]->GetEntries() !=0){
@@ -1332,7 +1332,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
                 if(fHistoMappingTrueMesonInvMassPtReweightedBins_FixedPzPiZero[iPt]){
                     cout << "Using exp fit"<<endl;
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtReweightedBins_FixedPzPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,2);
 
                     if (fHistoMappingTrueMesonInvMassPtReweightedBins_FixedPzPiZero[iPt]->GetEntries() !=0){
@@ -1470,26 +1470,31 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
                 fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
                 fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
-                // Calculation for InvMass pi0 subtracted
-                fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]          = fMesonYields_SubPiZero[k][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
-                fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = pow(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
-                                                                                  fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
-                fMesonYieldsPerEvent_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fNEvents;
-                fMesonYieldsPerEventError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
 
                 fMesonYieldsPerEventBackFit[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit[k][iPt]/fNEvents;
                 fMesonYieldsPerEventBackFitError[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]/fNEvents;
+
+                // Calculation for InvMass pi0 subtracted
+                fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]          = fMesonYields_SubPiZero[k][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
+                fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = pow(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
+                                                                                  fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]),0.5);
+                fMesonYieldsPerEvent_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fNEvents;
+                fMesonYieldsPerEventError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
+
+                fMesonYieldsPerEventBackFit_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit_SubPiZero[k][iPt]/fNEvents;
+                fMesonYieldsPerEventBackFitError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError_SubPiZero[k][iPt]/fNEvents;
+
                 // Calculation for InvMass pz of pi0 fixes
                 fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]          = fMesonYields_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
                 fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = pow(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
-                                                                                      fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+                                                                                      fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]),0.5);
                 fMesonYieldsPerEvent_FixedPzPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/fNEvents;
-                fMesonYieldsPerEventError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
+                fMesonYieldsPerEventError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]/fNEvents;
 
-                fMesonYieldsCorResidualBckFuncBackFit[k][iPt]          = fMesonYieldsBackFit[k][iPt]- fMesonYieldsResidualBckFuncBackFit[iPt];
-                fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]     =
-                        pow((fMesonYieldsBackFitError[k][iPt]*fMesonYieldsBackFitError[k][iPt]+
-                             fMesonYieldsResidualBckFuncBackFitError[iPt]*fMesonYieldsResidualBckFuncBackFitError[iPt]),0.5);
+                fMesonYieldsCorResidualBckFuncBackFit_FixedPzPiZero[k][iPt]          = fMesonYieldsBackFit_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFuncBackFit_FixedPzPiZero[iPt];
+                fMesonYieldsCorResidualBckFuncBackFitError_FixedPzPiZero[k][iPt]     =
+                        pow((fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]*fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]+
+                             fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]*fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]),0.5);
 
                 // Calculation for InvMass pi0 subtracted
                 fMesonYieldsCorResidualBckFuncBackFit_SubPiZero[k][iPt]          = fMesonYieldsBackFit_SubPiZero[k][iPt]- fMesonYieldsResidualBckFuncBackFit_SubPiZero[iPt];
@@ -1582,7 +1587,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
             // TODO: Why is this not done for normal integration range? -> because case 0 was already done before?
             if (k > 0){
-                fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
+                fFileErrLog << "INFO: Doing fitting for " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
                 Double_t intRange[2]    = {0,0};
                 if (k == 1){
                     intRange[0]         = fMesonIntDeltaRangeWide[0];
@@ -1593,7 +1598,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 }
                 if(fCrysFitting==0){
                     if(fHistoMappingSignalInvMassPtBin[iPt]){
-                        fFileErrLog << "Using exp fit"<<endl;
+                        fFileErrLog << "INFO: Using exp fit"<<endl;
                         FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], intRange, iPt, kFALSE,0);
                         fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
                         fMesonYieldsResidualBckFuncError[k][iPt]    = fIntLinearBckError;
@@ -1697,13 +1702,13 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fHistoMappingBackNormInvMassLeftPtBin_FixedPzPiZero[iPt] = fBckNorm;
 
         // Fitting the subtracted spectra
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/left normalization" << endl;
+        fFileErrLog << "INFO: Doing fitting for " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/left normalization" << endl;
 
         fFitInvMassLeftPtBin[iPt]               = 0x00;
         fFitInvMassLeftPtBin_SubPiZero[iPt]     = 0x00;
         fFitInvMassLeftPtBin_FixedPzPiZero[iPt] = 0x00;
         if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
+            fFileErrLog << "INFO: Using exp fit"<<endl;
             FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,0);
             fFitInvMassLeftPtBin[iPt]                   = fFitReco;
             fFitSignalPeakPosInvMassLeftPtBin[iPt]      = fFitGausExp;
@@ -1713,7 +1718,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
             // Fitting pi0 inv mass subtracted
             if(fHistoMappingSignalInvMassLeftPtBin_SubPiZero[iPt] != NULL){
-              fFileErrLog << "Using exp fit (pi0 inv mass subtracted"<<endl;
+              fFileErrLog << "INFO: Using exp fit (pi0 inv mass subtracted"<<endl;
               FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin_SubPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,1);
               fFitInvMassLeftPtBin_SubPiZero[iPt]                   = fFitReco;
               fFitSignalPeakPosInvMassLeftPtBin_SubPiZero[iPt]      = fFitGausExp;
@@ -1724,7 +1729,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
             // Fitting with pz of pi0 fixed
             if(fHistoMappingSignalInvMassLeftPtBin_FixedPzPiZero[iPt] != NULL){
-              fFileErrLog << "Using exp fit (pi0 inv mass subtracted"<<endl;
+              fFileErrLog << "INFO: Using exp fit (pi0 inv mass subtracted"<<endl;
               FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin_FixedPzPiZero[iPt], fMesonIntDeltaRange,iPt,kFALSE,2);
               fFitInvMassLeftPtBin_FixedPzPiZero[iPt]                   = fFitReco;
               fFitSignalPeakPosInvMassLeftPtBin_FixedPzPiZero[iPt]      = fFitGausExp;
@@ -1734,7 +1739,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             }
 
         } else {
-            fFileErrLog << "Using Crystal Ball function"<<endl;
+            fFileErrLog << "INFO: Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE, Form("CBFitFuncLeftBin%02d",iPt),0);
             fFitInvMassLeftPtBin[iPt]                   = fFitReco;
             fFitSignalPeakPosInvMassLeftPtBin[iPt]      = fFitGausExp;
@@ -1888,7 +1893,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fMesonYieldsError_FixedPzPiZero[k+3][iPt]       = fYieldsError;
             fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
             if (k > 0){
-                fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k+3].Data()<<  endl;
+                fFileErrLog << "INFO: Doing fitting for "<< fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k+3].Data()<<  endl;
                 Double_t intRange[2]    = {0,0};
                 if (k == 1){
                     intRange[0]         = fMesonIntDeltaRangeWide[0];
@@ -1898,7 +1903,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                     intRange[1]         = fMesonIntDeltaRangeNarrow[1];
                 }
                 if(fCrysFitting==0){
-                    fFileErrLog << "Using exp fit"<<endl;
+                    fFileErrLog << "INFO: Using exp fit"<<endl;
                     FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], intRange, iPt, kFALSE,0);
                     fMesonYieldsResidualBckFunc[k+3][iPt]         = fIntLinearBck;
                     fMesonYieldsResidualBckFuncError[k+3][iPt]    = fIntLinearBckError;
@@ -2235,7 +2240,13 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
         nameCanvasSub       = "MesonCanvasSubtracted";
         namePadSub          = "MesonPadSubtracted";
-        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitTrueSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero);
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitTrueSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_FixedPzPiZero);
+
+        // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
+        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_SubPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+        nameCanvasSub       = "MesonCanvasSubtracted";
+        namePadSub          = "MesonPadSubtracted";
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitTrueSignalInvMassPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_SubPiZero);
     }
 
     // Meson Subtracted backfit
@@ -3729,19 +3740,22 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitReco= NULL;
     fFitGausExp =NULL;
     fFitLinearBck = NULL;
+    fFitLinearBckCheck = NULL; // used as crosscheck in case fFitReco fitting fails
     if(usePol2BckFitting){ // use for bckground
         fFitReco = new TF1  ("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",FitRangeTmp[0],FitRangeTmp[1]);
         fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBck = new TF1("Linear","[0]+[1]*x+[2]*x*x",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitLinearBckCheck = new TF1("Linear","[0]+[1]*x+[2]*x*x",FitRangeTmp[0],FitRangeTmp[1]);
     } else{
         fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",FitRangeTmp[0],FitRangeTmp[1]);
         fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBck = new TF1("Linear","[0]+[1]*x",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitLinearBckCheck = new TF1("Linear","[0]+[1]*x",FitRangeTmp[0],FitRangeTmp[1]);
     }
     // fit with linear back witch a function excluding the peak area (fMesonMassExpect +/- fMesonIntRangeNarrow)
     fFitLinearBckExcl = NULL;
     if(usePol2BckFitting){ // use pol2
-        fFitLinearBckExcl = new TF1("LinearEx",Pol2BGExclusion,FitRangeTmp[0],FitRangeTmp[1],2);
+        fFitLinearBckExcl = new TF1("LinearEx",Pol2BGExclusion,FitRangeTmp[0],FitRangeTmp[1],3);
     } else{
         fFitLinearBckExcl = new TF1("LinearEx",LinearBGExclusion,FitRangeTmp[0],FitRangeTmp[1],2);
     }
@@ -3854,8 +3868,14 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fIntLinearBck = 0;
     fIntLinearBckError = 0;
 
-    // calculate errors
+    // Check fitting status
+    Bool_t fittingOK = kFALSE;
     if(TString(gMinuit->fCstatu.Data()).Contains("CONVERGED") == 1 || TString(gMinuit->fCstatu.Data()).Contains("SUCCESSFUL") == 1 || TString(gMinuit->fCstatu.Data()).Contains("PROBLEMS") == 1){
+        fittingOK = kTRUE;
+    }
+
+    // calculate Error
+    if(fittingOK){
         binCenterStart = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
         startBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         binCenterEnd = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
@@ -3889,7 +3909,52 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             fIntLinearBckError = errorLinearBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         }
     } else {
-        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+
+        fFileErrLog << endl <<"ERROR: Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() << endl;
+
+        // Print fitting function so one can see where it failed
+        if(usePol2BckFitting){
+            fFileErrLog << "Parameter for bin " << ptBin << endl;
+            fFileErrLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
+            fFileErrLog << "Pol2: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< "\t "<<fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<< endl;
+        } else{
+            fFileErrLog << "Parameter for bin " << ptBin << endl;
+            fFileErrLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
+            fFileErrLog << "Linear: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< endl;
+        }
+
+        // Get borders
+        binCenterStart = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
+        startBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        binCenterEnd = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
+        endBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+
+        // calculate integral of function extracted from fFitReco regardlessly
+        Float_t intLinearBack   = fFitLinearBck->Integral(startBinEdge,endBinEdge);
+        Float_t errorLinearBack  = fFitLinearBck->IntegralError(startBinEdge,endBinEdge);
+
+        // Get a function of background just using the parameters of exclusion fit
+        if(usePol2BckFitting){ // use for bckground
+            fFitLinearBckCheck->SetParameter(0,fFitLinearBckExcl->GetParameter(0));
+            fFitLinearBckCheck->SetParameter(1,fFitLinearBckExcl->GetParameter(1));
+            fFitLinearBckCheck->SetParameter(2,fFitLinearBckExcl->GetParameter(2));
+        } else{
+            fFitLinearBckCheck->SetParameter(0,fFitLinearBckExcl->GetParameter(0));
+            fFitLinearBckCheck->SetParameter(1,fFitLinearBckExcl->GetParameter(1));
+        }
+
+        // calculate integral of check function
+        Float_t intLinearBackCheck    = fFitLinearBckCheck->Integral(startBinEdge,endBinEdge);
+        Float_t errorLinearBackCheck  = fFitLinearBckCheck->IntegralError(startBinEdge,endBinEdge);
+
+        fFileErrLog << "WARNING: Will use integral of background regardlessly!"  << endl;
+        fFileErrLog << "WARNING: Extracted integral used is (without rebinning) " << intLinearBack << endl;
+        fFileErrLog << "WARNING: Using just exclusion fit would result in  " << intLinearBackCheck << endl;
+        fFileErrLog << "WARNING: Please check fits manually by eye! " << endl;
+
+        // use integral of failed fit
+        fIntLinearBck = intLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        fIntLinearBckError = errorLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
     }
     fFitReco->DrawCopy("same");
 
@@ -3924,6 +3989,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             if (fPrefix.CompareTo("Eta")==0){
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
             }
         }
@@ -3957,13 +4023,19 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     fFitRecoPre->SetParameter(2,fMesonWidthExpect);
     fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     if (fPrefix.CompareTo("Eta")==0){
-        fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.80,fMesonMassExpect*1.20);
+        fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.05);
 
     } else{
         fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
     }
 
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitRecoPre,"QRME0");
+
+    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 ){
+        fFileErrLog << "PreFit success" << endl;
+    } else{
+        fFileErrLog << "prefit failed" << endl;
+    }
 
     Double_t widthPrefit = fFitRecoPre->GetParameter(2);
 
@@ -3983,9 +4055,17 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         fFitReco->SetParameter(3,fMesonLambdaTailTrue);
         fFitReco->SetParLimits(3,fMesonLambdaTailRangeTrue[0],fMesonLambdaTailRangeTrue[1]);
     }
-    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    fFitReco->SetParLimits(1,fMesonMassExpect-(widthPrefit/2.),fMesonMassExpect+(widthPrefit/2.));
-    fFitReco->SetParLimits(2,fMesonWidthRangeTrue[0],fMesonWidthRangeTrue[1]);
+
+     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+     fFitReco->SetParLimits(1,fMesonMassExpect-(widthPrefit/2.),fMesonMassExpect+(widthPrefit/2.));
+     if(fPrefix.CompareTo("Eta")==0){
+         if(fMode == 40){
+             fFitReco->SetParLimits(1,fMesonMassExpect*0.99,fMesonMassExpect*1.01);
+         } else if(fMode == 41){
+             fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.01);
+         }
+     }
+     fFitReco->SetParLimits(2,fMesonWidthRangeTrue[0],fMesonWidthRangeTrue[1]);
 
     // fitting two time to improve stability
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
@@ -4004,7 +4084,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
     } else {
-        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+        fFileErrLog << endl << "ERROR: Fitting failed for True Signal in " << ptBin << " with status " << gMinuit->fCstatu.Data() << endl;
     }
     fFitReco->DrawCopy("same");
 }
@@ -4012,7 +4092,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 void FitCBSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle,Double_t * fMesonIntDeltaRangeFit, Int_t ptBin,Bool_t vary ,TString functionname, Int_t InvMassType)
 {
 
-fFileErrLog<<"Start Fitting spectra with CB fit"<<endl;
+fFileErrLog<<"INFO: Start Fitting spectra with CB fit"<<endl;
 
 if(InvMassType==0) {
   fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassRange[0],fMesonMassRange[1]);
@@ -4138,7 +4218,7 @@ if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinu
     fIntLinearBck = intLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
     fIntLinearBckError = errorLinearBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
 } else {
-    fFileErrLog << "Fitting failed in " << ptBin << " with status::" << gMinuit->fCstatu.Data() <<"why failed?"<<endl << endl;
+    fFileErrLog << endl <<"ERROR: Fitting failed in " << ptBin << " with status::" << gMinuit->fCstatu.Data() <<"why failed?"<< endl;
 }
 fFitReco->DrawCopy("same");
 
@@ -4252,7 +4332,7 @@ if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinu
     fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
     fFileDataLog << "Quadratic: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5) << "\t "<<fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<< endl;
 } else {
-    fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+    fFileErrLog << endl<< "ERROR: Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() << endl;
 }
 fFitReco->DrawCopy("same");
 }
