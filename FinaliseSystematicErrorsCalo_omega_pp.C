@@ -144,8 +144,13 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                                                    1,                 // neutral pion
                                                    1,                // omega
                                                    0};                 // yield extraction
-    Bool_t bsmoothMBEta7TeV[16]             = { 0, 0,  0, 0, 0,0, 0, 0, 0, 0, 0,
-                                                0,0, 0, 0, 0}; // currently not used
+    Bool_t bsmoothMBEta07TeV[16]             = { 1,                  // pileup
+                                                   1, 1, 1, 1, 1, 1,1,   // calo
+                                                   1, 1, 1, 1, 1,      // charged pion
+                                                   1,                 // neutral pion
+                                                   1,                // omega
+                                                   0};                 // yield extraction
+    if(meson.Contains("Eta") && (mode == 45)) bsmoothMBEta07TeV[15] = 1;
     Bool_t bsmoothMBOmegaToPi07TeV[16]             = { 0, 0, 0,  0, 0,  0, 0, 0, 0,
                                                 0, 0 ,0 , 0, 0, 0, 0}; // currently not used
 
@@ -155,7 +160,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
             if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Omega")==0){
                 bsmooth[i]                      = bsmoothMBOmega07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
-                bsmooth[i]                      = bsmoothMBEta7TeV[i];
+                bsmooth[i]                      = bsmoothMBEta07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("OmegaToPi0")==0){
                 bsmooth[i]                      = bsmoothMBOmegaToPi07TeV[i]; // not implemented yet
             }
@@ -576,7 +581,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 9+1.*ptBins[k];
+                        errorReset = -5.*ptBins[k]+45;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -719,7 +724,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
         } else if (meson.Contains("Omega")){
             labelMeson= new TLatex(0.95,0.89,Form("#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}"));
         } else {
-            labelMeson= new TLatex(0.95,0.89,Form("#eta #rightarrow #gamma_{conv}#gamma_{conv}"));
+            labelMeson= new TLatex(0.95,0.89,Form("#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}"));
         }
         SetStyleTLatex( labelMeson, 0.038,4,1,42,kTRUE, 311);
         labelMeson->SetTextAlign(31);
@@ -748,6 +753,8 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
         TH2D *histo2DNewSysErrMean ;
         if (meson.Contains("Pi0")){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
+        } else if (meson.Contains("Eta") && (mode == 45)){
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
         } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
         }
@@ -757,6 +764,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
 
         // create legend
         TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+        if(meson.Contains("Eta")) legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
         if (numberCutStudies> 7) legendMeanNew->SetNColumns(2);
         if (numberCutStudies> 11) legendMeanNew->SetNColumns(3);
 
@@ -1049,6 +1057,10 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
         printf("-----------------------------------SUMMARY----------------------------------\n");
         printf("%-40s \t %-20s \t %-15s \n","Name","Found Graph in File?","Did smoothing?");
         for(Int_t i = 0; i <nCuts;i++){
+            if(meson.CompareTo("Eta")==0){
+                printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBEta07TeV[i]);
+            } else {
                 printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBOmega07TeV[i]);
+            }
         }
 }

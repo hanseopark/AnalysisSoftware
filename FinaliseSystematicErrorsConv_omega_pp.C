@@ -138,8 +138,12 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                                                    1,                           // neutral pion
                                                    1,                           // omega
                                                    0};                          // yield extraction
-    Bool_t bsmoothMBEta7TeV[17]             = { 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0,
-                                                0,0, 0, 0,0 }; // currently not used
+    Bool_t bsmoothMBEta07TeV[17]             = { 1,                           // pileup
+                                                   1, 1, 1, 1, 1, 1, 1, 1,      // conversion cuts
+                                                   1, 1, 1, 1, 1,               // charged pion
+                                                   1,                           // neutral pion
+                                                   1,                           // omega
+                                                   0};                          // yield extraction
     Bool_t bsmoothMBOmegaToPi07TeV[17]             = { 0, 0, 0, 0,  0, 0, 0, 0, 0,0,
                                                 0, 0, 0,  0 ,0 , 0, 0}; // currently not used
 
@@ -149,7 +153,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
             if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Omega")==0){
                 bsmooth[i]                      = bsmoothMBOmega07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
-                bsmooth[i]                      = bsmoothMBEta7TeV[i];
+                bsmooth[i]                      = bsmoothMBEta07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("OmegaToPi0")==0){
                 bsmooth[i]                      = bsmoothMBOmegaToPi07TeV[i]; // not implemented yet
             }
@@ -222,6 +226,11 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     // ****************************** Read & process data from file **************************************
     // ***************************************************************************************************
 
+    Bool_t foundHisto[nCuts]; // keep track if histo is found or dummy is used
+    for(Int_t i = 0; i < nCuts; i++){
+       foundHisto[i] = kFALSE;
+    }
+
     TFile* fileErrorInput                   = new TFile(nameDataFileErrors);
     for (Int_t i = 0; i < nCuts; i++){
         TGraphAsymmErrors* graphPosErrors   = NULL;
@@ -261,33 +270,46 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
             cout << "graphpos= " << graphPosErrors;
         } else {
+            // name is not in list
+            printf("WARNING: trying to get %s, but no rule is known. Will try to get it anyways ... \n",nameCutVariationSC[i].Data());
             TString nameGraphPos            = Form("%s_SystErrorRelPos_%spp",meson.Data(),nameCutVariationSC[i].Data() );
             TString nameGraphNeg            = Form("%s_SystErrorRelNeg_%spp",meson.Data(),nameCutVariationSC[i].Data() );
-            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-            if ( graphPosErrors == NULL ){
-                cout << "systematic wasn't contained, setting it to 0" << endl;
-                TString nameGraphPos            = Form("%s_SystErrorRelPos_%s",meson.Data(),nameCutVariationSC[0].Data() );
-                TString nameGraphNeg            = Form("%s_SystErrorRelNeg_%s",meson.Data(),nameCutVariationSC[0].Data() );
-                if (meson.CompareTo("EtaToPi0") == 0){
-                    nameGraphPos                = Form("Eta_SystErrorRelPos_%s",nameCutVariationSC[0].Data() );
-                    nameGraphNeg                = Form("Eta_SystErrorRelNeg_%s",nameCutVariationSC[0].Data() );
-                }
-                cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
-                graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
-                graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-
-                for (Int_t k = 0; k< graphPosErrors->GetN(); k++){
-                    graphPosErrors->SetPoint(k, graphPosErrors->GetX()[k],0);
-                    graphPosErrors->SetPointEYhigh (k, 0);
-                    graphPosErrors->SetPointEYlow (k, 0);
-                    graphNegErrors->SetPoint(k, graphNegErrors->GetX()[k],0);
-                    graphNegErrors->SetPointEYhigh (k, 0);
-                    graphNegErrors->SetPointEYlow (k, 0);
-                }
-            }
         }
+
+        // check now if getting the histogram actually worked
+        if(graphPosErrors==NULL){
+            printf("WARNING: Didn't find %s graph in file %s!\n",nameCutVariationSC[i].Data(),fileErrorInput->GetName());
+            printf("WARNING: Will use yield extraction histogram as dummy instead!");
+
+            TString nameGraphPos            = Form("%s_SystErrorRelPos_%s_pp",meson.Data(),"YieldExtraction"  );
+            TString nameGraphNeg            = Form("%s_SystErrorRelNeg_%s_pp",meson.Data(),"YieldExtraction"  );
+            graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+
+            if(graphPosErrors==NULL){ // still didnt find histo
+                printf("ERROR: Could't find yield extraction histo either, returning ...");
+                return;
+            }
+
+            // Set everything to zero
+            printf("INFO: Using YieldExtraction graph for %s and setting all values to zero ...\n",nameCutVariationSC[i].Data());
+            for (Int_t k = 0; k< graphPosErrors->GetN(); k++){
+                graphPosErrors->SetPoint(k, graphPosErrors->GetX()[k],0);
+                graphPosErrors->SetPointEYhigh (k, 0);
+                graphPosErrors->SetPointEYlow (k, 0);
+                graphNegErrors->SetPoint(k, graphNegErrors->GetX()[k],0);
+                graphNegErrors->SetPointEYhigh (k, 0);
+                graphNegErrors->SetPointEYlow (k, 0);
+            }
+            graphPosErrors->SetName(Form("%s_SystErrorRelPos_%spp",meson.Data(),nameCutVariationSC[i].Data()));
+            graphNegErrors->SetName(Form("%s_SystErrorRelNeg_%spp",meson.Data(),nameCutVariationSC[i].Data()));
+        } else{
+            printf("INFO: Loaded %s.graph succesfully!.. \n",nameCutVariationSC[i].Data());
+            foundHisto[i]=kTRUE;
+        }
+
 
         // remove points below minPt
         while (graphPosErrors->GetX()[0] < startPtSys){
@@ -323,7 +345,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // pileup
             if (nameCutVariationSC[i].CompareTo("RemovePileUp")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 if (!energy.CompareTo("7TeV"))
                     errorReset  = 0.5; // 5% higher yield * 90% efficiency
 
@@ -338,7 +360,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // min pt of conversion track
             } else if (nameCutVariationSC[i].CompareTo("Conversion_SinglePtCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
 
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
@@ -356,7 +378,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // min cls in TPC for conversion track
             } else if (nameCutVariationSC[i].CompareTo("Conversion_ClsTPCCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 2.0;
@@ -371,7 +393,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // PID cut for conversion electron
             } else if (nameCutVariationSC[i].CompareTo("Conversion_TPCdEdxCutElectron")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 1.0;
@@ -386,7 +408,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // rejection of pions when looking at conversion tracks
             } else if (nameCutVariationSC[i].CompareTo("Conversion_TPCdEdxCutPion")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 if (!energy.CompareTo("7TeV"))
                     errorReset  = 0.2; //
 
@@ -401,7 +423,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // conversion qt cut
             } else if (nameCutVariationSC[i].CompareTo("Conversion_QtMaxCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 1.8;
@@ -416,7 +438,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // conversion chi2 cut
             } else if (nameCutVariationSC[i].CompareTo("Conversion_Chi2GammaCut")==0 ){
-                minPt       =1.8;
+                minPt       =startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 1.5;
@@ -431,7 +453,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // conversion psipair
             } else if (nameCutVariationSC[i].CompareTo("Conversion_PsiPair")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 1.5;
@@ -446,7 +468,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // conversion cosine pointing angle
             } else if (nameCutVariationSC[i].CompareTo("Conversion_CosinePointingAngle")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 1.0;
@@ -461,7 +483,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // charged pion track cls in TPC
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_ClsTPCCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         if(ptBins[k]<4.){
@@ -480,7 +502,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
                 // charged pion PID
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_TPCdEdxCutPion")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 3.0;
@@ -495,7 +517,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // charged pion PID
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_DCACut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 4.5;
@@ -509,7 +531,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 }
             // charged pion PID
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_pTCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 4.;
@@ -523,7 +545,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 }
             // charged pion pair mass window
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_MassCut")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 4.0;
@@ -538,7 +560,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // two gamma mass window
             } else if (nameCutVariationSC[i].CompareTo("NeutralPion_SelectionWindows")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 9.;
@@ -553,7 +575,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // background description
             } else if (nameCutVariationSC[i].CompareTo("Omega_BackgroundScheme")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 5.2;
@@ -571,7 +593,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
             // Yield Extraction
             } else if (nameCutVariationSC[i].CompareTo("YieldExtraction")==0 ){
-                minPt       = 1.8;
+                minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 17.+0.2*pow(ptBins[k]-5.5,2);
@@ -743,6 +765,8 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
         TH2D *histo2DNewSysErrMean ;
         if (meson.Contains("Pi0")){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
+        } else if ( meson.Contains("Eta")){
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,70.);
         } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
         }
@@ -751,7 +775,12 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
         histo2DNewSysErrMean->Draw();
 
         // create legend
-        TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+        TLegend* legendMeanNew = NULL;
+        if(meson.Contains("Eta")){
+            legendMeanNew = GetAndSetLegend2(minXLegend-0.08,maxYLegend-heightLegend,minXLegend+(0.8*widthLegend),maxYLegend, 30);
+        } else{
+            legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+        }
         if (numberCutStudies> 7) legendMeanNew->SetNColumns(2);
         if (numberCutStudies> 11) legendMeanNew->SetNColumns(3);
 
@@ -980,6 +1009,9 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
         TH2D *histo2DSummedErrMean ;
         if (meson.Contains("Pi0") ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
+        } else if (meson.Contains("Eta")){
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,60.);
+
         } else {
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
         }
@@ -1040,5 +1072,15 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
         SysErrDatAverPaper << ptBins[l] <<"\t" << errorsMat[l] << "\t" << errorsMeanCorrSignalExtraction[l] << "\t" << errorsMeanCorrChargedPionReco[l]<< "\t" << errorsMeanCorrPhotonReco[l]<< "\t" <<errorsMeanCorrPi0Reco[l] <<"\t" << errorsMeanCorrMatSummed[l]<< endl;
     }
     SysErrDatAverPaper.close();
+
+    printf("-----------------------------------SUMMARY----------------------------------\n");
+    printf("%-40s \t %-20s \t %-15s \n","Name","Found Graph in File?","Did smoothing?");
+    for(Int_t i = 0; i <nCuts;i++){
+        if(meson.CompareTo("Eta")==0){
+            printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBEta07TeV[i]);
+        } else {
+            printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBOmega07TeV[i]);
+        }
+    }
 
 }

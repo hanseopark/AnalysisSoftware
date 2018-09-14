@@ -109,9 +109,9 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                                                 "ChargedPion_pTCut",               // 18
                                                 "ChargedPion_TPCdEdxCutPion",      // 19
                                                 "ChargedPion_MassCut",             // 20
-                                                "NeutralPion_SelectionWindows",    // 22
-                                                "Omega_BackgroundScheme",          // 23
-                                                "YieldExtraction"};                // 24
+                                                "NeutralPion_SelectionWindows",    // 21
+                                                "Omega_BackgroundScheme",          // 22
+                                                "YieldExtraction"};                // 23
     TString nameCutVariation[24] = {"pileup","conv. track p_{T}","conv. track N_{cls,TPC}","conv. electron PID","conv. pion rej.","conv. photon q_{T}","conv. photon #chi^{2}","conv. photon #psi_{pair}","conv. cosine pointing angle","cluster non-linearity","cluster timing","cluster trackmatching","cluster min. energy","cluster N_{cells,min}","cluster shape",
                                     "clusterizer algorithm","charged pion N_{cls,TPC}","charged pion DCA","charged pion min p_{T}","charged pion PID","M_{#pi^{+}#pi^{-}} cut"
                                     ,"M_{#gamma#gamma} cut","background description","yield extraction" };
@@ -158,8 +158,15 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                                                    1,                        // neutral pion cuts
                                                    1,                        // omega cuts
                                                    0};                       // yield extraction
-    Bool_t bsmoothMBEta7TeV[24]                = { 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0};
+    Bool_t bsmoothMBEta07TeV[24]             = { 1,                        // pileup
+                                                   1, 1, 1, 1, 1, 1, 1, 1,   // conv. cuts
+                                                   1, 1, 1, 1, 1, 1, 1,      // calo cuts
+                                                   1, 1, 1, 1, 1,            // charged pion cuts
+                                                   1,                        // neutral pion cuts
+                                                   1,                        // omega cuts
+                                                   0};                       // yield extraction
+    if(mode==42) bsmoothMBEta07TeV[23]       = 1; // smooth eta signal extraction for PCM-PHOS
+
     Bool_t bsmoothMBOmegaToPi07TeV[24]         = { 0, 0, 0, 0, 0, 0, 0, 0,
                                                    0, 0, 0, 0,  0 , 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0};
 
@@ -169,7 +176,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
             if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Omega")==0){
                 bsmooth[i]                      = bsmoothMBOmega07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
-                bsmooth[i]                      = bsmoothMBEta7TeV[i];
+                bsmooth[i]                      = bsmoothMBEta07TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("OmegaToPi0")==0){
                 bsmooth[i]                      = bsmoothMBOmegaToPi07TeV[i]; // not implemented yet
             }
@@ -460,7 +467,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
 
                 // conversion chi2 cut
             } else if (nameCutVariationSC[i].CompareTo("Conversion_Chi2GammaCut")==0 ){
-                minPt       =3.5;
+                minPt       =startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
                         errorReset = 2.0;
@@ -712,7 +719,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 9+1.*ptBins[k];
+                        errorReset = 20.; // used for eta PCM-PHOS
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -822,7 +829,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         // create dummy histo
         TH2D *histo2DSysErrMean ;
         if (meson.Contains("Pi0") ){
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,25.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,25.);        
         } else {
             histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,25.);
         }
@@ -849,7 +856,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         } else if (meson.Contains("Omega")){
             labelMeson= new TLatex(0.95,0.89,Form("#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}"));
         } else {
-            labelMeson= new TLatex(0.95,0.89,Form("#eta #rightarrow #gamma_{conv}#gamma_{conv}"));
+            labelMeson= new TLatex(0.95,0.89,Form("#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}"));
         }
         SetStyleTLatex( labelMeson, 0.038,4,1,42,kTRUE, 311);
         labelMeson->SetTextAlign(31);
@@ -879,6 +886,8 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         TH2D *histo2DNewSysErrMean ;
         if (meson.Contains("Pi0")){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
+        } else if (meson.Contains("Eta") && (mode == 42)){
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
         } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,45.);
         }
@@ -887,7 +896,13 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         histo2DNewSysErrMean->Draw();
 
         // create legend
-        TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+        if(meson.Contains("Eta")){
+            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-heightLegend,minXLegend+(0.9*widthLegend),maxYLegend, 30);
+            if(mode==42) legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-(0.9*heightLegend),minXLegend+(0.9*widthLegend),maxYLegend, 30);
+
+        } else{
+            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+        }
         legendMeanNew->SetMargin(0.05);
         if (numberCutStudies> 7) legendMeanNew->SetNColumns(2);
         if (numberCutStudies> 11) legendMeanNew->SetNColumns(3);
@@ -1138,7 +1153,11 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         histo2DSummedErrMean->Draw();
 
         // create legend
-        TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
+        if(meson.Contains("Eta")){
+            TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2-0.05,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
+        } else{
+            TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
+        }
         legendSummedMeanNew->SetNColumns(2);
         legendSummedMeanNew->SetMargin(0.1);
 
@@ -1201,6 +1220,10 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     printf("-----------------------------------SUMMARY----------------------------------\n");
     printf("%-40s \t %-20s \t %-15s \n","Name","Found Graph in File?","Did smoothing?");
     for(Int_t i = 0; i <nCuts;i++){
+        if(meson.CompareTo("Eta")==0){
+            printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBEta07TeV[i]);
+        } else {
             printf("%-40s \t %-20d \t %-15d \n",nameCutVariationSC[i].Data(),foundHisto[i],bsmoothMBOmega07TeV[i]);
+        }
     }
 }
