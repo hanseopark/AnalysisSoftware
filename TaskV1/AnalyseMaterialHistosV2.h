@@ -1,93 +1,130 @@
-TString     fdate                                                       = "";
-TString     fEnergyFlag                                                 = "";
-TString     fCollisionSystem                                            = "";
-TString     fTextMeasurement                                            = "";
-TString     fDetectionProcess                                           = "";
-TString     fCutSelection                                               = "";
-TString     fCutSelectionRead                                           = "";
-TString     fEventCutSelection                                          = "";
-TString     fGammaCutSelection                                          = "";
-TString     fClusterCutSelection                                        = "";
-TString     fElectronCutSelection                                       = "";
-TString     fMesonCutSelection                                          = "";
+TString     fdate                 = "";
+TString     fEnergyFlag           = "";
+TString     fCollisionSystem      = "";
+TString     fTextMeasurement      = "";
+TString     fDetectionProcess     = "";
+TString     fCutSelection         = "";
+TString     fCutSelectionRead     = "";
+TString     fEventCutSelection    = "";
+TString     fGammaCutSelection    = "";
+TString     fClusterCutSelection  = "";
+TString     fElectronCutSelection = "";
+TString     fMesonCutSelection    = "";
+TString     nameMainDir           = "GammaConvMaterial";
 
-Double_t fMinPt     = 0.;
-Double_t fMinPt1    = 0.8;
-Double_t fMaxPt     = 20.;
+Double_t markerSize               = 1.2;
+Color_t colorData                 = kBlack;
+Color_t colorMC                   = kRed;
+Color_t colorTrueMC               = kMagenta+2;
+Color_t colorTrueCombMC           = kGreen+2;
+Color_t colorComparisonMC         = kBlue-4;
 
-Int_t rebinRPlots   = 1;
-Int_t rebinZPlots   = 4;
-Int_t rebinPtPlots  = 4;
+Double_t fMinPt                   = 0.;
+Double_t fMinPt1                  = 0.8;
+Double_t fMaxPt                   = 20.;
 
-Double_t rMinGas    = 95.;
-Double_t rMaxGas    = 145.;
+Int_t rebinRPlots                 = 1;
+Int_t rebinZPlots                 = 4;
+Int_t rebinPtPlots                = 4;
+Int_t rebinPhiPlots               = 3;
 
-const int nBinsR = 12;
-// Double_t arrayRBins[14] = {0., 1.5, 3.5, 5.7, 8.6, 13., 21.,  33.5, 41., 55., 72., 90.,  150., 180};
-Double_t arrayRBins[13] = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
-//                      = {0., 1.5, 5., 8.6, 13., 21., 33.5, 41., 55., 72., 90., 150., 180};
+Double_t rMinGas                  = 95.;
+Double_t rMaxGas                  = 145.;
 
-TString arrayRangesRBins[12] =
-                       {"0 cm < R < 1.5 cm",     //0
-                        "1.5 cm < R < 5. cm",    //1
-                        "5. cm < R < 8.6 cm",    //2
-                        "8.6 cm < R < 13 cm",    //3
-                        "13 cm < R < 21 cm",     //4
-                        "21 cm < R < 33.5 cm",   //5
-                        "33.5 cm < R < 41 cm",   //6
-                        "41 cm < R < 55 cm",     //7
-                        "55 cm < R < 72 cm",     //8
-                        "72 cm < R < 90 cm",     //9
-                        "90 cm < R < 150 cm",    //10
-                        "150 cm < R < 180 cm"    //11
-                       };
+const int nBinsPtFine             = 15;
+Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
+                                            0.3,  0.35, 0.4, 0.45, 0.5,
+                                            0.55, 0.6, 0.65, 0.7, 0.75};
+TH1F *histoRinPtBinDataFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
+                                            NULL, NULL, NULL, NULL, NULL,
+                                            NULL, NULL, NULL, NULL, NULL
+                                           };
+TH1F *histoRinPtBinMCFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
+                                            NULL, NULL, NULL, NULL, NULL,
+                                            NULL, NULL, NULL, NULL, NULL
+                                           };
+Double_t nconvInRangeDataFine[nBinsPtFine];
+Double_t dataStatErrorGasFine[nBinsPtFine];
+Double_t dataStatRelErrorGasFine[nBinsPtFine];
+TH1D * histoIntegralGasDataFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
+                                                  NULL, NULL, NULL, NULL, NULL,
+                                                  NULL, NULL, NULL, NULL, NULL
+                                                 };
+TH1F * histoRinPtBinDataRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
+                                                  NULL, NULL, NULL, NULL, NULL,
+                                                  NULL, NULL, NULL, NULL, NULL
+                                                 };
+TH1F * histoRinPtBinDataScaledToGasRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
+                                                             NULL, NULL, NULL, NULL, NULL,
+                                                             NULL, NULL, NULL, NULL, NULL
+                                                            };
 
-TString arrayNamesRBins[12] =
-                       {"Vertex",                                       //0
-                        "BeamPipe+SPD 1",                               //1
-                        "SPD 2",                                        //2
-                        "Thermal shield/Support between SPD/SDD",       //3
-                        "SDD 1 +Thermal shield",                        //4
-                        "SDD 2 +Thermal shield",                        //5
-                        "SSD 1",                                        //6
-                        "SSD 2",                                        //7
-                        "Air + TPC in. cont. vessel + CO_{2}",          //8
-                        "CO_{2} + TPC in. field cage vessel+TPC rods ", //9
-                        "Ne: CO_{2}: N_{2}",                            //10
-                        "Ne: CO_{2}: N_{2}"                             //11
-                       };
+Double_t nconvInRangeMCFine[nBinsPtFine];
+Double_t dataStatErrorGasMCFine[nBinsPtFine];
+Double_t dataStatRelErrorGasMCFine[nBinsPtFine];
+TH1D * histoIntegralGasMCFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
+                                             NULL, NULL, NULL, NULL, NULL,
+                                             NULL, NULL, NULL, NULL, NULL
+                                            };
+TH1F * histoRinPtBinMCRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
+                                               NULL, NULL, NULL, NULL, NULL,
+                                               NULL, NULL, NULL, NULL, NULL
+                                              };
+TH1F * histoRinPtBinMCScaledToGasRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
+                                                          NULL, NULL, NULL, NULL, NULL,
+                                                          NULL, NULL, NULL, NULL, NULL
+                                                         };
+TH1F * histoDataMCRatioRinPtBinScaledToGasFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
+                                                              NULL, NULL, NULL, NULL, NULL,
+                                                              NULL, NULL, NULL, NULL, NULL
+                                                             };
 
-// const int 	nBinsR = 				10;
-// Float_t         arrayRBins[11] =                {0.,2.,3.5,13.,21.,33.5,55.,72.,90.,150.,180};
-// TString         arrayNamesRangesRBins[11]=      {"0 cm < R < 2 cm",       //0
-// 						     "2. cm < R < 3.5 cm",    //1
-// 						     "3.5 cm < R < 13 cm",    //2
-// 						     "13 cm < R < 21. cm",   //3
-// 						     "21 cm < R < 33.5 cm",   //4
-// 						     "33.5 cm < R < 55 cm",   //5
-// 						     "55 cm < R < 72 cm",     //6
-// 						     "72 cm < R < 90 cm",     //7
-// 						     "90 cm < R < 150 cm",    //8
-// 						     "150 cm < R < 180 cm"};  //9
 
-Double_t arrayZBins[13] = {10.,15.,20.,40.,40.,60.,60.,80.,120.,120.,200.,200.,200};
 
-TLine *lineRLimits[13];
-TLine *lineRLimitsPurity[13];
+const int nBinsR                  = 12;
+Double_t arrayRBins[13]           = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
+TString arrayRangesRBins[12]      = { "0 cm < R #leq 1.5 cm",     //0
+                                      "1.5 cm < R #leq 5. cm",    //1
+                                      "5. cm < R #leq 8.5 cm",    //2
+                                      "8.5 cm < R #leq 13 cm",    //3
+                                      "13 cm < R #leq 21 cm",     //4
+                                      "21 cm < R #leq 33.5 cm",   //5
+                                      "33.5 cm < R #leq 41 cm",   //6
+                                      "41 cm < R #leq 55 cm",     //7
+                                      "55 cm < R #leq 72 cm",     //8
+                                      "72 cm < R #leq 95 cm",     //9
+                                      "95 cm < R #leq 145 cm",    //10
+                                      "145 cm < R #leq 180 cm"    //11
+                                    };
 
-Double_t doubleLatexNamingBinsX = 0.16;
-Double_t doubleLatexNamingBinsRatioX = 0.11;
-Double_t doubleLatexNamingBinsX2 = 0.24;
-Double_t doubleLatexNamingBinsY = 0.9;
-Double_t doubleLatexNamingBinsY2 = 0.86;
-Double_t doubleLatexNamingBinsY3 = 0.82;
-Size_t sizeTextNameBins = 0.05;
+TString arrayNamesRBins[12]       = { "Vertex",                                       //0
+                                      "BeamPipe+SPD 1",                               //1
+                                      "SPD 2",                                        //2
+                                      "Thermal shield/Support between SPD/SDD",       //3
+                                      "SDD 1 +Thermal shield",                        //4
+                                      "SDD 2 +Thermal shield",                        //5
+                                      "SSD 1",                                        //6
+                                      "SSD 2",                                        //7
+                                      "Air + TPC in. cont. vessel + CO_{2}",          //8
+                                      "CO_{2} + TPC in. field cage vessel+TPC rods ", //9
+                                      "Ne: CO_{2}: N_{2}",                            //10
+                                      "Ne: CO_{2}: N_{2}"                             //11
+                                    };
+const int nBinsPtMin= 15;
+Double_t  arrayBinsPtMin[nBinsPtMin+1];
+TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL
+                                        };
 
-Double_t doubleLatexNamingCutX=0.16;
-Double_t doubleLatexNamingCutY=0.20;
+const int nBinsZ                  = 12;
+Double_t arrayZBins[13]           = {10.,15.,20.,40.,40.,60.,60.,80.,120.,120.,200.,200.,200};
 
-TString 	nameHistoRatioPhiInRMC;
-TString 	nameHistoRatioZInRMC;
+Double_t eps = 0.001;
+Size_t sizeTextNameBins              = 0.05;
+
+TString nameHistoRatioPhiInRMC;
+TString nameHistoRatioZInRMC;
 
 TH1F*   histoRDataScaledToGas;
 TH1F*   histoRFullPtDataScaledToGas;
@@ -100,25 +137,26 @@ TH1F*   histoRFullPtDataScaledToGasRebin;
 TH1F*   histoRFullPtMCScaledToGasRebin;
 TH1F*   histoDataMCRatioRFullPtScaledToGas;
 
-TH1F*   histoRinPtBinDataScaledToGas01;
-TH1F*   histoRinPtBinMCScaledToGas01;
-TH1F*   histoRinPtBinDataScaledToGasRebin01;
-TH1F*   histoRinPtBinMCScaledToGasRebin01;
-TH1F*   histoDataMCRatioRinPtBinScaledToGas01;
+TH1F*   histoRinPtBinDataScaledToGasPtBin1;
+TH1F*   histoRinPtBinMCScaledToGasPtBin1;
+TH1F*   histoRinPtBinDataScaledToGasPtBin1Rebin;
+TH1F*   histoRinPtBinMCScaledToGasPtBin1Rebin;
+TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin1;
 
-TH1F*   histoRinPtBinDataScaledToGas02;
-TH1F*   histoRinPtBinMCScaledToGas02;
-TH1F*   histoRinPtBinDataScaledToGasRebin02;
-TH1F*   histoRinPtBinMCScaledToGasRebin02;
-TH1F*   histoDataMCRatioRinPtBinScaledToGas02;
+TH1F*   histoRinPtBinDataScaledToGasPtBin2;
+TH1F*   histoRinPtBinMCScaledToGasPtBin2;
+TH1F*   histoRinPtBinDataScaledToGasPtBin2Rebin;
+TH1F*   histoRinPtBinMCScaledToGasPtBin2Rebin;
+TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin2;
 
-TH1F*   histoRinPtBinDataScaledToGas03;
-TH1F*   histoRinPtBinMCScaledToGas03;
-TH1F*   histoRinPtBinDataScaledToGasRebin03;
-TH1F*   histoRinPtBinMCScaledToGasRebin03;
-TH1F*   histoDataMCRatioRinPtBinScaledToGas03;
+TH1F*   histoRinPtBinDataScaledToGasPtBin3;
+TH1F*   histoRinPtBinMCScaledToGasPtBin3;
+TH1F*   histoRinPtBinDataScaledToGasPtBin3Rebin;
+TH1F*   histoRinPtBinMCScaledToGasPtBin3Rebin;
+TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin3;
 
 TH1F*	histoDataMCRatioR;
+TH1F*	histoDataMCRatioRRebin;
 TH1F*	histoMidPtDataMCRatioR;
 TH1F*	histoPurityR;
 TH1F*	histoPurityPt;
@@ -133,52 +171,101 @@ TH1D*   histoPhiInRMC[nBinsR];
 TH1D*   histoPhiInRTrueMC[nBinsR];
 TH1D*	histoDataMCRatioPhiInR[nBinsR];
 
-TH1D*   histoIntegralGasStatErrorData[nBinsR];
-TH1D*   histoIntegralGasStatErrorData01[nBinsR];
-TH1D*   histoIntegralGasStatErrorData02[nBinsR];
-TH1D*   histoIntegralGasStatErrorData03[nBinsR];
+TH1D*   histoIntegralGasStatErrorDataFullRange[nBinsR];
+TH1D*   histoIntegralGasStatErrorDataPtBin1[nBinsR];
+TH1D*   histoIntegralGasStatErrorDataPtBin2[nBinsR];
+TH1D*   histoIntegralGasStatErrorDataPtBin3[nBinsR];
 TH1D*   histoIntegralGasStatErrorMC[nBinsR];
-TH1D*   histoIntegralGasStatErrorMC01[nBinsR];
-TH1D*   histoIntegralGasStatErrorMC02[nBinsR];
-TH1D*   histoIntegralGasStatErrorMC03[nBinsR];
+TH1D*   histoIntegralGasStatErrorMCPtBin1[nBinsR];
+TH1D*   histoIntegralGasStatErrorMCPtBin2[nBinsR];
+TH1D*   histoIntegralGasStatErrorMCPtBin3[nBinsR];
 
-TH1D*   histoIntegralGasData;
-TH1D*   histoIntegralGasData01;
-TH1D*   histoIntegralGasData02;
-TH1D*   histoIntegralGasData03;
-TH1D*   histoIntegralGasMC;
-TH1D*   histoIntegralGasMC01;
-TH1D*   histoIntegralGasMC02;
-TH1D*   histoIntegralGasMC03;
+TH1D*   histoIntegralGasDataFullRange;
+TH1D*   histoIntegralGasDataPtBin1;
+TH1D*   histoIntegralGasDataPtBin2;
+TH1D*   histoIntegralGasDataPtBin3;
+TH1D*   histoIntegralGasMCFullRange;
+TH1D*   histoIntegralGasMCPtBin1;
+TH1D*   histoIntegralGasMCPtBin2;
+TH1D*   histoIntegralGasMCPtBin3;
 
 TH1F*   histoRDataRebin;
-TH1F*   histoRinPtBinDataRebin01;
-TH1F*   histoRinPtBinDataRebin02;
-TH1F*   histoRinPtBinDataRebin03;
+TH1F*   histoRinPtBinDataPtBin1Rebin;
+TH1F*   histoRinPtBinDataPtBin2Rebin;
+TH1F*   histoRinPtBinDataPtBin3Rebin;
 
-TH1F*   histoRinPtBinMCRebin01;
-TH1F*   histoRinPtBinMCRebin02;
-TH1F*   histoRinPtBinMCRebin03;
+TH1F*   histoRMCRebin;
+TH1F*   histoRinPtBinMCPtBin1Rebin;
+TH1F*   histoRinPtBinMCPtBin2Rebin;
+TH1F*   histoRinPtBinMCPtBin3Rebin;
 
 TH1D*   histoZInRData[nBinsR];
 TH1D*   histoZInRMC[nBinsR];
 TH1D*   histoZInRTrueMC[nBinsR];
 TH1D*	histoDataMCRatioZInR[nBinsR];
 
-Int_t rebinPhiPlots=3;
+Double_t arrayX[2];
+Double_t arrayY[3];
+Double_t relX[3];
+Double_t relY[3];
+Int_t textSizeLabels = 30;
+Double_t textsizeLabelsDown = 0;
+Double_t textsizeFacDown = 0;
+Double_t textsizeLabelsUp = 0;
+Double_t textsizeFacUp = 0;
 
-Double_t markerSize =1.05;
+Double_t arrayXRdistrib[3];
+Double_t arrayYRdistrib[3];
+Double_t relXRdistrib[3];
+Double_t relYRdistrib[3];
 
-Color_t colorData = kBlack;
-Color_t colorMC = kRed;
-Color_t colorTrueMC = kMagenta+2;
-Color_t colorTrueCombMC = kGreen+2;
+Double_t arrayXRConv2Pad[2];
+Double_t arrayYRConv2Pad[3];
+Double_t relXRConv2Pad[3];
+Double_t relYRConv2Pad[3];
+Double_t textsizeLabelsDownRConv2Pad = 0;
+Double_t textsizeFacDownRConv2Pad = 0;
+Double_t textsizeLabelsUpRConv2Pad = 0;
+Double_t textsizeFacUpRConv2Pad = 0;
 
-Color_t colorComparisonMC = kBlue-4;
+Double_t arrayXpurity[2];
+Double_t arrayYpurity[3];
+Double_t relXpurity[3];
+Double_t relYpurity[3];
+Double_t textsizeLabelsDownpurity = 0;
+Double_t textsizeFacDownpurity = 0;
+Double_t textsizeLabelsUppurity = 0;
+Double_t textsizeFacUppurity = 0;
 
+Double_t arrayXPhotonChar[3];
+Double_t arrayYPhotonChar[3];
+Double_t relXPhotonChar[3];
+Double_t relYPhotonChar[3];
 
+Double_t arrayXPhiInRbins[2];
+Double_t arrayYPhiInRbins[3];
+Double_t relXPhiInRbins[3];
+Double_t relYPhiInRbins[3];
 
-//__________________________________________ Plotting all Invariant Mass bins _______________________________________________
+Double_t arrayXZInRbins[2];
+Double_t arrayYZInRbins[3];
+Double_t relXZInRbins[3];
+Double_t relYZInRbins[3];
+
+Double_t EtaRange[2] = {-1.5,1.5};
+Double_t PhiRange[2] = {0.,6.28};
+Double_t PtRange[2]  = {0.,15.};
+Double_t RRange[2]   = {0.,180.};
+Double_t minYRatio = 0.9;
+Double_t maxYRatio = 1.5;
+
+Color_t colorOnFly = kRed+1;
+Color_t colorOffline = kBlue+1;
+
+Color_t color[12] = { kBlack, kAzure, kGreen+2, kOrange+2, kCyan+2,
+                      kYellow+2, kViolet-3, kSpring+10, kRed+1, kMagenta-8,
+                      kGray, kGray+3};
+
 void PlotRDistribRunwise(   TH1D** fHistoData,
                             TH1D** fHistoMC,
                             TString namePlot,

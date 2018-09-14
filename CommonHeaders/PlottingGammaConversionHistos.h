@@ -2327,7 +2327,8 @@ using namespace std; // necessary for non-ROOT compilation
                                                 Double_t* arrayBoundariesX,
                                                 Double_t* arrayBoundariesY,
                                                 Double_t* relativeMarginsX,
-                                                Double_t* relativeMarginsY){
+                                                Double_t* relativeMarginsY,
+                                                Bool_t verbose = kTRUE){
         Int_t realsizeX             = sizeX- (Int_t)(sizeX*leftMargin)- (Int_t)(sizeX*rightMargin);
         Int_t realsizeY             = sizeY- (Int_t)(sizeY*upperMargin)- (Int_t)(sizeY*lowerMargin);
 
@@ -2338,13 +2339,13 @@ using namespace std; // necessary for non-ROOT compilation
 
         Int_t nPixelsSinglePlotX    = (Int_t) (realsizeX/nCols);
         Int_t nPixelsSinglePlotY    = (Int_t) (realsizeY/nRows);
-        cout << realsizeX << "\t" << nPixelsSinglePlotX << endl;
-        cout << realsizeY << "\t" << nPixelsSinglePlotY << endl;
-
-        cout << nPixelsLeftColumn << "\t" << nPixelsRightColumn  << "\t" << nPixelsLowerColumn << "\t" << nPixelsUpperColumn << endl;
-
+        if(verbose){
+            cout << realsizeX << "\t" << nPixelsSinglePlotX << endl;
+            cout << realsizeY << "\t" << nPixelsSinglePlotY << endl;
+            cout << nPixelsLeftColumn << "\t" << nPixelsRightColumn  << "\t" << nPixelsLowerColumn << "\t" << nPixelsUpperColumn << endl;
+        }
         Int_t pixel = 0;
-        cout << "boundaries X" << endl;
+        if(verbose)cout << "boundaries X" << endl;
         for (Int_t i = 0; i < nCols+1; i++){
             if (i == 0){
                 arrayBoundariesX[i] = 0.;
@@ -2356,10 +2357,10 @@ using namespace std; // necessary for non-ROOT compilation
                 arrayBoundariesX[i] = (Double_t)pixel/sizeX;
                 pixel = pixel+nPixelsSinglePlotX;
             }
-            cout << i << "\t" << arrayBoundariesX[i] << "\t" << pixel<<endl;
+            if(verbose)cout << i << "\t" << arrayBoundariesX[i] << "\t" << pixel<<endl;
         }
 
-        cout << "boundaries Y" << endl;
+        if(verbose)cout << "boundaries Y" << endl;
         pixel = sizeY;
         for (Int_t i = 0; i < nRows+1; i++){
             if (i == 0){
@@ -2372,7 +2373,7 @@ using namespace std; // necessary for non-ROOT compilation
                 arrayBoundariesY[i] = (Double_t)pixel/sizeY;
                 pixel = pixel-nPixelsSinglePlotY;
             }
-            cout << i << "\t" << arrayBoundariesY[i] <<"\t" << pixel<<endl;
+            if(verbose)cout << i << "\t" << arrayBoundariesY[i] <<"\t" << pixel<<endl;
         }
 
         relativeMarginsX[0]         = (Double_t)nPixelsLeftColumn/(nPixelsLeftColumn+nPixelsSinglePlotX);
