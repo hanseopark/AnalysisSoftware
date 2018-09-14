@@ -164,10 +164,10 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothIncGammapPb5TeV[16]           = { 1, 0, 1, 1, 1,  0, 0, 0, 1, 0,
                                                     0, 1, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatiopPb5TeV[16]           = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 0,
+    Bool_t bsmoothIncRatiopPb5TeV[16]           = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
                                                     0, 1, 1, 0, 0,  1 };
-    Bool_t bsmoothDRpPb5TeV[16]                 = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 0,
-                                                    0, 1, 1, 0, 0,  1 };
+    Bool_t bsmoothDRpPb5TeV[16]                 = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
+                                                    0, 1, 1, 1, 0,  1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0){
@@ -262,32 +262,35 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
 
         TGraphAsymmErrors* graphPosErrors       = NULL;
         TGraphAsymmErrors* graphNegErrors       = NULL;
+        TString centTemp = "0-100%";
+        if(nameCutVariationSC[i].Contains("dEdxE") || nameCutVariationSC[i].Contains("OOBPileupGamma") || nameCutVariationSC[i].Contains("IntRange")  || nameCutVariationSC[i].Contains("OOBPileupPi0") )
+            centTemp = cent;
 
         // Set currently undetermined uncertainties
         if ( nameCutVariationSC[i].CompareTo("SPD")==0 ){
             TString nameGraphPos;
             TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data());
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data()  );
+            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), centTemp.Data());
+            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), centTemp.Data()  );
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<< "\t fixing" <<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else if ( nameCutVariationSC[i].CompareTo("OOBPileupPi0")==0 ){
-            TString nameGraphPos                = Form("Pi0_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), cent.Data());
-            TString nameGraphNeg                = Form("Pi0_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), cent.Data());
+            TString nameGraphPos                = Form("Pi0_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), centTemp.Data());
+            TString nameGraphNeg                = Form("Pi0_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), centTemp.Data());
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else if ( nameCutVariationSC[i].CompareTo("OOBPileupGamma")==0 ){
-            TString nameGraphPos                = Form("Gamma_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), cent.Data());
-            TString nameGraphNeg                = Form("Gamma_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), cent.Data());
+            TString nameGraphPos                = Form("Gamma_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), centTemp.Data());
+            TString nameGraphNeg                = Form("Gamma_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), centTemp.Data());
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else {
             // Load input graphs from systematics file
-            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
-            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
+            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), centTemp.Data() );
+            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), centTemp.Data() );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -489,7 +492,23 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
             }
             // fix out-of-bunch sys #9
             if (!nameCutVariationSC[i].CompareTo("OOBPileupPi0")){
-                cout << "nothing to do" << endl;
+                adjustPtDependent               = kTRUE;
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if(!cent.CompareTo("0-20%") || !cent.CompareTo("20-40%"))
+                        errorFixed                  = 28*pow(0.005,ptBins[k])+1.8;
+                    else if(!cent.CompareTo("40-60%") || !cent.CompareTo("60-100%"))
+                        errorFixed                  = 33*pow(0.005,ptBins[k])+2.4;
+                    else{
+                        cout << "nothing to do" << endl;
+                        adjustPtDependent               = kFALSE;
+                    }
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }
+                }
             }
 
             // fix cosPoint sys #10

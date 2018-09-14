@@ -1432,6 +1432,7 @@ TList* GetCocktailInputList(TString energy, TString centrality) {
         else if (centrality.CompareTo("80-100%")==0)fCentrality = "80100";
         else if (centrality.CompareTo("20-30%")==0) fCentrality = "2030";
         else if (centrality.CompareTo("30-40%")==0) fCentrality = "3040";
+        else if (centrality.CompareTo("60-100%")==0) fCentrality = "60100";
         else {
             cout << "centrality " << centrality.Data() << " not recognized, failed to load correct list of cocktail input objects!" << endl;
             return NULL;

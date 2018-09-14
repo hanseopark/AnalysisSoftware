@@ -1602,27 +1602,27 @@
               cout << "\n**************************************************************************************************" << endl;
               cout << "loading systematic correlations..." << endl;
               cout << "**************************************************************************************************\n" << endl;
-                corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMEMC");
-                corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCM-PCMEMC");
-                corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCMEMC-EMC");
-                corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-EMC");
-                corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCM-EMC");
+                corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMEMC", folderName);
+                corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCM-PCMEMC", folderName);
+                corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-EMC", folderName);
+                corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCMEMC-EMC", folderName);
+                corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-EMC", folderName);
+                corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCM-EMC", folderName);
               cout << "\n**************************************************************************************************" << endl;
               cout << "loading statistical correlations..." << endl;
               cout << "**************************************************************************************************\n" << endl;
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCM_PCMEMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC");
+                    corrFracPCM_PCM_PCMEMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC", folderName);
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCM-PCMEMC") != -10)
-                    corrFracPCMEMC_PCM_PCMEMC[1]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCM-PCMEMC");
+                    corrFracPCMEMC_PCM_PCMEMC[1]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCM-PCMEMC", folderName);
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCMEMC-EMC") != -10)
-                    corrFracPCMEMC_PCMEMC_EMC[1]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCMEMC-EMC");
+                    corrFracPCMEMC_PCMEMC_EMC[1]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCMEMC-EMC", folderName);
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCMEMC-EMC") != -10)
-                    corrFracEMC_PCMEMC_EMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCMEMC-EMC");
+                    corrFracEMC_PCMEMC_EMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCMEMC-EMC", folderName);
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-EMC") != -10)
-                    corrFracPCM_PCM_EMC[1]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-EMC");
+                    corrFracPCM_PCM_EMC[1]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-EMC", folderName);
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCM-EMC") != -10)
-                    corrFracEMC_PCM_EMC[1]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCM-EMC");
+                    corrFracEMC_PCM_EMC[1]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "EMC_PCM-EMC", folderName);
             } else if ( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") ==0 ){
                 corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "EMC_PCM-EMC");
                 corrFracEMC_PCMDal_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "EMC_PCMDalitz-EMC");

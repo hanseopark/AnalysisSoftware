@@ -1728,7 +1728,7 @@
                     if (!centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%"))
                         startPtBin      = 2;
                     else
-                        startPtBin      = 1;
+                        startPtBin      = 2;
                 }else if (mode == 2 && meson.CompareTo("directPhotonA") == 0 )
                     startPtBin      = 8;
                 else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 )
@@ -2105,9 +2105,12 @@
                         maxNBins    = 25;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        if (DCAcase)
-                            binning[i] = fBinsPi0pPb5TeVPtDCA[i];
-                        else if ( !centrality.CompareTo("0-100%"))
+                        if (DCAcase){
+                            if ( !centrality.CompareTo("0-100%"))
+                                binning[i] = fBinsPi0pPb5TeVPtDCA[i];
+                            else
+                                binning[i] = fBinsPi0pPb5TeVPtDCACent[i];
+                        }else if ( !centrality.CompareTo("0-100%"))
                             binning[i] = fBinsPi0pPb5TeVPt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVPCMCentPt[i];
@@ -3180,7 +3183,7 @@
                   }
                 } else if (mode == 23) {
                     maxNBins    = 36;
-                    binningMax  = 37;
+                    binningMax  = 36;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i]  = fBinsDirGammapPb5TeVAlter2Pt[i];
                     }
@@ -4222,15 +4225,15 @@
                     if(energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0){
                         optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                         optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
-                        optionBGSmoothingVar2       = "noSmoothing";
+                        optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing1";
                         nIterBGFit                  = 13;
-                        fMaxYFracBGOverIntHist      = 20;
+                        fMaxYFracBGOverIntHist      = 50;
                     }else{
                         optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                         optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                         optionBGSmoothingVar2       = "noSmoothing";
                         nIterBGFit                  = 13;
-                        fMaxYFracBGOverIntHist      = 20;
+                        fMaxYFracBGOverIntHist      = 50;
                     }
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
@@ -4358,7 +4361,7 @@
                           nIterBGFit                = 7;
                       }
                     }
-                    fMaxYFracBGOverIntHist      = 20;
+                    fMaxYFracBGOverIntHist      = 50;
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pPb 8TeV**************************************
