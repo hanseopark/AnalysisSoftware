@@ -197,7 +197,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         TString nameEfficiency;
         nameCorrectedYield = "CorrectedYieldTrueEff";
         nameEfficiency = "TrueMesonEffiPt";
-        if ( mode == 2 || mode == 3 || mode == 4 || mode == 5 ){
+        if ( mode == 4 || mode == 5 ){
             nameCorrectedYield = "CorrectedYieldNormEff";
             nameEfficiency = "MesonEffiPt";
         }
