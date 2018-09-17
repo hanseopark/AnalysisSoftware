@@ -79,6 +79,8 @@ void ComputeCorrelationFactors(
         mesonPlot           = "#eta";
     else if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0)
         mesonPlot           = "#eta/#pi^{0}";
+    else if(meson.CompareTo("Omega") == 0)
+        mesonPlot           = "#omega";
     else if(meson.CompareTo("GammaInc") == 0 )
         mesonPlot           = "#gamma_{inc}";
     else if(meson.CompareTo("IncGammaToPi0") == 0 )
@@ -287,6 +289,10 @@ void ComputeCorrelationFactors(
         maxCorrYaxis            = 1.05;
     }else if(combMode.CompareTo("systems") == 0 ){
         minCorrYaxis            = 0.35;
+        if(mode >= 40 && mode <= 45){
+          minCorrYaxis = 0.2;
+          maxCorrYaxis = 0.82;
+        }
     } else if (combMode.CompareTo("triggers") == 0 && energy.CompareTo("2.76TeV") == 0 && ( mode == 2 || mode == 4 ) ){
         minCorrYaxis            = 0.15;
     }
@@ -324,6 +330,8 @@ void ComputeCorrelationFactors(
     TLatex *labelWeightsPi0     = 0x0;
     if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0 || meson.Contains("Gamma") )
         labelWeightsPi0         = new TLatex(0.95,0.14+((nRowsLabels-2)*0.05),Form("%s",mesonPlot.Data()));
+    else if(mode >= 40 && mode <= 45)
+        labelWeightsPi0         = new TLatex(0.95,0.14+((nRowsLabels-2)*0.05),Form("%s #rightarrow #pi^{+}#pi^{-}#pi^{0}",mesonPlot.Data()));
     else
         labelWeightsPi0         = new TLatex(0.95,0.14+((nRowsLabels-2)*0.05),Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
     SetStyleTLatex( labelWeightsPi0, textSizeLabelsPixel,4);
@@ -548,6 +556,10 @@ void ComputeCorrelationFactors(
     DrawGammaLines(minPt,maxPt, 0.9, 0.9,0.1, kGray, 1);
     DrawGammaLines(minPt,maxPt, 0.8, 0.8,0.1, kGray, 3);
     DrawGammaLines(minPt,maxPt, 0.7, 0.7,0.1, kGray, 7);
+    if(mode >= 40 && mode <= 45){
+      DrawGammaLines(minPt,maxPt, 0.6, 0.6,0.1, kGray, 1);
+      DrawGammaLines(minPt,maxPt, 0.5, 0.5,0.1, kGray, 3);
+    }
 
     if (!isStatCorr)
         canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
