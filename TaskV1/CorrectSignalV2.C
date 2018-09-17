@@ -2360,8 +2360,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
             // fitting with 2nd functional form
-            if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) )
-                fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
+            fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
             if(mode == 0 && optionEnergy.Contains("5TeV2017") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("13TeVLowB") ){
@@ -2385,6 +2384,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,8    );
                 else
                     histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",1.0,maxPtMeson    );
+            }else if(mode == 2 && optionEnergy.Contains("8TeV") ){
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",1.0,maxPtMeson    );
             }else if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
             }else{
