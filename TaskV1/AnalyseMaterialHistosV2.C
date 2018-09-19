@@ -596,12 +596,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         if (j==(nBinsPtMin)) arrayBinsPtMin[j] = projPtBinsFine[j-1]+0.025;
         else                 arrayBinsPtMin[j] = projPtBinsFine[j]-0.025;
     }
-    for(Int_t i=0; i < nBinsR+1; i++){
+    for(Int_t i=0; i < nBinsR; i++){
         histoWeightsEachRPtMin[i] = new TH1F(Form("histoWeightsEachRPtMin%i",i), Form("histoWeightsEachRPtMin%i",i), nBinsPtMin,  arrayBinsPtMin);
         for(Int_t j=0; j < nBinsPtMin; j++){
-            //	 cout << "BinR::"  << i << " Bin Pt Min::"<< j <<
-            //  " arrayPt" << projPtBinsFine[j]<<  " binCenterPt::" <<histoWeightsEachRPtMin[i]->GetXaxis()->GetBinCenter(j) << " arrayRBins::"<< arrayRBins[i]  <<endl;
-            //cout<< "Weights::"<< histoDataMCRatioRinPtBinScaledToGasFine[j]->GetBinContent(i+1)<< endl;
             histoWeightsEachRPtMin[i]->SetBinContent(j+1,histoDataMCRatioRinPtBinScaledToGasFine[j]->GetBinContent(i+1));
             histoWeightsEachRPtMin[i]->SetBinError(j+1,histoDataMCRatioRinPtBinScaledToGasFine[j]->GetBinError(i+1));
         }
@@ -612,26 +609,15 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoPtTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoPtMC,normFactorReconstMC);
     GammaScalingHistogramm(histoEtaMC,normFactorReconstMC);
-    //    DivideTH1ByBinWidth(histoRTrueMC);
-    //    DivideTH1ByBinWidth(histoPtTrueMC);
-    //    DivideTH1ByBinWidth(histoPtMC);
-    //    DivideTH1ByBinWidth(histoEtaMC);
 
     GammaScalingHistogramm(histoRMCRTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoPtMCPtTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoConvRMC,normFactorReconstMC);
     GammaScalingHistogramm(histoConvPtMC,normFactorReconstMC);
-    //    DivideTH1ByBinWidth(histoRMCRTrueMC);
-    //    DivideTH1ByBinWidth(histoPtMCPtTrueMC);
-    //    DivideTH1ByBinWidth(histoConvRMC);
-    //    DivideTH1ByBinWidth(histoConvPtMC);
 
     GammaScalingHistogramm(histoPi0DalRTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoEtaDalRTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoCombRTrueMC,normFactorReconstMC);
-    //   DivideTH1ByBinWidth(histoPi0DalRTrueMC);
-    //    DivideTH1ByBinWidth(histoEtaDalRTrueMC);
-    //    DivideTH1ByBinWidth(histoCombRTrueMC);
 
     GammaScalingHistogramm(histoEtaData,normFactorReconstData);
     GammaScalingHistogramm(histoPtData,normFactorReconstData);
@@ -639,10 +625,6 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoRDataRebin,normFactorReconstData);
     GammaScalingHistogramm(histoRMC,normFactorReconstMC);
     GammaScalingHistogramm(histoRMCRebin,normFactorReconstMC);
-    //    DivideTH1ByBinWidth(histoRData);
-    //    DivideTH1ByBinWidth(histoRDataRebin);
-    //    DivideTH1ByBinWidth(histoRMC);
-    //    DivideTH1ByBinWidth(histoRMCRebin);
 
     GammaScalingHistogramm(histoRPhiData,normFactorReconstData);
     GammaScalingHistogramm(histoRPhiMC,normFactorReconstMC);
@@ -1711,6 +1693,36 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasSingleAsymDataMCHighP->Print(Form("%s/PhotonAsymDataMCHighPSingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
+
+    //_______________________ Ploting weights vs pT in each R bin __________________________
+
+    TCanvas *canvasMBWeightEachR          = new TCanvas("canvasMBWeighEachR","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBWeightEachR, 0, 0, 0, 0);
+    canvasMBWeightEachR->cd();
+
+    TPad * padMBWeightEachR               = new TPad("padMBWeightEachR","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBWeightEachR, 0, 0, 0, 0);
+    padMBWeightEachR->Divide(4,3,0.0,0.0);
+    padMBWeightEachR->Draw();
+    Int_t place  = 0;
+    TH2F *histoDummyWeightEachR =  new TH2F("histoDummyWeightEachR","histoDummyWeightEachR",1000,0.,1.,1000,0.9,1.3);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightEachR, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
+    for(Int_t i=0; i < nBinsR; i++){
+      place  = place + 1;
+      padMBWeightEachR->cd(place);
+      padMBWeightEachR->cd(place)->SetTopMargin(0.12);
+      padMBWeightEachR->cd(place)->SetBottomMargin(0.15);
+      padMBWeightEachR->cd(place)->SetLeftMargin(0.1);
+      padMBWeightEachR->cd(place)->SetRightMargin(0.1);
+      histoDummyWeightEachR->DrawCopy();
+      DrawGammaLines(0.,1.5,1., 1.,1.,kGray,1);
+ 
+      DrawGammaSetMarker(histoWeightsEachRPtMin[i], 20, markerSize, colorData, colorData);
+      histoWeightsEachRPtMin[i]->Draw("same");
+    }
+    canvasMBWeightEachR->Print(Form("%s/MBWeightVSPtMinEachR%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+
     //_______________________ creation TProfile for MB weights ___________________________________
     TProfile* fProfileContainingMaterialBudgetWeightsFullPt = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBinsFullPt","profileContainingMaterialBudgetWeights_manyRadialBinsFullPt",nBinsR,arrayRBins);
     fProfileContainingMaterialBudgetWeightsFullPt->GetXaxis()->SetTitle("R (cm)");
@@ -1849,7 +1861,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
             //histoRinPtBinMCScaledToGasRebinFine[i]->Write();
             histoDataMCRatioRinPtBinScaledToGasFine[i]->Write();
         }
-        for(Int_t i=0; i < nBinsR+1; i++){
+        for(Int_t i=0; i < nBinsR; i++){
             histoWeightsEachRPtMin[i]->Write();
         }
 
