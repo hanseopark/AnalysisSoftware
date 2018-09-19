@@ -133,11 +133,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
 //    };
 
-//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun";
+//    TString train = "Legotrain-vAN-20180828-8TeV-TM_valid";
 //    Int_t trainRuns[nSets] = {
-//                              2477,2477,2477,2477,2477,2477,2477,
-//                              3491,3491,3491,3491,3491,3491,3491,
-//                              3492,3492,3492,3492,3492,3492,3492
+//                              2490,2490,2490,2490,2490,2490,2490,
+//                              3520,3520,3520,3520,3520,3520,3520,
+//                              3521,3521,3521,3521,3521,3521,3521
 //                             };
 
 //    TString runlist[nSets] = {
@@ -146,9 +146,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
 //    };
 
-//    const Int_t nFiles = 6;
+//    const Int_t nFiles = 4;
 //    TString Files[nFiles] = {
-//      "GammaCalo_181", "GammaCalo_182", "GammaCalo_183", "GammaConvCalo_129", "GammaConvCalo_130", "GammaConvCalo_131"
+//      "GammaCalo_181", "GammaCalo_182", "GammaCalo_183", "GammaCalo_184"
 //                            };
 
 //    const Int_t nMerge = 4;
@@ -218,24 +218,24 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
     };
 
-    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180605";
+    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180514";
     Int_t trainRuns[nSets] = {
-      3516,3516,3516,3516,3516,3516,3516
+      3522,3522,3522,3522,3522,3522,3522
     };
 
-//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180607";
+//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180521";
 //    Int_t trainRuns[nSets] = {
-//      3517,3517,3517,3517,3517,3517,3517
+//      3523,3523,3523,3523,3523,3523,3523
 //    };
 
-//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180608";
+//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180525";
 //    Int_t trainRuns[nSets] = {
-//      3518,3518,3518,3518,3518,3518,3518
+//      3524,3524,3524,3524,3524,3524,3524
 //    };
 
-//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180623";
+//    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180601";
 //    Int_t trainRuns[nSets] = {
-//      3519,3519,3519,3519,3519,3519,3519
+//      3525,3525,3525,3525,3525,3525,3525
 //    };
 
     TString runlist[nSets] = {
