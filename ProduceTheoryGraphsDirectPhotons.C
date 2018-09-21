@@ -2504,6 +2504,296 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphErrors* graphDirectPhotonPromptChatterjee2040_2   = new TGraphErrors(nlinesChatterjee2040_2, ptChatterjee2040_2, yieldPromptChatterjee2040_2,
                                                                                 errYieldXChatterjee2040_2, errYieldYChatterjee2040_2);
 
+
+	//******************************************************************************************************************
+        //*********************************Chatterjee http://journals.aps.org/prc/pdf/10.1103/PhysRevC.85.064910 ***********
+        // for 5.02 TeV . Journal reference:	Phys. Rev. C 98, 024911 (2018)
+	// DOI:	10.1103/PhysRevC.98.024911
+        //******************************************************************************************************************
+        Double_t ptChatterjee_PbPb5020_0010               [36];
+        Double_t yieldThermalChatterjee_PbPb5020_0010     [36];
+        Double_t yieldPromptChatterjee_PbPb5020_0010      [36];
+        Double_t yieldChatterjee_PbPb5020_0010            [36];
+        Double_t yieldSummedChatterjee_PbPb5020_0010      [36];
+        Double_t errYieldChatterjee_PbPb5020_0010         [36];
+        Double_t errYieldXChatterjee_PbPb5020_0010        [36];
+        Int_t nlinesChatterjee_PbPb5020_0010                  = 0;
+
+        TString fileNameChatterjee_PbPb5020_0010              = "ExternalInputPbPb/Theory/Chatterjee/0_10_DirectPhoton_5020GeV_PbPb_Chatterjee_forReading.dat";
+        ifstream  fileChatterjee_PbPb5020_0010;
+        fileChatterjee_PbPb5020_0010.open(fileNameChatterjee_PbPb5020_0010,ios_base::in);
+        cout << fileNameChatterjee_PbPb5020_0010 << endl;
+
+        while(!fileChatterjee_PbPb5020_0010.eof() && nlinesChatterjee_PbPb5020_0010< 36){
+            fileChatterjee_PbPb5020_0010 >> ptChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] >> yieldPromptChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010]  >> yieldThermalChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] >> yieldChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010];
+            cout << nlinesChatterjee_PbPb5020_0010 << "\t"  << ptChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] << "\t"  << yieldPromptChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] << "\t"  << yieldThermalChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] << "\t"  << yieldChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] << endl;;
+            yieldSummedChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] = yieldThermalChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010] + yieldPromptChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010];
+            errYieldChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010]    = 0;
+            errYieldXChatterjee_PbPb5020_0010[nlinesChatterjee_PbPb5020_0010]   = 0;
+            nlinesChatterjee_PbPb5020_0010++;
+        }
+        fileChatterjee_PbPb5020_0010.close();
+
+        TGraphErrors* graphDirectPhotonSummedChatterjee_PbPb5020_0010 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_0010,yieldSummedChatterjee_PbPb5020_0010, errYieldXChatterjee_PbPb5020_0010, errYieldChatterjee_PbPb5020_0010);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_0010->GetY()[0] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_0010->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_0010->GetY()[graphDirectPhotonSummedChatterjee_PbPb5020_0010->GetN()-1] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_0010->RemovePoint(graphDirectPhotonSummedChatterjee_PbPb5020_0010->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonChatterjee_PbPb5020_0010 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_0010,yieldChatterjee_PbPb5020_0010, errYieldXChatterjee_PbPb5020_0010, errYieldChatterjee_PbPb5020_0010);
+            while (graphDirectPhotonChatterjee_PbPb5020_0010->GetY()[0] == 0) graphDirectPhotonChatterjee_PbPb5020_0010->RemovePoint(0);
+            while (graphDirectPhotonChatterjee_PbPb5020_0010->GetY()[graphDirectPhotonChatterjee_PbPb5020_0010->GetN()-1] == 0) graphDirectPhotonChatterjee_PbPb5020_0010->RemovePoint(graphDirectPhotonChatterjee_PbPb5020_0010->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonThermalChatterjee_PbPb5020_0010 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_0010,yieldThermalChatterjee_PbPb5020_0010, errYieldXChatterjee_PbPb5020_0010, errYieldChatterjee_PbPb5020_0010);
+            while (graphDirectPhotonThermalChatterjee_PbPb5020_0010->GetY()[graphDirectPhotonThermalChatterjee_PbPb5020_0010->GetN()-1] == 0)
+                graphDirectPhotonThermalChatterjee_PbPb5020_0010->RemovePoint(graphDirectPhotonThermalChatterjee_PbPb5020_0010->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonPromptChatterjee_PbPb5020_0010 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_0010,yieldPromptChatterjee_PbPb5020_0010, errYieldXChatterjee_PbPb5020_0010, errYieldChatterjee_PbPb5020_0010);
+            while (graphDirectPhotonPromptChatterjee_PbPb5020_0010->GetY()[0] == 0) graphDirectPhotonPromptChatterjee_PbPb5020_0010->RemovePoint(0);
+
+	    //------10-20%-------
+
+        Double_t ptChatterjee_PbPb5020_1020               [36];
+        Double_t yieldThermalChatterjee_PbPb5020_1020     [36];
+        Double_t yieldPromptChatterjee_PbPb5020_1020      [36];
+        Double_t yieldChatterjee_PbPb5020_1020            [36];
+        Double_t yieldSummedChatterjee_PbPb5020_1020      [36];
+        Double_t errYieldChatterjee_PbPb5020_1020         [36];
+        Double_t errYieldXChatterjee_PbPb5020_1020        [36];
+        Int_t nlinesChatterjee_PbPb5020_1020                  = 0;
+
+        TString fileNameChatterjee_PbPb5020_1020              = "ExternalInputPbPb/Theory/Chatterjee/10_20_DirectPhoton_5020GeV_PbPb_Chatterjee_forReading.dat";
+        ifstream  fileChatterjee_PbPb5020_1020;
+        fileChatterjee_PbPb5020_1020.open(fileNameChatterjee_PbPb5020_1020,ios_base::in);
+        cout << fileNameChatterjee_PbPb5020_1020 << endl;
+
+        while(!fileChatterjee_PbPb5020_1020.eof() && nlinesChatterjee_PbPb5020_1020< 36){
+            fileChatterjee_PbPb5020_1020 >> ptChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] >> yieldPromptChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020]  >> yieldThermalChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] >> yieldChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020];
+            cout << nlinesChatterjee_PbPb5020_1020 << "\t"  << ptChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] << "\t"  << yieldPromptChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] << "\t"  << yieldThermalChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] << "\t"  << yieldChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] << endl;;
+            yieldSummedChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] = yieldThermalChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020] + yieldPromptChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020];
+            errYieldChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020]    = 0;
+            errYieldXChatterjee_PbPb5020_1020[nlinesChatterjee_PbPb5020_1020]   = 0;
+            nlinesChatterjee_PbPb5020_1020++;
+        }
+        fileChatterjee_PbPb5020_1020.close();
+
+        TGraphErrors* graphDirectPhotonSummedChatterjee_PbPb5020_1020 = new TGraphErrors(nlinesChatterjee_PbPb5020_1020,ptChatterjee_PbPb5020_1020,yieldSummedChatterjee_PbPb5020_1020, errYieldXChatterjee_PbPb5020_1020, errYieldChatterjee_PbPb5020_1020);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_1020->GetY()[0] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_1020->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_1020->GetY()[graphDirectPhotonSummedChatterjee_PbPb5020_1020->GetN()-1] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_1020->RemovePoint(graphDirectPhotonSummedChatterjee_PbPb5020_1020->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonChatterjee_PbPb5020_1020 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_1020,yieldChatterjee_PbPb5020_1020, errYieldXChatterjee_PbPb5020_1020, errYieldChatterjee_PbPb5020_1020);
+            while (graphDirectPhotonChatterjee_PbPb5020_1020->GetY()[0] == 0) graphDirectPhotonChatterjee_PbPb5020_1020->RemovePoint(0);
+            while (graphDirectPhotonChatterjee_PbPb5020_1020->GetY()[graphDirectPhotonChatterjee_PbPb5020_1020->GetN()-1] == 0) graphDirectPhotonChatterjee_PbPb5020_1020->RemovePoint(graphDirectPhotonChatterjee_PbPb5020_1020->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonThermalChatterjee_PbPb5020_1020 = new TGraphErrors(nlinesChatterjee_PbPb5020_1020,ptChatterjee_PbPb5020_1020,yieldThermalChatterjee_PbPb5020_1020, errYieldXChatterjee_PbPb5020_1020, errYieldChatterjee_PbPb5020_1020);
+            while (graphDirectPhotonThermalChatterjee_PbPb5020_1020->GetY()[graphDirectPhotonThermalChatterjee_PbPb5020_1020->GetN()-1] == 0)
+                graphDirectPhotonThermalChatterjee_PbPb5020_1020->RemovePoint(graphDirectPhotonThermalChatterjee_PbPb5020_1020->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonPromptChatterjee_PbPb5020_1020 = new TGraphErrors(nlinesChatterjee_PbPb5020_1020,ptChatterjee_PbPb5020_1020,yieldPromptChatterjee_PbPb5020_1020, errYieldXChatterjee_PbPb5020_1020, errYieldChatterjee_PbPb5020_1020);
+            while (graphDirectPhotonPromptChatterjee_PbPb5020_1020->GetY()[0] == 0) graphDirectPhotonPromptChatterjee_PbPb5020_1020->RemovePoint(0);
+
+
+	    //------20-30%-------
+
+        Double_t ptChatterjee_PbPb5020_2030               [36];
+        Double_t yieldThermalChatterjee_PbPb5020_2030     [36];
+        Double_t yieldPromptChatterjee_PbPb5020_2030      [36];
+        Double_t yieldChatterjee_PbPb5020_2030            [36];
+        Double_t yieldSummedChatterjee_PbPb5020_2030      [36];
+        Double_t errYieldChatterjee_PbPb5020_2030         [36];
+        Double_t errYieldXChatterjee_PbPb5020_2030        [36];
+        Int_t nlinesChatterjee_PbPb5020_2030                  = 0;
+
+        TString fileNameChatterjee_PbPb5020_2030              = "ExternalInputPbPb/Theory/Chatterjee/20_30_DirectPhoton_5020GeV_PbPb_Chatterjee_forReading.dat";
+        ifstream  fileChatterjee_PbPb5020_2030;
+        fileChatterjee_PbPb5020_2030.open(fileNameChatterjee_PbPb5020_2030,ios_base::in);
+        cout << fileNameChatterjee_PbPb5020_2030 << endl;
+
+        while(!fileChatterjee_PbPb5020_2030.eof() && nlinesChatterjee_PbPb5020_2030< 36){
+            fileChatterjee_PbPb5020_2030 >> ptChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] >> yieldPromptChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030]  >> yieldThermalChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] >> yieldChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030];
+            cout << nlinesChatterjee_PbPb5020_2030 << "\t"  << ptChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] << "\t"  << yieldPromptChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] << "\t"  << yieldThermalChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] << "\t"  << yieldChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] << endl;;
+            yieldSummedChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] = yieldThermalChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030] + yieldPromptChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030];
+            errYieldChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030]    = 0;
+            errYieldXChatterjee_PbPb5020_2030[nlinesChatterjee_PbPb5020_2030]   = 0;
+            nlinesChatterjee_PbPb5020_2030++;
+        }
+        fileChatterjee_PbPb5020_2030.close();
+
+        TGraphErrors* graphDirectPhotonSummedChatterjee_PbPb5020_2030 = new TGraphErrors(nlinesChatterjee_PbPb5020_2030,ptChatterjee_PbPb5020_2030,yieldSummedChatterjee_PbPb5020_2030, errYieldXChatterjee_PbPb5020_2030, errYieldChatterjee_PbPb5020_2030);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_2030->GetY()[0] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_2030->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_2030->GetY()[graphDirectPhotonSummedChatterjee_PbPb5020_2030->GetN()-1] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_2030->RemovePoint(graphDirectPhotonSummedChatterjee_PbPb5020_2030->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonChatterjee_PbPb5020_2030 = new TGraphErrors(nlinesChatterjee_PbPb5020_0010,ptChatterjee_PbPb5020_2030,yieldChatterjee_PbPb5020_2030, errYieldXChatterjee_PbPb5020_2030, errYieldChatterjee_PbPb5020_2030);
+            while (graphDirectPhotonChatterjee_PbPb5020_2030->GetY()[0] == 0) graphDirectPhotonChatterjee_PbPb5020_2030->RemovePoint(0);
+            while (graphDirectPhotonChatterjee_PbPb5020_2030->GetY()[graphDirectPhotonChatterjee_PbPb5020_2030->GetN()-1] == 0) graphDirectPhotonChatterjee_PbPb5020_2030->RemovePoint(graphDirectPhotonChatterjee_PbPb5020_2030->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonThermalChatterjee_PbPb5020_2030 = new TGraphErrors(nlinesChatterjee_PbPb5020_2030,ptChatterjee_PbPb5020_2030,yieldThermalChatterjee_PbPb5020_2030, errYieldXChatterjee_PbPb5020_2030, errYieldChatterjee_PbPb5020_2030);
+            while (graphDirectPhotonThermalChatterjee_PbPb5020_2030->GetY()[graphDirectPhotonThermalChatterjee_PbPb5020_2030->GetN()-1] == 0)
+                graphDirectPhotonThermalChatterjee_PbPb5020_2030->RemovePoint(graphDirectPhotonThermalChatterjee_PbPb5020_2030->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonPromptChatterjee_PbPb5020_2030 = new TGraphErrors(nlinesChatterjee_PbPb5020_2030,ptChatterjee_PbPb5020_2030,yieldPromptChatterjee_PbPb5020_2030, errYieldXChatterjee_PbPb5020_2030, errYieldChatterjee_PbPb5020_2030);
+            while (graphDirectPhotonPromptChatterjee_PbPb5020_2030->GetY()[0] == 0) graphDirectPhotonPromptChatterjee_PbPb5020_2030->RemovePoint(0);
+
+	    //------30-40%-------
+
+        Double_t ptChatterjee_PbPb5020_3040               [36];
+        Double_t yieldThermalChatterjee_PbPb5020_3040     [36];
+        Double_t yieldPromptChatterjee_PbPb5020_3040      [36];
+        Double_t yieldChatterjee_PbPb5020_3040            [36];
+        Double_t yieldSummedChatterjee_PbPb5020_3040      [36];
+        Double_t errYieldChatterjee_PbPb5020_3040         [36];
+        Double_t errYieldXChatterjee_PbPb5020_3040        [36];
+        Int_t nlinesChatterjee_PbPb5020_3040                  = 0;
+
+        TString fileNameChatterjee_PbPb5020_3040              = "ExternalInputPbPb/Theory/Chatterjee/30_40_DirectPhoton_5020GeV_PbPb_Chatterjee_forReading.dat";
+        ifstream  fileChatterjee_PbPb5020_3040;
+        fileChatterjee_PbPb5020_3040.open(fileNameChatterjee_PbPb5020_3040,ios_base::in);
+        cout << fileNameChatterjee_PbPb5020_3040 << endl;
+
+        while(!fileChatterjee_PbPb5020_3040.eof() && nlinesChatterjee_PbPb5020_3040< 36){
+            fileChatterjee_PbPb5020_3040 >> ptChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] >> yieldPromptChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040]  >> yieldThermalChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] >> yieldChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040];
+            cout << nlinesChatterjee_PbPb5020_3040 << "\t"  << ptChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] << "\t"  << yieldPromptChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] << "\t"  << yieldThermalChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] << "\t"  << yieldChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] << endl;;
+            yieldSummedChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] = yieldThermalChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040] + yieldPromptChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040];
+            errYieldChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040]    = 0;
+            errYieldXChatterjee_PbPb5020_3040[nlinesChatterjee_PbPb5020_3040]   = 0;
+            nlinesChatterjee_PbPb5020_3040++;
+        }
+        fileChatterjee_PbPb5020_3040.close();
+
+        TGraphErrors* graphDirectPhotonSummedChatterjee_PbPb5020_3040 = new TGraphErrors(nlinesChatterjee_PbPb5020_3040,ptChatterjee_PbPb5020_3040,yieldSummedChatterjee_PbPb5020_3040, errYieldXChatterjee_PbPb5020_3040, errYieldChatterjee_PbPb5020_3040);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_3040->GetY()[0] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_3040->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee_PbPb5020_3040->GetY()[graphDirectPhotonSummedChatterjee_PbPb5020_3040->GetN()-1] == 0) graphDirectPhotonSummedChatterjee_PbPb5020_3040->RemovePoint(graphDirectPhotonSummedChatterjee_PbPb5020_3040->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonChatterjee_PbPb5020_3040 = new TGraphErrors(nlinesChatterjee_PbPb5020_3040,ptChatterjee_PbPb5020_3040,yieldChatterjee_PbPb5020_3040, errYieldXChatterjee_PbPb5020_3040, errYieldChatterjee_PbPb5020_3040);
+            while (graphDirectPhotonChatterjee_PbPb5020_3040->GetY()[0] == 0) graphDirectPhotonChatterjee_PbPb5020_3040->RemovePoint(0);
+            while (graphDirectPhotonChatterjee_PbPb5020_3040->GetY()[graphDirectPhotonChatterjee_PbPb5020_3040->GetN()-1] == 0) graphDirectPhotonChatterjee_PbPb5020_3040->RemovePoint(graphDirectPhotonChatterjee_PbPb5020_3040->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonThermalChatterjee_PbPb5020_3040 = new TGraphErrors(nlinesChatterjee_PbPb5020_3040,ptChatterjee_PbPb5020_3040,yieldThermalChatterjee_PbPb5020_3040, errYieldXChatterjee_PbPb5020_3040, errYieldChatterjee_PbPb5020_3040);
+            while (graphDirectPhotonThermalChatterjee_PbPb5020_3040->GetY()[graphDirectPhotonThermalChatterjee_PbPb5020_3040->GetN()-1] == 0)
+                graphDirectPhotonThermalChatterjee_PbPb5020_3040->RemovePoint(graphDirectPhotonThermalChatterjee_PbPb5020_3040->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonPromptChatterjee_PbPb5020_3040 = new TGraphErrors(nlinesChatterjee_PbPb5020_3040,ptChatterjee_PbPb5020_3040,yieldPromptChatterjee_PbPb5020_3040, errYieldXChatterjee_PbPb5020_3040, errYieldChatterjee_PbPb5020_3040);
+            while (graphDirectPhotonPromptChatterjee_PbPb5020_3040->GetY()[0] == 0) graphDirectPhotonPromptChatterjee_PbPb5020_3040->RemovePoint(0);
+
+
+
+
+	//******************************************************************************************************************
+        //*********************************McGill (Paquett, IPGlasma, 14.08.2015 - -email 17.07.2018) ********************
+        //******************************************************************************************************************
+        Double_t ptMCGill_PbPb5020           [17];
+        Double_t yieldMCGill_PbPb5020_0005        [17];
+        Double_t errYieldMCGill_PbPb5020_0005     [17];
+        Double_t errYieldXMCGill_PbPb5020_0005    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_0510        [17];
+        Double_t errYieldMCGill_PbPb5020_0510     [17];
+        Double_t errYieldXMCGill_PbPb5020_0510    [17];
+
+        Double_t yieldMCGill_PbPb5020_0010        [17];
+        Double_t errYieldMCGill_PbPb5020_0010     [17];
+        Double_t errYieldXMCGill_PbPb5020_0010    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_1020        [17];
+        Double_t errYieldMCGill_PbPb5020_1020     [17];
+        Double_t errYieldXMCGill_PbPb5020_1020    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_2030        [17];
+        Double_t errYieldMCGill_PbPb5020_2030     [17];
+        Double_t errYieldXMCGill_PbPb5020_2030    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_3040        [17];
+        Double_t errYieldMCGill_PbPb5020_3040     [17];
+        Double_t errYieldXMCGill_PbPb5020_3040    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_4050        [17];
+        Double_t errYieldMCGill_PbPb5020_4050     [17];
+        Double_t errYieldXMCGill_PbPb5020_4050    [17];
+
+
+        Double_t yieldMCGill_PbPb5020_5060        [17];
+        Double_t errYieldMCGill_PbPb5020_5060     [17];
+        Double_t errYieldXMCGill_PbPb5020_5060    [17];
+
+
+
+
+        Int_t nlinesMCGill_PbPb5020          = 0;
+
+        TString fileNameMCGill_PbPb5020                  = "ExternalInputPbPb/Theory/McGill/spectra_directPhotons_5020GeV_PbPb_Paquet.dat";
+        ifstream  fileMCGill_PbPb5020;
+        fileMCGill_PbPb5020.open(fileNameMCGill_PbPb5020,ios_base::in);
+        cout << fileNameMCGill_PbPb5020 << endl;
+        string line;
+        for (Int_t ii=0;ii<3; ii++) {
+          getline(fileMCGill_PbPb5020, line);
+          cout<< line<<endl;
+        }
+        while(!fileMCGill_PbPb5020.eof() && nlinesMCGill_PbPb5020 < 17){
+            fileMCGill_PbPb5020 >> ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] >> yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] >> 
+	    yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]>> 
+            yieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]>> yieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020];
+
+
+            cout << nlinesMCGill_PbPb5020 << "\t"  << ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] << "\t"  << yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020] << "\t"  << 
+                                                                                                           yieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020] << "\t"  << endl;
+
+	    yieldMCGill_PbPb5020_0010[nlinesMCGill_PbPb5020]= 0.5*(yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020]+yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020]);
+	    // cout << "0-10%::"<< yieldMCGill_PbPb5020_0010[nlinesMCGill_PbPb5020] << endl;
+
+            errYieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020]   = 0;
+
+            errYieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020]   = 0;
+
+            errYieldMCGill_PbPb5020_0010[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_0010[nlinesMCGill_PbPb5020]   = 0;
+
+            errYieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020]   = 0;
+ 
+            errYieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]   = 0;
+ 
+            errYieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020]   = 0;
+ 
+            errYieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]   = 0;
+ 
+            errYieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020]    = 0;
+            errYieldXMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020]   = 0;
+ 
+
+           nlinesMCGill_PbPb5020++;
+        }
+        fileMCGill_PbPb5020.close();
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_0005   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_0005, errYieldXMCGill_PbPb5020_0005, errYieldMCGill_PbPb5020_0005);
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_0510   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_0510, errYieldXMCGill_PbPb5020_0510, errYieldMCGill_PbPb5020_0510);
+
+       TGraphErrors* graphDirectPhotonMCGill_PbPb5020_0010   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_0010, errYieldXMCGill_PbPb5020_0010, errYieldMCGill_PbPb5020_0010);
+
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_1020   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_1020, errYieldXMCGill_PbPb5020_1020, errYieldMCGill_PbPb5020_1020);
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_2030   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_2030, errYieldXMCGill_PbPb5020_2030, errYieldMCGill_PbPb5020_2030);
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_3040   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_3040, errYieldXMCGill_PbPb5020_3040, errYieldMCGill_PbPb5020_3040);
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_4050   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_4050, errYieldXMCGill_PbPb5020_4050, errYieldMCGill_PbPb5020_4050);
+        TGraphErrors* graphDirectPhotonMCGill_PbPb5020_5060   = new TGraphErrors(nlinesMCGill_PbPb5020-1,ptMCGill_PbPb5020,yieldMCGill_PbPb5020_5060, errYieldXMCGill_PbPb5020_5060, errYieldMCGill_PbPb5020_5060);
+
+
+
+
+
+
+
         //******************************************************************************************************************
         //*********************************v.Hees, Rapp NPA933(2015)256 ****************************************************
         //******************************************************************************************************************
@@ -2825,6 +3115,35 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphDirectPhotonChatterjee2040_2->Write("graphDirectPhotonYield_Chatterjee_2040_2", TObject::kOverwrite);
             graphDirectPhotonThermalChatterjee2040_2->Write("graphDirectPhotonThermalYield_Chatterjee_2040_2", TObject::kOverwrite);
             graphDirectPhotonPromptChatterjee2040_2->Write("graphDirectPhotonPromptYield_Chatterjee_2040_2", TObject::kOverwrite);
+
+	    graphDirectPhotonThermalChatterjee_PbPb5020_0010 -> Write("graphDirectPhotonThermalChatterjee_PbPb5020_0010",TObject::kOverwrite);
+	    graphDirectPhotonPromptChatterjee_PbPb5020_0010  -> Write("graphDirectPhotonPromptChatterjee_PbPb5020_0010",TObject::kOverwrite);
+	    graphDirectPhotonSummedChatterjee_PbPb5020_0010  -> Write("graphDirectPhotonSummedChatterjee_PbPb5020_0010",TObject::kOverwrite);
+	    graphDirectPhotonChatterjee_PbPb5020_0010 -> Write("graphDirectPhotonChatterjee_PbPb5020_0010",TObject::kOverwrite);
+
+	    graphDirectPhotonThermalChatterjee_PbPb5020_1020 -> Write("graphDirectPhotonThermalChatterjee_PbPb5020_1020",TObject::kOverwrite);
+	    graphDirectPhotonPromptChatterjee_PbPb5020_1020  -> Write("graphDirectPhotonPromptChatterjee_PbPb5020_1020",TObject::kOverwrite);
+	    graphDirectPhotonSummedChatterjee_PbPb5020_1020  -> Write("graphDirectPhotonSummedChatterjee_PbPb5020_1020",TObject::kOverwrite);
+	    graphDirectPhotonChatterjee_PbPb5020_1020 -> Write("graphDirectPhotonChatterjee_PbPb5020_1020",TObject::kOverwrite);
+
+	    graphDirectPhotonThermalChatterjee_PbPb5020_2030 -> Write("graphDirectPhotonThermalChatterjee_PbPb5020_2030",TObject::kOverwrite);
+	    graphDirectPhotonPromptChatterjee_PbPb5020_2030  -> Write("graphDirectPhotonPromptChatterjee_PbPb5020_2030",TObject::kOverwrite);
+	    graphDirectPhotonSummedChatterjee_PbPb5020_2030  -> Write("graphDirectPhotonSummedChatterjee_PbPb5020_2030",TObject::kOverwrite);
+	    graphDirectPhotonChatterjee_PbPb5020_2030 -> Write("graphDirectPhotonChatterjee_PbPb5020_2030",TObject::kOverwrite);
+
+	    graphDirectPhotonThermalChatterjee_PbPb5020_3040 -> Write("graphDirectPhotonThermalChatterjee_PbPb5020_3040",TObject::kOverwrite);
+	    graphDirectPhotonPromptChatterjee_PbPb5020_3040  -> Write("graphDirectPhotonPromptChatterjee_PbPb5020_3040",TObject::kOverwrite);
+	    graphDirectPhotonSummedChatterjee_PbPb5020_3040  -> Write("graphDirectPhotonSummedChatterjee_PbPb5020_3040",TObject::kOverwrite);
+	    graphDirectPhotonChatterjee_PbPb5020_3040 -> Write("graphDirectPhotonChatterjee_PbPb5020_3040",TObject::kOverwrite);
+
+	    graphDirectPhotonMCGill_PbPb5020_0005->Write("graphDirectPhotonMCGill_PbPb5020_0005",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_0510->Write("graphDirectPhotonMCGill_PbPb5020_0510",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_0010->Write("graphDirectPhotonMCGill_PbPb5020_0010",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_1020->Write("graphDirectPhotonMCGill_PbPb5020_1020",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_2030->Write("graphDirectPhotonMCGill_PbPb5020_2030",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_3040->Write("graphDirectPhotonMCGill_PbPb5020_3040",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_4050->Write("graphDirectPhotonMCGill_PbPb5020_4050",TObject::kOverwrite);
+	    graphDirectPhotonMCGill_PbPb5020_5060->Write("graphDirectPhotonMCGill_PbPb5020_5060",TObject::kOverwrite);
 
             graphDirectPhotonRapp5TeV0010->Write("graphDirectPhotonRapp5TeV_0010", TObject::kOverwrite);
             graphDirectPhotonRapp276GeV0010->Write("graphDirectPhotonRapp276GeV_0010", TObject::kOverwrite);
