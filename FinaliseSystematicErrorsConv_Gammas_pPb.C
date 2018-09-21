@@ -123,16 +123,16 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
     }
 
     // Set names of cut variations for file input
-    TString nameCutVariationSC[16]              = {"dEdxE", "TPCCluster", "SinglePt", "Chi2PsiPair" , "Qt" ,
+    TString nameCutVariationSC[17]              = {"dEdxE", "TPCCluster", "SinglePt", "Chi2PsiPair" , "Qt" ,
                                                     "DoubleCount" ,"BG" ,"OOBPileupGamma" ,"SPD" ,"OOBPileupPi0",
                                                     "CosPoint","dEdxPi", "Alpha" ,"Cocktail","RCut",
-                                                    "IntRange" };
+                                                    "IntRange", "Efficiency" };
 
     // Set colors and markers
     Color_t color[20];
     Color_t markerStyle[20];
     // Set names of cut variations for legends
-    TString nameCutVariation[16];
+    TString nameCutVariation[17];
 
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
@@ -148,26 +148,26 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
     // ***************************************************************************************************
     // ******************************** Booleans for enabling systematic errors **************************
     // ***************************************************************************************************
-    Bool_t benable[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0,  0 };
-    Bool_t benableIncGammapPb5TeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 1, 1, 0,
-                                                    0, 1, 0, 0, 0,  0 };
-    Bool_t benableIncRatiopPb5TeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
-                                                    0, 1, 1, 0, 0,  1 };
-    Bool_t benableDRpPb5TeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
-                                                    0, 1, 1, 1, 0,  1 };
+    Bool_t benable[17]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                                    0, 0, 0, 0, 0,  0, 0 };
+    Bool_t benableIncGammapPb5TeV[17]           = { 1, 1, 1, 1, 1,  0, 0, 1, 1, 0,
+                                                    0, 1, 0, 0, 0,  0, 1 };
+    Bool_t benableIncRatiopPb5TeV[17]           = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
+                                                    0, 1, 1, 0, 0,  1, 1 };
+    Bool_t benableDRpPb5TeV[17]                 = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
+                                                    0, 1, 1, 1, 0,  1, 1 };
 
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGammapPb5TeV[16]           = { 1, 0, 1, 1, 1,  0, 0, 0, 1, 0,
-                                                    0, 1, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatiopPb5TeV[16]           = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
-                                                    0, 1, 1, 0, 0,  1 };
-    Bool_t bsmoothDRpPb5TeV[16]                 = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
-                                                    0, 1, 1, 1, 0,  1 };
+    Bool_t bsmooth[17]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+                                                    0, 0, 0, 0, 0,  0, 0 };
+    Bool_t bsmoothIncGammapPb5TeV[17]           = { 1, 0, 1, 1, 1,  0, 0, 0, 1, 0,
+                                                    0, 1, 0, 0, 0,  0, 1 };
+    Bool_t bsmoothIncRatiopPb5TeV[17]           = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
+                                                    0, 1, 1, 0, 0,  1, 1 };
+    Bool_t bsmoothDRpPb5TeV[17]                 = { 1, 0, 1, 1, 1,  0, 1, 0, 1, 1,
+                                                    0, 1, 1, 1, 0,  1, 1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0){
@@ -263,7 +263,7 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
         TGraphAsymmErrors* graphPosErrors       = NULL;
         TGraphAsymmErrors* graphNegErrors       = NULL;
         TString centTemp = "0-100%";
-        if(nameCutVariationSC[i].Contains("dEdxE") || nameCutVariationSC[i].Contains("OOBPileupGamma") || nameCutVariationSC[i].Contains("IntRange")  || nameCutVariationSC[i].Contains("OOBPileupPi0") )
+        if(nameCutVariationSC[i].Contains("dEdxE") || nameCutVariationSC[i].Contains("OOBPileupGamma") || nameCutVariationSC[i].Contains("IntRange")  || nameCutVariationSC[i].Contains("Efficiency") || nameCutVariationSC[i].Contains("OOBPileupPi0") )
             centTemp = cent;
 
         // Set currently undetermined uncertainties
@@ -604,6 +604,14 @@ void FinaliseSystematicErrorsConv_Gammas_pPb(   TString nameDataFileErrors      
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
                         }
                     }
+                }
+            }
+            // fix IntRange sys #15
+            if (!nameCutVariationSC[i].CompareTo("Efficiency")){
+                if (spectrumName.Contains("Ratio")){
+                   errorFixed                  = 1.0;
+                } else {
+                   errorFixed                  = 1.0;
                 }
             }
 

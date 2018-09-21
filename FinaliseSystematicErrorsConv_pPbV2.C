@@ -75,7 +75,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
 
     TString nameCutVariationSCCurrent[16]   = { "YieldExtraction"   ,"BGEstimate"   ,"dEdxE"    ,"dEdxPi"       ,"TPCCluster"   ,
                                                 "SinglePt"          ,"Qt"           ,"Alpha"    ,"Chi2PsiPair"  ,"CosPoint"     ,
-                                                "BG"                ,"MCSmearing"   ,"BGEstimateIterations", "Eta"      ,""     ,
+                                                "BG"                ,"MCSmearing"   ,"BGEstimateIterations", "Efficiency"      ,"Eta"     ,
                                                 ""
                                               };
     Color_t color[20];
@@ -107,17 +107,17 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     Bool_t bsmooth[16]                      = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                 0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothMBPi05TeV[16]             = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
     Bool_t bsmoothMBEta5TeV[16]             = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
     Bool_t bsmoothMBEtaToPi05TeV[16]        = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
     Bool_t bsmoothCentPi05TeV[16]           = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
     Bool_t bsmoothCentEta5TeV[16]           = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
     Bool_t bsmoothCentEtaToPi05TeV[16]      = { 0, 0, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                1, 1, 0, 0, 0,  0 };
+                                                1, 1, 0, 1, 0,  0 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ){
@@ -234,9 +234,9 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 
-        } else if ( nameCutVariationSC[i].CompareTo("YieldExtraction")==0 && !meson.CompareTo("EtaToPi0") &&  i == 1){
-            TString nameGraphPos            = Form("Pi0EtaBinning_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), additionalName.Data() );
-            TString nameGraphNeg            = Form("Pi0EtaBinning_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), additionalName.Data() );
+        } else if ( nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 && !meson.CompareTo("EtaToPi0") &&  i == 1){
+            TString nameGraphPos            = Form("Pi0EtaBinning_SystErrorRelPos_%s_%s","YieldExtraction", additionalName.Data() );
+            TString nameGraphNeg            = Form("Pi0EtaBinning_SystErrorRelNeg_%s_%s","YieldExtraction", additionalName.Data() );
             cout << "trying to read: " << nameGraphPos.Data() << "\t" << nameGraphNeg.Data() << endl;
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -483,6 +483,16 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
 
 
             // Eta - cutstudies nr 13
+            if (nameCutVariationSC[i].CompareTo("Efficiency")==0  ){
+                if ( meson.CompareTo("Pi0") == 0){
+                    minPt           = 0;
+                    errorReset      = 2.0;
+                } else if ( meson.CompareTo("Eta")==0  ){
+                    minPt           = 0;
+                    errorReset      = 2.0;
+                }
+            }
+            // Eta - cutstudies nr 14
             if (nameCutVariationSC[i].CompareTo("Eta")==0  ){
                 if ( meson.Contains("Pi0") ){
                     minPt           = 0;

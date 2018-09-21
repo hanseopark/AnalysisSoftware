@@ -628,6 +628,13 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         specialString[3]="DCAvar3";
         specialString[4]="DCAvar4";
     }
+    if(!cutVariationName.CompareTo("Test")){
+        specialString[0]="paper";
+        specialString[1]="var1";
+        specialString[2]="var2";
+        specialString[3]="var3";
+        specialString[4]="var4";
+    }
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
     //*******************************************************************************************
@@ -843,7 +850,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("PileupDCA")){
+        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("PileupDCA")||!cutVariationName.CompareTo("Test")){
             cutStringsName[i]   = specialString[i].Data();
             folderName[i]       = Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{
@@ -995,7 +1002,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         DrawGammaSetMarker(histoGammaEff[i], markerType, 2.0, color[i], color[i]);
         histoGammaEffRatio[i] = (TH1D*) histoGammaEff[i]->Clone(Form("histoGammaEffRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaEffRatio[i]->Divide(histoGammaEffRatio[i],histoGammaEff[0],1,1,"b");
-        SetHistogramm(histoGammaEffRatio[i],"p_{T,MC} (GeV/c)","Ratios of Efficiencies",0.5,1.8);
+        SetHistogramm(histoGammaEffRatio[i],"p_{T,MC} (GeV/c)","Ratios of Efficiencies",0.8,1.2);
 
         histoGammaEffRecPt[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaRecoEff_WithResolCorr_Pt");
         histoGammaEffRecPt[i]->SetTitle("");
@@ -1004,7 +1011,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         DrawGammaSetMarker(histoGammaEffRecPt[i], markerType, 2.0, color[i], color[i]);
         histoGammaEffRecPtRatio[i] = (TH1D*) histoGammaEffRecPt[i]->Clone(Form("histoGammaEffRecPtRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaEffRecPtRatio[i]->Divide(histoGammaEffRecPtRatio[i],histoGammaEffRecPt[0],1,1,"b");
-        SetHistogramm(histoGammaEffRecPtRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Efficiencies inc resol corr",0.5,1.8);
+        SetHistogramm(histoGammaEffRecPtRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Efficiencies inc resol corr",0.8,1.2);
 
 
         histoGammaResolCorr[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaResolCorrUnfold_Pt");
@@ -1024,7 +1031,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         DrawGammaSetMarker(histoGammaCorrFac[i], markerType, 2.0, color[i], color[i]);
         histoGammaCorrFacRatio[i] = (TH1D*) histoGammaCorrFac[i]->Clone(Form("histoGammaCorrFacRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaCorrFacRatio[i]->Divide(histoGammaCorrFacRatio[i],histoGammaCorrFac[0],1,1,"b");
-        SetHistogramm(histoGammaCorrFacRatio[i],"#it{p}_{T} (GeV/c)","Ratios of correction factors",0,2);
+        SetHistogramm(histoGammaCorrFacRatio[i],"#it{p}_{T} (GeV/c)","Ratios of correction factors",0.8,1.2);
 
 
         PlotCanvas(i,number,canvasRawGamma,histoRawGamma[i],legendRawGamma,canvasRawGammaRatio,histoRawGammaRatio[i],legendRawGammaRatio,cutStringsName[i],One);

@@ -3182,8 +3182,8 @@
                     binning[i]  = fBinsDirGammapPb5TeVAlterPt[i];
                   }
                 } else if (mode == 23) {
-                    maxNBins    = 36;
-                    binningMax  = 36;
+                    maxNBins    = 37;
+                    binningMax  = 37;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i]  = fBinsDirGammapPb5TeVAlter2Pt[i];
                     }

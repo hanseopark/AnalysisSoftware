@@ -2453,7 +2453,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoTrueEffiPt[k]->Sumw2();
             // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
             if (scaleTrueEffiWithFit){
-                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV")|| !optionEnergy.CompareTo("pPb_5.023TeVRun2") || (!optionEnergy.CompareTo("pPb_5.023TeVCent") && mode == 0))
+                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV")|| !optionEnergy.CompareTo("pPb_5.023TeVRun2") || (!optionEnergy.CompareTo("pPb_5.023TeVCent") && mode == 0) || (!optionEnergy.CompareTo("8TeV") && mode == 0))
                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
                 else
                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
