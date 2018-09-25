@@ -54,7 +54,7 @@
 void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                                         Bool_t noXerrorBars = kTRUE,
                                         TString thisthesis="", //"This thesis",//"ALICE work in progress", //"This thesis",
-                                        Bool_t PaperPi0 = kTRUE,
+                                        Bool_t PaperPi0 = kFALSE,//kTRUE,
 //                                         Bool_t thesisPlotting = kFALSE, //kTRUE,
                                         TString suffix = "pdf",
                                         TString bWCorrection="X",
@@ -9949,6 +9949,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         if(graphEMCalInvYieldSysPbPb2760GeVUnshifted_0010)graphEMCalInvYieldSysPbPb2760GeVUnshifted_0010->Write(Form("graphInvYield%sEMCalPbPb2760GeVSysErrNoShift_0010",meson.Data()));
         if(graphPHOSInvYieldStatPbPb2760GeVUnshifted_0010)graphPHOSInvYieldStatPbPb2760GeVUnshifted_0010->Write(Form("graphInvYield%sPHOSPbPb2760GeVStatErrNoShift_0010",meson.Data()));
         if(graphPHOSInvYieldSysPbPb2760GeVUnshifted_0010)graphPHOSInvYieldSysPbPb2760GeVUnshifted_0010->Write(Form("graphInvYield%sPHOSPbPb2760GeVSysErrNoShift_0010",meson.Data()));
+
+        if(graphPCMInvYieldStatPbPb2760GeVUnShifted_2040)graphPCMInvYieldStatPbPb2760GeVUnShifted_2040->Write("graphInvYieldPi0PCMPbPb2760GeVStatErrNoShift_2040");
+        if(graphPCMInvYieldSysPbPb2760GeVUnShifted_2040)graphPCMInvYieldSysPbPb2760GeVUnShifted_2040->Write("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2040");
 
         if(graphPCMInvYieldStatPbPb2760GeVUnShifted_2050)graphPCMInvYieldStatPbPb2760GeVUnShifted_2050->Write(Form("graphInvYield%sPCMPbPb2760GeVStatErrNoShift_2050",meson.Data()));
         if(graphPCMInvYieldSysPbPb2760GeVUnShifted_2050)graphPCMInvYieldSysPbPb2760GeVUnShifted_2050->Write(Form("graphInvYield%sPCMPbPb2760GeVSysErrNoShift_2050",meson.Data()));

@@ -85,7 +85,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
                                      TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV",
                                      Bool_t runDrawReweighted = kTRUE,
                                      Bool_t runPPplotting = kFALSE,
-                                     TString thisthesis="This thesis"//"ALICE work in progress" //thisthesis.Data()
+                                     TString thisthesis = ""//"This thesis"//"ALICE work in progress" //thisthesis.Data()
 //                                      Bool_t thesisPlotting = kFALSE
 
 ){
@@ -253,7 +253,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	TF1* fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([1]*x)+[1]");
 	fitTrueEffi->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 
-    Bool_t thesisPlotting;
+    Bool_t thesisPlotting = kFALSE;
     if(thisthesis.CompareTo("")==0) thesisPlotting = kFALSE;
     else thesisPlotting = kTRUE;
 
@@ -1627,11 +1627,11 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     canvasEffRatio->Update();
     canvasEffRatio->SaveAs(Form("%s/EfficienciesRatio.%s",outputDir.Data(),suffix.Data()));
 
-  
+
 	TCanvas* canvasSecondaries = new TCanvas("canvasSecondaries","",1300,1000);// gives the page size
     DrawGammaCanvasSettings( canvasSecondaries, 0.1, 0.018, 0.04, 0.1);
 //     canvasSecondaries->SetLogy();
-    
+
         TH2F * histo2DSecondaries = new TH2F("histo2DSecondaries","histo2DSecondaries",1000,0.,15,2000,1e-6,0.1 );
         SetStyleHistoTH2ForGraphs(histo2DSecondaries, "#it{p}_{T} (GeV/#it{c})","r_{X} = #frac{X -> #pi^{0}}{#pi^{0}}",0.035,0.04, 0.035,0.04, .9,1.2);
         histo2DSecondaries->Draw("copy");
@@ -1646,8 +1646,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         for (Int_t j = 0; j < 4; j++){
             if (histoSecCorrection[2][j]){
-                DrawGammaSetMarker(histoSecCorrection[2][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                histoSecCorrection[2][j]->DrawCopy("same,e1");  
+                DrawGammaSetMarker(histoSecCorrection[2][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);
+                histoSecCorrection[2][j]->DrawCopy("same,e1");
                 legendSecondaries->AddEntry(histoSecCorrection[2][j],Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
             }
         }
@@ -1665,8 +1665,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         for (Int_t j = 0; j < 4; j++){
             if (histoSecCorrection[0][j]){
-                DrawGammaSetMarker(histoSecCorrection[0][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                histoSecCorrection[0][j]->DrawCopy("same,e1");  
+                DrawGammaSetMarker(histoSecCorrection[0][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);
+                histoSecCorrection[0][j]->DrawCopy("same,e1");
             }
         }
 
@@ -1683,8 +1683,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         for (Int_t j = 0; j < 4; j++){
             if (histoSecCorrection[1][j]){
-                DrawGammaSetMarker(histoSecCorrection[1][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                histoSecCorrection[1][j]->DrawCopy("same,e1");  
+                DrawGammaSetMarker(histoSecCorrection[1][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);
+                histoSecCorrection[1][j]->DrawCopy("same,e1");
             }
         }
 
@@ -1701,8 +1701,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         for (Int_t j = 0; j < 4; j++){
             if (histoSecCorrection[3][j]){
-                DrawGammaSetMarker(histoSecCorrection[3][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                histoSecCorrection[3][j]->DrawCopy("same,e1");  
+                DrawGammaSetMarker(histoSecCorrection[3][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);
+                histoSecCorrection[3][j]->DrawCopy("same,e1");
             }
         }
 
@@ -1727,8 +1727,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         for (Int_t j = 0; j < 4; j++){
             if (histoSecCorrection[4][j]){
-                DrawGammaSetMarker(histoSecCorrection[4][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                histoSecCorrection[4][j]->DrawCopy("same,e1");  
+                DrawGammaSetMarker(histoSecCorrection[4][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);
+                histoSecCorrection[4][j]->DrawCopy("same,e1");
                 legendSecondariesV2->AddEntry(histoSecCorrection[4][j],Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
             }
         }
@@ -3852,7 +3852,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         canvasPurity->SaveAs(Form("%s/PurityGamma.%s",outputDir.Data(),suffix.Data()));
         delete canvasPurity;
     }
-      
+
       TFile *fileChargedRatios = new TFile(Form("pdf/%s/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_%s.root",dateForOutput.Data(),dateForOutput.Data()));
       if(fileChargedRatios){
         TDirectoryFile* directoryChargedPbPb = (TDirectoryFile*)fileChargedRatios->Get("ChargedParticles_PbPb_2.76TeV");
@@ -4495,17 +4495,17 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     DrawGammaSetMarkerTGraphAsym(graphEtaRAA2040,  markerStylePbPb4060,markerSizePbPb4060, colorCombPbPb4060 , colorCombPbPb4060);
     ProduceGraphAsymmWithoutXErrors(graphEtaRAA2040);
 
-    while(graphPi0RAASys0005->GetX()[0] < 1.) graphPi0RAASys0005->RemovePoint(0);
-    while(graphPi0RAA0005->GetX()[0] < 1.) graphPi0RAA0005->RemovePoint(0);
-    while(graphPi0RAASys0010->GetX()[0] < 1.) graphPi0RAASys0010->RemovePoint(0);
-    while(graphPi0RAA0010->GetX()[0] < 1.) graphPi0RAA0010->RemovePoint(0);
-    while(graphPi0RAASys0510->GetX()[0] < 1.) graphPi0RAASys0510->RemovePoint(0);
-    while(graphPi0RAA0510->GetX()[0] < 1.) graphPi0RAA0510->RemovePoint(0);
-    while(graphPi0RAASys2040->GetX()[0] < 1.) graphPi0RAASys2040->RemovePoint(0);
-    while(graphPi0RAA2040->GetX()[0] < 1.) graphPi0RAA2040->RemovePoint(0);
-    while(graphPi0RAASys2050->GetX()[0] < 1.) graphPi0RAASys2050->RemovePoint(0);
-    while(graphPi0RAA2050->GetX()[0] < 1.) graphPi0RAA2050->RemovePoint(0);
-
+//     while(graphPi0RAASys0005->GetX()[0] < 1.) graphPi0RAASys0005->RemovePoint(0);
+//     while(graphPi0RAA0005->GetX()[0] < 1.) graphPi0RAA0005->RemovePoint(0);
+//     while(graphPi0RAASys0010->GetX()[0] < 1.) graphPi0RAASys0010->RemovePoint(0);
+//     while(graphPi0RAA0010->GetX()[0] < 1.) graphPi0RAA0010->RemovePoint(0);
+//     while(graphPi0RAASys0510->GetX()[0] < 1.) graphPi0RAASys0510->RemovePoint(0);
+//     while(graphPi0RAA0510->GetX()[0] < 1.) graphPi0RAA0510->RemovePoint(0);
+//     while(graphPi0RAASys2040->GetX()[0] < 1.) graphPi0RAASys2040->RemovePoint(0);
+//     while(graphPi0RAA2040->GetX()[0] < 1.) graphPi0RAA2040->RemovePoint(0);
+//     while(graphPi0RAASys2050->GetX()[0] < 1.) graphPi0RAASys2050->RemovePoint(0);
+//     while(graphPi0RAA2050->GetX()[0] < 1.) graphPi0RAA2050->RemovePoint(0);
+//
 	// *******************************************************************************************************
 	// *****************************			RAA 				******************************************
 	// *******************************************************************************************************
@@ -6144,7 +6144,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		SetStyleTLatex( labelRatioMCData2050, 0.04,4);
 		labelRatioMCData2050->Draw();
 		DrawGammaLines(0., 14.,1., 1.,0.1);
-		
+
 //         if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb2050.%s",outputDir.Data(),suffix.Data()));

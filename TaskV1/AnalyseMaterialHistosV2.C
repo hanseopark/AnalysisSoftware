@@ -1831,6 +1831,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         fProfileContainingMaterialBudgetWeightsPtBin1->Write();
         fProfileContainingMaterialBudgetWeightsPtBin2->Write();
         fProfileContainingMaterialBudgetWeightsPtBin3->Write();
+        histoDataMCRatioRinPtBinScaledToGasPtBin3->Write();
+        histoRData->Write("Data");
 
         outFile.Close();
 

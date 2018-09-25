@@ -4,15 +4,15 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180830-1_2017ppAOD;
+TRAINDIR=Legotrain-vAN-20180915-1_PYTaddstat;
 
 ### Data
-LHC17pqMETA=2474_20180830-1007; #451_20180831-1144 ,
+LHC17pqMETA=; 2474_20180830-1007; #451_20180831-1144 ,
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
 LHC17q_woSDD=$LHC17pqMETA\_child_4
-LHC17p_wSDD=; #2483_20180830-1009;
+LHC17p_wSDD=;
 LHC17q_wSDD=;
 
 # LHC17p_fast=$LHC17pqMETA\_child_1
@@ -41,7 +41,13 @@ LHC17l4b_cent=;
 LHC18d6bMETA=; #3477_20180823-1142;
 LHC18d6b_fast=;#$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=;#$LHC18d6bMETA\_child_2;
-LHC18d6b_wSDD=3495_20180830-1024;
+LHC18d6b_wSDD=;
+
+LHC18d6cMETA=3515_20180915-2103; #3477_20180823-1142;
+LHC18d6c_fast=$LHC18d6cMETA\_child_1;
+LHC18d6c_woSDD=$LHC18d6cMETA\_child_2;
+LHC18d6c_woSDD_part2=$LHC18d6cMETA\_child_3;
+LHC18d6c_wSDD=$LHC18d6cMETA\_child_4;
 
 ### MC Jet Jet
 LHC18b8META=; #974_20180817-1718
@@ -2228,6 +2234,64 @@ if [ $2 = "material" ]; then
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
     fi
+
+
+    if [ $LHC18d6c_fast != "" ]; then
+        OUTPUTDIR_LHC18d6c_fast=$BASEDIR/$TRAINDIR/Material_LHC18d6c_fast_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6c_fast
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6c_fast/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6c_fast/
+        ls $OUTPUTDIR_LHC18d6c_fast/GammaConv*Material*.root > fileLHC18d6c_fast.txt
+        fileNumbers=`cat fileLHC18d6c_fast.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6c_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6c_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18d6c_woSDD != "" ]; then
+        OUTPUTDIR_LHC18d6c_woSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6c_woSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6c_woSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6c_woSDD/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6c_woSDD/
+        ls $OUTPUTDIR_LHC18d6c_woSDD/GammaConv*Material*.root > fileLHC18d6c_woSDD.txt
+        fileNumbers=`cat fileLHC18d6c_woSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6c_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6c_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18d6c_woSDD_part2 != "" ]; then
+        OUTPUTDIR_LHC18d6c_woSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6c_woSDD_LowInt_part2
+        mkdir -p $OUTPUTDIR_LHC18d6c_woSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6c_woSDD_part2/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6c_woSDD/
+        ls $OUTPUTDIR_LHC18d6c_woSDD/GammaConv*Material*.root > fileLHC18d6c_woSDD.txt
+        fileNumbers=`cat fileLHC18d6c_woSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6c_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6c_woSDDpart2_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18d6c_wSDD != "" ]; then
+        OUTPUTDIR_LHC18d6c_wSDD=$BASEDIR/$TRAINDIR/Material_LHC18d6c_wSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC18d6c_wSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6c_wSDD/merge/GammaConv_Material_* file:$OUTPUTDIR_LHC18d6c_wSDD/
+        ls $OUTPUTDIR_LHC18d6c_wSDD/GammaConv*Material*.root > fileLHC18d6c_wSDD.txt
+        fileNumbers=`cat fileLHC18d6c_wSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC18d6c_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC18d6c_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
 
     if [ $3 = "runwise" ]; then
 

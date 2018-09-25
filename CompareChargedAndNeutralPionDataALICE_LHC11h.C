@@ -862,9 +862,9 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
     //PCM
 	TGraphAsymmErrors*	graphYieldPi0PCMPbPb0010LHC11hStatErr	 	= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVStatErrNoShift_0010");
 	TGraphAsymmErrors*	graphYieldPi0PCMPbPb0010LHC11hSysErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_0010");
-// 	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2040LHC11hStatErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2040");
-// 	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2040LHC11hSysErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2040");
-	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2050LHC11hStatErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2050");
+	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2040LHC11hStatErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVStatErrNoShift_2040");
+	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2040LHC11hSysErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2040");
+	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2050LHC11hStatErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVStatErrNoShift_2050");
 	TGraphAsymmErrors*	graphYieldPi0PCMPbPb2050LHC11hSysErr 		= (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldPi0PCMPbPb2760GeVSysErrNoShift_2050");
 
     //PCM
@@ -872,7 +872,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
     TGraphAsymmErrors*  graphYieldEtaPCMPbPb0010LHC11hSysErr        = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVSysErrNoShift_0010");
 //     TGraphAsymmErrors*  graphYieldEtaPCMPbPb2040LHC11hStatErr       = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVSysErrNoShift_2040");
 //     TGraphAsymmErrors*  graphYieldEtaPCMPbPb2040LHC11hSysErr        = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVSysErrNoShift_2040");
-    TGraphAsymmErrors*  graphYieldEtaPCMPbPb2050LHC11hStatErr       = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVSysErrNoShift_2050");
+    TGraphAsymmErrors*  graphYieldEtaPCMPbPb2050LHC11hStatErr       = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVStatErrNoShift_2050");
     TGraphAsymmErrors*  graphYieldEtaPCMPbPb2050LHC11hSysErr        = (TGraphAsymmErrors*)directoryUnshiftedSpectra->Get("graphInvYieldEtaPCMPbPb2760GeVSysErrNoShift_2050");
 
     //EMCal
@@ -912,8 +912,8 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
     TGraphAsymmErrors* graphYieldEtaPCMPbPb0010LHC11hStatErrCopy        = (TGraphAsymmErrors*) graphYieldEtaPCMPbPb0010LHC11hStatErr->Clone("graphYieldEtaPCMPbPb0010LHC11hStatErrCopy");
     TGraphAsymmErrors* graphYieldEtaPCMPbPb0010LHC11hSysErrCopy         = (TGraphAsymmErrors*) graphYieldEtaPCMPbPb0010LHC11hSysErr->Clone("graphYieldEtaPCMPbPb0010LHC11hSysErrCopy");
 
-// 	TGraphAsymmErrors* graphYieldPi0PCMPbPb2040LHC11hStatErrCopy 		= (TGraphAsymmErrors*) graphYieldPi0PCMPbPb2040LHC11hStatErr->Clone("graphYieldPi0PCMPbPb2040LHC11hStatErrCopy");
-// 	TGraphAsymmErrors* graphYieldPi0PCMPbPb2040LHC11hSysErrCopy 		= (TGraphAsymmErrors*) graphYieldPi0PCMPbPb2040LHC11hSysErr->Clone("graphYieldPi0PCMPbPb2040LHC11hSysErrCopy");
+	TGraphAsymmErrors* graphYieldPi0PCMPbPb2040LHC11hStatErrCopy 		= (TGraphAsymmErrors*) graphYieldPi0PCMPbPb2040LHC11hStatErr->Clone("graphYieldPi0PCMPbPb2040LHC11hStatErrCopy");
+	TGraphAsymmErrors* graphYieldPi0PCMPbPb2040LHC11hSysErrCopy 		= (TGraphAsymmErrors*) graphYieldPi0PCMPbPb2040LHC11hSysErr->Clone("graphYieldPi0PCMPbPb2040LHC11hSysErrCopy");
 
 //     TGraphAsymmErrors* graphYieldEtaPCMPbPb2040LHC11hStatErrCopy        = (TGraphAsymmErrors*) graphYieldEtaPCMPbPb2040LHC11hStatErr->Clone("graphYieldEtaPCMPbPb2040LHC11hStatErrCopy");
 //     TGraphAsymmErrors* graphYieldEtaPCMPbPb2040LHC11hSysErrCopy         = (TGraphAsymmErrors*) graphYieldEtaPCMPbPb2040LHC11hSysErr->Clone("graphYieldEtaPCMPbPb2040LHC11hSysErrCopy");
@@ -969,21 +969,21 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
                                                                       &graphChargedPionSpecLowPtStat0010LHC11hLowPtPCM, &graphChargedPionSpecLowPtSyst0010LHC11hLowPtPCM);
 // 	graphRatioLowPtChargedPionsPCM0010LHC11h->Print();
 
-// 	TGraphErrors* graphRatioHighPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
-//                                                                       graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
-//                                                                       histoChargedPionSpecHighPtStat2040, histoChargedPionSpecHighPtSyst2040,
-//                                                                       kTRUE,  kTRUE,
-//                                                                       &graphYieldPCMStatPi02040LHC11hRebinnedHighPtPCM, &graphYieldPCMSysPi02040LHC11hRebinnedHighPtPCM,
-//                                                                       &graphChargedPionSpecHighPtStat2040LHC11hHighPtPCM, &graphChargedPionSpecHighPtSyst2040LHC11hHighPtPCM);
-// 	graphRatioHighPtChargedPionsPCM2040LHC11h->Print();
+	TGraphErrors* graphRatioHighPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                      graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
+                                                                      histoChargedPionSpecHighPtStat2040, histoChargedPionSpecHighPtSyst2040,
+                                                                      kTRUE,  kTRUE,
+                                                                      &graphYieldPCMStatPi02040LHC11hRebinnedHighPtPCM, &graphYieldPCMSysPi02040LHC11hRebinnedHighPtPCM,
+                                                                      &graphChargedPionSpecHighPtStat2040LHC11hHighPtPCM, &graphChargedPionSpecHighPtSyst2040LHC11hHighPtPCM);
+	graphRatioHighPtChargedPionsPCM2040LHC11h->Print();
 
-// 	TGraphErrors* graphRatioLowPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
-//                                                                       graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
-//                                                                       histoChargedPionSpecLowPtStat2040, histoChargedPionSpecLowPtSyst2040,
-//                                                                       kTRUE,  kTRUE,
-//                                                                       &graphYieldPCMStatPi02040LHC11hRebinnedLowPtPCM, &graphYieldPCMSysPi02040LHC11hRebinnedLowPtPCM,
-//                                                                       &graphChargedPionSpecLowPtStat2040LHC11hLowPtPCM, &graphChargedPionSpecLowPtSyst2040LHC11hLowPtPCM);
-// 	graphRatioLowPtChargedPionsPCM2040LHC11h->Print();
+	TGraphErrors* graphRatioLowPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                      graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
+                                                                      histoChargedPionSpecLowPtStat2040, histoChargedPionSpecLowPtSyst2040,
+                                                                      kTRUE,  kTRUE,
+                                                                      &graphYieldPCMStatPi02040LHC11hRebinnedLowPtPCM, &graphYieldPCMSysPi02040LHC11hRebinnedLowPtPCM,
+                                                                      &graphChargedPionSpecLowPtStat2040LHC11hLowPtPCM, &graphChargedPionSpecLowPtSyst2040LHC11hLowPtPCM);
+	graphRatioLowPtChargedPionsPCM2040LHC11h->Print();
 
     TGraphErrors* graphRatioHighPtChargedPionsEMCal0010LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
                                                                       graphYieldPi0EMCalPbPb0010LHC11hStatErrCopy, graphYieldPi0EMCalPbPb0010LHC11hSysErrCopy,
@@ -1028,13 +1028,13 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 // 	graphRatioFullPtChargedPionsPCM2050LHC11h->Print();
 
 
-//     TGraphErrors* graphRatioFullPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
-//                                                                       graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
-//                                                                       histoChargedPionSpecFullPtStat2040, histoChargedPionSpecFullPtSyst2040,
-//                                                                       kTRUE,  kTRUE,
-//                                                                       &a, &b,
-//                                                                       &c, &d);
-// 	graphRatioFullPtChargedPionsPCM2040LHC11h->Print();
+    TGraphErrors* graphRatioFullPtChargedPionsPCM2040LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                      graphYieldPi0PCMPbPb2040LHC11hStatErrCopy, graphYieldPi0PCMPbPb2040LHC11hSysErrCopy,
+                                                                      histoChargedPionSpecFullPtStat2040, histoChargedPionSpecFullPtSyst2040,
+                                                                      kTRUE,  kTRUE,
+                                                                      &a, &b,
+                                                                      &c, &d);
+	graphRatioFullPtChargedPionsPCM2040LHC11h->Print();
 
 	TGraphErrors* graphRatioFullPtChargedPionsEMCal0010LHC11h = CalculateRatioBetweenSpectraWithDifferentBinning(
                                                                       graphYieldPi0EMCalPbPb0010LHC11hStatErrCopy, graphYieldPi0EMCalPbPb0010LHC11hSysErrCopy,
@@ -1945,7 +1945,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 // 	// ***************************************************************************************************************
 	pad6PartCompChargedIndPionsLHC11h1->cd();
 	pad6PartCompChargedIndPionsLHC11h1->SetLogx();
-	histo2DCompCombinedRatioLHC11h2->GetXaxis()->SetRangeUser(0.,15.);
+	histo2DCompCombinedRatioLHC11h2->GetXaxis()->SetRangeUser(0.3,20.);
 	histo2DCompCombinedRatioLHC11h2->GetYaxis()->SetRangeUser(0.,2.1);
 	histo2DCompCombinedRatioLHC11h2->DrawCopy();
 
@@ -1962,10 +1962,10 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 		graphRatioLowPtChargedPionsPCM0010LHC11h->Draw("E1psame");
 
 		DrawGammaSetMarkerTGraphErr(graphRatioFullPtChargedPionsPCM0010, 33, markerSizeComparison+0.5, kPink+9 , kPink+9);
-		graphRatioFullPtChargedPionsPCM0010->Draw("E1psame");
+// 		graphRatioFullPtChargedPionsPCM0010->Draw("E1psame");
 
 		DrawGammaSetMarkerTGraphErr(graphRatioFullPtChargedPionsPCM0010LHC11h, 33, markerSizeComparison+0.5, kPink+4,kPink+4);
-		graphRatioFullPtChargedPionsPCM0010LHC11h->Draw("E1psame");
+// 		graphRatioFullPtChargedPionsPCM0010LHC11h->Draw("E1psame");
 
 		labelPi0CompChargedPionsPbPbLHC11h0010->Draw();
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray,2);
@@ -1988,7 +1988,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (2011)","p");
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry((TObject*)0,"charged ref: PWGLF-258","");
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioFullPtChargedPionsPCM0010,"#pi^{0}/#pi^{#pm} (PCM 2010)","p");
-		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioFullPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} (PCM 2011)","p");
+// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioFullPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} (PCM 2011)","p");
 
 		legendPi0CompChargedOnlyPCMPionsPbPb0010->Draw();
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray, 2);
@@ -2002,14 +2002,14 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	pad6PartCompChargedIndPionsLHC11h1->Update();
 	pad6PartCompChargedIndPionsLHC11h3->cd();
 	pad6PartCompChargedIndPionsLHC11h3->SetLogx();
-	histo2DCompCombinedRatioLHC11h->GetXaxis()->SetRangeUser(0.5,20.);
+	histo2DCompCombinedRatioLHC11h->GetXaxis()->SetRangeUser(0.3,20.);
 	histo2DCompCombinedRatioLHC11h->GetYaxis()->SetRangeUser(0.,2.1);
 	histo2DCompCombinedRatioLHC11h->DrawCopy();
 
-// 		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsPCM2040LHC11h, markerStylePCMHighPt, markerSizeComparison, kRed+1, kRed+1);
-// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsPCM2040LHC11h, markerStylePCMLowPt, markerSizeComparison, kRed, kRed);
-// 		graphRatioHighPtChargedPionsPCM2040LHC11h->Draw("E1psame");
-// 		graphRatioLowPtChargedPionsPCM2040LHC11h->Draw("E1psame");
+		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsPCM2040LHC11h, markerStylePCMHighPt, markerSizeComparison, kRed+1, kRed+1);
+		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsPCM2040LHC11h, markerStylePCMLowPt, markerSizeComparison, kRed, kRed);
+		graphRatioHighPtChargedPionsPCM2040LHC11h->Draw("E1psame");
+		graphRatioLowPtChargedPionsPCM2040LHC11h->Draw("E1psame");
 
 
 		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsPCM2040, markerStylePCMHighPt, markerSizeComparison, colorPCMHighPt , colorPCMHighPt);
@@ -2073,8 +2073,8 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 		DrawGammaSetMarkerTGraphErr(graphRatioFullPtChargedPionsPCM2040, 33, markerSizeComparison+0.5, kPink+9 , kPink+9);
 		graphRatioFullPtChargedPionsPCM2040->Draw("E1psame");
 
-// 		DrawGammaSetMarkerTGraphErr(graphRatioFullPtChargedPionsPCM2040LHC11h, 33, markerSizeComparison+0.5, kPink+4,kPink+4);
-// 		graphRatioFullPtChargedPionsPCM2040LHC11h->Draw("E1psame");
+		DrawGammaSetMarkerTGraphErr(graphRatioFullPtChargedPionsPCM2040LHC11h, 33, markerSizeComparison+0.5, kPink+4,kPink+4);
+		graphRatioFullPtChargedPionsPCM2040LHC11h->Draw("E1psame");
 
 		labelPi0CompChargedPionsPbPbLHC11h2040->Draw();
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray,2);

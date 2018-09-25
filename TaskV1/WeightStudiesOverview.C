@@ -194,7 +194,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
         WeightFile[i] = TFile::Open(FileNames[i]);
         profileWeight[i]=  (TProfile*)WeightFile[i]->Get("profileContainingMaterialBudgetWeights_manyRadialBins");
-        histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRinPtBinScaledToGas03");
+        histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRinPtBinScaledToGasPtBin3");
         rData[i]        = (TH1F*)WeightFile[i]->Get("Data");
 
         // Calculate ratios
@@ -342,7 +342,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     // cout<< "Bins::"<< rData[0]->GetXaxis()->FindBin(5.+0.001)<< endl;
     // cout<< "Bins::"<< rData[0]->GetXaxis()->FindBin(180.-0.001)<< endl;
     // cout << "Bin width::"<<     rData[0]->GetBinWidth(1)<< " " <<rData[0]->GetBinWidth(10)<< " " << endl;
-    Double_t totInRRange= rData[0]->Integral(rData[0]->GetXaxis()->FindBin(5.+0.001),rData[0]->GetXaxis()->FindBin(180.-0.001),"width");
+    Double_t totInRRange = rData[0]->Integral(rData[0]->GetXaxis()->FindBin(5.+0.001),rData[0]->GetXaxis()->FindBin(180.-0.001),"width");
     Double_t averageWeightSys=0.;
     Double_t averageWeightSta=0.;
     Double_t averageWeightTot=0.;
