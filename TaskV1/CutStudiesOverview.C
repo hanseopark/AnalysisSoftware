@@ -384,6 +384,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         } else if (cutVariationName.Contains("PhotonAsymmetry")){
             TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fPhotonAsymmetry));
+        } else if (cutVariationName.Contains("Sphericity")){
+            TString fSphericityCut                                        = fEventCutSelection(0,1);
+            cutStringsName[i]                                   = AnalyseSphericity(CutNumberToInteger(fSphericityCut));
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }

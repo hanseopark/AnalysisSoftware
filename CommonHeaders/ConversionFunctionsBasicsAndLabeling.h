@@ -532,6 +532,34 @@
             // BinContent 14 - Pileup V0M-TPCout
             if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
             return nEvents;
+        }else if(histo->GetNbinsX()==15){
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)-histo->GetBinContent(13)-histo->GetBinContent(14)-histo->GetBinContent(15)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
+            for (Int_t i = 1; i<16; i++ ){
+                if(doCout) cout << histo->GetBinContent(i) << "\t";
+            }
+            if(doCout) cout << nEventsMB  << endl;
+            for (Int_t i = 1; i<16; i++ ){
+                    if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
+            }
+            if(doCout) cout << "accepted \t" << (Float_t)nEvents/nEventsMB << endl;
+            if(doCout) cout << endl;
+            // BinContent 1 - good events
+            // BinContent 2 - centrality not selected
+            // BinContent 3 - MC corrupt
+            // BinContent 4 - no Trigger Bit
+            // BinContent 5 - Zvertex-position,
+            // BinContent 6 - no Contributors to vtx
+            // BinContent 7 - PileUp
+            // BinContent 8 - no SDD
+            // BinContent 9 - no V0AND
+            // BinContent 12 - SPD cluster vs tracklets
+            // BinContent 13 - Out of bunch pileup
+            // BinContent 14 - Pileup V0M-TPCout
+            // BinContent 15 - Sphericity
+            if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
+            return nEvents;
         }else{
             cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
             return 0;
@@ -2173,7 +2201,7 @@
         TString centralityCutNumberStart    = cutNumber(GetEventCentralityMinCutPosition(),1);
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
-        if (ppCutNumber.CompareTo("0") ==0){
+        if (ppCutNumber.CompareTo("0") ==0 || ppCutNumber.CompareTo("h") ==0 || ppCutNumber.CompareTo("i") ==0 || ppCutNumber.CompareTo("j") ==0){
             return "pp";
         } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("4") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -2233,7 +2261,7 @@
         TString centralityCutNumberStart    = cutNumber(GetEventCentralityMinCutPosition(),1);
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
-        if (ppCutNumber.CompareTo("0") ==0){
+        if (ppCutNumber.CompareTo("0") ==0 || ppCutNumber.CompareTo("h") ==0 || ppCutNumber.CompareTo("i") ==0 || ppCutNumber.CompareTo("j") ==0){
             return "pp";
         } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("4") ==0 ){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -2275,7 +2303,7 @@
         TString centralityCutNumberStart    = cutNumber(GetEventCentralityMinCutPosition(),1);
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
-        if (ppCutNumber.CompareTo("0") ==0){
+        if (ppCutNumber.CompareTo("0") ==0 || ppCutNumber.CompareTo("h") ==0 || ppCutNumber.CompareTo("i") ==0 || ppCutNumber.CompareTo("j") ==0){
             return "pp";
         } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("4") ==0 ) {
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -3192,6 +3220,24 @@
                 return "p-dependent asymmetry cut ";
             default:
                 return "photon asymmetry cut not defined";
+        }
+    }
+
+    //************************************************************************************
+    //********* Analyzes the Sphericity cut, return correct cut label       **************
+    //************************************************************************************
+    TString AnalyseSphericity(Int_t cut ){
+        switch(cut) {
+            case 0:
+                return "no cut";
+            case 17:
+                return "S_{T} < 0.5";
+            case 18:
+                return "S_{T} > 0.5";
+            case 19:
+                return "0 < S_{T} < 1";
+            default:
+                return "Sphericity cut not defined";
         }
     }
 
