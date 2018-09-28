@@ -45,20 +45,22 @@
 
 
 
-void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
+void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
                                 TString inputFileNamePHOS       = "",
                                 TString inputFileNamePHOS2      = "",
                                 TString inputFileNameEMC        = "",
                                 TString inputFileNamePCMEMC     = "",
                                 TString suffix                  = "eps",
                                 Bool_t enablepValueCalc         = kFALSE,
-                                Bool_t isThesis                 = kFALSE
-                            ){
+                                Bool_t isThesis                 = kFALSE,
+                                Int_t  fixPHOSspectrum          = 0,
+                                TString fileNameCorrelations    = ""
 
+                            ){
     Int_t nMeasSetDR[5]               = {4,4,4,4,4};
     Int_t nMeasSetIncGamma[5]         = {4,4,4,4,4};
     Bool_t combineCent[5]             = {kTRUE,kTRUE,kTRUE,kTRUE,kTRUE};
-    TString fileNameCorrelations[5]    = {"/media/nschmidt/local/ANALYSIS_RESULTS/pPb/5.023TeV/dirGammaPHOS/pPb5TeV_CF_20180920.root","/media/nschmidt/local/ANALYSIS_RESULTS/pPb/5.023TeV/dirGammaPHOS/pPb5TeV_CF_20180920.root","/media/nschmidt/local/ANALYSIS_RESULTS/pPb/5.023TeV/dirGammaPHOS/pPb5TeV_CF_20180920.root","/media/nschmidt/local/ANALYSIS_RESULTS/pPb/5.023TeV/dirGammaPHOS/pPb5TeV_CF_20180920.root","/media/nschmidt/local/ANALYSIS_RESULTS/pPb/5.023TeV/dirGammaPHOS/pPb5TeV_CF_20180920.root"};
+
     //*******************************************************************************************************************************************
     //*********************************************************** Set main style choices ********************************************************
     //*******************************************************************************************************************************************
@@ -87,11 +89,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     gSystem->Exec(Form("cp %s %s/Inputs/InputPCMEMCGammapPb.root", inputFileNamePCMEMC.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Inputs/InputEMCGammapPb.root", inputFileNameEMC.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Inputs/TheorypPb.root", fileNameTheorypPb.Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors_0020.root", fileNameCorrelations[0].Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors_2040.root", fileNameCorrelations[1].Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors_4060.root", fileNameCorrelations[2].Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors_60100.root", fileNameCorrelations[3].Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors_NSD.root", fileNameCorrelations[4].Data(), outputDir.Data()));
+    gSystem->Exec(Form("cp %s %s/Inputs/CorrelationFactors.root", fileNameCorrelations.Data(), outputDir.Data()));
 
     TString nameFinalResDat                                     = Form("%s/CombinedResultsGamma_FitResults_%s.dat",outputDir.Data(),dateForOutput.Data());
     fstream fileFinalResults;
@@ -166,6 +164,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     Size_t   markerSizeMult[5];
 
     TString multbins[5]              = {"0-20%","20-40%","40-60%","60-100%",""};
+    TString multbinsPlot[5]              = {"0-  20%","20-  40%","40-  60%","60-100%","0-100%"};
     TString multbinsCorrF[5]              = {"0020/","2040/","4060/","60100/",""};
     TString multbinsPHOS[5]              = {"00-20","20-40","40-60","60-100","00-100"};
     TString multbinsTheory[5]              = {"0020","2040","4060","60100",""};
@@ -193,10 +192,9 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
     Width_t widthLinesBoxes                         = 1.4;
     Width_t widthCommonFit                          = 2.4;
-    Double_t scalingToNSD                           = 0.964;
+    Double_t scalingToNSD[5]                        = {1,1,1,0.97,0.964};
 
     TString collisionSystempPb                      = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
-    TString collisionSystempPbNSD                   = "NSD p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
 
     TString textALICE                               = "ALICE preliminary";
     TString textALICEPerf                           = "ALICE performance";
@@ -331,12 +329,10 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
                 histoPileupCorr[i][0]                              = (TH1D*) directoryPCMGammapPb->Get("PileUpCorrectionFactor");
                 histoRawGamma[i][0]                                = (TH1D*) directoryPCMGammapPb->Get("GammaRawYields");
-                if(i==4){
-                    if (histoIncGammaStatErr[i][0])
-                        histoIncGammaStatErr[i][0]->Scale(scalingToNSD);
-                    if (graphIncGammaSysErr[i][0])
-                        graphIncGammaSysErr[i][0]                      = ScaleGraph(graphIncGammaSysErr[i][0],scalingToNSD);
-                }
+                if (histoIncGammaStatErr[i][0])
+                    histoIncGammaStatErr[i][0]->Scale(scalingToNSD[i]);
+                if (graphIncGammaSysErr[i][0])
+                    graphIncGammaSysErr[i][0]                      = ScaleGraph(graphIncGammaSysErr[i][0],scalingToNSD[i]);
                 histoEffSecCorr[i][0][0]                           = (TH1D*) directoryPCMGammapPb->Get("GammaEffectiveSecondaryCorr_K0s");
                 histoEffSecCorr[i][1][0]                           = (TH1D*) directoryPCMGammapPb->Get("GammaEffectiveSecondaryCorr_K0l");
                 histoEffSecCorr[i][2][0]                           = (TH1D*) directoryPCMGammapPb->Get("GammaEffectiveSecondaryCorr_Lambda");
@@ -390,12 +386,10 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
                 histoPileupCorr[i][4]                              = (TH1D*) directoryPCMEMCGammapPb->Get("PileUpCorrectionFactor");
                 histoRawGamma[i][4]                                = (TH1D*) directoryPCMEMCGammapPb->Get("GammaRawYields");
-                if(i==4){
-                    if (histoIncGammaStatErr[i][4])
-                        histoIncGammaStatErr[i][4]->Scale(scalingToNSD);
-                    if (graphIncGammaSysErr[i][4])
-                        graphIncGammaSysErr[i][4]                      = ScaleGraph(graphIncGammaSysErr[i][4],scalingToNSD);
-                }
+                if (histoIncGammaStatErr[i][4])
+                    histoIncGammaStatErr[i][4]->Scale(scalingToNSD[i]);
+                if (graphIncGammaSysErr[i][4])
+                    graphIncGammaSysErr[i][4]                      = ScaleGraph(graphIncGammaSysErr[i][4],scalingToNSD[i]);
                 histoEffSecCorr[i][0][4]                           = (TH1D*) directoryPCMEMCGammapPb->Get("GammaEffectiveSecondaryCorr_K0s");
                 histoEffSecCorr[i][1][4]                           = (TH1D*) directoryPCMEMCGammapPb->Get("GammaEffectiveSecondaryCorr_K0l");
                 histoEffSecCorr[i][2][4]                           = (TH1D*) directoryPCMEMCGammapPb->Get("GammaEffectiveSecondaryCorr_Lambda");
@@ -450,12 +444,11 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
                 histoEffSecCorr[i][1][2]                           = (TH1D*) directoryEMCGammapPb->Get("GammaEffectiveSecondaryCorr_K0l");
                 histoEffSecCorr[i][2][2]                           = (TH1D*) directoryEMCGammapPb->Get("GammaEffectiveSecondaryCorr_Lambda");
                 histoEffSecCorr[i][3][2]                           = (TH1D*) directoryEMCGammapPb->Get("GammaEffectiveSecondaryCorr_Rest");
+                if (histoIncGammaStatErr[i][2])
+                    histoIncGammaStatErr[i][2]->Scale(scalingToNSD[i]);
+                if (graphIncGammaSysErr[i][2])
+                    graphIncGammaSysErr[i][2]                      = ScaleGraph(graphIncGammaSysErr[i][2],scalingToNSD[i]);
                 if(i==4){
-                    if (histoIncGammaStatErr[i][2])
-                        histoIncGammaStatErr[i][2]->Scale(scalingToNSD);
-                    if (graphIncGammaSysErr[i][2])
-                        graphIncGammaSysErr[i][2]                      = ScaleGraph(graphIncGammaSysErr[i][2],scalingToNSD);
-
                     while (graphDRNonFitSysErr[i][2]->GetX()[0] < 2.05) graphDRNonFitSysErr[i][2]->RemovePoint(0);
                     while (graphIncGammaRatioSysErr[i][2]->GetX()[0] < 2.05) graphIncGammaRatioSysErr[i][2]->RemovePoint(0);
                     while (graphIncGammaSysErr[i][2]->GetX()[0] < 2.05) graphIncGammaSysErr[i][2]->RemovePoint(0);
@@ -532,7 +525,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
             }
         }
     }
-    multbins[4]="NSD";
+    multbins[4]="0-100%";
 
     //*******************************************************************************************************************************************
     //************************************************ Load theory curves from external input ***************************************************
@@ -564,7 +557,11 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         TGraphAsymmErrors* graphTheoryMCGillDRpPb       = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail");
         TGraph* graphTheoryMCGillDRpPbCenter            = (TGraph*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center");
-        TGraphAsymmErrors* graphTheoryMCGillpPb         = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphDirectPhotonSpecMcGill5023GeV");
+        TGraphErrors* graphTheoryMCGillpPb         = (TGraphErrors*) fileTheory->Get("pPb_5.023TeV/graphDirectPhotonSpecMcGill5023GeV");
+
+        TGraphAsymmErrors* graphTheoryMCGillDRpPb0020       = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_0020");
+        TGraph* graphTheoryMCGillDRpPbCenter0020            = (TGraph*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center_0020");
+        TGraphErrors* graphTheoryMCGillpPb0020         = (TGraphErrors*) fileTheory->Get("pPb_5.023TeV/graphDirectPhotonSpecMcGill5023GeV_0020");
 
         TGraphAsymmErrors* graphTheoryPowhegDRnCTEQpPb[5];
         TGraph* graphTheoryPowhegDRnCTEQpPbCenter[5];
@@ -715,10 +712,10 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         for (Int_t i = 0; i < 11; i++){
             statErrorRelCollectionDRNonFit[ncent][i]  = NULL;
             if (histoDRNonFitStatErr[ncent][i]){
-                // if(ncent==1 && i==1){
-                //     histoDRNonFitStatErr[ncent][i]->SetBinContent(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1,histoDRNonFitStatErr[ncent][i]->GetBinContent(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1)*0.75);
-                //     histoDRNonFitStatErr[ncent][i]->SetBinError(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1,histoDRNonFitStatErr[ncent][i]->GetBinError(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1)*0.75);
-                // }
+                if(ncent==1 && i==1 && fixPHOSspectrum==1){
+                    histoDRNonFitStatErr[ncent][i]->SetBinContent(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1,histoDRNonFitStatErr[ncent][i]->GetBinContent(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1)*0.75);
+                    histoDRNonFitStatErr[ncent][i]->SetBinError(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1,histoDRNonFitStatErr[ncent][i]->GetBinError(histoDRNonFitStatErr[ncent][i]->GetNbinsX()-1)*0.75);
+                }
                 statErrorRelCollectionDRNonFit[ncent][i]   = new TGraphAsymmErrors(histoDRNonFitStatErr[ncent][i]);
                 while (statErrorRelCollectionDRNonFit[ncent][i]->GetY()[0] == 0) statErrorRelCollectionDRNonFit[ncent][i]->RemovePoint(0);
                 while (statErrorRelCollectionDRNonFit[ncent][i]->GetY()[statErrorRelCollectionDRNonFit[ncent][i]->GetN()-1] == 0)
@@ -736,11 +733,17 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
             sysErrorRelCollectionDRNonFit[ncent][i]   = NULL;
             cout << i << endl;
             if (graphDRNonFitSysErr[ncent][i]){
-                // if(ncent==1 && i==1){
-                //     graphDRNonFitSysErr[ncent][i]->SetPoint(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetX()[graphDRNonFitSysErr[ncent][i]->GetN()-1],graphDRNonFitSysErr[ncent][i]->GetY()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
-                //     graphDRNonFitSysErr[ncent][i]->SetPointEYhigh(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetEYhigh()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
-                //     graphDRNonFitSysErr[ncent][i]->SetPointEYlow(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetEYlow()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
-                // }
+                if(ncent==1 && i==1 && fixPHOSspectrum==1){
+                    graphDRNonFitSysErr[ncent][i]->SetPoint(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetX()[graphDRNonFitSysErr[ncent][i]->GetN()-1],graphDRNonFitSysErr[ncent][i]->GetY()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
+                    graphDRNonFitSysErr[ncent][i]->SetPointEYhigh(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetEYhigh()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
+                    graphDRNonFitSysErr[ncent][i]->SetPointEYlow(graphDRNonFitSysErr[ncent][i]->GetN()-1,graphDRNonFitSysErr[ncent][i]->GetEYlow()[graphDRNonFitSysErr[ncent][i]->GetN()-1]*0.75);
+                }
+                if(ncent<4 && i==1 && fixPHOSspectrum==2){
+                    for(Int_t bin = 0; bin<graphDRNonFitSysErr[ncent][i]->GetN(); bin++){
+                        graphDRNonFitSysErr[ncent][i]->SetPointEYhigh(bin,graphDRNonFitSysErr[ncent][i]->GetEYhigh()[bin]*1.1);
+                        graphDRNonFitSysErr[ncent][i]->SetPointEYlow(bin,graphDRNonFitSysErr[ncent][i]->GetEYlow()[bin]*1.1);
+                    }
+                }
                 sysErrorRelCollectionDRNonFit[ncent][i]     = (TGraphAsymmErrors*)graphDRNonFitSysErr[ncent][i]->Clone(Form("relativeSysErrorDRNonFit_%s", nameMeasGlobal[i].Data()));
                 sysErrorRelCollectionDRNonFit[ncent][i]->Print();
                 while (sysErrorRelCollectionDRNonFit[ncent][i]->GetY()[0] == 0) sysErrorRelCollectionDRNonFit[ncent][i]->RemovePoint(0);
@@ -769,7 +772,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
                                                                                         offSetsGamma[ncent] , offSetsGammaSys[ncent] ,
                                                                                         graphCombDRStat[ncent] , graphCombDRSys[ncent] ,
                                                                                         fileNameDROutputWeighting[ncent] , "pPb_5.023TeV", "RGamma", kTRUE,
-                                                                                        NULL, fileNameCorrelations[ncent]  , multbinsCorrF[ncent].Data());
+                                                                                        NULL, fileNameCorrelations  , multbinsCorrF[ncent].Data());
                                                                                         // NULL, ""  );
 
 
@@ -1051,7 +1054,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
                                                                                             graphCombIncGammaStat[ncent], graphCombIncGammaSys[ncent],
                                                                                             fileNameIncGammaOutputWeighting[ncent], "pPb_5.023TeV", "GammaInc", kTRUE,
                                                                                             // NULL, "" );
-                                                                                           NULL, fileNameCorrelations[ncent]  , multbinsCorrF[ncent].Data());
+                                                                                           NULL, fileNameCorrelations  , multbinsCorrF[ncent].Data());
 
 
     if (graphCombIncGammaTot[ncent] == NULL) {
@@ -1719,19 +1722,34 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
             graphTheoryNLODRpPb[ncent]->Draw("3,same");
             legendDRTheoryComb2->AddEntry(dummyNLO,"PDF: CT10, FF: GRV","fl");
         }
-
-        if (graphTheoryMCGillDRpPb) {
-            DrawGammaSetMarkerTGraphAsym(dummyMcGill, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
-            dummyMcGill->SetLineStyle(styleLineMcGill);
-            dummyMcGill->SetLineWidth(widthLineNLO);
-            dummyMcGill->SetLineColor(colorNLOMcGill);
-            DrawGammaSetMarkerTGraphAsym(graphTheoryMCGillDRpPb, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
-            graphTheoryMCGillDRpPb->Draw("3,same");
-            legendDRTheoryComb->AddEntry(dummyMcGill,"Shen #it{et al.}","fl");
-        }
-        if (graphTheoryMCGillDRpPbCenter){
-            DrawGammaNLOTGraph( graphTheoryMCGillDRpPbCenter, widthLineNLO, styleLineMcGill, colorNLOMcGill);
-            graphTheoryMCGillDRpPbCenter->Draw("lc,same");
+        if(ncent==0){
+            if (graphTheoryMCGillDRpPb0020) {
+                DrawGammaSetMarkerTGraphAsym(dummyMcGill, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+                dummyMcGill->SetLineStyle(styleLineMcGill);
+                dummyMcGill->SetLineWidth(widthLineNLO);
+                dummyMcGill->SetLineColor(colorNLOMcGill);
+                DrawGammaSetMarkerTGraphAsym(graphTheoryMCGillDRpPb0020, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+                graphTheoryMCGillDRpPb0020->Draw("3,same");
+                legendDRTheoryComb->AddEntry(dummyMcGill,"Shen #it{et al.}","fl");
+            }
+            if (graphTheoryMCGillDRpPbCenter0020){
+                DrawGammaNLOTGraph( graphTheoryMCGillDRpPbCenter0020, widthLineNLO, styleLineMcGill, colorNLOMcGill);
+                graphTheoryMCGillDRpPbCenter0020->Draw("lc,same");
+            }
+        }else if(ncent==4){
+            if (graphTheoryMCGillDRpPb) {
+                DrawGammaSetMarkerTGraphAsym(dummyMcGill, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+                dummyMcGill->SetLineStyle(styleLineMcGill);
+                dummyMcGill->SetLineWidth(widthLineNLO);
+                dummyMcGill->SetLineColor(colorNLOMcGill);
+                DrawGammaSetMarkerTGraphAsym(graphTheoryMCGillDRpPb, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+                graphTheoryMCGillDRpPb->Draw("3,same");
+                legendDRTheoryComb->AddEntry(dummyMcGill,"Shen #it{et al.}","fl");
+            }
+            if (graphTheoryMCGillDRpPbCenter){
+                DrawGammaNLOTGraph( graphTheoryMCGillDRpPbCenter, widthLineNLO, styleLineMcGill, colorNLOMcGill);
+                graphTheoryMCGillDRpPbCenter->Draw("lc,same");
+            }
         }
         if (graphTheoryNLODRpPbCenter[ncent]){
             DrawGammaNLOTGraph( graphTheoryNLODRpPbCenter[ncent], widthLineNLO, styleLineNLOWerner, colorNLOWerner);
@@ -2150,9 +2168,9 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         TLatex *labelALICEInvYieldPaperAll  = new TLatex(0.20,0.20+0.04*4,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
 //         labelALICEInvYieldPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05+0.04,"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
-        labelALICENormUnPaperAll->Draw();
+        // TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05+0.04,"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+        // labelALICENormUnPaperAll->Draw();
 
         histo2DYieldGamma->Draw("same,axis");
 
@@ -2182,7 +2200,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         labelEnergyInvYieldPaperAll->Draw();
         labelALICEInvYieldPaperAll->Draw();
-        labelALICENormUnPaperAll->Draw();
+        // labelALICENormUnPaperAll->Draw();
 
         histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/InvYield_IncGamma_IndMeas_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
@@ -2223,9 +2241,9 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     TLatex *labelALICEDGInvYieldPaperAll  = new TLatex(0.94,0.965-0.04*2,textALICE.Data());
     SetStyleTLatex( labelALICEDGInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
     labelALICEDGInvYieldPaperAll->Draw();
-    TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2+0.04*0.8),"Norm. unc. 3.1%");
-    SetStyleTLatex( labelALICEDGNormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
-    labelALICEDGNormUnPaperAll->Draw();
+    // TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2+0.04*0.8),"Norm. unc. 3.1%");
+    // SetStyleTLatex( labelALICEDGNormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+    // labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/InvYield_DirGamma_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
@@ -2262,7 +2280,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGInvYieldPaperAll->Draw();
-        labelALICEDGNormUnPaperAll->Draw();
+        // labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/InvYield_DirGamma_IncGamma_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
@@ -2271,10 +2289,11 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
      histo2DYieldGamma->Draw("copy");
 
-        TLegend* legendYieldDirGamma2           = GetAndSetLegend2(0.70, 0.84-(2.4*textSizeLabelsRel*0.85), 0.93, 0.84,textSizeLabelsPixel, 1, "", 43, 0.3);
+        // TLegend* legendYieldDirGamma2           = GetAndSetLegend2(0.70, 0.84-(2.4*textSizeLabelsRel*0.85), 0.93, 0.84,textSizeLabelsPixel, 1, "", 43, 0.3);
+        TLegend* legendYieldDirGamma2           = GetAndSetLegend2(0.70, 0.87-(2.4*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
         TLegend* legendYieldDirGamma3           = GetAndSetLegend2(0.20, 0.11+(5.2*textSizeLabelsRel*0.85), 0.5, 0.11+(6.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1,
                                                                    "", 43, 0.23);
-        if(ncent<4)
+        if(ncent<4 && ncent>0)
             legendYieldDirGamma3                = GetAndSetLegend2(0.20, 0.11+(4.2*textSizeLabelsRel*0.85), 0.5, 0.11+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1,
                                                                    "", 43, 0.23);
         TLegend* legendYieldDirGammaTheo        = GetAndSetLegend2(0.20, 0.11+(4.2*textSizeLabelsRel*0.85), 0.5, 0.11+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1,
@@ -2303,8 +2322,14 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
             legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOpPb[ncent],"PDF: CT10, FF: GRV","l");
         }
 
+        if (graphTheoryMCGillpPb0020 && ncent==0) {
+            DrawGammaSetMarkerTGraphErr(graphTheoryMCGillpPb0020, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+            graphTheoryMCGillpPb0020->Draw("3,same");
+            graphTheoryMCGillpPb0020->SetLineWidth(widthLineNLO*1.5);
+            legendYieldDirGammaTheo->AddEntry(graphTheoryMCGillpPb0020,"#gamma_{dir} Shen #it{et al.}","l");
+        }
         if (graphTheoryMCGillpPb && ncent==4) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryMCGillpPb, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+            DrawGammaSetMarkerTGraphErr(graphTheoryMCGillpPb, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
             graphTheoryMCGillpPb->Draw("3,same");
             graphTheoryMCGillpPb->SetLineWidth(widthLineNLO*1.5);
             legendYieldDirGammaTheo->AddEntry(graphTheoryMCGillpPb,"#gamma_{dir} Shen #it{et al.}","l");
@@ -2321,7 +2346,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
             legendYieldDirGammaTheo2->AddEntry(graphTheoryPowhegEPPS16pPb[ncent],"nPDF: EPPS16, FF: GRV","f");
         }
         legendYieldDirGammaTheo2->Draw();
-        if(ncent==4)
+        if(ncent==4 || ncent==0)
             legendYieldDirGammaTheo->Draw();
 
         if (graphCombDirGammaSpectrumStatErrPlot[ncent]){
@@ -2334,7 +2359,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGInvYieldPaperAll->Draw();
-        labelALICEDGNormUnPaperAll->Draw();
+        // labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/InvYield_DirGamma_IncGamma_Theory_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
@@ -2361,7 +2386,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
     labelEnergyInvYieldPaperAll->Draw();
     labelALICEInvYieldPaperAll->Draw();
-    labelALICENormUnPaperAll->Draw();
+    // labelALICENormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/RawYield_IncGamma_IndMeas_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
@@ -2487,7 +2512,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     TF1* fitHagGammaCombScaled[5];
     TF1* fitTCMGammaCombScaled[5];
         
-    TCanvas* canvasSpectraGamma          = new TCanvas("canvasSpectraGamma","",200,10,1350,1350*1.15);  // gives the page size
+    TCanvas* canvasSpectraGamma          = new TCanvas("canvasSpectraGamma","",200,10,1350,1350*1.25);  // gives the page size
     DrawGammaCanvasSettings( canvasSpectraGamma, 0.16, 0.02, 0.02, 0.08);
     canvasSpectraGamma->SetLogx();
     canvasSpectraGamma->SetLogy();
@@ -2505,20 +2530,20 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     histo2DSpectraGamma->Draw("copy");
     TLegend* legendYieldIncGamma           = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(4*textSizeLabelsRel*0.85),textSizeLabelsPixel);
     for(Int_t ncent = 0; ncent < 4; ncent++){
-        graphCombIncGammaSysScaled[ncent]    = ScaleGraph(graphCombIncGammaSys[ncent],pow(10,3-ncent));
-        graphCombIncGammaStatPlotScaled[ncent]    = ScaleGraph(graphCombIncGammaStatPlot[ncent],pow(10,3-ncent));
+        graphCombIncGammaSysScaled[ncent]    = ScaleGraph(graphCombIncGammaSys[ncent],pow(10,8-(ncent*2)));
+        graphCombIncGammaStatPlotScaled[ncent]    = ScaleGraph(graphCombIncGammaStatPlot[ncent],pow(10,8-(ncent*2)));
         ProduceGraphAsymmWithoutXErrors(graphCombIncGammaStatPlotScaled[ncent]);
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaSysScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent],widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaStatPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent],widthLinesBoxes);
         graphCombIncGammaSysScaled[ncent]->Draw("E2same");
         graphCombIncGammaStatPlotScaled[ncent]->Draw("Epsame");
         legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc}, %s (#times 10^{%d})",multbins[ncent].Data(),3-ncent),"pf");
-        fitHagGammaCombScaled[ncent] = ScaleTF1(fitHagGammaComb[ncent],pow(10,3-ncent),Form("fitHagGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
+        fitHagGammaCombScaled[ncent] = ScaleTF1(fitHagGammaComb[ncent],pow(10,8-(ncent*2)),Form("fitHagGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
         DrawGammaSetMarkerTF1( fitHagGammaCombScaled[ncent], 7, 2, colorCombpPb);
         fitHagGammaCombScaled[ncent]->SetRange(doubleRatioXpp[0]-0.05, doubleRatioXpp[1]-15);
         // legendYieldIncGamma->AddEntry(fitHagGammaComb[ncent],"Hagedorn fit","l");
         fitHagGammaCombScaled[ncent]->Draw("same");
-        fitTCMGammaCombScaled[ncent] = ScaleTF1(fitTCMGammaComb[ncent],pow(10,3-ncent),Form("fitTCMGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
+        fitTCMGammaCombScaled[ncent] = ScaleTF1(fitTCMGammaComb[ncent],pow(10,8-(ncent*2)),Form("fitTCMGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
         DrawGammaSetMarkerTF1( fitTCMGammaCombScaled[ncent], 9, 2, kGray+1);
         fitTCMGammaCombScaled[ncent]->SetRange(doubleRatioXpp[0]-0.05, doubleRatioXpp[1]-15);
         // legendYieldIncGamma->AddEntry(fitHagGammaComb[ncent],"Hagedorn fit","l");
@@ -2541,16 +2566,18 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         TLatex *labelALICEInvYieldPaperAll  = new TLatex(0.20,0.20+0.04*4,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEInvYieldPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05+0.04,"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
-        labelALICENormUnPaperAll->Draw();
+        // TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05+0.04,"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+        // labelALICENormUnPaperAll->Draw();
 
         histo2DSpectraGamma->Draw("same,axis");
 
     canvasSpectraGamma->SaveAs(Form("%s/InvYield_IncGamma_AllCent.%s",outputDir.Data(), suffix.Data()));
     canvasSpectraGamma->SaveAs(Form("%s/InvYield_IncGamma_AllCent.pdf",outputDir.Data()));
 
-    histo2DSpectraGamma->GetYaxis()->SetRangeUser(1.1e-11,9e4);
+    // histo2DSpectraGamma->GetYaxis()->SetRangeUser(1.1e-11,9e4);
+    histo2DSpectraGamma->GetYaxis()->SetRangeUser(1.1e-11,14e11);
+    histo2DSpectraGamma->GetYaxis()->SetNdivisions(110);
     histo2DSpectraGamma->GetXaxis()->SetRangeUser(doubleRatioXpp[0]-0.1, doubleRatioXpp[1]);
     histo2DSpectraGamma->Draw("copy");
     legendYieldIncGamma           = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(6*textSizeLabelsRel*0.85),textSizeLabelsPixel);
@@ -2559,29 +2586,30 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         legendYieldIncGamma->AddEntry(fitTCMGammaComb[4],"TCM fit","l");
     for(Int_t ncent = 0; ncent < 5; ncent++){
         if(ncent==4){
-            graphCombIncGammaSysScaled[ncent]    = ScaleGraph(graphCombIncGammaSys[ncent],pow(10,3-ncent));
-            graphCombIncGammaStatPlotScaled[ncent]    = ScaleGraph(graphCombIncGammaStatPlot[ncent],pow(10,3-ncent));
+            graphCombIncGammaSysScaled[ncent]    = ScaleGraph(graphCombIncGammaSys[ncent],pow(10,8-(ncent*2)));
+            graphCombIncGammaStatPlotScaled[ncent]    = ScaleGraph(graphCombIncGammaStatPlot[ncent],pow(10,8-(ncent*2)));
             ProduceGraphAsymmWithoutXErrors(graphCombIncGammaStatPlotScaled[ncent]);
             DrawGammaSetMarkerTGraphAsym(graphCombIncGammaSysScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent],widthLinesBoxes, kTRUE);
             DrawGammaSetMarkerTGraphAsym(graphCombIncGammaStatPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent],widthLinesBoxes);
-            fitHagGammaCombScaled[ncent] = ScaleTF1(fitHagGammaComb[ncent],pow(10,3-ncent),Form("fitHagGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
+            fitHagGammaCombScaled[ncent] = ScaleTF1(fitHagGammaComb[ncent],pow(10,8-(ncent*2)),Form("fitHagGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
             DrawGammaSetMarkerTF1( fitHagGammaCombScaled[ncent], 7, 2, colorCombpPb);
             fitHagGammaCombScaled[ncent]->SetRange(doubleRatioXpp[0]-0.05, doubleRatioXpp[1]-15);
-            fitTCMGammaCombScaled[ncent] = ScaleTF1(fitTCMGammaComb[ncent],pow(10,3-ncent),Form("fitTCMGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
+            fitTCMGammaCombScaled[ncent] = ScaleTF1(fitTCMGammaComb[ncent],pow(10,8-(ncent*2)),Form("fitTCMGammaCombScaled_%s",multbinsPHOS[ncent].Data()));
             DrawGammaSetMarkerTF1( fitTCMGammaCombScaled[ncent], 9, 2, kGray+1);
             fitTCMGammaCombScaled[ncent]->SetRange(doubleRatioXpp[0]-0.05, doubleRatioXpp[1]-15);
         }
         graphCombIncGammaSysScaled[ncent]->Draw("E2same");
         graphCombIncGammaStatPlotScaled[ncent]->Draw("Epsame");
 
-        if(ncent==0)
-            legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc},   %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
-        else if(ncent==3)
-            legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc}, %s",multbins[ncent].Data()),"pf");
-        else if(ncent==4)
-            legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc},      %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
-        else
-            legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc}, %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
+        legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("%s",multbins[ncent].Data()),"pf");
+        // if(ncent==0)
+        //     legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc},   %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
+        // else if(ncent==3)
+        //     legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc}, %s",multbins[ncent].Data()),"pf");
+        // else if(ncent==4)
+        //     legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc},      %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
+        // else
+        //     legendYieldIncGamma->AddEntry(graphCombIncGammaSysScaled[ncent],Form("#gamma_{inc}, %s #times10^{%d}",multbins[ncent].Data(),3-ncent),"pf");
 
         // fitHagGammaCombScaled[ncent]->Draw("same");
         fitTCMGammaCombScaled[ncent]->Draw("same");
@@ -2593,9 +2621,25 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         TLatex *labelALICEInvYieldPaperAllTop  = new TLatex(0.945,0.77+0.04*4,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelALICEInvYieldPaperAllTop->Draw();
-        TLatex *labelALICENormUnPaperAllTop    = new TLatex(0.945,0.77+0.05+0.04,"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
-        labelALICENormUnPaperAllTop->Draw();
+        // TLatex *labelALICENormUnPaperAllTop    = new TLatex(0.945,0.77+0.05+0.04,"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAllTop->Draw();
+        // TLatex *labelgammaincTop    = new TLatex(0.945,0.78+0.05,"#gamma_{inc}");
+        TLatex *labelgammaincTop    = new TLatex(0.945,0.77+0.05+0.05,"#gamma_{inc}");
+        SetStyleTLatex( labelgammaincTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        labelgammaincTop->Draw();
+        TLatex* label0020Scaling    = new TLatex(0.945,0.93-(10.5*textSizeLabelsRel*0.85),"#times10^{8}");
+        SetStyleTLatex( label0020Scaling, textSizeLabelsPixel*0.75,4, colorMult[0], 43, kTRUE, 31);
+        label0020Scaling->Draw();
+        TLatex* label2040Scaling    = new TLatex(0.945,0.93-(12.7*textSizeLabelsRel*0.85),"#times10^{6}");
+        SetStyleTLatex( label2040Scaling, textSizeLabelsPixel*0.75,4, colorMult[1], 43, kTRUE, 31);
+        label2040Scaling->Draw();
+        TLatex* label4060Scaling    = new TLatex(0.945,0.93-(15*textSizeLabelsRel*0.85),"#times10^{4}");
+        SetStyleTLatex( label4060Scaling, textSizeLabelsPixel*0.75,4, colorMult[2], 43, kTRUE, 31);
+        label4060Scaling->Draw();
+        TLatex* label60100Scaling    = new TLatex(0.945,0.93-(17.7*textSizeLabelsRel*0.85),"#times10^{2}");
+        SetStyleTLatex( label60100Scaling, textSizeLabelsPixel*0.75,4, colorMult[3], 43, kTRUE, 31);
+        label60100Scaling->Draw();
 
         histo2DSpectraGamma->Draw("same,axis");
 
@@ -2603,7 +2647,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     canvasSpectraGamma->SaveAs(Form("%s/InvYield_IncGamma_MBandCent.pdf",outputDir.Data()));
 
 
-    histo2DSpectraGamma->GetYaxis()->SetRangeUser(4e-14,10e6);
+    histo2DSpectraGamma->GetYaxis()->SetRangeUser(4e-12,10e8);
     histo2DSpectraGamma->GetXaxis()->SetRangeUser(doubleRatioXpp[0], doubleRatioXpp[1]);
     // histo2DSpectraGamma->GetYaxis()->SetRangeUser(3e-10,10e5);
     histo2DSpectraGamma->Draw("copy");
@@ -2614,19 +2658,19 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     for(Int_t ncent = 0; ncent < 4; ncent++){
 
         if (graphCombDirGammaSpectrumSystErr[ncent]){
-            graphCombDirGammaSpectrumSystErrScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSystErr[ncent],pow(10,6-(ncent*2)));
+            graphCombDirGammaSpectrumSystErrScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSystErr[ncent],pow(10,8-(ncent*2)));
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErrScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent], widthLinesBoxes, kTRUE);
             graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
-            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s (#times 10^{%d})",multbins[ncent].Data(),6-(ncent*2)),"pf");
+            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s (#times 10^{%d})",multbins[ncent].Data(),8-(ncent*2)),"pf");
         }
         if (graphCombDirGammaSpectrumStatErrPlot[ncent]){
-            graphCombDirGammaSpectrumStatErrPlotScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumStatErrPlot[ncent],pow(10,6-(ncent*2)));
+            graphCombDirGammaSpectrumStatErrPlotScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumStatErrPlot[ncent],pow(10,8-(ncent*2)));
             ProduceGraphAsymmWithoutXErrors(graphCombDirGammaSpectrumStatErrPlotScaled[ncent]);
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent]);
             graphCombDirGammaSpectrumStatErrPlotScaled[ncent]->Draw("p,E1Z,same");
         }
         if (graphCombDirGammaSpectrumSumErrAr[ncent]){
-            graphCombDirGammaSpectrumSumErrArScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSumErrAr[ncent],pow(10,6-(ncent*2)));
+            graphCombDirGammaSpectrumSumErrArScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSumErrAr[ncent],pow(10,8-(ncent*2)));
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSumErrArScaled[ncent] , 1, 3,  colorMult[ncent] , colorMult[ncent], 1.8, kTRUE);
             graphCombDirGammaSpectrumSumErrArScaled[ncent]->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumSumErrArScaled[ncent]);
@@ -2639,9 +2683,9 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         labelALICEInvYieldPaperAllTop  = new TLatex(0.945,0.77+0.04*4,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelALICEInvYieldPaperAllTop->Draw();
-        labelALICENormUnPaperAllTop    = new TLatex(0.945,0.77+0.05+0.04,"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
-        labelALICENormUnPaperAllTop->Draw();
+        // labelALICENormUnPaperAllTop    = new TLatex(0.945,0.77+0.05+0.04,"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAllTop->Draw();
 
         histo2DSpectraGamma->Draw("same,axis");
 
@@ -2659,7 +2703,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     for(Int_t ncent = 0; ncent < 4; ncent++){
 
         if (graphTheoryNLOpPb[ncent]) {
-            graphTheoryNLOpPb[ncent]    = ScaleGraph(graphTheoryNLOpPb[ncent],pow(10,6-(ncent*2)));
+            graphTheoryNLOpPb[ncent]    = ScaleGraph(graphTheoryNLOpPb[ncent],pow(10,8-(ncent*2)));
             DrawGammaSetMarkerTGraphAsym(graphTheoryNLOpPb[ncent], 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLOpPb[ncent]->Draw("3,same");
             graphTheoryNLOpPb[ncent]->SetLineWidth(widthLineNLO*1.5);
@@ -2668,7 +2712,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         }
 
         if (graphTheoryPowhegnCTEQpPb[ncent]) {
-            graphTheoryPowhegnCTEQpPb[ncent]    = ScaleGraph(graphTheoryPowhegnCTEQpPb[ncent],pow(10,6-(ncent*2)));
+            graphTheoryPowhegnCTEQpPb[ncent]    = ScaleGraph(graphTheoryPowhegnCTEQpPb[ncent],pow(10,8-(ncent*2)));
             DrawGammaSetMarkerTGraphAsym(graphTheoryPowhegnCTEQpPb[ncent], 0, 0, colorNLONCTEQBand, colorNLONCTEQBand, 0.6, kTRUE, colorNLONCTEQBand, kTRUE);
             graphTheoryPowhegnCTEQpPb[ncent]->Draw("3,same");
             if(ncent==0)
@@ -2676,7 +2720,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         }
 
         if (graphTheoryPowhegEPPS16pPb[ncent]) {
-            graphTheoryPowhegEPPS16pPb[ncent]    = ScaleGraph(graphTheoryPowhegEPPS16pPb[ncent],pow(10,6-(ncent*2)));
+            graphTheoryPowhegEPPS16pPb[ncent]    = ScaleGraph(graphTheoryPowhegEPPS16pPb[ncent],pow(10,8-(ncent*2)));
             DrawGammaSetMarkerTGraphAsym(graphTheoryPowhegEPPS16pPb[ncent], 0, 0, colorNLOEPPSBand, colorNLOEPPSBand, 0.6, kTRUE, colorNLOEPPSBand, kTRUE);
             graphTheoryPowhegEPPS16pPb[ncent]->Draw("3,same");
             if(ncent==0)
@@ -2709,9 +2753,9 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         legendYieldIncGamma->Draw();
         labelEnergyInvYieldPaperAllTop->Draw();
         labelALICEInvYieldPaperAllTop->Draw();
-        labelALICENormUnPaperAllTop    = new TLatex(0.945,0.848-(4*textSizeLabelsRel*0.85),"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
-        labelALICENormUnPaperAllTop->Draw();
+        // labelALICENormUnPaperAllTop    = new TLatex(0.945,0.848-(4*textSizeLabelsRel*0.85),"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAllTop->Draw();
 
         histo2DSpectraGamma->Draw("same,axis");
 
@@ -2724,19 +2768,20 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     // canvasSpectraGamma->SetLogx();
     // canvasSpectraGamma->SetLogy();
 
-    histo2DSpectraGamma->GetYaxis()->SetRangeUser(1.1e-13,13e8);
+    histo2DSpectraGamma->GetYaxis()->SetRangeUser(1.1e-11,14e11);
     histo2DSpectraGamma->GetYaxis()->SetNdivisions(110);
     histo2DSpectraGamma->GetXaxis()->SetRangeUser(doubleRatioXpp[0]-0.1, doubleRatioXpp[1]);
 
      histo2DSpectraGamma->Draw("copy");
-    legendYieldIncGamma           = GetAndSetLegend2(0.585, 0.96-(5*textSizeLabelsRel*0.85), 0.875, 0.954,textSizeLabelsPixel);
+    legendYieldIncGamma           = GetAndSetLegend2(0.715, 0.96-(5*textSizeLabelsRel*0.85), 0.945, 0.954,textSizeLabelsPixel);
+    // legendYieldIncGamma           = GetAndSetLegend2(0.655, 0.96-(5*textSizeLabelsRel*0.85), 0.945, 0.954,textSizeLabelsPixel);
     legendYieldDirGammaTheo2       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(4*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
     legendYieldDirGammaTheo2->SetTextAlign(12);
     for(Int_t ncent = 0; ncent < 5; ncent++){
 
         if (graphTheoryNLOpPb[ncent]) {
             if(ncent==4)
-                graphTheoryNLOpPb[ncent]    = ScaleGraph(graphTheoryNLOpPb[ncent],pow(10,6-(ncent*2)));
+                graphTheoryNLOpPb[ncent]    = ScaleGraph(graphTheoryNLOpPb[ncent],1);
             DrawGammaSetMarkerTGraphAsym(graphTheoryNLOpPb[ncent], 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLOpPb[ncent]->Draw("3,same");
             graphTheoryNLOpPb[ncent]->SetLineWidth(widthLineNLO*1.5);
@@ -2746,7 +2791,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         if (graphTheoryPowhegnCTEQpPb[ncent]) {
             if(ncent==4)
-                graphTheoryPowhegnCTEQpPb[ncent]    = ScaleGraph(graphTheoryPowhegnCTEQpPb[ncent],pow(10,6-(ncent*2)));
+                graphTheoryPowhegnCTEQpPb[ncent]    = ScaleGraph(graphTheoryPowhegnCTEQpPb[ncent],1);
             DrawGammaSetMarkerTGraphAsym(graphTheoryPowhegnCTEQpPb[ncent], 0, 0, colorNLONCTEQBand, colorNLONCTEQBand, 0.6, kTRUE, colorNLONCTEQBand, kTRUE);
             graphTheoryPowhegnCTEQpPb[ncent]->Draw("3,same");
             if(ncent==0)
@@ -2755,7 +2800,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         if (graphTheoryPowhegEPPS16pPb[ncent]) {
             if(ncent==4)
-                graphTheoryPowhegEPPS16pPb[ncent]    = ScaleGraph(graphTheoryPowhegEPPS16pPb[ncent],pow(10,6-(ncent*2)));
+                graphTheoryPowhegEPPS16pPb[ncent]    = ScaleGraph(graphTheoryPowhegEPPS16pPb[ncent],1);
             DrawGammaSetMarkerTGraphAsym(graphTheoryPowhegEPPS16pPb[ncent], 0, 0, colorNLOEPPSBand, colorNLOEPPSBand, 0.6, kTRUE, colorNLOEPPSBand, kTRUE);
             graphTheoryPowhegEPPS16pPb[ncent]->Draw("3,same");
             if(ncent==0)
@@ -2766,22 +2811,31 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
         if (graphCombDirGammaSpectrumSystErr[ncent]){
             if (ncent==4){
-                graphCombDirGammaSpectrumSystErrScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSystErr[ncent],pow(10,6-(ncent*2)));
+                graphCombDirGammaSpectrumSystErrScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSystErr[ncent],1);
                 DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErrScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent], widthLinesBoxes, kTRUE);
             }
             graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
-            if(ncent==0)
-            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},   %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
-            else if(ncent==3)
-            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s",multbins[ncent].Data()),"pf");
-            else if(ncent==4)
-            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},      %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
-            else
-            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
+            legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("%s",multbins[ncent].Data()),"pf");
+            // if(ncent==0)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},   %s",multbinsPlot[ncent].Data()),"pf");
+            // else if(ncent==3)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s",multbinsPlot[ncent].Data()),"pf");
+            // else if(ncent==4)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},   %s",multbinsPlot[ncent].Data()),"pf");
+            // else
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s",multbinsPlot[ncent].Data()),"pf");
+            // if(ncent==0)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},   %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
+            // else if(ncent==3)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s",multbins[ncent].Data()),"pf");
+            // else if(ncent==4)
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir},   %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
+            // else
+            // legendYieldIncGamma->AddEntry(graphCombDirGammaSpectrumSystErrScaled[ncent],Form("#gamma_{dir}, %s #times10^{%d}",multbins[ncent].Data(),6-(ncent*2)),"pf");
         }
         if (graphCombDirGammaSpectrumStatErrPlot[ncent]){
             if (ncent==4){
-                graphCombDirGammaSpectrumStatErrPlotScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumStatErrPlot[ncent],pow(10,6-(ncent*2)));
+                graphCombDirGammaSpectrumStatErrPlotScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumStatErrPlot[ncent],1);
                 ProduceGraphAsymmWithoutXErrors(graphCombDirGammaSpectrumStatErrPlotScaled[ncent]);
                 DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent]);
             }
@@ -2789,7 +2843,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         }
         if (graphCombDirGammaSpectrumSumErrAr[ncent]){
             if(ncent==4){
-                graphCombDirGammaSpectrumSumErrArScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSumErrAr[ncent],pow(10,6-(ncent*2)));
+                graphCombDirGammaSpectrumSumErrArScaled[ncent]    = ScaleGraph(graphCombDirGammaSpectrumSumErrAr[ncent],1);
                 DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSumErrArScaled[ncent] , 1, 3,  colorMult[ncent] , colorMult[ncent], 1.8, kTRUE);
             }
             graphCombDirGammaSpectrumSumErrArScaled[ncent]->Draw(">,same");
@@ -2797,21 +2851,106 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
         }
     }
         legendYieldIncGamma->Draw();
-        labelEnergyInvYieldPaperAllTop = new TLatex(0.2, 0.775+0.04*3, Form("%s",collisionSystempPb.Data()));
+        labelEnergyInvYieldPaperAllTop = new TLatex(0.2, 0.775+0.04*3, Form("V0A %s",collisionSystempPb.Data()));
+        SetStyleTLatex( labelEnergyInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelEnergyInvYieldPaperAllTop->Draw();
+        TLatex * labelgammadirTop = new TLatex(0.2, 0.79+0.04*2, "#gamma_{dir}");
+        SetStyleTLatex( labelgammadirTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelgammadirTop->Draw();
+        labelALICEInvYieldPaperAllTop  = new TLatex(0.2,0.77+0.04*4,"ALICE preliminary");
+        // labelALICEInvYieldPaperAllTop  = new TLatex(0.21,0.77+0.04*4,textALICE.Data());
+        SetStyleTLatex( labelALICEInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelALICEInvYieldPaperAllTop->Draw();
+        // labelALICENormUnPaperAllTop    = new TLatex(0.945,0.93-(5*textSizeLabelsRel*0.85),"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAllTop->Draw();
+
+        label0020Scaling    = new TLatex(0.945,0.93-(11.3*textSizeLabelsRel*0.85),"#times10^{8}");
+        SetStyleTLatex( label0020Scaling, textSizeLabelsPixel*0.75,4, colorMult[0], 43, kTRUE, 31);
+        label0020Scaling->Draw();
+        label2040Scaling    = new TLatex(0.945,0.93-(13.45*textSizeLabelsRel*0.85),"#times10^{6}");
+        SetStyleTLatex( label2040Scaling, textSizeLabelsPixel*0.75,4, colorMult[1], 43, kTRUE, 31);
+        label2040Scaling->Draw();
+        label4060Scaling    = new TLatex(0.945,0.93-(15.6*textSizeLabelsRel*0.85),"#times10^{4}");
+        SetStyleTLatex( label4060Scaling, textSizeLabelsPixel*0.75,4, colorMult[2], 43, kTRUE, 31);
+        label4060Scaling->Draw();
+        label60100Scaling    = new TLatex(0.945,0.93-(18*textSizeLabelsRel*0.85),"#times10^{2}");
+        SetStyleTLatex( label60100Scaling, textSizeLabelsPixel*0.75,4, colorMult[3], 43, kTRUE, 31);
+        label60100Scaling->Draw();
+
+        histo2DSpectraGamma->Draw("same,axis");
+
+    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheory_MBandCent.%s",outputDir.Data(), suffix.Data()));
+    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheory_MBandCent.pdf",outputDir.Data()));
+
+    histo2DSpectraGamma->Draw("copy");
+    TLegend* legendYieldDirGammaTheo3       = GetAndSetLegend2(0.20, 0.11+(4*textSizeLabelsRel*0.85), 0.5, 0.11+(5*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
+    legendYieldDirGammaTheo3->SetTextAlign(12);
+    // TGraphAsymmErrors graphTheoryMCGillpPbScaled = NULL;
+    for(Int_t ncent = 0; ncent < 5; ncent++){
+        if (graphTheoryMCGillpPb0020 && ncent==0) {
+            graphTheoryMCGillpPb0020    = ScaleGraph(graphTheoryMCGillpPb0020,pow(10,8-(ncent*2)));
+            DrawGammaSetMarkerTGraphErr(graphTheoryMCGillpPb0020, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+            graphTheoryMCGillpPb0020->Draw("3,same");
+            graphTheoryMCGillpPb0020->SetLineWidth(widthLineNLO*1.5);
+        }
+        if (graphTheoryMCGillpPb && ncent==4) {
+            graphTheoryMCGillpPb    = ScaleGraph(graphTheoryMCGillpPb,1);
+            DrawGammaSetMarkerTGraphErr(graphTheoryMCGillpPb, 0, 0, colorNLOMcGill, colorNLOMcGill, 0.6, kTRUE, colorNLOMcGill, kTRUE);
+            graphTheoryMCGillpPb->Draw("3,same");
+            graphTheoryMCGillpPb->SetLineWidth(widthLineNLO*1.5);
+            legendYieldDirGammaTheo3->AddEntry(graphTheoryMCGillpPb,"Shen #it{et al.}","l");
+            legendYieldDirGammaTheo3->Draw();
+        }
+
+
+        if (graphTheoryNLOpPb[ncent]) {
+            graphTheoryNLOpPb[ncent]->Draw("3,same");
+            graphTheoryNLOpPb[ncent]->SetLineWidth(widthLineNLO*1.5);
+        }
+
+        if (graphTheoryPowhegnCTEQpPb[ncent]) {
+            graphTheoryPowhegnCTEQpPb[ncent]->Draw("3,same");
+        }
+
+        if (graphTheoryPowhegEPPS16pPb[ncent]) {
+            graphTheoryPowhegEPPS16pPb[ncent]->Draw("3,same");
+        }
+        if(ncent==0)
+            legendYieldDirGammaTheo2->Draw();
+
+        if (graphCombDirGammaSpectrumSystErr[ncent]){
+            graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
+        }
+        if (graphCombDirGammaSpectrumStatErrPlot[ncent]){
+            graphCombDirGammaSpectrumStatErrPlotScaled[ncent]->Draw("p,E1Z,same");
+        }
+        if (graphCombDirGammaSpectrumSumErrAr[ncent]){
+            graphCombDirGammaSpectrumSumErrArScaled[ncent]->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumSumErrArScaled[ncent]);
+        }
+    }
+        legendYieldIncGamma->Draw();
+        labelEnergyInvYieldPaperAllTop = new TLatex(0.2, 0.775+0.04*3, Form("V0A %s",collisionSystempPb.Data()));
         SetStyleTLatex( labelEnergyInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelEnergyInvYieldPaperAllTop->Draw();
         labelALICEInvYieldPaperAllTop  = new TLatex(0.2,0.77+0.04*4,"ALICE preliminary");
         // labelALICEInvYieldPaperAllTop  = new TLatex(0.21,0.77+0.04*4,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAllTop, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEInvYieldPaperAllTop->Draw();
-        labelALICENormUnPaperAllTop    = new TLatex(0.945,0.93-(5*textSizeLabelsRel*0.85),"Norm. unc. 3.1%");
-        SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
-        labelALICENormUnPaperAllTop->Draw();
+        // labelALICENormUnPaperAllTop    = new TLatex(0.945,0.93-(5*textSizeLabelsRel*0.85),"Norm. unc. 3.1%");
+        // SetStyleTLatex( labelALICENormUnPaperAllTop, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAllTop->Draw();
+        labelgammadirTop->Draw();
+        label0020Scaling->Draw();
+        label2040Scaling->Draw();
+        label4060Scaling->Draw();
+        label60100Scaling->Draw();
 
         histo2DSpectraGamma->Draw("same,axis");
 
-    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheory_MBandCent.%s",outputDir.Data(), suffix.Data()));
-    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheory_MBandCent.pdf",outputDir.Data()));
+    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheoryThermal_MBandCent.%s",outputDir.Data(), suffix.Data()));
+    canvasSpectraGamma->SaveAs(Form("%s/InvYield_DirGammaandTheoryThermal_MBandCent.pdf",outputDir.Data()));
 
     //*******************************************************************************************************************************************
     //******************************************* DR plot with pp and PbPb measurements *********************************************************
@@ -2834,6 +2973,7 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
     TH2D *dummyDRCentPlot[5];
     TLegend* legendDRCentPlot;
     TLegend* legendDRCentPlot2;
+    TLegend* legendDRCentPlot3;
     TLatex* labelDRCentPlot[5];
     TLatex* labelDRCentPlotALICE;
 
@@ -3092,17 +3232,26 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
             }
         }
-        labelDRCentPlot[ncent] = new TLatex(0.12, ncent==0 ? 0.78 : (ncent==4 ? 0.86 : 0.84 ), Form("%s %s", multbins[ncent].Data(), collisionSystempPb.Data()));
+        labelDRCentPlot[ncent] = new TLatex(0.125, ncent==0 ? 0.78 : (ncent==4 ? 0.86 : 0.84 ), ( ncent==4 ? Form("%s %s", multbins[ncent].Data(), collisionSystempPb.Data()) : Form("%s V0A %s", multbins[ncent].Data(), collisionSystempPb.Data())));
         SetStyleTLatex( labelDRCentPlot[ncent], textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelDRCentPlot[ncent]->Draw();
         if(ncent==0){
-            labelDRCentPlotALICE = new TLatex(0.12, 0.78-textsizeLabelsPad[ncent] , Form("%s", textALICE.Data()));
+            labelDRCentPlotALICE = new TLatex(0.125, 0.78-textsizeLabelsPad[ncent] , Form("%s", textALICE.Data()));
             SetStyleTLatex( labelDRCentPlotALICE, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
             labelDRCentPlotALICE->Draw();
         }
         if(ncent==4)
             legendDRCentPlot->Draw();
     }
+    /*
+        if(ncent==1){
+        TLatex* labelNLO2040 = new TLatex(0.125, 0.86-textsizeLabelsPad[ncent] , "NLO pQCD:");
+        SetStyleTLatex( labelNLO2040, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelNLO2040->Draw();
+    }
+    if(ncent==1)
+        legendDRCentPlot2 = GetAndSetLegend2(0.12, (0.92-3.6*textsizeLabelsPad[ncent]), 0.12+0.19,  0.94-2*textsizeLabelsPad[ncent],0.85*textsizeLabelsPad[ncent], 1,"", 42, 0.3);
+    */
 
 
     canvasRatioIndDR->SaveAs(Form("%s/DR_IndMeas_pPb5TeVRun1_MBandCent.%s", outputDir.Data(), suffix.Data()));
@@ -3165,6 +3314,76 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
     canvasRatioIndDR->SaveAs(Form("%s/DR_CombandTheory_pPb5TeVRun1_MBandCent.%s", outputDir.Data(), suffix.Data()));
     canvasRatioIndDR->SaveAs(Form("%s/DR_CombandTheory_pPb5TeVRun1_MBandCent.pdf", outputDir.Data()));
+
+     for(Int_t ncent = 0; ncent < 5; ncent++){
+        padPartRatio[ncent]->cd();
+        padPartRatio[ncent]->SetLogx(1);
+        dummyDRCentPlot[ncent]->Draw("");
+        DrawGammaLines(doubleRatioX[0]-0.1, doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+        if(ncent==0)
+            legendDRCentPlot3 = GetAndSetLegend2(0.12, (0.87-3*textsizeLabelsPad[ncent]), 0.12+0.19,  0.89-2*textsizeLabelsPad[ncent],textsizeLabelsPad[ncent], 1,"", 42, 0.3);
+        if(ncent==3)
+            legendDRCentPlot = GetAndSetLegend2(0.12, (0.91-3*textsizeLabelsPad[ncent]), 0.12+0.19,  0.93-textsizeLabelsPad[ncent],textsizeLabelsPad[ncent], 1,"NLO pQCD: ", 42, 0.3);
+            // legendDRCentPlot = GetAndSetLegend2(0.12, (0.92-4.3*textsizeLabelsPad[ncent]), 0.12+0.19,  0.94-2.3*textsizeLabelsPad[ncent],textsizeLabelsPad[ncent], 1,"NLO pQCD: ", 42, 0.3);
+        if(ncent==4)
+            legendDRCentPlot2 = GetAndSetLegend2(0.12, (0.92-4*textsizeLabelsPad[ncent]), 0.12+0.19,  0.94-textsizeLabelsPad[ncent],textsizeLabelsPad[ncent], 1,"NLO pQCD: ", 42, 0.3);
+
+        if (graphTheoryNLODRpPb[ncent]) {
+            graphTheoryNLODRpPb[ncent]->Draw("3,same");
+            if(ncent==3)
+                legendDRCentPlot->AddEntry(dummyNLO,"PDF: CT10, FF: GRV","fl");
+        }
+        if (graphTheoryNLODRpPbCenter[ncent]){
+            DrawGammaNLOTGraph( graphTheoryNLODRpPbCenter[ncent], widthLineNLO, styleLineNLOWerner, colorNLOWerner);
+            graphTheoryNLODRpPbCenter[ncent]->Draw("lc,same");
+        }
+        if (graphTheoryMCGillDRpPb && graphTheoryMCGillDRpPb0020){
+            if(ncent==0)
+                graphTheoryMCGillDRpPb0020->Draw("3,same");
+            if(ncent==4)
+                graphTheoryMCGillDRpPb->Draw("3,same");
+            if(ncent==0){
+                legendDRCentPlot3->AddEntry(dummyMcGill,"Shen #it{et al.}","fl");
+                legendDRCentPlot3->Draw();
+            }
+        }
+
+        if (graphTheoryPowhegDRnCTEQpPb[ncent]) {
+            graphTheoryPowhegDRnCTEQpPb[ncent]->Draw("3,same");
+            if(ncent==4)
+                legendDRCentPlot2->AddEntry(dummyNLOnCTEQ,"nPDF: nCTEQ15, FF: GRV","fl");
+        }
+        if (graphTheoryPowhegDRnCTEQpPbCenter[ncent]){
+            graphTheoryPowhegDRnCTEQpPbCenter[ncent]->Draw("lc,same");
+        }
+        if (graphTheoryPowhegDREPPS16pPb[ncent]) {
+            graphTheoryPowhegDREPPS16pPb[ncent]->Draw("3,same");
+            if(ncent==4)
+                legendDRCentPlot2->AddEntry(dummyNLOEPPS,"nPDF: EPPS16, FF: GRV","fl");
+        }
+        if (graphTheoryPowhegDREPPS16pPbCenter[ncent])
+            graphTheoryPowhegDREPPS16pPbCenter[ncent]->Draw("lc,same");
+
+
+        if(graphCombDRSys[ncent] && graphCombDRStat[ncent]){
+            graphCombDRSys[ncent]->Draw("E2same");
+            graphCombDRStatPlot[ncent]->Draw("p,same,z");
+        }
+
+        labelDRCentPlot[ncent]->Draw();
+        if(ncent==0){
+            labelDRCentPlotALICE->Draw();
+        }
+        if(ncent==3)
+            legendDRCentPlot->Draw();
+        if(ncent==4)
+            legendDRCentPlot2->Draw();
+    }
+
+
+    canvasRatioIndDR->SaveAs(Form("%s/DR_CombandTheoryThermal_pPb5TeVRun1_MBandCent.%s", outputDir.Data(), suffix.Data()));
+    canvasRatioIndDR->SaveAs(Form("%s/DR_CombandTheoryThermal_pPb5TeVRun1_MBandCent.pdf", outputDir.Data()));
 
 
 
@@ -3232,6 +3451,224 @@ void CombineGammaResultspPb_V2(    TString inputFileNamePCM        = "",
 
     canvasRatioIndDR->SaveAs(Form("%s/IncGamma_Comb_pPb5TeVRun1_MBandCent.%s", outputDir.Data(), suffix.Data()));
     canvasRatioIndDR->SaveAs(Form("%s/IncGamma_Comb_pPb5TeVRun1_MBandCent.pdf", outputDir.Data()));
+
+
+ if(fixPHOSspectrum>0){
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+     if(fixPHOSspectrum==1)
+        cout << "                           PHOS LAST POINT FIX ACTIVE!!" << endl;
+     if(fixPHOSspectrum==2)
+        cout << "                           PHOS SYSTEMATICS FIX ACTIVE!!" << endl;
+     cout << "                      Set fixPHOSspectrum = 0 to deactivate" << endl;
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+     cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+
+ }
+
+
+
+
+if(1){
+    // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErrScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent], widthLinesBoxes, kTRUE);
+    // DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
+            // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
+        
+            // DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
+            // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent]);
+            // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
+            // graphCombDirGammaSpectrumStatErrPlotScaled[ncent]->Draw("p,E1Z,same");
+
+    Size_t markerSize = 1.5;
+
+    Color_t colorpp200 = kOrange+2;
+    Color_t colorpAu200 = kAzure+2;
+    Color_t colordAu200 = kViolet+2;
+    Color_t colorCuCu200 = kCyan+2;
+    Color_t colorAuAu39 = kMagenta+2;
+    Color_t colorAuAu62 = kGreen+2;
+    Color_t colorAuAu200 = kRed+2;
+    Color_t colorPbPb2760 = kBlue+2;
+
+    Style_t stylepp200 = 24;
+    Style_t stylepAu200 = 29;
+    Style_t styledAu200 = 34;
+    Style_t styleCuCu200 = 23;
+    Style_t styleAuAu39 = 27;
+    Style_t styleAuAu62 = 20;
+    Style_t styleAuAu200 = 21;
+    Style_t stylePbPb2760 = 33;
+    //==========================================================================================
+	//                     200 GeV Au+Au external conversion method
+	//==========================================================================================
+	const int N200AuAu = 4;
+	double dNdeta200AuAu[N200AuAu] = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};
+	double edNdeta200AuAu[N200AuAu] = {2.6250e+01,  1.3175e+01,  8.0750e+00,  2.8137e+00};
+	double dNdy200AuAu[N200AuAu] = {1.6611e+00,  7.0773e-01,  2.1711e-01,  2.2951e-02};
+	double edNdy200AuAu[N200AuAu] = {2.0251e-01,  8.6331e-02,  3.2922e-02,  6.2015e-03};
+	double sdNdy200AuAu[N200AuAu] = {5.3393e-01,  2.4784e-01,  9.3644e-02,  1.5471e-02};
+	TGraphAsymmErrors* tEIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, 0, 0, edNdy200AuAu, edNdy200AuAu);
+	TGraphAsymmErrors* tSIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, edNdeta200AuAu, edNdeta200AuAu, sdNdy200AuAu, sdNdy200AuAu);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
+	//==========================================================================================
+	//                    200 GeV Au+Au internal conversion method
+	//==========================================================================================
+	const int N200AuAuInt = 3;
+	double dNdeta200AuAuInt[N200AuAuInt] = {5.112e+02, 2.220e+02, 1.861e+02};
+	double edNdeta200AuAuInt[N200AuAuInt] = {2.625e+01, 1.318e+01, 1.132e+01};
+	double dNdy200AuAuInt[N200AuAuInt] = {1.686e+00, 6.981e-01, 5.550e-01};
+	double edNdy200AuAuInt[N200AuAuInt] = {2.312e-01, 8.545e-02, 5.043e-02};
+	double sdNdy200AuAuInt[N200AuAuInt] = {3.775e-01, 1.494e-01, 1.177e-01};
+	TGraphAsymmErrors* tEIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, 0, 0, edNdy200AuAuInt, edNdy200AuAuInt);
+	TGraphAsymmErrors* tSIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, edNdeta200AuAuInt, edNdeta200AuAuInt, sdNdy200AuAuInt, sdNdy200AuAuInt);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
+    //==========================================================================================
+	//                    39 GeV Au+Au external conversion method
+	//==========================================================================================
+	const int N39AuAu = 1;
+	double dNdeta39AuAu[N39AuAu] = {1.043e+02};
+	double edNdeta39AuAu[N39AuAu] = { 8.882e+00};
+	double dNdy39AuAu[N39AuAu] = {2.597e-01};
+	double edNdy39AuAu[N39AuAu] = {1.108e-01};
+	double sdNdy39AuAu[N39AuAu] = {2.149e-01};
+	TGraphAsymmErrors* tEIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, 0, 0, edNdy39AuAu, edNdy39AuAu);
+	TGraphAsymmErrors* tSIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, edNdeta39AuAu, edNdeta39AuAu, sdNdy39AuAu, sdNdy39AuAu);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39, widthLinesBoxes, kTRUE);
+    //==========================================================================================
+	//                    62 GeV Au+Au external conversion method
+	//==========================================================================================
+	const int N62AuAu = 3;
+	double dNdeta62AuAu[N62AuAu] = {3.412e+02, 1.518e+02, 1.315e+02};
+	double edNdeta62AuAu[N62AuAu] = {2.932e+01, 1.269e+01, 1.115e+01};
+	double dNdy62AuAu[N62AuAu] = {1.289e+00, 4.157e-01, 3.362e-01};
+	double edNdy62AuAu[N62AuAu] = {2.717e-01, 1.155e-01, 6.527e-02};
+	double sdNdy62AuAu[N62AuAu] = {4.525e-01, 2.101e-01, 1.724e-01};
+	TGraphAsymmErrors* tEIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, 0, 0, edNdy62AuAu, edNdy62AuAu);
+	TGraphAsymmErrors* tSIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, edNdeta62AuAu, edNdeta62AuAu, sdNdy62AuAu, sdNdy62AuAu);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62, widthLinesBoxes, kTRUE);
+    //==========================================================================================
+	//                    2760 GeV Pb+Pb ALICE
+	//==========================================================================================
+	const int N2760PbPb = 1;
+	double dNdeta2760PbPb[N2760PbPb] = {1.2068e+03};
+	double edNdeta2760PbPb[N2760PbPb] = {4.5750e+01};
+	double dNdy2760PbPb[N2760PbPb] = {4.7588e+00};
+	double edNdy2760PbPb[N2760PbPb] = {3.1678e-01};
+	double sdNdy2760PbPb[N2760PbPb] = {1.8749e+00};
+	TGraphAsymmErrors* tEIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, 0, 0, edNdy2760PbPb, edNdy2760PbPb);
+	TGraphAsymmErrors* tSIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, edNdeta2760PbPb, edNdeta2760PbPb, sdNdy2760PbPb, sdNdy2760PbPb);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760, widthLinesBoxes, kTRUE);
+    //==========================================================================================
+	//                    200 GeV p+p data
+	//==========================================================================================
+	const int N200pp = 1;
+	double dNdeta200pp[N200pp] = {2.3800e+00};
+	double edNdeta200pp[N200pp] = {1.7000e-01};
+	double dNdy200pp[N200pp] = {0.00017021881};
+	double edNdy200pp[N200pp] = {6.5655e-05};
+	double sMaxdNdy200pp[N200pp] = {8.8280476e-05};
+	double sMindNdy200pp[N200pp] = {6.7012381e-05};
+	TGraphAsymmErrors* tEIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, 0, 0, edNdy200pp, edNdy200pp);
+	TGraphAsymmErrors* tSIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, edNdeta200pp, edNdeta200pp, sMindNdy200pp, sMaxdNdy200pp);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200, widthLinesBoxes, kTRUE);
+    //==========================================================================================
+	//                    200 GeV Cu+Cu data
+	//==========================================================================================
+	const int N200CuCu = 2;
+	double dNdeta200CuCu[N200CuCu] = {5.1654e+01,  1.0926e+02};
+	double edNdeta200CuCu[N200CuCu] = {3.5590e+00,  7.8130e+00};
+	double dNdy200CuCu[N200CuCu] = {6.0815e-02,  1.5244e-01};
+	double edNdy200CuCu[N200CuCu] = {2.1225e-02,  5.9775e-02};
+	double sdNdy200CuCu[N200CuCu] = {2.5220e-02,  6.9172e-02};
+    TGraphAsymmErrors* tEIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, 0, 0, edNdy200CuCu, edNdy200CuCu);
+	TGraphAsymmErrors* tSIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, edNdeta200CuCu, edNdeta200CuCu, sdNdy200CuCu, sdNdy200CuCu);
+    DrawGammaSetMarkerTGraphAsym(tEIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200);
+    DrawGammaSetMarkerTGraphAsym(tSIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200, widthLinesBoxes, kTRUE);
+
+// double ratio combined
+    TCanvas *canvasIntegYieldPlot = new TCanvas("canvasIntegYieldPlot","",0.095,0.09,1000,815);
+    DrawGammaCanvasSettings( canvasIntegYieldPlot, 0.1, 0.01, 0.01, 0.12);
+    canvasIntegYieldPlot->cd();
+    canvasIntegYieldPlot->SetLogx();
+    canvasIntegYieldPlot->SetLogy();
+
+    Double_t minX                            = 1.01;
+    Double_t maxX                            = 1.9e3;
+    Double_t minY                            = 5e-5;
+    Double_t maxY                            = 2e1;
+    Double_t textSizeSinglePad               = 0.05;
+    TH2F * hist2DIntegYielgDRummy       = new TH2F("hist2DIntegYielgDRummy","hist2DIntegYielgDRummy",1000,minX, maxX,1000,minY, maxY);
+    SetStyleHistoTH2ForGraphs(hist2DIntegYielgDRummy, "d#it{N}_{ch}/d#eta |_{#eta#approx0}","d#it{N}_{#gamma}/d#it{y} (#it{p}_{T} > 1.0 GeV/#it{c})", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 1.08,0.95);
+    hist2DIntegYielgDRummy->GetXaxis()->SetLabelOffset(-0.005);
+    // hist2DIntegYielgDRummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+    hist2DIntegYielgDRummy->DrawCopy();
+
+        // TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.958-textSizeSinglePad*5,0.35,0.958, textSizeSinglePad, 1, Form("%s %s",multbins[ncent].Data(),collisionSystempPb.Data()), 42, 0.3);
+        // legendDRSingle->SetTextAlign(11);
+        // DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+        // for (Int_t i = 0; i < 10; i++){
+        //     if (graphDRNonFitSysErr[ncent][i]){
+        //         DrawGammaSetMarkerTGraphAsym(graphDRNonFitSysErr[ncent][i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
+        //         graphDRNonFitSysErr[ncent][i]->Draw("E2same");
+        //         legendDRSingle->AddEntry(graphDRNonFitSysErr[ncent][i],nameMeasGlobalLabel[i],"pf");
+
+        //     }
+        //     if (histoDRNonFitStatErr[ncent][i]){
+        //         DrawGammaSetMarker(histoDRNonFitStatErr[ncent][i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
+        //         histoDRNonFitStatErr[ncent][i]->Draw("p,same,e0,X0");
+        //         if (!graphDRNonFitSysErr[ncent][i])legendDRSingle->AddEntry(histoDRNonFitStatErr[ncent][i],nameMeasGlobalLabel[i],"p");
+        //     }
+        // }
+        tSIntYield200AuAuInt->Draw("E2same");
+        tEIntYield200AuAuInt->Draw("p,E1Z,same");
+
+        tSIntYield200AuAu->Draw("E2same");
+        tEIntYield200AuAu->Draw("p,E1Z,same");
+
+        tSIntYield62AuAu->Draw("E2same");
+        tEIntYield62AuAu->Draw("p,E1Z,same");
+
+        tSIntYield39AuAu->Draw("E2same");
+        tEIntYield39AuAu->Draw("p,E1Z,same");
+
+        tSIntYield2760PbPb->Draw("E2same");
+        tEIntYield2760PbPb->Draw("p,E1Z,same");
+
+        tSIntYield200pp->Draw("E2same");
+        tEIntYield200pp->Draw("p,E1Z,same");
+
+        tSIntYield200CuCu->Draw("E2same");
+        tEIntYield200CuCu->Draw("p,E1Z,same");
+
+        // if (histoDRNonFitStatErr[ncent][2]) histoDRNonFitStatErr[ncent][2]->Draw("p,same,e0,X0");
+        // if (histoDRNonFitStatErr[ncent][0]) histoDRNonFitStatErr[ncent][0]->Draw("p,same,e0,X0");
+        // if (histoDRNonFitStatErr[ncent][4]) histoDRNonFitStatErr[ncent][4]->Draw("p,same,e0,X0");
+        // legendDRSingle->Draw();
+
+//         TLatex *labelDRSingle       = new TLatex(0.95,0.19,Form("%s %s",multbins[ncent].Data(),collisionSystempPb.Data()));
+//         SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+// //         labelDRSingle->Draw();
+//         TLatex *labelALICEDRSingle  = new TLatex(0.95,0.14,textALICE.Data());
+//         SetStyleTLatex( labelALICEDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+//         labelALICEDRSingle->Draw();
+
+        hist2DIntegYielgDRummy->Draw("same,axis");
+
+    canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.%s", outputDir.Data(), suffix.Data()));
+    canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.pdf", outputDir.Data()));
+
+
+}
+
+
 
 
 

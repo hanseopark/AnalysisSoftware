@@ -483,7 +483,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
 
 
             // Eta - cutstudies nr 13
-            if (nameCutVariationSC[i].CompareTo("Efficiency")==0  ){
+            if (nameCutVariationSC[i].CompareTo("Efficiency")==0  && energy.CompareTo("pPb_5.023TeVCent")){
                 if ( meson.CompareTo("Pi0") == 0){
                     minPt           = 0;
                     errorReset      = 2.0;

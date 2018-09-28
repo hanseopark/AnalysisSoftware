@@ -3619,6 +3619,21 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         inMCGillGammaV2.close();
         TGraphErrors* graphGammaV2McGill5023GeV = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,yV2GammaMCGill, xPtErrGammaMCGill, yV2ErrGammaMCGill );
 
+        // read direct photon v2
+        nlinesGammaMCGill           = 0;
+        ifstream inMCGillGamma0020;
+        Double_t y0020GammaMCGill[100], y0020ErrGammaMCGill[100];
+        inMCGillGamma0020.open("ExternalInputpPb/Theory/McGill/direct_photon_sp_pPbC0-20.dat",ios_base::in);
+        while(!inMCGillGamma0020.eof()){
+            inMCGillGamma0020 >> xPtGammaMCGill[nlinesGammaMCGill]  >> y0020GammaMCGill[nlinesGammaMCGill] >> y0020ErrGammaMCGill[nlinesGammaMCGill];
+            cout << nlinesGammaMCGill << "         "  << xPtGammaMCGill[nlinesGammaMCGill] << "         "  <<y0020GammaMCGill[nlinesGammaMCGill]<<endl;
+            xPtErrGammaMCGill[nlinesGammaMCGill] = 0;
+            nlinesGammaMCGill++;
+
+        }
+        inMCGillGamma0020.close();
+        TGraphErrors* graphGammaSpecMcGill5023GeV0020 = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,y0020GammaMCGill, xPtErrGammaMCGill, y0020ErrGammaMCGill );
+
         //******************************************************************************************************************
         //************************************** Calculate RGamma based on ALICE cocktail **********************************
         //******************************************************************************************************************
@@ -3638,11 +3653,11 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphMCGillRGammaALICECocktail->SetPointError(i, graphMCGillRGammaALICECocktail->GetEX()[i], drtheoGamma*relErrUp);
         }
 
-        TGraphErrors* graphMCGillRGammaALICECocktail0020                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail0020");
+        TGraphErrors* graphMCGillRGammaALICECocktail0020                = (TGraphErrors*)graphGammaSpecMcGill5023GeV0020->Clone("graphMCGillRGammaALICECocktail0020");
         graphMCGillRGammaALICECocktail0020                          = (TGraphErrors*)ScaleGraph(graphMCGillRGammaALICECocktail0020, ncollpPb5TeV0020/ncollpPb5TeVMB);
         TGraph* graphMCGillRGammaALICECocktail0020Center                = new TGraph(graphMCGillRGammaALICECocktail0020->GetN());
         for (Int_t i = 0; i < graphMCGillRGammaALICECocktail0020->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail0020->GetX()[i]);
+            Double_t decayGamma                                     = histoGammaDecaypPb5TeV0020->Interpolate(graphMCGillRGammaALICECocktail0020->GetX()[i]);
             Double_t theoGamma                                      = graphMCGillRGammaALICECocktail0020->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
             Double_t relErrUp                                       = 0;
@@ -3655,56 +3670,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphMCGillRGammaALICECocktail0020->SetPointError(i, graphMCGillRGammaALICECocktail0020->GetEX()[i], drtheoGamma*relErrUp);
         }
 
-        TGraphErrors* graphMCGillRGammaALICECocktail2040                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail2040");
-        graphMCGillRGammaALICECocktail2040                          = (TGraphErrors*)ScaleGraph(graphMCGillRGammaALICECocktail2040, ncollpPb5TeV2040/ncollpPb5TeVMB);
-        TGraph* graphMCGillRGammaALICECocktail2040Center                = new TGraph(graphMCGillRGammaALICECocktail2040->GetN());
-        for (Int_t i = 0; i < graphMCGillRGammaALICECocktail2040->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail2040->GetX()[i]);
-            Double_t theoGamma                                      = graphMCGillRGammaALICECocktail2040->GetY()[i];
-            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
-            Double_t relErrUp                                       = 0;
-            cout << graphMCGillRGammaALICECocktail2040->GetX()[i] << "\t" << decayGamma << "\t" << theoGamma << endl;
-            if (theoGamma != 0){
-                relErrUp                                            = graphMCGillRGammaALICECocktail2040->GetEY()[i]/theoGamma;
-            }
-            graphMCGillRGammaALICECocktail2040->SetPoint(i, graphMCGillRGammaALICECocktail2040->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail2040Center->SetPoint(i, graphMCGillRGammaALICECocktail2040->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail2040->SetPointError(i, graphMCGillRGammaALICECocktail2040->GetEX()[i], drtheoGamma*relErrUp);
-        }
-
-        TGraphErrors* graphMCGillRGammaALICECocktail4060                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail4060");
-        graphMCGillRGammaALICECocktail4060                          = (TGraphErrors*)ScaleGraph(graphMCGillRGammaALICECocktail4060, ncollpPb5TeV4060/ncollpPb5TeVMB);
-        TGraph* graphMCGillRGammaALICECocktail4060Center                = new TGraph(graphMCGillRGammaALICECocktail4060->GetN());
-        for (Int_t i = 0; i < graphMCGillRGammaALICECocktail4060->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail4060->GetX()[i]);
-            Double_t theoGamma                                      = graphMCGillRGammaALICECocktail4060->GetY()[i];
-            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
-            Double_t relErrUp                                       = 0;
-            cout << graphMCGillRGammaALICECocktail4060->GetX()[i] << "\t" << decayGamma << "\t" << theoGamma << endl;
-            if (theoGamma != 0){
-                relErrUp                                            = graphMCGillRGammaALICECocktail4060->GetEY()[i]/theoGamma;
-            }
-            graphMCGillRGammaALICECocktail4060->SetPoint(i, graphMCGillRGammaALICECocktail4060->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail4060Center->SetPoint(i, graphMCGillRGammaALICECocktail4060->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail4060->SetPointError(i, graphMCGillRGammaALICECocktail4060->GetEX()[i], drtheoGamma*relErrUp);
-        }
-
-        TGraphErrors* graphMCGillRGammaALICECocktail60100                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail60100");
-        graphMCGillRGammaALICECocktail60100                          = (TGraphErrors*)ScaleGraph(graphMCGillRGammaALICECocktail60100, ncollpPb5TeV60100/ncollpPb5TeVMB);
-        TGraph* graphMCGillRGammaALICECocktail60100Center                = new TGraph(graphMCGillRGammaALICECocktail60100->GetN());
-        for (Int_t i = 0; i < graphMCGillRGammaALICECocktail60100->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail60100->GetX()[i]);
-            Double_t theoGamma                                      = graphMCGillRGammaALICECocktail60100->GetY()[i];
-            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
-            Double_t relErrUp                                       = 0;
-            cout << graphMCGillRGammaALICECocktail60100->GetX()[i] << "\t" << decayGamma << "\t" << theoGamma << endl;
-            if (theoGamma != 0){
-                relErrUp                                            = graphMCGillRGammaALICECocktail60100->GetEY()[i]/theoGamma;
-            }
-            graphMCGillRGammaALICECocktail60100->SetPoint(i, graphMCGillRGammaALICECocktail60100->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail60100Center->SetPoint(i, graphMCGillRGammaALICECocktail60100->GetX()[i], drtheoGamma);
-            graphMCGillRGammaALICECocktail60100->SetPointError(i, graphMCGillRGammaALICECocktail60100->GetEX()[i], drtheoGamma*relErrUp);
-        }
 
         //*****************************************************
         // read decay photon spectra
@@ -4234,6 +4199,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
                 // writing McGill calcs
                 graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
+                graphGammaSpecMcGill5023GeV0020->Write("graphDirectPhotonSpecMcGill5023GeV_0020", TObject::kOverwrite);
                 graphMCGillRGammaALICECocktail->GetYaxis()->SetTitle("R_{#gamma}");
                 graphMCGillRGammaALICECocktail->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphMCGillRGammaALICECocktail->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail",TObject::kOverwrite);
@@ -4246,24 +4212,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphMCGillRGammaALICECocktail0020Center->GetYaxis()->SetTitle("R_{#gamma}");
                 graphMCGillRGammaALICECocktail0020Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphMCGillRGammaALICECocktail0020Center->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center_0020",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail2040->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail2040->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail2040->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_2040",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail2040Center->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail2040Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail2040Center->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center_2040",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail4060->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail4060->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail4060->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_4060",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail4060Center->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail4060Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail4060Center->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center_4060",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail60100->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail60100->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail60100->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_60100",TObject::kOverwrite);
-                graphMCGillRGammaALICECocktail60100Center->GetYaxis()->SetTitle("R_{#gamma}");
-                graphMCGillRGammaALICECocktail60100Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphMCGillRGammaALICECocktail60100Center->Write("graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center_60100",TObject::kOverwrite);
 
                 graphGammaV2McGill5023GeV->Write("graphDirectPhotonV2McGill5023GeV", TObject::kOverwrite);
                 for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
@@ -4401,6 +4349,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 delete graphNLOCalcFragGampPb5TeV;
                 delete graphNLOCalcInvYieldINT7FragGampPb5TeV;
                 delete graphGammaSpecMcGill5023GeV;
+                delete graphGammaSpecMcGill5023GeV0020;
                 delete graphGammaV2McGill5023GeV;
 
                 delete gae_gamma_pt_powheg_pPb5020_ncteq15;
