@@ -329,6 +329,12 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       } else if (cutVariationName.Contains("dEdxE")){	 
          TString fdEdxCut = fGammaCutSelection(5,1);
          cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
+      } else if (cutVariationName.Contains("TPCdEdxE")){
+         TString fdEdxCutTPC = fElectronCutSelection(2,1);
+         cutStringsName[i] = AnalyseTPCdEdxCutElectronLineTPC(CutNumberToInteger(fdEdxCutTPC));
+      } else if (cutVariationName.Contains("MassElectronPositron")){
+         TString fMassEPCut = fElectronCutSelection(17,1);
+         cutStringsName[i] = AnalyseMassEPCut(CutNumberToInteger(fMassEPCut));
       } else if (cutVariationName.Contains("dEdxPi")){    
          TString fdEdxCut = fGammaCutSelection(6,3);
          cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      

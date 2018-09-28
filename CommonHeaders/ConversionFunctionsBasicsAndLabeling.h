@@ -3001,7 +3001,73 @@
             }
         } else return "";
     }
+    //************************************************************************************
+    //** Analyzes the TPC dEdx E electron cut, return correct cut label ******************
+    //************************************************************************************
+    TString AnalyseTPCdEdxCutElectronLineTPC(Int_t ededxSigmaCut){
+        switch(ededxSigmaCut){
+            case 0: // -10,10  kTrue
+                return "-10 #sigma < TPC dE/dx - #LTdE/dx#GT < 10 #sigma";
+            case 1: // -10,10 kFalse
+                return "-10 #sigma < TPC dE/dx - #LTdE/dx#GT < 10 #sigma";
+            case 2:// -6,7
+                return "-6 #sigma < TPC dE/dx - #LTdE/dx#GT < 7 #sigma";
+            case 3: // -5,5
+                return "-5 #sigma < TPC dE/dx - #LTdE/dx#GT < 5 #sigma";
+            case 4: // -4,5
+                return "-4 #sigma < TPC dE/dx - #LTdE/dx#GT < 5 #sigma";
+            case 5: // -3,5
+                return "-3 #sigma < TPC dE/dx - #LTdE/dx#GT < 5 #sigma";
+            case 6: // -4,4
+                return "-4 #sigma < TPC dE/dx - #LTdE/dx#GT < 4 #sigma";
+            case 7: // -2.5,4
+                return "-2.5 #sigma < TPC dE/dx - #LTdE/dx#GT < 4 #sigma";
+            case 8: // -2,3.5
+                return "-2 #sigma < TPC dE/dx - #LTdE/dx#GT 3.5 < #sigma";
+            case 9: // -3,4
+                return "-3 #sigma < TPC dE/dx - #LTdE/dx#GT < 4 #sigma";
+            default:
+                return "no dEdx cut defined";
+        }
+        return kTRUE;
+    }
 
+    //************************************************************************************
+    //** Analyzes the M_{e^+e^-}, electron cut, return correct cut label ******************
+    //************************************************************************************
+    TString AnalyseMassEPCut(Int_t ReconstructionMassEPCut){
+        switch(ReconstructionMassEPCut){
+            case 0: // -999, 999-999
+                return "No cut";
+            case 1: // -999, 0.135
+                return "M_{e^{+}e^{-}}<0.0135";
+            case 2: // -999, 0.100
+                return "M_{e^{+}e^{-}}<0.1";
+            case 3: // 1.0, 0.015-0.032
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.015 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.032";
+            case 4: // -999, 0.050
+                return "M_{e^{+}e^{-}}<0.05";
+            case 5: // -999, 0.035
+                return "M_{e^{+}e^{-}}<0.035";
+            case 6: // -999, 0.015
+                return "M_{e^{+}e^{-}}<0.015";
+            case 7: // 1.0, 0.015-0.035
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.015 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.035";
+            case 8: // 1.0, 0.015-0.050
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.015 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.05";
+            case 9: // 1.0, 0.025-0.035
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.025 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.035";
+            case 10: // 1.0, 0.02-0.03
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.02 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.03";
+            case 11: // 1.0, 0.027-0.054
+                return "p_{T}(M_{e^{+}e^{-}})<1.0 and M_{e^{+}e^{-}}<0.027 or p_{T}(M_{e^{+}e^{-}})>1.0 and M_{e^{+}e^{-}}<0.054";
+            case 12: // 1.0, 0.02-0.02
+                return "M_{e^{+}e^{-}}<0.02";
+            default:
+                return "no Mass cut defined for Electron and Positron";
+        }
+        return kTRUE;
+    }
     //************************************************************************************
     //** Analyzes the TPC cluster cut, return correct cut label **************************
     //************************************************************************************
