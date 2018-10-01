@@ -1,0 +1,21 @@
+%: table_doi: 10.17182/hepdata.73775.v1/t3
+%: name: Table 3
+%: description: Average $Q_{\rm pPb}$ of D$^{0}$	 D$^{+}$ and D*$^{+}$ mesons for the sum of particles and antiparticles in several multiplicity and PT(D) intervals for p-Pb collisions at $\sqrt{s_{NN}}$ = 5.02 TeV as a function of the multiplicity at central rapidity evaluated with the V0A estimator. The values are reported together with their uncertainties	 which are quoted as statistical followed by systematic uncertainties. Normalisation uncertainty is not quoted and amounts to $\pm 0.05$	 $\pm 0.05$	 $\pm 0.06$ and $\pm 0.22$ for the 0-20%	 20-40%	 40-60% and 60-100% intervals	 respectively.
+
+%: data_file: Table3.yaml
+%: keyword reactions: P PB --> D0 X | P PB --> D+ X | P PB --> D*+ X
+%: keyword observables: RPA
+%: keyword phrases: Inclusive | Charm Production
+%: keyword cmenergies: 5020.0
+%: RE			P PB --> D X
+%: YRAP(RF=CM)(D)			-0.96-0.04
+%: CENTRALITY [pct]			60.0-100.0
+%: SQRT(S)/NUCLEON [GeV]			5020.0
+%'PT(D) [GEV]'	'PT(D) [GEV] LOW'	'PT(D) [GEV] HIGH'	'$Q_{\rm pPb}$'	'stat +'	'stat -'	'sys +'	'sys -'
+1.5	1.0	2.0	0.65	0.15	-0.15	0.19	-0.19
+3.0	2.0	4.0	0.71	0.06	-0.06	0.13	-0.14
+5.0	4.0	6.0	0.75	0.05	-0.05	0.12	-0.12
+7.0	6.0	8.0	0.76	0.07	-0.07	0.12	-0.12
+10.0	8.0	12.0	0.75	0.08	-0.08	0.12	-0.12
+14.0	12.0	16.0	0.81	0.21	-0.21	0.14	-0.15
+

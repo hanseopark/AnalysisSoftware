@@ -88,7 +88,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
 
     Double_t  posYLabel                         = 0.84;
 
-    TLatex *labelEnergy                         = new TLatex(0.95,0.92,collisionSystem);
+    TLatex *labelEnergy                         = new TLatex(0.95,0.92,Form("%s %s",cent.Data(), collisionSystem.Data()));
     SetStyleTLatex( labelEnergy, 0.038,4);
     labelEnergy->SetTextAlign(31);
     TLatex *labelSpectrum;
@@ -268,19 +268,22 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
         TGraphAsymmErrors* graphPosErrors       = NULL;
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
+        TString currCent    = cent;
+        if (! (i == 0 || i==11))
+            currCent        = "0-100%";
         // Set currently undetermined uncertainties
         if ( nameCutVariationSC[i].CompareTo("SPD")==0  || nameCutVariationSC[i].CompareTo("Efficiency")==0 || nameCutVariationSC[i].CompareTo("ClusterTiming")==0){
             TString nameGraphPos;
             TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data());
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data()  );
+            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), currCent.Data());
+            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), currCent.Data()  );
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<< "\t fixing" <<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else {
             // Load input graphs from systematics file
-            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
-            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
+            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), currCent.Data() );
+            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), currCent.Data() );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -498,11 +501,14 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
 
             // fix Efficiency sys #12
             if (!nameCutVariationSC[i].CompareTo("Efficiency")){
-                if (spectrumName.Contains("Ratio")){
+                if (!cent.CompareTo("0-100%") && spectrumName.Contains("Ratio"))
                     errorFixed          = TMath::Sqrt(2*2+1.5*1.5);
-                } else {
+                else if (!cent.CompareTo("0-100%") )
                     errorFixed          = 1.5;
-                }
+                else if (!spectrumName.Contains("Ratio"))
+                    errorFixed          = TMath::Sqrt(1*1+1.5*1.5);
+                else
+                    errorFixed          = TMath::Sqrt(2*2+1.5*1.5+1.5*1.5);
             }
 
             // 13 "Rapidity"
@@ -735,8 +741,8 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
 
         Double_t minXLegend2        = 0.11;
         Double_t maxYLegend2        = 0.95;
-        Double_t widthLegend2       = 0.5;
-        Double_t heightLegend2      = 4*0.04;
+        Double_t widthLegend2       = 0.45;
+        Double_t heightLegend2      = 4*0.042;
 
         // create legend
         TLegend* legendSummedMeanNew    = GetAndSetLegend2(minXLegend2, maxYLegend2-heightLegend2, minXLegend2+widthLegend2, maxYLegend2, 40, 2, "", 43, 0.1);
@@ -760,22 +766,22 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
         if (benable[8] || benable[9] || benable[11] || benable[13] || benable[14]){
             DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, GetMarkerStyleSystematics("IntRange"), markersizeSummed, GetColorSystematics("IntRange"),GetColorSystematics("IntRange"));
             meanErrorsSignalExtraction->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Ext. #pi^{0}","p");
+            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"sig. ext. #pi^{0}","p");
         }
         if (benable[7] ){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[7], GetMarkerStyleSystematics("Pileup"), markersizeSummed, GetColorSystematics("Pileup"),GetColorSystematics("Pileup"));
             meanErrorsCorr[7]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[7],"Pile-up","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[7],"pile-up","p");
         }
         if (benable[1] || benable[2] || benable[4] || benable[5] ){
             DrawGammaSetMarkerTGraphErr(meanErrorsClusterProp, GetMarkerStyleSystematics("ClusterM02"), markersizeSummed, GetColorSystematics("ClusterM02"),GetColorSystematics("ClusterM02"));
             meanErrorsClusterProp->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsClusterProp,"cluster prop.","p");
+            legendSummedMeanNew->AddEntry(meanErrorsClusterProp,"cl. prop.","p");
         }
         if (benable[0]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[0], markerStyle[0], markersizeSummed,color[0],color[0]);
             meanErrorsCorr[0]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[0],"cl. energy scale","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[0],"cl. #it{E}-scale","p");
         }
         if (benable[3]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[3], markerStyle[3], markersizeSummed,color[3],color[3]);
@@ -785,17 +791,17 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
         if (benable[12]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[12], markerStyle[12], markersizeSummed,color[12],color[12]);
             meanErrorsCorr[12]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[12],"Efficiency","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[12],"#varepsilon_{rec}","p");
         }
         if (benable[10]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[10], markerStyle[10], markersizeSummed,color[10],color[10]);
             meanErrorsCorr[10]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[10],"Cocktail","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[10],"cocktail","p");
         }
         if (benable[6]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[6], markerStyle[6], markersizeSummed,color[6],color[6]);
             meanErrorsCorr[6]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[6],"outer material","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[6],"outer mat.","p");
         }
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummed, 20, markersizeSummed,kBlack,kBlack);
         meanErrorsCorrSummed->Draw("p,csame");

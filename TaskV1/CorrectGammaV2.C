@@ -1077,22 +1077,30 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         // fit correction factor to get back to original binning
         cout << "fitting ratio gamma raw yield to raw yield after pileup subtraction to extract the pileup correction factor" << endl;
+        //otherwise function is null
         Double_t rangeShift = 0.;
-        if(energy.Contains("PbPb") || (energy.CompareTo("pPb_5.023TeVRun2")==0 ) || (energy.CompareTo("8TeV")==0 && mode == 2)) rangeShift = 0.5; //otherwise function is null
+        if( energy.Contains("PbPb") ||
+            (energy.CompareTo("pPb_5.023TeVRun2")==0 ) ||
+
+            (energy.CompareTo("8TeV")==0 && mode == 2))
+            rangeShift = 0.5;
+        else if ((energy.CompareTo("pPb_5.023TeV")==0 && centrality.CompareTo("0-100%") != 0 && mode == 2) )
+            rangeShift = 0.8;
+
         Int_t   fitStatus                                           = 0;
                 histoRatioWithWithoutPileUpFit                      = new TF1("histoRatioWithWithoutPileUpFit", "1+[0]/TMath::Power((x-[1]), [2])",
                                                                               histoESDConvGammaPt_OrBin->GetXaxis()->GetXmin()+rangeShift,
                                                                               histoESDConvGammaPt_OrBin->GetXaxis()->GetXmax());
         histoRatioWithWithoutPileUpFit->SetParameters(1, 0, 1);
         histoRatioWithWithoutPileUpFit->SetName(Form("%s_fit", histoRatioWithWithoutPileUp->GetName()));
-        TFitResultPtr histoRatioWithWithoutPileUpFitResult          = histoRatioWithWithoutPileUp->Fit(histoRatioWithWithoutPileUpFit, "SMNRE+","",
+        TFitResultPtr fitResultPileup                               = histoRatioWithWithoutPileUp->Fit(histoRatioWithWithoutPileUpFit, "SMNRE+","",
                                                                                                        histoRatioWithWithoutPileUp->GetXaxis()->GetXmin()+rangeShift,
                                                                                                        histoRatioWithWithoutPileUp->GetXaxis()->GetXmax());
-        fitStatus                                                   = histoRatioWithWithoutPileUpFitResult;
+        fitStatus                                                   = fitResultPileup;
+        // accepting fits, if everything went fine (i.e. fitstatus = 0) of if only improve had problems (i.e. fitstatus >= 1000)
+        cout << "fit status: " << fitStatus << endl;
 
-        if (fitStatus == 0 || fitStatus >= 1000) {
-            // accepting fits, if everything went fine (i.e. fitstatus = 0) of if only improve had problems (i.e. fitstatus >= 1000)
-            cout << "fit status: " << fitStatus << endl;
+        if (fitStatus == 0 || fitStatus >= 1000 || fitStatus == 4) {
 
             // pileup correction factor in analysis binning
             histoPileUpCorrectionFactor_Pt                          = (TH1D*)histoESDConvGammaPt->Clone("PileUpCorrectionFactorOrBin");
@@ -1104,12 +1112,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt->GetNbinsX()+1; i++) {
                 binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
                                                                                                                histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
-                                                                                                               histoRatioWithWithoutPileUpFitResult->GetParams()) /
+                                                                                                               fitResultPileup->GetParams()) /
                                                                                                                histoPileUpCorrectionFactor_Pt->GetBinWidth(i);
                 binError                                            = histoRatioWithWithoutPileUpFit->IntegralError(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
                                                                                                                     histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
-                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetParams(),
-                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetCovarianceMatrix().GetMatrixArray()) /
+                                                                                                                    fitResultPileup->GetParams(),
+                                                                                                                    fitResultPileup->GetCovarianceMatrix().GetMatrixArray()) /
                                                                                                                     histoPileUpCorrectionFactor_Pt->GetBinWidth(i);
                 if (binContent > 0) {
                     histoPileUpCorrectionFactor_Pt->SetBinContent(i, 1./binContent);
@@ -1130,12 +1138,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt_OrBin->GetNbinsX()+1; i++) {
                 binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinLowEdge(i),
                                                                                                                histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i),
-                                                                                                               histoRatioWithWithoutPileUpFitResult->GetParams()) /
+                                                                                                               fitResultPileup->GetParams()) /
                                                                                                                histoPileUpCorrectionFactor_Pt_OrBin->GetBinWidth(i);
                 binError                                            = histoRatioWithWithoutPileUpFit->IntegralError(histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinLowEdge(i),
                                                                                                                     histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i),
-                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetParams(),
-                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetCovarianceMatrix().GetMatrixArray()) /
+                                                                                                                    fitResultPileup->GetParams(),
+                                                                                                                    fitResultPileup->GetCovarianceMatrix().GetMatrixArray()) /
                                                                                                                     histoPileUpCorrectionFactor_Pt_OrBin->GetBinWidth(i);
                 if (binContent > 0) {
                     histoPileUpCorrectionFactor_Pt_OrBin->SetBinContent(i, 1./binContent);

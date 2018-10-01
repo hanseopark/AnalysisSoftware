@@ -485,6 +485,19 @@ void ProduceTheoryGraphsPPb(){
         histoEtaToKCHDPMJet[cent]       = (TH1D*)directoryDPMJetCent[cent]->Get("MCEtaToKCh");
     }
 
+    TFile* fileDPMJet2              = new TFile("ExternalInputpPb/Theory/DPMJet_pPb_5023GeV_990Mio.root");
+    TH1D* histoPi0DPMJet2               = (TH1D*)fileDPMJet2->Get("hPtPi0DPMJetpPb");
+    TH1D* histoPiPlDPMJet2              = (TH1D*)fileDPMJet2->Get("hPtPiPlDPMJetpPb");
+    TH1D* histoPiMiDPMJet2              = (TH1D*)fileDPMJet2->Get("hPtPiMiDPMJetpPb");
+    TH1D* histoPiChDPMJet2              = (TH1D*)histoPiPlDPMJet2->Clone("hPtPiChDPMJetpPb");
+    histoPiChDPMJet2->Add(histoPiMiDPMJet2);
+    histoPiChDPMJet2->Scale(1/2.);
+    TH1D* histoEtaDPMJet2               = (TH1D*)fileDPMJet2->Get("hPtEtaDPMJetpPb");
+    TH1D* histoEtaToPi0DPMJet2          = (TH1D*)histoEtaDPMJet2->Clone("MCEtaToPi0DPMJet");
+    histoEtaToPi0DPMJet2->Divide(histoPi0DPMJet2);
+    TH1D* histoPi0ToPiCHDPMJet2         = (TH1D*)histoPi0DPMJet2->Clone("MCPi0ToPiChDPMJet");
+    histoPi0ToPiCHDPMJet2->Divide(histoPiChDPMJet2);
+
     //**************************************************************************************************
     //********************** EPOSLHC MC spectra and ratio ***********************************************
     //**************************************************************************************************
@@ -515,6 +528,19 @@ void ProduceTheoryGraphsPPb(){
         histoEtaToKCHEPOSLHC[cent]       = (TH1D*)directoryEPOSLHCCent[cent]->Get("MCEtaToKCh");
     }
 
+    TFile* fileEPOSLHC2              = new TFile("ExternalInputpPb/Theory/EPOSLHC_pPb_5023GeV_99Mio.root");
+    TH1D* histoPi0EPOSLHC2               = (TH1D*)fileEPOSLHC2->Get("hPtPi0EPOSLHCpPb");
+    TH1D* histoPiPlEPOSLHC2              = (TH1D*)fileEPOSLHC2->Get("hPtPiPlEPOSLHCpPb");
+    TH1D* histoPiMiEPOSLHC2              = (TH1D*)fileEPOSLHC2->Get("hPtPiMiEPOSLHCpPb");
+    TH1D* histoPiChEPOSLHC2              = (TH1D*)histoPiPlEPOSLHC2->Clone("hPtPiChEPOSLHCpPb");
+    histoPiChEPOSLHC2->Add(histoPiMiEPOSLHC2);
+    histoPiChEPOSLHC2->Scale(1/2.);
+    TH1D* histoEtaEPOSLHC2               = (TH1D*)fileEPOSLHC2->Get("hPtEtaEPOSLHCpPb");
+    TH1D* histoEtaToPi0EPOSLHC2          = (TH1D*)histoEtaEPOSLHC2->Clone("MCEtaToPi0EPOSLHC");
+    histoEtaToPi0EPOSLHC2->Divide(histoPi0EPOSLHC2);
+    TH1D* histoPi0ToPiCHEPOSLHC2         = (TH1D*)histoPi0EPOSLHC2->Clone("MCPi0ToPiChEPOSLHC");
+    histoPi0ToPiCHEPOSLHC2->Divide(histoPiChEPOSLHC2);
+
 
     //**************************************************************************************************
     //********************** HIJING MC spectra and ratio ***********************************************
@@ -531,6 +557,18 @@ void ProduceTheoryGraphsPPb(){
     TH1D* histoEtaToKCHHIJING       = (TH1D*)fileHIJING->Get("MCEtaToKCh");
     TH1D* histoPi0ToPiCHHIJING      = (TH1D*)fileHIJING->Get("MCPi0ToPiCh");
 
+    TFile* fileHIJING2              = new TFile("ExternalInputpPb/Theory/HIJING_pPb_5023GeV_97Mio.root");
+    TH1D* histoPi0HIJING2               = (TH1D*)fileHIJING2->Get("hPtPi0HIJINGpPb");
+    TH1D* histoPiPlHIJING2              = (TH1D*)fileHIJING2->Get("hPtPiPlHIJINGpPb");
+    TH1D* histoPiMiHIJING2              = (TH1D*)fileHIJING2->Get("hPtPiMiHIJINGpPb");
+    TH1D* histoPiChHIJING2              = (TH1D*)histoPiPlHIJING2->Clone("hPtPiChHIJINGpPb");
+    histoPiChHIJING2->Add(histoPiMiHIJING2);
+    histoPiChHIJING2->Scale(1/2.);
+    TH1D* histoEtaHIJING2               = (TH1D*)fileHIJING2->Get("hPtEtaHIJINGpPb");
+    TH1D* histoEtaToPi0HIJING2          = (TH1D*)histoEtaHIJING2->Clone("MCEtaToPi0HIJING");
+    histoEtaToPi0HIJING2->Divide(histoPi0HIJING2);
+    TH1D* histoPi0ToPiCHHIJING2         = (TH1D*)histoPi0HIJING2->Clone("MCPi0ToPiChHIJING");
+    histoPi0ToPiCHHIJING2->Divide(histoPiChHIJING2);
 
     //**************************************************************************************************
     //****************************** extracting McGill predictions**************************************
@@ -1321,6 +1359,7 @@ void ProduceTheoryGraphsPPb(){
             histoEtaToKCHEPOSLHC[cent]->Write("histoEtaToKChEPOSLHC", TObject::kOverwrite);
             histoPi0ToPiCHEPOSLHC[cent]->Write("histoPi0ToPiChEPOSLHC", TObject::kOverwrite);
         }
+
         // write MB calcs
         fileTheoryGraphsPPb.cd("pPb_5.023TeV");
             // pi0 EPS09 with old FFs RpPb
@@ -1345,6 +1384,12 @@ void ProduceTheoryGraphsPPb(){
             histoEtaToPi0EPOSLHC[0]->Write("histoEtaToPi0EPOSLHC", TObject::kOverwrite);
             histoEtaToKCHEPOSLHC[0]->Write("histoEtaToKChEPOSLHC", TObject::kOverwrite);
             histoPi0ToPiCHEPOSLHC[0]->Write("histoPi0ToPiChEPOSLHC", TObject::kOverwrite);
+            histoPi0EPOSLHC2->Write("histoPi0SpecEPOSLHC_MCGen", TObject::kOverwrite);
+            histoPiChEPOSLHC2->Write("histoPiChSpecEPOSLHC_MCGen", TObject::kOverwrite);
+            histoEtaEPOSLHC2->Write("histoEtaSpecEPOSLHC_MCGen", TObject::kOverwrite);
+            histoEtaToPi0EPOSLHC2->Write("histoEtaToPi0EPOSLHC_MCGen", TObject::kOverwrite);
+            histoPi0ToPiCHEPOSLHC2->Write("histoPi0ToPiChEPOSLHC_MCGen", TObject::kOverwrite);
+
             // pi0, eta, eta/pi0 DPMJet
             histoPi0DPMJet[0]->Write("histoPi0SpecDPMJet", TObject::kOverwrite);
             histoEtaDPMJet[0]->Write("histoEtaSpecDPMJet", TObject::kOverwrite);
@@ -1355,6 +1400,12 @@ void ProduceTheoryGraphsPPb(){
             histoEtaToPi0DPMJet[0]->Write("histoEtaToPi0DPMJet", TObject::kOverwrite);
             histoEtaToKCHDPMJet[0]->Write("histoEtaToKChDPMJet", TObject::kOverwrite);
             histoPi0ToPiCHDPMJet[0]->Write("histoPi0ToPiChDPMJet", TObject::kOverwrite);
+            histoPi0DPMJet2->Write("histoPi0SpecDPMJet_MCGen", TObject::kOverwrite);
+            histoPiChDPMJet2->Write("histoPiChSpecDPMJet_MCGen", TObject::kOverwrite);
+            histoEtaDPMJet2->Write("histoEtaSpecDPMJet_MCGen", TObject::kOverwrite);
+            histoEtaToPi0DPMJet2->Write("histoEtaToPi0DPMJet_MCGen", TObject::kOverwrite);
+            histoPi0ToPiCHDPMJet2->Write("histoPi0ToPiChDPMJet_MCGen", TObject::kOverwrite);
+
             // pi0, eta, eta/pi0 HIJING
             histoPi0HIJING->Write("histoPi0SpecHIJING", TObject::kOverwrite);
             histoEtaHIJING->Write("histoEtaSpecHIJING", TObject::kOverwrite);
@@ -1365,6 +1416,11 @@ void ProduceTheoryGraphsPPb(){
             histoEtaToPi0HIJING->Write("histoEtaToPi0HIJING", TObject::kOverwrite);
             histoEtaToKCHHIJING->Write("histoEtaToKChHIJING", TObject::kOverwrite);
             histoPi0ToPiCHHIJING->Write("histoPi0ToPiChHIJING", TObject::kOverwrite);
+            histoPi0HIJING2->Write("histoPi0SpecHIJING_MCGen", TObject::kOverwrite);
+            histoPiChHIJING2->Write("histoPiChSpecHIJING_MCGen", TObject::kOverwrite);
+            histoEtaHIJING2->Write("histoEtaSpecHIJING_MCGen", TObject::kOverwrite);
+            histoEtaToPi0HIJING2->Write("histoEtaToPi0HIJING_MCGen", TObject::kOverwrite);
+            histoPi0ToPiCHHIJING2->Write("histoPi0ToPiChHIJING_MCGen", TObject::kOverwrite);
             // pi0, eta, eta/pi0 McGill Hydro
             graphEtaSpecMcGill->Write("graphEtaSpecMcGill5023GeV", TObject::kOverwrite);
             graphPi0SpecMcGill->Write("graphPi0SpecMcGill5023GeV", TObject::kOverwrite);

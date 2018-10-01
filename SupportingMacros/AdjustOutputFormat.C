@@ -53,7 +53,8 @@ void AdjustOutputFormat(    TString energy          = "",
                             TString meson           = "",
                             TString inputFileName1  = "",
                             TString inputFileName2  = "",
-                            TString outputFileName  = ""
+                            TString outputFileName  = "",
+                            TString additionalName  = ""
                         ){
 
     StyleSettingsThesis();
@@ -196,9 +197,9 @@ void AdjustOutputFormat(    TString energy          = "",
             }
 
             TFile* fileOutputForComparisonFullyCorrected = new TFile(outputFileName,"RECREATE");
-            fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s",centrality.Data(),energy.Data()));
-            TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s",centrality.Data(),energy.Data()));
-            fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s",centrality.Data(),energy.Data()));
+            fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s%s",centrality.Data(),energy.Data(), additionalName.Data()));
+            TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s%s",centrality.Data(),energy.Data(), additionalName.Data()));
+            fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s%s",centrality.Data(),energy.Data(), additionalName.Data()));
                 if (graphCorrectedYieldPi0)  graphCorrectedYieldPi0->Write("graphCorrectedYieldPi0",TObject::kOverwrite);
                 if (CorrectedYieldPi0)  CorrectedYieldPi0->Write("CorrectedYieldPi0",TObject::kOverwrite);
                 if (Pi0SystError)   Pi0SystError->Write("Pi0SystError",TObject::kOverwrite);

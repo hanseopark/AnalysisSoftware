@@ -99,10 +99,12 @@ void ComputeCorrelationFactors(
     TString fCollisionSystemWrite   = ReturnCollisionEnergyOutputString(energy);
     TString fCollisionSystemAndCent = fCollisionSystemWrite;
     TString centralityForOutput     = GetCentralityStringOutput(eventCut);
+    if (energy.CompareTo("pPb_5.023TeVCent") == 0)
+        centralityForOutput         = centralityForOutput+"Cent";
     TString collisionSystem         = ReturnFullCollisionsSystem(energy);
     if (centrality.CompareTo("") != 0){
         collisionSystem             = centrality+" "+collisionSystem;
-        fCollisionSystemAndCent       = centralityForOutput+"_"+fCollisionSystemWrite;
+        fCollisionSystemAndCent     = centralityForOutput+"_"+fCollisionSystemWrite;
     }
     TString outputDir               = Form("%s/%s/ComputeCorrelationFactors_%s",suffix.Data(),dateForOutput.Data(), fCollisionSystemWrite.Data());
     TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
@@ -489,6 +491,8 @@ void ComputeCorrelationFactors(
                     }
                     // calculate rho_AB at respective pTA
                     factor              = sqrt(totalErr*totalErr-unCorrErr)/totalErr;
+                    if ( TMath::IsNaN(factor)) factor = 0;
+                    if ( !TMath::Finite(factor)) factor = 0;
                 }
                 // set pt values and correlation factors rho_AB
                 corrFactorsBins[iMeasA][iMeasB].push_back(pTA);

@@ -2152,10 +2152,11 @@
     }
 
 
-    TBox* CreateBoxConv(Color_t colorBox, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
+    TBox* CreateBoxConv(Color_t colorBox, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd, Style_t fillStyle = 1001 ) {
         TBox* box = new TBox(xStart ,yStart , xEnd, yEnd);
         box->SetLineColor(colorBox);
         box->SetFillColor(colorBox);
+        box->SetFillStyle(fillStyle);
         return box;
     }
 
@@ -3112,15 +3113,15 @@
                     return kGreen+4;
                 } else if (!generator.CompareTo("LHC13f")){
                     return 418;
-				} else if (generator.Contains("LHC16q_fast")){
+                } else if (generator.Contains("LHC16q_fast")){
                     return 597;
-				} else if (generator.Contains("LHC16q_woSSD")){
+                } else if (generator.Contains("LHC16q_woSSD")){
                     return 419;
                 } else if (generator.Contains("LHC16q")){
                     return 633;
-				} else if (generator.Contains("LHC16t_fast")){
+                } else if (generator.Contains("LHC16t_fast")){
                     return 807;
-				} else if (generator.Contains("LHC16t_woSSD")){
+                } else if (generator.Contains("LHC16t_woSSD")){
                     return 633;
                 } else if (generator.Contains("LHC16t")){
                     return 807;
@@ -3152,7 +3153,21 @@
                     }
                 }
             } else {
-                return kViolet+6;
+                if (!centrality.CompareTo("0-10%")){
+                    return kRed-6;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return kRed-5;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 800-3;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kGreen-5;
+                } else if (!centrality.CompareTo("40-60%")){
+                    return kCyan-5;
+                } else if (!centrality.CompareTo("60-100%")){
+                    return kViolet+2;
+                } else {
+                    return kViolet+6;
+                }
             }
         }
         if (!energy.CompareTo("pPb_8TeV") ){

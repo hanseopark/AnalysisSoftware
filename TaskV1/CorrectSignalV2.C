@@ -2321,6 +2321,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         )
         scaleTrueEffiWithFit        = kFALSE;
 
+    if ( ( mode == 4 || mode == 2 || mode == 3 ) && optionEnergy.CompareTo("pPb_5.023TeV") == 0 && centralityString.CompareTo("0-100%") != 0 && nameMeson.CompareTo("Eta") == 0){
+        scaleTrueEffiWithFit        = kFALSE;
+    }
+
     if (    (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) ))
         || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV"))){
         cout << "\n\n\nINFO:: Entered ratio ftting of efficiency " << endl;
@@ -2365,8 +2369,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("13TeVLowB") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.7,maxPtMeson    );
-	        }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
-	            histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
+            }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeV") && ( centralityString.Contains("0-20%") || centralityString.Contains("20-40%") || centralityString.Contains("40-60%") || centralityString.Contains("60-100%"))) {
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.5,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeVCent") ) {

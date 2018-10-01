@@ -1129,7 +1129,7 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     TGraphAsymmErrors* ScaleGraph (TGraphAsymmErrors* graph, Double_t scaleFac){
-    TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
+        TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
 
         Double_t* xValue                = dummyGraph->GetX();
         Double_t* yValue                = dummyGraph->GetY();
@@ -3480,7 +3480,7 @@
                         if (((TString)nameSysPP.at(k)).CompareTo((TString)nameSysTakeOut.at(m)) == 0)
                             enabled     = kFALSE;
                     }
-                    if (((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 || ((TString)nameSysPP.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("bin") == 0 || ((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 )
+                    if (((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 || ((TString)nameSysPP.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("bin") == 0 || ((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorr") == 0 )
                         enabled     = kFALSE;
 
                     enablePPSys.push_back(enabled);
@@ -5043,6 +5043,9 @@
         return -1;
     }
 
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
     void RemoveZerosAtBeginningAndEndFromGraph (TGraph* graph){
         while(graph->GetY()[0] == 0 && graph->GetN()>0)
             graph->RemovePoint(0);
@@ -5050,4 +5053,69 @@
             graph->RemovePoint(graph->GetN()-1);
         return;
     }
+
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    void RecalculateErrorsBasedOnDetailedInputFile (TGraphAsymmErrors* graph, TString fileNameSys){
+
+        vector<TString>nameSysPP;
+
+        // possibly 100 pt bins
+        vector<Double_t>ptSysSplit[100];
+        vector<Bool_t>enablePPSys;
+        // read detailed file pp
+        cout << fileNameSys.Data() << endl;
+        Int_t iPtBin                = 0;
+        Bool_t isFirstLine          = kTRUE;
+        string line;
+        Int_t nDiffErrContribPP     = 0;
+
+        ifstream fileSysErrDetailed;
+        fileSysErrDetailed.open(fileNameSys,ios_base::in);
+
+
+        while (getline(fileSysErrDetailed, line) && iPtBin < 100) {
+            istringstream ss(line);
+            TString temp        ="";
+            if (isFirstLine){
+                while(ss && nDiffErrContribPP < 100){
+                    ss >> temp;
+                    if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                        nameSysPP.push_back(temp);
+                        nDiffErrContribPP++;
+                    }
+                }
+                isFirstLine             = kFALSE;
+            } else {
+                Int_t nRunning          = 0;
+                while(ss && nRunning < nDiffErrContribPP){
+                    ss >> temp;
+                    ptSysSplit[iPtBin].push_back(temp.Atof());
+                    nRunning++;
+                }
+                iPtBin++;
+            }
+        }
+        fileSysErrDetailed.close();
+
+        //
+        cout << "\t Graph \t" <<  endl;
+        graph->Print();
+
+        for (Int_t i = 0; i < iPtBin+1 && i < graph->GetN() ; i++ ){
+            if ( graph->GetX()[i] - ptSysSplit[i].at(0) > 0.001){
+                cout << "mismatch: "<< graph->GetX()[i] << "\t" << ptSysSplit[i].at(0) << endl;
+                return;
+            } else {
+                Double_t yErr   = graph->GetY()[i]*ptSysSplit[i].at(ptSysSplit[i].size()-1)/ 100.;
+                graph->SetPointError(i, graph->GetEXlow()[i], graph->GetEXhigh()[i], yErr, yErr);
+            }
+        }
+        cout << "\t Graph neu\t" <<  endl;
+        graph->Print();
+
+        return;
+    }
+
 #endif

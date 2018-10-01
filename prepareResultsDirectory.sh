@@ -61,7 +61,6 @@ ln -sf $PHOTONCONVDIR/TaskQA/*.sh TaskQA/
 ln -sf $PHOTONCONVDIR/ExternalInput/* ExternalInput/
 ln -sf $PHOTONCONVDIR/ExternalInputPbPb/* ExternalInputPbPb/
 ln -sf $PHOTONCONVDIR/ExternalInputpPb/* ExternalInputpPb/
-ln -sf $PHOTONCONVDIR/FinalResults/* FinalResults/
 ln -sf $PHOTONCONVDIR/CocktailInput/* CocktailInput/
 ln -sf $PHOTONCONVDIR/RooUnfold/* RooUnfold/
 ln -sf $PHOTONCONVDIR/DownloadAndDataPrep/* DownloadAndDataPrep/

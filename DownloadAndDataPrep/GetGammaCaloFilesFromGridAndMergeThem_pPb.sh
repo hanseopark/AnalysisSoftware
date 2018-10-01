@@ -11,10 +11,10 @@
 source basicFunction.sh
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 MERGEONMC=1
-SINGLERUN=1
+SINGLERUN=0
 SEPARATEON=0
 MERGEONSINGLEData=0
 MERGEONSINGLEMC=1
@@ -103,12 +103,12 @@ function ParseJDLFilesDownloadAndMerge()
                 echo $TOMERGE2
                 hadd -n 10 -f $2/inputFailedStage1Merge/$TOMERGE $2/inputFailedStage1Merge/*/$TOMERGE
                 if [ $SEPARATEON == 1 ]; then
-                    if [[ $TOMERGE == *"GammaCalo_"* ]]; then
+                    if [[ $TOMERGE == *"GammaConvCalo_"* ]]; then
                         SeparateCutsIfNeeded $TOMERGE2 2
-                    elif [[ $TOMERGE == *"GammaV1_"* ]]; then
-                        SeparateCutsIfNeededConv $TOMERGE2 0
+                    elif [[ $TOMERGE == *"GammaConvV1_"* ]]; then
+                        SeparateCutsIfNeeded $TOMERGE2 0
                     elif [[ $TOMERGE == *"GammaCalo_"* ]]; then
-                        SeparateCutsIfNeededCalo $TOMERGE2 4
+                        SeparateCutsIfNeeded $TOMERGE2 4
                     fi
                 fi
             done
@@ -281,7 +281,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13b2_efix_p3MC="child_3";
 # LHC13b2_efix_p4MC="child_4";
 
-TRAINDIR=Legotrain-vAN20180718-triggQA
+# TRAINDIR=Legotrain-vAN20180718-triggQA
 # LHC13bcData="765"; #pass 3
 # LHC13bData="child_1"; #pass 3
 # LHC13cData="child_2"; #pass 2
@@ -289,8 +289,22 @@ TRAINDIR=Legotrain-vAN20180718-triggQA
 # LHC13dData="child_1"; #pass 4
 # LHC13eData="child_2"; #pass 4
 # LHC13fData="764"; #pass 4
-LHC13b4fixMC="1286";
-LHC13b4plusMC="1287";
+# LHC13b4fixMC="1286";
+# LHC13b4plusMC="1287";
+
+# TRAINDIR=Legotrain-vAN20180906-dirGamma
+# LHC13b2_efix="1302"
+# LHC13b2_efix_p1MC="child_1";
+# LHC13b2_efix_p2MC="child_2";
+# LHC13b2_efix_p3MC="child_3";
+# LHC13b2_efix_p4MC="child_4";
+
+TRAINDIR=Legotrain-vAN20180916-dirGamma
+LHC13b2_efix="1306"
+LHC13b2_efix_p1MC="child_1";
+LHC13b2_efix_p2MC="child_2";
+LHC13b2_efix_p3MC="child_3";
+LHC13b2_efix_p4MC="child_4";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

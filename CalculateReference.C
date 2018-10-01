@@ -123,7 +123,8 @@ void CalculateReference (   TString configFile                  = "",
                             TString nameFileMCRef               = "",
                             TString nameHistMCRef               = "",
                             Int_t nTrials                       = 1000,
-                            TString fitSelection                = ""
+                            TString fitSelection                = "",
+                            TString addLabel                    = ""
                         ){
 
     //*************************************************************************************************
@@ -137,13 +138,13 @@ void CalculateReference (   TString configFile                  = "",
     SetPlotStyle();
 
     TString dateForOutput   = ReturnDateStringForOutput();
-    TString modeName        = ReturnTextReconstructionProcess(mode);
+    TString modeName        = ReturnTextReconstructionProcessWrite(mode);
     TString collisionSystem = ReturnFullCollisionsSystem(finalEnergy);
     TString collSystOut     = ReturnCollisionEnergyOutputString(finalEnergy);
     mesonString             = ReturnMesonString (meson);
     detProcess              = ReturnFullTextReconstructionProcess(mode);
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
-    TString outputDirPlots  = Form("%s/%s/CalculateReference/%s_%s",suffix.Data(), dateForOutput.Data(), modeName.Data(), meson.Data());
+    TString outputDirPlots  = Form("%s/%s/CalculateReference/%s%s_%s",suffix.Data(), dateForOutput.Data(), modeName.Data(), addLabel.Data(), meson.Data());
     gSystem->Exec("mkdir -p "+outputDirPlots);
     Int_t exampleBin        = 7;
     Double_t dummyScaleFac  = 1;
@@ -178,17 +179,19 @@ void CalculateReference (   TString configFile                  = "",
     Int_t startBin                  = 0;
     Int_t maxNBinsAbs               = 0;
     if (doSpecialBinning){
-        maxNBins                    = GetBinning( finalBinningPt, maxNBinsAbs, meson.Data(), binningEnergy.Data(), mode );
-        startBin                    = GetStartBin( meson.Data(), binningEnergy.Data(), mode );
+        maxNBins                    = GetBinning( finalBinningPt, maxNBinsAbs, meson.Data(), binningEnergy.Data(), mode, -1 , kFALSE, "0-100%");
+        startBin                    = GetStartBin( meson.Data(), binningEnergy.Data(), mode, -1, "0-100%" );
 //         exampleBin                  = ReturnSingleInvariantMassBinPlotting (meson.Data(), binningEnergy.Data(), mode, 0, dummyScaleFac);
         if (maxNBins == 0){
             cout << "The requested binning doesn't exist, aborting!" << endl;
             return;
         }
+        cout << maxNBins << "\t start Bin: " << startBin << endl;
         cout << "Binning" << endl;
-        for (Int_t i = 0; i<maxNBins; i++){
-            cout << i << "\t"<< finalBinningPt[i] << "-" << finalBinningPt[i+1] <<endl;
+        for (Int_t i = 0; i<maxNBins+1; i++){
+            cout << finalBinningPt[i] <<  "\t," ;
         }
+        cout << endl;
     }
 
     vector<TString>* ptSysRemNames  = new vector<TString>[5];
@@ -714,6 +717,9 @@ void CalculateReference (   TString configFile                  = "",
                 counter++;
             }
             PlotInterpolationPtBins(graphPtvsSqrtsMC,gPtvsEnergiesSystemMC,fPowerlawSystemMC,0x0, graphFinalEnergyMC,columns, rows, Form("%s/%s_%s_MC_Pt_vs_Sqrts.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+            cout << "Example bin MC: " <<  exampleBinMC << endl;
+            if (exampleBinMC < 1)
+                exampleBinMC = maxNBins-2;
             PlotInterpolationSinglePtBin(graphPtvsSqrtsMC[exampleBinMC],gPtvsEnergiesSystemMC[exampleBinMC], fPowerlawSystemMC[exampleBinMC], 0x0, graphFinalEnergyMC, exampleBinMC, Form("%s/%s_%s_MC_Pt_vs_Sqrts_SinglePtBin.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
 
             splineAlphaMC                       = new TSpline5("alphaMCSpline",graphAlphaMC);
@@ -748,6 +754,9 @@ void CalculateReference (   TString configFile                  = "",
             counter++;
         }
         PlotInterpolationPtBins(graphPtvsSqrts, gPtvsEnergiesSystem, fPowerlawSystem, fPowerlawSystemSystMC, graphFinalEnergyComb1, columns, rows, Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        cout << "Example bin data" << exampleBin << "\t" << graphCombReb[0]->GetN() << endl;
+        if (exampleBin >= graphCombReb[0]->GetN() )
+            exampleBin  = graphCombReb[0]->GetN()-1;
         PlotInterpolationSinglePtBin(graphPtvsSqrts[exampleBin], gPtvsEnergiesSystem[exampleBin], fPowerlawSystem[exampleBin], fPowerlawSystemSystMC[exampleBin], graphFinalEnergyComb1, exampleBin, Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts_SinglePtBin.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
 
     } else {
@@ -867,11 +876,11 @@ void CalculateReference (   TString configFile                  = "",
     }
     TF1* fitFinal;
     if(!fitSelection.CompareTo("TCM"))
-      fitFinal                       = DoFitWithTCM(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7.,0.2,graphFinalEnergyCombWOCorr->GetY()[0]/10,0.3);
+        fitFinal                       = DoFitWithTCM(graphFinalEnergyCombWOCorr,Form("fitComb_%s%s",finalEnergy.Data(), addLabel.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7.,0.2,graphFinalEnergyCombWOCorr->GetY()[0]/10,0.3);
     else if(!fitSelection.CompareTo("oHag"))
-      fitFinal                       = DoFitWithModHagedorn(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],0.5,0.,0.4,6);
+        fitFinal                       = DoFitWithModHagedorn(graphFinalEnergyCombWOCorr,Form("fitComb_%s%s",finalEnergy.Data(), addLabel.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],0.5,0.,0.4,6);
     else
-      fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2);
+        fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s%s",finalEnergy.Data(), addLabel.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2);
 
     graphCombReb[nDataSets]             = graphFinalEnergyCombWOCorr;
     graphComb[nDataSets]                = graphFinalEnergyCombWOCorr;
@@ -927,7 +936,7 @@ void CalculateReference (   TString configFile                  = "",
     // **************************************************************************************************
     TH1D* histoFinalStat                    = NULL;
     if (maxNBins > 0){
-        histoFinalStat                      = new TH1D(Form("histStatErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),Form("histStatErr_%s_%s",meson.Data(),finalEnergy.Data()),maxNBins,finalBinningPt);
+        histoFinalStat                      = new TH1D(Form("histStatErr%s_%s_%s%s",modeName.Data(),meson.Data(),finalEnergy.Data(), addLabel.Data()),Form("histStatErr_%s_%s%s", meson.Data(), finalEnergy.Data(), addLabel.Data()),maxNBins,finalBinningPt);
         for(Int_t i=0; i<graphFinalEnergyStat->GetN(); i++){
             Int_t ptBin                     = histoFinalStat->FindBin(graphFinalEnergyStat->GetX()[i]);
             histoFinalStat->SetBinContent(ptBin,graphFinalEnergyStat->GetY()[i]);
@@ -935,7 +944,7 @@ void CalculateReference (   TString configFile                  = "",
         }
     }
     graphFinalEnergySyst->Print();
-    TGraphAsymmErrors* graphFinalEnergySystFull = (TGraphAsymmErrors*)graphFinalEnergySyst->Clone(Form("graphSystErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()));
+    TGraphAsymmErrors* graphFinalEnergySystFull = (TGraphAsymmErrors*)graphFinalEnergySyst->Clone(Form("graphSystErr%s_%s_%s%s",modeName.Data(),meson.Data(),finalEnergy.Data(), addLabel.Data()));
 
     for (Int_t iPt= 0; iPt< graphFinalEnergySystFull->GetN(); iPt++){
         Double_t value                  = graphFinalEnergySyst->GetY()[iPt];
@@ -952,12 +961,12 @@ void CalculateReference (   TString configFile                  = "",
     // ************************* Plot relative errors ***************************************************
     // **************************************************************************************************
     Int_t nErrors                           = 3;
-    TGraphAsymmErrors* graphStatRel         = CalculateRelErrUpAsymmGraph( graphFinalEnergyStat, Form("relativeStatError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
-    TGraphAsymmErrors* graphSystUncorrRel   = CalculateRelErrUpAsymmGraph( graphFinalEnergySyst, Form("relativeUncorrSystError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
-    TGraphAsymmErrors* graphSystFullRel     = CalculateRelErrUpAsymmGraph( graphFinalEnergySystFull, Form("relativeSystFullError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+    TGraphAsymmErrors* graphStatRel         = CalculateRelErrUpAsymmGraph( graphFinalEnergyStat, Form("relativeStatError_%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()));
+    TGraphAsymmErrors* graphSystUncorrRel   = CalculateRelErrUpAsymmGraph( graphFinalEnergySyst, Form("relativeUncorrSystError_%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()));
+    TGraphAsymmErrors* graphSystFullRel     = CalculateRelErrUpAsymmGraph( graphFinalEnergySystFull, Form("relativeSystFullError_%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()));
     TGraphAsymmErrors* graphSystInterRel    = 0x0;
     if (graphFinalEnergyIntSyst){
-        graphSystInterRel                   = CalculateRelErrUpAsymmGraph( graphFinalEnergyIntSyst, Form("relativeSystInterError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+        graphSystInterRel                   = CalculateRelErrUpAsymmGraph( graphFinalEnergyIntSyst, Form("relativeSystInterError_%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()));
         nErrors++;
     }
 
@@ -1042,7 +1051,7 @@ void CalculateReference (   TString configFile                  = "",
     //*************************** write systematics dat-file ***************************************************
     //*************************************************************************************************
 
-    const char *SysErrDatnameMean = Form("%s/SystematicErrorAveragedSinglePP_%s%s_%s.dat",outputDir.Data(), meson.Data(),modeName.Data(), ((TString)ReturnCollisionEnergyOutputString(finalEnergy.Data())).Data());
+    const char *SysErrDatnameMean = Form("%s/SystematicErrorAveragedSinglePP_%s%s_%s%s.dat",outputDir.Data(), meson.Data(),modeName.Data(), ((TString)ReturnCollisionEnergyOutputString(finalEnergy.Data())).Data(), addLabel.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -1068,22 +1077,22 @@ void CalculateReference (   TString configFile                  = "",
     //*************************************************************************************************
     TFile *fOutput = new TFile(Form("%s/Interpolation.root",outputDir.Data()),"UPDATE");
 
-        graphFinalEnergyStat->Write(Form("graph%sStatErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        graphFinalEnergySyst->Write(Form("graph%sUnCorrSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        graphFinalEnergySystFull->Write(Form("graph%sSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        if (graphFinalEnergyIntSyst) graphFinalEnergyIntSyst->Write(Form("graph%sInterpolSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        graphFinalEnergyCombWOCorr->Write(Form("graph%sUnCorrCombErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        graphFinalEnergyComb->Write(Form("graph%sCombErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        if (histoFinalStat) histoFinalStat->Write(Form("hist%sStatErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphFinalEnergyStat->Write(Form("graph%sStatErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        graphFinalEnergySyst->Write(Form("graph%sUnCorrSystErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        graphFinalEnergySystFull->Write(Form("graph%sSystErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        if (graphFinalEnergyIntSyst) graphFinalEnergyIntSyst->Write(Form("graph%sInterpolSystErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        graphFinalEnergyCombWOCorr->Write(Form("graph%sUnCorrCombErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        graphFinalEnergyComb->Write(Form("graph%sCombErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        if (histoFinalStat) histoFinalStat->Write(Form("hist%sStatErr%s_%s_%s%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
 
-        if(graphAlphaStat) graphAlphaStat->Write(Form("graphAlphaStat%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        if(graphAlphaSyst) graphAlphaSyst->Write(Form("graphAlphaSyst%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        if(graphAlphaMC) graphAlphaMC->Write(Form("graphAlphaMC%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if(graphAlphaStat) graphAlphaStat->Write(Form("graphAlphaStat%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        if(graphAlphaSyst) graphAlphaSyst->Write(Form("graphAlphaSyst%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        if(graphAlphaMC) graphAlphaMC->Write(Form("graphAlphaMC%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
 
-        graphStatRel->Write(Form("graphRelStatErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()),TObject::kOverwrite);
-        graphSystUncorrRel->Write(Form("graphRelUnCorrSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        graphSystFullRel->Write(Form("graphRelSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
-        if (graphSystInterRel) graphSystInterRel->Write(Form("graphRelInterpolSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphStatRel->Write(Form("graphRelStatErr%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()),TObject::kOverwrite);
+        graphSystUncorrRel->Write(Form("graphRelUnCorrSystErr%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        graphSystFullRel->Write(Form("graphRelSystErr%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
+        if (graphSystInterRel) graphSystInterRel->Write(Form("graphRelInterpolSystErr%s_%s_%s%s", modeName.Data(), meson.Data(), finalEnergy.Data(), addLabel.Data()), TObject::kOverwrite);
 
     fOutput->Write();
     fOutput->Close();

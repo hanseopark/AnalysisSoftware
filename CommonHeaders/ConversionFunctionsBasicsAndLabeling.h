@@ -111,11 +111,84 @@
     Double_t xSection13TeVINELErr   = 1.0*1e-3;   //
 
     // pPb  5TeV
-    Double_t xSection5023GeVINELpPb = 70*1e-3;
-    Double_t ncollpPb5023GeV       = 6.9;
-    Double_t ncollErrpPb5023GeV    = 0.7;
-    Double_t tpPb5023GeV           = 0.0983e3*(1/recalcBarn);
-    Double_t tpPbErr5023GeV        = 0.0035e3*(1/recalcBarn);
+    // reference cent bins: https://twiki.cern.ch/twiki/bin/view/ALICE/PACentStudiesRun2 +
+    // updated values for all but > 20% 10% cent bins from  https://alice-notes.web.cern.ch/system/files/notes/public/711/2018-09-04-ALICE_public_note.pdf
+    Double_t xSection5023GeVINELpPb    = 67.6*1e-3;
+    Double_t ncollpPb5023GeV           = 6.708;
+    Double_t ncollErrpPb5023GeV        = 0.11;
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t nCollpPb5TeVBaseV0A10[10]      = { 13.285, 11.18, 10.5, 8.95, 7.38, 5.83, 4.42, 3.2, 2.23, 1.5};
+    Double_t nCollpPbErr5TeVBaseV0A10[10]   = { 0.7178612504, 0.612, 3.9, 3.87, 3.72, 3.4, 2.94, 2.29, 1.59, 0.909};
+                                            // 0-5, 5-10
+    Double_t nCollpPb5TeVBaseV0A5[2]        = { 14.1, 12.47};
+    Double_t nCollpPbErr5TeVBaseV0A5[2]     = { 0.747, 0.687};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t nCollpPb5TeVBaseV0A20[5]       = { 12.2325, 9.089, 6.42, 3.884, 1.982};
+    Double_t nCollpPbErr5TeVBaseV0A20[5]    = { 0.6653017029, 0.472, 0.272, 0.0974, 0.0331};
+
+    Double_t nCollpPb5TeVV0A60100           = 2.933;
+    Double_t nCollpPbErr5TeVV0A60100        = 0.0612667663;
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t nCollpPb5TeVBaseCL110[10]      = { 14.475, 11.87, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.7494346839, 0.626, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+                                            // 0-5, 5-10
+    Double_t nCollpPb5TeVBaseCL15[2]        = { 15.51, 13.44};
+    Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.804, 0.695};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t nCollpPb5TeVBaseCL120[5]       = { 13.1725, 9.396, 6.169, 3.253, 1.6};
+    Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.6883448722, 0.474, 0.251, 0.112, 0.0373};
+    Double_t nCollpPb5TeVCL160100           = 2.4265;
+    Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
+
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+                                            // 0-5, 5-10
+    Double_t nCollpPb5TeVBaseHybrid5[2]     = { 13.7, 12.7};
+    Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.89, 6.94, 4.12, 2.12};
+    Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
+    Double_t nCollpPb5TeVHybrid60100        = 3.12;
+    Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;
+
+    Double_t tpPb5023GeV                    = 0.0983e3*(1/recalcBarn);
+    Double_t tpPbErr5023GeV                 = 0.0017e3*(1/recalcBarn);
+
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t tpPb5TeVBaseV0A10[10]          = { 0.1965, 0.1654, 0.145, 0.123, 0.102, 0.0805, 0.061, 0.0441, 0.0308, 0.0208};
+    Double_t tpPbErr5TeVBaseV0A10[10]       = { 0.0095919553, 0.00813, 0.0538, 0.0534, 0.0513, 0.0469, 0.0405, 0.0315, 0.0219, 0.0125};
+                                            // 0-5, 5-10
+    Double_t tpPb5TeVBaseV0A5[2]            = { 0.2085, 0.1845};
+    Double_t tpPbErr5TeVBaseV0A5[2]         = { 0.00997, 0.00919};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t tpPb5TeVBaseV0A20[5]           = { 0.18095, 0.1345, 0.09496, 0.05745, 0.02932};
+    Double_t tpPbErr5TeVBaseV0A20[5]        = { 0.0088636176, 0.00624, 0.00357, 0.00127, 0.000468};
+    Double_t tpPb5TeVBaseV0A60100           = 0.043385;
+    Double_t tpPbErr5TeVBaseV0A60100        = 0.0008257897;
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t tpPb5TeVBaseCL110[10]          = { 0.21415, 0.1757, 0.148, 0.125, 0.101, 0.0782, 0.0571, 0.0404, 0.0287, 0.020};
+    Double_t tpPbErr5TeVBaseCL110[10]       = { 0.0099578005, 0.00825, 0.0487, 0.0485, 0.0466, 0.0426, 0.0361, 0.0275, 0.0193, 0.0114};
+                                            // 0-5, 5-10
+    Double_t tpPb5TeVBaseCL15[2]            = { 0.2294, 0.1989};
+    Double_t tpPbErr5TeVBaseCL15[2]         = { 0.0107, 0.00922};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t tpPb5TeVBaseCL120[5]           = { 0.194925, 0.139, 0.09125, 0.04812, 0.02367};
+    Double_t tpPbErr5TeVBaseCL120[5]        = { 0.0091009923, 0.00623, 0.00327, 0.00151, 0.000552};
+    Double_t tpPb5TeVBaseCL160100           = 0.035895;
+    Double_t tpPbErr5TeVBaseCL160100        = 0.000981738;
+
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t tpPb5TeVBaseHybrid10[10]       = { 0.1952662722, 0.1730769231, 0.148, 0.125, 0.101, 0.0782, 0.0571, 0.0404, 0.0287, 0.020};
+    Double_t tpPbErr5TeVBaseHybrid10[10]    = { 0.0153284024, 0.0065769231, 0.0487, 0.0485, 0.0466, 0.0426, 0.0361, 0.0275, 0.0193, 0.0114};
+                                            // 0-5, 5-10
+    Double_t tpPb5TeVBaseHybrid5[2]         = { 0.2026627219, 0.1878698225};
+    Double_t tpPbErr5TeVBaseHybrid5[2]      = { 0.0178343195, 0.0129630178};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t tpPb5TeVBaseHybrid20[5]        = { 0.1841715976, 0.1463017751, 0.1026627219, 0.0609467456, 0.0313609467};
+    Double_t tpPbErr5TeVBaseHybrid20[5]     = { 0.0107279956, 0.0035112426, 0.0050304734, 0.0043881657, 0.001160355};
+    Double_t tpPb5TeVBaseHybrid60100        = 0.0461538462;
+    Double_t tpPbErr5TeVBaseHybrid60100     = 0.0025153846;
 
 
     // basic function to convert cutNumber to integere
@@ -247,7 +320,7 @@
               char tmpChar = tmpIntMesonCutNumber+39+'0';
               mesonCutNumber.Replace(14,2,tmpChar);
             }
-        } else if (type == 5){ //PHOS-PHOS
+        } else if (type == 5 || type == -5){ //PHOS-PHOS
             objstrEvent         = (TObjString*)arr->At(pos);
             objstrCluster       = (TObjString*)arr->At(1+pos);
             objstrMeson         = (TObjString*)arr->At(2+pos);
@@ -617,7 +690,7 @@
                 return "PCM-PHOS";
             case 4:
                 return "EMC";
-            case 5:
+            case 5: case -5:
                 return "PHOS";
             case 6:
                 return "EMC-#gamma^{*}#gamma";
@@ -631,7 +704,7 @@
                 return "DMC";
             case 13:
                 return "DMC-PCM";
-            case 20:
+            case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
             case 40:
@@ -658,6 +731,7 @@
                 return "#pi^{0} rec w/ DCAL, DALITZ";
             default:
                 return "not known";
+
         }
     }
 
@@ -678,7 +752,7 @@
                 return "PCM-PHOS";
             case 4:
                 return "EMC";
-            case 5:
+            case 5: case -5:
                 return "PHOS";
             case 6:
                 return "EMC-Dal";
@@ -688,7 +762,7 @@
                 return "mEMC";
             case 11:
                 return "mPHOS";
-            case 20:
+            case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
             case 40:
@@ -1713,7 +1787,120 @@
                 return ncoll7590;
             }
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
-            return ncollpPb5023GeV;
+            if (name.CompareTo("0020_V0A") == 0){ //0-20%
+                return nCollpPb5TeVBaseV0A20[0];
+            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
+                return nCollpPb5TeVBaseV0A5[0];
+            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
+                return nCollpPb5TeVBaseV0A5[1];
+            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
+                return nCollpPb5TeVBaseV0A10[0];
+            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
+                return nCollpPb5TeVBaseV0A10[1];
+            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
+                return nCollpPb5TeVBaseV0A10[2];
+            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
+                return nCollpPb5TeVBaseV0A10[3];
+            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
+                return nCollpPb5TeVBaseV0A10[4];
+            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
+                return nCollpPb5TeVBaseV0A10[5];
+            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
+                return nCollpPb5TeVBaseV0A10[6];
+            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
+                return nCollpPb5TeVBaseV0A10[7];
+            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
+                return nCollpPb5TeVBaseV0A10[8];
+            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
+                return nCollpPb5TeVBaseV0A10[9];
+            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
+                return nCollpPb5TeVBaseV0A20[1];
+            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
+                return nCollpPb5TeVBaseV0A20[2];
+            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
+                return nCollpPb5TeVBaseV0A20[3];
+            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
+                return nCollpPb5TeVBaseV0A20[4];
+            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return nCollpPb5TeVV0A60100;
+            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
+                return nCollpPb5TeVBaseCL120[0];
+            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
+                return nCollpPb5TeVBaseCL15[0];
+            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
+                return nCollpPb5TeVBaseCL15[1];
+            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
+                return nCollpPb5TeVBaseCL110[0];
+            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
+                return nCollpPb5TeVBaseCL110[1];
+            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
+                return nCollpPb5TeVBaseCL110[2];
+            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
+                return nCollpPb5TeVBaseCL110[3];
+            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
+                return nCollpPb5TeVBaseCL110[4];
+            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
+                return nCollpPb5TeVBaseCL110[5];
+            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
+                return nCollpPb5TeVBaseCL110[6];
+            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
+                return nCollpPb5TeVBaseCL110[7];
+            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
+                return nCollpPb5TeVBaseCL110[8];
+            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
+                return nCollpPb5TeVBaseCL110[9];
+            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
+                return nCollpPb5TeVBaseCL120[1];
+            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
+                return nCollpPb5TeVBaseCL120[2];
+            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
+                return nCollpPb5TeVBaseCL120[3];
+            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
+                return nCollpPb5TeVBaseCL120[4];
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return nCollpPb5TeVCL160100;
+            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
+                return nCollpPb5TeVBaseHybrid20[0];
+            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
+                return nCollpPb5TeVBaseHybrid5[0];
+            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
+                return nCollpPb5TeVBaseHybrid5[1];
+            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
+                return nCollpPb5TeVBaseHybrid10[0];
+            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
+                return nCollpPb5TeVBaseHybrid10[1];
+            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
+                return nCollpPb5TeVBaseHybrid10[2];
+            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
+                return nCollpPb5TeVBaseHybrid10[3];
+            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
+                return nCollpPb5TeVBaseHybrid10[4];
+            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
+                return nCollpPb5TeVBaseHybrid10[5];
+            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
+                return nCollpPb5TeVBaseHybrid10[6];
+            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
+                return nCollpPb5TeVBaseHybrid10[7];
+            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
+                return nCollpPb5TeVBaseHybrid10[8];
+            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
+                return nCollpPb5TeVBaseHybrid10[9];
+            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
+                return nCollpPb5TeVBaseHybrid20[1];
+            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
+                return nCollpPb5TeVBaseHybrid20[2];
+            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
+                return nCollpPb5TeVBaseHybrid20[3];
+            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
+                return nCollpPb5TeVBaseHybrid20[4];
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return nCollpPb5TeVHybrid60100;
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return ncollpPb5023GeV;
+            } else {
+                return ncollpPb5023GeV;
+            }
+
         } else {
             return 1.;
         }
@@ -1764,7 +1951,119 @@
             return 1.;
 
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
-            return ncollErrpPb5023GeV;
+            if (name.CompareTo("0020_V0A") == 0){ //0-20%
+                return nCollpPbErr5TeVBaseV0A20[0];
+            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseV0A5[0];
+            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseV0A5[1];
+            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
+                return nCollpPbErr5TeVBaseV0A10[0];
+            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
+                return nCollpPbErr5TeVBaseV0A10[1];
+            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
+                return nCollpPbErr5TeVBaseV0A10[2];
+            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
+                return nCollpPbErr5TeVBaseV0A10[3];
+            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
+                return nCollpPbErr5TeVBaseV0A10[4];
+            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
+                return nCollpPbErr5TeVBaseV0A10[5];
+            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
+                return nCollpPbErr5TeVBaseV0A10[6];
+            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
+                return nCollpPbErr5TeVBaseV0A10[7];
+            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
+                return nCollpPbErr5TeVBaseV0A10[8];
+            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
+                return nCollpPbErr5TeVBaseV0A10[9];
+            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
+                return nCollpPbErr5TeVBaseV0A20[1];
+            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
+                return nCollpPbErr5TeVBaseV0A20[2];
+            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseV0A20[3];
+            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseV0A20[4];
+            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return nCollpPbErr5TeVV0A60100;
+            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
+                return nCollpPbErr5TeVBaseCL120[0];
+            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseCL15[0];
+            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseCL15[1];
+            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
+                return nCollpPbErr5TeVBaseCL110[0];
+            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
+                return nCollpPbErr5TeVBaseCL110[1];
+            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
+                return nCollpPbErr5TeVBaseCL110[2];
+            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
+                return nCollpPbErr5TeVBaseCL110[3];
+            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
+                return nCollpPbErr5TeVBaseCL110[4];
+            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
+                return nCollpPbErr5TeVBaseCL110[5];
+            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
+                return nCollpPbErr5TeVBaseCL110[6];
+            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
+                return nCollpPbErr5TeVBaseCL110[7];
+            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
+                return nCollpPbErr5TeVBaseCL110[8];
+            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
+                return nCollpPbErr5TeVBaseCL110[9];
+            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
+                return nCollpPbErr5TeVBaseCL120[1];
+            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
+                return nCollpPbErr5TeVBaseCL120[2];
+            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseCL120[3];
+            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseCL120[4];
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return nCollpPbErr5TeVCL160100;
+            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
+                return nCollpPbErr5TeVBaseHybrid20[0];
+            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseHybrid5[0];
+            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
+                return nCollpPbErr5TeVBaseHybrid5[1];
+            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
+                return nCollpPbErr5TeVBaseHybrid10[0];
+            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
+                return nCollpPbErr5TeVBaseHybrid10[1];
+            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
+                return nCollpPbErr5TeVBaseHybrid10[2];
+            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
+                return nCollpPbErr5TeVBaseHybrid10[3];
+            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
+                return nCollpPbErr5TeVBaseHybrid10[4];
+            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
+                return nCollpPbErr5TeVBaseHybrid10[5];
+            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
+                return nCollpPbErr5TeVBaseHybrid10[6];
+            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
+                return nCollpPbErr5TeVBaseHybrid10[7];
+            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
+                return nCollpPbErr5TeVBaseHybrid10[8];
+            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
+                return nCollpPbErr5TeVBaseHybrid10[9];
+            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
+                return nCollpPbErr5TeVBaseHybrid20[1];
+            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
+                return nCollpPbErr5TeVBaseHybrid20[2];
+            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseHybrid20[3];
+            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
+                return nCollpPbErr5TeVBaseHybrid20[4];
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return nCollpPbErr5TeVHybrid60100;
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return ncollErrpPb5023GeV;
+            } else {
+                return ncollErrpPb5023GeV;
+            }
         } else {
             return 1.;
         }
@@ -1903,7 +2202,119 @@
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
-            return tpPb5023GeV;
+            if (name.CompareTo("0020_V0A") == 0){ //0-20%
+                return tpPb5TeVBaseV0A20[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
+                return tpPb5TeVBaseV0A5[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
+                return tpPb5TeVBaseV0A5[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
+                return tpPb5TeVBaseV0A10[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
+                return tpPb5TeVBaseV0A10[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
+                return tpPb5TeVBaseV0A10[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
+                return tpPb5TeVBaseV0A10[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
+                return tpPb5TeVBaseV0A10[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
+                return tpPb5TeVBaseV0A10[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
+                return tpPb5TeVBaseV0A10[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
+                return tpPb5TeVBaseV0A10[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
+                return tpPb5TeVBaseV0A10[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
+                return tpPb5TeVBaseV0A10[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
+                return tpPb5TeVBaseV0A20[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
+                return tpPb5TeVBaseV0A20[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
+                return tpPb5TeVBaseV0A20[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
+                return tpPb5TeVBaseV0A20[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return tpPb5TeVBaseV0A60100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
+                return tpPb5TeVBaseCL120[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
+                return tpPb5TeVBaseCL15[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
+                return tpPb5TeVBaseCL15[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
+                return tpPb5TeVBaseCL110[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
+                return tpPb5TeVBaseCL110[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
+                return tpPb5TeVBaseCL110[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
+                return tpPb5TeVBaseCL110[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
+                return tpPb5TeVBaseCL110[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
+                return tpPb5TeVBaseCL110[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
+                return tpPb5TeVBaseCL110[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
+                return tpPb5TeVBaseCL110[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
+                return tpPb5TeVBaseCL110[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
+                return tpPb5TeVBaseCL110[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
+                return tpPb5TeVBaseCL120[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
+                return tpPb5TeVBaseCL120[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
+                return tpPb5TeVBaseCL120[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
+                return tpPb5TeVBaseCL120[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return tpPb5TeVBaseCL160100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
+                return tpPb5TeVBaseHybrid20[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
+                return tpPb5TeVBaseHybrid5[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
+                return tpPb5TeVBaseHybrid5[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
+                return tpPb5TeVBaseHybrid10[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
+                return tpPb5TeVBaseHybrid10[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
+                return tpPb5TeVBaseHybrid10[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
+                return tpPb5TeVBaseHybrid10[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
+                return tpPb5TeVBaseHybrid10[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
+                return tpPb5TeVBaseHybrid10[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
+                return tpPb5TeVBaseHybrid10[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
+                return tpPb5TeVBaseHybrid10[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
+                return tpPb5TeVBaseHybrid10[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
+                return tpPb5TeVBaseHybrid10[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
+                return tpPb5TeVBaseHybrid20[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
+                return tpPb5TeVBaseHybrid20[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
+                return tpPb5TeVBaseHybrid20[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
+                return tpPb5TeVBaseHybrid20[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return tpPb5TeVBaseHybrid60100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return tpPb5023GeV;
+            } else {
+                return tpPb5023GeV;
+            }
         } else {
             return 1.;
         }
@@ -1937,7 +2348,121 @@
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
-            return tpPbErr5023GeV;
+            if (name.CompareTo("0020_V0A") == 0){ //0-20%
+                return tpPbErr5TeVBaseV0A20[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
+                return tpPbErr5TeVBaseV0A5[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
+                return tpPbErr5TeVBaseV0A5[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
+                return tpPbErr5TeVBaseV0A10[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
+                return tpPbErr5TeVBaseV0A10[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
+                return tpPbErr5TeVBaseV0A10[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
+                return tpPbErr5TeVBaseV0A10[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
+                return tpPbErr5TeVBaseV0A10[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
+                return tpPbErr5TeVBaseV0A10[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
+                return tpPbErr5TeVBaseV0A10[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
+                return tpPbErr5TeVBaseV0A10[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
+                return tpPbErr5TeVBaseV0A10[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
+                return tpPbErr5TeVBaseV0A10[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
+                return tpPbErr5TeVBaseV0A20[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
+                return tpPbErr5TeVBaseV0A20[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
+                return tpPbErr5TeVBaseV0A20[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
+                return tpPbErr5TeVBaseV0A20[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return tpPbErr5TeVBaseV0A60100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
+                return tpPbErr5TeVBaseCL120[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
+                return tpPbErr5TeVBaseCL15[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
+                return tpPbErr5TeVBaseCL15[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
+                return tpPbErr5TeVBaseCL110[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
+                return tpPbErr5TeVBaseCL110[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
+                return tpPbErr5TeVBaseCL110[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
+                return tpPbErr5TeVBaseCL110[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
+                return tpPbErr5TeVBaseCL110[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
+                return tpPbErr5TeVBaseCL110[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
+                return tpPbErr5TeVBaseCL110[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
+                return tpPbErr5TeVBaseCL110[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
+                return tpPbErr5TeVBaseCL110[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
+                return tpPbErr5TeVBaseCL110[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
+                return tpPbErr5TeVBaseCL120[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
+                return tpPbErr5TeVBaseCL120[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
+                return tpPbErr5TeVBaseCL120[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
+                return tpPbErr5TeVBaseCL120[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return tpPbErr5TeVBaseCL160100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
+                return tpPbErr5TeVBaseHybrid20[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
+                return tpPbErr5TeVBaseHybrid5[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
+                return tpPbErr5TeVBaseHybrid5[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
+                return tpPbErr5TeVBaseHybrid10[0]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
+                return tpPbErr5TeVBaseHybrid10[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
+                return tpPbErr5TeVBaseHybrid10[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
+                return tpPbErr5TeVBaseHybrid10[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
+                return tpPbErr5TeVBaseHybrid10[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
+                return tpPbErr5TeVBaseHybrid10[5]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
+                return tpPbErr5TeVBaseHybrid10[6]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
+                return tpPbErr5TeVBaseHybrid10[7]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
+                return tpPbErr5TeVBaseHybrid10[8]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
+                return tpPbErr5TeVBaseHybrid10[9]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
+                return tpPbErr5TeVBaseHybrid20[1]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
+                return tpPbErr5TeVBaseHybrid20[2]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
+                return tpPbErr5TeVBaseHybrid20[3]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
+                return tpPbErr5TeVBaseHybrid20[4]*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return tpPbErr5TeVBaseHybrid60100*1e3*(1/recalcBarn);
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return tpPbErr5023GeV;
+            } else {
+                return tpPbErr5023GeV;
+            }
+
+
         } else {
             return 1.;
         }
@@ -2239,7 +2764,7 @@
             } else {
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd),"%");
             }
-        } else if ( ppCutNumber.CompareTo("e") ==0 ){
+        } else if ( ppCutNumber.CompareTo("e") ==0 || ppCutNumber.CompareTo("f") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "ZNA 0-100%";
             } else if( centralityCutNumberEnd.CompareTo("0")!=0){
@@ -2292,6 +2817,12 @@
                 return "0-100";
             } else {
                 return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
+            }
+        } else if ( ppCutNumber.CompareTo("e") ==0 || ppCutNumber.CompareTo("f") ==0){
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "ZNA 0-100";
+            } else {
+                return Form("ZNA %i-%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
             }
         } else return "";
     }
@@ -2349,7 +2880,7 @@
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
                 }
             }
-        } else if ( ppCutNumber.CompareTo("e") ==0 ) {
+        } else if ( ppCutNumber.CompareTo("e") ==0 || ppCutNumber.CompareTo("f") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "ZNA_00100";
             } else {
@@ -4491,7 +5022,7 @@
                     return "#gamma's rec. with PCM, PHOS";
                 case 4: case 44:
                     return "#gamma's rec. with EMCal";
-                case 5: case 45:
+                case 5: case 45: case -5:
                     return "#gamma's rec. with PHOS";
                 case 6: case 48:
                     return "#gamma's rec. with EMCal, Dalitz";
@@ -4519,7 +5050,7 @@
                     return "#gamma's rec. with DCal";
                 case 13: case 43:
                     return "#gamma's rec. with PCM, DCal";
-                case 20:
+                case 20: case 21: case 22: case 23:
                     return "combined";
                 default:
                     return "not known";
@@ -4550,6 +5081,7 @@
                 case 4:
                 case 6:
                     return "#gamma's rec. with EMCal";
+                case -5:
                 case 3:
                 case 5:
                 case 7:
@@ -4635,7 +5167,7 @@
         meanR = 60.;
         }else if((mode == 4 || mode == 12) || mode == 10){
         meanR = 428.;
-        }else if(mode == 5 || mode == 11){
+        }else if(mode == 5 || mode == 11 || mode == -5){
         meanR = 460.;
         } else meanR = 60.;
 
