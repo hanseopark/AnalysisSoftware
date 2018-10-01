@@ -120,7 +120,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     TList *ESDContainer           = (TList*)HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TH1F *histoEventQualityData   = (TH1F*)ESDContainer->FindObject("NEvents");
-    TH1F *histoGoodESDTracksData  = (TH1F*)ESDContainer->FindObject("GoodESDTracksEta09");
+    TH1F *histoGoodESDTracksData  = (TH1F*)ESDContainer->FindObject("GoodESDTracksEta08");
     TH2F *histoRPhiData           = (TH2F*)ESDContainer->FindObject("ESD_Conversion_RPhi");
     TH2F *histoREtaData           = (TH2F*)ESDContainer->FindObject("ESD_Conversion_REta");
     TH2F *histoRZData             = (TH2F*)ESDContainer->FindObject("ESD_Conversion_RZ");
@@ -150,7 +150,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     TList *ESDContainerMC         = (TList*)HistosGammaConversionMC->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TH1F *histoEventQualityMC     = (TH1F*)ESDContainerMC->FindObject("NEvents");
-    TH1F *histoGoodESDTracksMC    = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksEta09");
+    TH1F *histoGoodESDTracksMC    = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksEta08");
     TH2F *histoRPhiMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RPhi");
     TH2F *histoREtaMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_REta");
     TH2F *histoRZMC               = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RZ");
@@ -1716,7 +1716,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
       padMBWeightEachR->cd(place)->SetRightMargin(0.1);
       histoDummyWeightEachR->DrawCopy();
       DrawGammaLines(0.,1.5,1., 1.,1.,kGray,1);
- 
+
       DrawGammaSetMarker(histoWeightsEachRPtMin[i], 20, markerSize, colorData, colorData);
       histoWeightsEachRPtMin[i]->Draw("same");
     }

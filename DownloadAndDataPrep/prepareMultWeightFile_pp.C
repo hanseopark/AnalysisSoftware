@@ -31,84 +31,92 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include <vector>
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-void prepareMultWeightFile_pp(){
 
-  // Macro copied  from prepareMultWeightFile() that is for PbPb. Meike Danisch
-  // Adapted for pp. Ana Marin
-  // this macro reads GoodESDTracks histograms from GammaConv files
-  // for different centrality classes, for data and different MCs
-  // and saves them in a root file which has to be handed over to the addtask to apply multiplicity weighting
-  // has to be compiled!
-  // current settings are for LHC15o
-  // cureent settings are for LHC16d
+void prepareMultWeightFile_pp(TString inputPath = "/Users/marin/analysis/multWeightFile",
+                              TString eventAndphotonCutNo = "00010103_0d000009266300008850404000",
+                              TString targetFileName = "histosForMultWeighting_pp.root",
+                              TString energy = ""){
 
-
-  //######### settings#################
-  const Int_t nProductions       = 3;
-  const Int_t nProductionsUsed   = 3;
-  const Int_t nCentralityClasses = 1;
-
-  const TString productionNames[nProductions] = {"LHC16d", "LHC16P1Pyt8","LHC18d6a2" };
-
-  // first three digits of event cut number:
-  const TString centralityClasses1[nCentralityClasses] = {"000"};   // config 23
-  //  const TString centralityClasses2[nCentralityClasses] = {"000","000","000","000","000"};   // config 23
+    // Macro copied  from prepareMultWeightFile() that is for PbPb. Meike Danisch
+    // Adapted for pp. Ana Marin
+    // this macro reads GoodESDTracks histograms from GammaConv files
+    // for different centrality classes, for data and different MCs
+    // and saves them in a root file which has to be handed over to the addtask to apply multiplicity weighting
+    // has to be compiled!
+    // current settings are for LHC15o
+    // cureent settings are for LHC16d
 
 
-  const TString eventCutNo                             = "10a13";   // rest after first three digits
+    //######### settings#################
+    const Int_t nProductions       = 3;
+    const Int_t nProductionsUsed   = 3;
+    const Int_t nCentralityClasses = 1;
 
-  const TString inputPath               = "/Users/marin/analysis/multWeightFile";
-  const TString eventAndphotonCutNo             = "00010103_0d000009266300008850404000";
-  const TString targetFileName          = "histosForMultWeighting_pp.root";
+    TString centralityClasses1[nCentralityClasses] = {"000"};   // config 23
 
+    // file names for Pythia - Phojet - all  MB
+    TString productionNames13TeV[nProductions] = {"LHC16d", "LHC17f6","LHC18d6a2" };
+    TString fileNames13TeV[nProductions]       = {"GammaConv_Material_LHC16d_23.root",  // LHC16d
+                                                  "GammaConv_Material_MC_LHC17f6total_23.root", // Pythia 13 TeV
+                                                  "GammaConv_Material_MC_LHC18d6a2_23.root" };  // Phojet 13 TeV
 
-  // file names for Pythia - Phojet- all  MB
-  const TString fileNames1[nProductions] = {"GammaConv_Material_LHC16d_23.root",  // LHC16d
-					    "GammaConv_Material_MC_LHC17f6total_23.root", // Pythia 13 TeV
-					    "GammaConv_Material_MC_LHC18d6a2_23.root" };  // Phojet 13 TeV 
+    TString productionNames5TeV[nProductions] = {"LHC17p", "LHC17l3b","LHC18d6b" };
+    TString fileNames5TeV[nProductions]       = {"MaterialBudget_LHC17p_fastwoSDD_LowInt_23.root",  // LHC16d
+                                                 "MaterialBudget_PythiaLowInt_fastwoSDD_23.root", // Pythia 13 TeV
+                                                 "MaterialBudget_PhojetLowInt_fastwoSDD_23.root" };  // Phojet 13 TeV
 
-  TString fileNames;
-  TString centralityClass;
+    TString productions;
+    TString fileNames;
+    TString centralityClass;
 
-  //########## start ########################
-  TFile targetFile( Form("%s/%s", inputPath.Data(),targetFileName.Data()),"RECREATE");
-  
+    //########## start ########################
+    TFile targetFile( Form("%s/%s", inputPath.Data(),targetFileName.Data()),"RECREATE");
+
     // go through productions j
     for(Int_t j=0; j<nProductionsUsed; j++){
-      cout << productionNames[j].Data() << endl;
-      fileNames = fileNames1[j];
-      centralityClass   = centralityClasses1[0]; 
-      TString fullCutString = Form("%s", eventAndphotonCutNo.Data());
-      TString inputFileName = Form("%s/%s/%s", inputPath.Data(), productionNames[j].Data(), fileNames.Data());
-      cout<< inputFileName.Data()<< endl;
-      cout<< fullCutString.Data() << endl;
-      TFile inputFile(inputFileName, "READ");
-      //	TList *topList        = (TList*)inputFile.Get("GammaConvV1");
-      TList *topList        = (TList*)inputFile.Get("GammaConvMaterial");
-      TList *cutList        = (TList*)topList->FindObject(Form("Cut Number %s",fullCutString.Data()));
-      TList *subList        = (TList*)cutList->FindObject(Form("%s ESD histograms", fullCutString.Data()));
-      TH1D *histoTracks     = (TH1D*)subList->FindObject("GoodESDTracksEta08");
-      topList->SetOwner(kTRUE);  // enables recursive free of memory
-      cutList->SetOwner(kTRUE);
-      subList->SetOwner(kTRUE);
-      TH1D* histoTracksSave = (TH1D*)histoTracks->Clone();
-      histoTracksSave->Sumw2();
-      cout<< histoTracksSave->GetEntries()<< endl;
-      if(histoTracksSave->GetEntries()>0) histoTracksSave->Scale(1./histoTracksSave->GetEntries());
-      //	histoTracksSave->SetTitle(Form("GoodESDTracks %s %s", productionNames[j].Data(), centForTitle.Data()));
-      histoTracksSave->SetTitle(Form("GoodESDTracks08 %s", productionNames[j].Data() ));
-      histoTracksSave->SetName(Form("%s_%s", productionNames[j].Data(), centralityClass.Data()));
-      targetFile.cd();
-      histoTracksSave->Write();
-      cout << "\t done"<< endl;
-      // clean up
-      inputFile.Close();
-      delete topList;   // needs to be deleted because Close() does not free list memory correctly
+        if(energy.Contains("5TeV")){
+            productions = productionNames5TeV[j];
+            fileNames   = fileNames5TeV[j];
+        } else if (energy.Contains("13TeV")){
+            productions = productionNames13TeV[j];
+            fileNames   = fileNames13TeV[j];
+        }
+        cout << productions.Data() << endl;
+        centralityClass   = centralityClasses1[0];
+
+        TString fullCutString = Form("%s", eventAndphotonCutNo.Data());
+        TString inputFileName = Form("%s/%s/%s", inputPath.Data(), productions.Data(), fileNames.Data());
+        if(energy.Contains("5TeV")) inputFileName = Form("%s/%s", inputPath.Data(), fileNames.Data());
+        cout<< inputFileName.Data()<< endl;
+        cout<< fullCutString.Data() << endl;
+
+        TFile inputFile(inputFileName, "READ");
+        //	TList *topList        = (TList*)inputFile.Get("GammaConvV1");
+        TList *topList        = (TList*)inputFile.Get("GammaConvMaterial");
+        TList *cutList        = (TList*)topList->FindObject(Form("Cut Number %s",fullCutString.Data()));
+        TList *subList        = (TList*)cutList->FindObject(Form("%s ESD histograms", fullCutString.Data()));
+        TH1D *histoTracks     = (TH1D*)subList->FindObject("GoodESDTracksEta08");
+        topList->SetOwner(kTRUE);  // enables recursive free of memory
+        cutList->SetOwner(kTRUE);
+        subList->SetOwner(kTRUE);
+        TH1D* histoTracksSave = (TH1D*)histoTracks->Clone();
+        histoTracksSave->Sumw2();
+        cout<< histoTracksSave->GetEntries()<< endl;
+        if(histoTracksSave->GetEntries()>0) histoTracksSave->Scale(1./histoTracksSave->GetEntries());
+        //	histoTracksSave->SetTitle(Form("GoodESDTracks %s %s", productions.Data(), centForTitle.Data()));
+        histoTracksSave->SetTitle(Form("GoodESDTracks08 %s", productions.Data() ));
+        histoTracksSave->SetName(Form("%s_%s", productions.Data(), centralityClass.Data()));
+        targetFile.cd();
+        histoTracksSave->Write();
+        cout << "\t done"<< endl;
+        // clean up
+        inputFile.Close();
+        delete topList;   // needs to be deleted because Close() does not free list memory correctly
 
     }
     cout << "to " <<  targetFileName.Data() << endl;
-    targetFile.Close(); 
+    targetFile.Close();
 }
