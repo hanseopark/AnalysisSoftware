@@ -1,0 +1,17 @@
+#: table_doi: 10.17182/hepdata.22677.v1/t2
+#: name: Table 2
+#: description: Cross section using conversion method and an isolation cut of 2 GeV in a cone around the photon. There is an additional +32,-46 pct systematic uncertainty in addition to the PT dependent systematic errors shown in the table.
+
+#: data_file: Table2.yaml
+#: keyword reactions: PBAR P --> GAMMA X
+#: keyword observables: D2SIG/DETARAP/DPT
+#: keyword phrases: Inclusive | Prompt | Double Differential Cross Section | Transverse Momentum Dependence
+#: keyword cmenergies: 1800.0
+#: RE,,,PBAR P --> GAMMA X
+#: SQRT(S) [GeV],,,1800.0,,,,
+'PT [GEV]','PT [GEV] LOW','PT [GEV] HIGH','D2(SIG)/DPT/DETARAP [PB/GEV]','stat +','stat -','sys +','sys -'
+32.2,28.0,38.0,60.5,9.1,-9.1,4.2,-4.2
+42.4,38.0,48.0,11.9,4.4,-4.4,0.7,-0.7
+52.5,48.0,58.0,6.53,2.7,-2.7,0.4,-0.4
+62.6,58.0,68.0,2.22,1.8,-1.8,0.2,-0.2
+

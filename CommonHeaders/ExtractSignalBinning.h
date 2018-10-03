@@ -1581,7 +1581,7 @@
                     startPtBin     = 2;
                 } else if ( mode == 4 || mode == 5 || mode == 12){
                     startPtBin     = 13;
-                } else if ( mode == 2 )
+                } else if ( mode == 2 ){
                     startPtBin     = 13;
                 }
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0){

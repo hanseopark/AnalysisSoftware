@@ -1,0 +1,18 @@
+%: table_doi: 10.17182/hepdata.83913.v1/t11
+%: name: Table 11
+%: description: Ratio of inclusive to decay photon cross sections extracted from the dielectron spectra measured in pp collisions at $\sqrt{s}$ = 7 TeV in the ALICE acceptance as a function of $p_{\rm T	ee}$.
+%: data_file: fig18.yaml
+%: keyword reactions: P P --> E+ E- X
+%: keyword observables: RGAMMA
+%: keyword cmenergies: 7000.0
+%: keyword phrases: R GAMMA
+%: RE			P P --> E+ E- X
+%: ETARAP			-0.8 TO 0.8
+%: SQRT(S) [GEV]			7000.0
+%'PT [GEV/C]'	'PT [GEV/C] LOW'	'PT [GEV/C] HIGH'	'RGAMMA'	'stat +'	'stat -'	'sys +'	'sys -'
+1.25	1.0	1.5	0.9930677	0.006086543	-0.006086543	0.01927496	-0.02140909
+1.75	1.5	2.0	0.9875579	0.009481435	-0.009481435	0.02157182	-0.02141486
+2.5	2.0	3.0	0.9841581	0.01236098	-0.01236098	0.02372879	-0.02464227
+3.5	3.0	4.0	1.024856	0.02944437	-0.02944437	0.03083682	-0.04441367
+6.0	4.0	8.0	1.086131	0.05614169	-0.05614169	0.03548263	-0.05003453
+

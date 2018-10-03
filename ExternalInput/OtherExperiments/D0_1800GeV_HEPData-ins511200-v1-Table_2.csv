@@ -1,0 +1,23 @@
+#: table_doi: 10.17182/hepdata.42075.v1/t2
+#: name: Table 2
+#: description: The measured isolated photon cross sections. The first error contains the statistics and uncorrelated systematic uncertainties, the DSYS error is the correlated systematic uncertainty.
+
+#: data_file: Table2.yaml
+#: keyword reactions: PBAR P --> GAMMA X
+#: keyword observables: D2SIG/DET/DETARAP
+#: keyword phrases: Inclusive | Double Differential Cross Section
+#: keyword cmenergies: 1800.0
+#: RE,,,PBAR P --> GAMMA X
+#: ABS(ETARAP),,,1.6 TO 2.5
+#: SQRT(S) [GeV],,,1800.0,,,,
+'ET(P=3) [GEV]','ET(P=3) [GEV] LOW','ET(P=3) [GEV] HIGH','D2(SIG)/DET/DETARAP [PB/GEV]','stat +','stat -','sys +','sys -'
+11.8,10.0,14.0,4850.0,2716.0,-2716.0,1649.0,-1649.0
+17.0,14.0,21.0,1780.0,605.0,-605.0,463.0,-463.0
+23.3,21.0,26.0,318.0,86.0,-86.0,64.0,-64.0
+30.5,26.0,36.0,115.0,30.0,-30.0,20.0,-20.0
+38.8,36.0,42.0,23.8,2.9,-2.9,3.3,-3.3
+47.2,42.0,54.0,8.97,0.99,-0.99,1.08,-1.08
+62.6,54.0,75.0,1.85,0.15,-0.15,0.2,-0.2
+79.7,75.0,85.0,0.384,0.042,-0.042,0.038,-0.038
+105.1,85.0,140.0,0.0366,0.0084,-0.0084,0.0037,-0.0037
+

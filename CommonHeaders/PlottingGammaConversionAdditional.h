@@ -3225,7 +3225,7 @@
                         return kRed+1;
                     } else if (!centrality.CompareTo("5-10%")){
                         return 807;
-                    } else if (!centrality.CompareTo("10-20%")){
+                    } else if (!centrality.CompareTo("10-20%")|| !centrality.CompareTo("10-30%") ){
                         return 800;
                     } else if (!centrality.CompareTo("20-40%")){
                         return kGreen+2;
@@ -3233,10 +3233,12 @@
                         return kCyan+2;
                     } else if (!centrality.CompareTo("40-60%")){
                         return kCyan+2;
-                    } else if (!centrality.CompareTo("60-80%")){
+                    } else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")){
                         return kBlue+1;
-                    } else if (!centrality.CompareTo("40-80%")){
+                    } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")){
                         return kCyan+2;
+                    } else if (!centrality.CompareTo("30-100%") ){
+                        return kViolet+2;
                     }
                 } else {
                     if (!centrality.CompareTo("0-10%")){
@@ -3249,18 +3251,20 @@
                         return kRed+2;
                     } else if (!centrality.CompareTo("5-10%")){
                         return 809;
-                    } else if (!centrality.CompareTo("10-20%")){
+                    } else if (!centrality.CompareTo("10-20%") || !centrality.CompareTo("10-30%") ){
                         return 802;
                     } else if (!centrality.CompareTo("20-40%")){
                         return kGreen+4;
                     } else if (!centrality.CompareTo("20-50%")){
                         return kCyan+3;
-                    } else if (!centrality.CompareTo("40-60%")){
+                    } else if (!centrality.CompareTo("40-60%") ){
                         return kCyan+3;
-                    } else if (!centrality.CompareTo("60-80%")){
+                    } else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")){
                         return kBlue+3;
-                    } else if (!centrality.CompareTo("40-80%")){
+                    } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")){
                         return kCyan+3;
+                    } else if (!centrality.CompareTo("30-100%") ){
+                        return kViolet-6;
                     }
                 }
             } else {
@@ -3275,7 +3279,7 @@
                         return kGreen-5;
                     } else if (!centrality.CompareTo("20-50%")){
                         return kCyan-5;
-                    } else if (!centrality.CompareTo("40-80%")){
+                    } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")){
                         return kCyan-5;
                     }
                 }
@@ -3632,7 +3636,7 @@
                     return 20;
                 } else if (!centrality.CompareTo("5-10%")){
                     return 21;
-                } else if (!centrality.CompareTo("10-20%")){
+                } else if (!centrality.CompareTo("10-20%") || !centrality.CompareTo("10-30%") ){
                     return 29;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 33;
@@ -3640,9 +3644,11 @@
                     return 34;
                 } else if (!centrality.CompareTo("40-60%")){
                     return 20;
-                } else if (!centrality.CompareTo("60-80%")){
+                } else if (!centrality.CompareTo("30-100%") ){
                     return 21;
-                } else if (!centrality.CompareTo("40-80%")){
+                } else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")){
+                    return 21;
+                } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") ){
                     return 34;
                 }
             } else {
@@ -3656,7 +3662,7 @@
                     return 24;
                 } else if (!centrality.CompareTo("5-10%")){
                     return 25;
-                } else if (!centrality.CompareTo("10-20%")){
+                } else if (!centrality.CompareTo("10-20%")|| !centrality.CompareTo("10-30%") ){
                     return 30;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 27;
@@ -3664,9 +3670,11 @@
                     return 28;
                 } else if (!centrality.CompareTo("40-60%")){
                     return 24;
-                } else if (!centrality.CompareTo("60-80%")){
+                } else if (!centrality.CompareTo("30-100%") ){
                     return 25;
-                } else if (!centrality.CompareTo("40-80%")){
+                } else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")){
+                    return 25;
+                } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") ){
                     return 28;
                 }
             }
@@ -3851,17 +3859,19 @@
                     return 2;
                 } else if (!centrality.CompareTo("5-10%")){
                     return 2;
-                } else if (!centrality.CompareTo("10-20%")){
+                } else if (!centrality.CompareTo("10-20%") || !centrality.CompareTo("10-30%") ){
                     return 2.5;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 2.5;
                 } else if (!centrality.CompareTo("20-50%")){
                     return 2.;
-                } else if (!centrality.CompareTo("40-60%")){
+                } else if (!centrality.CompareTo("40-60%") || !centrality.CompareTo("30-100%") ){
                     return 2;
-                } else if (!centrality.CompareTo("60-80%")){
+                } else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")){
                     return 2;
-                } else if (!centrality.CompareTo("40-80%")){
+                } else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")){
+                    return 2;
+                } else {
                     return 2;
                 }
             }
@@ -4101,6 +4111,31 @@
             }
         }
     }
+    void PlotErrorBarAtUpperEdgeOfTGraphErr(TGraphErrors* graph,
+                                            Double_t widthTick = 0.05,
+                                            Bool_t isLog = kFALSE,
+                                            TGraphErrors* graphpTbinning = NULL){
+
+        TGraphErrors* dummy = (TGraphErrors*)graph->Clone("dummyPlotErrorsAtEdge");
+        if(!graphpTbinning){
+            for (Int_t i=0; i < dummy->GetN();i++){
+                Double_t widthTickUsedUp = widthTick;
+                Double_t widthTickUsedDown = widthTick;
+                DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEY()[i], dummy->GetY()[i]+dummy->GetEY()[i],
+                               dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
+
+            }
+        } else {
+            for (Int_t i=0; i < dummy->GetN();i++){
+                Double_t widthTickUsedUp = graphpTbinning->GetEX()[i];
+                Double_t widthTickUsedDown = graphpTbinning->GetEX()[i];
+                DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEY()[i], dummy->GetY()[i]+dummy->GetEY()[i],
+                               dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
+
+            }
+        }
+    }
+
 
     Color_t GetDefaultTriggerColor( TString periodName,
                                     Int_t SpecialTrigger){

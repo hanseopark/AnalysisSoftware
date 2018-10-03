@@ -27,6 +27,8 @@
     Double_t ncoll7080      = 15.575;
     Double_t ncoll8090      = 6.293;
     Double_t ncoll7590      = 8.219;
+    Double_t ncoll1030      = 11.6*64;
+    Double_t ncoll30100     = 1.45*64;
 
     Double_t nCollErr0005   = 190;
     Double_t nCollErr0510   = 140;
@@ -1640,6 +1642,8 @@
                     return ncoll0010;
                 } else if (centralityCutNumber.CompareTo("12") == 0){ //10-20%
                     return ncoll1020;
+                } else if (centralityCutNumber.CompareTo("13") == 0){ //10-30%
+                    return ncoll1030;
                 } else if (centralityCutNumber.CompareTo("24") == 0){ //20-40%
                     return ncoll2040;
                 } else if (centralityCutNumber.CompareTo("25") == 0){ //20-50%
@@ -1660,6 +1664,8 @@
                     return ncoll7080;
                 } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
                     return ncoll8090;
+                } else if (centralityCutNumber.CompareTo("30") == 0){ //10-30%
+                    return ncoll30100;
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
                     return 77.1;
                 } else if (centralityCutNumber.CompareTo("04") == 0){ //0-40%
@@ -1763,6 +1769,8 @@
                 return ncoll0010;
             } else if (name.CompareTo("1020") == 0){ //10-20%
                 return ncoll1020;
+            } else if (name.CompareTo("1030") == 0){ //10-30%
+                return ncoll1030;
             } else if (name.CompareTo("2040") == 0){ //20-40%
                 return ncoll2040;
             } else if (name.CompareTo("2050") == 0){ //20-50%
@@ -1785,7 +1793,70 @@
                 return ncoll8090;
             } else if (name.CompareTo("7590") == 0){ //60-80%
                 return ncoll7590;
+            } else if (name.CompareTo("30100") == 0){ //30-100%
+                return ncoll30100;
             }
+        } else if (energy.CompareTo("AuAu_0.2TeV") == 0){
+            double dNdeta200AuAu[4]     = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};
+            double edNdeta200AuAu[4]    = {2.6250e+01,  1.3175e+01,  8.0750e+00,  2.8137e+00};
+//             0%–20% 770.6 ± 79.9 277.5 ± 6.5 735.2 ± 14.6 239 ± 25 ± 7
+//             20%–40% 282.4 ± 28.4 135.6 ± 7.0 333.2 ± 10.7 260 ± 33 ± 8
+//             40%–60% 82.6 ± 9.3 56.0 ± 5.3 126.6 ± 6.1 225 ± 28 ± 6
+//             60%–92% 12.1 ± 3.1 12.5 ± 2.6 25.8 ± 4.0 238 ± 50 ± 6
+//             0%–92% 251.1 ± 26.7 106.3 ± 5.0 268.8 ± 8.2 242 ± 28 ± 7
+            if (name.CompareTo("0020") == 0){ //0-20%
+                return 770.6;
+            } else if (name.CompareTo("2040") == 0){ //20-40%
+                return 282.4;
+            } else if (name.CompareTo("4060") == 0){ //40-60%
+                return 82.6;
+            } else if (name.CompareTo("6092") == 0){ //40-60%
+                return 12.1;
+            } else if (name.CompareTo("0092") == 0){ //40-60%
+                return 251.1;
+            }
+        } else if (energy.CompareTo("AuAu_0.2TeV_STAR") == 0){
+            // 0-20% (766 ± 28)/42 mb
+            // 20-40% (291 ± 30)/42 mb
+            // 0-80% (292 ± 20)/42 mb
+            // 40-60% (91 ± 20)/42 mb
+            // 60-80% (22 ± 8)/42 mb
+            if (name.CompareTo("0020") == 0){ //0-20%
+                return 766;
+            } else if (name.CompareTo("2040") == 0){ //20-40%
+                return 291;
+            } else if (name.CompareTo("4060") == 0){ //40-60%
+                return 91;
+            } else if (name.CompareTo("6080") == 0){ //60-80%
+                return 22;
+            } else if (name.CompareTo("0080") == 0){ //0-80%
+                return 292;
+            }
+        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
+            //Centrality dNch/dη Ncoll Npart
+            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
+            // MB       51.7±3.6    51.8±5.6    34.6±1.2
+            if (name.CompareTo("0040") == 0){ //0-40%
+                return 108.2;
+            } else if (name.CompareTo("0094") == 0){ //0-94%
+                return 51.8;
+            }
+        } else if (energy.CompareTo("AuAu_62.4GeV") == 0){
+            double dNdeta62AuAu[3]  = {3.412e+02, 1.518e+02, 1.315e+02};
+            double edNdeta62AuAu[3] = {2.932e+01, 1.269e+01, 1.115e+01};
+            if (name.CompareTo("0020") == 0){ //0-40%
+                return 653;
+            } else if (name.CompareTo("2040") == 0){ //0-94%
+                return 240;
+            } else if (name.CompareTo("0086") == 0){ //0-94%
+                return 200;
+            }
+        } else if (energy.CompareTo("AuAu_39GeV") == 0){
+            double dNdeta39AuAu     = 1.043e+02;
+            double edNdeta39AuAu    = 8.882e+00;
+            return 192;
+        } else if (energy.CompareTo("PbPb_17.2GeV") == 0){
+            return 660;
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
             if (name.CompareTo("0020_V0A") == 0){ //0-20%
                 return nCollpPb5TeVBaseV0A20[0];
@@ -1946,6 +2017,32 @@
                 return nCollErr8090;
             } else if (name.CompareTo("7590") == 0){ //75-90%
                 return nCollErr7590;
+            }
+        } else if (energy.CompareTo("AuAu_0.2TeV") == 0){
+            //             0%–20% 770.6 ± 79.9 277.5 ± 6.5 735.2 ± 14.6 239 ± 25 ± 7
+            //             20%–40% 282.4 ± 28.4 135.6 ± 7.0 333.2 ± 10.7 260 ± 33 ± 8
+            //             40%–60% 82.6 ± 9.3 56.0 ± 5.3 126.6 ± 6.1 225 ± 28 ± 6
+            //             60%–92% 12.1 ± 3.1 12.5 ± 2.6 25.8 ± 4.0 238 ± 50 ± 6
+            //             0%–92% 251.1 ± 26.7 106.3 ± 5.0 268.8 ± 8.2 242 ± 28 ± 7
+            if (name.CompareTo("0020") == 0){ //0-20%
+                return 79.9;
+            } else if (name.CompareTo("2040") == 0){ //20-40%
+                return 28.4;
+            } else if (name.CompareTo("4060") == 0){ //40-60%
+                return 9.3;
+            } else if (name.CompareTo("6092") == 0){ //40-60%
+                return 3.1;
+            } else if (name.CompareTo("0092") == 0){ //40-60%
+                return 26.7;
+            }
+        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
+            //Centrality dNch/dη Ncoll Npart
+            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
+            // MB       51.7±3.6    51.8±5.6    34.6±1.2
+            if (name.CompareTo("0040") == 0){ //0-40%
+                return 12.0;
+            } else if (name.CompareTo("0094") == 0){ //0-94%
+                return 5.6;
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;

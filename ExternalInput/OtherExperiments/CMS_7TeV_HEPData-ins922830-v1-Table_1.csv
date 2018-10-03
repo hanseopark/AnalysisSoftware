@@ -1,0 +1,30 @@
+%: table_doi: 10.17182/hepdata.58958.v1/t1
+%: name: Table 1
+%: description: The measured prompt photon production spectra in the two |eta|  regions	 0.0-0.9 and 0.9-1.44.
+
+%: data_file: Table1.yaml
+%: keyword reactions: P P --> GAMMA X
+%: keyword observables: D2SIG/DET/DETARAP
+%: keyword phrases: Inclusive | Prompt | Double Differential Cross Section | Proton-Proton Scattering
+%: keyword cmenergies: 7000.0
+%: RE			P P --> GAMMA X
+%: SQRT(S) [GeV]			7000.0
+%: ABS(ETARAP)			0.0-0.9
+%: ET(C=ISOLATION) [GEV]			< 5
+%'ET [GEV]'	'ET [GEV] LOW'	'ET [GEV] HIGH'	'D2(SIG)/DET/DETARAP [NB/GEV]'	'stat +'	'stat -'	'sys +'	'sys -'
+27.5	25.0	30.0	0.783	0.017	-0.017	0.096	-0.096
+32.5	30.0	35.0	0.385	0.014	-0.014	0.046	-0.042
+37.5	35.0	40.0	0.204	0.004	-0.004	0.019	-0.019
+42.5	40.0	45.0	0.125	0.003	-0.003	0.011	-0.011
+47.5	45.0	50.0	0.0793	0.0022	-0.0022	0.0063	-0.0066
+52.5	50.0	55.0	0.0497	0.0016	-0.0016	0.0037	-0.0039
+57.5	55.0	60.0	0.0349	0.0009	-0.0009	0.0028	-0.0028
+62.5	60.0	65.0	0.0231	0.0009	-0.0009	0.0017	-0.0018
+67.5	65.0	70.0	0.0161	0.0007	-0.0007	0.0012	-0.0013
+75.0	70.0	80.0	0.0105	0.0003	-0.0003	0.0009	-0.0008
+90.0	80.0	100.0	0.0048	0.00012	-0.00012	0.0003	-0.00028
+110.0	100.0	120.0	0.00189	5e-05	-5e-05	0.00014	-0.00014
+160.0	120.0	200.0	0.000407	1.6e-05	-1.6e-05	3.3e-05	-2.9e-05
+250.0	200.0	300.0	4e-05	2.9e-06	-2.9e-06	2.7e-06	-2.7e-06
+350.0	300.0	400.0	8.2e-06	1.22e-06	-1.22e-06	5.9e-07	-5.4e-07
+

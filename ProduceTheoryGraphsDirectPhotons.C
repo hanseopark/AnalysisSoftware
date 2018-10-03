@@ -2733,17 +2733,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
           cout<< line<<endl;
         }
         while(!fileMCGill_PbPb5020.eof() && nlinesMCGill_PbPb5020 < 17){
-            fileMCGill_PbPb5020 >> ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] >> yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] >> 
-	    yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]>> 
+            fileMCGill_PbPb5020 >> ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] >> yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] >>
+	    yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]>>
             yieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020] >>  yieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]>> yieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020];
 
 
-            cout << nlinesMCGill_PbPb5020 << "\t"  << ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] << "\t"  << yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] << "\t"  << 
-                                                                                                           yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] << "\t"  << 
-                                                                                                           yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] << "\t"  << 
-                                                                                                           yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020] << "\t"  << 
-                                                                                                           yieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020] << "\t"  << 
-                                                                                                           yieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020] << "\t"  << 
+            cout << nlinesMCGill_PbPb5020 << "\t"  << ptMCGill_PbPb5020[nlinesMCGill_PbPb5020] << "\t"  << yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020] << "\t"  <<
+                                                                                                           yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020] << "\t"  <<
+                                                                                                           yieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020] << "\t"  <<
+                                                                                                           yieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020] << "\t"  <<
+                                                                                                           yieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020] << "\t"  <<
+                                                                                                           yieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020] << "\t"  <<
                                                                                                            yieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020] << "\t"  << endl;
 
 	    yieldMCGill_PbPb5020_0010[nlinesMCGill_PbPb5020]= 0.5*(yieldMCGill_PbPb5020_0005[nlinesMCGill_PbPb5020]+yieldMCGill_PbPb5020_0510[nlinesMCGill_PbPb5020]);
@@ -2760,19 +2760,19 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
             errYieldMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020]    = 0;
             errYieldXMCGill_PbPb5020_1020[nlinesMCGill_PbPb5020]   = 0;
- 
+
             errYieldMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]    = 0;
             errYieldXMCGill_PbPb5020_2030[nlinesMCGill_PbPb5020]   = 0;
- 
+
             errYieldMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020]    = 0;
             errYieldXMCGill_PbPb5020_3040[nlinesMCGill_PbPb5020]   = 0;
- 
+
             errYieldMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]    = 0;
             errYieldXMCGill_PbPb5020_4050[nlinesMCGill_PbPb5020]   = 0;
- 
+
             errYieldMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020]    = 0;
             errYieldXMCGill_PbPb5020_5060[nlinesMCGill_PbPb5020]   = 0;
- 
+
 
            nlinesMCGill_PbPb5020++;
         }

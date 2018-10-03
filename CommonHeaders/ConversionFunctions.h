@@ -1128,6 +1128,48 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
+    TGraphAsymmErrors* xTScalePhoton(TGraphAsymmErrors* tg, double E=1, double n = 4.5){
+        TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)tg->Clone(Form("%s_Xt",tg->GetName()));
+
+        Double_t* xValue                = dummyGraph->GetX();
+        Double_t* yValue                = dummyGraph->GetY();
+        Double_t* xErrorLow             = dummyGraph->GetEXlow();
+        Double_t* xErrorHigh            = dummyGraph->GetEXhigh();
+        Double_t* yErrorLow             = dummyGraph->GetEYlow();
+        Double_t* yErrorHigh            = dummyGraph->GetEYhigh();
+
+        for(int i = 0; i < dummyGraph->GetN(); i++){
+            xValue[i] = 2.0 * xValue[i] / E;
+            xErrorLow[i] = 2.0 * xErrorLow[i] / E;
+            xErrorHigh[i] = 2.0 * xErrorHigh[i] / E;
+            yValue[i] = yValue[i]*pow(E,n);
+            yErrorLow[i] = yErrorLow[i]*pow(E,n);
+            yErrorHigh[i] = yErrorHigh[i]*pow(E,n);
+        }
+        return dummyGraph;
+    }
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    TGraphErrors* xTScalePhoton(TGraphErrors* tg, double E=1, double n = 4.5){
+        TGraphErrors* dummyGraph    = (TGraphErrors*)tg->Clone(Form("%s_Xt",tg->GetName()));
+        double *x = dummyGraph->GetX();
+        double *y = dummyGraph->GetY();
+        double *ex = dummyGraph->GetEX();
+        double *ey = dummyGraph->GetEY();
+        for(int i = 0; i < dummyGraph->GetN(); i++){
+            x[i] = 2.0 * x[i] / E;
+            ex[i] = 2.0 * ex[i] / E;
+            y[i] = y[i]*pow(E,n);
+            ey[i] = ey[i]*pow(E,n);
+        }
+        return dummyGraph;
+    }
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
     TGraphAsymmErrors* ScaleGraph (TGraphAsymmErrors* graph, Double_t scaleFac){
         TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
 
@@ -2016,6 +2058,25 @@
         inputgraph              = new TGraphAsymmErrors(n,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
     //     inputgraph->Print();
     }
+
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    void ProduceGraphAsymmDisplacedInX(TGraphAsymmErrors* inputgraph, Double_t xShift){
+        Int_t n                 = inputgraph->GetN();
+        Double_t* xValue        = inputgraph->GetX();
+        Double_t* xErrorHigh    = inputgraph->GetEXhigh();
+        Double_t* xErrorLow     = inputgraph->GetEXlow();
+        Double_t* yValue        = inputgraph->GetY();
+        Double_t* yErrorLow     = inputgraph->GetEYlow();
+        Double_t* yErrorHigh    = inputgraph->GetEYhigh();
+        for (Int_t i= 0; i < n; i++){
+            xValue[i]       = xValue[i]+xShift;
+        }
+        //     inputgraph->Print();
+    }
+
 
     // ****************************************************************************************************************
     // ****************************************************************************************************************
@@ -5117,5 +5178,160 @@
 
         return;
     }
+
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    TGraphAsymmErrors* ParseHEPData(TString hepDataFile,
+                                    Int_t   totalNumberOfColumns,
+                                    Int_t   columnX,
+                                    Int_t   columnXErrLow,
+                                    Int_t   columnXErrHigh,
+                                    Int_t   columnY,
+                                    Int_t   columnYErrLow,
+                                    Int_t   columnYErrHigh,
+                                    Bool_t  isXErrVal,
+                                    Bool_t  isYErrVal,
+                                    Bool_t  debugMode = kFALSE) {
+
+        // create streamer
+        ifstream file;
+        if (debugMode) cout << "HEP data file: " << hepDataFile.Data() << endl;
+        file.open(hepDataFile,ios_base::in);
+        if (!file) {
+            cout << "ERROR: HEP data file " << hepDataFile.Data() << " not found!" << endl;
+            return NULL;
+        }
+
+        // check for correct column numbers
+        if (columnX<0) {
+            cout << "ERROR: columnX set to " << columnX << endl;
+            return NULL;
+        }
+        if (columnY<0) {
+            cout << "ERROR: columnY set to " << columnY << endl;
+            return NULL;
+        }
+        if (columnYErrLow<0 || columnYErrHigh<0) {
+            cout << "ERROR: columnYErrLow set to " << columnYErrLow << " and columnYErrHigh set to " << columnYErrHigh << endl;
+            return NULL;
+        }
+
+        // initialize vectors for temporary storage of values
+        std::vector<Double_t> xVal;
+        std::vector<Double_t> xErrLow;
+        std::vector<Double_t> xErrHigh;
+        std::vector<Double_t> yVal;
+        std::vector<Double_t> yErrLow;
+        std::vector<Double_t> yErrHigh;
+
+        // read from file
+        TString                 tempString;
+        std::vector<TString>    tempStringColumn(totalNumberOfColumns);
+        std::string line;
+        for( std::string line; getline(file, line); ) {
+            file >> tempString;
+            if (!tempString.BeginsWith("%") && !tempString.BeginsWith("%") && tempString.CompareTo("")) {
+                tempStringColumn[0]     = tempString;
+                if (debugMode) cout << tempStringColumn[0].Data() << "\t";
+                for (Int_t i=1; i<totalNumberOfColumns; i++) {
+                    file >> tempStringColumn[i];
+                    if (debugMode) cout << tempStringColumn[i].Data() << "\t";
+                }
+                if (debugMode) cout << endl;
+
+                // x value and error
+                xVal.push_back(tempStringColumn[columnX].Atof());
+                if (columnXErrLow>=0)   xErrLow.push_back(tempStringColumn[columnXErrLow].Atof());
+                else                    xErrLow.push_back(-1);
+                if (columnXErrHigh>=0)  xErrHigh.push_back(tempStringColumn[columnXErrHigh].Atof());
+                else                    xErrHigh.push_back(-1);
+
+                // y value and error
+                yVal.push_back(tempStringColumn[columnY].Atof());
+                yErrLow.push_back(tempStringColumn[columnYErrLow].Atof());
+                yErrHigh.push_back(tempStringColumn[columnYErrHigh].Atof());
+            } else
+                continue;
+        }
+
+        // check for equal number of rows for each column
+        Bool_t  isEqualNumberOfRows     = kTRUE;
+        Int_t   nRowsTemp[6];
+        nRowsTemp[0]                    = xVal.size();
+        nRowsTemp[1]                    = xErrLow.size();
+        nRowsTemp[2]                    = xErrHigh.size();
+        nRowsTemp[3]                    = yVal.size();
+        nRowsTemp[4]                    = yErrLow.size();
+        nRowsTemp[5]                    = yErrHigh.size();
+        for (Int_t i=0; i<5; i++) {
+            if (nRowsTemp[i]!=nRowsTemp[i+1]) {
+                isEqualNumberOfRows     = kFALSE;
+                break;
+            }
+        }
+        if (!isEqualNumberOfRows) {
+            cout << "number of rows in " << hepDataFile.Data() << " are not equal for different columns!" << endl;
+            return NULL;
+        }
+        Int_t nRows                     = xVal.size();
+
+        // calculate x errors if necessary (i.e. column numbers set to -1)
+        std::vector<Double_t> tempXErr(xVal.size());
+        if (columnXErrLow<0 || columnXErrHigh<0) {
+            for (Int_t i=0; i<nRows; i++) {
+
+                // calculate x error
+                if (i==0)               tempXErr[i] = (xVal[1]-xVal[0])/2;
+                else if (i==nRows-1)    tempXErr[i] = xVal[i]-(xVal[i-1] + tempXErr[i-1]);
+                else                    tempXErr[i] = (xVal[i]-xVal[i-1])/2;
+
+                // set error
+                xErrLow[i]              = tempXErr[i];
+                xErrHigh[i]             = tempXErr[i];
+            }
+        }
+
+        // calculate errors if bin boundaries were given
+        if (!isXErrVal && columnXErrLow>=0 && columnXErrHigh>=0) {
+            for (Int_t i=0; i<nRows; i++) {
+                xErrLow[i]              = TMath::Abs(xVal[i]-xErrLow[i]);
+                xErrHigh[i]             = TMath::Abs(xErrHigh[i]-xVal[i]);
+            }
+        }
+        if (!isYErrVal) {
+            for (Int_t i=0; i<nRows; i++) {
+                yErrLow[i]              = TMath::Abs(yVal[i]-yErrLow[i]);
+                yErrHigh[i]             = TMath::Abs(yErrHigh[i]-yVal[i]);
+            }
+        }
+
+        // set errors to absolute values, direction is taken care of by TGraphAsymmErrors
+        for (Int_t i=0; i<nRows; i++) {
+            xErrLow[i]                  = TMath::Abs(xErrLow[i]);
+            xErrHigh[i]                 = TMath::Abs(xErrHigh[i]);
+
+            yErrLow[i]                  = TMath::Abs(yErrLow[i]);
+            yErrHigh[i]                 = TMath::Abs(yErrHigh[i]);
+        }
+
+        // cout values (debug mode)
+        if (debugMode) {
+            cout << "nRows = " << nRows << endl;
+            for (Int_t i=0; i<nRows; i++) {
+                cout << "x = " << xVal[i] << "\t+ " << xErrHigh[i] << "\t- " << xErrLow[i] << "\t y = " << yVal[i] << "\t+ " << yErrHigh[i] << "\t- " << yErrLow[i] << endl;
+            }
+        }
+
+        // create TGraphAsymmErrors
+        TGraphAsymmErrors* graph        = new TGraphAsymmErrors(nRows);
+        for (Int_t i=0; i<nRows; i++) {
+            graph->SetPoint(        i, xVal[i], yVal[i]);
+            graph->SetPointError(   i, xErrLow[i], xErrHigh[i], TMath::Abs(yErrLow[i]), TMath::Abs(yErrHigh[i]));
+        }
+        return graph;
+    }
+
+
 
 #endif

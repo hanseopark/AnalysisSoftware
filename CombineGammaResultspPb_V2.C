@@ -163,11 +163,11 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
     Size_t   markerSizeDetMC[11];
     Size_t   markerSizeMult[5];
 
-    TString multbins[5]              = {"0-20%","20-40%","40-60%","60-100%",""};
-    TString multbinsPlot[5]              = {"0-  20%","20-  40%","40-  60%","60-100%","0-100%"};
-    TString multbinsCorrF[5]              = {"0020/","2040/","4060/","60100/",""};
-    TString multbinsPHOS[5]              = {"00-20","20-40","40-60","60-100","00-100"};
-    TString multbinsTheory[5]              = {"0020","2040","4060","60100",""};
+    TString multbins[5]                     = {"0-20%","20-40%","40-60%","60-100%",""};
+    TString multbinsPlot[5]                 = {"0-  20%","20-  40%","40-  60%","60-100%","0-100%"};
+    TString multbinsCorrF[5]                = {"0020/","2040/","4060/","60100/",""};
+    TString multbinsPHOS[5]                 = {"00-20","20-40","40-60","60-100","00-100"};
+    TString multbinsTheory[5]               = {"0020","2040","4060","60100",""};
     for (Int_t i = 0; i < 5; i++){
         colorMult[i]                                 = GetColorDefaultColor("pPb_5.023TeV", "", multbins[i].Data());
         markerStyleMult[i]                           = GetDefaultMarkerStyle("pPb_5.023TeV", "", multbins[i].Data());
@@ -2392,64 +2392,6 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/RawYield_IncGamma_IndMeas_%s.%s",outputDir.Data(),multbinsPHOS[ncent].Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/SinglePlots/RawYield_IncGamma_IndMeas_%s.pdf",outputDir.Data(),multbinsPHOS[ncent].Data()));
 }
-/*
-    // ****************************************************************************************************************
-    // ************************** Store final results including corr factors in 1 file ********************************
-    // ****************************************************************************************************************
-    TString nameOutputCommonFile    = Form("CombinedGammaResultPPb5TeV_%s.root", dateForOutput.Data());
-
-    TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
-
-    fCombResults.mkdir("Gamma_pPb5TeV");
-    TDirectoryFile* directoryGamma = (TDirectoryFile*)fCombResults.Get("Gamma_pPb5TeV");
-    fCombResults.cd("Gamma_pPb5TeV");
-
-    // writing main results
-    if (graphCombIncGammaStat[ncent]) graphCombIncGammaStat[ncent]->Write("graphInvYieldIncGammaStatErr");
-    if (graphCombIncGammaSys[ncent]) graphCombIncGammaSys[ncent]->Write("graphInvYieldIncGammaSysErr");
-    if (graphCombIncGammaTot[ncent]) graphCombIncGammaTot[ncent]->Write("graphInvYieldIncGammaTotErr");
-    if (graphCombIncGammaStatUnshi[ncent]) graphCombIncGammaStatUnshi[ncent]->Write("graphInvYieldIncGammaStatErr_Unshifted");
-    if (graphCombIncGammaSysUnshi[ncent]) graphCombIncGammaSysUnshi[ncent]->Write("graphInvYieldIncGammaSysErr_Unshifted");
-    if (graphCombIncGammaTotUnshi[ncent]) graphCombIncGammaTotUnshi[ncent]->Write("graphInvYieldIncGammaTotErr_Unshifted");
-
-    if (graphCombDRStat[ncent]) graphCombDRStat[ncent]->Write("graphRGammaCombNonFitStatErr");
-    if (graphCombDRSys[ncent]) graphCombDRSys[ncent]->Write("graphRGammaCombNonFitSysErr");
-    if (graphCombDRTot[ncent]) graphCombDRTot[ncent]->Write("graphRGammaCombNonFitTotErr");
-    if (graphCombDirGammaSpectrumSystErr[ncent]) graphCombDirGammaSpectrumSystErr[ncent]->Write("graphInvYieldNonFitDirGammaSysErr");
-    if (graphCombDirGammaSpectrumStatErr[ncent]) graphCombDirGammaSpectrumStatErr[ncent]->Write("graphInvYieldNonFitDirGammaStatErr");
-    if (graphCombDirGammaSpectrumSumErrAr[ncent]) graphCombDirGammaSpectrumSumErrAr[ncent]->Write("graphInvYieldNonFitDirGammaSumErrAr");
-    if (graphCombDRStat[ncent]) graphCombDRStat[ncent]->Write("graphRGammaCombStatErr");
-    if (graphCombDRSys[ncent]) graphCombDRSys[ncent]->Write("graphRGammaCombSysErr");
-    if (graphCombDRTot[ncent]) graphCombDRTot[ncent]->Write("graphRGammaCombTotErr");
-    if (graphCombDirGammaSpectrumSystErr) graphCombDirGammaSpectrumSystErr->Write("graphInvYieldDirGammaSysErr");
-    if (graphCombDirGammaSpectrumStatErr) graphCombDirGammaSpectrumStatErr->Write("graphInvYieldDirGammaStatErr");
-    if (graphCombDirGammaSpectrumSumErrAr) graphCombDirGammaSpectrumSumErrAr->Write("graphInvYieldDirGammaSumErrAr");
-
-    for (Int_t i = 0; i < 11; i++){
-        if (graphIndGammaIncSys[ncent][i]) graphIndGammaIncSys[ncent][i]->Write(Form("graphInvYieldIncGamma%sSysErr",nameMeasGlobal[i].Data()));
-        if (graphIndGammaIncStat[ncent][i]) graphIndGammaIncStat[ncent][i]->Write(Form("graphInvYieldIncGamma%sStatErr",nameMeasGlobal[i].Data()));
-        if (histoIncGammaStatErr[i]) histoIncGammaStatErr[i]->Write(Form("histoInvYieldIncGamma%sStatErr_Unshifted",nameMeasGlobal[i].Data()));
-        if (histoDRStatErr[i]) histoDRStatErr[i]->Write(Form("histoRGamma%sStatErr",nameMeasGlobal[i].Data()));
-        if (graphDRSysErr[i]) graphDRSysErr[i]->Write(Form("graphRGamma%sSysErr",nameMeasGlobal[i].Data()));
-        if (histoDRNonFitStatErr[i]) histoDRNonFitStatErr[i]->Write(Form("histoNonFitRGamma%sStatErr",nameMeasGlobal[i].Data()));
-        if (graphDRNonFitSysErr[i]) graphDRNonFitSysErr[i]->Write(Form("graphNonfitRGamma%sSysErr",nameMeasGlobal[i].Data()));
-    }
-    directoryGamma->mkdir("Supporting");
-    directoryGamma->cd("Supporting");
-    // Writing full correction factors
-    for (Int_t i = 0; i < 11; i++){
-        if (histoPileupCorr[ncent][i]) histoPileupCorr[ncent][i]->Write(Form("histoPileupCorr%s",nameMeasGlobal[i].Data()));
-        if (histoConvProb[ncent][i]) histoConvProb[ncent][i]->Write(Form("histoConvProb%s",nameMeasGlobal[i].Data()));
-        if (histoEffi[ncent][i]) histoEffi[ncent][i]->Write(Form("histoEffi[ncent]Effective%s",nameMeasGlobal[i].Data()));
-        if (histoEffiMCPt[ncent][i]) histoEffiMCPt[ncent][i]->Write(Form("histoEffiWithoutResol%s",nameMeasGlobal[i].Data()));
-        if (histoPurity[ncent][i]) histoPurity[ncent][i]->Write(Form("histoPurity%s",nameMeasGlobal[i].Data()));
-        for (Int_t k = 0; k<4; k++){
-            if (histoEffSecCorr[ncent][k][i]) histoEffSecCorr[ncent][k][i]->Write(Form("histoEffectiveSecCorrFrom%s_%s",nameOutputSec[i].Data(), nameMeasGlobal[i].Data()));
-        }
-    }
-
-    fCombResults.Close();
-*/
     Double_t textSizeLabelsRel          = 55./1200;
     textSizeLabelsPixel                 = 55;
     TCanvas* canvasEffectiveSecCorrCent   = new TCanvas("canvasEffectiveSecCorrCent", "", 200, 10, 1200, 1100);  // gives the page size
@@ -2511,7 +2453,7 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
     TGraphAsymmErrors* graphCombIncGammaStatPlotScaled[5];
     TF1* fitHagGammaCombScaled[5];
     TF1* fitTCMGammaCombScaled[5];
-        
+
     TCanvas* canvasSpectraGamma          = new TCanvas("canvasSpectraGamma","",200,10,1350,1350*1.25);  // gives the page size
     DrawGammaCanvasSettings( canvasSpectraGamma, 0.16, 0.02, 0.02, 0.08);
     canvasSpectraGamma->SetLogx();
@@ -3108,7 +3050,7 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
 
     canvasRatioIndDR->SaveAs(Form("%s/DR_Comb_pPb5TeVRun1_allCent.%s", outputDir.Data(), suffix.Data()));
     canvasRatioIndDR->SaveAs(Form("%s/DR_Comb_pPb5TeVRun1_allCent.pdf", outputDir.Data()));
-    
+
 
 
     for(Int_t ncent = 0; ncent < 4; ncent++){
@@ -3475,7 +3417,7 @@ if(1){
     // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErrScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent], widthLinesBoxes, kTRUE);
     // DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
             // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
-        
+
             // DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
             // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent]);
             // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
@@ -3664,6 +3606,59 @@ if(1){
 
     canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.%s", outputDir.Data(), suffix.Data()));
     canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.pdf", outputDir.Data()));
+
+
+    //***********************************************************************************
+    //************************* Write output to file ************************************
+    //***********************************************************************************
+    TString nameOutputCommonFile    = Form("CombinedGammaResultPPb5TeV_%s.root", dateForOutput.Data());
+
+    TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
+
+    for (Int_t cent = 0; cent < 5; cent++){
+        TString nameDirectoryGamma  = Form("Gamma_pPb5TeV%s", multbins[cent].Data() );
+        fCombResults.mkdir(nameDirectoryGamma.Data());
+        TDirectoryFile* directoryGamma = (TDirectoryFile*)fCombResults.Get(nameDirectoryGamma.Data());
+        fCombResults.cd(nameDirectoryGamma.Data());
+
+        // writing main results
+        if (graphCombIncGammaStat[cent]) graphCombIncGamAmaStat[cent]->Write("graphInvYieldIncGammaStatErr");
+        if (graphCombIncGammaSys[cent]) graphCombIncGammaSys[cent]->Write("graphInvYieldIncGammaSysErr");
+        if (graphCombIncGammaTot[cent]) graphCombIncGammaTot[cent]->Write("graphInvYieldIncGammaTotErr");
+        if (graphCombIncGammaStatUnshi[cent]) graphCombIncGammaStatUnshi[cent]->Write("graphInvYieldIncGammaStatErr_Unshifted");
+        if (graphCombIncGammaSysUnshi[cent]) graphCombIncGammaSysUnshi[cent]->Write("graphInvYieldIncGammaSysErr_Unshifted");
+        if (graphCombIncGammaTotUnshi[cent]) graphCombIncGammaTotUnshi[cent]->Write("graphInvYieldIncGammaTotErr_Unshifted");
+
+        if (graphCombDirGammaSpectrumSystErr[cent]) graphCombDirGammaSpectrumSystErr[cent]->Write("graphInvYieldDirGammaSysErr");
+        if (graphCombDirGammaSpectrumStatErr[cent]) graphCombDirGammaSpectrumStatErr[cent]->Write("graphInvYieldDirGammaStatErr");
+        if (graphCombDirGammaSpectrumSumErrAr[cent]) graphCombDirGammaSpectrumSumErrAr[cent]->Write("graphInvYieldDirGammaSumErrAr");
+        if (graphCombDRStat[cent]) graphCombDRStat[cent]->Write("graphRGammaCombStatErr");
+        if (graphCombDRSys[cent]) graphCombDRSys[cent]->Write("graphRGammaCombSysErr");
+        if (graphCombDRTot[cent]) graphCombDRTot[cent]->Write("graphRGammaCombTotErr");
+
+        for (Int_t i = 0; i < 11; i++){
+            if (graphIndGammaIncSys[cent][i]) graphIndGammaIncSys[cent][i]->Write(Form("graphInvYieldIncGamma%sSysErr",nameMeasGlobal[i].Data()));
+            if (graphIndGammaIncStat[cent][i]) graphIndGammaIncStat[cent][i]->Write(Form("graphInvYieldIncGamma%sStatErr",nameMeasGlobal[i].Data()));
+            if (histoIncGammaStatErr[cent][i]) histoIncGammaStatErr[cent][i]->Write(Form("histoInvYieldIncGamma%sStatErr_Unshifted",nameMeasGlobal[i].Data()));
+            if (histoDRNonFitStatErr[cent][i]) histoDRNonFitStatErr[cent][i]->Write(Form("histoRGamma%sStatErr",nameMeasGlobal[i].Data()));
+            if (graphDRNonFitSysErr[cent][i]) graphDRNonFitSysErr[cent][i]->Write(Form("graphRGamma%sSysErr",nameMeasGlobal[i].Data()));
+        }
+
+        directoryGamma->mkdir("Supporting");
+        directoryGamma->cd("Supporting");
+        // Writing full correction factors
+        for (Int_t i = 0; i < 11; i++){
+            if (histoPileupCorr[cent][i]) histoPileupCorr[cent][i]->Write(Form("histoPileupCorr%s",nameMeasGlobal[i].Data()));
+            if (histoConvProb[cent][i]) histoConvProb[cent][i]->Write(Form("histoConvProb%s",nameMeasGlobal[i].Data()));
+            if (histoEffi[cent][i]) histoEffi[cent][i]->Write(Form("histoEffi[cent]Effective%s",nameMeasGlobal[i].Data()));
+            if (histoEffiMCPt[cent][i]) histoEffiMCPt[cent][i]->Write(Form("histoEffiWithoutResol%s",nameMeasGlobal[i].Data()));
+            if (histoPurity[cent][i]) histoPurity[cent][i]->Write(Form("histoPurity%s",nameMeasGlobal[i].Data()));
+//             for (Int_t k = 0; k<4; k++){
+//                 if (histoEffSecCorr[cent][k][i]) histoEffSecCorr[cent][k][i]->Write(Form("histoEffectiveSecCorrFrom%s_%s",nameOutputSec[i].Data(), nameMeasGlobal[i].Data()));
+//             }
+        }
+    }
+    fCombResults.Close();
 
 
 }

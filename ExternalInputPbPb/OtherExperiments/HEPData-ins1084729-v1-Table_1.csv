@@ -1,0 +1,19 @@
+%: table_doi: 10.17182/hepdata.58979.v1/t1
+%: name: Table 1
+%: description: Isolated photon spectra for PB PB collisions in 3 centrality ranges.
+
+%: data_file: Table1.yaml
+%: keyword reactions: PB PB --> GAMMA X
+%: keyword observables: DN/DET
+%: keyword phrases: Inclusive | Single Differential Distribution
+%: keyword cmenergies: 2760.0
+%: RE			PB PB --> GAMMA X
+%: CENTRALITY [pct]			0.0-10.0
+%: ABS(ETARAP)			< 1.44
+%: SQRT(S)/NUCLEON [GeV]			2760.0
+%'ET(P=3) [GEV]'	'ET(P=3) [GEV] LOW'	'ET(P=3) [GEV] HIGH'	'(1/TAA)*D(N)/DET [PB/GEV]'	'stat +'	'stat -'	'sys +'	'sys -'
+22.3	20.0	25.0	2480.0	240.0	-240.0	740.0	-740.0
+27.3	25.0	30.0	830.0	120.0	-120.0	240.0	-240.0
+34.4	30.0	40.0	416.0	54.0	-54.0	110.0	-110.0
+44.5	40.0	50.0	100.0	22.0	-22.0	23.0	-23.0
+61.7	50.0	80.0	20.0	5.7	-5.7	4.6	-4.6
