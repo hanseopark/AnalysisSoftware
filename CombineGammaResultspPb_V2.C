@@ -3329,7 +3329,7 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
 
 
 
-        for(Int_t ncent = 0; ncent < 5; ncent++){
+    for(Int_t ncent = 0; ncent < 5; ncent++){
 
         padPartRatio[ncent]->cd();
         padPartRatio[ncent]->SetLogx(1);
@@ -3395,7 +3395,7 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
     canvasRatioIndDR->SaveAs(Form("%s/IncGamma_Comb_pPb5TeVRun1_MBandCent.pdf", outputDir.Data()));
 
 
- if(fixPHOSspectrum>0){
+ if(fixPHOSspectrum>0&&0){
      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
@@ -3412,202 +3412,403 @@ void CombineGammaResultspPb_V2( TString inputFileNamePCM        = "",
 
 
 
+    if(1){
+        Size_t markerSize = 1.5;
 
-if(1){
-    // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErrScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent], widthLinesBoxes, kTRUE);
-    // DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
-            // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
-
-            // DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
-            // DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlotScaled[ncent], markerStyleMult[ncent], markerSizeMult[ncent], colorMult[ncent] , colorMult[ncent]);
-            // graphCombDirGammaSpectrumSystErrScaled[ncent]->Draw("E2same");
-            // graphCombDirGammaSpectrumStatErrPlotScaled[ncent]->Draw("p,E1Z,same");
-
-    Size_t markerSize = 1.5;
-
-    Color_t colorpp200 = kOrange+2;
-    Color_t colorpAu200 = kAzure+2;
-    Color_t colordAu200 = kViolet+2;
-    Color_t colorCuCu200 = kCyan+2;
-    Color_t colorAuAu39 = kMagenta+2;
-    Color_t colorAuAu62 = kGreen+2;
-    Color_t colorAuAu200 = kRed+2;
-    Color_t colorPbPb2760 = kBlue+2;
-
-    Style_t stylepp200 = 24;
-    Style_t stylepAu200 = 29;
-    Style_t styledAu200 = 34;
-    Style_t styleCuCu200 = 23;
-    Style_t styleAuAu39 = 27;
-    Style_t styleAuAu62 = 20;
-    Style_t styleAuAu200 = 21;
-    Style_t stylePbPb2760 = 33;
-    //==========================================================================================
-	//                     200 GeV Au+Au external conversion method
-	//==========================================================================================
-	const int N200AuAu = 4;
-	double dNdeta200AuAu[N200AuAu] = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};
-	double edNdeta200AuAu[N200AuAu] = {2.6250e+01,  1.3175e+01,  8.0750e+00,  2.8137e+00};
-	double dNdy200AuAu[N200AuAu] = {1.6611e+00,  7.0773e-01,  2.1711e-01,  2.2951e-02};
-	double edNdy200AuAu[N200AuAu] = {2.0251e-01,  8.6331e-02,  3.2922e-02,  6.2015e-03};
-	double sdNdy200AuAu[N200AuAu] = {5.3393e-01,  2.4784e-01,  9.3644e-02,  1.5471e-02};
-	TGraphAsymmErrors* tEIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, 0, 0, edNdy200AuAu, edNdy200AuAu);
-	TGraphAsymmErrors* tSIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, edNdeta200AuAu, edNdeta200AuAu, sdNdy200AuAu, sdNdy200AuAu);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
-	//==========================================================================================
-	//                    200 GeV Au+Au internal conversion method
-	//==========================================================================================
-	const int N200AuAuInt = 3;
-	double dNdeta200AuAuInt[N200AuAuInt] = {5.112e+02, 2.220e+02, 1.861e+02};
-	double edNdeta200AuAuInt[N200AuAuInt] = {2.625e+01, 1.318e+01, 1.132e+01};
-	double dNdy200AuAuInt[N200AuAuInt] = {1.686e+00, 6.981e-01, 5.550e-01};
-	double edNdy200AuAuInt[N200AuAuInt] = {2.312e-01, 8.545e-02, 5.043e-02};
-	double sdNdy200AuAuInt[N200AuAuInt] = {3.775e-01, 1.494e-01, 1.177e-01};
-	TGraphAsymmErrors* tEIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, 0, 0, edNdy200AuAuInt, edNdy200AuAuInt);
-	TGraphAsymmErrors* tSIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, edNdeta200AuAuInt, edNdeta200AuAuInt, sdNdy200AuAuInt, sdNdy200AuAuInt);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
-    //==========================================================================================
-	//                    39 GeV Au+Au external conversion method
-	//==========================================================================================
-	const int N39AuAu = 1;
-	double dNdeta39AuAu[N39AuAu] = {1.043e+02};
-	double edNdeta39AuAu[N39AuAu] = { 8.882e+00};
-	double dNdy39AuAu[N39AuAu] = {2.597e-01};
-	double edNdy39AuAu[N39AuAu] = {1.108e-01};
-	double sdNdy39AuAu[N39AuAu] = {2.149e-01};
-	TGraphAsymmErrors* tEIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, 0, 0, edNdy39AuAu, edNdy39AuAu);
-	TGraphAsymmErrors* tSIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, edNdeta39AuAu, edNdeta39AuAu, sdNdy39AuAu, sdNdy39AuAu);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39, widthLinesBoxes, kTRUE);
-    //==========================================================================================
-	//                    62 GeV Au+Au external conversion method
-	//==========================================================================================
-	const int N62AuAu = 3;
-	double dNdeta62AuAu[N62AuAu] = {3.412e+02, 1.518e+02, 1.315e+02};
-	double edNdeta62AuAu[N62AuAu] = {2.932e+01, 1.269e+01, 1.115e+01};
-	double dNdy62AuAu[N62AuAu] = {1.289e+00, 4.157e-01, 3.362e-01};
-	double edNdy62AuAu[N62AuAu] = {2.717e-01, 1.155e-01, 6.527e-02};
-	double sdNdy62AuAu[N62AuAu] = {4.525e-01, 2.101e-01, 1.724e-01};
-	TGraphAsymmErrors* tEIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, 0, 0, edNdy62AuAu, edNdy62AuAu);
-	TGraphAsymmErrors* tSIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, edNdeta62AuAu, edNdeta62AuAu, sdNdy62AuAu, sdNdy62AuAu);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62, widthLinesBoxes, kTRUE);
-    //==========================================================================================
-	//                    2760 GeV Pb+Pb ALICE
-	//==========================================================================================
-	const int N2760PbPb = 1;
-	double dNdeta2760PbPb[N2760PbPb] = {1.2068e+03};
-	double edNdeta2760PbPb[N2760PbPb] = {4.5750e+01};
-	double dNdy2760PbPb[N2760PbPb] = {4.7588e+00};
-	double edNdy2760PbPb[N2760PbPb] = {3.1678e-01};
-	double sdNdy2760PbPb[N2760PbPb] = {1.8749e+00};
-	TGraphAsymmErrors* tEIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, 0, 0, edNdy2760PbPb, edNdy2760PbPb);
-	TGraphAsymmErrors* tSIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, edNdeta2760PbPb, edNdeta2760PbPb, sdNdy2760PbPb, sdNdy2760PbPb);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760, widthLinesBoxes, kTRUE);
-    //==========================================================================================
-	//                    200 GeV p+p data
-	//==========================================================================================
-	const int N200pp = 1;
-	double dNdeta200pp[N200pp] = {2.3800e+00};
-	double edNdeta200pp[N200pp] = {1.7000e-01};
-	double dNdy200pp[N200pp] = {0.00017021881};
-	double edNdy200pp[N200pp] = {6.5655e-05};
-	double sMaxdNdy200pp[N200pp] = {8.8280476e-05};
-	double sMindNdy200pp[N200pp] = {6.7012381e-05};
-	TGraphAsymmErrors* tEIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, 0, 0, edNdy200pp, edNdy200pp);
-	TGraphAsymmErrors* tSIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, edNdeta200pp, edNdeta200pp, sMindNdy200pp, sMaxdNdy200pp);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200, widthLinesBoxes, kTRUE);
-    //==========================================================================================
-	//                    200 GeV Cu+Cu data
-	//==========================================================================================
-	const int N200CuCu = 2;
-	double dNdeta200CuCu[N200CuCu] = {5.1654e+01,  1.0926e+02};
-	double edNdeta200CuCu[N200CuCu] = {3.5590e+00,  7.8130e+00};
-	double dNdy200CuCu[N200CuCu] = {6.0815e-02,  1.5244e-01};
-	double edNdy200CuCu[N200CuCu] = {2.1225e-02,  5.9775e-02};
-	double sdNdy200CuCu[N200CuCu] = {2.5220e-02,  6.9172e-02};
-    TGraphAsymmErrors* tEIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, 0, 0, edNdy200CuCu, edNdy200CuCu);
-	TGraphAsymmErrors* tSIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, edNdeta200CuCu, edNdeta200CuCu, sdNdy200CuCu, sdNdy200CuCu);
-    DrawGammaSetMarkerTGraphAsym(tEIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200);
-    DrawGammaSetMarkerTGraphAsym(tSIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200, widthLinesBoxes, kTRUE);
-
-// double ratio combined
-    TCanvas *canvasIntegYieldPlot = new TCanvas("canvasIntegYieldPlot","",0.095,0.09,1000,815);
-    DrawGammaCanvasSettings( canvasIntegYieldPlot, 0.1, 0.01, 0.01, 0.12);
-    canvasIntegYieldPlot->cd();
-    canvasIntegYieldPlot->SetLogx();
-    canvasIntegYieldPlot->SetLogy();
-
-    Double_t minX                            = 1.01;
-    Double_t maxX                            = 1.9e3;
-    Double_t minY                            = 5e-5;
-    Double_t maxY                            = 2e1;
-    Double_t textSizeSinglePad               = 0.05;
-    TH2F * hist2DIntegYielgDRummy       = new TH2F("hist2DIntegYielgDRummy","hist2DIntegYielgDRummy",1000,minX, maxX,1000,minY, maxY);
-    SetStyleHistoTH2ForGraphs(hist2DIntegYielgDRummy, "d#it{N}_{ch}/d#eta |_{#eta#approx0}","d#it{N}_{#gamma}/d#it{y} (#it{p}_{T} > 1.0 GeV/#it{c})", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 1.08,0.95);
-    hist2DIntegYielgDRummy->GetXaxis()->SetLabelOffset(-0.005);
-    // hist2DIntegYielgDRummy->GetXaxis()->SetMoreLogLabels(kTRUE);
-    hist2DIntegYielgDRummy->DrawCopy();
-
-        // TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.958-textSizeSinglePad*5,0.35,0.958, textSizeSinglePad, 1, Form("%s %s",multbins[ncent].Data(),collisionSystempPb.Data()), 42, 0.3);
-        // legendDRSingle->SetTextAlign(11);
-        // DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
-        // for (Int_t i = 0; i < 10; i++){
-        //     if (graphDRNonFitSysErr[ncent][i]){
-        //         DrawGammaSetMarkerTGraphAsym(graphDRNonFitSysErr[ncent][i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
-        //         graphDRNonFitSysErr[ncent][i]->Draw("E2same");
-        //         legendDRSingle->AddEntry(graphDRNonFitSysErr[ncent][i],nameMeasGlobalLabel[i],"pf");
-
-        //     }
-        //     if (histoDRNonFitStatErr[ncent][i]){
-        //         DrawGammaSetMarker(histoDRNonFitStatErr[ncent][i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
-        //         histoDRNonFitStatErr[ncent][i]->Draw("p,same,e0,X0");
-        //         if (!graphDRNonFitSysErr[ncent][i])legendDRSingle->AddEntry(histoDRNonFitStatErr[ncent][i],nameMeasGlobalLabel[i],"p");
-        //     }
-        // }
-        tSIntYield200AuAuInt->Draw("E2same");
-        tEIntYield200AuAuInt->Draw("p,E1Z,same");
-
-        tSIntYield200AuAu->Draw("E2same");
-        tEIntYield200AuAu->Draw("p,E1Z,same");
-
-        tSIntYield62AuAu->Draw("E2same");
-        tEIntYield62AuAu->Draw("p,E1Z,same");
-
-        tSIntYield39AuAu->Draw("E2same");
-        tEIntYield39AuAu->Draw("p,E1Z,same");
-
-        tSIntYield2760PbPb->Draw("E2same");
-        tEIntYield2760PbPb->Draw("p,E1Z,same");
-
-        tSIntYield200pp->Draw("E2same");
-        tEIntYield200pp->Draw("p,E1Z,same");
-
-        tSIntYield200CuCu->Draw("E2same");
-        tEIntYield200CuCu->Draw("p,E1Z,same");
-
-        // if (histoDRNonFitStatErr[ncent][2]) histoDRNonFitStatErr[ncent][2]->Draw("p,same,e0,X0");
-        // if (histoDRNonFitStatErr[ncent][0]) histoDRNonFitStatErr[ncent][0]->Draw("p,same,e0,X0");
-        // if (histoDRNonFitStatErr[ncent][4]) histoDRNonFitStatErr[ncent][4]->Draw("p,same,e0,X0");
-        // legendDRSingle->Draw();
-
-//         TLatex *labelDRSingle       = new TLatex(0.95,0.19,Form("%s %s",multbins[ncent].Data(),collisionSystempPb.Data()));
-//         SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
-// //         labelDRSingle->Draw();
-//         TLatex *labelALICEDRSingle  = new TLatex(0.95,0.14,textALICE.Data());
-//         SetStyleTLatex( labelALICEDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
-//         labelALICEDRSingle->Draw();
-
-        hist2DIntegYielgDRummy->Draw("same,axis");
-
-    canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.%s", outputDir.Data(), suffix.Data()));
-    canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.pdf", outputDir.Data()));
+        Color_t colorpp200 = kOrange+2;
+        Color_t colorpAu200 = kAzure+2;
+        Color_t colordAu200 = kViolet+2;
+        Color_t colorCuCu200 = kCyan+2;
+        Color_t colorAuAu39 = kMagenta+2;
+        Color_t colorAuAu62 = kGreen+2;
+        Color_t colorAuAu200 = kRed+2;
+        Color_t colorPbPb2760 = kBlue+2;
+        Color_t colorpPb5020 = kGray+2;
+        Color_t colorpp2760 = kPink;
+        Color_t colorpp8000 = kOrange;
+        Style_t stylepp200 = 24;
+        Style_t stylepAu200 = 29;
+        Style_t styledAu200 = 34;
+        Style_t styleCuCu200 = 23;
+        Style_t styleAuAu39 = 27;
+        Style_t styleAuAu62 = 20;
+        Style_t styleAuAu200 = 21;
+        Style_t stylePbPb2760 = 33;
+        Style_t stylepPb5020 = 23;
+        Style_t stylepp2760 = 21;
+        Style_t stylepp8000 = 24;
 
 
+        TGraphAsymmErrors* graphCombDirGammaSpectrumSystErrForIntYield[5];
+        TGraphAsymmErrors* graphCombDirGammaSpectrumStatErrPlotForIntYield[5];
+        TGraphAsymmErrors* graphCombDirGammaSpectrumSumErrArForIntYield[5];
+        for(Int_t ncent = 0; ncent < 5; ncent++){
+            if (graphCombDirGammaSpectrumSystErr[ncent])
+                graphCombDirGammaSpectrumSystErrForIntYield[ncent]    = (TGraphAsymmErrors*)graphCombDirGammaSpectrumSystErr[ncent]->Clone(Form("graphCombDirGammaSpectrumSystErrForIntYield%d",ncent));
+            if (graphCombDirGammaSpectrumStatErr[ncent])
+                graphCombDirGammaSpectrumStatErrPlotForIntYield[ncent]    = (TGraphAsymmErrors*)graphCombDirGammaSpectrumStatErr[ncent]->Clone(Form("graphCombDirGammaSpectrumStatErrPlotForIntYield%d",ncent));
+            if (graphCombDirGammaSpectrumSumErrAr[ncent])
+                graphCombDirGammaSpectrumSumErrAr[ncent]    = (TGraphAsymmErrors*)graphCombDirGammaSpectrumSumErrAr[ncent]->Clone(Form("graphCombDirGammaSpectrumSumErrAr%d",ncent));
+        }
+        Double_t dNdetapPbALICE5020[5] = {(45+36.2+30.5)/3, 23.2, 16.1, (9.8+4.4)/2, (45+36.2+30.5+23.2+16.1+9.8+4.4)/7 };
+        Double_t edNdetapPbALICE5020[5] = {pow(1*1+0.8*0.8+0.7*0.7,0.5), 0.5, 0.4, pow(0.2*0.2+0.1*0.1,0.5)};
+        Double_t dNdypPbALICE5020[5];
+        Double_t edNdypPbALICE5020[5];
+        Double_t sdNdypPbALICE5020[5];
+        TGraphAsymmErrors* tEIntYieldpPbALICE5020;
+        TGraphAsymmErrors* tSIntYieldpPbALICE5020;
+        // TGraphAsymmErrors* tSIntYieldpPbALICE5020[5] = new TGraphAsymmErrors(NpPbALICE5020, dNdetapPbALICE5020, dNdypPbALICE5020, edNdetapPbALICE5020, edNdetapPbALICE5020, sdNdypPbALICE5020, sdNdypPbALICE5020);
+        for(Int_t ncent = 0; ncent < 5; ncent++){
+            dNdypPbALICE5020[ncent]         = 0;
+            edNdypPbALICE5020[ncent]        = 0;
+            sdNdypPbALICE5020[ncent]        = 0;
+            for(Int_t bin = 0; bin < graphCombIncGammaStat[ncent]->GetN()-1; bin++){
+                if(graphCombIncGammaStat[ncent]->GetX()[bin] < 1.0) continue;
+                cout << "integyield: " << dNdypPbALICE5020[ncent] << endl;
+               // cout << "bin " << graphCombIncGammaStat[ncent]->GetX()[bin] << endl;
+                for(Int_t bindirg = 0; bindirg < graphCombDirGammaSpectrumSumErrAr[ncent]->GetN()-1; bindirg++){
+                    if(graphCombIncGammaStat[ncent]->GetX()[bin]+0.01>graphCombDirGammaSpectrumSumErrAr[ncent]->GetX()[bindirg] && graphCombIncGammaStat[ncent]->GetX()[bin]-0.01<graphCombDirGammaSpectrumSumErrAr[ncent]->GetX()[bindirg]){
+                        // cout << "\tfound in Upper limits" << endl;
+                        cout << "\tx: " << graphCombIncGammaStat[ncent]->GetX()[bin] << "\t";
+                        cout << "ex: "  << graphCombIncGammaStat[ncent]->GetEXlow()[bin] << "\t";
+                        cout << "y: "   << graphCombDirGammaSpectrumSumErrAr[ncent]->GetY()[bindirg] << "\t";
+                        cout << "ey: "  << graphCombDirGammaSpectrumSumErrAr[ncent]->GetEYlow()[bindirg] << endl;
+                        dNdypPbALICE5020[ncent]+=((graphCombDirGammaSpectrumSumErrAr[ncent]->GetY()[bindirg]+graphCombDirGammaSpectrumSumErrAr[ncent]->GetEYhigh()[bindirg])*graphCombIncGammaStat[ncent]->GetX()[bin]*2*graphCombIncGammaStat[ncent]->GetEXlow()[bin]*2*TMath::Pi());
+                    }
+                    else{
+                        for(Int_t bindirg2 = 0; bindirg2 < graphCombDirGammaSpectrumStatErrPlotForIntYield[ncent]->GetN()-1; bindirg2++){
+                            if(graphCombIncGammaStat[ncent]->GetX()[bin]+0.01>graphCombDirGammaSpectrumStatErrPlotForIntYield[ncent]->GetX()[bindirg2] && graphCombIncGammaStat[ncent]->GetX()[bin]-0.01<graphCombDirGammaSpectrumStatErrPlot[ncent]->GetX()[bindirg2]){
+                                dNdypPbALICE5020[ncent]+=(graphCombDirGammaSpectrumStatErrPlotForIntYield[ncent]->GetY()[bindirg2]*graphCombIncGammaStat[ncent]->GetX()[bin]*2*graphCombIncGammaStat[ncent]->GetEXlow()[bin]*2*TMath::Pi());
+                            }
+                        }
+                    }
+                }
+            }
+            cout << multbins[ncent].Data() << ": dNdypPbALICE5020: " << dNdypPbALICE5020[ncent] << endl;
+        }
+            tEIntYieldpPbALICE5020 = new TGraphAsymmErrors(5, dNdetapPbALICE5020, dNdypPbALICE5020, 0, 0, edNdypPbALICE5020, edNdypPbALICE5020);
+            tSIntYieldpPbALICE5020 = new TGraphAsymmErrors(5, dNdetapPbALICE5020, dNdypPbALICE5020, 0, 0, edNdypPbALICE5020, edNdypPbALICE5020);
+            DrawGammaSetMarkerTGraphAsym(tEIntYieldpPbALICE5020, stylepPb5020, markerSize, colorpPb5020 , colorpPb5020);
+            DrawGammaSetMarkerTGraphAsym(tSIntYieldpPbALICE5020, stylepPb5020, markerSize, colorpPb5020 , colorpPb5020, widthLinesBoxes, kTRUE);
+
+
+
+        //==========================================================================================
+        //                     200 GeV Au+Au external conversion method
+        //==========================================================================================
+        TFile * pp2760GeVresults = new TFile("PreliminaryResultsAndConfigurations/pPb5TeV/directPhotons/CombinedGammaResultPP2760GeV_2018_07_24.root");
+        TGraphAsymmErrors* invYield2760GeVIncGammaComb = (TGraphAsymmErrors*) pp2760GeVresults->Get("Gamma2.76TeV/graphInvYieldIncGammaStatErr");
+        TGraphAsymmErrors* invYield2760GeVDirGammaUL = (TGraphAsymmErrors*) pp2760GeVresults->Get("Gamma2.76TeV/graphInvYieldDirGammaSumErrAr");
+        TGraphAsymmErrors* invYield2760GeVDirGammaStat = (TGraphAsymmErrors*) pp2760GeVresults->Get("Gamma2.76TeV/graphInvYieldDirGammaStatErr");
+
+        Double_t dNdetappALICE2760[1] = {3.75 };
+        Double_t elowdNdetappALICE2760[1] = {0.16};
+        Double_t ehighdNdetappALICE2760[1] = {0.26};
+        Double_t dNdyppALICE2760[1] = {0};
+        Double_t edNdyppALICE2760[1]= {0};
+        Double_t sdNdyppALICE2760[1]= {0};
+        TGraphAsymmErrors* tEIntYieldppALICE2760;
+        TGraphAsymmErrors* tSIntYieldppALICE2760;
+        // TGraphAsymmErrors* tSIntYieldppALICE2760[5] = new TGraphAsymmErrors(NppALICE2760, dNdetappALICE2760, dNdyppALICE2760, edNdetappALICE2760, edNdetappALICE2760, sdNdyppALICE2760, sdNdyppALICE2760);
+        for(Int_t bin = 0; bin < invYield2760GeVIncGammaComb->GetN()-1; bin++){
+            if(invYield2760GeVIncGammaComb->GetX()[bin] < 1.0) continue;
+            for(Int_t bindirg = 0; bindirg < invYield2760GeVDirGammaUL->GetN()-1; bindirg++){
+                if(invYield2760GeVIncGammaComb->GetX()[bin]+0.01>invYield2760GeVDirGammaUL->GetX()[bindirg] && invYield2760GeVIncGammaComb->GetX()[bin]-0.01<invYield2760GeVDirGammaUL->GetX()[bindirg]){
+                    dNdyppALICE2760[0]+=((invYield2760GeVDirGammaUL->GetY()[bindirg]+invYield2760GeVDirGammaUL->GetEYhigh()[bindirg])*invYield2760GeVIncGammaComb->GetX()[bin]*2*invYield2760GeVIncGammaComb->GetEXlow()[bin]*2*TMath::Pi());
+                }else{
+                    for(Int_t bindirg2 = 0; bindirg2 < invYield2760GeVDirGammaStat->GetN()-1; bindirg2++){
+                        if(invYield2760GeVIncGammaComb->GetX()[bin]+0.01>invYield2760GeVDirGammaStat->GetX()[bindirg2] && invYield2760GeVIncGammaComb->GetX()[bin]-0.01<graphCombDirGammaSpectrumStatErrPlot[0]->GetX()[bindirg2]){
+                            dNdyppALICE2760[0]+=(invYield2760GeVDirGammaStat->GetY()[bindirg2]*invYield2760GeVIncGammaComb->GetX()[bin]*2*invYield2760GeVIncGammaComb->GetEXlow()[bin]*2*TMath::Pi());
+                        }
+                    }
+                }
+            }
+        }
+        cout << "dNdyppALICE2760: " << dNdyppALICE2760[0] << endl;
+        tEIntYieldppALICE2760 = new TGraphAsymmErrors(5, dNdetappALICE2760, dNdyppALICE2760, 0, 0, edNdyppALICE2760, edNdyppALICE2760);
+        tSIntYieldppALICE2760 = new TGraphAsymmErrors(5, dNdetappALICE2760, dNdyppALICE2760, elowdNdetappALICE2760, ehighdNdetappALICE2760, edNdyppALICE2760, edNdyppALICE2760);
+        DrawGammaSetMarkerTGraphAsym(tEIntYieldppALICE2760, stylepp2760, markerSize, colorpp2760 , colorpp2760);
+        DrawGammaSetMarkerTGraphAsym(tSIntYieldppALICE2760, stylepp2760, markerSize, colorpp2760 , colorpp2760, widthLinesBoxes, kTRUE);
+
+
+        TFile * pp8TeVresults = new TFile("PreliminaryResultsAndConfigurations/pPb5TeV/directPhotons/CombinedGammaResultPP8TeV_2018_09_28.root");
+        TGraphAsymmErrors* invYield8TeVIncGammaComb = (TGraphAsymmErrors*) pp8TeVresults->Get("Gamma8TeV/graphInvYieldIncGammaStatErr");
+        TGraphAsymmErrors* invYield8TeVDirGammaUL = (TGraphAsymmErrors*) pp8TeVresults->Get("Gamma8TeV/graphInvYieldDirGammaSumErrAr");
+        TGraphAsymmErrors* invYield8TeVDirGammaStat = (TGraphAsymmErrors*) pp8TeVresults->Get("Gamma8TeV/graphInvYieldDirGammaStatErr");
+
+        Double_t dNdetappALICE8000[1] = {4.66 };
+        Double_t ehighdNdetappALICE8000[1] = {0.35};
+        Double_t elowdNdetappALICE8000[1] = {0.17};
+        Double_t dNdyppALICE8000[1] = {0};
+        Double_t edNdyppALICE8000[1]= {0};
+        Double_t sdNdyppALICE8000[1]= {0};
+        TGraphAsymmErrors* tEIntYieldppALICE8000;
+        TGraphAsymmErrors* tSIntYieldppALICE8000;
+        // TGraphAsymmErrors* tSIntYieldppALICE8000[5] = new TGraphAsymmErrors(NppALICE8000, dNdetappALICE8000, dNdyppALICE8000, edNdetappALICE8000, edNdetappALICE8000, sdNdyppALICE8000, sdNdyppALICE8000);
+        for(Int_t bin = 0; bin < invYield8TeVIncGammaComb->GetN()-1; bin++){
+            cout << "integyield: " << dNdyppALICE8000[0] << endl;
+            if(invYield8TeVIncGammaComb->GetX()[bin] < 1.0) continue;
+            for(Int_t bindirg = 0; bindirg < invYield8TeVDirGammaUL->GetN()-1; bindirg++){
+                if(invYield8TeVIncGammaComb->GetX()[bin]+0.01>invYield8TeVDirGammaUL->GetX()[bindirg] && invYield8TeVIncGammaComb->GetX()[bin]-0.01<invYield8TeVDirGammaUL->GetX()[bindirg]){
+                                        cout << "\tx: " << invYield8TeVIncGammaComb->GetX()[bin] << "\t";
+                        cout << "ex: "  << invYield8TeVIncGammaComb->GetEXlow()[bin] << "\t";
+                        cout << "y: "   << invYield8TeVDirGammaUL->GetY()[bindirg] << "\t";
+                        cout << "ey: "  << invYield8TeVDirGammaUL->GetEYhigh()[bindirg] << endl;
+                    dNdyppALICE8000[0]+=((invYield8TeVDirGammaUL->GetY()[bindirg]+invYield8TeVDirGammaUL->GetEYhigh()[bindirg])*invYield8TeVIncGammaComb->GetX()[bin]*2*invYield8TeVIncGammaComb->GetEXlow()[bin]*2*TMath::Pi());
+                    cout << "integyield: " << dNdyppALICE8000[0] << endl;
+                }
+                // else{
+                //     for(Int_t bindirg2 = 0; bindirg2 < invYield8TeVDirGammaStat->GetN()-1; bindirg2++){
+                //         if(invYield8TeVIncGammaComb->GetX()[bin]+0.01>invYield8TeVDirGammaStat->GetX()[bindirg2] && invYield8TeVIncGammaComb->GetX()[bin]-0.01<graphCombDirGammaSpectrumStatErrPlot[0]->GetX()[bindirg2]){
+                //             dNdyppALICE8000[0]+=(invYield8TeVDirGammaStat->GetY()[bindirg2]*invYield8TeVIncGammaComb->GetX()[bin]*2*invYield8TeVIncGammaComb->GetEXlow()[bin]);
+                //         }
+                //     }
+                // }
+            }
+        }
+        cout << "dNdyppALICE8000: " << dNdyppALICE8000[0] << endl;
+        tEIntYieldppALICE8000 = new TGraphAsymmErrors(1, dNdetappALICE8000, dNdyppALICE8000, 0, 0, edNdyppALICE8000, edNdyppALICE8000);
+        tSIntYieldppALICE8000 = new TGraphAsymmErrors(1, dNdetappALICE8000, dNdyppALICE8000, elowdNdetappALICE8000, ehighdNdetappALICE8000, edNdyppALICE8000, edNdyppALICE8000);
+        DrawGammaSetMarkerTGraphAsym(tEIntYieldppALICE8000, stylepp8000, markerSize, colorpp8000 , colorpp8000);
+        DrawGammaSetMarkerTGraphAsym(tSIntYieldppALICE8000, stylepp8000, markerSize, colorpp8000 , colorpp8000, widthLinesBoxes, kTRUE);
+
+        TFile * PbPb2760GeVresults = new TFile("ExternalInputPbPb/CombDirGamma/Gamma_CombResults_PbPb_2.76TeV_20150729_Pub2015.root");
+        TGraphAsymmErrors* invYield2760GeVHIIncGammaComb[3];
+        TGraphAsymmErrors* invYield2760GeVHIDirGammaUL[3];
+        TGraphAsymmErrors* invYield2760GeVHIDirGammaStat[3];
+        TString multbinsPbPb[3] = {"0-20%","20-40%","40-80%"};
+        for(Int_t ncent = 0; ncent < 3; ncent++){
+            invYield2760GeVHIIncGammaComb[ncent] = (TGraphAsymmErrors*) PbPb2760GeVresults->Get(Form("Gamma_PbPb_2.76TeV_%s/IncGammaSpec_comb_StatErr",multbinsPbPb[ncent].Data()));
+            invYield2760GeVHIDirGammaUL[ncent] = (TGraphAsymmErrors*) PbPb2760GeVresults->Get(Form("Gamma_PbPb_2.76TeV_%s/DirGammaSpec_comb_upperLimits",multbinsPbPb[ncent].Data()));
+            invYield2760GeVHIDirGammaStat[ncent] = (TGraphAsymmErrors*) PbPb2760GeVresults->Get(Form("Gamma_PbPb_2.76TeV_%s/DirGammaSpec_comb_StatErr",multbinsPbPb[ncent].Data()));
+        }
+        Double_t dNdetaPbPbALICE2760[3] = {1500, 1e6,1e6 };
+        Double_t edNdetaPbPbALICE2760[3] = {50, 1, 1};
+        Double_t dNdyPbPbALICE2760[3] = {0,0,0};
+        Double_t edNdyPbPbALICE2760[3]= {0,0,0};
+        Double_t sdNdyPbPbALICE2760[3]= {0,0,0};
+        TGraphAsymmErrors* tEIntYieldPbPbALICE2760;
+        TGraphAsymmErrors* tSIntYieldPbPbALICE2760;
+        // TGraphAsymmErrors* tSIntYieldPbPbALICE2760[5] = new TGraphAsymmErrors(NPbPbALICE2760, dNdetaPbPbALICE2760, dNdyPbPbALICE2760, edNdetaPbPbALICE2760, edNdetaPbPbALICE2760, sdNdyPbPbALICE2760, sdNdyPbPbALICE2760);
+        for(Int_t ncent = 0; ncent < 3; ncent++){
+            for(Int_t bin = 0; bin < invYield2760GeVHIDirGammaStat[ncent]->GetN()-1; bin++){
+                cout << "integyield: " << dNdyPbPbALICE2760[ncent] << endl;
+                if(invYield2760GeVHIDirGammaStat[ncent]->GetX()[bin] < 1.0) continue;
+                else
+                    dNdyPbPbALICE2760[ncent]+=(invYield2760GeVHIDirGammaStat[ncent]->GetY()[bin]*invYield2760GeVHIDirGammaStat[ncent]->GetX()[bin]*2*invYield2760GeVHIDirGammaStat[ncent]->GetEXlow()[bin]*2*TMath::Pi());
+            }
+        }
+        cout << "dNdyPbPbALICE2760: " << dNdyPbPbALICE2760[0] << endl;
+        tEIntYieldPbPbALICE2760 = new TGraphAsymmErrors(3, dNdetaPbPbALICE2760, dNdyPbPbALICE2760, 0, 0, edNdyPbPbALICE2760, edNdyPbPbALICE2760);
+        tSIntYieldPbPbALICE2760 = new TGraphAsymmErrors(3, dNdetaPbPbALICE2760, dNdyPbPbALICE2760, 0, 0, edNdyPbPbALICE2760, edNdyPbPbALICE2760);
+        DrawGammaSetMarkerTGraphAsym(tEIntYieldPbPbALICE2760, stylepp8000, markerSize, colorpp8000 , colorpp8000);
+        DrawGammaSetMarkerTGraphAsym(tSIntYieldPbPbALICE2760, stylepp8000, markerSize, colorpp8000 , colorpp8000, widthLinesBoxes, kTRUE);
+
+
+        //==========================================================================================
+        //                     200 GeV Au+Au external conversion method
+        //==========================================================================================
+        const int N200AuAu = 4;
+        double dNdeta200AuAu[N200AuAu] = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};
+        double edNdeta200AuAu[N200AuAu] = {2.6250e+01,  1.3175e+01,  8.0750e+00,  2.8137e+00};
+        double dNdy200AuAu[N200AuAu] = {1.6611e+00,  7.0773e-01,  2.1711e-01,  2.2951e-02};
+        double edNdy200AuAu[N200AuAu] = {2.0251e-01,  8.6331e-02,  3.2922e-02,  6.2015e-03};
+        double sdNdy200AuAu[N200AuAu] = {5.3393e-01,  2.4784e-01,  9.3644e-02,  1.5471e-02};
+        TGraphAsymmErrors* tEIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, 0, 0, edNdy200AuAu, edNdy200AuAu);
+        TGraphAsymmErrors* tSIntYield200AuAu = new TGraphAsymmErrors(N200AuAu, dNdeta200AuAu, dNdy200AuAu, edNdeta200AuAu, edNdeta200AuAu, sdNdy200AuAu, sdNdy200AuAu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAu, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    200 GeV Au+Au internal conversion method
+        //==========================================================================================
+        const int N200AuAuInt = 3;
+        double dNdeta200AuAuInt[N200AuAuInt] = {5.112e+02, 2.220e+02, 1.861e+02};
+        double edNdeta200AuAuInt[N200AuAuInt] = {2.625e+01, 1.318e+01, 1.132e+01};
+        double dNdy200AuAuInt[N200AuAuInt] = {1.686e+00, 6.981e-01, 5.550e-01};
+        double edNdy200AuAuInt[N200AuAuInt] = {2.312e-01, 8.545e-02, 5.043e-02};
+        double sdNdy200AuAuInt[N200AuAuInt] = {3.775e-01, 1.494e-01, 1.177e-01};
+        TGraphAsymmErrors* tEIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, 0, 0, edNdy200AuAuInt, edNdy200AuAuInt);
+        TGraphAsymmErrors* tSIntYield200AuAuInt = new TGraphAsymmErrors(N200AuAuInt, dNdeta200AuAuInt, dNdy200AuAuInt, edNdeta200AuAuInt, edNdeta200AuAuInt, sdNdy200AuAuInt, sdNdy200AuAuInt);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200AuAuInt, styleAuAu200, markerSize, colorAuAu200 , colorAuAu200, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    39 GeV Au+Au external conversion method
+        //==========================================================================================
+        const int N39AuAu = 1;
+        double dNdeta39AuAu[N39AuAu] = {1.043e+02};
+        double edNdeta39AuAu[N39AuAu] = { 8.882e+00};
+        double dNdy39AuAu[N39AuAu] = {2.597e-01};
+        double edNdy39AuAu[N39AuAu] = {1.108e-01};
+        double sdNdy39AuAu[N39AuAu] = {2.149e-01};
+        TGraphAsymmErrors* tEIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, 0, 0, edNdy39AuAu, edNdy39AuAu);
+        TGraphAsymmErrors* tSIntYield39AuAu = new TGraphAsymmErrors(N39AuAu, dNdeta39AuAu, dNdy39AuAu, edNdeta39AuAu, edNdeta39AuAu, sdNdy39AuAu, sdNdy39AuAu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield39AuAu, styleAuAu39, markerSize, colorAuAu39 , colorAuAu39, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    62 GeV Au+Au external conversion method
+        //==========================================================================================
+        const int N62AuAu = 3;
+        double dNdeta62AuAu[N62AuAu] = {3.412e+02, 1.518e+02, 1.315e+02};
+        double edNdeta62AuAu[N62AuAu] = {2.932e+01, 1.269e+01, 1.115e+01};
+        double dNdy62AuAu[N62AuAu] = {1.289e+00, 4.157e-01, 3.362e-01};
+        double edNdy62AuAu[N62AuAu] = {2.717e-01, 1.155e-01, 6.527e-02};
+        double sdNdy62AuAu[N62AuAu] = {4.525e-01, 2.101e-01, 1.724e-01};
+        TGraphAsymmErrors* tEIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, 0, 0, edNdy62AuAu, edNdy62AuAu);
+        TGraphAsymmErrors* tSIntYield62AuAu = new TGraphAsymmErrors(N62AuAu, dNdeta62AuAu, dNdy62AuAu, edNdeta62AuAu, edNdeta62AuAu, sdNdy62AuAu, sdNdy62AuAu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield62AuAu, styleAuAu62, markerSize, colorAuAu62 , colorAuAu62, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    2760 GeV Pb+Pb ALICE
+        //==========================================================================================
+        const int N2760PbPb = 1;
+        double dNdeta2760PbPb[N2760PbPb] = {1.2068e+03};
+        double edNdeta2760PbPb[N2760PbPb] = {4.5750e+01};
+        double dNdy2760PbPb[N2760PbPb] = {4.7588e+00};
+        double edNdy2760PbPb[N2760PbPb] = {3.1678e-01};
+        double sdNdy2760PbPb[N2760PbPb] = {1.8749e+00};
+        TGraphAsymmErrors* tEIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, 0, 0, edNdy2760PbPb, edNdy2760PbPb);
+        TGraphAsymmErrors* tSIntYield2760PbPb = new TGraphAsymmErrors(N2760PbPb, dNdeta2760PbPb, dNdy2760PbPb, edNdeta2760PbPb, edNdeta2760PbPb, sdNdy2760PbPb, sdNdy2760PbPb);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield2760PbPb, stylePbPb2760, markerSize, colorPbPb2760 , colorPbPb2760, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    200 GeV p+p data
+        //==========================================================================================
+        const int N200pp = 1;
+        double dNdeta200pp[N200pp] = {2.3800e+00};
+        double edNdeta200pp[N200pp] = {1.7000e-01};
+        double dNdy200pp[N200pp] = {0.00017021881};
+        double edNdy200pp[N200pp] = {6.5655e-05};
+        double sMaxdNdy200pp[N200pp] = {8.8280476e-05};
+        double sMindNdy200pp[N200pp] = {6.7012381e-05};
+        TGraphAsymmErrors* tEIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, 0, 0, edNdy200pp, edNdy200pp);
+        TGraphAsymmErrors* tSIntYield200pp = new TGraphAsymmErrors(N200pp, dNdeta200pp, dNdy200pp, edNdeta200pp, edNdeta200pp, sMindNdy200pp, sMaxdNdy200pp);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200pp, stylepp200, markerSize, colorpp200 , colorpp200, widthLinesBoxes, kTRUE);
+        //==========================================================================================
+        //                    200 GeV Cu+Cu data
+        //==========================================================================================
+        const int N200CuCu = 2;
+        double dNdeta200CuCu[N200CuCu] = {5.1654e+01,  1.0926e+02};
+        double edNdeta200CuCu[N200CuCu] = {3.5590e+00,  7.8130e+00};
+        double dNdy200CuCu[N200CuCu] = {6.0815e-02,  1.5244e-01};
+        double edNdy200CuCu[N200CuCu] = {2.1225e-02,  5.9775e-02};
+        double sdNdy200CuCu[N200CuCu] = {2.5220e-02,  6.9172e-02};
+        TGraphAsymmErrors* tEIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, 0, 0, edNdy200CuCu, edNdy200CuCu);
+        TGraphAsymmErrors* tSIntYield200CuCu = new TGraphAsymmErrors(N200CuCu, dNdeta200CuCu, dNdy200CuCu, edNdeta200CuCu, edNdeta200CuCu, sdNdy200CuCu, sdNdy200CuCu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200CuCu, styleCuCu200, markerSize, colorCuCu200 , colorCuCu200, widthLinesBoxes, kTRUE);
+
+        //==========================================================================================
+        //                    200 GeV p+Au data
+        //==========================================================================================
+        const int N200pAu = 2;
+        double dNdeta200pAu[N200pAu] = {5.8,  12.3};
+        double edNdeta200pAu[N200pAu] = {0.3,  1.0};
+        double dNdy200pAu[N200pAu] = {0.00139413 ,  0.00616746};
+        double edNdy200pAu[N200pAu] = {0.000721012,  0.0010536};
+        double sdNdy200pAu[N200pAu] = {0.00117236,  0.00261843};
+        TGraphAsymmErrors* tEIntYield200pAu = new TGraphAsymmErrors(N200pAu, dNdeta200pAu, dNdy200pAu, 0, 0, edNdy200pAu, edNdy200pAu);
+        TGraphAsymmErrors* tSIntYield200pAu = new TGraphAsymmErrors(N200pAu, dNdeta200pAu, dNdy200pAu, edNdeta200pAu, edNdeta200pAu, sdNdy200pAu, sdNdy200pAu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200pAu, stylepAu200, markerSize, colorpAu200 , colorpAu200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200pAu, stylepAu200, markerSize, colorpAu200 , colorpAu200, widthLinesBoxes, kTRUE);
+
+        //==========================================================================================
+        //                    200 GeV d+Au data
+        //==========================================================================================
+        const int N200dAu = 1;
+        double dNdeta200dAu[N200dAu] = {9.21};
+        double edNdeta200dAu[N200dAu] = {0.8};
+        double dNdy200dAu[N200dAu] = {0.00359506};
+        double edNdy200dAu[N200dAu] = {0.00134348};
+        double sdNdy200dAu[N200dAu] = {0.00104564};
+        TGraphAsymmErrors* tEIntYield200dAu = new TGraphAsymmErrors(N200dAu, dNdeta200dAu, dNdy200dAu, 0, 0, edNdy200dAu, edNdy200dAu);
+        TGraphAsymmErrors* tSIntYield200dAu = new TGraphAsymmErrors(N200dAu, dNdeta200dAu, dNdy200dAu, edNdeta200dAu, edNdeta200dAu, sdNdy200dAu, sdNdy200dAu);
+        DrawGammaSetMarkerTGraphAsym(tEIntYield200dAu, styledAu200, markerSize, colordAu200 , colordAu200);
+        DrawGammaSetMarkerTGraphAsym(tSIntYield200dAu, styledAu200, markerSize, colordAu200 , colordAu200, widthLinesBoxes, kTRUE);
+
+        // double ratio combined
+        TCanvas *canvasIntegYieldPlot = new TCanvas("canvasIntegYieldPlot","",0.095,0.09,1000,815);
+        DrawGammaCanvasSettings( canvasIntegYieldPlot, 0.1, 0.01, 0.01, 0.12);
+        canvasIntegYieldPlot->cd();
+        canvasIntegYieldPlot->SetLogx();
+        canvasIntegYieldPlot->SetLogy();
+
+        Double_t minX                            = 1.01;
+        Double_t maxX                            = 1.9e3;
+        Double_t minY                            = 5e-5;
+        Double_t maxY                            = 2e1;
+        Double_t textSizeSinglePad               = 0.05;
+        TH2F * hist2DIntegYielgDRummy       = new TH2F("hist2DIntegYielgDRummy","hist2DIntegYielgDRummy",1000,minX, maxX,1000,minY, maxY);
+        SetStyleHistoTH2ForGraphs(hist2DIntegYielgDRummy, "d#it{N}_{ch}/d#eta |_{#eta#approx0}","d#it{N}_{#gamma}/d#it{y} (#it{p}_{T} > 1.0 GeV/#it{c})", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 1.08,0.95);
+        hist2DIntegYielgDRummy->GetXaxis()->SetLabelOffset(-0.005);
+        // hist2DIntegYielgDRummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+        hist2DIntegYielgDRummy->DrawCopy();
+
+            TLegend* legendIntegYield = GetAndSetLegend2(0.12,0.958-textSizeSinglePad*5,0.35,0.958, textSizeSinglePad*0.95, 1,"", 42, 0.3);
+            legendIntegYield->SetTextAlign(11);
+            TLegend* legendIntegYield2 = GetAndSetLegend2(0.5,0.958-textSizeSinglePad*16,0.73,0.958-textSizeSinglePad*10, textSizeSinglePad*0.95, 1,"", 42, 0.3);
+            legendIntegYield2->SetTextAlign(11);
+
+            tSIntYieldPbPbALICE2760->Draw("E2same");
+            tEIntYieldPbPbALICE2760->Draw("p,E1Z,same");
+
+            tSIntYield2760PbPb->Draw("E2same");
+            tEIntYield2760PbPb->Draw("p,E1Z,same");
+            legendIntegYield->AddEntry(tSIntYield2760PbPb,"Pb-Pb,  #sqrt{#it{s}_{_{NN}}} = 2760 GeV","pf");
+
+            tSIntYield200AuAuInt->Draw("E2same");
+            tEIntYield200AuAuInt->Draw("p,E1Z,same");
+            legendIntegYield->AddEntry(tSIntYield200AuAuInt,"Au-Au,  #sqrt{#it{s}_{_{NN}}} = 200 GeV","pf");
+
+            tSIntYield200AuAu->Draw("E2same");
+            tEIntYield200AuAu->Draw("p,E1Z,same");
+
+            tSIntYield62AuAu->Draw("E2same");
+            tEIntYield62AuAu->Draw("p,E1Z,same");
+            legendIntegYield->AddEntry(tSIntYield62AuAu,"Au-Au,  #sqrt{#it{s}_{_{NN}}} = 62.4 GeV","pf");
+
+            tSIntYield39AuAu->Draw("E2same");
+            tEIntYield39AuAu->Draw("p,E1Z,same");
+            legendIntegYield->AddEntry(tSIntYield39AuAu,"Au-Au,  #sqrt{#it{s}_{_{NN}}} = 39 GeV","pf");
+
+            tSIntYield200CuCu->Draw("E2same");
+            tEIntYield200CuCu->Draw("p,E1Z,same");
+            legendIntegYield->AddEntry(tSIntYield200CuCu,"Cu-Cu,  #sqrt{#it{s}_{_{NN}}} = 200 GeV","pf");
+
+            tEIntYieldpPbALICE5020->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYieldpPbALICE5020,"p-Pb,  #sqrt{#it{s}_{_{NN}}} = 5020 GeV","pf");
+
+            tSIntYield200pAu->Draw("E2same");
+            tEIntYield200pAu->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYield200pAu,"p-Au,  #sqrt{#it{s}_{_{NN}}} = 200 GeV","pf");
+
+            tSIntYield200dAu->Draw("E2same");
+            tEIntYield200dAu->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYield200dAu,"d-Au,  #sqrt{#it{s}_{_{NN}}} = 200 GeV","pf");
+
+            tSIntYield200pp->Draw("E2same");
+            tEIntYield200pp->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYield200pp,"pp,  #sqrt{#it{s}} = 200 GeV","pf");
+
+            tSIntYieldppALICE2760->Draw("E2same");
+            tEIntYieldppALICE2760->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYieldppALICE2760,"pp,  #sqrt{#it{s}} = 2760 GeV","pf");
+
+            tSIntYieldppALICE8000->Draw("E2same");
+            tEIntYieldppALICE8000->Draw("p,E1Z,same");
+            legendIntegYield2->AddEntry(tSIntYieldppALICE8000,"pp,  #sqrt{#it{s}} = 8000 GeV","pf");
+
+
+            legendIntegYield->Draw();
+            legendIntegYield2->Draw();
+
+            hist2DIntegYielgDRummy->Draw("same,axis");
+
+        canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.%s", outputDir.Data(), suffix.Data()));
+        canvasIntegYieldPlot->Print(Form("%s/IntegratedYieldDirGamma.pdf", outputDir.Data()));
+
+
+    }
     //***********************************************************************************
     //************************* Write output to file ************************************
     //***********************************************************************************
@@ -3622,7 +3823,7 @@ if(1){
         fCombResults.cd(nameDirectoryGamma.Data());
 
         // writing main results
-        if (graphCombIncGammaStat[cent]) graphCombIncGamAmaStat[cent]->Write("graphInvYieldIncGammaStatErr");
+        if (graphCombIncGammaStat[cent]) graphCombIncGammaStat[cent]->Write("graphInvYieldIncGammaStatErr");
         if (graphCombIncGammaSys[cent]) graphCombIncGammaSys[cent]->Write("graphInvYieldIncGammaSysErr");
         if (graphCombIncGammaTot[cent]) graphCombIncGammaTot[cent]->Write("graphInvYieldIncGammaTotErr");
         if (graphCombIncGammaStatUnshi[cent]) graphCombIncGammaStatUnshi[cent]->Write("graphInvYieldIncGammaStatErr_Unshifted");
@@ -3659,12 +3860,6 @@ if(1){
         }
     }
     fCombResults.Close();
-
-
-}
-
-
-
 
 
 }

@@ -94,6 +94,7 @@ if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ] || [ $1 = "jlietave" ] || [ $1 = "re
     ln -sf $PHOTONCONVDIR/TaskV1/* TaskV1/
     ln -sf $PHOTONCONVDIR/TaskQA/* TaskQA/
     ln -sf $PHOTONCONVDIR/PublishedResultsAndConfigurations PublishedResultsAndConfigurations
+    ln -sf $PHOTONCONVDIR/PreliminaryResultsAndConfigurations PreliminaryResultsAndConfigurations
 fi
 ln -sf $PHOTONCONVDIR/*.eps .
 ln -sf $PHOTONCONVDIR/*.C .
