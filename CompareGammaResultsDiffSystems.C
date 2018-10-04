@@ -57,6 +57,22 @@ Color_t GetDefaultDifferentSystemsAndCents( TString centrality,
         } else if (!centrality.CompareTo("40-80%")){
             return kRed-5;
         }
+    } else if (!collisionsEnergy.CompareTo("pPb_5.023TeV") && !experiment.CompareTo("ALICE")){
+        if (!centrality.CompareTo("0-20%")){
+            return kRed+4;
+        } else if (!centrality.CompareTo("20-40%")){
+            return kRed+3;
+        } else if (!centrality.CompareTo("40-60%")){
+            return kRed-2;
+        } else if (!centrality.CompareTo("60-100%")){
+            return kRed-3;
+        } else if (!centrality.CompareTo("0-100%")){
+            return kRed+2;
+        }
+    } else if (!collisionsEnergy.CompareTo("pPb_8.16TeV") && !experiment.CompareTo("ATLAS")){
+        if (!centrality.CompareTo("0-100%")){
+            return kOrange+9;
+        }
     } else if (!collisionsEnergy.CompareTo("PbPb_2.76TeV") && !experiment.CompareTo("CMS")){
         if (!centrality.CompareTo("0-10%")){
             return kRed+3;
@@ -77,6 +93,18 @@ Color_t GetDefaultDifferentSystemsAndCents( TString centrality,
         } else if (!centrality.CompareTo("0-92%")){
             return kGreen-5;
         }
+    } else if (!collisionsEnergy.CompareTo("pAu_0.2TeV") && !experiment.CompareTo("PHENIX")){
+        if (!centrality.CompareTo("0-20%")){
+            return kGreen+2;
+        } else if (!centrality.CompareTo("20-40%")){
+            return kGreen-2;
+        } else if (!centrality.CompareTo("40-60%")){
+            return kGreen+3;
+        } else if (!centrality.CompareTo("60-100%")){
+            return kGreen-1;
+        } else if (!centrality.CompareTo("0-100%")){
+            return kGreen-5;
+        }
     } else if (!collisionsEnergy.CompareTo("AuAu_0.2TeV") && !experiment.CompareTo("STAR")){
         if (!centrality.CompareTo("0-20%")){
             return kYellow+2;
@@ -91,6 +119,12 @@ Color_t GetDefaultDifferentSystemsAndCents( TString centrality,
         }
     } else if (!collisionsEnergy.CompareTo("CuCu_0.2TeV") && !experiment.CompareTo("PHENIX")){
         if (!centrality.CompareTo("0-40%")){
+            return kTeal-6;
+        } else if (!centrality.CompareTo("0-94%")){
+            return kTeal-1;
+        }
+    } else if (!collisionsEnergy.CompareTo("dAu_0.2TeV") && !experiment.CompareTo("PHENIX")){
+        if (!centrality.CompareTo("0-100%")){
             return kTeal-6;
         } else if (!centrality.CompareTo("0-94%")){
             return kTeal-1;
@@ -150,6 +184,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TString fileNameTheoryPPb                                   = "ExternalInputPPb/Theory/TheoryCompilationPPb.root";
     TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
     TString fileNameExperimentPP                                = "ExternalInput/OtherExperiments/DataCompilationFromOtherEnergiesPP.root";
+    TString fileNameExperimentPA                                = "ExternalInputpPb/OtherExperiments/DataCompilationFromOtherEnergiesPA.root";
     TString fileNameExperimentAA                                = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesAA.root";
     //*******************************************************************************************************************************************
     //******************************************************* set ranges for plotting ***********************************************************
@@ -176,10 +211,45 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Style_t  styleLineMcGill                        = 7;
     Width_t  widthLineNLO                           = 2.;
 
-    Color_t colorCombpPb                            = GetColorDefaultColor("pPb_5.023TeV", "", "");
-    Color_t colorCombpPbBox                         = GetColorDefaultColor("pPb_5.023TeV", "", "", kTRUE);
-    Style_t markerStyleCombpPb                      = GetDefaultMarkerStyle("pPb_5.023TeV", "", "");
-    Size_t markerSizeCombpPb                        = GetDefaultMarkerSize("pPb_5.023TeV", "", "");
+    // pPb settings
+    TString namepPbCent[5]                         = {"0-20%", "20-40%", "40-60%", "60-100%", "0-100%"};
+    TString namepPbCentOut[5]                      = {"0020", "2040", "4060", "60100", "0100"};
+    TString namepPbCentForNColl[5]                      = {"0020_V0A", "2040_V0A", "4060_V0A", "60100_V0A", "0100_V0A"};
+    TString labelXTALICEpPb[5]                         = {"ALICE prel. (0-20% p-Pb 5.02TeV)", "ALICE prel. (20-40% p-Pb 5.02TeV)", "ALICE prel. (40-60% p-Pb 5.02TeV)", "ALICE prel. (60-100% p-Pb 5.02TeV)", "ALICE prel. (0-100% p-Pb 5.02TeV)"};
+    TString labelALICEpPb[5]                           = {"ALICE prel. (0-20%)", "ALICE prel. (20-40%)", "ALICE prel. (40-60%)", "ALICE prel. (60-100%)", "ALICE prel. (0-100%)"};
+    Double_t xLegALICEXTpPb[5]                         = {0.43, 0.445, 0.46, 0.475, 0.49};
+    Double_t yLegALICEXTpPb[5]                         = {0.88, 0.86, 0.84, 0.82, 0.80};
+    TString nameLabelScalepPb[5]                   = {"x 10^{1}", "x 10^{0}", "x 10^{-2}", "x 10^{-3}", "x 10^{-4}"};
+    Double_t scaleFacPlotApPb[5]                            = {10e8, 10e6, 10e4, 10e2, 1};
+
+
+    Color_t colorCombpPb[5];
+    Color_t colorCombpPbBox[5];
+    Style_t markerStyleCombpPb[5];
+    Style_t markerStyleCombpPbMC[5];
+    Size_t markerSizeCombpPb[5];
+    Double_t nCollpPb5[5];
+    for (Int_t ncent = 0; ncent<5; ncent++){
+        colorCombpPb[ncent]                            = GetDefaultDifferentSystemsAndCents(namepPbCent[ncent].Data(),"pPb_5.023TeV", "ALICE");
+        colorCombpPbBox[ncent]                         = GetColorDefaultColor("pPb_5.023TeV", "", namepPbCent[ncent].Data(), kTRUE);
+        markerStyleCombpPb[ncent]                      = GetDefaultMarkerStyle("pPb_5.023TeV", "", namepPbCent[ncent].Data());
+        markerStyleCombpPbMC[ncent]                    = GetDefaultMarkerStyle("pPb_5.023TeV", "MC", namepPbCent[ncent].Data());
+        markerSizeCombpPb[ncent]                       = GetDefaultMarkerSize("pPb_5.023TeV", "", namepPbCent[ncent].Data());
+        nCollpPb5[ncent]                               = GetNCollFromName(namepPbCentForNColl[ncent].Data(),"pPb_5.023TeV");
+    }
+
+    TString nameCentspPb8TeVATLAS                         = "0-100%";
+    TString nameCentspPb8TeVATLASOut                      = "0100";
+    TString labelXTpPb8TeVATLAS                         = "ATLAS prel. (0-100% p-Pb 8.16TeV)";
+    TString labelpPb8TeVATLAS                         = "ATLAS prel. (0-100%)";
+    Double_t xLegpPb8TeVATLASXT                         = 0.65;
+    Double_t yLegpPb8TeVATLASXT                         = 0.58;
+    Color_t colorCombpPb8ATLAS   = GetDefaultDifferentSystemsAndCents(nameCentspPb8TeVATLAS.Data(),"pPb_8.16TeV", "ATLAS");
+    Color_t colorCombpPb8ATLASBox= GetDefaultDifferentSystemsAndCents(nameCentspPb8TeVATLAS.Data(),"pPb_8.16TeV", "ATLAS");
+    Style_t markerStyleCombpPb8ATLAS= GetDefaultMarkerStyle("pPb_5.023TeV", "", nameCentspPb8TeVATLAS.Data());
+    Style_t markerStyleCombpPb8ATLASMC= GetDefaultMarkerStyle("pPb_5.023TeV", "MC", nameCentspPb8TeVATLAS.Data());
+    Size_t markerSizeCombpPb8ATLAS =GetDefaultMarkerSize("pPb_5.023TeV", "", nameCentspPb8TeVATLAS.Data());
+    Double_t nCollpPb8ATLAS = 7.09;
 
     // PbPb settings
     TString namePbPbCent[3]                         = {"0-20%", "20-40%", "40-80%"};
@@ -225,6 +295,43 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         markerSizeCombCMS[centPb]                      = GetDefaultMarkerSize("PbPb_2.76TeV", "", namePbPbCentCMS[centPb].Data());
         nCollCMS[centPb]                               = GetNCollFromName(namePbPbCentCMSOut[centPb].Data());
     }
+
+    Color_t colorCombpAu200[2];
+    Style_t markerStyleCombpAu200[2];
+    Style_t markerStyleCombMCpAu200[2];
+    Size_t markerSizeCombpAu200[2];
+    Double_t nCollpAu200[2];
+    TString nameCentspAu200Out[2]                  = {"0020", "0100"};
+    TString nameCentspAu200[2]                     = {"0-20%", "0-100%"};
+    TString labelXTPHENIXpAu200[2]                     = {"PHENIX prel. (0-20% p-Au 0.2TeV)", "PHENIX prel. (0-100% p-Au 0.2TeV)"};
+    TString labelPHENIXpAu200[2]                       = {"PHENIX prel. (0-20%)", "PHENIX prel. (0-100%)"};
+    Double_t xLegPHENIXpAu200XT[2]                     = {0.33, 0.345};
+    Double_t yLegPHENIXpAu200XT[2]                     = {0.43, 0.41};
+    for (Int_t centAu = 0; centAu < 2; centAu++){
+        colorCombpAu200[centAu]                    = GetDefaultDifferentSystemsAndCents(nameCentspAu200[centAu].Data(), "pAu_0.2TeV", "PHENIX");
+        markerStyleCombpAu200[centAu]              = GetDefaultMarkerStyle("pPb_5.023TeV", "", nameCentspAu200[centAu].Data());
+        markerStyleCombMCpAu200[centAu]            = GetDefaultMarkerStyle("pPb_5.023TeV", "MC", nameCentspAu200[centAu].Data());
+        markerSizeCombpAu200[centAu]               = GetDefaultMarkerSize("pPb_5.023TeV", "", nameCentspAu200[centAu].Data());
+        nCollpAu200[centAu]                        = GetNCollFromName(nameCentspAu200Out[centAu].Data(), "pAu_0.2TeV");
+    }
+
+
+    Color_t colorCombdAu200;
+    Style_t markerStyleCombdAu200;
+    Style_t markerStyleCombMCdAu200;
+    Size_t markerSizeCombdAu200;
+    Double_t nColldAu200;
+    TString nameCentsdAu200Out                  = "0100";
+    TString nameCentsdAu200                     = "0-100%";
+    TString labelXTPHENIXdAu200                     = "PHENIX (0-100% d-Au 0.2TeV)";
+    TString labelPHENIXdAu200                       = "PHENIX (0-100%)";
+    Double_t xLegPHENIXdAu200XT                     = 0.395;
+    Double_t yLegPHENIXdAu200XT                     = 0.37;
+        colorCombdAu200                    = GetDefaultDifferentSystemsAndCents(nameCentsdAu200.Data(), "dAu_0.2TeV", "PHENIX");
+        markerStyleCombdAu200              = GetDefaultMarkerStyle("PbPb_2.76TeV", "", nameCentsdAu200.Data());
+        markerStyleCombMCdAu200            = 28;
+        markerSizeCombdAu200               = GetDefaultMarkerSize("PbPb_2.76TeV", "", nameCentsdAu200.Data());
+        nColldAu200                        = GetNCollFromName(nameCentsdAu200Out.Data(), "dAu_0.2TeV");
 
     Color_t colorCombAuAu200[5];
     Style_t markerStyleCombAuAu200[5];
@@ -332,12 +439,15 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TString collisionSystempp8TeV                   = "pp, #sqrt{#it{s}} = 8 TeV";
     TString collisionSystempp7TeV                   = "pp, #sqrt{#it{s}} = 7 TeV";
     TString collisionSystemPbPb2760GeV               = "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystempAu200GeV                = "p-Au, #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
+    TString collisionSystemdAu200GeV                = "d-Au, #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
     TString collisionSystemAuAu200GeV               = "Au-Au, #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
     TString collisionSystemAuAu39GeV                = "Au-Au, #sqrt{#it{s}_{_{NN}}} = 39 GeV";
     TString collisionSystemAuAu62GeV                = "Au-Au, #sqrt{#it{s}_{_{NN}}} = 62.4 GeV";
     TString collisionSystemCuCu200GeV               = "Cu-Cu, #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
     TString collisionSystemPbPb17GeV                = "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 17.2 GeV";
     TString collisionSystempPb5TeV                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
+    TString collisionSystempPb8TeV                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 8.16 TeV";
     TString textALICE                               = "ALICE";
 
     Color_t colorCombpp2760GeV                      = kBlack;
@@ -360,7 +470,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Style_t markerStyleEpp7TeV                      = GetDefaultMarkerStyle("7TeV", "", "");
     Size_t markerSizeEpp7TeV                        = GetDefaultMarkerSize("7TeV", "", "")*0.8;
 
-    Int_t nOtherEnergies                            = 23;
+    const Int_t nOtherEnergies                            = 23;
     TString nameOtherExp[nOtherEnergies]            = { "ATLAS","ATLAS", "ALICE prel.", "ATLAS", "ATLAS", "CMS", "CMS",
                                                         "CMS", "CDF", "D0", "UA1", "UA2",
                                                         "UA1", "PHENIX", "R807", "R807",
@@ -468,20 +578,59 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TF1* fitInvYieldIncGammapp8TeV                          = (TF1*) fileCombPP8TeV->Get("Gamma8TeV/Fits/TwoComponentModelFitGamma");
     //--------------------------------------- pPb 5TeV --------------------------------------------
     TFile* fileCombPPb5TeV                                  = new TFile( inputFileNamePPb5TeV.Data());
-    TGraphAsymmErrors* graphDRStatpPb5TeV[5];
-    TGraphAsymmErrors* graphDRSyspPb5TeV[5];
-    TGraphAsymmErrors* graphInvYieldDirGammaStatpPb5TeV[5];
-    TGraphAsymmErrors* graphInvYieldDirGammaSyspPb5TeV[5];
-    TGraphAsymmErrors* graphInvYieldDirGammaTotArpPb5TeV[5];
+    TGraphAsymmErrors* graphDRStatpPb5TeV[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphDRSyspPb5TeV[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaStatpPb5TeV[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaSyspPb5TeV[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaTotArpPb5TeV[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaStatpPb5TeVNCollScaled[5]       = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaSyspPb5TeVNCollScaled[5]        = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaTotArpPb5TeVNCollScaled[5]      = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaTotpPb5TeVNCollScaled[5]      = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[5]    = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[5]      = {NULL, NULL, NULL, NULL, NULL};
 
-    TString namepPbCent[5]                                  = {"0-20%", "20-40%", "40-60%", "60-100%", "0-100%"};
-    Double_t scaleFacPlotApPb[5]                            = {10e8, 10e6, 10e4, 10e2, 1};
-    for (Int_t cent = 0; cent < 5; cent++){
-        graphDRStatpPb5TeV[cent]                            = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphRGammaCombStatErr",namepPbCent[cent].Data()));
-        graphDRSyspPb5TeV[cent]                             = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphRGammaCombSysErr",namepPbCent[cent].Data()));
-        graphInvYieldDirGammaStatpPb5TeV[cent]              = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaStatErr",namepPbCent[cent].Data()));
-        graphInvYieldDirGammaSyspPb5TeV[cent]               = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaSysErr",namepPbCent[cent].Data()));
-        graphInvYieldDirGammaTotArpPb5TeV[cent]             = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaSumErrAr",namepPbCent[cent].Data()));
+    for (Int_t ncent = 0; ncent < 5; ncent++){
+        graphDRStatpPb5TeV[ncent]                            = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphRGammaCombStatErr",namepPbCent[ncent].Data()));
+        graphDRSyspPb5TeV[ncent]                             = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphRGammaCombSysErr",namepPbCent[ncent].Data()));
+        graphInvYieldDirGammaStatpPb5TeV[ncent]              = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaStatErr",namepPbCent[ncent].Data()));
+        graphInvYieldDirGammaSyspPb5TeV[ncent]               = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaSysErr",namepPbCent[ncent].Data()));
+        graphInvYieldDirGammaTotArpPb5TeV[ncent]             = (TGraphAsymmErrors*) fileCombPPb5TeV->Get(Form("Gamma_pPb5TeV%s/graphInvYieldDirGammaSumErrAr",namepPbCent[ncent].Data()));
+        if (graphInvYieldDirGammaStatpPb5TeV[ncent])
+            graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent]    = ScaleGraph(graphInvYieldDirGammaStatpPb5TeV[ncent], 1./nCollpPb5[ncent]);
+        if (graphInvYieldDirGammaSyspPb5TeV[ncent])
+            graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]     = ScaleGraph(graphInvYieldDirGammaSyspPb5TeV[ncent], 1./nCollpPb5[ncent]);
+        if (graphInvYieldDirGammaTotArpPb5TeV[ncent])
+            graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]   = ScaleGraph(graphInvYieldDirGammaTotArpPb5TeV[ncent], 1./nCollpPb5[ncent]);
+
+        if (graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent] && graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent] && graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent] ){
+            for (Int_t pt = 0; pt < graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]->GetN();pt++){
+                Int_t currPt = 0;
+                while (currPt < graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent]->GetN()){
+                    if ( graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent]->GetX()[currPt] == graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]->GetX()[pt] )
+                        graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent]->RemovePoint(currPt);
+                    else
+                        currPt++;
+                }
+                currPt = 0;
+                while (currPt < graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]->GetN()){
+                    if ( graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]->GetX()[currPt] == graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]->GetX()[pt] )
+                        graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]->RemovePoint(currPt);
+                    else
+                        currPt++;
+                }
+            }
+            graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent] = AddErrorsQuadraticallyTGraph(graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent],graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]);
+            graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]->Print();
+
+            graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[ncent]     = xTScalePhoton(graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent], 5020.);
+            graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent]       = xTScalePhoton(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent], 5020.);
+
+        } else if (graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent] && graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]){
+            graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent] = AddErrorsQuadraticallyTGraph(graphInvYieldDirGammaStatpPb5TeVNCollScaled[ncent],graphInvYieldDirGammaSyspPb5TeVNCollScaled[ncent]);
+            graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]->Print();
+            graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent]       = xTScalePhoton(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent], 5020.);
+        }
     }
     //--------------------------------------- PbPb 2.76TeV --------------------------------------------
     TFile* fileCombPbPb2760GeV                              = new TFile( inputFileNamePbPb2760GeV.Data());
@@ -559,6 +708,138 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphRGammaLMEE7TeVStat              = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get("RGamma_stat_LMEE_7TeV");
     TGraphAsymmErrors* graphRGammaLMEE7TeVSys               = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get("RGamma_sys_LMEE_7TeV");
     TGraphAsymmErrors* graphRGammaLMEE7TeVTot               = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get("RGamma_tot_LMEE_7TeV");
+
+    //*************************************************************************************************************************************************
+    //*************************************** Read p(d)-A graphs for scaling plots from other experiments ************************************************
+    //*************************************************************************************************************************************************
+    TFile* fileOtherExperimentsPA                           = new TFile(fileNameExperimentPA.Data());
+    TGraphErrors* graphYieldDirGammapAu200GeVStat[2]                = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVSys[2]                 = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVTot[2]                 = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVStatNCollScaled[2]     = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVSysNCollScaled[2]      = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVTotNCollScaled[2]      = {NULL, NULL};
+    TGraphAsymmErrors* graphYieldDirGammapAu200GeVTotArNCollScaled[2]       = {NULL, NULL};
+    TGraphErrors* graphYieldDirGammapAu200GeVTotNCollScaledXT[2]            = {NULL, NULL};
+    TGraphAsymmErrors* graphYieldDirGammapAu200GeVTotArNCollScaledXT[2]     = {NULL, NULL};
+    for (Int_t ncent = 0; ncent < 2; ncent++){
+        graphYieldDirGammapAu200GeVStat[ncent]      = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Stat_%s", nameCentspAu200Out[ncent].Data()));
+        graphYieldDirGammapAu200GeVSys[ncent]       = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Sys_%s", nameCentspAu200Out[ncent].Data()));
+        if (graphYieldDirGammapAu200GeVStat[ncent] && graphYieldDirGammapAu200GeVSys[ncent])
+            graphYieldDirGammapAu200GeVTot[ncent] = AddErrorsQuadraticallyTGraph(graphYieldDirGammapAu200GeVStat[ncent],graphYieldDirGammapAu200GeVSys[ncent]);
+        // graphYieldDirGammapAu200GeVTot[ncent]       = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Tot_%s", nameCentspAu200Out[ncent].Data()));
+        if (graphYieldDirGammapAu200GeVStat[ncent])
+            graphYieldDirGammapAu200GeVStatNCollScaled[ncent]   = ScaleGraph(graphYieldDirGammapAu200GeVStat[ncent], 1./(4520.0144*nCollpAu200[ncent]));
+        if (graphYieldDirGammapAu200GeVSys[ncent])
+            graphYieldDirGammapAu200GeVSysNCollScaled[ncent]    = ScaleGraph(graphYieldDirGammapAu200GeVSys[ncent], 1./(4520.0144*nCollpAu200[ncent]));
+        if (graphYieldDirGammapAu200GeVTot[ncent])
+            graphYieldDirGammapAu200GeVTotNCollScaled[ncent]    = ScaleGraph(graphYieldDirGammapAu200GeVTot[ncent], 1./(4520.0144*nCollpAu200[ncent]));
+
+        if (graphYieldDirGammapAu200GeVTotNCollScaled[ncent]){
+            Int_t nUpperLimits = 0;
+            for (Int_t i=0; i< graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetN(); i++){
+                if (graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetEY()[i]/graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetY()[i] > 0.8)
+                    nUpperLimits++;
+            }
+            if (nUpperLimits>0){
+                graphYieldDirGammapAu200GeVTotArNCollScaled[ncent] = new TGraphAsymmErrors(nUpperLimits);
+                Int_t currPtBinNew = 0;
+                for (Int_t i=0; i< graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetN(); i++){
+                    if (graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetEY()[i]/graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetY()[i] > 0.8){
+                        graphYieldDirGammapAu200GeVTotArNCollScaled[ncent]->SetPoint(currPtBinNew, graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetX()[i], graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetY()[i]+graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetEY()[i]);
+                        graphYieldDirGammapAu200GeVTotArNCollScaled[ncent]->SetPointError(currPtBinNew, graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetEX()[i], graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetEX()[i], graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->GetY()[i]*1.6, 0);
+                        graphYieldDirGammapAu200GeVTotNCollScaled[ncent]->RemovePoint(i);
+                        i--;
+                        currPtBinNew++;
+                    }
+                }
+                graphYieldDirGammapAu200GeVTotArNCollScaledXT[ncent] = xTScalePhoton(graphYieldDirGammapAu200GeVTotArNCollScaled[ncent], 200.);
+            }
+            graphYieldDirGammapAu200GeVTotNCollScaledXT[ncent]  = xTScalePhoton(graphYieldDirGammapAu200GeVTotNCollScaled[ncent], 200.);
+        }
+    }
+    TGraphErrors* graphYieldDirGammadAu200GeVStat                =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVSys                 =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVTot                 =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVStatNCollScaled     =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVSysNCollScaled      =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVTotNCollScaled      =NULL;
+    TGraphAsymmErrors* graphYieldDirGammadAu200GeVTotArNCollScaled       =NULL;
+    TGraphErrors* graphYieldDirGammadAu200GeVTotNCollScaledXT            =NULL;
+    TGraphAsymmErrors* graphYieldDirGammadAu200GeVTotArNCollScaledXT     =NULL;
+    for (Int_t ncent = 0; ncent < 2; ncent++){
+        graphYieldDirGammadAu200GeVStat      = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Stat_%s", nameCentsdAu200Out.Data()));
+        graphYieldDirGammadAu200GeVSys       = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Sys_%s", nameCentsdAu200Out.Data()));
+        graphYieldDirGammadAu200GeVTot       = (TGraphErrors*)fileOtherExperimentsPA->Get(Form("Gamma/graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Tot_%s", nameCentsdAu200Out.Data()));
+        if (graphYieldDirGammadAu200GeVStat)
+            graphYieldDirGammadAu200GeVStatNCollScaled   = ScaleGraph(graphYieldDirGammadAu200GeVStat, 1./(5624.336*nColldAu200));
+        if (graphYieldDirGammadAu200GeVSys)
+            graphYieldDirGammadAu200GeVSysNCollScaled    = ScaleGraph(graphYieldDirGammadAu200GeVSys, 1./(5624.336*nColldAu200));
+        if (graphYieldDirGammadAu200GeVTot)
+            graphYieldDirGammadAu200GeVTotNCollScaled    = ScaleGraph(graphYieldDirGammadAu200GeVTot, 1./(5624.336*nColldAu200));
+
+        if (graphYieldDirGammadAu200GeVTotNCollScaled){
+            Int_t nUpperLimits = 0;
+            for (Int_t i=0; i< graphYieldDirGammadAu200GeVTotNCollScaled->GetN(); i++){
+                if (graphYieldDirGammadAu200GeVTotNCollScaled->GetEY()[i]/graphYieldDirGammadAu200GeVTotNCollScaled->GetY()[i] > 0.8)
+                    nUpperLimits++;
+            }
+            if (nUpperLimits>0){
+                graphYieldDirGammadAu200GeVTotArNCollScaled = new TGraphAsymmErrors(nUpperLimits);
+                Int_t currPtBinNew = 0;
+                for (Int_t i=0; i< graphYieldDirGammadAu200GeVTotNCollScaled->GetN(); i++){
+                    if (graphYieldDirGammadAu200GeVTotNCollScaled->GetEY()[i]/graphYieldDirGammadAu200GeVTotNCollScaled->GetY()[i] > 0.8){
+                        graphYieldDirGammadAu200GeVTotArNCollScaled->SetPoint(currPtBinNew, graphYieldDirGammadAu200GeVTotNCollScaled->GetX()[i], graphYieldDirGammadAu200GeVTotNCollScaled->GetY()[i]+graphYieldDirGammadAu200GeVTotNCollScaled->GetEY()[i]);
+                        graphYieldDirGammadAu200GeVTotArNCollScaled->SetPointError(currPtBinNew, graphYieldDirGammadAu200GeVTotNCollScaled->GetEX()[i], graphYieldDirGammadAu200GeVTotNCollScaled->GetEX()[i], graphYieldDirGammadAu200GeVTotNCollScaled->GetY()[i]*1.6, 0);
+                        graphYieldDirGammadAu200GeVTotNCollScaled->RemovePoint(i);
+                        i--;
+                        currPtBinNew++;
+                    }
+                }
+                graphYieldDirGammadAu200GeVTotArNCollScaledXT = xTScalePhoton(graphYieldDirGammadAu200GeVTotArNCollScaled, 200.);
+            }
+            graphYieldDirGammadAu200GeVTotNCollScaledXT  = xTScalePhoton(graphYieldDirGammadAu200GeVTotNCollScaled, 200.);
+        }
+    }
+
+    Int_t npoints_ATLAS_dirgamma_pPb8TeV                  = 17;
+    Double_t pT_ATLAS_dirgamma_pPb8TeV[17]                = { 30, 40, 50, 60, 70, 80, 95, 115, 137.5, 162.5, 187.5, 225, 275, 325, 375, 435, 510};
+    // Double_t pTErr_ATLAS_dirgamma_pPb8TeV[17]                = { 5, 5, 5, 5, 5, 5, 10, 10, 12.5, 12.5, 12.5, 25, 25, 25, 25, 35, 40};
+    Double_t pTErr_ATLAS_dirgamma_pPb8TeV[17]                = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    Double_t xsection_ATLAS_dirgamma_pPb8TeV[17]      = { 157610, 44823.2, 17190.3, 7723.29, 3746.62, 2025.61, 957.837, 392.197, 158.167, 73.0265, 39.4647, 13.7071, 4.51454, 1.92182, 0.695431, 0.102295, 0.0921991};
+    Double_t xsectionErr_ATLAS_dirgamma_pPb8TeV[17]       = { 1836.26, 457.206, 94.5415, 64.3389, 45.6204, 33.7393, 16.9768, 11.108, 6.29703, 4.32938, 3.22617, 1.35363, 0.797988, 0.564711, 0.528743, 0.358239, 0.353141};
+
+    TGraphErrors* graphYieldDirGammapPb8TeV8000GeVATLASTot         = new TGraphErrors(npoints_ATLAS_dirgamma_pPb8TeV, pT_ATLAS_dirgamma_pPb8TeV, xsection_ATLAS_dirgamma_pPb8TeV,
+                                                                            pTErr_ATLAS_dirgamma_pPb8TeV, xsectionErr_ATLAS_dirgamma_pPb8TeV);
+    TGraphErrors* graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled      =NULL;
+    TGraphErrors* graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT            =NULL;
+    TGraphAsymmErrors* graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled            =NULL;
+    TGraphAsymmErrors* graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT            =NULL;
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTot)
+            graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled    = ScaleGraph(graphYieldDirGammapPb8TeV8000GeVATLASTot, 1./(70*1e12*7.09*2*TMath::Pi())); //70mb=179.7733 GeV/c2, Ncoll pPb8Tev = 7.09
+
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled){
+            Int_t nUpperLimits = 0;
+            for (Int_t i=0; i< graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetN(); i++){
+                if (graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetEY()[i]/graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetY()[i] > 0.8)
+                    nUpperLimits++;
+            }
+            if (nUpperLimits>0){
+                graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled = new TGraphAsymmErrors(nUpperLimits);
+                Int_t currPtBinNew = 0;
+                for (Int_t i=0; i< graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetN(); i++){
+                    if (graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetEY()[i]/graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetY()[i] > 0.8){
+                        graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled->SetPoint(currPtBinNew, graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetX()[i], graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetY()[i]+graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetEY()[i]);
+                        graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled->SetPointError(currPtBinNew, graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetEX()[i], graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetEX()[i], graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->GetY()[i]*3.6, 0);
+                        graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->RemovePoint(i);
+                        i--;
+                        currPtBinNew++;
+                    }
+                }
+                graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT = xTScalePhoton(graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled, 8000.);
+            }
+            graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT  = xTScalePhoton(graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled, 8000.);
+        }
 
     //*************************************************************************************************************************************************
     //*************************************** Read A-A graphs for scaling plots from other experiments ************************************************
@@ -956,16 +1237,16 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeV);
         }
         if (graphInvYieldDirGammaSyspPb5TeV[4]){
-            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspPb5TeV[4], markerStyleCombpPb, markerSizeCombpPb, colorCombpPb , colorCombpPb, widthLinesBoxes, kTRUE);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspPb5TeV[4], markerStyleCombpPb[4], markerSizeCombpPb[4], colorCombpPb[4] , colorCombpPb[4], widthLinesBoxes, kTRUE);
             graphInvYieldDirGammaSyspPb5TeV[4]->Draw("E2same");
         }
         if (graphInvYieldDirGammaStatpPb5TeV[4]){
             ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaStatpPb5TeV[4]);
-            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpPb5TeV[4], markerStyleCombpPb, markerSizeCombpPb, colorCombpPb , colorCombpPb);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpPb5TeV[4], markerStyleCombpPb[4], markerSizeCombpPb[4], colorCombpPb[4] , colorCombpPb[4]);
             graphInvYieldDirGammaStatpPb5TeV[4]->Draw("p,E1Z,same");
         }
         if (graphInvYieldDirGammaTotArpPb5TeV[4]){
-            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpPb5TeV[4] , 1, 3, colorCombpPb, colorCombpPb, 1.8, kTRUE);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpPb5TeV[4] , 1, 3, colorCombpPb[4], colorCombpPb[4], 1.8, kTRUE);
             graphInvYieldDirGammaTotArpPb5TeV[4]->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpPb5TeV[4]);
         }
@@ -1047,6 +1328,244 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_Unscaled_AA.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_Unscaled_AA.pdf",outputDir.Data()));
 
+
+
+    
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    TCanvas *canvasDirGammapPb = new TCanvas("canvasDirGammapPb","",10,10,1200,1400);  // gives the page size
+    DrawGammaCanvasSettings( canvasDirGammapPb, 0.18, 0.01, 0.01, 0.08);
+    canvasDirGammapPb->SetLogy();
+    canvasDirGammapPb->SetLogx();
+
+    TH1D* dummyDirGammapPb1 = new TH1D("dummyDirGammapPb", "dummyDirGammapPb", 1000, 0.09, 820.);
+    SetStyleHistoTH1ForGraphs( dummyDirGammapPb1, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{#it{N}_{coll}} #frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+                               0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.78, 1.85);
+    dummyDirGammapPb1->GetYaxis()->SetRangeUser( 1.2e-18,4e2);
+    dummyDirGammapPb1->GetXaxis()->SetLabelOffset(-0.012);
+    dummyDirGammapPb1->GetXaxis()->SetTickLength(0.025);
+    dummyDirGammapPb1->GetYaxis()->SetTickLength(0.025);
+//     dummyDirGammapPb1->GetXaxis()->SetRangeUser(doubleRatioX[0],doubleRatioX[1]);
+    dummyDirGammapPb1->DrawCopy();
+
+        TLatex *labelXTscaledGammapPb = new TLatex(0.95,0.94,"p + A #rightarrow #gamma + X");
+        SetStyleTLatex( labelXTscaledGammapPb, textSizeLabelsPixelDirGam, 4, 1, 43, kTRUE, 31);
+        labelXTscaledGammapPb->Draw();
+        TLatex *labelXTscaledGammapPb2 = new TLatex(0.95,0.90,"y #approx 0");
+        SetStyleTLatex( labelXTscaledGammapPb2, textSizeLabelsPixelDirGam, 4, 1, 43, kTRUE, 31);
+        labelXTscaledGammapPb2->Draw();
+
+        Int_t nRowsGammapPb              = 3;
+        Int_t nRowsGammapPb8000           = 2;
+        Int_t nRowsGammadAu200           = 2;
+        Int_t nRowsGammapAu200           = 2;
+        Int_t nColumnsGammapPb           = 3;
+        Double_t yMinLegpPb                = 0.1;
+        Double_t xMinLegpPb                = 0.22;
+        Double_t widthColumnpPb            = 0.23;
+        TLegend* legendInvYieldGammapPb      = GetAndSetLegend2( xMinLegpPb, yMinLegpPb, xMinLegpPb+widthColumnpPb*nColumnsGammapPb, yMinLegpPb+(nRowsGammapPb*textsizeLabelsDirGamma*0.5) ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempPb5TeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammapAu200   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb)*textsizeLabelsDirGamma*0.5+0.01, xMinLegpPb+widthColumnpPb*2,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.01 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempAu200GeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammadAu200   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.02, xMinLegpPb+widthColumnpPb*nColumnsGammapPb,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200+nRowsGammadAu200)*textsizeLabelsDirGamma*0.5)+0.02 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystemdAu200GeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammapPb8000    = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapPb8000+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.03, xMinLegpPb+widthColumnpPb*nColumnsGammapPb,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapPb8000+nRowsGammadAu200+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.03 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempPb8TeV.Data()), 42, 0.15);
+        for (Int_t ncent = 0; ncent < 5; ncent++){
+            if (graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]){
+                ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent], markerStyleCombpPbMC[ncent], markerSizeCombpPb[ncent], colorCombpPb[ncent] , colorCombpPb[ncent]);
+                graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]->Draw("p,E1,same");
+                legendInvYieldGammapPb->AddEntry(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent], labelALICEpPb[ncent].Data(), "p");
+            }
+            if (graphInvYieldDirGammaTotArpPb5TeV[ncent]){
+                cout << "Pb:    " << ncent << endl;
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent] , 1, 3, colorCombpPb[ncent], colorCombpPb[ncent], 1.8, kTRUE);
+                graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]->Draw(">,same");
+                PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent], 0.05);
+                graphInvYieldDirGammaTotArpPb5TeVNCollScaled[ncent]->Print();
+            }
+        }
+
+        // plotting PHENIX pAu 200
+        for (Int_t centAu = 0; centAu < 2; centAu++){
+            if (graphYieldDirGammapAu200GeVTotNCollScaled[centAu]){
+                //                     ProduceGraphAsymmWithoutXErrors(graphYieldDirGammapAu200GeVStat[centAu]);
+                DrawGammaSetMarkerTGraphErr(graphYieldDirGammapAu200GeVTotNCollScaled[centAu], markerStyleCombMCpAu200[centAu], markerSizeCombpAu200[centAu], colorCombpAu200[centAu], colorCombpAu200[centAu] );
+                graphYieldDirGammapAu200GeVTotNCollScaled[centAu]->Draw("p,E1,same");
+                legendInvYieldGammapAu200->AddEntry(graphYieldDirGammapAu200GeVTotNCollScaled[centAu], labelPHENIXpAu200[centAu].Data(), "p");
+            }
+            if (graphYieldDirGammapAu200GeVTotArNCollScaled[centAu]){
+                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammapAu200GeVTotArNCollScaled[centAu] , 1, 3, colorCombpAu200[centAu], colorCombpAu200[centAu], 1.8, kTRUE);
+                graphYieldDirGammapAu200GeVTotArNCollScaled[centAu]->Draw(">,same");
+                graphYieldDirGammapAu200GeVTotArNCollScaled[centAu]->Print();
+                PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammapAu200GeVTotArNCollScaled[centAu], 0.1);
+            }
+        }
+
+        // plotting PHENIX dAu 200
+        if (graphYieldDirGammadAu200GeVTotNCollScaled){
+            //                     ProduceGraphAsymmWithoutXErrors(graphYieldDirGammadAu200GeVStat);
+            DrawGammaSetMarkerTGraphErr(graphYieldDirGammadAu200GeVTotNCollScaled, markerStyleCombMCdAu200, markerSizeCombdAu200, colorCombdAu200, colorCombdAu200 );
+            graphYieldDirGammadAu200GeVTotNCollScaled->Draw("p,E1,same");
+            legendInvYieldGammadAu200->AddEntry(graphYieldDirGammadAu200GeVTotNCollScaled, labelPHENIXdAu200.Data(), "p");
+        }
+        if (graphYieldDirGammadAu200GeVTotArNCollScaled){
+            DrawGammaSetMarkerTGraphAsym(graphYieldDirGammadAu200GeVTotArNCollScaled , 1, 3, colorCombdAu200, colorCombdAu200, 1.8, kTRUE);
+            graphYieldDirGammadAu200GeVTotArNCollScaled->Draw(">,same");
+            graphYieldDirGammadAu200GeVTotArNCollScaled->Print();
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammadAu200GeVTotArNCollScaled, 0.1);
+        }
+
+        // plotting ATLAS pPb 8000
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled){
+            //                     ProduceGraphAsymmWithoutXErrors(graphYieldDirGammadAu200GeVStat);
+            DrawGammaSetMarkerTGraphErr(graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled, markerStyleCombpPb8ATLASMC, markerSizeCombpPb8ATLAS, colorCombpPb8ATLAS, colorCombpPb8ATLAS );
+            graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled->Draw("p,E1,same");
+            legendInvYieldGammapPb8000->AddEntry(graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaled, labelpPb8TeVATLAS.Data(), "p");
+        }
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled){
+            DrawGammaSetMarkerTGraphAsym(graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled , 1, 3, colorCombpPb8ATLAS, colorCombpPb8ATLAS, 1.8, kTRUE);
+            graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled->Draw(">,same");
+            graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled->Print();
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaled, 0.1);
+        }
+
+        legendInvYieldGammapPb->Draw();
+        legendInvYieldGammapAu200->Draw();
+        legendInvYieldGammadAu200->Draw();
+        legendInvYieldGammapPb8000->Draw();
+
+    canvasDirGammapPb->Print(Form("%s/DirGammaSpectra_SmallSystems_NCollScaled.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGammapPb->Print(Form("%s/DirGammaSpectra_SmallSystems_NCollScaled.pdf",outputDir.Data()));
+
+
+
+    canvasDirGammapPb->cd();
+    TH1D* dummyDirGammapPb2 = new TH1D("dummyDirGamma", "dummyDirGamma", 1000, 3e-5, 3);
+    SetStyleHistoTH1ForGraphs( dummyDirGammapPb2, "#it{x}_{T} = 2#it{p}_{T}/#sqrt{#it{s}_{_{NN}}}", "#sqrt{(#it{s}_{_{NN}}/GeV)}^{n} #frac{1}{#it{N}_{coll}} #frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+                               0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.77, 1.8);
+    dummyDirGammapPb2->GetYaxis()->SetRangeUser( 1.2e-5,2.3e17);
+    dummyDirGammapPb2->GetXaxis()->SetLabelOffset(-0.012);
+    dummyDirGammapPb2->GetXaxis()->SetTickLength(0.025);
+    dummyDirGammapPb2->GetYaxis()->SetTickLength(0.025);
+    dummyDirGammapPb2->DrawCopy();
+
+        labelXTscaledGammapPb->Draw();
+        labelXTscaledGammapPb2->Draw();
+        TLatex *labelXTscaledGammaNpPb = new TLatex(0.95,0.86,"n = 4.5");
+        SetStyleTLatex( labelXTscaledGammaNpPb, textSizeLabelsPixelDirGam, 4, 1, 43, kTRUE, 31);
+        labelXTscaledGammaNpPb->Draw();
+
+        // Plotting ALICE
+        for (Int_t ncent = 0; ncent < 5; ncent++){
+            if (graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent]){
+                ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent]);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent], markerStyleCombpPbMC[ncent], markerSizeCombpPb[ncent], colorCombpPb[ncent] , colorCombpPb[ncent]);
+                graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent]->Draw("p,E1,same");
+
+                TMarker* markerCurrent             = CreateMarkerFromGraph(graphInvYieldDirGammaTotpPb5TeVNCollScaledXT[ncent], xLegALICEXTpPb[ncent]-0.015 , yLegALICEXTpPb[ncent],1);
+                markerCurrent->SetNDC(kTRUE);
+                markerCurrent->Draw("same,p");
+                TLatex *labelCurrent               = new TLatex(xLegALICEXTpPb[ncent] , yLegALICEXTpPb[ncent], labelXTALICEpPb[ncent]);
+                SetStyleTLatex( labelCurrent, textSizeLabelsPixelDirGam*0.5, 4, 1, 43, kTRUE, 12);
+                labelCurrent->Draw();
+
+            }
+            if (graphInvYieldDirGammaTotArpPb5TeV[ncent]){
+                cout << "Pb:    " << ncent << endl;
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[ncent] , 1, 3, colorCombpPb[ncent], colorCombpPb[ncent], 1.8, kTRUE);
+                graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[ncent]->Draw(">,same");
+                PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[ncent], 0.00001);
+                graphInvYieldDirGammaTotArpPb5TeVNCollScaledXT[ncent]->Print();
+            }
+        }
+             // plotting PHENIX pAu
+        for (Int_t centAu = 0; centAu < 2; centAu++){
+            if (graphYieldDirGammapAu200GeVTotNCollScaledXT[centAu]){
+                DrawGammaSetMarkerTGraphErr(graphYieldDirGammapAu200GeVTotNCollScaledXT[centAu], markerStyleCombMCpAu200[centAu], markerSizeCombpAu200[centAu], colorCombpAu200[centAu], colorCombpAu200[centAu] );
+                graphYieldDirGammapAu200GeVTotNCollScaledXT[centAu]->Draw("p,E1,same");
+
+                TMarker* markerCurrent             = CreateMarkerFromGraph(graphYieldDirGammapAu200GeVTotNCollScaledXT[centAu], xLegPHENIXpAu200XT[centAu]-0.015 , yLegPHENIXpAu200XT[centAu],1);
+                markerCurrent->SetNDC(kTRUE);
+                markerCurrent->Draw("same,p");
+                TLatex *labelCurrent               = new TLatex(xLegPHENIXpAu200XT[centAu] , yLegPHENIXpAu200XT[centAu], labelXTPHENIXpAu200[centAu]);
+                SetStyleTLatex( labelCurrent, textSizeLabelsPixelDirGam*0.5, 4, 1, 43, kTRUE, 12);
+                labelCurrent->Draw();
+            }
+            if (graphYieldDirGammapAu200GeVTotArNCollScaledXT[centAu]){
+                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammapAu200GeVTotArNCollScaledXT[centAu] , 1, 3, colorCombpAu200[centAu], colorCombpAu200[centAu], 1.8, kTRUE);
+                graphYieldDirGammapAu200GeVTotArNCollScaledXT[centAu]->Draw(">,same");
+                graphYieldDirGammapAu200GeVTotArNCollScaledXT[centAu]->Print();
+                PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammapAu200GeVTotArNCollScaledXT[centAu], 0.001);
+            }
+        }
+            // plotting PHENIX dAu
+        if (graphYieldDirGammadAu200GeVTotNCollScaledXT){
+            DrawGammaSetMarkerTGraphErr(graphYieldDirGammadAu200GeVTotNCollScaledXT, markerStyleCombMCdAu200, markerSizeCombdAu200, colorCombdAu200, colorCombdAu200 );
+            graphYieldDirGammadAu200GeVTotNCollScaledXT->Draw("p,E1,same");
+
+            TMarker* markerCurrent             = CreateMarkerFromGraph(graphYieldDirGammadAu200GeVTotNCollScaledXT, xLegPHENIXdAu200XT-0.015 , yLegPHENIXdAu200XT,1);
+            markerCurrent->SetNDC(kTRUE);
+            markerCurrent->Draw("same,p");
+            TLatex *labelCurrent               = new TLatex(xLegPHENIXdAu200XT , yLegPHENIXdAu200XT, labelXTPHENIXdAu200);
+            SetStyleTLatex( labelCurrent, textSizeLabelsPixelDirGam*0.5, 4, 1, 43, kTRUE, 12);
+            labelCurrent->Draw();
+        }
+        if (graphYieldDirGammadAu200GeVTotArNCollScaledXT){
+            DrawGammaSetMarkerTGraphAsym(graphYieldDirGammadAu200GeVTotArNCollScaledXT , 1, 3, colorCombdAu200, colorCombdAu200, 1.8, kTRUE);
+            graphYieldDirGammadAu200GeVTotArNCollScaledXT->Draw(">,same");
+            graphYieldDirGammadAu200GeVTotArNCollScaledXT->Print();
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammadAu200GeVTotArNCollScaledXT, 0.001);
+        }
+            // plotting ATLAS pPb 8 TeV
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT){
+            DrawGammaSetMarkerTGraphErr(graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT, markerStyleCombpPb8ATLASMC, markerSizeCombpPb8ATLAS, colorCombpPb8ATLAS, colorCombpPb8ATLAS );
+            graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT->Draw("p,E1,same");
+
+            TMarker* markerCurrent             = CreateMarkerFromGraph(graphYieldDirGammapPb8TeV8000GeVATLASTotNCollScaledXT, xLegpPb8TeVATLASXT-0.015 , yLegpPb8TeVATLASXT,1);
+            markerCurrent->SetNDC(kTRUE);
+            markerCurrent->Draw("same,p");
+            TLatex *labelCurrent               = new TLatex(xLegpPb8TeVATLASXT , yLegpPb8TeVATLASXT, labelXTpPb8TeVATLAS);
+            SetStyleTLatex( labelCurrent, textSizeLabelsPixelDirGam*0.5, 4, 1, 43, kTRUE, 12);
+            labelCurrent->Draw();
+        }
+        if (graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT){
+            DrawGammaSetMarkerTGraphAsym(graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT , 1, 3, colorCombpPb8ATLAS, colorCombpPb8ATLAS, 1.8, kTRUE);
+            graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT->Draw(">,same");
+            graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT->Print();
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammapPb8TeV8000GeVATLASTotArNCollScaledXT, 0.001);
+        }
+    canvasDirGammapPb->Print(Form("%s/DirGammaSpectra_SmallSystems_NCollScaled_xT.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGammapPb->Print(Form("%s/DirGammaSpectra_SmallSystems_NCollScaled_xT.pdf",outputDir.Data()));
+    
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
+    
     TCanvas *canvasDirGammaPb = new TCanvas("canvasDirGammaPb","",10,10,1200,1400);  // gives the page size
     DrawGammaCanvasSettings( canvasDirGammaPb, 0.18, 0.01, 0.01, 0.08);
     canvasDirGammaPb->SetLogy();
