@@ -1365,25 +1365,26 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         SetStyleTLatex( labelXTscaledGammapPb2, textSizeLabelsPixelDirGam, 4, 1, 43, kTRUE, 31);
         labelXTscaledGammapPb2->Draw();
 
-        Int_t nRowsGammapPb              = 3;
+        Int_t nRowsGammapPb              = 2;
         Int_t nRowsGammapPb8000           = 2;
         Int_t nRowsGammadAu200           = 2;
-        Int_t nRowsGammapAu200           = 2;
+        Int_t nRowsGammapAu200           = 3;
         Int_t nColumnsGammapPb           = 3;
         Double_t yMinLegpPb                = 0.1;
         Double_t xMinLegpPb                = 0.22;
         Double_t widthColumnpPb            = 0.23;
-        TLegend* legendInvYieldGammapPb      = GetAndSetLegend2( xMinLegpPb, yMinLegpPb, xMinLegpPb+widthColumnpPb*nColumnsGammapPb, yMinLegpPb+(nRowsGammapPb*textsizeLabelsDirGamma*0.5) ,0.5*textsizeLabelsDirGamma,
-                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempPb5TeV.Data()), 42, 0.15);
-        TLegend* legendInvYieldGammapAu200   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb)*textsizeLabelsDirGamma*0.5+0.01, xMinLegpPb+widthColumnpPb*2,
-                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.01 ,0.5*textsizeLabelsDirGamma,
-                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempAu200GeV.Data()), 42, 0.15);
-        TLegend* legendInvYieldGammadAu200   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.02, xMinLegpPb+widthColumnpPb*nColumnsGammapPb,
-                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200+nRowsGammadAu200)*textsizeLabelsDirGamma*0.5)+0.02 ,0.5*textsizeLabelsDirGamma,
-                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystemdAu200GeV.Data()), 42, 0.15);
-        TLegend* legendInvYieldGammapPb8000    = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapPb8000+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.03, xMinLegpPb+widthColumnpPb*nColumnsGammapPb,
-                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapPb8000+nRowsGammadAu200+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.03 ,0.5*textsizeLabelsDirGamma,
+        TLegend* legendInvYieldGammapPb8000      = GetAndSetLegend2( xMinLegpPb, yMinLegpPb, xMinLegpPb+widthColumnpPb*2, yMinLegpPb+(nRowsGammapPb*textsizeLabelsDirGamma*0.5) ,0.5*textsizeLabelsDirGamma,
                                                                 nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempPb8TeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammapPb   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb)*textsizeLabelsDirGamma*0.5+0.01, xMinLegpPb+widthColumnpPb*3,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.01 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempPb5TeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammapAu200   = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.02, xMinLegpPb+widthColumnpPb*2,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapAu200+nRowsGammadAu200)*textsizeLabelsDirGamma*0.5)+0.02 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystempAu200GeV.Data()), 42, 0.15);
+        TLegend* legendInvYieldGammadAu200    = GetAndSetLegend2( xMinLegpPb, yMinLegpPb+(nRowsGammapPb+nRowsGammapPb8000+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5+0.03, xMinLegpPb+widthColumnpPb*nColumnsGammapPb,
+                                                                yMinLegpPb+((nRowsGammapPb+nRowsGammapPb8000+nRowsGammadAu200+nRowsGammapAu200)*textsizeLabelsDirGamma*0.5)+0.03 ,0.5*textsizeLabelsDirGamma,
+                                                                nColumnsGammapPb, Form("#scale[1.25]{%s}",collisionSystemdAu200GeV.Data()), 42, 0.15);
+
         for (Int_t ncent = 0; ncent < 5; ncent++){
             if (graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]){
                 ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaTotpPb5TeVNCollScaled[ncent]);
