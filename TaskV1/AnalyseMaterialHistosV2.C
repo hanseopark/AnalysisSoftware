@@ -151,6 +151,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TList *ESDContainerMC         = (TList*)HistosGammaConversionMC->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TH1F *histoEventQualityMC     = (TH1F*)ESDContainerMC->FindObject("NEvents");
     TH1F *histoGoodESDTracksMC    = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksEta08");
+    TH1F *histoGoodESDTracksWeightedMC    =NULL;
+    histoGoodESDTracksWeightedMC  = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksWeightedEta08");
     TH2F *histoRPhiMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RPhi");
     TH2F *histoREtaMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_REta");
     TH2F *histoRZMC               = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RZ");
@@ -202,8 +204,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     Float_t normFactorReconstData = 1./(numberGoodEventsData*meanMultData);
 
     Float_t numberGoodEventsMC    = histoEventQualityMC->GetBinContent(1);
-    Double_t meanMultMC           = histoGoodESDTracksMC->GetMean();
-    Float_t normFactorReconstMC   = 1./(numberGoodEventsMC*meanMultMC);
+    Double_t meanMultMC;           
+    Float_t normFactorReconstMC;   
+    if( histoGoodESDTracksWeightedMC != NULL) {
+      meanMultMC = histoGoodESDTracksWeightedMC->GetMean();
+     }else{
+      meanMultMC = histoGoodESDTracksMC->GetMean();
+    }
+    normFactorReconstMC = 1./(numberGoodEventsMC*meanMultMC);
 
     cout << "*********************************************" << endl;
     cout << "Number of good events in data -> " << numberGoodEventsData << endl;
@@ -219,6 +227,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     histoGoodESDTracksData->Scale(1./numberGoodEventsData);
     histoGoodESDTracksMC->Scale(1./numberGoodEventsMC);
+    if( histoGoodESDTracksWeightedMC != 0x0) {
+      histoGoodESDTracksWeightedMC->Scale(1./numberGoodEventsMC);
+    }
 
     //-AM   Don't do scaling prior to calculation of errors
     // GammaScalingHistogramm(histoRPtData,normFactorReconstData);
@@ -844,6 +855,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoGoodESDTracksData->Draw("same,hist");
         DrawGammaSetMarker(histoGoodESDTracksMC, 20, markerSize, colorMC, colorMC);
         histoGoodESDTracksMC->Draw("same,hist");
+	if( histoGoodESDTracksWeightedMC != 0x0){
+	  histoGoodESDTracksWeightedMC->Draw("same,hist");
+	}
 
         TLegend* legend = GetAndSetLegend(0.75,0.75,2);
         legend->AddEntry(histoGoodESDTracksData,"Data","l");
