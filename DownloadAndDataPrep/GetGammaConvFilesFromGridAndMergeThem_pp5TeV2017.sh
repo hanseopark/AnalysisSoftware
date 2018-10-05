@@ -4,7 +4,7 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180927-1_MatBugNewPlots;
+TRAINDIR=Legotrain-vAN-20181003-1_MatBugMultWeights;
 
 ### Data
 LHC17pqMETA=2498_20180927-1712; #451_20180831-1144 ,
@@ -46,7 +46,7 @@ LHC18d6c_woSDD_part2=; #$LHC18d6cMETA\_child_3;
 LHC18d6c_wSDD=; #$LHC18d6cMETA\_child_4;
 
 ###### all low intensity pythia ######
-LowIntPythiaMETA=3536_20180927-1716 ; #3477_20180823-1142;
+LowIntPythiaMETA=3547_20181004-1019; #3477_20180823-1142;
 LHC17b3lLowInt_fast=$LowIntPythiaMETA\_child_1;
 LHC17b3lLowInt_woSDD=$LowIntPythiaMETA\_child_2;
 LHC17b3lLowInt_wSDD=$LowIntPythiaMETA\_child_3;
@@ -57,7 +57,7 @@ LHC18d6cLowInt_wSDD=$LowIntPythiaMETA\_child_7;
 
 
 ############## Phojet ################
-LHC18d6bMETA=3535_20180927-1716; #3477_20180823-1142;
+LHC18d6bMETA=3548_20181004-1019; #3477_20180823-1142;
 LHC18d6b_fast=$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=$LHC18d6bMETA\_child_2;
 LHC18d6b_fastpart2=$LHC18d6bMETA\_child_3;
