@@ -159,6 +159,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TList *ESDContainerMC         = (TList*)HistosGammaConversionMC->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TH1F *histoEventQualityMC     = (TH1F*)ESDContainerMC->FindObject("NEvents");
     TH1F *histoGoodESDTracksMC    = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksEta08");
+
     TH1F *histoGoodESDTracksWeightedMC = NULL;
     histoGoodESDTracksWeightedMC  = (TH1F*)ESDContainerMC->FindObject("GoodESDTracksWeightedEta08");
     TH2F *histoRPhiMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RPhi");
@@ -861,6 +862,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoGoodESDTracksData->Draw("same,hist");
         DrawGammaSetMarker(histoGoodESDTracksMC, 20, markerSize, colorMC, colorMC);
         histoGoodESDTracksMC->Draw("same,hist");
+
         if( histoGoodESDTracksWeightedMC != 0x0) histoGoodESDTracksWeightedMC->Draw("same,hist");
 
         TLegend* legend = GetAndSetLegend(0.5,0.75,2.5);
