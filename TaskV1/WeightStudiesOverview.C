@@ -105,11 +105,13 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     // Define necessary histogram/file/string arrays
     const Int_t ConstNumberOfCuts = NumberOfCuts;
     const Int_t MaxNumberOfCuts = 12;
+    const Int_t nBinsR = 12;
     if(ConstNumberOfCuts > MaxNumberOfCuts){
         cout << "Too many cuts, beware!" << endl;
         return;
     }
     TString FileNames[MaxNumberOfCuts];
+    TString FileNamesAdditional[MaxNumberOfCuts];
 
     // Read cuts from CutSelection file
     ifstream in(CombineFilesName.Data());
@@ -122,9 +124,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         FileNames[Number]=tempFile;
         cutNumber[Number]=tempFile;
         cutNumber[Number].Remove(0,32);
+        FileNamesAdditional[Number] = Form("AdditionalMBHistos%s",cutNumber[Number].Data());
         cout<< cutNumber[Number].Length()-5<< endl;
         cutNumber[Number].Remove(cutNumber[Number].Length()-5,5);
         cout<<	FileNames[Number]<< "  " << cutNumber[Number].Data() << endl;
+	cout<<  FileNamesAdditional[Number] << endl;
         Number++;
     }
 
@@ -173,9 +177,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             counterOffline++;
         }
 
-//         cout << "period " << periodName[i] << " " << clusterName[i] << endl;
-//         cout << "generator " << generatorName[i] << endl;
-//         cout << "V0Reader " << V0ReaderName[i] << endl;
+	//	cout << "period " << periodName[i] << " " << clusterName[i] << endl;
+	//        cout << "generator " << generatorName[i] << endl;
+	//	cout << "V0Reader " << V0ReaderName[i] << endl;
     }
 
     cout<<"=========================="<<endl;
@@ -189,6 +193,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TH1F * histoDiffWeightCut          [ConstNumberOfCuts];
     TH1F * histRelUncWeightCut         [ConstNumberOfCuts];
     TH1F * rData [ConstNumberOfCuts];
+    TFile*  WeightFileAdditional       [ConstNumberOfCuts];
+    TH1F * histoWeightsEachRPtMin[nBinsR][ConstNumberOfCuts];
 
     for (Int_t i=0; i< NumberOfCuts; i++){
 
@@ -197,6 +203,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRinPtBinScaledToGasPtBin3");
         rData[i]        = (TH1F*)WeightFile[i]->Get("Data");
 
+	WeightFileAdditional[i] = TFile::Open(FileNamesAdditional[i]);
+
         // Calculate ratios
         histoRatioWeightCut[i] = (TH1F*) histWeight[i]->Clone("histoRatioWeights");
         histoRatioWeightCut[i]->Sumw2();
@@ -204,7 +212,11 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histoDiffWeightCut[i]->Sumw2();
         histoRatioWeightEnergyCut[i] = (TH1F*) histWeight[i]->Clone("histoRatioWeightsByEnergy");
         histoRatioWeightEnergyCut[i]->Sumw2();
-
+	for (Int_t j=0; j< nBinsR; j++){
+	  //	  cout<< "name:"<< Form("histoWeightsEachRPtMin%i",j)<< endl;
+	  histoWeightsEachRPtMin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMin%i",j)); 
+	  //	  cout<< "mean" <<histoWeightsEachRPtMin[i][j]->GetMean() <<endl;
+	}
         if(sequence==0){
             if (i != 3){
                     histoRatioWeightCut[i]->Sumw2();
@@ -668,6 +680,92 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     canvasWeightDiff->SaveAs(Form("%s/WeightDiff_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
     delete canvasWeightDiff;
 
+
+   //_______________________ Ploting weights vs pT in each R bin On-the-fly finder__________________________
+
+    TCanvas *canvasMBWeightEachROnfly          = new TCanvas("canvasMBWeighEachROnfly","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBWeightEachROnfly, 0, 0, 0, 0);
+    canvasMBWeightEachROnfly->cd();
+    TPad * padMBWeightEachROnfly               = new TPad("padMBWeightEachROnfly","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBWeightEachROnfly, 0, 0, 0, 0);
+    padMBWeightEachROnfly->Divide(4,3,0.0,0.0);
+    padMBWeightEachROnfly->Draw();
+    Int_t place  = 0;
+    TH2F *histoDummyWeightEachROnfly =  new TH2F("histoDummyWeightEachROnfly","histoDummyWeightEachROnfly",1000,0.,1.,1000,0.9,2.);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnfly, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
+
+    for(Int_t j=0; j < nBinsR; j++){
+      place  = place + 1;
+      padMBWeightEachROnfly->cd(place);
+      padMBWeightEachROnfly->cd(place)->SetTopMargin(0.04);
+      padMBWeightEachROnfly->cd(place)->SetBottomMargin(0.15);
+      padMBWeightEachROnfly->cd(place)->SetLeftMargin(0.15);
+      padMBWeightEachROnfly->cd(place)->SetRightMargin(0.05);
+      histoDummyWeightEachROnfly->GetYaxis()->SetNdivisions(504); 
+      if(j>1 && j<=3) {
+	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
+      }else if(j>3 && j<=6) {
+	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
+      }else if(j>7 ) {
+	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
+      }
+      histoDummyWeightEachROnfly->DrawCopy();
+      DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+      DrawGammaLines(0.4,0.4,0.9, 2.,1.,kGray,1);
+      for(Int_t i = 0; i< 2; i++){
+	if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
+	else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	histoWeightsEachRPtMin[j][i]->Draw("same");
+      }
+      if (j==9)  legendWeightOnfly->Draw();
+    }
+
+    canvasMBWeightEachROnfly->Print(Form("%s/MBWeightVSPtMinOnflyEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
+
+
+
+ //_______________________ Ploting weights vs pT in each R bin Offline finder__________________________
+
+    TCanvas *canvasMBWeightEachROffline          = new TCanvas("canvasMBWeighEachROffline","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBWeightEachROffline, 0, 0, 0, 0);
+    canvasMBWeightEachROffline->cd();
+    TPad * padMBWeightEachROffline               = new TPad("padMBWeightEachROffline","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBWeightEachROffline, 0, 0, 0, 0);
+    padMBWeightEachROffline->Divide(4,3,0.0,0.0);
+    padMBWeightEachROffline->Draw();
+     place  = 0;
+    TH2F *histoDummyWeightEachROffline =  new TH2F("histoDummyWeightEachROffline","histoDummyWeightEachROffline",1000,0.,1.,1000,0.9,2.);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightEachROffline, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
+
+    for(Int_t j=0; j < nBinsR; j++){
+      place  = place + 1;
+      padMBWeightEachROffline->cd(place);
+      padMBWeightEachROffline->cd(place)->SetTopMargin(0.04);
+      padMBWeightEachROffline->cd(place)->SetBottomMargin(0.15);
+      padMBWeightEachROffline->cd(place)->SetLeftMargin(0.15);
+      padMBWeightEachROffline->cd(place)->SetRightMargin(0.05);
+      histoDummyWeightEachROffline->GetYaxis()->SetNdivisions(504); 
+      if(j>1 && j<=3) {
+	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
+      }else if(j>3 && j<=6) {
+	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
+      }else if(j>7 ) {
+	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
+      }	
+      histoDummyWeightEachROffline->DrawCopy();
+      DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+      DrawGammaLines(0.4,0.4,0.9, 2.,1.,kGray,1);
+      for(Int_t i = 2; i< NumberOfCuts; i++){
+	if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
+	else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	histoWeightsEachRPtMin[j][i]->Draw("same");
+      }
+      if (j==9)  legendWeightOffline->Draw();
+    }
+    canvasMBWeightEachROffline->Print(Form("%s/MBWeightVSPtMinOfflineEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
+
+
+   //____________________________________________________________________________________
 
     TFile outFile(Form("%s/weightsWithErrors_Test.root",outputDir.Data()) ,"RECREATE");
     histWeightStaErr->Write();
