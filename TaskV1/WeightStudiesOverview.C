@@ -214,7 +214,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         histoRatioWeightEnergyCut[i]->Sumw2();
 	for (Int_t j=0; j< nBinsR; j++){
 	  //	  cout<< "name:"<< Form("histoWeightsEachRPtMin%i",j)<< endl;
-	  histoWeightsEachRPtMin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMin%i",j)); 
+	  histoWeightsEachRPtMin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMin%i",j));
 	  //	  cout<< "mean" <<histoWeightsEachRPtMin[i][j]->GetMean() <<endl;
 	}
         if(sequence==0){
@@ -691,33 +691,44 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROnfly->Divide(4,3,0.0,0.0);
     padMBWeightEachROnfly->Draw();
     Int_t place  = 0;
-    TH2F *histoDummyWeightEachROnfly =  new TH2F("histoDummyWeightEachROnfly","histoDummyWeightEachROnfly",1000,0.,1.,1000,0.9,2.);
+    TH2F *histoDummyWeightEachROnfly =  new TH2F("histoDummyWeightEachROnfly","histoDummyWeightEachROnfly",1000,0.,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnfly, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
 
+    TLegend* legendWeightPtOnfly= new TLegend(0.5,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
+    legendWeightPtOnfly->SetFillColor(0);
+    legendWeightPtOnfly->SetMargin(0.17);
+    legendWeightPtOnfly->SetLineColor(0);
+    legendWeightPtOnfly->SetTextFont(42);
+    legendWeightPtOnfly->SetTextSize(0.05);
+    legendWeightPtOnfly->SetHeader("On-the-Fly V0 finder");
+    for(Int_t i = 0; i< 2; i++){
+        if(V0ReaderName[i].Contains("On-the-Fly"))
+            legendWeightPtOnfly->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+    }
+
     for(Int_t j=0; j < nBinsR; j++){
-      place  = place + 1;
-      padMBWeightEachROnfly->cd(place);
-      padMBWeightEachROnfly->cd(place)->SetTopMargin(0.04);
-      padMBWeightEachROnfly->cd(place)->SetBottomMargin(0.15);
-      padMBWeightEachROnfly->cd(place)->SetLeftMargin(0.15);
-      padMBWeightEachROnfly->cd(place)->SetRightMargin(0.05);
-      histoDummyWeightEachROnfly->GetYaxis()->SetNdivisions(504); 
-      if(j>1 && j<=3) {
-	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
-      }else if(j>3 && j<=6) {
-	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
-      }else if(j>7 ) {
-	histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
-      }
-      histoDummyWeightEachROnfly->DrawCopy();
-      DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
-      DrawGammaLines(0.4,0.4,0.9, 2.,1.,kGray,1);
-      for(Int_t i = 0; i< 2; i++){
-	if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
-	else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
-	histoWeightsEachRPtMin[j][i]->Draw("same");
-      }
-      if (j==9)  legendWeightOnfly->Draw();
+        place  = place + 1;
+        padMBWeightEachROnfly->cd(place);
+        padMBWeightEachROnfly->cd(place)->SetTopMargin(0.04);
+        padMBWeightEachROnfly->cd(place)->SetBottomMargin(0.15);
+        padMBWeightEachROnfly->cd(place)->SetLeftMargin(0.15);
+        padMBWeightEachROnfly->cd(place)->SetRightMargin(0.05);
+        histoDummyWeightEachROnfly->GetYaxis()->SetNdivisions(504);
+
+//         if(j>1 && j<=3)      histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
+//         else if(j>3 && j<=6) histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
+//         else if(j>7 )        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
+        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.82,1.3);
+
+        histoDummyWeightEachROnfly->DrawCopy();
+        DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+        DrawGammaLines(0.4,0.4,0.82,1.3,1.,kGray,2);
+        for(Int_t i = 0; i< 2; i++){
+            if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+            histoWeightsEachRPtMin[j][i]->Draw("same");
+        }
+        if (j==0)  legendWeightPtOnfly->Draw();
     }
 
     canvasMBWeightEachROnfly->Print(Form("%s/MBWeightVSPtMinOnflyEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
@@ -734,33 +745,45 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROffline->Divide(4,3,0.0,0.0);
     padMBWeightEachROffline->Draw();
      place  = 0;
-    TH2F *histoDummyWeightEachROffline =  new TH2F("histoDummyWeightEachROffline","histoDummyWeightEachROffline",1000,0.,1.,1000,0.9,2.);
+    TH2F *histoDummyWeightEachROffline =  new TH2F("histoDummyWeightEachROffline","histoDummyWeightEachROffline",1000,0.,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROffline, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
 
+    TLegend* legendWeightPtOffline= new TLegend(0.5,0.31-(1+counterOnfly)*0.05,0.8,0.31); //0.17,0.13,0.5,0.24);
+    legendWeightPtOffline->SetFillColor(0);
+    legendWeightPtOffline->SetMargin(0.17);
+    legendWeightPtOffline->SetLineColor(0);
+    legendWeightPtOffline->SetTextFont(42);
+    legendWeightPtOffline->SetTextSize(0.05);
+    legendWeightPtOffline->SetHeader("Offline V0 finder");
+    for(Int_t i = 2; i< NumberOfCuts; i++){
+        if(V0ReaderName[i].Contains("Offline"))
+            legendWeightPtOffline->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+    }
+
     for(Int_t j=0; j < nBinsR; j++){
-      place  = place + 1;
-      padMBWeightEachROffline->cd(place);
-      padMBWeightEachROffline->cd(place)->SetTopMargin(0.04);
-      padMBWeightEachROffline->cd(place)->SetBottomMargin(0.15);
-      padMBWeightEachROffline->cd(place)->SetLeftMargin(0.15);
-      padMBWeightEachROffline->cd(place)->SetRightMargin(0.05);
-      histoDummyWeightEachROffline->GetYaxis()->SetNdivisions(504); 
-      if(j>1 && j<=3) {
-	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
-      }else if(j>3 && j<=6) {
-	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
-      }else if(j>7 ) {
-	histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
-      }	
-      histoDummyWeightEachROffline->DrawCopy();
-      DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
-      DrawGammaLines(0.4,0.4,0.9, 2.,1.,kGray,1);
-      for(Int_t i = 2; i< NumberOfCuts; i++){
-	if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
-	else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
-	histoWeightsEachRPtMin[j][i]->Draw("same");
-      }
-      if (j==9)  legendWeightOffline->Draw();
+        place  = place + 1;
+        padMBWeightEachROffline->cd(place);
+        padMBWeightEachROffline->cd(place)->SetTopMargin(0.04);
+        padMBWeightEachROffline->cd(place)->SetBottomMargin(0.15);
+        padMBWeightEachROffline->cd(place)->SetLeftMargin(0.15);
+        padMBWeightEachROffline->cd(place)->SetRightMargin(0.05);
+        histoDummyWeightEachROffline->GetYaxis()->SetNdivisions(504);
+
+//         if(j>1 && j<=3)      histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
+//         else if(j>3 && j<=6) histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
+//         else if(j>7 )       histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
+        histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.85,1.5);
+
+        histoDummyWeightEachROffline->DrawCopy();
+        DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+        DrawGammaLines(0.4,0.4,0.85, 1.5,1.,kGray,2);
+        for(Int_t i = 2; i< NumberOfCuts; i++){
+        if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
+        else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+        histoWeightsEachRPtMin[j][i]->Draw("same");
+        }
+
+        if (j==0)  legendWeightPtOffline->Draw();
     }
     canvasMBWeightEachROffline->Print(Form("%s/MBWeightVSPtMinOfflineEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
