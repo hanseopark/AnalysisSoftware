@@ -247,7 +247,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Color_t colorCombpPb8ATLAS   = GetDefaultDifferentSystemsAndCents(nameCentspPb8TeVATLAS.Data(),"pPb_8.16TeV", "ATLAS");
     Color_t colorCombpPb8ATLASBox= GetDefaultDifferentSystemsAndCents(nameCentspPb8TeVATLAS.Data(),"pPb_8.16TeV", "ATLAS");
     Style_t markerStyleCombpPb8ATLAS= GetDefaultMarkerStyle("pPb_5.023TeV", "", nameCentspPb8TeVATLAS.Data());
-    Style_t markerStyleCombpPb8ATLASMC= GetDefaultMarkerStyle("pPb_5.023TeV", "MC", nameCentspPb8TeVATLAS.Data());
+    Style_t markerStyleCombpPb8ATLASMC= 30;
     Size_t markerSizeCombpPb8ATLAS =GetDefaultMarkerSize("pPb_5.023TeV", "", nameCentspPb8TeVATLAS.Data());
     Double_t nCollpPb8ATLAS = 7.09;
 
