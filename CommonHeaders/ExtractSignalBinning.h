@@ -2691,8 +2691,8 @@
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[i];
                     }
                 } else if(mode == 42){
-                    maxNBins = 13;
-                    binningMax  = 13;
+                    maxNBins = 12;
+                    binningMax  = 12;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                     }
