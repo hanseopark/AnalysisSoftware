@@ -82,6 +82,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     TString     fileName                = "";
     TString     fileNameMC              = "";
     TString     fileNamePhoton          = "";
+    TString     fileNamePhotonMC        = "";
     TString     filePathPhoton          = "";
     TString     select                  = "";
     TString     addPhotonCutNr          = "";
@@ -162,8 +163,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             filePathPhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("filePath",TString::kIgnoreCase)){
             filePath            = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("fileNamePhoton",TString::kIgnoreCase)){
+        } else if ((tempValue.BeginsWith("fileNamePhoton",TString::kIgnoreCase))&&!(tempValue.BeginsWith("fileNamePhotonMC",TString::kIgnoreCase))){
             fileNamePhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("fileNamePhotonMC",TString::kIgnoreCase)){
+            fileNamePhotonMC      = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if ((tempValue.BeginsWith("fileName",TString::kIgnoreCase))&&!(tempValue.BeginsWith("fileNameMC",TString::kIgnoreCase))){
             fileName            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("fileNameMC",TString::kIgnoreCase)){
@@ -224,10 +227,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << endl;
     cout << "folderRunlists:        " << folderRunlists.Data()      << endl;
     cout << "fileName:              " << fileName.Data()            << endl;
-    cout << "fileNameMC:              " << fileNameMC.Data()            << endl;
+    cout << "fileNameMC:            " << fileNameMC.Data()            << endl;
     cout << "filePath:              " << filePath.Data()            << endl;
     cout << "filePathPhoton:        " << filePathPhoton.Data()      << endl;
-    cout << "fileNamePhoton:        " << fileNamePhoton.Data()            << endl;
+    cout << "fileNamePhoton:        " << fileNamePhoton.Data()      << endl;
     cout << "cutNr:                 " << cutNr                      << endl;
     cout << "mode:                  " << mode                       << endl;
     cout << endl;
@@ -272,9 +275,9 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
         PhotonQA_Runwise(   nSets, nData, fEnergyFlag, path, fileNamePhoton, DataSets, plotDataSets, mode, cutNr,
                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, addPhotonCutNr);
     }
-    if (doClusterQA)    ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
+    if (doClusterQA)    ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
                                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
-    if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
+    if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
                                             1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kTRUE );
     if ( doPrimaryTrackQA ) {
         PrimaryTrackQA_Runwise (nSets, nData, fEnergyFlag, filePath, fileName, DataSets,  plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist);
