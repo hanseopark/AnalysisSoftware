@@ -51,7 +51,6 @@ void EventQA_Runwise(
     TH1::AddDirectory(kFALSE);
     StyleSettingsThesis();
     SetPlotStyle();
-    TString fileNameData=fileName;
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++ Setting common variables ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -59,6 +58,7 @@ void EventQA_Runwise(
 
     const Int_t nSets   = nSetsIn;
     const Int_t nData   = nDataIn;
+    TString fileNameData= fileName;
 
     const Int_t maxSets = 20;
     if(nSets>maxSets){
@@ -175,14 +175,27 @@ void EventQA_Runwise(
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++ Determine which cut to process +++++++++++++++++++++++++++++++++++++++++++++++
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    TFile* fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()));
-    if(fCutFile->IsZombie()) {cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl; return;}
-
+    UInt_t ActualRunIndexInVector=0;
+    TFile* fCutFile             = NULL;
+    while ( (fCutFile==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
+        fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileName.Data()));
+        if(fCutFile->IsZombie()) {
+            cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl;
+            fCutFile->Close();
+            delete fCutFile;
+            fCutFile=NULL;
+        }
+        ActualRunIndexInVector++;
+    }
+    if(fCutFile==NULL) {
+        cout << "ERROR: no ROOT file; last tried file: '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector-1)).Data(), fileName.Data()) << "'; return!" << endl;
+        return;
+    }
     TKey *key;
     if (fixedTopDir.CompareTo("") == 0){
         TIter next(fCutFile->GetListOfKeys());
         while ((key=(TKey*)next())){
-            cout << Form("Found TopDir: '%s' ",key->GetName());
+            cout << Form("Found TopDir: '%s' ",key->GetName())<< endl;
             nameMainDir             = key->GetName();
         }
     } else {
@@ -195,9 +208,22 @@ void EventQA_Runwise(
     }
     else {
         cout<<"fileNameData and fileNameMC differ => Changing corresponding name variable nameMainDirMC"<<endl;
-        TFile* fCutFileMC             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(0)).Data(), fileNameMC.Data()));
-        if(fCutFileMC->IsZombie()) {cout << "ERROR: MC ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(0)).Data(), fileNameMC.Data()) << "' could not be openend, return!" << endl; return;}
-
+        ActualRunIndexInVector=0;
+        TFile* fCutFileMC=NULL;
+        while ( (fCutFileMC==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
+            fCutFileMC             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileNameMC.Data()));
+            if(fCutFileMC->IsZombie()) {
+                cout << "ERROR: MC ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileNameMC.Data()) << "' could not be openend" << endl;
+                fCutFileMC->Close();
+                delete fCutFileMC;
+                fCutFileMC=NULL;
+            }
+            ActualRunIndexInVector++;
+        }
+        if(fCutFileMC==NULL) {
+            cout << "ERROR: no MC ROOT file; last tried File: '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector-1)).Data(), fileNameMC.Data()) << "'; return!" << endl;
+            return;
+        }
         TKey *keyMC;
         if (fixedTopDir.CompareTo("") == 0){
             TIter nextMC(fCutFileMC->GetListOfKeys());
