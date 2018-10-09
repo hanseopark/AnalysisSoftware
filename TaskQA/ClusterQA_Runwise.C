@@ -161,19 +161,15 @@ void ClusterQA_Runwise(
         ActualRunIndexInVector=0;
         TFile* fCutFileMC=NULL;
         while ( (fCutFileMC==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
-            cout<<"Debug, Line: "<<__LINE__<<"; ActualRunIndexInVector: "<<ActualRunIndexInVector<<"; vecRuns.size(): "<<vecRuns.size()<<endl;
             fCutFileMC             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileNameMC.Data()));
             if(fCutFileMC->IsZombie()) {
-                cout<<"Debug, Line: "<<__LINE__<<"; ActualRunIndexInVector: "<<ActualRunIndexInVector<<"; vecRuns.size(): "<<vecRuns.size()<<endl;
                 cout << "ERROR: MC ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileNameMC.Data()) << "' could not be openend, return!" << endl;
                 fCutFileMC->Close();
                 delete fCutFileMC;
                 fCutFileMC=NULL;
             }
-            cout<<"Debug, Line: "<<__LINE__<<"; ActualRunIndexInVector: "<<ActualRunIndexInVector<<"; vecRuns.size(): "<<vecRuns.size()<<endl;
             ActualRunIndexInVector++;
         }
-        cout<<"Debug, Line: "<<__LINE__<<"; ActualRunIndexInVector: "<<ActualRunIndexInVector<<"; vecRuns.size(): "<<vecRuns.size()<<endl;
         if(fCutFileMC==NULL) {
             cout << "ERROR: no MC ROOT file; last tried File: '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector-1)).Data(), fileNameMC.Data()) << "'; return!" << endl;
             return;
