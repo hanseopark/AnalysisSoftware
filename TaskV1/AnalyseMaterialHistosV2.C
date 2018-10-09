@@ -1707,7 +1707,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH2F *histoDummyPurityR = new TH2F("histoDummyPurityR","histoDummyPurityR",1000,0.,180.,1000,0.,1.2);
     SetStyleHistoTH2ForGraphs(histoDummyPurityR, "R (cm)","Purity", 0.9*textsizeLabelsUppurity, textsizeLabelsUppurity,0.9*textsizeLabelsUppurity,textsizeLabelsUppurity, 0.9,0.1/(textsizeFacUppurity*marginXRatio));
 
-    TH2F *histoDummyPurityPt =  new TH2F("histoDummyPurityPt","histoDummyPurityPt",1000,0.,8.,1000,0.,1.2);
+    TH2F *histoDummyPurityPt =  new TH2F("histoDummyPurityPt","histoDummyPurityPt",1000,0.,10.,1000,0.,1.2);
     SetStyleHistoTH2ForGraphs(histoDummyPurityPt, "#it{p}_{T} (GeV/c)","Purity", 0.9*textsizeLabelsDownpurity, textsizeLabelsDownpurity,0.9*textsizeLabelsDownpurity,textsizeLabelsDownpurity, 0.9,0.1/(textsizeFacDownpurity*marginXRatio));
     histoDummyPurityPt->GetYaxis()->SetRangeUser(0.6,1.1);
 
@@ -1744,6 +1744,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     histoDummyPurityR->Draw("same,axis");
     padLowerPurity->cd();
+    histoDummyPurityPt->GetXaxis()->SetRangeUser(0.04,10.);
     histoDummyPurityPt->DrawCopy();
 
         DrawGammaLines(0.,8.,1., 1.,1.1,kGray+1);
@@ -1763,12 +1764,18 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoDummyPurityPt->Draw("same,axis");
     canvasPurity->Print(Form("%s/PhotonPurity%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
+    padLowerPurity->SetLogx();
+
+    canvasPurity->Print(Form("%s/PhotonPurity_logX_%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+
 
     TCanvas * canvasSinglePtPurity = new TCanvas("canvasSinglePtPurity","",1200,1000);
     DrawGammaCanvasSettings( canvasSinglePtPurity,  0.12, 0.02, 0.02, 0.12);
+
     TH2F *histoDummyPuritySinglePt =  new TH2F("histoDummyPuritySinglePt","histoDummyPuritySinglePt",1000,0.,10.,1000,0.5,1.1);
     SetStyleHistoTH2ForGraphs(histoDummyPuritySinglePt, "#it{p}_{T} (GeV/c)","Purity",0.05,0.05, 0.05,0.05);
-    histoDummyPuritySinglePt->GetXaxis()->SetRangeUser(0.,5.);
+    histoDummyPuritySinglePt->GetXaxis()->SetRangeUser(0.04,5.);
     histoDummyPuritySinglePt->DrawCopy();
 
         DrawGammaSetMarker(histoPurityPt5cm, 20, markerSize, colorMC, colorMC);
@@ -1785,6 +1792,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     histoDummyPuritySinglePt->Draw("same,axis");
     canvasSinglePtPurity->Print(Form("%s/PhotonPuritySingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    canvasSinglePtPurity->SetLogx();
+    canvasSinglePtPurity->Print(Form("%s/PhotonPuritySingle_LogX_%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+
 
     TCanvas * canvasSingleEtaDataMC = new TCanvas("canvasSingleEtaDataMC","",1200,1000);
     DrawGammaCanvasSettings( canvasSingleEtaDataMC,  0.15, 0.02, 0.07, 0.12);
