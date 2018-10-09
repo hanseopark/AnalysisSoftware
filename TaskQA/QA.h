@@ -268,6 +268,7 @@ public:
             fFitRecoPi->SetParLimits(3,0.001,0.05);
         }
         fSignalPi->Draw();
+        //fSignalPi->Fit(fFitRecoPi,"QRNME+","",0.05,0.25);
         fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.05,0.25);
         TFitResultPtr result = fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.05,0.25);
 
