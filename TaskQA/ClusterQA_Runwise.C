@@ -133,9 +133,9 @@ void ClusterQA_Runwise(
     UInt_t ActualRunIndexInVector=0;
     TFile* fCutFile             = NULL;
     while ( (fCutFile==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
-        fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(ActualRunIndexInVector)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()));
+        fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileName.Data()));
         if(fCutFile->IsZombie()) {
-            cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(ActualRunIndexInVector)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl;
+            cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileName.Data()) << "' could not be openend, return!" << endl;
             fCutFile->Close();
             delete fCutFile;
             fCutFile=NULL;
