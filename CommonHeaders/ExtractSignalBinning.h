@@ -1276,6 +1276,8 @@
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 3;
+                } else if ( mode == 3){
+                    startPtBin     = 10;
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 1;
                 } else if ( mode == 5){
@@ -2040,6 +2042,13 @@
                             case 5: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 123 ); break;
                             case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG1Pt, binning, 117 ); break;
                             case 3: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG2Pt, binning, 112 ); break;
+                        }
+                        break;
+                    case 3: //PCM-PHOS
+                        switch(SpecialTrigger) {
+                            default:
+                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 99 );
+                                break;
                         }
                         break;
                     case 4:
