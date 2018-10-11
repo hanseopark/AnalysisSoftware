@@ -686,6 +686,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoEtaDalRTrueMC,normFactorReconstMC);
     GammaScalingHistogramm(histoCombRTrueMC,normFactorReconstMC);
 
+
     GammaScalingHistogramm(histoEtaData,normFactorReconstData);
     GammaScalingHistogramm(histoPtData,normFactorReconstData);
     GammaScalingHistogramm(histoRData,normFactorReconstData);
@@ -1143,6 +1144,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoEtaDalRTrueMC->SetFillColor(kBlue-3);
         histoEtaDalRTrueMC->SetFillStyle(3002);
         histoEtaDalRTrueMC->DrawCopy("same,hist");
+        DrawGammaSetMarker(histoRTrueSecMC, 20, markerSize, color[5], color[5]);
+	histoRTrueSecMC->SetLineWidth(2);
+        histoRTrueSecMC->Draw("same,hist");
 
         TLegend* legenRdistrib = GetAndSetLegend2(0.6, 0.93-(6*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
         legenRdistrib->AddEntry(histoRData,"Data","l");
@@ -1249,7 +1253,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoEtaDalRTrueMC->SetLineWidth(2);
         histoEtaDalRTrueMC->DrawCopy("same,hist");
 
-        TLegend* legenRdistribSingle = GetAndSetLegend2(0.6, 0.93-(6*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
+        TLegend* legenRdistribSingle = GetAndSetLegend2(0.6, 0.93-(8*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
         legenRdistribSingle->AddEntry(histoRData,"Data","l");
         legenRdistribSingle->AddEntry(histoRMC,"MC","l");
         legenRdistribSingle->AddEntry(histoRTrueMC,"True MC","l");
@@ -1316,11 +1320,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoPi0DalRTrueMC->DrawCopy("same,hist");
         histoEtaDalRTrueMC->SetLineWidth(2);
         histoEtaDalRTrueMC->DrawCopy("same,hist");
+	histoRTrueSecMC->DrawCopy("same,hist");
 
-        TLegend* legenRdistrib2 = GetAndSetLegend2(0.6, 0.93-(6*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
+        TLegend* legenRdistrib2 = GetAndSetLegend2(0.6, 0.93-(8*0.85*textsizeLabelsUp), 0.9, 0.93, textSizeLabels);
         legenRdistrib2->AddEntry(histoRData,"Data","l");
         legenRdistrib2->AddEntry(histoRMC,"MC","l");
         legenRdistrib2->AddEntry(histoRTrueMC,"True MC","l");
+        legenRdistrib2->AddEntry(histoRTrueSecMC,"True Sec MC","l");
         legenRdistrib2->AddEntry(histoCombRTrueMC,"True MC comb.","l");
         legenRdistrib2->AddEntry(histoPi0DalRTrueMC,"True MC #pi^{0} Dal.","lf");
         legenRdistrib2->AddEntry(histoEtaDalRTrueMC,"True MC #eta Dal.","fl");
@@ -1765,7 +1771,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasPurity->Print(Form("%s/PhotonPurity%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     padLowerPurity->SetLogx();
-
+    DrawGammaLines(0.4,0.4,0.6,1.1,1.,kGray,2);
+ 
     canvasPurity->Print(Form("%s/PhotonPurity_logX_%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
@@ -1794,6 +1801,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasSinglePtPurity->Print(Form("%s/PhotonPuritySingle%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     canvasSinglePtPurity->SetLogx();
+    DrawGammaLines(0.4,0.4,0.6,1.1,1.,kGray,2);
     canvasSinglePtPurity->Print(Form("%s/PhotonPuritySingle_LogX_%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
