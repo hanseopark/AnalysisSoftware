@@ -235,12 +235,12 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         histoDRPi0FitStatErr[0]                         = (TH1D*) directoryPCMGammapp8TeV->Get("DoubleRatioPi0FitStatError");
         graphDRPi0FitSysErr[0]                          = (TGraphAsymmErrors*) directoryPCMGammapp8TeV->Get("DoubleRatioPi0FitSystError");
         histoDRStatErr[0]                               = (TH1D*) directoryPCMGammapp8TeV->Get(Form("DoubleRatioStatError%s",strBinShifted.Data()));
-        histoDRStatErr[0]->SetBinContent(2,histoDRStatErr[0]->GetBinContent(2)*1.22);
-        histoDRStatErr[0]->SetBinError(2,histoDRStatErr[0]->GetBinError(2)*1.22);
+        histoDRStatErr[0]->SetBinContent(2,histoDRStatErr[0]->GetBinContent(2)*1.66);
+        histoDRStatErr[0]->SetBinError(2,histoDRStatErr[0]->GetBinError(2)*1.66);
         graphDRSysErr[0]                                = (TGraphAsymmErrors*) directoryPCMGammapp8TeV->Get(Form("DoubleRatioSystError%s",strBinShifted.Data()));
-        graphDRSysErr[0]->SetPoint(0,graphDRSysErr[0]->GetX()[0],graphDRSysErr[0]->GetY()[0]*1.22);
-        graphDRSysErr[0]->SetPointEYlow(0,graphDRSysErr[0]->GetEYlow()[0]*1.22);
-        graphDRSysErr[0]->SetPointEYhigh(0,graphDRSysErr[0]->GetEYhigh()[0]*1.22);
+        graphDRSysErr[0]->SetPoint(0,graphDRSysErr[0]->GetX()[0],graphDRSysErr[0]->GetY()[0]*1.66);
+        graphDRSysErr[0]->SetPointEYlow(0,graphDRSysErr[0]->GetEYlow()[0]*1.66);
+        graphDRSysErr[0]->SetPointEYhigh(0,graphDRSysErr[0]->GetEYhigh()[0]*1.66);
         histoIncGammaRatioStatErr[0]                    = (TH1D*) directoryPCMGammapp8TeV->Get(Form("IncRatioStatError%s",strBinShifted.Data()));
         graphIncGammaRatioSysErr[0]                     = (TGraphAsymmErrors*) directoryPCMGammapp8TeV->Get(Form("IncRatioSystError%s",strBinShifted.Data()));
         histoConvProb[0]                                = (TH1D*) directoryPCMGammapp8TeV->Get("GammaConversionProbability");
