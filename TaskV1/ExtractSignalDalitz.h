@@ -53,7 +53,11 @@ Double_t fIntLinearBckErrorOut;
 
 const Double_t factorGGCont             = (98.826*10)/(1.174*90);
 const Double_t fPi0GGBRDPG              = 0.98823; //DPG
-const Double_t fPi0DalitzBRDPG          = 0.01174; //DPG 0.01174 
+const Double_t fPi0DalitzBRDPG          = 0.01174; //DPG 0.01174
+const Double_t fEtaGGBRDPG              = 0.3941;
+const Double_t fEtaDalitzBRDPG          = 0.000069;
+Double_t fMesonGGBRDPG                  = 0;
+Double_t fMesonDalitzBRDPG              = 0;
 
 TString fEventCutSelection              = "";
 TString fGammaCutSelection              = "";
@@ -75,7 +79,7 @@ fstream fFileDataLog;
 TArrayD *fArrayDBinsPt                  = NULL;
 TArrayD *fArrayDMesonMassRange          = NULL;
 TArrayI *fArrayIParametersBins          = NULL;
-TArrayD *fArrayBRPi0Meson               = NULL;
+TArrayD *fArrayBRMeson               = NULL;
 
 Double_t *fBGFitRange                   = NULL;
 Double_t *fBGFitRangeLeft               = NULL;

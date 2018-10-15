@@ -55,7 +55,8 @@ struct SysErrorConversion {
 
 Double_t Pi0DalitzBR = 0.0;
 Double_t Pi0GGBR     = 0.0;
-
+Double_t EtaDalitzBR = 0.0;
+Double_t EtaGGBR     = 0.0;
 void CorrectYieldDalitz(TH1D* histoCorrectedYield,TH1D* histoRawGGYield, TH1D* histoEffiPt, TH1D* histoAcceptance, Double_t deltaRapid, Double_t scaling, Double_t nEvt, TString nameMeson ){
 	histoCorrectedYield->Sumw2();
 	histoCorrectedYield->Add(histoRawGGYield,-1.);
@@ -76,8 +77,8 @@ void CorrectYieldDalitz(TH1D* histoCorrectedYield,TH1D* histoRawGGYield, TH1D* h
 		histoCorrectedYield->Scale(1./Pi0DalitzBR);	 
 		
 	}else{
-	  
-		histoCorrectedYield->Scale(1./0.000068);
+	        cout<<"Scaling by EtaDalitzBR: "<<EtaDalitzBR<<endl;
+		histoCorrectedYield->Scale(1./EtaDalitzBR);
 	}
 }
 
@@ -104,7 +105,7 @@ void CorrectYield(TH1D* histoCorrectedYield, TH1D* histoRawSecYield, TH1D* histo
 		
 		
 	}else{
-		histoCorrectedYield->Scale(1./0.3931);
+		histoCorrectedYield->Scale(1./EtaGGBR);
 	}
 	
 }
@@ -380,7 +381,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	TH1D* histoTrueMassMeson =          	(TH1D*)fileCorrections->Get("histoTrueMassMeson");
 	TH1D* histoTrueFWHMMeson =          	(TH1D*)fileCorrections->Get("histoTrueFWHMMeson");
 	
-	TArrayD* fArrayBRPi0Meson = 	    	(TArrayD*)fileCorrections->Get("fArrayBRPi0Meson");
+	TArrayD* fArrayBRMeson = 	    	(TArrayD*)fileCorrections->Get("fArrayBRMeson");
 	
 	
 	if ( nameMeson.CompareTo("Pi0") == 0 || nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
@@ -388,14 +389,14 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	      if( isMC.CompareTo("kTRUE") == 0 ){
 	    
 		cout<<"Taking Branching ratios from MC"<<endl;
-		Pi0GGBR     =  fArrayBRPi0Meson->GetAt(2);
-		Pi0DalitzBR =  fArrayBRPi0Meson->GetAt(3);
+		Pi0GGBR     =  fArrayBRMeson->GetAt(2);
+		Pi0DalitzBR =  fArrayBRMeson->GetAt(3);
 		
 	      } else {
 		
 		cout<<"Taking Branching ratios from DPG 2013 "<<endl;
-		Pi0GGBR     =  fArrayBRPi0Meson->GetAt(0); //  0.98823 DPG
-		Pi0DalitzBR =  fArrayBRPi0Meson->GetAt(1); //  0.01174 DPG
+		Pi0GGBR     =  fArrayBRMeson->GetAt(0); //  0.98823 DPG
+		Pi0DalitzBR =  fArrayBRMeson->GetAt(1); //  0.01174 DPG
 		
 	      }
     
@@ -403,7 +404,26 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		cout<<"Pi0->GG    : "<<Pi0GGBR<<endl;
 		cout<<"Pi0->e+e-G : "<<Pi0DalitzBR<<endl;
 	     
-	} 
+	} else if ( nameMeson.CompareTo("Eta") == 0 ) {
+
+            if( isMC.CompareTo("kTRUE") == 0 ){
+
+                cout<<"Taking Branching ratios from MC"<<endl;
+                EtaGGBR     =  fArrayBRMeson->GetAt(2);
+                EtaDalitzBR =  fArrayBRMeson->GetAt(3);
+
+            } else {
+
+                cout<<"Taking Branching ratios from DPG 2013 "<<endl;
+                EtaGGBR     =  fArrayBRMeson->GetAt(0); //  0.98823 DPG
+                EtaDalitzBR =  fArrayBRMeson->GetAt(1); //  0.01174 DPG
+
+                }
+
+		cout<<"The Branching ratios were set as follow:"<<endl;
+		cout<<"Eta->GG    : "<<EtaGGBR<<endl;
+		cout<<"Eta->e+e-G : "<<EtaDalitzBR<<endl;
+        }
 	
 	
 
@@ -2401,7 +2421,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		
      
 		DrawAutoGammaMesonHistos( histoYieldTrueGGFracMeson, 
-                             "", "p_{T} (GeV/c)", "#frac{True #pi^{0} #rightarrow #gamma#gamma}{ True #pi^{0} #rightarrow #gamma#gamma + True #pi^{0} #rightarrow e^{+}e^{-}#gamma }", 
+                             "", "p_{T} (GeV/c)", "#frac{True #pi^{0} #rightarrow #gamma#gamma}{ True #pi^{0} #rightarrow #gamma#gamma + True #pi^{0} #rightarrow e^{+}e^{-}#gamma }",
                              kTRUE, 3., 4e-10, kTRUE,
                              kFALSE, 0., 0.30, 
                              kFALSE, 0., 10.);
@@ -2424,8 +2444,8 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		
      
 		DrawAutoGammaMesonHistos( histoYieldTrueGGFracMesonForData, 
-                             "", "p_{T} (GeV/c)", Form("#frac{ #frac{%f}{%f} #times True #pi^{0} #rightarrow #gamma#gamma}{ #frac{%f}{%f} #times True #pi^{0} #rightarrow #gamma#gamma + #frac{%f}{%f} #times True #pi^{0} #rightarrow e^{+}e^{-}#gamma}",fArrayBRPi0Meson->GetAt(0),fArrayBRPi0Meson->GetAt(2),
-						       fArrayBRPi0Meson->GetAt(0),fArrayBRPi0Meson->GetAt(2),fArrayBRPi0Meson->GetAt(1),fArrayBRPi0Meson->GetAt(3)), 
+                             "", "p_{T} (GeV/c)", Form("#frac{ #frac{%f}{%f} #times True #pi^{0} #rightarrow #gamma#gamma}{ #frac{%f}{%f} #times True #pi^{0} #rightarrow #gamma#gamma + #frac{%f}{%f} #times True #pi^{0} #rightarrow e^{+}e^{-}#gamma}",fArrayBRMeson->GetAt(0),fArrayBRMeson->GetAt(2),
+						       fArrayBRMeson->GetAt(0),fArrayBRMeson->GetAt(2),fArrayBRMeson->GetAt(1),fArrayBRMeson->GetAt(3)),
                              kTRUE, 3., 4e-10, kTRUE,
                              kFALSE, 0., 0.30, 
                              kFALSE, 0., 10.);

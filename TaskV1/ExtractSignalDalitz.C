@@ -79,8 +79,10 @@ void ExtractSignalDalitz(   TString meson               = "",
     gSystem->Load("libCORRFW.so");
     gSystem->Load("libPWGGAGammaConv.so");
     
-    Double_t Pi0DalitzBR            = 0.0;
-    Double_t Pi0GGBR                = 0.0;
+    //Double_t Pi0DalitzBR            = 0.0;
+    //Double_t Pi0GGBR                = 0.0;
+    Double_t MesonDalitzBR            = 0.0;
+    Double_t MesonGGBR                = 0.0;
     fCutSelection                   = cutSelection;
     TString fCutSelectionRead       = cutSelection;
     fMode                           = mode;
@@ -404,26 +406,38 @@ void ExtractSignalDalitz(   TString meson               = "",
             fHistoMCMesonDalitzPt           = (TH1D*)fHistoMCMesonPt->Clone(nameEtaDalitzPt.Data());
             fHistoMCMesonGGPt               = (TH1D*)fMChistograms->FindObject(nameEtaGGPt.Data());
         }
-        
+        cout<<"Computing BR from MC histos"<<endl;
+        MesonDalitzBR = fHistoMCMesonDalitzPt->GetEntries()/(fHistoMCMesonDalitzPt->GetEntries()+fHistoMCMesonGGPt->GetEntries());
+        MesonGGBR = fHistoMCMesonGGPt->GetEntries()/(fHistoMCMesonDalitzPt->GetEntries() + fHistoMCMesonGGPt->GetEntries());
         if( meson.CompareTo("Pi0") == 0 || meson.CompareTo("Pi0EtaBinning") == 0 ){
             /////////////////////////Saving Branching Ratio//////////////////////////////
             cout<<"Saving Branching Ration from DPG"<<endl;
-            fArrayBRPi0Meson->AddAt( fPi0GGBRDPG,	  0);  //  0.98823 DPG
-            fArrayBRPi0Meson->AddAt( fPi0DalitzBRDPG, 1);  //  0.01174 DPG
-            cout<<"Pi0->gg: "<<fArrayBRPi0Meson->GetAt(0)<< "  Pi0->eeg "<<fArrayBRPi0Meson->GetAt(1)<<endl;
 
-            ////////////////////////////////////////////////////////////////////////////                
-            cout<<"Computing BR from MC histos"<<endl;
-            Pi0DalitzBR             = fHistoMCMesonDalitzPt->GetEntries() / ( fHistoMCMesonDalitzPt->GetEntries() + fHistoMCMesonGGPt->GetEntries() );
-            Pi0GGBR                 = fHistoMCMesonGGPt->GetEntries()     / ( fHistoMCMesonDalitzPt->GetEntries() + fHistoMCMesonGGPt->GetEntries() );
-                
-            fArrayBRPi0Meson->AddAt( Pi0GGBR,	2);  // 
-            fArrayBRPi0Meson->AddAt( Pi0DalitzBR, 3);  // 
+            fMesonGGBRDPG = fPi0GGBRDPG;
+            fMesonDalitzBRDPG = fPi0DalitzBRDPG;
 
-            cout<<"The MC Branching ratios are set as follow:"<<endl;
-            cout<<"Pi0->gg: "<<fArrayBRPi0Meson->GetAt(2)<<"  Pi0->e+e-G: "<<fArrayBRPi0Meson->GetAt(3)<<endl;
-        } 
+        } else if (meson.CompareTo("Eta") == 0 ) {
+
+            fMesonGGBRDPG     = fEtaGGBRDPG;
+            fMesonDalitzBRDPG = fEtaDalitzBRDPG;
+
+            MesonDalitzBR   =  fMesonDalitzBRDPG; //NOTE This only temporal
+            MesonGGBR       =  fMesonGGBRDPG;    //NOTE this only temporal
+
+        }
         
+        fArrayBRMeson->AddAt( fMesonGGBRDPG,   0);  //  0.98823 DPG
+        fArrayBRMeson->AddAt( fMesonDalitzBRDPG, 1);  //  0.01174 DPG
+        cout<<meson.Data()<<": ->gg: "<<fArrayBRMeson->GetAt(0)<< " : ->eeg "<<fArrayBRMeson->GetAt(1)<<endl;
+
+        ///////////////////////////////////////NEW-WAY/////////////////////////////////////
+
+        fArrayBRMeson->AddAt( MesonGGBR,2);
+        fArrayBRMeson->AddAt( MesonDalitzBR, 3);
+
+        cout<<"The MC Branching ratios are set as follow:"<<endl;
+        cout<<meson.Data()<<": ->gg: "<<fArrayBRMeson->GetAt(2)<<" : ->e+e-G: "<<fArrayBRMeson->GetAt(3)<<endl;
+
         fHistoTrueMesonInvMassVSPt      = (TH2F*)fTrueHistograms->FindObject(fObjectNameTrue.Data());
         FillMassMCTrueMesonHistosArray(fHistoTrueMesonInvMassVSPt);
         fHistoTrueGGMesonInvMassVSPt    = (TH2F*)fTrueHistograms->FindObject(fObjectNameTruePi0Cont.Data());
@@ -1259,8 +1273,8 @@ void ExtractSignalDalitz(   TString meson               = "",
         TH1D*  fHistoYieldTrueMesonScaled   = (TH1D*)fHistoYieldTrueMeson->Clone("fHistoYieldTrueMesonScaled");
         TH1D*  fHistoYieldTrueGGMesonScaled = (TH1D*)fHistoYieldTrueGGMeson->Clone("fHistoYieldTrueGGMesonScaled");
         
-        fHistoYieldTrueMesonScaled->Scale(fPi0DalitzBRDPG/Pi0DalitzBR);
-        fHistoYieldTrueGGMesonScaled->Scale(fPi0GGBRDPG/Pi0GGBR);
+        fHistoYieldTrueMesonScaled->Scale(fMesonDalitzBRDPG/MesonDalitzBR);
+        fHistoYieldTrueGGMesonScaled->Scale(fMesonGGBRDPG/MesonGGBR);
                 
         fNameHistoFrac="TrueGGFracForData";
         fHistoYieldTrueGGFracMesonForData = CalculateSecondaryFractions(fHistoYieldTrueMesonScaled, fHistoYieldTrueGGMesonScaled, fNameHistoFrac);
@@ -1268,8 +1282,8 @@ void ExtractSignalDalitz(   TString meson               = "",
         TH1D* fHistoYieldTrueMesonNarrowScaled   = (TH1D*)fHistoYieldTrueMesonNarrow->Clone("fHistoYieldTrueMesonNarrowScaled");
         TH1D* fHistoYieldTrueGGMesonNarrowScaled = (TH1D*)fHistoYieldTrueGGMesonNarrow->Clone("fHistoYieldTrueGGMesonNarrowScaled");
         
-        fHistoYieldTrueMesonNarrowScaled->Scale(fPi0DalitzBRDPG/Pi0DalitzBR);
-        fHistoYieldTrueGGMesonNarrowScaled->Scale(fPi0GGBRDPG/Pi0GGBR);
+        fHistoYieldTrueMesonNarrowScaled->Scale(fMesonDalitzBRDPG/MesonDalitzBR);
+        fHistoYieldTrueGGMesonNarrowScaled->Scale(fMesonGGBRDPG/MesonGGBR);
                 
         fNameHistoFrac="TrueGGFracNarrowForData";
         fHistoYieldTrueGGFracMesonNarrowForData= CalculateSecondaryFractions(fHistoYieldTrueMesonNarrowScaled, fHistoYieldTrueGGMesonNarrowScaled, fNameHistoFrac);
@@ -1277,8 +1291,8 @@ void ExtractSignalDalitz(   TString meson               = "",
         TH1D* fHistoYieldTrueMesonWideScaled   = (TH1D*) fHistoYieldTrueMesonWide->Clone("fHistoYieldTrueMesonWideScaled");
         TH1D* fHistoYieldTrueGGMesonWideScaled = (TH1D*) fHistoYieldTrueGGMesonWide->Clone("fHistoYieldTrueGGMesonWideScaled");
         
-        fHistoYieldTrueMesonWideScaled->Scale(fPi0DalitzBRDPG/Pi0DalitzBR);
-        fHistoYieldTrueGGMesonWideScaled->Scale(fPi0GGBRDPG/Pi0GGBR );
+        fHistoYieldTrueMesonWideScaled->Scale(fMesonDalitzBRDPG/MesonDalitzBR);
+        fHistoYieldTrueGGMesonWideScaled->Scale(fMesonGGBRDPG/MesonGGBR);
         
         fNameHistoFrac="TrueGGFracWideForData";
         fHistoYieldTrueGGFracMesonWideForData= CalculateSecondaryFractions(fHistoYieldTrueMesonWideScaled, fHistoYieldTrueGGMesonWideScaled, fNameHistoFrac);
@@ -1336,12 +1350,37 @@ void ExtractSignalDalitz(   TString meson               = "",
 
 
 TH1D* CalculateSecondaryFractions(TH1D* histoRawYield, TH1D* histoRawYieldSec, TString nameHistoFrac/*, Bool_t scaleGGCont*/){
-
     TH1D* histoFracSec = (TH1D*)histoRawYieldSec->Clone(nameHistoFrac.Data());
     TH1D* histoRawYieldTotal = (TH1D*)histoRawYield->Clone();
-    histoRawYieldTotal->Add(histoFracSec,1.);
+      histoRawYieldTotal->Add(histoFracSec,1.);
+        //ProtoType for checks 0 on Histo.
+      /*
+      Int_t Big0 = histoFracSec->GetNbinsX()+1;
+      Int_t Big1 = histoFracSec->GetNbinsX()+1;
+      Int_t limr = 10;
+      if ( Big0 < Big1 )  limr = Big1;
+      else limr = Big0;
+    for (Int_t BiS = 1; BiS < limr; BiS++){
+        if(histoRawYieldTotal->GetBinContent(BiS) == 0){
+              cout<<"CalculateSecondaryFractions-Zeros"<<endl;
+        cout<<"We find a bin with zero value on him, so we fill with 1"<<histoRawYieldTotal->GetBinContent(BiS)<<endl;
+        cout<<"We find a bin with zero value on him, so we fill with 1"<<histoFracSec->GetBinContent(BiS)<<endl;
+            histoRawYieldTotal->SetBinContent(BiS,0.02);
+            histoRawYieldTotal->SetBinError(BiS,0.02);
+            //histoRawYieldTotal->Fill(BiS,1);
+             cout<<"CalculateSecondaryFractions-NOZeros"<<endl;
+        cout<<"We find a bin with zero value on him, so we fill with 1"<<histoRawYieldTotal->GetBinContent(BiS)<<endl;
+        cout<<"We find a bin with zero value on him, so we fill with 1"<<histoFracSec->GetBinContent(BiS)<<endl;
+        }
+    }
+    */
     histoFracSec->Divide(histoFracSec,histoRawYieldTotal,1.,1.,"B");
-
+    /*
+    for (Int_t BiS = 1; BiS < limr; BiS++){
+              cout<<"histoFracSec-Divde"<<endl;
+        cout<<"We find a bin with zero value on him, so we fill with 1"<<histoFracSec->GetBinContent(BiS)<<endl;
+    }
+    */
     return histoFracSec;
 
 }
@@ -2182,7 +2221,6 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 
     fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
     fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
-
     fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
     fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
 
@@ -2935,8 +2973,17 @@ void IntegrateFitFunc(TF1 * fFunc, TH1D *  fHistoMappingSignalInvMassPtBinSingle
 
 void FillHistosArrayMC(TH1D* fHistoMCMesonPtWithinAcceptanceFill, TH1D * fHistoMCMesonPtFill, TH1D * fDeltaPtFill){
    //Char_t nameHisto[100] = "fHistoMCMesonPtEtaWithinAcceptance";
-   cout<<"Fallo aqui"<<endl;
+   //cout<<"Something Fail here"<<endl;
    fHistoMCMesonWithinAccepPt = (TH1D*)fHistoMCMesonPtWithinAcceptanceFill->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
+   /* for (Int_t BiS = 0; BiS < fDeltaPtFill->GetNbinsX()+1; BiS++){
+        cout<<"FillHistosArrayMC"<<endl;
+        if(fDeltaPtFill->GetBinContent(BiS) == 0){
+            cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
+            fDeltaPtFill->SetBinError(BiS,1.);
+            fDeltaPtFill->SetBinContent(BiS,1.);
+            fDeltaPtFill->Fill(BiS,1);
+        }
+    }*/
    fHistoMCMesonWithinAccepPt->Divide(fDeltaPtFill);
    fHistoMCMesonPt1 = (TH1D*)fHistoMCMesonPtFill->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
    fHistoMCMesonPt1->Divide(fDeltaPtFill);
@@ -2946,6 +2993,15 @@ void FillHistosArrayMC(TH1D* fHistoMCMesonPtWithinAcceptanceFill, TH1D * fHistoM
 void CalculateMesonAcceptance(){
     fHistoMCMesonAcceptPt = new TH1D("fMCMesonAccepPt","",fNBinsPt,fBinsPt);
     fHistoMCMesonAcceptPt->Sumw2();
+      cout<<"CalculateMesonAcceptance"<<endl;
+      /*  for (Int_t BiS = 0; BiS < fHistoMCMesonPt1->GetNbinsX()+1; BiS++){
+            if(fHistoMCMesonPt1->GetBinContent(BiS) == 0){
+            cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
+            fHistoMCMesonPt1->SetBinError(BiS,1.);
+            fHistoMCMesonPt1->SetBinContent(BiS,1.);
+            fHistoMCMesonPt1->Fill(BiS,1);
+            }
+        }*/
     fHistoMCMesonAcceptPt->Divide(fHistoMCMesonWithinAccepPt,fHistoMCMesonPt1,1.,1.,"B");
     fHistoMCMesonAcceptPt->DrawCopy();
     fFileDataLog << endl << "Calculation of the Acceptance" << endl;
@@ -2958,6 +3014,15 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TString nameEfi ){
     fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
     fHistoMCMesonEffiPt->Sumw2();
     fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
+      cout<<"CalculateMesonEfficiency"<<endl;
+    for (Int_t BiS = 0; BiS < fHistoMCMesonWithinAccepPt->GetNbinsX()+1; BiS++){
+        if(fHistoMCMesonWithinAccepPt->GetBinContent(BiS) == 0){
+            cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
+            fHistoMCMesonWithinAccepPt->SetBinError(BiS,1.);
+            fHistoMCMesonWithinAccepPt->SetBinContent(BiS,1.);
+            fHistoMCMesonWithinAccepPt->Fill(BiS,1);
+        }
+    }
     fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPt,1.,1.,"B");
     fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
     for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
@@ -2972,7 +3037,16 @@ void CalculateMesonEfficiencyWithoutGGCont(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_f
     fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
     fHistoMCRAWYieldTrueGGMeson = (TH1D*)fHistoMCMesonEffiPt->Clone(nameGGFrac.Data());
     fHistoMCRAWYieldTrueGGMeson->Multiply(fMC_fMesonYieldsTrueGGFrac);
-    fHistoMCMesonEffiPt->Add(fHistoMCRAWYieldTrueGGMeson,-1.0); 
+    fHistoMCMesonEffiPt->Add(fHistoMCRAWYieldTrueGGMeson,-1.0);
+     /* cout<<"CalculateMesonEfficiencyWithoutGGCont"<<endl;
+    for (Int_t BiS = 0; BiS < fHistoMCMesonWithinAccepPt->GetNbinsX()+1; BiS++){
+        if(fHistoMCMesonWithinAccepPt->GetBinContent(BiS) == 0){
+            cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
+            fHistoMCMesonWithinAccepPt->SetBinError(BiS,1.);
+            fHistoMCMesonWithinAccepPt->SetBinContent(BiS,1.);
+            //fHistoMCMesonWithinAccepPt->Fill(BiS,1);
+        }
+    }*/
     fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPt,1.,1.,"B");
     fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
     for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
@@ -3134,7 +3208,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
     fHistoMCMesonDalitzPt->Write();
     fHistoMCMesonGGPt->Write();
     
-    fOutput2->WriteObject(fArrayBRPi0Meson,"fArrayBRPi0Meson");
+    fOutput2->WriteObject(fArrayBRMeson,"fArrayBRMeson");
     fEventQuality->Write();
     fOutput2->Write();
     fOutput2->Close();
@@ -3215,7 +3289,7 @@ void Initialize( TString setPi0, Int_t numberOfBins){
     fArrayIParametersBins->AddAt(fColumn,2);
     fArrayIParametersBins->AddAt(fRow,3);
 
-    fArrayBRPi0Meson	            = new TArrayD(4); //0: Pi0->GG BR DPG, 1: Pi0->eeG BR DPG, 2: Pi0->GG BR MC , 3: Pi0->eeG BR MC
+    fArrayBRMeson	            = new TArrayD(4); //0: Pi0->GG BR DPG, 1: Pi0->eeG BR DPG, 2: Pi0->GG BR MC , 3: Pi0->eeG BR MC
     fFullPt                         = new Double_t[2]; fFullPt[0] = 0.4; fFullPt[1] = 15.;
     fMesonCurIntRange               = new Double_t[2];
     fMesonCurIntRangeWide           = new Double_t[2];

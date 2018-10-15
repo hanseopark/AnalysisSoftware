@@ -86,8 +86,8 @@ function GiveBinningDalitz5TeV2017()
 		    echo "Pi0 Binning was not set correctly. Please try again.";
 		    correctPi0=0
 		fi
-+        echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV), 10 (14 GeV)"
- 	read answer
+        echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV), 10 (14 GeV)"
+        read answer
 		if [ $answer = 7 ]; then
 		    echo "7 Bins --> Max p_T = 4.4 GeV ...";
 		    correctEta=1
