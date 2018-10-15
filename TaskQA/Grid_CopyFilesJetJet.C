@@ -18,7 +18,7 @@
 #include <iostream>
 #include <fstream>
 
-void ChangeStrucToStd(TString nameInputFile, TString namefileOutput, TString nameInputList);
+//void ChangeStrucToStd(TString nameInputFile, TString namefileOutput, TString nameInputList);
 Bool_t copyAlien2Local(TString loc, TString rem);
 Bool_t readin(TString fileRuns, std::vector<TString> &vec){
     cout << Form("Reading from %s...", fileRuns.Data()) << endl;
@@ -354,7 +354,7 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
                       fFile->Close();
                       delete fFile;
 
-                      ChangeStrucToStd(fPathTemp.Data(),fPathTemp.Data(),Files[k].Data());
+                      //ChangeStrucToStd(fPathTemp.Data(),fPathTemp.Data(),Files[k].Data());
                       mergeBins[k] += Form(" %s",fPathTemp.Data());
                     }
                     else{
@@ -429,7 +429,7 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
             }
 
             if(copyAlien2Local(fPathGrid,fPathTemp)){
-              ChangeStrucToStd(fPathTemp.Data(),fPathTemp.Data(),Files[k].Data());
+              //ChangeStrucToStd(fPathTemp.Data(),fPathTemp.Data(),Files[k].Data());
               for(Int_t iM=0; iM<nMerge; iM++){
                 it = find( mergeVec[iM].begin(), mergeVec[iM].end(), i);
                 if( it!=mergeVec[iM].end() ) mergeSets[iM][k] += Form(" %s/%s_%s.root", fPathLocal.Data(), DataSets[i].Data(), Files[k].Data());
@@ -474,50 +474,50 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
 
 
 
-void ChangeStrucToStd(TString nameInputFile, TString namefileOutput, TString nameInputList){
+//void ChangeStrucToStd(TString nameInputFile, TString namefileOutput, TString nameInputList){
 
-   TFile *fileInput = new TFile(nameInputFile.Data());
-   cout << fileInput << endl;
+//   TFile *fileInput = new TFile(nameInputFile.Data());
+//   cout << fileInput << endl;
 
-   TList *listInput =(TList*)fileInput->Get(nameInputList.Data());
-   if (listInput == NULL){
-      return;
-   }else listInput->SetOwner();
+//   TList *listInput =(TList*)fileInput->Get(nameInputList.Data());
+//   if (listInput == NULL){
+//      return;
+//   }else listInput->SetOwner();
 
-   TObjArray *rArr = nameInputList.Tokenize("_");
-   TObjString* rString = (TObjString*)rArr->At(0);
-   TString string = rString->GetString();
+//   TObjArray *rArr = nameInputList.Tokenize("_");
+//   TObjString* rString = (TObjString*)rArr->At(0);
+//   TString string = rString->GetString();
 
-   TFile *fileOutput = new TFile(namefileOutput,"RECREATE");
-   TList *listOutput =(TList*)fileOutput->Get(string.Data());
-   Bool_t kNewList = kFALSE;
-   if (!listOutput){
-      kNewList = kTRUE;
-      listOutput = new TList();
-      listOutput->SetName(string.Data());
-   }
+//   TFile *fileOutput = new TFile(namefileOutput,"RECREATE");
+//   TList *listOutput =(TList*)fileOutput->Get(string.Data());
+//   Bool_t kNewList = kFALSE;
+//   if (!listOutput){
+//      kNewList = kTRUE;
+//      listOutput = new TList();
+//      listOutput->SetName(string.Data());
+//   }
 
-   for(Int_t i = 0; i<listInput->GetSize(); i++){
-      TList *listToSave = (TList*)listInput->At(i);
-      TString dirname = listToSave->GetName();
-      cout<<dirname<<endl;
-      if(listToSave){
-         cout<<"found"<<endl;
-         listOutput->Add(listToSave);
-      }
-   }
+//   for(Int_t i = 0; i<listInput->GetSize(); i++){
+//      TList *listToSave = (TList*)listInput->At(i);
+//      TString dirname = listToSave->GetName();
+//      cout<<dirname<<endl;
+//      if(listToSave){
+//         cout<<"found"<<endl;
+//         listOutput->Add(listToSave);
+//      }
+//   }
 
-   listOutput->Write("",TObject::kSingleKey);
-   delete listOutput;
-   fileOutput->Close();
-   delete fileOutput;
+//   listOutput->Write("",TObject::kSingleKey);
+//   delete listOutput;
+//   fileOutput->Close();
+//   delete fileOutput;
 
-   delete listInput;
-   fileInput->Close();
-   delete fileInput;
+//   delete listInput;
+//   fileInput->Close();
+//   delete fileInput;
 
-   return;
-}
+//   return;
+//}
 
 Bool_t copyAlien2Local(TString loc, TString rem){
    TString sl(Form("alien://%s", loc.Data()));
