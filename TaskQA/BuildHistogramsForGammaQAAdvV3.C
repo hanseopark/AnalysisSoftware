@@ -315,6 +315,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         PhotonQA                    = (TTree*)treeList->FindObject("PhotonQA");
     else{
         PhotonQA                    = (TTree*)f->Get("PhotonQA");
+        if(!PhotonQA)
+            PhotonQA                = (TTree*)f->Get("PhotonQA_%s",fCutSelection.Data());
         cout << "loading TTree directly from file instead of TList" << endl;
     }
     PhotonQA->SetBranchAddress("pt",&photonPt);
