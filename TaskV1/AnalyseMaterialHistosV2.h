@@ -46,6 +46,7 @@ TH1F *histoRinPtBinMCFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
 Double_t nconvInRangeDataFine[nBinsPtFine];
 Double_t dataStatErrorGasFine[nBinsPtFine];
 Double_t dataStatRelErrorGasFine[nBinsPtFine];
+
 TH1D * histoIntegralGasDataFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
                                                   NULL, NULL, NULL, NULL, NULL,
                                                   NULL, NULL, NULL, NULL, NULL
@@ -116,6 +117,23 @@ TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL,
                                          NULL, NULL, NULL, NULL,
                                          NULL, NULL, NULL, NULL
                                         };
+TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL
+                                        };
+
+Double_t nConvInRangeFromPtMinSecSubtractedData[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedDataRelErr[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedMC[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedMCRelErr[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedDataToGas[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedMCToGas[nBinsR][nBinsPtFine];
+Double_t weightInRangeFromPtMinSecSubtracted[nBinsR][nBinsPtFine];
+
+Double_t nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[nBinsR][nBinsPtFine];
+Double_t weightInRangeFromPtMinSecSubtractedRelErr[nBinsR][nBinsPtFine];
+
 
 const int nBinsZ                  = 12;
 Double_t arrayZBins[13]           = {10.,15.,20.,40.,40.,60.,60.,80.,120.,120.,200.,200.,200};
