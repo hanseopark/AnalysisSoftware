@@ -49,7 +49,7 @@ function GiveBinningPbPb5TeV()
     if [ $DOPI0 -eq 1 ] ; then
         echo "How many p_T bins do you want to use for Pi0? up to 24(20GeV)";
         read answer
-        if [ "$answer" -le "24" ]; then
+        if [ "$answer" -le "34" ]; then
             CORRECTPI0=1
             BINSPTPI0=$answer
         else

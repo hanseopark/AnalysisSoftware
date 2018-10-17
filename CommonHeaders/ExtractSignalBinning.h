@@ -701,10 +701,10 @@
                     return 3;
                 } else if (mode == 2 || mode == 13){
                     scaleFac    = 5;
-                    return 8;
+                    return 20;
                 } else if (mode == 4 || mode == 12 ){
                     scaleFac    = 1.5;
-                    return 18;
+                    return 23;
                 } else
                     return 4;
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
@@ -1088,9 +1088,9 @@
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
                 if (mode == 2 || mode == 13){
-                    return 8;
+                    return 15;
                 }else if (mode == 4 || mode == 12 ){
-                    return 10;
+                    return 16;
                 }else
                     return 1;
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
@@ -1423,15 +1423,23 @@
                 } else if ( mode == 1 ){
                     startPtBin      = 2;
                 } else if ( mode == 2 || mode == 13 ){
-                    startPtBin      = 4;
+                    startPtBin      = 5;
+                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0 || centrality.CompareTo("10-20%") == 0){
+                      startPtBin = 6;
+                    }
                 } else if ( mode == 3 ){
                     startPtBin      = 3;
                 } else if ( mode == 4 || mode == 12 ){
+                  //cout << "centrality.Data() = " << centrality.Data() << endl;
                     cout << minECut << endl;
                     if (minECut.Atoi() != 3)
                         startPtBin      = 6;
                     else
                         startPtBin      = 6;
+                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0
+                        || centrality.CompareTo("10-20%") == 0){
+                      startPtBin = 11;
+                    }
                 } else if ( mode == 5){
                     startPtBin      = 4;
                 } else if (mode == 20){
@@ -1621,9 +1629,7 @@
                     else
                         startPtBin     = 5;
                 } else if ( mode == 3 ){
-                    if (energy.CompareTo("pPb_5.023TeVCent") == 0)
-                        startPtBin     = 5;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg != 4)
+                    if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && specialTrigg != 4)
                         startPtBin     = 4;
                     else if (specialTrigg == 4)
                         startPtBin     = 8;
@@ -2437,12 +2443,12 @@
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
                 } else if ( mode == 2 || mode == 13 ) {
-                    maxNBins = 24;
+                    maxNBins = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins = 24;
+                    maxNBins = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
                     }
@@ -4672,11 +4678,12 @@
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaPbPb5TeVPtRebin[i];
                     }
                 } else{
-                    fStartPtBin     = GetStartBin("Pi0", energy, modi, specialTrigg, clusterCutSelection(GetClusterMinEnergyCutPosition(clusterCutSelection),1));
+                    fStartPtBin     = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
                     if (fNBinsPt > 12 && isDCA) {
                         cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
                         fNBinsPt        = 12;
                     }
+                    cout << "calling GetOptimumNColumnsAndRows " <<  fNBinsPt << " , " << fStartPtBin << endl;
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {

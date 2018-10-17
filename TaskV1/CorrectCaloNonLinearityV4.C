@@ -780,12 +780,13 @@ void CorrectCaloNonLinearityV4(
     if (select.Contains("LHC10-Calo"))      minPlotY = 0.9;
     if (select.Contains("LHC12-JetJet"))    minPlotY = 0.93;
     if (select.Contains("LHC16"))           minPlotY = 0.89;
+    if (select.Contains("LHC15o"))           minPlotY = 0.8;
 
     Double_t minMass  = 0.89;
     Double_t maxMass  = 1.1;
     if (mode == 4 || mode == 12){
         minMass  = 0.87;
-        maxMass  = 1.07;
+        maxMass  = 1.25;
     } else if ((mode == 2 || mode == 13) && select.Contains("LHC16")){
         minMass  = 0.89;
         maxMass  = 1.14;
@@ -1024,8 +1025,11 @@ void CorrectCaloNonLinearityV4(
     canvasMassRatioMCData->SetLogx(1);
     canvasMassRatioMCData->SetLogy(0);
 
+    Double_t maxPlotY = 1.05;
+    if (select.Contains("LHC15o"))           maxPlotY = 1.2;
+
     TH2F * histoDummyDataMCRatio;
-    histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minPlotY, 1.05);
+    histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minPlotY, maxPlotY);
     if(mode == 2 || mode == 3) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     else SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
@@ -1230,7 +1234,8 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
             mesonAmplitudeMin = mesonAmplitude*90./100.;
     // special setting for EMC
     } else if (mode == 4 || mode == 12){
-        mesonAmplitudeMin = mesonAmplitude*80./100.;
+        mesonAmplitudeMin = mesonAmplitude*20./100.;
+        fitRangeMin = 0.08;
     // special setting for PHOS
     } else if (mode == 5){
         if (ptcenter > 1.)
