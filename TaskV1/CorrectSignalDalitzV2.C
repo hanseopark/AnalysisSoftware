@@ -516,32 +516,33 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 				Double_t ptStart = histoYieldTrueSecFracMeson->GetXaxis()->GetBinLowEdge(i);
 				Double_t ptEnd = histoYieldTrueSecFracMeson->GetXaxis()->GetBinUpEdge(i);
 				Double_t binWidth = ptEnd-ptStart;
-				Double_t secFrac = fitDefaultSecFrac->Integral(ptStart, ptEnd, resultSecFrac->GetParams()) / binWidth;
+				Double_t secFrac = fitDefaultSecFrac->Integral(ptStart, ptEnd) / binWidth;
+                                //Double_t secFrac = fitDefaultSecFrac->Integral(ptStart, ptEnd, resultSecFrac->GetParams()) / binWidth;
 				Double_t errorSecFrac = fitDefaultSecFrac->IntegralError(ptStart, ptEnd, resultSecFrac->GetParams(), resultSecFrac->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMeson->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMeson->SetBinError(i, errorSecFrac);
 				
-				secFrac = fitDefaultSecFracWide->Integral(ptStart, ptEnd, resultSecFracWide->GetParams()) / binWidth;
+				secFrac = fitDefaultSecFracWide->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitDefaultSecFracWide->IntegralError(ptStart, ptEnd, resultSecFracWide->GetParams(), resultSecFracWide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMesonWide->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMesonWide->SetBinError(i, errorSecFrac);
 				
-				secFrac = fitDefaultSecFracNarrow->Integral(ptStart, ptEnd, resultSecFracNarrow->GetParams()) / binWidth;
+				secFrac = fitDefaultSecFracNarrow->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitDefaultSecFracNarrow->IntegralError(ptStart, ptEnd, resultSecFracNarrow->GetParams(), resultSecFracNarrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMesonNarrow->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMesonNarrow->SetBinError(i, errorSecFrac);
 				
-				secFrac = fitDefaultSecFracFromK0->Integral(ptStart, ptEnd, resultSecFracFromK0->GetParams()) / binWidth;
+				secFrac = fitDefaultSecFracFromK0->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitDefaultSecFracFromK0->IntegralError(ptStart, ptEnd, resultSecFracFromK0->GetParams(), resultSecFracFromK0->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMeson->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMeson->SetBinError(i, errorSecFrac);
 				
-				secFrac = fitDefaultSecFracFromK0Wide->Integral(ptStart, ptEnd, resultSecFracFromK0Wide->GetParams()) / binWidth;
+				secFrac = fitDefaultSecFracFromK0Wide->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitDefaultSecFracFromK0Wide->IntegralError(ptStart, ptEnd, resultSecFracFromK0Wide->GetParams(), resultSecFracFromK0Wide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMesonWide->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMesonWide->SetBinError(i, errorSecFrac);
 				
-				secFrac = fitDefaultSecFracFromK0Narrow->Integral(ptStart, ptEnd, resultSecFracFromK0Narrow->GetParams()) / binWidth;
+				secFrac = fitDefaultSecFracFromK0Narrow->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitDefaultSecFracFromK0Narrow->IntegralError(ptStart, ptEnd, resultSecFracFromK0Narrow->GetParams(), resultSecFracFromK0Narrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMesonNarrow->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMesonNarrow->SetBinError(i, errorSecFrac);
@@ -571,32 +572,32 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 				Double_t ptStart = histoYieldTrueSecFracMeson->GetXaxis()->GetBinLowEdge(i);
 				Double_t ptEnd = histoYieldTrueSecFracMeson->GetXaxis()->GetBinUpEdge(i);
 				Double_t binWidth = ptEnd-ptStart;
-				Double_t secFrac = fitpPbSecFrac->Integral(ptStart, ptEnd, resultpPbSecFrac->GetParams()) / binWidth;
+				Double_t secFrac = fitpPbSecFrac->Integral(ptStart, ptEnd) / binWidth;
 				Double_t errorSecFrac = fitpPbSecFrac->IntegralError(ptStart, ptEnd, resultpPbSecFrac->GetParams(), resultpPbSecFrac->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMeson->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMeson->SetBinError(i, errorSecFrac);
 					
-				secFrac = fitpPbSecFracWide->Integral(ptStart, ptEnd, resultpPbSecFracWide->GetParams()) / binWidth;
+				secFrac = fitpPbSecFracWide->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitpPbSecFracWide->IntegralError(ptStart, ptEnd, resultpPbSecFracWide->GetParams(), resultpPbSecFracWide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMesonWide->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMesonWide->SetBinError(i, errorSecFrac);
 					
-				secFrac = fitpPbSecFracNarrow->Integral(ptStart, ptEnd, resultpPbSecFracNarrow->GetParams()) / binWidth;
+				secFrac = fitpPbSecFracNarrow->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitpPbSecFracNarrow->IntegralError(ptStart, ptEnd, resultpPbSecFracNarrow->GetParams(), resultpPbSecFracNarrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracMesonNarrow->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracMesonNarrow->SetBinError(i, errorSecFrac);
 					
-				secFrac = fitpPbSecFracFromK0->Integral(ptStart, ptEnd, resultpPbSecFracFromK0->GetParams()) / binWidth;
+				secFrac = fitpPbSecFracFromK0->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitpPbSecFracFromK0->IntegralError(ptStart, ptEnd, resultpPbSecFracFromK0->GetParams(), resultpPbSecFracFromK0->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMeson->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMeson->SetBinError(i, errorSecFrac);
 					
-				secFrac = fitpPbSecFracFromK0Wide->Integral(ptStart, ptEnd, resultpPbSecFracFromK0Wide->GetParams()) / binWidth;
+				secFrac = fitpPbSecFracFromK0Wide->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitpPbSecFracFromK0Wide->IntegralError(ptStart, ptEnd, resultpPbSecFracFromK0Wide->GetParams(), resultpPbSecFracFromK0Wide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMesonWide->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMesonWide->SetBinError(i, errorSecFrac);
 					
-				secFrac = fitpPbSecFracFromK0Narrow->Integral(ptStart, ptEnd, resultpPbSecFracFromK0Narrow->GetParams()) / binWidth;
+				secFrac = fitpPbSecFracFromK0Narrow->Integral(ptStart, ptEnd) / binWidth;
 				errorSecFrac = fitpPbSecFracFromK0Narrow->IntegralError(ptStart, ptEnd, resultpPbSecFracFromK0Narrow->GetParams(), resultpPbSecFracFromK0Narrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 				histoYieldTrueSecFracFromK0SMesonNarrow->SetBinContent(i, secFrac);
 				histoYieldTrueSecFracFromK0SMesonNarrow->SetBinError(i, errorSecFrac);

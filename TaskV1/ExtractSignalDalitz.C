@@ -1979,7 +1979,7 @@ void FillSignalInvMassW0TruePi0HistosArray(){
 void FillGGInvMassW0TruePi0HistosArray(){
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         fNameHistoGGInvMassW0TruePi0 = Form("Mapping_GG_InvMass_WOTruePi0_Pt_Bin%02d", iPt);    
-        if(fHistoMappingGGInvMassW0TruePi0PtBins[iPt]!= NULL){
+        if(fHistoMappingGGInvMassW0TruePi0PtBins[iPt]!=NULL){
             delete fHistoMappingGGInvMassW0TruePi0PtBins[iPt];
             fHistoMappingGGInvMassW0TruePi0PtBins[iPt]=NULL;
         }
@@ -3523,6 +3523,7 @@ void Initialize( TString setPi0, Int_t numberOfBins){
         fHistoMappingTrueGGBckInvMassPtBins[i]      = NULL;
         fHistoMappingTrueContBckInvMassPtBins[i]    = NULL;
         fHistoMappingSignalInvMassW0TruePi0PtBins[i]= NULL;
+        fHistoMappingGGInvMassW0TruePi0PtBins[i]    = NULL;
         
         fHistoMappingGGInvMassPtBin[i]              = NULL;
         fHistoMappingEEInvMassPtBin[i]              = NULL;
