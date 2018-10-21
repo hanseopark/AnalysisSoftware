@@ -2936,9 +2936,9 @@ void PrimaryTrackQA_Runwise(
     
     if (doHistsForEverySet) {
         TBox *boxLabel              = new TBox(1.37,0.7,1.78,0.83);
-        boxLabel->SetFillStyle(0);boxLabel->SetFillColor(0);boxLabel->SetLineColor(1);boxLabel->SetLineWidth(0.6);
+        boxLabel->SetFillStyle(0);boxLabel->SetFillColor(0);boxLabel->SetLineColor(1);boxLabel->SetLineWidth(1);
         TBox *boxLabel2             = new TBox(-0.4,51,6.5,56.5);
-        boxLabel2->SetFillStyle(0);boxLabel2->SetFillColor(0);boxLabel2->SetLineColor(1);boxLabel2->SetLineWidth(0.6);
+        boxLabel2->SetFillStyle(0);boxLabel2->SetFillColor(0);boxLabel2->SetLineColor(1);boxLabel2->SetLineWidth(1);
         
         TString outputDirDataSet;
         

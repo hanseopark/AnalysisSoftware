@@ -203,19 +203,11 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 histoSignalDataInvMassPtBin[iPt]->Rebin(4);
                 histoSignalMCInvMassPtBin[iPt]->Rebin(4);
             }
-            Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(
-                histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
-                histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
-            Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(
-                histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
-                histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
+            Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
+            Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
             if (j == 2){
-                integralData = histoSignalDataInvMassPtBin[iPt]->Integral(
-                    histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
-                    histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
-                integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(
-                    histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
-                    histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
+                integralData = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
+                integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
             }
 
             if (integralData < 0 || integralMC < 0 || j == 1){

@@ -4560,10 +4560,9 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
             // accepting fits, if everything went fine (i.e. fitstatus = 0) of if only improve had problems (i.e. fitstatus >= 1000)
 
             for (Int_t i = fFitStartBin; i < fNBinsPt+1; i++) {
-
+                fitToRatio->SetParameters(fitToRatioResult->GetParams());
                 binContent                  = fitToRatio->Integral(         pileupCorrectionFactor->GetXaxis()->GetBinLowEdge(i),
-                                                                            pileupCorrectionFactor->GetXaxis()->GetBinUpEdge(i),
-                                                                            fitToRatioResult->GetParams()) / pileupCorrectionFactor->GetBinWidth(i);
+                                                                            pileupCorrectionFactor->GetXaxis()->GetBinUpEdge(i)) / pileupCorrectionFactor->GetBinWidth(i);
 
                 binError                    = fitToRatio->IntegralError(    pileupCorrectionFactor->GetXaxis()->GetBinLowEdge(i),
                                                                             pileupCorrectionFactor->GetXaxis()->GetBinUpEdge(i),
