@@ -222,15 +222,15 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Width_t  widthLineNLO                           = 2.;
 
     // pPb settings
-    TString namepPbCent[5]                         = {"0-20%", "20-40%", "40-60%", "60-100%", "0-100%"};
-    TString namepPbCentOut[5]                      = {"0020", "2040", "4060", "60100", "0100"};
-    TString namepPbCentForNColl[5]                      = {"0020_V0A", "2040_V0A", "4060_V0A", "60100_V0A", "0100_V0A"};
-    TString labelXTALICEpPb[5]                         = {"ALICE prel. (0-20% p-Pb 5.02TeV)", "ALICE prel. (20-40% p-Pb 5.02TeV)", "ALICE prel. (40-60% p-Pb 5.02TeV)", "ALICE prel. (60-100% p-Pb 5.02TeV)", "ALICE prel. (0-100% p-Pb 5.02TeV)"};
-    TString labelALICEpPb[5]                           = {"ALICE prel. (0-20%)", "ALICE prel. (20-40%)", "ALICE prel. (40-60%)", "ALICE prel. (60-100%)", "ALICE prel. (0-100%)"};
-    Double_t xLegALICEXTpPb[5]                         = {0.43, 0.445, 0.46, 0.475, 0.49};
-    Double_t yLegALICEXTpPb[5]                         = {0.88, 0.86, 0.84, 0.82, 0.80};
-    TString nameLabelScalepPb[5]                   = {"x 10^{1}", "x 10^{0}", "x 10^{-2}", "x 10^{-3}", "x 10^{-4}"};
-    Double_t scaleFacPlotApPb[5]                            = {10e8, 10e6, 10e4, 10e2, 1};
+    TString namepPbCent[5]                          = {"0-20%", "20-40%", "40-60%", "60-100%", "0-100%"};
+    TString namepPbCentOut[5]                       = {"0020", "2040", "4060", "60100", "0100"};
+    TString namepPbCentForNColl[5]                  = {"0020_V0A", "2040_V0A", "4060_V0A", "60100_V0A", "0100_V0A"};
+    TString labelXTALICEpPb[5]                      = {"ALICE prel. (0-20% p-Pb 5.02TeV)", "ALICE prel. (20-40% p-Pb 5.02TeV)", "ALICE prel. (40-60% p-Pb 5.02TeV)", "ALICE prel. (60-100% p-Pb 5.02TeV)", "ALICE prel. (0-100% p-Pb 5.02TeV)"};
+    TString labelALICEpPb[5]                        = {"ALICE prel. (0-20%)", "ALICE prel. (20-40%)", "ALICE prel. (40-60%)", "ALICE prel. (60-100%)", "ALICE prel. (0-100%)"};
+    Double_t xLegALICEXTpPb[5]                      = {0.43, 0.445, 0.46, 0.475, 0.49};
+    Double_t yLegALICEXTpPb[5]                      = {0.88, 0.86, 0.84, 0.82, 0.80};
+    TString nameLabelScalepPb[5]                    = {"x 10^{1}", "x 10^{0}", "x 10^{-2}", "x 10^{-3}", "x 10^{-4}"};
+    Double_t scaleFacPlotApPb[5]                    = {10e8, 10e6, 10e4, 10e2, 1};
 
 
     Color_t colorCombpPb[5];
@@ -248,10 +248,10 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         nCollpPb5[ncent]                               = GetNCollFromName(namepPbCentForNColl[ncent].Data(),"pPb_5.023TeV");
     }
 
-    TString nameCentspPb8TeVATLAS                         = "0-100%";
-    TString nameCentspPb8TeVATLASOut                      = "0100";
+    TString nameCentspPb8TeVATLAS                       = "0-100%";
+    TString nameCentspPb8TeVATLASOut                    = "0100";
     TString labelXTpPb8TeVATLAS                         = "ATLAS prel. (0-100% p-Pb 8.16TeV)";
-    TString labelpPb8TeVATLAS                         = "ATLAS prel. (0-100%)";
+    TString labelpPb8TeVATLAS                           = "ATLAS prel. (0-100%)";
     Double_t xLegpPb8TeVATLASXT                         = 0.65;
     Double_t yLegpPb8TeVATLASXT                         = 0.58;
     Color_t colorCombpPb8ATLAS   = GetDefaultDifferentSystemsAndCents(nameCentspPb8TeVATLAS.Data(),"pPb_8.16TeV", "ATLAS");

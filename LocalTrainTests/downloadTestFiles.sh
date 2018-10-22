@@ -1,10 +1,14 @@
-dataOrMC=MC #data or MC
-ESDOrAOD=AOD #ESD or AOD
-energy=pPb_5TeV
+dataOrMC=data #data or MC
+ESDOrAOD=ESD #ESD or AOD
+#energy=pPb_5TeV
+energy=pp_5TeV
 
 # set these if you want to download data
-yearData=2016
-periodData=LHC16q
+#yearData=2016
+#periodData=LHC16q
+#pass=pass1_CENT_woSDD
+yearData=2017
+periodData=LHC17p
 pass=pass1_CENT_woSDD
 
 # set these if you want to download MC
@@ -14,7 +18,8 @@ periodMCshort=LHC18f3_2
 AODFILTER=202
 
 # must be set either way
-RUN=265500
+#RUN=265500
+RUN=282078
 downloadFile=root_archive.zip
 
 RUNDL=$RUN
