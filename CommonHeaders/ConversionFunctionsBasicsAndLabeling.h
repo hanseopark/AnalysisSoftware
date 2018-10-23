@@ -5298,6 +5298,8 @@
             return "EPOSLHC";
         } else if (MCname.CompareTo("LHC17f2b") == 0 || MCname.CompareTo("LHC18f3") == 0 ){
             return "DPMJet";
+        } else if (MCname.CompareTo("LHC16P1Pyt8") == 0 || MCname.CompareTo("LHC17P1Pyt8") == 0 || MCname.CompareTo("LHC18P1Pyt8") == 0 ){
+            return "Pythia 8.2, Monash2013";
         } else {
             return "undefined";
         }
