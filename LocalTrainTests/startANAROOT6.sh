@@ -5,6 +5,7 @@ intMCrunning=0 #0: data, 1: MC, 2: JJ MC
 collsys=2 #0: pp, 1: PbPb, 2: pPb
 runPeriod="LHC16q"
 runPeriodData="LHC16q"
+isRun2=kTRUE
 dataType=ESD #ESD or AOD
 runMode="QAPCHMS" #switch for which tasks to run: QA (photon and cluster QA), P (PCM), C (Calo [EMC, DMC, PHOS]), H (hybrid PCM-Calo), M (merged EMC), S (skimming ESD or AOD)
 recoPassData=1
@@ -15,4 +16,4 @@ numLocalFiles=1
 
 mkdir -p $energy/$runPeriod/$runMode$dataType
 cd $energy/$runPeriod/$runMode$dataType
-aliroot -x -l -b -q '../../../runLocalAnalysisROOT6.C('$intMCrunning','$collsys', "'$runPeriod'", "'$runPeriodData'", "'$dataType'", "'$runMode'", '$recoPassData', "'$tenderPassData'", '$useCorrTask', "'$aodConversionCutnumber'", '$numLocalFiles')'
+aliroot -x -l -b -q '../../../runLocalAnalysisROOT6.C('$intMCrunning','$collsys', "'$runPeriod'", "'$runPeriodData'", "'$dataType'", "'$runMode'", '$recoPassData', "'$tenderPassData'", '$useCorrTask', "'$aodConversionCutnumber'", '$isRun2', '$numLocalFiles')'
