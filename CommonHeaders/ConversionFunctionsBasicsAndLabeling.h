@@ -5298,6 +5298,8 @@
             return "EPOSLHC";
         } else if (MCname.CompareTo("LHC17f2b") == 0 || MCname.CompareTo("LHC18f3") == 0 ){
             return "DPMJet";
+        } else if (MCname.Contains("LHC173l") == 0 ){
+            return "Pythia 8.2";
         } else {
             return "undefined";
         }

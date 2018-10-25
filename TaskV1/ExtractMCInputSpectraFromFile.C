@@ -654,13 +654,26 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
       TFile* fileDataInput          = new TFile(nameExternalInput.Data());
       TH1D* fHistoChargedPionData   = NULL;
       TH1D* fHistoChargedKaonData   = NULL;
-      if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
+      if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0
+          || optionEnergy.Contains("5TeV") ){
         TString opt = "QNRMEI";
         fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat2760GeV");
         if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat7TeV");
         if( optionEnergy.CompareTo("8TeV") == 0 ){
           opt = "QNRME";
           fHistoChargedPionData       = (TH1D*)fileDataInput->Get(Form("histPion8_%s",optionEnergy.Data()));
+        }
+        if( optionEnergy.Contains("5TeV") ){
+            opt = "QNRME";
+            TList *folderSummedPion = (TList*)fileDataInput->Get("Summed_Pion");
+            fHistoChargedPionData       = (TH1D*)folderSummedPion->FindObject("hSpectraSummedPion_pp_Combined_MB");
+            fHistoChargedPionData->Scale(0.5*scaling);
+            for (Int_t i = 1; i < fHistoChargedPionData->GetNbinsX()+1 ; i++){
+                Double_t newBinContent = fHistoChargedPionData->GetBinContent(i)/fHistoChargedPionData->GetBinCenter(i);
+                Double_t newBinError = fHistoChargedPionData->GetBinError(i)/fHistoChargedPionData->GetBinCenter(i);
+                fHistoChargedPionData->SetBinContent(i,newBinContent);
+                fHistoChargedPionData->SetBinError(i,newBinError);
+            }
         }
 
         TF1* fitChargedPions        = FitObject("l","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,opt);
@@ -672,6 +685,19 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat2760GeV");
         if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat7TeV");
         if( optionEnergy.CompareTo("8TeV") == 0 ) fHistoChargedKaonData       = (TH1D*)fileDataInput->Get(Form("histKaon8_%s",optionEnergy.Data()));
+        if( optionEnergy.Contains("5TeV") ){
+            opt = "QNRME";
+            TList *folderSummedKaon = (TList*)fileDataInput->Get("Summed_Kaon");
+            fHistoChargedKaonData       = (TH1D*)folderSummedKaon->FindObject("hSpectraSummedKaon_pp_Combined_MB");
+            fHistoChargedKaonData->Scale(0.5*scaling);
+            for (Int_t i = 1; i < fHistoChargedKaonData->GetNbinsX()+1 ; i++){
+                Double_t newBinContent = fHistoChargedKaonData->GetBinContent(i)/fHistoChargedKaonData->GetBinCenter(i);
+                Double_t newBinError = fHistoChargedKaonData->GetBinError(i)/fHistoChargedKaonData->GetBinCenter(i);
+                fHistoChargedKaonData->SetBinContent(i,newBinContent);
+                fHistoChargedKaonData->SetBinError(i,newBinError);
+            }
+        }
+
         TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,opt);
         TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);
 
