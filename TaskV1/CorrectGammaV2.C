@@ -43,10 +43,10 @@
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
-#include "RooUnfold.h"
-#include "RooUnfoldResponse.h"
-#include "RooUnfoldBayes.h"
-#include "RooUnfoldBinByBin.h"
+#include "../RooUnfold/src/RooUnfold.h"
+#include "../RooUnfold/src/RooUnfoldResponse.h"
+#include "../RooUnfold/src/RooUnfoldBayes.h"
+#include "../RooUnfold/src/RooUnfoldBinByBin.h"
 #include "CorrectGammaV2.h"
 
 //*********************************************************************************************************
@@ -1110,9 +1110,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             Double_t binContent                                     = 0.;
             Double_t binError                                       = 0.;
             for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt->GetNbinsX()+1; i++) {
+                histoRatioWithWithoutPileUpFit->SetParameters(fitResultPileup->GetParams());
                 binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
-                                                                                                               histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
-                                                                                                               fitResultPileup->GetParams()) /
+                                                                                                               histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i)) /
                                                                                                                histoPileUpCorrectionFactor_Pt->GetBinWidth(i);
                 binError                                            = histoRatioWithWithoutPileUpFit->IntegralError(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
                                                                                                                     histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
@@ -1136,9 +1136,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             binContent                                              = 0.;
             binError                                                = 0.;
             for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt_OrBin->GetNbinsX()+1; i++) {
+                histoRatioWithWithoutPileUpFit->SetParameters(fitResultPileup->GetParams());
                 binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinLowEdge(i),
-                                                                                                               histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i),
-                                                                                                               fitResultPileup->GetParams()) /
+                                                                                                               histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i)) /
                                                                                                                histoPileUpCorrectionFactor_Pt_OrBin->GetBinWidth(i);
                 binError                                            = histoRatioWithWithoutPileUpFit->IntegralError(histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinLowEdge(i),
                                                                                                                     histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i),

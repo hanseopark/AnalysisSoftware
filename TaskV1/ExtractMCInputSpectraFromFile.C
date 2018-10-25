@@ -191,6 +191,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                                            30.0, 35.0, 40.0, 45.0, 50.0};
     Int_t nBinsX                        = 64;
 
+
+
     // ------------------------------- Read MC information ---------------------------------------------------
     TList *MCContainer                  = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelection.Data()));
     // ----------- read pi0 -----------------------------------
@@ -331,7 +333,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoMCLambdaPtRebinned->Rebin(nBinsX,"fHistoMCLambdaPtRebinned2",ptBinning);
         fHistoMCLambdaPtRebinned        = (TH1D*)gDirectory->Get("fHistoMCLambdaPtRebinned2");
     }
-
+    cout << __LINE__  << endl;
     // ----------- secondary pions from K0s, K0l, Lambda ------
     //---> K0s
     TH2D* fHistoMCSecPi0PtSource                = (TH2D*)MCContainer->FindObject("MC_SecPi0_Pt_Source");
@@ -357,10 +359,12 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                                                                                                 fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2.),"e");
     TH1D* fHistoMCSecPi0FromLambdaPtRebinned    = (TH1D*)fHistoMCSecPi0FromLambdaPt->Clone("MCSecPi0FromLambdaRebinned");
     fHistoMCSecPi0FromLambdaPtRebinned->Rebin(nBinsX,"MCSecPi0FromLambdaRebinned2",ptBinning);
+    fHistoMCSecPi0FromLambdaPtRebinned          = (TH1D*)gDirectory->Get("MCSecPi0FromLambdaRebinned2");
+
     TH1D* fHistoRatioPi0FromLambdaDivLambda     = NULL;
     if (fHistoMCLambdaPt){
         fHistoRatioPi0FromLambdaDivLambda       = (TH1D*)fHistoMCSecPi0FromLambdaPtRebinned->Clone("ratioPi0FromLambda");
-        fHistoRatioPi0FromLambdaDivLambda->Divide(fHistoMCSecPi0FromLambdaPtRebinned, fHistoMCLambdaPtRebinned);
+	fHistoRatioPi0FromLambdaDivLambda->Divide(fHistoMCSecPi0FromLambdaPtRebinned, fHistoMCLambdaPtRebinned);
     }
 
     // scale yield to per event quantities
@@ -410,7 +414,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     SetStyleTLatex( labelEnergyRatio, 0.04,4);
     TLatex *labelGeneratorRatio     = new TLatex(0.15,0.12,Form("%s",fGeneratorName.Data()));
     SetStyleTLatex( labelGeneratorRatio, 0.04,4);
-
+    cout << __LINE__  << endl;
     // build ratio eta/pi^0
     if (fHistoMCPi0Pt && fHistoMCEtaPt){
         fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivPi0");
@@ -452,7 +456,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
         canvasRatio->SaveAs(Form("%s/EtaToPi0_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
     }
-
+    cout << __LINE__ << endl;
     // build ratio eta/pi^0
     if (fHistoMCKPt && fHistoMCEtaPt){
         cout << "eta/Kch" << endl;
@@ -531,6 +535,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
         canvasRatio->SaveAs(Form("%s/K0ToK_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
     }
+
+    cout << __LINE__ << endl;
+
     // build ratio K^\pm/pi^\pm
     if ( fHistoMCKPt && fHistoMCPiPt){
         fHistoRatioMCKDivPi = (TH1D*)fHistoMCKPtRebinned->Clone("fHistoRatioMCKDivPi");
@@ -654,8 +661,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
       TFile* fileDataInput          = new TFile(nameExternalInput.Data());
       TH1D* fHistoChargedPionData   = NULL;
       TH1D* fHistoChargedKaonData   = NULL;
-      if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0
-          || optionEnergy.Contains("5TeV") ){
+      if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0|| optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.Contains("5TeV") ){
         TString opt = "QNRMEI";
         fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat2760GeV");
         if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat7TeV");
@@ -674,6 +680,12 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                 fHistoChargedPionData->SetBinContent(i,newBinContent);
                 fHistoChargedPionData->SetBinError(i,newBinError);
             }
+        }
+        if( optionEnergy.CompareTo("13TeV") == 0 ){
+            opt = "QNRME";
+            fHistoChargedPionData       = (TH1D*)fileDataInput->Get("hsys_pion_pp13_sum");
+            TString chargedPionHistoName = fHistoChargedPionData->GetName();
+            if ( chargedPionHistoName.Contains("sum") ) fHistoChargedPionData ->Scale(0.5);
         }
 
         TF1* fitChargedPions        = FitObject("l","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,opt);
@@ -697,6 +709,12 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                 fHistoChargedKaonData->SetBinError(i,newBinError);
             }
         }
+        if( optionEnergy.CompareTo("13TeV") == 0 ){
+            fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("hsys_kaon_pp13_sum");
+            TString chargedKaonHistoName = fHistoChargedKaonData->GetName();
+            if ( chargedKaonHistoName.Contains("sum")  ) fHistoChargedKaonData ->Scale(0.5);
+        }
+
 
         TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,opt);
         TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);

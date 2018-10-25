@@ -2494,7 +2494,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     dummyHisto->Draw();
 
     // search list for particle spectra
-    Width_t widthLinesBoxes                 = 1.4;
+    Width_t widthLinesBoxes                 = 1;
     TH1D* tempHist                          = NULL;
     TGraph* tempGraph                       = NULL;
     TGraphErrors* tempGraphErrs             = NULL;

@@ -154,17 +154,17 @@ void runLocalAnalysisROOT6(
         AliEmcalCorrectionTask * correctionTask = AliEmcalCorrectionTask::AddTaskEmcalCorrectionTask("defaultSetting");
         correctionTask->SelectCollisionCandidates(kPhysSel);
         if(intMCrunning==0)
-            correctionTask->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_p1.yaml");
+            correctionTask->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config.yaml");
         else
-            correctionTask->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_MC_p1.yaml");
+            correctionTask->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_MC.yaml");
         correctionTask->Initialize();
         taskNameSpecial                 = "S500A100";
         AliEmcalCorrectionTask * correctionTaskSpezial = AliEmcalCorrectionTask::AddTaskEmcalCorrectionTask(taskNameSpecial);
         correctionTaskSpezial->SelectCollisionCandidates(kPhysSel);
         if(intMCrunning==0)
-            correctionTaskSpezial->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_p1.yaml");
+            correctionTaskSpezial->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config.yaml");
         else
-            correctionTaskSpezial->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_MC_p1.yaml");
+            correctionTaskSpezial->SetUserConfigurationFilename("/home/nschmidt/alice/ali-master/AliPhysics/PWGGA/GammaConv/config/PWGGA_CF_config_MC.yaml");
         correctionTaskSpezial->Initialize();
     }else{
         #if !defined (__CINT__) || defined (__CLING__)

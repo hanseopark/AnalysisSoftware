@@ -195,6 +195,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TH1F * rData [ConstNumberOfCuts];
     TFile*  WeightFileAdditional       [ConstNumberOfCuts];
     TH1F * histoWeightsEachRPtMin[nBinsR][ConstNumberOfCuts];
+    TH1F * histoWeightsEachRPtMinSecSub[nBinsR][ConstNumberOfCuts];   // Still a test
 
     for (Int_t i=0; i< NumberOfCuts; i++){
 
@@ -215,6 +216,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 	for (Int_t j=0; j< nBinsR; j++){
 	  //	  cout<< "name:"<< Form("histoWeightsEachRPtMin%i",j)<< endl;
 	  histoWeightsEachRPtMin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMin%i",j));
+	  histoWeightsEachRPtMinSecSub[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMinSecSub%i",j));
 	  //	  cout<< "mean" <<histoWeightsEachRPtMin[i][j]->GetMean() <<endl;
 	}
         if(sequence==0){
@@ -726,7 +728,10 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         for(Int_t i = 0; i< 2; i++){
             if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
             else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
-            histoWeightsEachRPtMin[j][i]->Draw("same");
+	    histoWeightsEachRPtMin[j][i]->Draw("same");
+	    // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
+            // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
+            // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
         }
         if (j==0)  legendWeightPtOnfly->Draw();
     }
@@ -778,9 +783,12 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
         DrawGammaLines(0.4,0.4,0.85, 1.5,1.,kGray,2);
         for(Int_t i = 2; i< NumberOfCuts; i++){
-        if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
-        else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
-        histoWeightsEachRPtMin[j][i]->Draw("same");
+	  if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
+	  else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	  histoWeightsEachRPtMin[j][i]->Draw("same");
+	  // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
+	  // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
+	  // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
         }
 
         if (j==0)  legendWeightPtOffline->Draw();

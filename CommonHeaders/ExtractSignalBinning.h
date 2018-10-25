@@ -1761,12 +1761,15 @@
                         startPtBin      = 8;
                     else
                         startPtBin      = 6;
-                } else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 )
+                } else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 ){
                     startPtBin      = 1;
-                else if (mode == 4)
+                } else if (mode == 3){
+                    startPtBin      = 5;
+                } else if (mode == 4){
                     startPtBin      = 8;
-                else
+                } else {
                     startPtBin      = 1;
+                }
 
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if( energy.Contains("2017")){
@@ -2443,12 +2446,12 @@
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
                 } else if ( mode == 2 || mode == 13 ) {
-                    maxNBins = 34;
+                    maxNBins = 33;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins = 34;
+                    maxNBins = 33;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
                     }
@@ -3238,9 +3241,15 @@
                         binningMax  = 25;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        if (!centrality.CompareTo("0-100%") && !energy.CompareTo("pPb_5.023TeVCent") == 0)
+                        if (!centrality.CompareTo("0-100%") && !(energy.CompareTo("pPb_5.023TeVCent") == 0))
                             binning[i]  = fBinsDirGammapPb5TeVPCMEMCPt[i];
                         else
+                            binning[i]  = fBinsDirGammapPb5TeVCentPCMPt[i];
+                    }
+                } else if (mode == 3){
+                        maxNBins    = 25;
+                        binningMax  = 25;
+                    for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i]  = fBinsDirGammapPb5TeVCentPCMPt[i];
                     }
                 } else if (mode == 4){
@@ -3251,7 +3260,7 @@
                         binningMax  = 25;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        if (!centrality.CompareTo("0-100%") && !energy.CompareTo("pPb_5.023TeVCent") == 0)
+                        if (!centrality.CompareTo("0-100%") && !(energy.CompareTo("pPb_5.023TeVCent") == 0))
                             binning[i]  = fBinsDirGammapPb5TeVEMCPt[i];
                         else
                             binning[i]  = fBinsDirGammapPb5TeVCentPCMPt[i];
@@ -4307,7 +4316,7 @@
                                 else
                                     fNRebin[i]  = fBinsDirGammapPb5TeVCentPCMPtRebin[i];
                             }
-                        } else if (modi == 2){
+                        } else if (modi == 2 || modi == 3){
                             if(!centrality.CompareTo("0-100%"))
                                 fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];
                             else
