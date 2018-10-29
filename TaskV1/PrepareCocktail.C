@@ -880,6 +880,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     Double_t theoRatios[nMotherParticles] = {1,0.2131528511,0.0293771568,0.2121738246,0.2488197353,
                                                0.2488197353,0.2488197353,0.0641642177,4.69567604091221e-7,
                                                0.028698447,0.0286394262,0.028698447,0.0285501625,0.2267748773,0.2659074433,0.,0.};
+    cout << "Starting to calculate IntegralAndError" << endl;
     Double_t intpi0 = 0;
     Double_t intpi0err = 0;
     Double_t intratio = 0;
@@ -908,6 +909,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             histoTheoPartRatios->SetBinError(i+1,0);
         }
     }
+    cout << "Done with calculate IntegralAndError" << endl;
     DrawGammaSetMarker(histoIntPartRatios, 21, 1.5, kRed+2 , kRed+2);
     DrawGammaSetMarker(histoTheoPartRatios, 24, 1.5, kGreen+2 , kGreen+2);
     histomTscalingPoints->GetXaxis()->SetLabelSize(0.8*textsizeLabels);
@@ -927,6 +929,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     canvasIntPartRatios->SaveAs(Form("%s/IntegratedRatios.%s",outputDir.Data(),suffix.Data()));
 
     //***************************** Plot ratio cocktail mothers to pi0 (pt) *****************************************
+    cout << "***** Plot ratio cocktail mothers to pi0 (pt) *****" << endl;
     TCanvas *canvasMothersRatio                                 = new TCanvas("canvasMothersRatio","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersRatio, 0.08, 0.01, 0.01, 0.075);
     canvasMothersRatio->SetLogy();
@@ -984,6 +987,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasMothersRatio;
 
     //***************************** Plot cocktail mothers (y) *******************************************************
+    cout << "*****  Plot cocktail mothers (y) *****" << endl;
     TCanvas *canvasMothersY                                     = new TCanvas("canvasMothersY","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersY, 0.12, 0.025, 0.01, 0.075);
     canvasMothersY->SetLogy();
@@ -1023,6 +1027,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasMothersY;
 
     //***************************** Plot cocktail mothers (phi) *****************************************************
+    cout << "*****  Plot cocktail mothers (phi) *****" << endl;
     TCanvas *canvasMothersPhi                                   = new TCanvas("canvasMothersPhi","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersPhi, 0.12, 0.025, 0.01, 0.075);
     canvasMothersPhi->SetLogy();
@@ -1061,6 +1066,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasMothersPhi;
 
     //***************************** Plot cocktail gammas (pt) *******************************************************
+    cout << "*****  Plot cocktail gammas (pt) *****" << endl;
     TCanvas *canvasGammas                                       = new TCanvas("canvasGammas","",1100,1200);
     DrawGammaCanvasSettings(canvasGammas, 0.15, 0.01, 0.01, 0.075);
     canvasGammas->SetLogy();
@@ -1099,6 +1105,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasGammas;
 
     //***************************** Plot cocktail gammas to pi0 ratio ***********************************************
+    cout << "*****  Plot cocktail gammas to pi0 ratio *****" << endl;
     TCanvas *canvasGammasRatio                                  = new TCanvas("canvasGammasRatio","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasRatio, 0.12, 0.01, 0.01, 0.075);
     canvasGammasRatio->SetLogy();
@@ -1147,6 +1154,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasGammasRatio;
 
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
+    cout << "*****  Plot cocktail gammas to all gammas ratio *****" << endl;
     TCanvas *canvasGammasRatio2                                 = new TCanvas("canvasGammasRatio2","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasRatio2, 0.12, 0.01, 0.01, 0.075);
     canvasGammasRatio2->SetLogy();
@@ -1188,6 +1196,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasGammasRatio2;
 
     //***************************** Plot cocktail gammas (y) ********************************************************
+    cout << "*****  Plot cocktail gammas (y) *****" << endl;
     TCanvas *canvasGammasY                                      = new TCanvas("canvasGammasY","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasY, 0.12, 0.025, 0.01, 0.075);
     canvasGammasY->SetLogy();
@@ -1227,6 +1236,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete canvasGammasY;
 
     //***************************** Plot cocktail mothers (phi) *****************************************************
+    cout << "*****  Plot cocktail mothers (phi) *****" << endl;
     TCanvas *canvasGammasPhi                                    = new TCanvas("canvasGammasPhi","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasPhi, 0.12, 0.025, 0.01, 0.075);
     canvasGammasPhi->SetLogy();
@@ -1268,6 +1278,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
     TH1D*   dummyHistRatio                                          = NULL;
     //***************************** Plot mT scaling cross check *****************************************************
+    cout << "*****  Plot mT scaling cross check *****" << endl;
     TCanvas* canvasMtCrossCheck                                 = NULL;
     TLegend* legendMtCrossCheck                                 = NULL;
     TPad* padMtCrossCheck                                       = NULL;
@@ -1342,6 +1353,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** Plot pi0 vs. gamma pt + vs. pi0 pt **********************************************
+    cout << "*****  Plot pi0 vs. gamma pt + vs. pi0 pt *****" << endl;
     if (histoGammaMotherPtGamma) {
         TCanvas *canvasPi02                                         = new TCanvas("canvasPi02","",1100,1200);
         TPad *padSpectrum2                                          = new TPad("padSpectrum2", "", 0., 0.25, 1., 1.,-1, -1, -2);
@@ -1408,6 +1420,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** Plot pi0 from data vs. cocktail *************************************************
+    cout << "*****  Plot pi0 from data vs. cocktail *****" << endl;
     if (histoPi0InvYieldData) {
         // get proper pt range for plotting
         for (Int_t i=1; i<histoPi0InvYieldData->GetNbinsX()+1; i++) {
@@ -1487,6 +1500,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** Plot eta from data vs. cocktail *************************************************
+    cout << "*****  Plot eta from data vs. cocktail *****" << endl;
     if (histoEtaInvYieldData && histoGeneratedEtaPt) {
 
         // get proper pt range for plotting
@@ -1567,6 +1581,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** Plot pi0 from data vs. cocktail inputs + param **********************************
+    cout << "*****  Plot pi0 from data vs. cocktail inputs + param *****" << endl;
     if (histoPi0YieldData && cocktailInputParametrizations[0] && hasPi0CocktailInput) {
 
         ptPlotMin                                                   = 0.2;
@@ -1675,6 +1690,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** Plot eta from data vs. cocktail inputs + param **********************************
+    cout << "*****  Plot eta from data vs. cocktail inputs + param *****" << endl;
     if (histoEtaYieldData && cocktailInputParametrizations[1] && hasEtaCocktailInput) {
 
         ptPlotMin                                                   = 0.2;

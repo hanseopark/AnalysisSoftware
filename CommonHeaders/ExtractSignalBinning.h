@@ -1438,7 +1438,7 @@
                         startPtBin      = 6;
                     if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0
                         || centrality.CompareTo("10-20%") == 0){
-                      startPtBin = 11;
+                      startPtBin = 6;
                     }
                 } else if ( mode == 5){
                     startPtBin      = 4;

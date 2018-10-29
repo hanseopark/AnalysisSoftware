@@ -859,7 +859,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         }
 
         // double ratio combined
-        TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
+        TCanvas *canvasDoubleRatio = GetAndSetCanvas("canvasDoubleRatio",0.095,0.09,1000,815);
         DrawGammaCanvasSettings( canvasDoubleRatio, 0.09, 0.02, 0.02, 0.09);
         canvasDoubleRatio->cd();
         canvasDoubleRatio->SetLogx();

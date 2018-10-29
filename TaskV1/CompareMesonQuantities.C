@@ -203,8 +203,14 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 histoSignalDataInvMassPtBin[iPt]->Rebin(4);
                 histoSignalMCInvMassPtBin[iPt]->Rebin(4);
             }
-            Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
-            Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
+            Double_t firstBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
+            Double_t lastBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
+            Double_t firstBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
+            Double_t lastBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
+            cout << "firstBinIntData= " << firstBinIntData << "\t lastBinIntData= " << lastBinIntData << endl;
+            cout << "firstBinIntMC= " << firstBinIntMC << "\t lastBinIntMC= " << lastBinIntMC << endl;
+            Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(firstBinIntData,lastBinIntData);
+            Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(firstBinIntMC,lastBinIntMC);
             if (j == 2){
                 integralData = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
                 integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );

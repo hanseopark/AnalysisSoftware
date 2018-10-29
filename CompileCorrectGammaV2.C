@@ -41,6 +41,10 @@ void CompileCorrectGammaV2(){
     // Please download it from https://github.com/skluth/RooUnfold and compile it!
     // Afterwards you have to add the location of the software here for your system
     //*****************************************************************************************
+
+  #if !defined (__CINT__) || defined (__CLING__)
+  cout << " USING ROOT6, NO NEED TO LOAD RooUnfold !!! " << endl;
+  #else
     TString homedirectory = gSystem->HomeDirectory();
 	cout << "***************************************" << endl;
 	cout << "HomeDirectory: " << homedirectory.Data() << endl;
@@ -78,6 +82,7 @@ void CompileCorrectGammaV2(){
     }
 
     gROOT->LoadMacro("TaskV1/CorrectGammaV2.C+");
+  #endif
 
     return;
 }
