@@ -80,13 +80,13 @@ void ProduceExperimentalDataGraphsPA(){
 
     // TGraphErrors* graphPHENIXpAu200GeVGamma_Stat         = (TGraphErrors*)graphPHENIXpAu200GeVGamma_StatLoad->Clone("tEYieldPAu2");
     // TGraphErrors* graphPHENIXpAu200GeVGamma_Sys          = (TGraphErrors*)graphPHENIXpAu200GeVGamma_SysLoad->Clone("tSYieldPAu2");
-    TGraphErrors* graphPHENIXpAu200GeVGamma0020_StatLoad    = (TGraphErrors*)filePHENIXPhoton_pAu->Get("tEYieldPAuCent");
-    TGraphErrors* graphPHENIXpAu200GeVGamma0020_SysLoad     = (TGraphErrors*)filePHENIXPhoton_pAu->Get("tSYieldPAuCent");
-    TGraphErrors* graphPHENIXpAu200GeVGamma0020_Stat        = ScaleGraph(graphPHENIXpAu200GeVGamma0020_StatLoad,1./(4520.0144));
-    TGraphErrors* graphPHENIXpAu200GeVGamma0020_Sys         = ScaleGraph(graphPHENIXpAu200GeVGamma0020_SysLoad,1./(4520.0144));
-    TGraphErrors* graphPHENIXpAu200GeVGamma0020_Tot         = NULL;
-    if (graphPHENIXpAu200GeVGamma0020_Sys && graphPHENIXpAu200GeVGamma0020_Stat)
-        graphPHENIXpAu200GeVGamma0020_Tot = AddErrorsQuadraticallyTGraph(graphPHENIXpAu200GeVGamma0020_Stat,graphPHENIXpAu200GeVGamma0020_Sys);
+    TGraphErrors* graphPHENIXpAu200GeVGamma0005_StatLoad    = (TGraphErrors*)filePHENIXPhoton_pAu->Get("tEYieldPAuCent");
+    TGraphErrors* graphPHENIXpAu200GeVGamma0005_SysLoad     = (TGraphErrors*)filePHENIXPhoton_pAu->Get("tSYieldPAuCent");
+    TGraphErrors* graphPHENIXpAu200GeVGamma0005_Stat        = ScaleGraph(graphPHENIXpAu200GeVGamma0005_StatLoad,1./(4520.0144));
+    TGraphErrors* graphPHENIXpAu200GeVGamma0005_Sys         = ScaleGraph(graphPHENIXpAu200GeVGamma0005_SysLoad,1./(4520.0144));
+    TGraphErrors* graphPHENIXpAu200GeVGamma0005_Tot         = NULL;
+    if (graphPHENIXpAu200GeVGamma0005_Sys && graphPHENIXpAu200GeVGamma0005_Stat)
+        graphPHENIXpAu200GeVGamma0005_Tot = AddErrorsQuadraticallyTGraph(graphPHENIXpAu200GeVGamma0005_Stat,graphPHENIXpAu200GeVGamma0005_Sys);
 
     // *********************************************************************************************
     // ALICE work in progress results iso gamma
@@ -122,16 +122,16 @@ void ProduceExperimentalDataGraphsPA(){
 
     fileExperimetalSummary.mkdir("Gamma");
     fileExperimetalSummary.cd("Gamma");
-        if (graphPHENIXdAu200GeVGamma_Stat) graphPHENIXdAu200GeVGamma_Stat->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Stat_0100");
-        if (graphPHENIXdAu200GeVGamma_Sys)  graphPHENIXdAu200GeVGamma_Sys->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Sys_0100");
-        if (graphPHENIXdAu200GeVGamma_Tot)  graphPHENIXdAu200GeVGamma_Tot->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Tot_0100");
+        if (graphPHENIXdAu200GeVGamma_Stat) graphPHENIXdAu200GeVGamma_Stat->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Stat_00100");
+        if (graphPHENIXdAu200GeVGamma_Sys)  graphPHENIXdAu200GeVGamma_Sys->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Sys_00100");
+        if (graphPHENIXdAu200GeVGamma_Tot)  graphPHENIXdAu200GeVGamma_Tot->Write("graph_InvYieldDirGamma_PHENIX_dAu_200GeV_Tot_00100");
 
-        if (graphPHENIXpAu200GeVGamma_Stat) graphPHENIXpAu200GeVGamma_Stat->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Stat_0100");
-        if (graphPHENIXpAu200GeVGamma_Sys)  graphPHENIXpAu200GeVGamma_Sys->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Sys_0100");
-        if (graphPHENIXpAu200GeVGamma_Tot) graphPHENIXpAu200GeVGamma0020_Tot->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Tot_0100");
-        if (graphPHENIXpAu200GeVGamma0020_Stat) graphPHENIXpAu200GeVGamma0020_Stat->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Stat_0020");
-        if (graphPHENIXpAu200GeVGamma0020_Sys)  graphPHENIXpAu200GeVGamma0020_Sys->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Sys_0020");
-        if (graphPHENIXpAu200GeVGamma0020_Tot) graphPHENIXpAu200GeVGamma0020_Tot->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Tot_0020");
+        if (graphPHENIXpAu200GeVGamma_Stat) graphPHENIXpAu200GeVGamma_Stat->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Stat_00100");
+        if (graphPHENIXpAu200GeVGamma_Sys)  graphPHENIXpAu200GeVGamma_Sys->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Sys_00100");
+        if (graphPHENIXpAu200GeVGamma_Tot) graphPHENIXpAu200GeVGamma0005_Tot->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Tot_00100");
+        if (graphPHENIXpAu200GeVGamma0005_Stat) graphPHENIXpAu200GeVGamma0005_Stat->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Stat_0005");
+        if (graphPHENIXpAu200GeVGamma0005_Sys)  graphPHENIXpAu200GeVGamma0005_Sys->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Sys_0005");
+        if (graphPHENIXpAu200GeVGamma0005_Tot) graphPHENIXpAu200GeVGamma0005_Tot->Write("graph_InvYieldDirGamma_PHENIX_pAu_200GeV_Tot_0005");
         if (graphALICEpPb5TeVIsoGamma_Stat) graphALICEpPb5TeVIsoGamma_Stat->Write("graph_InvYieldIsoGamma_ALICE_pPb_5TeV_Stat_00100");
         if (graphYieldDirGammapPb8TeV8000GeVATLASTot) graphYieldDirGammapPb8TeV8000GeVATLASTot->Write("graph_InvYieldIsoGamma_ATLAS_pPb_8TeV_Tot_00100");
 

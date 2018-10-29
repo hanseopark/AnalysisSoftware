@@ -1797,13 +1797,13 @@
                 return ncoll30100;
             }
         } else if (energy.CompareTo("pAu_0.2TeV") == 0){
-            if (name.CompareTo("0020") == 0){ //0-20%
+            if (name.CompareTo("0005") == 0){ //0-5%
                 return 9.59;
-            } else if (name.CompareTo("0100") == 0){ //20-40%
+            } else if (name.CompareTo("00100") == 0){ //0-100%
                 return 4.667;
             }
         } else if (energy.CompareTo("dAu_0.2TeV") == 0){
-            if (name.CompareTo("0100") == 0){ //20-40%
+            if (name.CompareTo("00100") == 0){ //0-100%
                 return 7.59;
         } else if (energy.CompareTo("PbPb_2.76TeV_ATLAS") == 0){
             if (name.CompareTo("0010") == 0){ //0-10%
