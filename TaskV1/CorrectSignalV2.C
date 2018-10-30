@@ -607,14 +607,31 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (kCollisionSystem ==2 && (mode == 2 || mode == 13)) minPtSecFitConst        = 4.0;
                     if (optionEnergy.CompareTo("8TeV") == 0 && mode == 2)  minPtSecFitConst        = 6.0;
                     if (optionEnergy.CompareTo("8TeV") == 0 && mode == 0)  minPtSecFitConst        = 8.0;
-                    histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
 
+                // Fit
+                    histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
+                //--------------------------------------------------------------------------------------------------------------------------------------------
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
                     if(mode == 0 && kCollisionSystem==1 && !(centralityString.Contains("20-40%") || centralityString.Contains("20-50%"))) cout << "const factor not fixed" << endl;
-                    else fithistoRatioSecEffDivTrueEff[k][j]->FixParameter(2,fitConst->GetParameter(0));
+                    else{
+                      fithistoRatioSecEffDivTrueEff[k][j]->SetParameter(2,fitConst->GetParameter(0));
+                      fithistoRatioSecEffDivTrueEff[k][j]->SetParLimits(2,0.,2.);
+                    }
+                // Fit
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fithistoRatioSecEffDivTrueEff[k][j],"QNRME+","",minPtMesonSec,maxPtMeson);
-                }
+                }else if((j==3) && (foundCocktailInput || foundToyMCInput)){
+                  Double_t minPtSecFitConst   = 2.5;
+              // Fit
+                  histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
+              //--------------------------------------------------------------------------------------------------------------------------------------------
+                  fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
+                  fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
+                  fithistoRatioSecEffDivTrueEff[k][j]->SetParameter(2,fitConst->GetParameter(0));
+                  fithistoRatioSecEffDivTrueEff[k][j]->SetParLimits(2,0.,2.);
+              // Fit
+                  histoRatioSecEffDivTrueEff[k][j]->Fit(fithistoRatioSecEffDivTrueEff[k][j],"QNRME+","",minPtMesonSec,maxPtMeson);
+              }
 
 
                 cout << "rel stat. err sec effi: " << k << "\t"<< j << endl;
@@ -693,9 +710,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (mode == 4 || mode == 12 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
+                          if(optionEnergy.CompareTo("8TeV") == 0){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                            histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                          }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.5);
+                          }
                         } else if ( j == 1 ){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
@@ -705,14 +728,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(1.0);
                         } else if ( j == 3 ){
-                          if(optionEnergy.CompareTo("8TeV") == 0){
-                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
-                            histoSecTrueEffi[k][j]->Scale(0.9);
-                          }else{
+                          if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
-                            histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                          }else{
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(1.5);
                           }
                         }
                     } else if (mode == 2 || mode == 13 ) {
@@ -736,9 +759,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.1);
                         } else if ( j == 3 ){
+                          if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
-                            histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                          }else{
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(0.3);
+                          }
                         }
                     }
                 } else if (optionEnergy.Contains("pPb_5.023TeV") ){
@@ -2868,6 +2897,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             fithistoRatioSecEffDivTrueEff[0][0]->SetLineColor(kRed);
             fithistoRatioSecEffDivTrueEff[0][0]->SetLineWidth(5);
             fithistoRatioSecEffDivTrueEff[0][0]->Draw("same");
+
+            fithistoRatioSecEffDivTrueEff[0][3]->SetLineColor(kBlue);
+            fithistoRatioSecEffDivTrueEff[0][3]->SetLineWidth(5);
+            fithistoRatioSecEffDivTrueEff[0][3]->Draw("same");
 
             legendEffWithSecRatio->Draw();
             canvasEffSimple->Update();
