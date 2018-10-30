@@ -2065,7 +2065,7 @@
                     case 3: //PCM-PHOS
                         switch(SpecialTrigger) {
                             default:
-                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 99 );
+                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 135 );
                                 break;
                         }
                         break;
@@ -4155,6 +4155,7 @@
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     //Rebinning, because not implemented in getBinning
                     if (!isDCA) {
+                        cout<<"ReBinning for Pi0, modi: "<<modi<<endl;
                         for (Int_t i = 0; i < fNBinsPt; i++) {
                             if (modi==0){
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
@@ -4178,6 +4179,8 @@
                                 } else if (specialTrigg==2){
                                     fNRebin[i]      = fBinsPi013TeVPCMEMCTrigEG1PtRebin[i];
                                 }
+                            } else if (modi == 3){
+                                fNRebin[i]=fBinsPi013TeVPCMPHOSTrigINT7PtRebin[i];
                             } else if( modi == 4){
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                     fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
