@@ -1805,6 +1805,15 @@
         } else if (energy.CompareTo("dAu_0.2TeV") == 0){
             if (name.CompareTo("0100") == 0){ //20-40%
                 return 7.59;
+        } else if (energy.CompareTo("PbPb_2.76TeV_ATLAS") == 0){
+            if (name.CompareTo("0010") == 0){ //0-10%
+                return 1500.6;
+            } else if (name.CompareTo("1020") == 0){ //10-20%
+                return 923.3;
+            } else if (name.CompareTo("0010") == 0){ //20-40%
+                return 440.6;
+            } else if (name.CompareTo("0010") == 0){ //40-80%
+                return 77.8;
             }
         } else if (energy.CompareTo("AuAu_0.2TeV") == 0){
             double dNdeta200AuAu[4]     = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};

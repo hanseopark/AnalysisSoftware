@@ -615,10 +615,54 @@ void ProduceExperimentalDataGraphsPbPb(){
     g39->SetPoint(g39->GetN(), 59.7, 0.905331401541957); g39->SetPointError(g39->GetN()-1, 0, 0.493815618562743);
 
 
+    //==========================================================================================
+    //                                         WA98 pi0s
+    //==========================================================================================
     // data from:
     TFile* fileWA98Pi0 = 	new TFile("ExternalInputPbPb/OtherExperiments/wa98_pi0_raa_pC_and_pPb_ref.root");
         TGraphErrors* graphWA09_0013 = (TGraphErrors*)fileWA98Pi0->Get("g_raa_pC_ref_0_13");
 
+    //==========================================================================================
+    //                                         WA98 gamma
+    //==========================================================================================
+    // https://arxiv.org/pdf/nucl-ex/0006008.pdf
+//     TGraphAsymmErrors* graphWA98_Gamma_Tot_0010 = ParseHEPData("ExternalInputPbPb/OtherExperiments/WA98_P_Gamma.csv", 4, 0, -1, -1, 1, 3, 2, kFALSE, kFALSE, kFALSE);
+// for (Int_t i = 0; i < graphWA98_Gamma_Tot_0010->GetN(); i++){
+//     graphWA98_Gamma_Tot_0010->SetPoint(i, graphWA98_Gamma_Tot_0010->GetX()[i], graphWA98_Gamma_Tot_0010->GetY()[i]/graphWA98_Gamma_Tot_0010->GetX()[i]);
+//     graphWA98_Gamma_Tot_0010->SetPointError(i, 0, 0, graphWA98_Gamma_Tot_0010->GetEYlow()[i]/graphWA98_Gamma_Tot_0010->GetX()[i], graphWA98_Gamma_Tot_0010->GetEYhigh()[i]/graphWA98_Gamma_Tot_0010->GetX()[i]);
+// }
+// graphWA98_Gamma_Tot_0010                    = ScaleGraph(graphWA98_Gamma_Tot_0010, 1./(2*TMath::Pi()));
+
+    TFile* fileWA98Gamma                        = new TFile("ExternalInputPbPb/OtherExperiments/WA98_gdir_all.root");
+    TGraphAsymmErrors* graphWA98_Gamma_Tot_0010 = (TGraphAsymmErrors*)fileWA98Gamma->Get("Graph");
+    Int_t nUpperLimitsWA98                      = 0;
+    for (Int_t i = 0; i < graphWA98_Gamma_Tot_0010->GetN(); i++){
+        if (graphWA98_Gamma_Tot_0010->GetEYhigh()[i] == 0) nUpperLimitsWA98++;
+    }
+    TGraphAsymmErrors* graphWA98_Gamma_TotAr_0010   = NULL;
+    Int_t nCurrUpperLim                             = 0;
+    if (nUpperLimitsWA98 > 0){
+        graphWA98_Gamma_TotAr_0010              = new TGraphAsymmErrors(nUpperLimitsWA98);
+        for (Int_t i = 0; i < graphWA98_Gamma_Tot_0010->GetN(); i++){
+            if (graphWA98_Gamma_Tot_0010->GetEYhigh()[i] == 0){
+                graphWA98_Gamma_TotAr_0010->SetPoint(nCurrUpperLim, graphWA98_Gamma_Tot_0010->GetX()[i], graphWA98_Gamma_Tot_0010->GetY()[i]);
+                graphWA98_Gamma_TotAr_0010->SetPointError(nCurrUpperLim, graphWA98_Gamma_Tot_0010->GetEXlow()[i], graphWA98_Gamma_Tot_0010->GetEXhigh()[i],
+                                                          graphWA98_Gamma_Tot_0010->GetEYlow()[i], graphWA98_Gamma_Tot_0010->GetEYhigh()[i]);
+                graphWA98_Gamma_Tot_0010->RemovePoint(i);
+                nCurrUpperLim++;
+                i--;
+            }
+        }
+    }
+
+
+
+    //==========================================================================================
+    //                                         PHENIX gammas
+    //==========================================================================================
+    // PHENIX  Au-Au 39GeV & 62.4 GeV: arXiv:1805.04084
+    // PHENIX Cu+Cu 200 GeV: arXiv:1805.04066
+    // PHENIX Au+Au 200GeV:  Phys.Rev. C91 (2015) no.6, 064904,  arXiv:1405.3940 & Phys.Rev.Lett. 109 (2012) 152302, arXiv:1205.5759 & Phys.Rev. C81 (2010) 034911, arXiv:0912.0244 & Phys.Rev.Lett. 104 (2010) 132301, arXiv:0804.4168 & Phys.Rev.Lett. 94 (2005) 232301 ,  nucl-ex/0503003
     TFile* filePHENIXPhoton = new TFile("ExternalInputPbPb/OtherExperiments/PHENIXHeavyIonData.root");
 
     TString centsAuAu200[5]             = {"0020", "2040", "4060", "6092", "0092"};
@@ -675,9 +719,27 @@ void ProduceExperimentalDataGraphsPbPb(){
     //     TGraphErrors* = (TGraphErrors*)filePHENIXPhoton->Get("tSpp200IntConv0000");
     //     TGraphErrors* = (TGraphErrors*)filePHENIXPhoton->Get("tSUMpp200IntConv0000");
 
+    //==========================================================================================
+    //                                         STAR gammas
+    //==========================================================================================
+    // Phys.Lett. B770 (2017) 451-458 , arXiv:1607.01447
+
+    TString centSTARAuAu[5]             = {"0020", "2040", "4060", "6080", "0080"};
+    TGraphAsymmErrors* tStat_200GeV_DirPh_STAR[5]   = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* tSys_200GeV_DirPh_STAR[5]    = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* tTot_200GeV_DirPh_STAR[5]    = {NULL, NULL, NULL, NULL, NULL};
+    for (Int_t cent = 0; cent < 5; cent++){
+        TString nameFileStar            = Form("ExternalInputPbPb/OtherExperiments/STAR_AuAu200GeV_Gamma_%s.csv", centSTARAuAu[cent].Data());
+        tStat_200GeV_DirPh_STAR[cent]   = ParseHEPData(nameFileStar, 5, 0, -1, -1, 1, 2, 2, kFALSE, kTRUE, kFALSE);
+        tSys_200GeV_DirPh_STAR[cent]    = ParseHEPData(nameFileStar, 5, 0, -1, -1, 1, 3, 3, kFALSE, kTRUE, kFALSE);
+        //         tStat_200GeV_DirPh_STAR[cent]   = ScaleGraph(tStat_200GeV_DirPh_STAR[cent], 1e-3*23.2*1e-9);
+        //         tSys_200GeV_DirPh_STAR[cent]    = ScaleGraph(tSys_200GeV_DirPh_STAR[cent], 1e-3*23.2*1e-9);
+        tTot_200GeV_DirPh_STAR[cent]    = AddErrorsOfGraphsQuadratically(tStat_200GeV_DirPh_STAR[cent], tSys_200GeV_DirPh_STAR[cent]);
+    }
+
 
     //==========================================================================================
-    //                                         CMS
+    //                                         CMS gammas
     //==========================================================================================
     //Phys.Lett. B710 (2012) 256-277, 2012
 //     0-10%       23.2 ± 1.0 mb-1
@@ -703,30 +765,102 @@ void ProduceExperimentalDataGraphsPbPb(){
     tSys_2760GeV_DirPh_CMS_30100                       = ScaleGraph(tSys_2760GeV_DirPh_CMS_30100, 1e-3*1.45*1e-9);
     TGraphAsymmErrors* tTot_2760GeV_DirPh_CMS_30100    = AddErrorsOfGraphsQuadratically(tStat_2760GeV_DirPh_CMS_30100, tSys_2760GeV_DirPh_CMS_30100);
 
-    TString centSTARAuAu[5]             = {"0020", "2040", "4060", "6080", "0080"};
-    TGraphAsymmErrors* tStat_200GeV_DirPh_STAR[5]   = {NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* tSys_200GeV_DirPh_STAR[5]    = {NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* tTot_200GeV_DirPh_STAR[5]    = {NULL, NULL, NULL, NULL, NULL};
-    for (Int_t cent = 0; cent < 5; cent++){
-        TString nameFileStar            = Form("ExternalInputPbPb/OtherExperiments/STAR_AuAu200GeV_Gamma_%s.csv", centSTARAuAu[cent].Data());
-        tStat_200GeV_DirPh_STAR[cent]   = ParseHEPData(nameFileStar, 5, 0, -1, -1, 1, 2, 2, kFALSE, kTRUE, kFALSE);
-        tSys_200GeV_DirPh_STAR[cent]    = ParseHEPData(nameFileStar, 5, 0, -1, -1, 1, 3, 3, kFALSE, kTRUE, kFALSE);
-//         tStat_200GeV_DirPh_STAR[cent]   = ScaleGraph(tStat_200GeV_DirPh_STAR[cent], 1e-3*23.2*1e-9);
-//         tSys_200GeV_DirPh_STAR[cent]    = ScaleGraph(tSys_200GeV_DirPh_STAR[cent], 1e-3*23.2*1e-9);
-        tTot_200GeV_DirPh_STAR[cent]    = AddErrorsOfGraphsQuadratically(tStat_200GeV_DirPh_STAR[cent], tSys_200GeV_DirPh_STAR[cent]);
-    }
 
     //==========================================================================================
-    //                                         WA89
+    //                                         ATLAS gammas
     //==========================================================================================
-    // https://arxiv.org/pdf/nucl-ex/0006008.pdf
-    TGraphAsymmErrors* graphWA98_Gamma_Tot_0010 = ParseHEPData("ExternalInputPbPb/OtherExperiments/WA98_P_Gamma.csv", 4, 0, -1, -1, 1, 3, 2, kFALSE, kFALSE, kFALSE);
+    // Phys.Rev. C93 (2016) no.3, 034914,  arXiv:1506.08552
+//     Quantity is dN/pT/<TAA> (not Ncoll).  If you want the fully invariant yield you’ll have to divide by d(eta), either 2*1.37 (mid rapidity) or 2*0.85 (forward).
+//
+//     Note I am providing pT in the table in bin center and not at a “mean”.  The photon purity varies so much bin to bin that it did not seem feasible to extract a “mean pT” per bin.  In the paper, I provide pT ranges, which are in the table as the first two values per line, which were also used to do the NLO calcuations.
+//
+//     Table 1 of the same paper has <TAA> values: respectively 1.2, 6.9, 14.4, 23.4 mb^-1, corresponding to <Ncoll> values of 77.8, 440.6, 923,.3, 1500.6.
+    Double_t atlasTaa_4080                          = 1.2;
+    Double_t atlasNColl_4080                        = 77.8;
+    Double_t atlasTaa_2040                          = 6.9;
+    Double_t atlasNColl_2040                        = 440.6;
+    Double_t atlasTaa_1020                          = 14.4;
+    Double_t atlasNColl_1020                        = 923.3;
+    Double_t atlasTaa_0010                          = 23.4;
+    Double_t atlasNColl_0010                        = 1500.6;
+    Double_t dEtaATLAS                              = 1.37*2;
 
-    for (Int_t i = 0; i < graphWA98_Gamma_Tot_0010->GetN(); i++){
-        graphWA98_Gamma_Tot_0010->SetPoint(i, graphWA98_Gamma_Tot_0010->GetX()[i], graphWA98_Gamma_Tot_0010->GetY()[i]/graphWA98_Gamma_Tot_0010->GetX()[i]);
-        graphWA98_Gamma_Tot_0010->SetPointError(i, 0, 0, graphWA98_Gamma_Tot_0010->GetEYlow()[i]/graphWA98_Gamma_Tot_0010->GetX()[i], graphWA98_Gamma_Tot_0010->GetEYhigh()[i]/graphWA98_Gamma_Tot_0010->GetX()[i]);
+    TGraphAsymmErrors* graphATLAS2760GeVStat_4080   = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 3, 4, 4, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphATLAS2760GeVSys_4080    = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 3, 5, 5, kFALSE, kTRUE, kFALSE);
+    graphATLAS2760GeVStat_4080                      = ScaleGraph(graphATLAS2760GeVStat_4080, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_4080*1e-9);
+    graphATLAS2760GeVSys_4080                       = ScaleGraph(graphATLAS2760GeVSys_4080, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_4080*1e-9);
+    for (Int_t i = 0; i <graphATLAS2760GeVStat_4080->GetN(); i++){
+        graphATLAS2760GeVStat_4080->SetPoint(i, graphATLAS2760GeVStat_4080->GetX()[i], graphATLAS2760GeVStat_4080->GetY()[i]/graphATLAS2760GeVStat_4080->GetX()[i]);
+        graphATLAS2760GeVStat_4080->SetPointError(i, graphATLAS2760GeVStat_4080->GetEXlow()[i], graphATLAS2760GeVStat_4080->GetEXhigh()[i],
+                                                    graphATLAS2760GeVStat_4080->GetEYlow()[i]/graphATLAS2760GeVStat_4080->GetX()[i],
+                                                    graphATLAS2760GeVStat_4080->GetEYhigh()[i]/graphATLAS2760GeVStat_4080->GetX()[i]
+                                                  );
+        graphATLAS2760GeVSys_4080->SetPoint(i, graphATLAS2760GeVSys_4080->GetX()[i], graphATLAS2760GeVSys_4080->GetY()[i]/graphATLAS2760GeVSys_4080->GetX()[i]);
+        graphATLAS2760GeVSys_4080->SetPointError(i, graphATLAS2760GeVSys_4080->GetEXlow()[i], graphATLAS2760GeVSys_4080->GetEXhigh()[i],
+                                                  graphATLAS2760GeVSys_4080->GetEYlow()[i]/graphATLAS2760GeVSys_4080->GetX()[i],
+                                                  graphATLAS2760GeVSys_4080->GetEYhigh()[i]/graphATLAS2760GeVSys_4080->GetX()[i]
+                                                );
     }
-    graphWA98_Gamma_Tot_0010                    = ScaleGraph(graphWA98_Gamma_Tot_0010, 1./(2*TMath::Pi()));
+    TGraphAsymmErrors* graphATLAS2760GeVTot_4080    = AddErrorsOfGraphsQuadratically(graphATLAS2760GeVStat_4080, graphATLAS2760GeVSys_4080);
+
+    TGraphAsymmErrors* graphATLAS2760GeVStat_2040   = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 6, 7, 7, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphATLAS2760GeVSys_2040    = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 6, 8, 8, kFALSE, kTRUE, kFALSE);
+    graphATLAS2760GeVStat_2040                      = ScaleGraph(graphATLAS2760GeVStat_2040, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_2040*1e-9);
+    graphATLAS2760GeVSys_2040                       = ScaleGraph(graphATLAS2760GeVSys_2040, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_2040*1e-9);
+    for (Int_t i = 0; i <graphATLAS2760GeVStat_2040->GetN(); i++){
+        graphATLAS2760GeVStat_2040->SetPoint(i, graphATLAS2760GeVStat_2040->GetX()[i], graphATLAS2760GeVStat_2040->GetY()[i]/graphATLAS2760GeVStat_2040->GetX()[i]);
+        graphATLAS2760GeVStat_2040->SetPointError(i, graphATLAS2760GeVStat_2040->GetEXlow()[i], graphATLAS2760GeVStat_2040->GetEXhigh()[i],
+                                                  graphATLAS2760GeVStat_2040->GetEYlow()[i]/graphATLAS2760GeVStat_2040->GetX()[i],
+                                                  graphATLAS2760GeVStat_2040->GetEYhigh()[i]/graphATLAS2760GeVStat_2040->GetX()[i]
+        );
+        graphATLAS2760GeVSys_2040->SetPoint(i, graphATLAS2760GeVSys_2040->GetX()[i], graphATLAS2760GeVSys_2040->GetY()[i]/graphATLAS2760GeVSys_2040->GetX()[i]);
+        graphATLAS2760GeVSys_2040->SetPointError(i, graphATLAS2760GeVSys_2040->GetEXlow()[i], graphATLAS2760GeVSys_2040->GetEXhigh()[i],
+                                                 graphATLAS2760GeVSys_2040->GetEYlow()[i]/graphATLAS2760GeVSys_2040->GetX()[i],
+                                                 graphATLAS2760GeVSys_2040->GetEYhigh()[i]/graphATLAS2760GeVSys_2040->GetX()[i]
+        );
+    }
+    TGraphAsymmErrors* graphATLAS2760GeVTot_2040    = AddErrorsOfGraphsQuadratically(graphATLAS2760GeVStat_2040, graphATLAS2760GeVSys_2040);
+
+    TGraphAsymmErrors* graphATLAS2760GeVStat_1020   = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 9, 10, 10, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphATLAS2760GeVSys_1020    = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 9, 11, 11, kFALSE, kTRUE, kFALSE);
+    graphATLAS2760GeVStat_1020                      = ScaleGraph(graphATLAS2760GeVStat_1020, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_1020*1e-9);
+    graphATLAS2760GeVSys_1020                       = ScaleGraph(graphATLAS2760GeVSys_1020, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_1020*1e-9);
+    for (Int_t i = 0; i <graphATLAS2760GeVStat_1020->GetN(); i++){
+        graphATLAS2760GeVStat_1020->SetPoint(i, graphATLAS2760GeVStat_1020->GetX()[i], graphATLAS2760GeVStat_1020->GetY()[i]/graphATLAS2760GeVStat_1020->GetX()[i]);
+        graphATLAS2760GeVStat_1020->SetPointError(i, graphATLAS2760GeVStat_1020->GetEXlow()[i], graphATLAS2760GeVStat_1020->GetEXhigh()[i],
+                                                  graphATLAS2760GeVStat_1020->GetEYlow()[i]/graphATLAS2760GeVStat_1020->GetX()[i],
+                                                  graphATLAS2760GeVStat_1020->GetEYhigh()[i]/graphATLAS2760GeVStat_1020->GetX()[i]
+        );
+        graphATLAS2760GeVSys_1020->SetPoint(i, graphATLAS2760GeVSys_1020->GetX()[i], graphATLAS2760GeVSys_1020->GetY()[i]/graphATLAS2760GeVSys_1020->GetX()[i]);
+        graphATLAS2760GeVSys_1020->SetPointError(i, graphATLAS2760GeVSys_1020->GetEXlow()[i], graphATLAS2760GeVSys_1020->GetEXhigh()[i],
+                                                 graphATLAS2760GeVSys_1020->GetEYlow()[i]/graphATLAS2760GeVSys_1020->GetX()[i],
+                                                 graphATLAS2760GeVSys_1020->GetEYhigh()[i]/graphATLAS2760GeVSys_1020->GetX()[i]
+        );
+    }
+    TGraphAsymmErrors* graphATLAS2760GeVTot_1020    = AddErrorsOfGraphsQuadratically(graphATLAS2760GeVStat_1020, graphATLAS2760GeVSys_1020);
+
+    TGraphAsymmErrors* graphATLAS2760GeVStat_0010   = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 12, 13, 13, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphATLAS2760GeVSys_0010    = ParseHEPData("ExternalInputPbPb/OtherExperiments/ATLAS_photon_table_mid.txt", 15, 0, 1, 2, 12, 14, 14, kFALSE, kTRUE, kFALSE);
+    graphATLAS2760GeVStat_0010                      = ScaleGraph(graphATLAS2760GeVStat_0010, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_0010*1e-9);
+    graphATLAS2760GeVSys_0010                       = ScaleGraph(graphATLAS2760GeVSys_0010, 1/(2*TMath::Pi()*dEtaATLAS)*atlasTaa_0010*1e-9);
+    for (Int_t i = 0; i <graphATLAS2760GeVStat_0010->GetN(); i++){
+        graphATLAS2760GeVStat_0010->SetPoint(i, graphATLAS2760GeVStat_0010->GetX()[i], graphATLAS2760GeVStat_0010->GetY()[i]/graphATLAS2760GeVStat_0010->GetX()[i]);
+        graphATLAS2760GeVStat_0010->SetPointError(i, graphATLAS2760GeVStat_0010->GetEXlow()[i], graphATLAS2760GeVStat_0010->GetEXhigh()[i],
+                                                  graphATLAS2760GeVStat_0010->GetEYlow()[i]/graphATLAS2760GeVStat_0010->GetX()[i],
+                                                  graphATLAS2760GeVStat_0010->GetEYhigh()[i]/graphATLAS2760GeVStat_0010->GetX()[i]
+        );
+        graphATLAS2760GeVSys_0010->SetPoint(i, graphATLAS2760GeVSys_0010->GetX()[i], graphATLAS2760GeVSys_0010->GetY()[i]/graphATLAS2760GeVSys_0010->GetX()[i]);
+        graphATLAS2760GeVSys_0010->SetPointError(i, graphATLAS2760GeVSys_0010->GetEXlow()[i], graphATLAS2760GeVSys_0010->GetEXhigh()[i],
+                                                 graphATLAS2760GeVSys_0010->GetEYlow()[i]/graphATLAS2760GeVSys_0010->GetX()[i],
+                                                 graphATLAS2760GeVSys_0010->GetEYhigh()[i]/graphATLAS2760GeVSys_0010->GetX()[i]
+        );
+    }
+    TGraphAsymmErrors* graphATLAS2760GeVTot_0010    = AddErrorsOfGraphsQuadratically(graphATLAS2760GeVStat_0010, graphATLAS2760GeVSys_0010);
+
+
+    //==========================================================================================
+    //                             writing outputfile
+    //==========================================================================================
     TFile fileExperimetalSummary("ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesAA.root","RECREATE");
     fileExperimetalSummary.mkdir("Pi0");
     fileExperimetalSummary.cd("Pi0");
@@ -812,15 +946,28 @@ void ProduceExperimentalDataGraphsPbPb(){
         if (graphPHENIX39GeVGamma_Stat_ExtConv) graphPHENIX39GeVGamma_Stat_ExtConv->Write(Form("graph_PHENIX_1_AuAu39GeV_Stat_%s",centsAuAu39.Data()));
         if (graphPHENIX39GeVGamma_Sys_ExtConv)  graphPHENIX39GeVGamma_Sys_ExtConv->Write(Form("graph_PHENIX_1_AuAu39GeV_Sys_%s",centsAuAu39.Data()));
         if (graphPHENIX39GeVGamma_Tot_ExtConv)  graphPHENIX39GeVGamma_Tot_ExtConv->Write(Form("graph_PHENIX_1_AuAu39GeV_Tot_%s",centsAuAu39.Data()));
-        if (tStat_2760GeV_DirPh_CMS_0010) tStat_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Stat_0010");
-        if (tSys_2760GeV_DirPh_CMS_0010) tSys_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Sys_0010");
-        if (tTot_2760GeV_DirPh_CMS_0010) tTot_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Tot_0010");
-        if (tStat_2760GeV_DirPh_CMS_1030) tStat_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Stat_1030");
-        if (tSys_2760GeV_DirPh_CMS_1030) tSys_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Sys_1030");
-        if (tTot_2760GeV_DirPh_CMS_1030) tTot_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Tot_1030");
-        if (tStat_2760GeV_DirPh_CMS_30100) tStat_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Stat_30100");
-        if (tSys_2760GeV_DirPh_CMS_30100) tSys_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Sys_30100");
-        if (tTot_2760GeV_DirPh_CMS_30100) tTot_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Tot_30100");
-        if (graphWA98_Gamma_Tot_0010) graphWA98_Gamma_Tot_0010->Write("graph_WA98_PbPb17.2GeV_Tot_0010");
+        if (tStat_2760GeV_DirPh_CMS_0010)       tStat_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Stat_0010");
+        if (tSys_2760GeV_DirPh_CMS_0010)        tSys_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Sys_0010");
+        if (tTot_2760GeV_DirPh_CMS_0010)        tTot_2760GeV_DirPh_CMS_0010->Write("graph_CMS_PbPb2760GeV_Tot_0010");
+        if (tStat_2760GeV_DirPh_CMS_1030)       tStat_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Stat_1030");
+        if (tSys_2760GeV_DirPh_CMS_1030)        tSys_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Sys_1030");
+        if (tTot_2760GeV_DirPh_CMS_1030)        tTot_2760GeV_DirPh_CMS_1030->Write("graph_CMS_PbPb2760GeV_Tot_1030");
+        if (tStat_2760GeV_DirPh_CMS_30100)      tStat_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Stat_30100");
+        if (tSys_2760GeV_DirPh_CMS_30100)       tSys_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Sys_30100");
+        if (tTot_2760GeV_DirPh_CMS_30100)       tTot_2760GeV_DirPh_CMS_30100->Write("graph_CMS_PbPb2760GeV_Tot_30100");
+        if (graphATLAS2760GeVStat_0010)         graphATLAS2760GeVStat_0010->Write("graph_ATLAS_PbPb2760GeV_Stat_0010");
+        if (graphATLAS2760GeVSys_0010)          graphATLAS2760GeVSys_0010->Write("graph_ATLAS_PbPb2760GeV_Sys_0010");
+        if (graphATLAS2760GeVTot_0010)          graphATLAS2760GeVTot_0010->Write("graph_ATLAS_PbPb2760GeV_Tot_0010");
+        if (graphATLAS2760GeVStat_1020)         graphATLAS2760GeVStat_1020->Write("graph_ATLAS_PbPb2760GeV_Stat_1020");
+        if (graphATLAS2760GeVSys_1020)          graphATLAS2760GeVSys_1020->Write("graph_ATLAS_PbPb2760GeV_Sys_1020");
+        if (graphATLAS2760GeVTot_1020)          graphATLAS2760GeVTot_1020->Write("graph_ATLAS_PbPb2760GeV_Tot_1020");
+        if (graphATLAS2760GeVStat_2040)         graphATLAS2760GeVStat_2040->Write("graph_ATLAS_PbPb2760GeV_Stat_2040");
+        if (graphATLAS2760GeVSys_2040)          graphATLAS2760GeVSys_2040->Write("graph_ATLAS_PbPb2760GeV_Sys_2040");
+        if (graphATLAS2760GeVTot_2040)          graphATLAS2760GeVTot_2040->Write("graph_ATLAS_PbPb2760GeV_Tot_2040");
+        if (graphATLAS2760GeVStat_4080)         graphATLAS2760GeVStat_4080->Write("graph_ATLAS_PbPb2760GeV_Stat_4080");
+        if (graphATLAS2760GeVSys_4080)          graphATLAS2760GeVSys_4080->Write("graph_ATLAS_PbPb2760GeV_Sys_4080");
+        if (graphATLAS2760GeVTot_4080)          graphATLAS2760GeVTot_4080->Write("graph_ATLAS_PbPb2760GeV_Tot_4080");
+        if (graphWA98_Gamma_Tot_0010)           graphWA98_Gamma_Tot_0010->Write("graph_WA98_PbPb17.2GeV_Tot_0010");
+        if (graphWA98_Gamma_TotAr_0010)         graphWA98_Gamma_TotAr_0010->Write("graph_WA98_PbPb17.2GeV_TotAr_0010");
     fileExperimetalSummary.Close();
 }

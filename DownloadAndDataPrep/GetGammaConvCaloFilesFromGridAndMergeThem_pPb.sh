@@ -267,7 +267,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13b2_efix_p3MC="child_3";
 # LHC13b2_efix_p4MC="child_4";
 
-TRAINDIR=Legotrain-vAN20180718-triggQA
+# TRAINDIR=Legotrain-vAN20180718-triggQA
 # LHC13bcData="765"; #pass 3
 # LHC13bData="child_1"; #pass 3
 # LHC13cData="child_2"; #pass 2
@@ -278,9 +278,26 @@ TRAINDIR=Legotrain-vAN20180718-triggQA
 # LHC13b4fixMC="1286";
 # LHC13b4plusMC="1287";
 # LHC16c3aMC="1290";
-LHC16c3a2MC="1292";
+# LHC16c3a2MC="1292";
 # LHC16c3bMC="1291";
 # LHC16c3b2MC="1293";
+
+TRAINDIR=Legotrain-vAN20181010-dirGamma
+LHC13bcData="780"; #pass 3
+LHC13bData="child_1"; #pass 3
+LHC13cData="child_2"; #pass 2
+LHC13deData="782"; #pass 3
+LHC13dData="child_1"; #pass 4
+LHC13eData="child_2"; #pass 4
+LHC13fData="783"; #pass 4
+LHC13b2_efix="1309"
+LHC13b2_efix_p1MC="child_1";
+LHC13b2_efix_p2MC="child_2";
+LHC13b2_efix_p3MC="child_3";
+LHC13b2_efix_p4MC="child_4";
+LHC13b4fixMC="1310";
+LHC13b4plusMC="1311";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 OUTPUTDIRMC=$BASEDIR/$TRAINDIR/GA_pPb_MC

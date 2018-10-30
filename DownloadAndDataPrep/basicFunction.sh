@@ -213,6 +213,7 @@ function CopyFileIfNonExisitent()
             if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
                 echo "copied correctly"
             else
+                echo "prolems in this function: CopyFileIfNonExisitent"
                 rm -f locallog.txt
                 if [ "$4" != "none" ]; then
                     if [ "$4" == "*Stage*" ]; then
@@ -695,7 +696,7 @@ function MergeFilesAccrossYears()
         for runList in $runLists; do
             for trainConfig in $trainconfigList; do
                 echo -e "\n\n---=== Adding runlist \"${runList}\", train config \"${trainConfig}\" ===---"
-                endString="-pass?-${runList}_${trainConfig}.root"   
+                endString="-pass?-${runList}_${trainConfig}.root"
                 fileNames=`ls ${beginString}*${endString}`
                 mergePeriods=""
                 echo "" > temp_YearList.txt # clean file

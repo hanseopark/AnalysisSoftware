@@ -17,7 +17,7 @@ MERGEONMC=1
 SINGLERUN=0
 SEPARATEON=0
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=1
+MERGEONSINGLEMC=0
 SPECIALMERGE=0
 ISADDDOWNLOAD=0
 ADDDOWNLOADALREADY=0
@@ -299,12 +299,29 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13b2_efix_p3MC="child_3";
 # LHC13b2_efix_p4MC="child_4";
 
-TRAINDIR=Legotrain-vAN20180916-dirGamma
-LHC13b2_efix="1306"
+# TRAINDIR=Legotrain-vAN20180916-dirGamma
+# LHC13b2_efix="1306"
+# LHC13b2_efix_p1MC="child_1";
+# LHC13b2_efix_p2MC="child_2";
+# LHC13b2_efix_p3MC="child_3";
+# LHC13b2_efix_p4MC="child_4";
+
+TRAINDIR=Legotrain-vAN20181010-dirGamma
+# LHC13bcData="780"; #pass 3
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+# LHC13deData="782"; #pass 3
+# LHC13dData="child_1"; #pass 4
+# LHC13eData="child_2"; #pass 4
+# LHC13fData="783"; #pass 4
+LHC13b2_efix="1314"
+# LHC13b2_efix="1309"
 LHC13b2_efix_p1MC="child_1";
 LHC13b2_efix_p2MC="child_2";
 LHC13b2_efix_p3MC="child_3";
 LHC13b2_efix_p4MC="child_4";
+# LHC13b4fixMC="1310";
+# LHC13b4plusMC="1311";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -366,9 +383,9 @@ fi
 # parse grid directories for correct train output dir for LHC13bc
 if [ $HAVELHC13b == 1 ]; then
     if [ $HAVETOBUILDLHC13bc == 1 ]; then
-        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_ | grep $LHC13bData`
+        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_2 | grep $LHC13bData`
     else
-        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bData\_`
+        LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bData\_2`
     fi
     if [ "$LHC13bData" == "" ]; then
         HAVELHC13b=0;
@@ -379,9 +396,9 @@ if [ $HAVELHC13b == 1 ]; then
 fi
 if [ $HAVELHC13c == 1 ]; then
     if [ $HAVETOBUILDLHC13bc == 1 ]; then
-        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_ | grep $LHC13cData`
+        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bcData\_2 | grep $LHC13cData`
     else
-        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13cData\_`
+        LHC13cData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13cData\_2`
     fi
     if [ "$LHC13cData" == "" ]; then
         HAVELHC13c=0;
@@ -393,9 +410,9 @@ fi
 # parse grid directories for correct train output dir for LHC13de
 if [ $HAVELHC13d == 1 ]; then
     if [ $HAVETOBUILDLHC13de == 1 ]; then
-        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13dData`
+        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_2 | grep $LHC13dData`
     else
-        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13dData\_`
+        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13dData\_2`
     fi
     if [ "$LHC13dData" == "" ]; then
         HAVELHC13d=0;
@@ -406,9 +423,9 @@ if [ $HAVELHC13d == 1 ]; then
 fi
 if [ $HAVELHC13e == 1 ]; then
     if [ $HAVETOBUILDLHC13de == 1 ]; then
-        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13eData`
+        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_2 | grep $LHC13eData`
     else
-        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13eData\_`
+        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13eData\_2`
     fi
     if [ "$LHC13eData" == "" ]; then
         HAVELHC13e=0;
@@ -429,9 +446,9 @@ fi
 
 if [ $HAVELHC13b2efixp1 == 1 ]; then
     if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p1MC`
+        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_2 | grep $LHC13b2_efix_p1MC`
     else
-        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p1MC\_`
+        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p1MC\_2`
     fi
     if [ "$LHC13b2_efix_p1MC" == "" ]; then
         HAVELHC13b2efixp1=0;
@@ -441,9 +458,9 @@ if [ $HAVELHC13b2efixp1 == 1 ]; then
 fi
 if [ $HAVELHC13b2efixp2 == 1 ]; then
     if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p2MC`
+        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_2 | grep $LHC13b2_efix_p2MC`
     else
-        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p2MC\_`
+        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p2MC\_2`
     fi
     if [ "$LHC13b2_efix_p2MC" == "" ]; then
         HAVELHC13b2efixp2=0;
@@ -453,9 +470,9 @@ if [ $HAVELHC13b2efixp2 == 1 ]; then
 fi
 if [ $HAVELHC13b2efixp3 == 1 ]; then
     if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p3MC`
+        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_2 | grep $LHC13b2_efix_p3MC`
     else
-        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p3MC\_`
+        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p3MC\_2`
     fi
     if [ "$LHC13b2_efix_p3MC" == "" ]; then
         HAVELHC13b2efixp3=0;
@@ -465,9 +482,9 @@ if [ $HAVELHC13b2efixp3 == 1 ]; then
 fi
 if [ $HAVELHC13b2efixp4 == 1 ]; then
     if [ $HAVETOBUILDMC == 1 ]; then
-        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_ | grep $LHC13b2_efix_p4MC`
+        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix\_2 | grep $LHC13b2_efix_p4MC`
     else
-        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p4MC\_`
+        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p4MC\_2`
     fi
     if [ "$LHC13b2_efix_p4MC" == "" ]; then
         HAVELHC13b2efixp4=0;
@@ -476,7 +493,7 @@ if [ $HAVELHC13b2efixp4 == 1 ]; then
     fi
 fi
 if [ $HAVELHC13e7 == 1 ]; then
-    LHC13e7MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_`
+    LHC13e7MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_2`
     if [ "$LHC13e7MC" == "" ]; then
         HAVELHC13e7=0;
     else
@@ -484,7 +501,7 @@ if [ $HAVELHC13e7 == 1 ]; then
     fi
 fi
 if [ $HAVELHC13b4fix == 1 ]; then
-    LHC13b4fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4fixMC\_`
+    LHC13b4fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4fixMC\_2`
     if [ "$LHC13b4fixMC" == "" ]; then
         HAVELHC13b4fix=0;
     else
@@ -492,7 +509,7 @@ if [ $HAVELHC13b4fix == 1 ]; then
     fi
 fi
 if [ $HAVELHC13b4plus == 1 ]; then
-    LHC13b4plusMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4plusMC\_`
+    LHC13b4plusMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b4plusMC\_2`
     if [ "$LHC13b4plusMC" == "" ]; then
         HAVELHC13b4plus=0;
     else

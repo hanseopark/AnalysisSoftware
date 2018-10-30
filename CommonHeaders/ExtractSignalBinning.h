@@ -1029,7 +1029,7 @@
                             break;
                     }
                 } else if (mode == 5){
-                    return 10;
+                    return 12;
                 } else {
                     return 6;
                 }
@@ -5876,6 +5876,18 @@
                     }
                 }
             }
+        }
+        if (fExampleBin < fStartPtBin || fExampleBin > fNBinsPt){
+            if (fExampleBin < fStartPtBin)
+                fExampleBin = fStartPtBin;
+            if (fExampleBin > fNBinsPt)
+                fExampleBin = fNBinsPt-1;
+            cout << "**************************************************************************************************************************************" << endl;
+            cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+            cout << "You have chosen an incompatible Example bin it should lie between " << fStartPtBin << "\t" << fNBinsPt << endl;
+            cout << "The example bin has been reset to: " << fExampleBin << ", please fix this in the code"<< endl;
+            cout << "**************************************************************************************************************************************" << endl;
+            fExampleBin = fStartPtBin;
         }
     }
 
