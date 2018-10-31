@@ -179,8 +179,8 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
 
 
   //fDetectionProcess 			= ReturnFullTextReconstructionProcess(mode);
-  TString particle[6]           = {"Pi0", "Eta", "EtaPrim", "Omega", "PiPl", "PiMi"};
-  TString particlelegend[6]     = {"#pi^{0}", "#eta", "#eta^{l}", "#omega", "#pi^{+}", "#pi^{-}"};
+  TString particle[8]           = {"Pi0", "Eta", "EtaPrime", "Omega", "PiPl", "PiMi", "KPl", "KMi"};
+  TString particlelegend[8]     = {"#pi^{0}", "#eta", "#eta^{l}", "#omega", "#pi^{+}", "#pi^{-}","K^{+}", "K^{-}"};
   // translate particle string to plotting string
 
   TString ptcut                 ="";
@@ -189,10 +189,10 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
 
   TString binning="";
   // histograms for MB
-  TH2F* fHPt_Y_ParticleMB[6];
-  TH1D* fHPt_ParticleMB[6];
-  TH1D* fHPt_ParticleMBUB[6];
-  TH1D* fHPt_ParticleMB_XSec[6];
+  TH2F* fHPt_Y_ParticleMB[8];
+  TH1D* fHPt_ParticleMB[8];
+  TH1D* fHPt_ParticleMBUB[8];
+  TH1D* fHPt_ParticleMB_XSec[8];
 
   TH1D* fHNEventsMB;
   TH1D* fHXSectionMB;
@@ -219,8 +219,9 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
     cout << "total inel. cross section #sigma_{inel} = " << fHXSectionMB->GetMean() * 1e9 << " pb" << endl;
     Int_t eventInMio    = (Int_t)(fHNEventsMB->GetBinContent(1)/1e6);
 
-    for (Int_t i = 0; i < 6; i++){
+    for (Int_t i = 0; i < 8; i++){
         // get particle histograms
+
         fHPt_Y_ParticleMB[i]    = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%s",particle[i].Data()))->Clone(Form("Pt_Y_%s_MB",particle[i].Data()));
 
         //scale
@@ -300,7 +301,7 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
     legendScaled->SetMargin(0.12);
     //    legendScaled->SetNColumns(2);
 
-    for (Int_t i = 0; i< 6; i++){
+    for (Int_t i = 0; i< 8; i++){
         DrawGammaSetMarker(fHPt_ParticleMB[i], markerBins[i], 1., colorBins[i], colorBins[i]);
         DrawGammaSetMarker(fHPt_ParticleMB_XSec[i], markerBins[i], 1., colorBins[i], colorBins[i]);
         fHPt_ParticleMB[i]->DrawCopy("e1,same");
@@ -321,7 +322,7 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
     TFile* fout = new TFile(Form("%s_%s_%s_%dMio.root",generator.Data(),tune.Data(),energy.Data(),eventInMio),"RECREATE");
     fHNEventsMB->Write();
     fHXSectionMB->Write();
-    for (Int_t i = 0; i< 6; i++){
+    for (Int_t i = 0; i< 8; i++){
         fHPt_ParticleMB[i]->Write();
         fHPt_ParticleMB_XSec[i]->Write();
     }
