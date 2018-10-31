@@ -42,8 +42,8 @@ void CompileCorrectGammaV2(){
     // Afterwards you have to add the location of the software here for your system
     //*****************************************************************************************
 
-  #if !defined (__CINT__) || defined (__CLING__)
-  cout << " USING ROOT6, NO NEED TO LOAD RooUnfold !!! " << endl;
+  #ifdef __CLING__
+    cout << " USING ROOT6, NO NEED TO LOAD RooUnfold !!! " << endl;
   #else
     TString homedirectory = gSystem->HomeDirectory();
 	cout << "***************************************" << endl;

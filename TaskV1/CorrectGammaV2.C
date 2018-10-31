@@ -43,8 +43,7 @@
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
-#include "CorrectGammaV2.h"
-#if !defined(__CINT__) || defined(__CLING__)
+#ifdef __CLING__
 // include something for ROOT6 here
 #else
 #include "../RooUnfold/src/RooUnfold.h"
@@ -52,6 +51,7 @@
 #include "../RooUnfold/src/RooUnfoldBayes.h"
 #include "../RooUnfold/src/RooUnfoldBinByBin.h"
 #endif
+#include "CorrectGammaV2.h"
 
 //*********************************************************************************************************
 //***************************** Main routine to correct inclusive photons *********************************
