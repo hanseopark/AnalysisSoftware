@@ -567,17 +567,23 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     } else if (!energy.CompareTo("7TeV") && mode == 0) {
         minPtFitSec[2]                                              = 0.4;
         maxPtFitSec[2]                                              = 1.6;
-
+    } else if (!energy.CompareTo("7TeV") && mode == 2) {
+        FitSecFunction[0]                                           = kFitSecConst;
+        minPtFitSec[0]                                              = 0.8;
+        maxPtFitSec[0]                                              = 16.0;
+        FitSecFunction[1]                                           = kFitSecConst;
+        minPtFitSec[1]                                              = 0.8;
+        maxPtFitSec[1]                                              = 5.0;
+        minPtFitSec[2]                                              = 0.8;
+        maxPtFitSec[2]                                              = 2.0;
     } else if (!energy.CompareTo("7TeV") && mode == 4) {
         minPtFitSec[0]                                              = 1.2;
-        minPtFitSec[1]                                              = 1.2;
-        minPtFitSec[2]                                              = 1.2;
-
-        maxPtFitSec[0]                                              = maxPtGamma;
-        maxPtFitSec[1]                                              = 7.0;
-        maxPtFitSec[2]                                              = 2.4;
-
+        maxPtFitSec[0]                                              = 16.0;
         FitSecFunction[1]                                           = kFitSecExp;
+        minPtFitSec[1]                                              = 1.2;
+        maxPtFitSec[1]                                              = 16.0;
+        minPtFitSec[2]                                              = 1.2;
+        maxPtFitSec[2]                                              = 4.0;
     } else if (!energy.CompareTo("8TeV") && mode == 0) {
         minPtFitSec[1]                                              = 1.0;
         maxPtFitSec[1]                                              = 2.0;
@@ -869,6 +875,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxPtFitSec[1]                                              = 50.;
             maxPtFitSec[2]                                              = 50.;
         }
+    }else if(energy.Contains("7TeV") && mode == 2){
+        FitConvProbFunction[0]                                          = kFitConvProbPowerOffset;
+        minPtFitSec[0]                                                  = 1.0;
+        maxPtFitSec[0]                                                  = 16.;
+        FitConvProbFunction[1]                                          = kFitConvProbPowerOffset;
+        minPtFitSec[1]                                                  = 0.8;
+        maxPtFitSec[1]                                                  = 6.;
+        minPtFitSec[2]                                                  = 0.8;
+        maxPtFitSec[2]                                                  = 4.;
     }else if(energy.Contains("8TeV") && mode == 2){
         FitConvProbFunction[0]                                          = kFitConvProbPowerOffset;
         minPtFitSec[0]                                                  = 1.0;
