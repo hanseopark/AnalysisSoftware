@@ -1803,7 +1803,7 @@
                 return 4.667;
             }
         } else if (energy.CompareTo("dAu_0.2TeV") == 0){
-            if (name.CompareTo("00100") == 0){ //0-100%
+            if (name.CompareTo("00100") == 0) //0-100%
                 return 7.59;
         } else if (energy.CompareTo("PbPb_2.76TeV_ATLAS") == 0){
             if (name.CompareTo("0010") == 0){ //0-10%
