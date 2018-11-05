@@ -74,8 +74,8 @@ void PrimaryTrackQA(
     }
     Color_t colorCompare[maxSets]       = {kBlack, kRed+1, kMagenta+2, 807, 800, kGreen+2, kCyan+2, kBlue+1, kOrange+2, kAzure, kViolet, kGray+1};
     TString nameMainDir[maxSets];
-    Double_t processLabelOffsetX1       = 0.82;
-    Double_t processLabelOffsetX2       = 0.65;
+    Double_t processLabelOffsetX1       = 0.9;
+    Double_t processLabelOffsetX2       = 0.83;
     TString* fCutSelection              = new TString[nSets];
     TString* fTypeCutSelection          = new TString[nSets];
     TString* fEventCutSelection         = new TString[nSets];

@@ -1302,7 +1302,7 @@
                                                             TString nameWeightsOutputFile = "output.dat",
                                                             TString energy = "2.76TeV", TString mesonType = "Pi0", Bool_t isV2ClusterMerged = kFALSE,
                                                             TGraphAsymmErrors** graphSystCorrFactors = NULL,
-                                                            TString fileCorrFactors = "", TString folderName = ""
+                                                            TString fileCorrFactors = "", TString folderName = "", Int_t mode = -1
                                                         ){
 
         TFile* fCorrFactors = 0x0;
@@ -1459,12 +1459,16 @@
             Double_t corrFracPCMDal_PCMDal_EMC[2]       = {0};
             Double_t corrFracEMC_PCMDal_EMC[2]          = {0};
 
+
             // correlation fraction between PCM-PHOS and PCM-EMC
             Double_t corrFracPCMPHOS_PCMEMC_PCMPHOS[2] = {0};
             Double_t corrFracPCMEMC_PCMEMC_PCMPHOS[2]  = {0};
             // correlation fraction between PCM-PHOS and PCM-Dal
             Double_t corrFracPCMPHOS_PCMDal_PCMPHOS[2] = {0};
             Double_t corrFracPCMDal_PCMDal_PCMPHOS[2]  = {0};
+            // correlation fraction between PCM-PHOS and EMCal (needed for three pion analysis)
+            Double_t corrFracPCMPHOS_EMC_PCMPHOS[2]            =  {0};
+            Double_t corrFracEMC_EMC_PCMPHOS[2]                =  {0};
 
             // correlation fraction between PCM-EMC and PCM-Dal
             Double_t corrFracPCMEMC_PCMEMC_PCMDal[2]   = {0};
@@ -1540,15 +1544,69 @@
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCMEMC-EMC");
                 corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "EMC_PCMEMC-EMC");
             } else if (energy.CompareTo("7TeV") == 0 && mesonType.CompareTo("Eta") == 0){
-                corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-PCMEMC");
-                corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_PCMEMC-EMC");
-                corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCMEMC-EMC");
+                if(mode=!40){
+                    corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-PCMEMC");
+                    corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCM-PCMEMC");
+                    corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_PCMEMC-EMC");
+                    corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCMEMC-EMC");
+                } else{
+                    corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-PCMEMC");
+                    corrFracPCM_PCM_PCMPHOS[0]             = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-PCMPHOS");
+                    corrFracPCM_PCM_PHOS[0]                = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-PHOS");
+                    corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCM_PCM-EMC");
+
+                    corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCM-PCMEMC");
+                    corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCMEMC-EMC");
+                    corrFracPCMEMC_PCMEMC_PCMPHOS[0]       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCMEMC-PCMPHOS");
+                    corrFracPCMEMC_PCMEMC_PHOS[0]          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMEMC_PCMEMC-PHOS");
+
+                    corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_PCM-EMC");
+                    corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_PCMEMC-EMC");
+                    corrFracEMC_EMC_PCMPHOS[0]             = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_EMC-PCMPHOS");
+                    corrFracEMC_EMC_PHOS[0]                = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_EMC-PHOS");
+
+                    corrFracPCMPHOS_PCM_PCMPHOS[0]         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMPHOS_PCM-PCMPHOS");
+                    corrFracPCMPHOS_PCMEMC_PCMPHOS[0]      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMPHOS_PCMEMC-PCMPHOS");
+                    corrFracPCMPHOS_EMC_PCMPHOS[0]         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMPHOS_EMC-PCMPHOS");
+                    corrFracPCMPHOS_PCMPHOS_PHOS[0]        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PCMPHOS_PCMPHOS-PHOS");
+
+                    corrFracPHOS_PCM_PHOS[0]               = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PHOS_PCM-PHOS");
+                    corrFracPHOS_PCMEMC_PHOS[0]            = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PHOS_PCMEMC-PHOS");
+                    corrFracPHOS_EMC_PHOS[0]               = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PHOS_EMC-PHOS");
+                    corrFracPHOS_PCMPHOS_PHOS[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "PHOS_PCMPHOS-PHOS");
+                }
+
             } else if (energy.CompareTo("7TeV") == 0 && mesonType.CompareTo("EtaToPi0") == 0){
                 corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0EtaBinning", "PCM_PCM-PCMEMC");
                 corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0EtaBinning", "PCMEMC_PCM-PCMEMC");
                 corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0EtaBinning", "EMC_PCMEMC-EMC");
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0EtaBinning", "PCMEMC_PCMEMC-EMC");
+            } else if (energy.CompareTo("7TeV") == 0 && mesonType.CompareTo("Omega") == 0){
+                corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCM_PCM-PCMEMC");
+                corrFracPCM_PCM_PCMPHOS[0]             = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCM_PCM-PCMPHOS");
+                corrFracPCM_PCM_PHOS[0]                = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCM_PCM-PHOS");
+                corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCM_PCM-EMC");
+
+                corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMEMC_PCM-PCMEMC");
+                corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMEMC_PCMEMC-EMC");
+                corrFracPCMEMC_PCMEMC_PCMPHOS[0]       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMEMC_PCMEMC-PCMPHOS");
+                corrFracPCMEMC_PCMEMC_PHOS[0]          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMEMC_PCMEMC-PHOS");
+
+                corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "EMC_PCM-EMC");
+                corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "EMC_PCMEMC-EMC");
+                corrFracEMC_EMC_PCMPHOS[0]             = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "EMC_EMC-PCMPHOS");
+                corrFracEMC_EMC_PHOS[0]                = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "EMC_EMC-PHOS");
+
+                corrFracPCMPHOS_PCM_PCMPHOS[0]         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMPHOS_PCM-PCMPHOS");
+                corrFracPCMPHOS_PCMEMC_PCMPHOS[0]      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMPHOS_PCMEMC-PCMPHOS");
+                corrFracPCMPHOS_EMC_PCMPHOS[0]         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMPHOS_EMC-PCMPHOS");
+                corrFracPCMPHOS_PCMPHOS_PHOS[0]        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PCMPHOS_PCMPHOS-PHOS");
+
+                corrFracPHOS_PCM_PHOS[0]               = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PHOS_PCM-PHOS");
+                corrFracPHOS_PCMEMC_PHOS[0]            = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PHOS_PCMEMC-PHOS");
+                corrFracPHOS_EMC_PHOS[0]               = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PHOS_EMC-PHOS");
+                corrFracPHOS_PCMPHOS_PHOS[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Omega", "PHOS_PCMPHOS-PHOS");
+
             } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("Pi0") == 0){
                 corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCM_PCM-PCMEMC");
                 corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCM-PCMEMC");
@@ -1814,11 +1872,31 @@
                 cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
                 cout << cvPHO_PCMEMC << endl;
             }
-                                            //PCM           PHOS            EMCal           PCM-PHOS            PCM-EMCal           PCM-Dalitz          PHOS-Dalitz         EMCal-Dalitz        spare   EMCAL merged    PCMOtherDataset
-            Double_t cvMatrix[11][11] = {   { 1,            0,              cvEMC_PCM,      cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
-                                            { 0,            1,              cvEMC_PHOS,     cvPHO_PCMPHO,       cvPHO_PCMEMC,       0,                  cvPHO_PHODal,       0,                  0,      0,              0,              },
-                                            { cvEMC_PCM,    cvEMC_PHOS,     1,              0,                  cvEMC_PCMEMC,       cvEMC_PCMDal,       0,                  cvEMC_EMCDal,       0,      cvEMC_EMCm,     0,              },
-                                            { cvPCM_PCMPHO, cvPHO_PCMPHO,   0,              1,                  cvPCMPHO_PCMEMC,    cvPCMPHO_PCMDal,    cvPCMPHO_PHODal,    0,                  0,      0,              0,              },
+            Double_t cvPCM_PHOS = 0.;
+            if (yValue[0]>0 && yValue[1]>0 ){
+                cvPCM_PHOS        = ( corrFracPCM_PCM_PHOS[0]*ySysErr[0]*corrFracPHOS_PCM_PHOS[0]*ySysErr[1] +
+                                        corrFracPCM_PCM_PHOS[1]*yStatErr[0]*corrFracPHOS_PCM_PHOS[1]*yStatErr[1])
+                                        / (yTotErr[0]*yTotErr[1]);
+                if (cvPCM_PHOS > 1) cvPCM_PHOS = 0.98;
+                cout << nameMeas[0] <<  " sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
+                cout << nameMeas[1] <<  " sys error : "  << ySysErr[1] << "\t, total err: " <<  yTotErr[1] << endl;
+                cout << cvPCM_PHOS << endl;
+            }
+            Double_t cvEMC_PCMPHOS = 0.;
+            if (yValue[3]>0 && yValue[4]>0 ){
+                cvEMC_PCMPHOS        = ( corrFracEMC_EMC_PCMPHOS[0]*ySysErr[3]*corrFracPCMPHOS_EMC_PCMPHOS[0]*ySysErr[4] +
+                                        corrFracEMC_EMC_PCMPHOS[1]*yStatErr[3]*corrFracPCMPHOS_EMC_PCMPHOS[1]*yStatErr[4])
+                                        / (yTotErr[3]*yTotErr[4]);
+                if (cvEMC_PCMPHOS > 1) cvEMC_PCMPHOS = 0.98;
+                cout << nameMeas[3] <<  " sys error : "  << ySysErr[3] << "\t, total err: " <<  yTotErr[3] << endl;
+                cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
+                cout << cvEMC_PCMPHOS << endl;
+            }
+                                            //PCM           PHOS                 EMCal           PCM-PHOS            PCM-EMCal           PCM-Dalitz          PHOS-Dalitz         EMCal-Dalitz        spare   EMCAL merged    PCMOtherDataset
+            Double_t cvMatrix[11][11] = {   { 1,            cvPCM_PHOS,      cvEMC_PCM,      cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
+                                            { cvPCM_PHOS,    1,              cvEMC_PHOS,     cvPHO_PCMPHO,       cvPHO_PCMEMC,       0,                  cvPHO_PHODal,       0,                  0,      0,              0,              },
+                                            { cvEMC_PCM,    cvEMC_PHOS,     1,               cvEMC_PCMPHOS,      cvEMC_PCMEMC,       cvEMC_PCMDal,       0,                  cvEMC_EMCDal,       0,      cvEMC_EMCm,     0,              },
+                                            { cvPCM_PCMPHO, cvPHO_PCMPHO,   cvEMC_PCMPHOS,              1,      cvPCMPHO_PCMEMC,    cvPCMPHO_PCMDal,    cvPCMPHO_PHODal,    0,                  0,      0,              0,              },
                                             { cvPCM_PCMEMC, cvPHO_PCMEMC,   cvEMC_PCMEMC,   cvPCMPHO_PCMEMC,    1,                  cvPCMEMC_PCMDal,    0,                  cvPCMEMC_EMCDal,    0,      cvPCMEMC_EMCm,  0,              },
                                             { cvPCM_PCMDal, 0,              cvEMC_PCMDal,   cvPCMPHO_PCMDal,    cvPCMEMC_PCMDal,    1,                  cvPCMDal_PHODal,    cvPCMDal_EMCDal,    0,      0,              cvPCM_PCMDal,   },
                                             { 0,            cvPHO_PHODal,   0,              cvPCMPHO_PHODal,    0,                  cvPCMDal_PHODal,    1,                  cvPHODal_EMCDal,    0,      0,              cvPCM_PCMEMC,   },

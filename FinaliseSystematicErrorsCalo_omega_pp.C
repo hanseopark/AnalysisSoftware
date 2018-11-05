@@ -904,7 +904,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
         }
         if(meson.CompareTo("EtaToPi0"))
-            SysErrDatAverSingle << 9 << "\t";
+            SysErrDatAverSingle << errorsMat[l] << "\t";
         SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
     }
     SysErrDatAverSingle.close();

@@ -2105,12 +2105,12 @@
                 if(namePlot.Contains("SubPiZero") == kTRUE){
                   DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
                                   titlePt,
-                                  Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                   fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                   //             cout << "here" << endl;
                   DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
                                   titlePt,
-                                  Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                   fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
                   //             cout << "here" << endl;
                 } else{
@@ -2201,19 +2201,14 @@
         Size_t linesize         = fHistoMappingBackNormInvMassPtBinPlot[exampleBin]->GetLineWidth();
         fHistoMappingBackNormInvMassPtBinPlot[exampleBin]->SetLineWidth(5*linesize);
         if(BckNmb==0){
-            if(namePlot.Contains("SubPiZero") == kTRUE){
-                legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s} - #it{M}_{#pi^{0}}",decayChannel.Data()),"l");
-
-            } else if(namePlot.Contains("FixedPzPiZero") == kTRUE){
+            if(namePlot.Contains("FixedPzPiZero") == kTRUE){
                 legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s} (p_{z} of #pi^{0} fixed)",decayChannel.Data()),"l");
 
             } else{
                 legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s}",decayChannel.Data()),"l");
             }
         } else{
-            if(namePlot.Contains("SubPiZero") == kTRUE){
-                legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s} - #it{M}_{#pi^{0}} group %d",decayChannel.Data(),BckNmb),"l");
-            } else if(namePlot.Contains("FixedPzPiZero") == kTRUE){
+            if(namePlot.Contains("FixedPzPiZero") == kTRUE){
                 legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s} group %d (p_{z} of #pi^{0} fixed)",decayChannel.Data(),BckNmb),"l");
             } else{
                 legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[exampleBin],Form("mixed evt. #it{M}_{%s} group %d",decayChannel.Data(),BckNmb),"l");
@@ -2909,16 +2904,10 @@
                 if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
                 else padDataFit->cd(place)->SetLeftMargin(0.25);
                 cout << place << "\t";
-                TString xlabel;
-                TString ylabel;
 
-                if(namePlot.Contains("SubPiZero") == kTRUE){
-                  xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
-                  ylabel = Form("dN_{%s}/d#it{M}_{#pi^{+} #pi^{-}}", decayChannel.Data());
-                } else{
-                  xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
-                  ylabel = Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data());
-                }
+                TString xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
+                TString ylabel = Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data());
+
 
                 if (labelData) {
                     TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);

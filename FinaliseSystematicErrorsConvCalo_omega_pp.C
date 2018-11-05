@@ -755,7 +755,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     Double_t errorInnerMaterial = 4.5;
 
     // outer material budget from EMCal
-    Double_t errorOuterMaterial = 3.;
+    Double_t errorOuterMaterial = 1.5;
 
     //calculate sqrt of summed errors
     for (Int_t l = 0; l < nPtBins; l++){
@@ -783,8 +783,8 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     Double_t errorsMat[nPtBins];
     Double_t errorsErrMat[nPtBins];
     for (Int_t l = 0; l < nPtBins; l++){
-        errorsMat[l]    = pow(errorInnerMaterial + errorOuterMaterial,0.5);
-        errorsErrMat[l] = pow(errorInnerMaterial + errorOuterMaterial,0.5)/100;
+        errorsMat[l]    = pow(pow(errorInnerMaterial,2) + pow(errorOuterMaterial,2),0.5);
+        errorsErrMat[l] = pow(pow(errorInnerMaterial,2) + pow(errorOuterMaterial,2),0.5)/100;
     }
 
     TGraphErrors* graphMaterialError    = new TGraphErrors(nPtBins,ptBins ,errorsMat ,ptBinsErr ,errorsErrMat );
@@ -1045,7 +1045,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
         }
         if(meson.CompareTo("EtaToPi0"))
-            SysErrDatAverSingle << 9 << "\t";
+            SysErrDatAverSingle << errorsMat[l] << "\t";
         SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
     }
     SysErrDatAverSingle.close();
