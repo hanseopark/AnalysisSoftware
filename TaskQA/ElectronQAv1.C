@@ -338,7 +338,7 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
        
        TString collisionSystem  = ReturnFullCollisionsSystem(energy);
        
-       TLatex *processSystem = new TLatex(0.63, 0.92,Form(collisionSystem.Data()));
+       TLatex *processSystem = new TLatex(0.63, 0.92,Form("%s",collisionSystem.Data()));
         processSystem->SetNDC();
         processSystem->SetTextColor(1);
         processSystem->SetTextSize(0.04);

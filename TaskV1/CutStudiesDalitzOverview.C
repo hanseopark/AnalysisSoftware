@@ -343,7 +343,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          cutStringsName[i] = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
       } else if (cutVariationName.Contains("Chi2")){
          TString fChi2Cut = fGammaCutSelection(12,1);
-         cutStringsName[i] = AnalyseChi2GammaCut(CutNumberToInteger(fChi2Cut));
+         TString fPsiPairCut = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
+         cutStringsName[i] = AnalyseChi2GammaCut(CutNumberToInteger(fChi2Cut),CutNumberToInteger(fPsiPairCut));
       } else if (cutVariationName.Contains("Rapidity")){
          TString fRapidityCut = fMesonCutSelection(4,1);
          cutStringsName[i] = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
@@ -352,13 +353,10 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          cutStringsName[i] = AnalyseAlphaMesonCut(CutNumberToInteger(fAlphaCut));
 	 
       } else if (cutVariationName.Contains("PsiPairDelthaPhi") ){
-	
-	 TString fPsiPairDelthaPhi = fElectronCutSelection(11,1);
-	 
-	 cout<<"String: "<< fElectronCutSelection.Data() <<" Code: "<<fPsiPairDelthaPhi.Data()<<endl;
-	 
-     cutStringsName[i] = AnalysePsiPairDelthaPhiCut( CutNumberToInteger(fPsiPairDelthaPhi) );
-	 
+        TString fPsiPairDelthaPhi = fElectronCutSelection(11,1);
+        cout<<"String: "<< fElectronCutSelection.Data() <<" Code: "<<fPsiPairDelthaPhi.Data()<<endl;
+//cutStringsName[i] = AnalysePsiPairDelthaPhiCut(CutNumberToInteger(fPsiPairDelthaPhi));
+//There is no function on Labelling
       } else {
          cutStringsName[i] = cutNumberAdv[i].Data();
       }

@@ -3017,10 +3017,10 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TString nameEfi ){
       cout<<"CalculateMesonEfficiency"<<endl;
     for (Int_t BiS = 0; BiS < fHistoMCMesonWithinAccepPt->GetNbinsX()+1; BiS++){
         if(fHistoMCMesonWithinAccepPt->GetBinContent(BiS) == 0){
-            cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
+            /*cout<<"We find a bin with zero value on him, so we fill with 1, you must check the range of the fits"<<endl;
             fHistoMCMesonWithinAccepPt->SetBinError(BiS,1.);
             fHistoMCMesonWithinAccepPt->SetBinContent(BiS,1.);
-            fHistoMCMesonWithinAccepPt->Fill(BiS,1);
+            fHistoMCMesonWithinAccepPt->Fill(BiS,1);*/
         }
     }
     fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPt,1.,1.,"B");

@@ -176,27 +176,27 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     if(optionEnergy.CompareTo("7TeV") == 0){
         fExampleBinPi0     = 7;
         fExampleBinEta     = 6;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 3;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("5TeV2017") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 6;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 4;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("900GeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 2;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("pPb_5.023TeV") == 0 ) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 4;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("PbPb_2.76TeV") == 0 ) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 6;

@@ -1084,29 +1084,34 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 			Double_t ptStart = histoBGEstimateA->GetXaxis()->GetBinLowEdge(i);
 			Double_t ptEnd = histoBGEstimateA->GetXaxis()->GetBinUpEdge(i);
 			Double_t binWidth = ptEnd-ptStart;
-			Double_t bgEstimate = (100-fitCorrectionFactorsHistvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams()) / binWidth )/100.;
+			Double_t bgEstimate = (100-fitCorrectionFactorsHistvsPt->Integral(ptStart, ptEnd)/binWidth)/100.;
+                        //cout << resultCorrectionFactorsHistvsPt->GetParams() << endl;
 			Double_t errorBGEstimate = (fitCorrectionFactorsHistvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams(), resultCorrectionFactorsHistvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
 			histoBGEstimateA->SetBinContent(i, bgEstimate);
 			histoBGEstimateA->SetBinError(i, errorBGEstimate);
 			
 			if (fitCorrectionFactorsFitvsPt){
-				bgEstimate = (100-fitCorrectionFactorsFitvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams()) / binWidth )/100.;
+				bgEstimate = (100-fitCorrectionFactorsFitvsPt->Integral(ptStart, ptEnd) / binWidth )/100.;
+                                //cout << resultCorrectionFactorsFitvsPt->GetParams() << endl;
 				errorBGEstimate = (fitCorrectionFactorsFitvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams(), resultCorrectionFactorsFitvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
 				histoBGEstimateB->SetBinContent(i, bgEstimate);
 				histoBGEstimateB->SetBinError(i, errorBGEstimate);
 			}
 			
-			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatA->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatA->GetParams()) / binWidth )/100.;
+			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatA->Integral(ptStart, ptEnd) / binWidth )/100.;
+                        //cout << resultCorrectionFactorsHistvsPtCatA->GetParams() << endl;
 			errorBGEstimate = (fitCorrectionFactorsHistvsPtCatA->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatA->GetParams(), resultCorrectionFactorsHistvsPtCatA->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
 			histoBGEstimateCatA->SetBinContent(i, bgEstimate);
 			histoBGEstimateCatA->SetBinError(i, errorBGEstimate);
 			
-			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatC->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatC->GetParams()) / binWidth )/100.;
+			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatC->Integral(ptStart, ptEnd) / binWidth )/100.;
+                        //cout<<resultCorrectionFactorsHistvsPtCatC->GetParams()<<endl;
 			errorBGEstimate = (fitCorrectionFactorsHistvsPtCatC->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatC->GetParams(), resultCorrectionFactorsHistvsPtCatC->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
 			histoBGEstimateCatC->SetBinContent(i, bgEstimate);
 			histoBGEstimateCatC->SetBinError(i, errorBGEstimate);
 			
-			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatD->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatD->GetParams()) / binWidth )/100.;
+			bgEstimate = (100-fitCorrectionFactorsHistvsPtCatD->Integral(ptStart, ptEnd) / binWidth )/100.;
+                        //cout<<resultCorrectionFactorsHistvsPtCatD->GetParams()<<endl;
 			errorBGEstimate = (fitCorrectionFactorsHistvsPtCatD->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatD->GetParams(), resultCorrectionFactorsHistvsPtCatD->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
 			histoBGEstimateCatD->SetBinContent(i, bgEstimate);
 			histoBGEstimateCatD->SetBinError(i, errorBGEstimate);
@@ -1385,7 +1390,8 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		Double_t ptStart = histoTrueEffiPt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiPt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffi->Integral(ptStart, ptEnd, resultEffi->GetParams()) / binWidth;
+		Double_t effi = fitTrueEffi->Integral(ptStart, ptEnd) / binWidth;
+                //resultEffi->GetParams()
 		Double_t errorEffi = fitTrueEffi->IntegralError(ptStart, ptEnd, resultEffi->GetParams(), resultEffi->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiPtFit->SetBinContent(i, effi);
 		histoTrueEffiPtFit->SetBinError(i, errorEffi);
@@ -1403,7 +1409,8 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		Double_t ptStart = histoTrueEffiNarrowPt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiNarrowPt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffiNarrow->Integral(ptStart, ptEnd, resultEffiNarrow->GetParams()) / binWidth;
+		Double_t effi = fitTrueEffiNarrow->Integral(ptStart, ptEnd) / binWidth;
+                //resultEffiNarrow->GetParams()
 		Double_t errorEffiNarrow = fitTrueEffiNarrow->IntegralError(ptStart, ptEnd, resultEffiNarrow->GetParams(), resultEffiNarrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiNarrowPtFit->SetBinContent(i, effi);
 		histoTrueEffiNarrowPtFit->SetBinError(i, errorEffiNarrow);
@@ -1419,7 +1426,8 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		Double_t ptStart = histoTrueEffiWidePt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiWidePt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffiWide->Integral(ptStart, ptEnd, resultEffiWide->GetParams()) / binWidth;
+		Double_t effi = fitTrueEffiWide->Integral(ptStart, ptEnd) / binWidth;
+                //resultEffiWide->GetParams()
 		Double_t errorEffiWide = fitTrueEffiWide->IntegralError(ptStart, ptEnd, resultEffiWide->GetParams(), resultEffiWide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiWidePtFit->SetBinContent(i, effi);
 		histoTrueEffiWidePtFit->SetBinError(i, errorEffiWide);
