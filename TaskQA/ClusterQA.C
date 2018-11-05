@@ -1005,7 +1005,7 @@ void ClusterQA(
             GetMinMaxBin(fHistNCellsBeforeQA,minB,maxB);
             SetXRange(fHistNCellsBeforeQA,minB,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistNCellsBeforeQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
+                                 fHistNCellsBeforeQA,"","#it{N}_{cells} per Cluster","",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNCellsBeforeQA, Form("%s/NCellPerCluster_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistNCellsBeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1016,7 +1016,7 @@ void ClusterQA(
             GetMinMaxBin(fHistNCellsAfterQA,minB,maxB);
             SetXRange(fHistNCellsAfterQA,minB,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistNCellsAfterQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
+                                fHistNCellsAfterQA,"","#it{N}_{cells} per Cluster","",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNCellsAfterQA, Form("%s/NCellPerCluster_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterNCells.push_back(new TH1D(*fHistNCellsAfterQA));
