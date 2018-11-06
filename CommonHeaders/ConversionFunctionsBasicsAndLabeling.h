@@ -2268,8 +2268,8 @@
             return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0  ) {
             cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
-            return  1./0.75 -1.;
-        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+	    return  1./1. -1.;
+         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
             cout << "Same as 7 TeV K0 scaling factor" << endl;
             return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {

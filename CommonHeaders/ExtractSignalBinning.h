@@ -2034,7 +2034,8 @@
                         switch(SpecialTrigger) {
                             case -1: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigCombPt, binning, 103 ); break;
                             case 0:
-                            case 4:
+ 			      maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 83 );break;
+                           case 4:
                             case 5:
                                 if( energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 14 );
                                 else                          maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 83 );
@@ -3545,6 +3546,7 @@
             specialTrigg        = triggerSet;
         }
 
+	cout<< "specialTrigg::"<< specialTrigg<<endl;
         //*************************************************************************************************
         //************************************ Binning for Pi0 ********************************************
         //*************************************************************************************************
