@@ -171,6 +171,8 @@ void PrimaryTrackQA_Runwise(
     while ((key=(TKey*)next())){
         cout << Form("Found TopDir: '%s' ",key->GetName());
         nameMainDir             = key->GetName();
+        if (nameMainDir.Contains("Gamma")) break;
+
     }
     cout << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;

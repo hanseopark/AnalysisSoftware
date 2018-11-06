@@ -119,6 +119,7 @@ void ClusterQA(
             while ((key=(TKey*)next())){
                 cout << Form(" - found TopDir: %s",key->GetName());
                 nameMainDir[i]  = key->GetName();
+                if (nameMainDir[i].Contains("Gamma")) break;
             }
             cout << endl;
             if(nameMainDir[i].IsNull() || !nameMainDir[i].BeginsWith("Gamma")){

@@ -151,6 +151,8 @@ void ClusterQA_Runwise(
     while ((key=(TKey*)next())){
         cout << Form("Found TopDir: '%s' ",key->GetName())<<endl;
         nameMainDir             = key->GetName();
+        if (nameMainDir.Contains("Gamma")) break;
+
     }
     nameMainDirData=nameMainDir;
     if (fileNameData.CompareTo(fileNameMC.Data())==0){
@@ -179,6 +181,7 @@ void ClusterQA_Runwise(
         while ((keyMC=(TKey*)nextMC())){
             cout << Form("Found TopDir for MC: '%s' ",keyMC->GetName())<<endl;
             nameMainDirMC             = keyMC->GetName();
+            if (nameMainDirMC.Contains("Gamma")) break;
         }
         cout<<"nameMainDirMC changed to: "<<nameMainDirMC.Data()<<endl;
         delete keyMC;

@@ -197,6 +197,7 @@ void EventQA_Runwise(
         while ((key=(TKey*)next())){
             cout << Form("Found TopDir: '%s' ",key->GetName())<< endl;
             nameMainDir             = key->GetName();
+            if (nameMainDir.Contains("Gamma")) break;
         }
     } else {
         nameMainDir = fixedTopDir;
@@ -230,6 +231,7 @@ void EventQA_Runwise(
             while ((keyMC=(TKey*)nextMC())){
                 cout << Form("Found TopDir for MC: '%s' ",keyMC->GetName());
                 nameMainDirMC             = keyMC->GetName();
+                if (nameMainDirMC.Contains("Gamma")) break;
             }
         } else {
             nameMainDirMC = fixedTopDir;
