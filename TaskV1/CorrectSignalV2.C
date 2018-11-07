@@ -1004,7 +1004,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     if ( !kIsEta ) {
         doK0SecCorrection = kTRUE;
-        if ( (mode == 0 || mode == 9) && !kIsMC && kCollisionSystem != 2 )                  doK0SecCorrectionWithDefaultHisto = 1; //PCM, data, NOT pPb
+        // if ( (mode == 0 || mode == 9) && !kIsMC && kCollisionSystem != 2 )                  doK0SecCorrectionWithDefaultHisto = 1; //PCM, data, NOT pPb
         if ( (mode == 0 || mode == 9 || mode == 1) && !kIsMC && kCollisionSystem == 2 )     doK0SecCorrectionWithDefaultHisto = 2; //PCM or EMcal, data, pPb
     }
     if (optDalitz) {
