@@ -606,6 +606,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     Double_t minPtSecFitConst   = 2.5;
                     if (kCollisionSystem ==2 && (mode == 2 || mode == 13)) minPtSecFitConst        = 4.0;
                     if (optionEnergy.CompareTo("8TeV") == 0 && mode == 2)  minPtSecFitConst        = 6.0;
+                    if (optionEnergy.CompareTo("8TeV") == 0 && mode == 0)  minPtSecFitConst        = 8.0;
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
 
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
@@ -1103,7 +1104,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }
             // fit current histo with powerlaw fit + constant (goes to constant  at high pt)
             } else if ( doK0SecCorrectionWithDefaultHisto == 0 ){
-                for (Int_t j = 0; j < 4; j++){
+                for (Int_t j = foundCocktailInput ? 3 : 0; j < 4; j++){ // NOTE: do not use fitted MC fraction in case a cocktail is available for better comparison
                     if (haveSec[j] && haveSecUsed[j]){
                         cout << "fitting current hist for "<< nameIntRange[k].Data() << " " << nameSecMeson[j].Data() << endl;
                         fitSecFracPLWithConst[k][j]->SetRange(minPtMesonSec, maxPtMeson);
@@ -1594,6 +1595,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     histoRatioYieldSecMeson[k][j]       = (TH1D*)histoYieldSecMeson[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     histoRatioYieldSecMeson[k][j]->Sumw2();
                     histoRatioYieldSecMeson[k][j]->Divide(histoRatioYieldSecMeson[k][j],histoUnCorrectedYield[k]);
+                }
+                // calculate cocktail secondary fractions with pileup corrected raw yield
+                for (Int_t j = 0; j < 3; j++){
+                    if (histoYieldSecMesonFromExternalInput[k][j] && histoExternalInputSecPi0[j])
+                    {
+                        cout << "recalculating sec yield fraction from cocktail for " << nameSecMeson[j].Data() << " in int range: " << nameIntRange[k].Data() << "with OOB pileup corrected raw yields!" << endl;
+                        histoRatioYieldSecMesonFromExtInput[k][j]    = (TH1D*)histoYieldSecMesonFromExternalInput[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sFrom%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
+                        histoRatioYieldSecMesonFromExtInput[k][j]->Sumw2();
+                        histoRatioYieldSecMesonFromExtInput[k][j]->Scale(nEvt);
+                        histoRatioYieldSecMesonFromExtInput[k][j]->Divide(histoRatioYieldSecMesonFromExtInput[k][j],histoUnCorrectedYield[k]);
+
+                    }
                 }
             }
         }
