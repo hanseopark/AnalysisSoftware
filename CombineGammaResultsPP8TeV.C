@@ -3352,7 +3352,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     TLegend* legendTCMfitXSec      = GetAndSetLegend2(0.68, 0.87-(2*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
 
-    TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection8TeVV0AND*recalcBarn,"xsecTCMfit");
+    // TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection8TeVV0AND*recalcBarn,"xsecTCMfit");
+    Double_t paramTCM2[5] = {graphXSecCombIncGammaTot->GetY()[1], 0.1, graphXSecCombIncGammaTot->GetY()[4], 0.6, 3};
+    TF1 *fitXSecTCMGammaComb = FitObject("tcm", "fitXSecTCMGammaComb", "Gamma", graphXSecCombIncGammaTot, graphXSecCombIncGammaTot->GetX()[0], graphXSecCombIncGammaTot->GetX()[graphXSecCombIncGammaTot->GetN()], paramTCM2, "QNRME+");
     DrawGammaSetMarkerTF1( fitXSecTCMGammaComb, 4, 2, kBlack);
     legendTCMfitXSec->AddEntry(fitXSecTCMGammaComb,"#gamma_{inc} TCM fit","l");
     fitXSecTCMGammaComb->SetRange(0.28, 17);
@@ -3433,7 +3435,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     fitXSecTCMGammaComb->SetRange(0.28, 17);
     fitXSecTCMGammaComb->Draw("same");
 
-    TF1* fitXSecHagedornGammaComb = ScaleTF1(fitHagGammaComb,xSection8TeVV0AND*recalcBarn,"xsecHagedornfit");
+    cout << "scaling fitHagGammaComb by " << xSection8TeVV0AND << " times " << recalcBarn << endl;
+    TF1 *fitXSecHagedornGammaComb = ScaleTF1(fitHagGammaComb, xSection8TeVV0AND * recalcBarn, "xsecHagedornfit");
     DrawGammaSetMarkerTF1( fitXSecHagedornGammaComb, 7, 2, kRed+2);
     legendTCMfitXSec2->AddEntry(fitXSecHagedornGammaComb,"mod. Hagedorn fit","l");
     fitXSecHagedornGammaComb->SetRange(0.28, 17);
