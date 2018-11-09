@@ -191,7 +191,7 @@ void EventQA_Runwise(
         cout << "ERROR: no ROOT file; last tried file: '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector-1)).Data(), fileName.Data()) << "'; return!" << endl;
         return;
     }
-    TKey *key;
+    TKey *key = NULL;
     if (fixedTopDir.CompareTo("") == 0){
         TIter next(fCutFile->GetListOfKeys());
         while ((key=(TKey*)next())){
@@ -225,7 +225,7 @@ void EventQA_Runwise(
             cout << "ERROR: no MC ROOT file; last tried File: '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector-1)).Data(), fileNameMC.Data()) << "'; return!" << endl;
             return;
         }
-        TKey *keyMC;
+        TKey *keyMC = NULL;
         if (fixedTopDir.CompareTo("") == 0){
             TIter nextMC(fCutFileMC->GetListOfKeys());
             while ((keyMC=(TKey*)nextMC())){
