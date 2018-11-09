@@ -964,6 +964,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             } else if( trigger.CompareTo("52") == 0 ){
               fMesonFitRange[0] = 0.04;
               fMesonFitRange[1] = 0.26;
+            } else {
+              fMesonFitRange[0] = 0.08;
+              fMesonFitRange[1] = 0.25;
             }
           } else if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 ){
             fMesonFitRange[0]       = 0.06;
