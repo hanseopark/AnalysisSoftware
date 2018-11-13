@@ -931,14 +931,14 @@ void EventQA_Runwise(
             cout << "\t\t----------------------------------------------------------------------------" << endl;
             cout << endl;
 
-            TDirectoryFile* directoryOrg2   = (TDirectoryFile*)RootFile->Get(nameMainDir.Data());
+            //TDirectoryFile* directoryOrg2   = (TDirectoryFile*)RootFile->Get(nameMainDir.Data());  // creates memory leak
             TList *TopDir                   = NULL;
             // if (directoryOrg2){
             //     TopDir                      = (TList*)directoryOrg2->Get(nameMainDir.Data());
             // } else {
             TopDir                      = (TList*)RootFile->Get(nameMainDir.Data());
             // }
-            delete directoryOrg2;
+            //delete directoryOrg2;  // creates memory leak
             if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
             else TopDir->SetOwner(kTRUE);
             TList* TopContainer         = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection.Data()));
