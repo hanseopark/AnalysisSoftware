@@ -1963,7 +1963,12 @@ void EventQA_Runwise(
     delete[] vecEtaSignal;
     delete[] vecPi0Fit;
     delete[] vecEtaFit;
-
+    delete[] vecTrackMult;
+    delete[] vecTrackMultRatio;
+    delete[] vecV0Mult;
+    delete[] vecV0MultRatio;
+    delete[] vecV0Trigg;
+    delete[] vecV0TriggRatio;
     delete[] fitValues;
 
     TH1::AddDirectory(kTRUE);
