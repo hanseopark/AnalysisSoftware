@@ -203,7 +203,7 @@ void EventQA_Runwise(
         nameMainDir = fixedTopDir;
     }
     nameMainDirData=nameMainDir;
-    delete key;
+    //delete key;  // deletes key from file so that object cannot be found and macro crashes
     if (fileNameData.CompareTo(fileNameMC.Data())==0){
         nameMainDirMC=nameMainDirData;
     }
