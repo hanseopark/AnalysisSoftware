@@ -25,24 +25,32 @@ downloadFile=root_archive.zip
 RUNDL=$RUN
 passDL=$pass
 
+# give number of maxim files to be downloaded for the data set
+NMaxFiles=20
+counter=0
+
 if [ $dataOrMC = "MC" ]; then
     if [ $ESDOrAOD = "AOD" ]; then
         RUNDL="$RUN/AOD$AODFILTER"
         downloadFile=root_archive.zip
     fi
     mkdir -p $energy/$periodMCshort/$ESDOrAOD/$RUN
-	for PARTS in $( alien_ls /alice/sim/$yearMC/$periodMC/$RUNDL/ )
-	do
+    for PARTS in $( alien_ls /alice/sim/$yearMC/$periodMC/$RUNDL/ )
+    do
         if [ -f $energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS/$downloadFile ]; then
             echo "file $downloadFile has already been copied for run " $RUN "and part" $PARTS
         else
             mkdir $energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS
-		    echo /alice/sim/$yearMC/$periodMC/$RUNDL/$PARTS/$downloadFile
-		    alien_cp alien:/alice/sim/$yearMC/$periodMC/$RUNDL/$PARTS/$downloadFile file:$energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS/$downloadFile
+            echo /alice/sim/$yearMC/$periodMC/$RUNDL/$PARTS/$downloadFile
+            alien_cp alien:/alice/sim/$yearMC/$periodMC/$RUNDL/$PARTS/$downloadFile file:$energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS/$downloadFile
             unzip -t $energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS/$downloadFile
             md5sum $energy/$periodMCshort/$ESDOrAOD/$RUN/$PARTS/$downloadFile
         fi
-	done
+        counter=`expr $counter + 1`
+        if [ $counter = $NMaxFiles ]; then
+          exit
+        fi
+    done
 fi
 
 
@@ -62,6 +70,10 @@ if [ $dataOrMC = "data" ]; then
             alien_cp alien:/alice/data/$yearData/$periodData/000$RUN/$passDL/$PARTS/$downloadFile file:$energy/$periodData/$pass/$ESDOrAOD/$RUN/$PARTS/$downloadFile
             unzip -t $energy/$periodData/$pass/$ESDOrAOD/$RUN/$PARTS/$downloadFile
             md5sum $energy/$periodData/$pass/$ESDOrAOD/$RUN/$PARTS/$downloadFile
+        fi
+        counter=`expr $counter + 1`
+        if [ $counter = $NMaxFiles ]; then
+          exit
         fi
     done
 fi
