@@ -299,6 +299,7 @@ void EventQA(
     std::vector<TH1D*> vecNGoodTracks;
     std::vector<TH1D*> vecGammaCandidates;
     std::vector<TH1D*> vecGammaCandidatesPerTrack;
+    std::vector<TH1D*> vecSphericity; //only if available
     std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
     std::vector<TH1D*> vecV0Trigg;
@@ -602,6 +603,18 @@ void EventQA(
             vecGammaCandidates.push_back(new TH1D(*fHistGammaCandidates));
         } else cout << "INFO: Object |GammaCandidates| could not be found! Skipping Draw..." << endl;
 
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // Sphericity distribution
+        TH1D* fHistSphericity = (TH1D*)ESDContainer->FindObject("EventSphericity");
+        if(fHistSphericity){
+            GetMinMaxBin(fHistSphericity,minB,maxB);
+            SetXRange(fHistSphericity,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                fHistSphericity,"","S_{T}","#frac{dN}{dS}",1,1,
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistSphericity);
+            vecSphericity.push_back(new TH1D(*fHistSphericity));
+        } else cout << "INFO: Object |fHistSphericity| could not be found! Skipping Draw..." << endl;
         if (isMergedCalo){
             //-------------------------------------------------------------------------------------------------------------------------------
             // number of merged candidates
@@ -1446,6 +1459,31 @@ void EventQA(
                                     0.92,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NGoodTracks.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
+    // Sphericity
+    if(vecSphericity.size()>0){
+      //-------------------------------------------------------------------------------------------------------------------------------
+      // x-vertex distribution
+      GetMinMaxBin(vecSphericity,minB,maxB);
+      for(Int_t iVec=0; iVec<(Int_t)vecSphericity.size(); iVec++){
+          TH1D* temp = vecSphericity.at(iVec);
+          temp->Sumw2();
+          temp->Scale(1./temp->Integral());
+          //temp->Scale(1./nEvents[iVec]);
+          SetXRange(temp,minB,maxB);
+      }
+      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecSphericity,"","S_{T}","#frac{1}{N} #frac{dN}{dS}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      SaveCanvas(canvas, Form("%s/Comparison/Sphericity.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+
+      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecSphericity,"","S_{T}","#frac{1}{N} #frac{dN}{dS}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Sphericity.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
     // VZERO multiplicity
     GetMinMaxBin(vecV0Mult,minB,maxB);
     for(Int_t iVec=0; iVec<(Int_t)vecV0Mult.size(); iVec++){
@@ -1916,6 +1954,7 @@ void EventQA(
     DeleteVecTH1D(vecNGoodTracks);
     DeleteVecTH1D(vecGammaCandidates);
     DeleteVecTH1D(vecGammaCandidatesPerTrack);
+    DeleteVecTH1D(vecSphericity);
     DeleteVecTH1D(vecMergedCandidates);
     DeleteVecTH1D(vecV0Mult);
     DeleteVecTH1D(vecV0Trigg);

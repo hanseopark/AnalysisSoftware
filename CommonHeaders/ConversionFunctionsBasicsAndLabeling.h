@@ -3949,6 +3949,18 @@
                 return "S_{T} > 0.5";
             case 19:
                 return "0 < S_{T} < 1";
+            case 20: // k: pp -> 0 < Sphericity < 1.0  + mult cut < 20
+                return "0 < S_{T} < 1, N_{tracks}<20";
+            case 21: // l: pp ->0 < Sphericity < 1.0 + mult cut > 20
+                return "0 < S_{T} < 1, N_{tracks}>20";
+            case 22: // m: pp -> Sphericity < 0.5 + mult cut < 20
+                return "S_{T} < 0.5, N_{tracks}<20";
+            case 23: // n: pp -> Sphericity < 0.5 + mult cut > 20
+                return "S_{T} < 0.5, N_{tracks}>20";
+            case 24: // o: pp -> Sphericity > 0.5 + mult cut < 20
+                return "S_{T} > 0.5, N_{tracks}<20";
+            case 25: // p: pp -> Sphericity > 0.5 + mult cut > 20
+                return "S_{T} > 0.5, N_{tracks}>20";
             default:
                 return "Sphericity cut not defined";
         }
