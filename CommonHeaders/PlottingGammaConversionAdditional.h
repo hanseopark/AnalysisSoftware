@@ -2865,6 +2865,8 @@
                 return kRed;
             } else if (!generator.CompareTo("LHC17e2")) {
                 return kGreen+2;
+            } else if (!generator.CompareTo("LHC18j3")) {
+                return kRed+2;
             } else if (!generator.CompareTo("LHC17p_fast")){
                 return kBlue+1;
             } else if (!generator.CompareTo("LHC17q_fast")){
@@ -3435,6 +3437,8 @@
                 return 28;
             } else if(generator.Contains("LHC17e2")){
                 return 28;
+            } else if(generator.Contains("LHC18j3")){
+                return 20;
             } else if(generator.Contains("LHC17p")){
                 return 20;
             } else if(generator.Contains("LHC17q")){

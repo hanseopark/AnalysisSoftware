@@ -4298,6 +4298,12 @@
                     return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.10-0.015)})^{1/1.75})^{1.75}}";
                 case 9:
                     return "TM #scale[0.5]{#Delta#eta #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.020 + (#frac{1}{#it{p}_{T} + (1/(0.12-0.020)})^{1/1.75})^{1.75}}";
+                case 18:
+                    return "TM #scale[0.5]{MIP subtraction: #Delta#eta < 0.010, -0.011 < #Delta#varphi_{+,-} < 0.011}";
+                case 19:
+                    return "TM #scale[0.5]{MIP subtraction: #Delta#eta < 0.015, -0.02 < #Delta#varphi_{+,-} < 0.02}";
+                case 20:
+                    return "TM #scale[0.5]{MIP subtraction: #Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.09-0.015)})^{1/2})^{2}}";
                 default:
                     return "track missmatch not defined ";
             }

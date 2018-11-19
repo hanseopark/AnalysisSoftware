@@ -100,8 +100,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         return ;
     }
 
-    TFile fileRawSignalData(dataFilename);
-    TFile fileRawSignalMC(mcFilename);
+    TFile* fileRawSignalData = new TFile(dataFilename);
+    TFile* fileRawSignalMC = new TFile(mcFilename);
 
 
     cout << dataFilename << endl;
@@ -112,27 +112,27 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     cout << energyFlag.Data() << endl;
     cout << numberOfBins << endl;
 
-    TH1D* histoChi2Data                     = (TH1D*) fileRawSignalData.Get("histoChi2_0");
-    TH1D* histoChi2_Pol2_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_1");
-    TH1D* histoChi2_Exp1_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_2");
-    TH1D* histoChi2_Exp2_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_3");
-    TH1D* histoConstResBGData               = (TH1D*) fileRawSignalData.Get("histoResidualBGcon");
-    TH1D* histoLinResBGData                 = (TH1D*) fileRawSignalData.Get("histoResidualBGlin");
-    TH1D* histoResBGYieldVsTotBGData        = (TH1D*) fileRawSignalData.Get("histoRatioResBGYield");
-    TH1D* histoResBGYieldVsResBGPlSigData   = (TH1D*) fileRawSignalData.Get("histoRatioResBGYieldToSPlusResBG");
-    TH1D* histoLambdaTailData               = (TH1D*) fileRawSignalData.Get("histoLambdaTail");
-    TH1D* histoChi2MC                       = (TH1D*) fileRawSignalMC.Get("histoChi2_0");
-    TH1D* histoChi2_Pol2_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_1");
-    TH1D* histoChi2_Exp1_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_2");
-    TH1D* histoChi2_Exp2_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_3");
-    TH1D* histoConstResBGMC                 = (TH1D*) fileRawSignalMC.Get("histoResidualBGcon");
-    TH1D* histoLinResBGMC                   = (TH1D*) fileRawSignalMC.Get("histoResidualBGlin");
-    TH1D* histoResBGYieldVsTotBGMC          = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYield");
-    TH1D* histoResBGYieldVsResBGPlSigMC     = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYieldToSPlusResBG");
-    TH1D* histoLambdaTailMC                 = (TH1D*) fileRawSignalMC.Get("histoLambdaTail");
+    TH1D* histoChi2Data                     = (TH1D*) fileRawSignalData->Get("histoChi2_0");
+    TH1D* histoChi2_Pol2_Data               = (TH1D*) fileRawSignalData->Get("histoChi2_1");
+    TH1D* histoChi2_Exp1_Data               = (TH1D*) fileRawSignalData->Get("histoChi2_2");
+    TH1D* histoChi2_Exp2_Data               = (TH1D*) fileRawSignalData->Get("histoChi2_3");
+    TH1D* histoConstResBGData               = (TH1D*) fileRawSignalData->Get("histoResidualBGcon");
+    TH1D* histoLinResBGData                 = (TH1D*) fileRawSignalData->Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGData        = (TH1D*) fileRawSignalData->Get("histoRatioResBGYield");
+    TH1D* histoResBGYieldVsResBGPlSigData   = (TH1D*) fileRawSignalData->Get("histoRatioResBGYieldToSPlusResBG");
+    TH1D* histoLambdaTailData               = (TH1D*) fileRawSignalData->Get("histoLambdaTail");
+    TH1D* histoChi2MC                       = (TH1D*) fileRawSignalMC->Get("histoChi2_0");
+    TH1D* histoChi2_Pol2_MC                 = (TH1D*) fileRawSignalMC->Get("histoChi2_1");
+    TH1D* histoChi2_Exp1_MC                 = (TH1D*) fileRawSignalMC->Get("histoChi2_2");
+    TH1D* histoChi2_Exp2_MC                 = (TH1D*) fileRawSignalMC->Get("histoChi2_3");
+    TH1D* histoConstResBGMC                 = (TH1D*) fileRawSignalMC->Get("histoResidualBGcon");
+    TH1D* histoLinResBGMC                   = (TH1D*) fileRawSignalMC->Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGMC          = (TH1D*) fileRawSignalMC->Get("histoRatioResBGYield");
+    TH1D* histoResBGYieldVsResBGPlSigMC     = (TH1D*) fileRawSignalMC->Get("histoRatioResBGYieldToSPlusResBG");
+    TH1D* histoLambdaTailMC                 = (TH1D*) fileRawSignalMC->Get("histoLambdaTail");
     TH1D* histoRatioYieldLowMassDataDivMC   = (TH1D*) histoChi2Data->Clone("histoRatioYieldLowMassDataDivMC");
 
-    Double_t* fMesonRange                   = NULL;
+    Double_t fMesonRange[2] = {0., 0.79};
     TString outputDir                       = Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
     TString nameLineShapePlot               = Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
     TString nameLineShapePlotLeft           = Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
@@ -148,17 +148,14 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
     Double_t peakRange[2]   = {0.10,0.15};
     if (mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0EtaBinning") == 0){
-        fMesonRange         = new Double_t[2];
         fMesonRange[0]      = 0.;
         fMesonRange[1]      = 0.3;
     } else if (mesonType.CompareTo("Eta") == 0){
-        fMesonRange         = new Double_t[2];
         fMesonRange[0]      = 0.35;
         fMesonRange[1]      = 0.79;
         peakRange[0]        = 0.50;
         peakRange[0]        = 0.60;
     } else if (mesonType.CompareTo("EtaPrime") == 0){
-        fMesonRange         = new Double_t[2];
         fMesonRange[0]      = 0.9;
         fMesonRange[1]      = 1.0;
         peakRange[0]        = 0.90;
@@ -168,9 +165,17 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     cout << "Start bin for " << mesonType << " (mode " << mode << "): " << fStartPtBin << endl;
 
     //******************************* Reading histograms **************************************************************
-    TH1D *  histoSignalDataInvMassPtBin[100];
-    TH1D *  histoSignalMCInvMassPtBin[100];
-    TH1D *  histoTrueMCInvMassPtBin[100];
+    TH1D **  histoSignalDataInvMassPtBin = NULL;
+    TH1D **  histoSignalMCInvMassPtBin = NULL;
+    TH1D **  histoTrueMCInvMassPtBin = NULL;
+    histoSignalDataInvMassPtBin = new TH1D*[100];
+    histoSignalMCInvMassPtBin = new TH1D*[100];
+    histoTrueMCInvMassPtBin = new TH1D*[100];
+    for(int i=0 ; i<100 ; i++){
+      histoSignalDataInvMassPtBin[i] = NULL;
+      histoSignalMCInvMassPtBin[i] = NULL;
+      histoTrueMCInvMassPtBin[i] = NULL;
+    }
     Double_t intLowMassData[100]                    = {0.};
     Double_t intLowMassMC[100]                      = {0.};
     Double_t intErrLowMassData[100]                 = {0.};
@@ -178,6 +183,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     Double_t ratioLowMass[100]                      = {1.};
     Double_t ratioErrLowMass[100]                   = {1.};
     for(Int_t j=0;j<3;j++){
+      cout << "j = " << j << " fNBinsPt = " << fNBinsPt << endl;
         TCanvas * canvasDummy = new TCanvas("canvasDummy","",2800,1800);  // gives the page size
         canvasDummy->SetTopMargin(0.02);
         canvasDummy->SetBottomMargin(0.02);
@@ -196,19 +202,21 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             } else if(j==2) {
                 histonameSignal = Form("Mapping_GG_InvMass_in_Pt_Bin%02d", iPt);
             }
-            histoSignalDataInvMassPtBin[iPt]    = (TH1D*)fileRawSignalData.Get(histonameSignal);
-            histoSignalMCInvMassPtBin[iPt]      = (TH1D*)fileRawSignalMC.Get(histonameSignal);
-
+            histoSignalDataInvMassPtBin[iPt]    = (TH1D*)fileRawSignalData->Get(histonameSignal);
+            histoSignalMCInvMassPtBin[iPt]      = (TH1D*)fileRawSignalMC->Get(histonameSignal);
+            if(histoSignalDataInvMassPtBin[iPt] == NULL) continue;
+            if(histoSignalMCInvMassPtBin[iPt] == NULL)   continue;
+/*
             if (j == 2){
                 histoSignalDataInvMassPtBin[iPt]->Rebin(4);
                 histoSignalMCInvMassPtBin[iPt]->Rebin(4);
-            }
+            }*/
             Double_t firstBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
             Double_t lastBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
             Double_t firstBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
             Double_t lastBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
-            cout << "firstBinIntData= " << firstBinIntData << "\t lastBinIntData= " << lastBinIntData << endl;
-            cout << "firstBinIntMC= " << firstBinIntMC << "\t lastBinIntMC= " << lastBinIntMC << endl;
+            cout << "iPt = " << iPt << " firstBinIntData= " << firstBinIntData << "\t lastBinIntData= " << lastBinIntData << endl;
+            cout << "iPt = " << iPt << " firstBinIntMC= " << firstBinIntMC << "\t lastBinIntMC= " << lastBinIntMC << endl;
             Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(firstBinIntData,lastBinIntData);
             Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(firstBinIntMC,lastBinIntMC);
             if (j == 2){
@@ -239,7 +247,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
             if (j < 2){
                 histonameMCTruth = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);
-                histoTrueMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC.Get(histonameMCTruth);
+                histoTrueMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC->Get(histonameMCTruth);
                 if(j==0)histoTrueMCInvMassPtBin[iPt]->Scale(1./integralMC);
             }
             if (j == 0){
@@ -339,6 +347,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 padLineShape->cd(place)->SetRightMargin(0.05);
                 padLineShape->cd(place)->SetLeftMargin(0.15);
 
+                if(histoSignalDataInvMassPtBin[iPt] == NULL || histoSignalMCInvMassPtBin[iPt]==NULL) continue;
                 Double_t maxY   = 0;
                 if (histoTrueMCInvMassPtBin[iPt])
                     maxY        = histoTrueMCInvMassPtBin[iPt]->GetMaximum();

@@ -579,7 +579,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 }
             }
         }
-        if (fEnableCalo && mode == 2 ){
+        if (fEnableCalo && ( mode == 2 || mode == 3) ){
             fHistoGammaMCAllInEMCAccPt                                          = (TH1D*)MCContainer->FindObject("MC_AllGammaEMCALAcc_Pt");
             fHistoGammaMCAllInEMCAccPt->Sumw2();
             fHistoGammaMCAllInEMCAccPtOrBin                                     = (TH1D*)fHistoGammaMCAllInEMCAccPt->Clone("MC_AllGammaEMCALAcc_OriginalBinning_MCPt");

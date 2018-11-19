@@ -1485,9 +1485,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
         dummyHistRatio->Draw();
 
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,0.1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
 
         ratioPi0DataCocktail = (TH1D*)histoPi0InvYieldData->Clone("ratioPi0DataCocktail");
         ratioPi0DataCocktail->Divide(histoPi0InvYieldData,histoGammaMotherPt[0],1.,1.,"");
@@ -1566,9 +1566,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
         dummyHistRatio->Draw();
 
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,0.1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
 
         ratioEtaDataCocktail = (TH1D*)histoEtaInvYieldData->Clone("ratioEtaDataCocktail");
         ratioEtaDataCocktail->Divide(histoEtaInvYieldData,histoGeneratedEtaPt,1.,1.,"");
@@ -1652,9 +1652,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
         dummyHistRatio->Draw();
 
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,0.1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
 
             TH1F* ratioPi0CurrToParam                                   = (TH1F*)histoPi0YieldData->Clone("ratioPi0CurrToParam");
             ratioPi0CurrToParam->Sumw2();
@@ -1762,9 +1762,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
         dummyHistRatio->Draw();
 
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,0.1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
 
         TH1F* ratioEtaCurrToParam                                   = (TH1F*)histoEtaYieldData->Clone("ratioEtaCurrToParam");
         ratioEtaCurrToParam->Sumw2();
