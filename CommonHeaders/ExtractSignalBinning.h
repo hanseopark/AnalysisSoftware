@@ -1091,6 +1091,14 @@
                     return 15;
                 }else if (mode == 4 || mode == 12 ){
                     return 16;
+		}else if (mode == 0){
+		  if(meson.CompareTo("Pi0EtaBinning") == 0){
+		    scaleFac = 1;
+		    return 4;
+		  } else {
+		    scaleFac = 40;
+		    return 2;
+		  }
                 }else
                     return 1;
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
@@ -2442,7 +2450,7 @@
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0 ){
                 if (mode == 0 ){ // PCM
-                    maxNBins = 15;
+                    maxNBins = 28;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
@@ -2457,7 +2465,7 @@
                         binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
                     }
                 } else if (mode == 20){ //combined
-                    maxNBins = 15;
+                    maxNBins = 28;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
@@ -3518,6 +3526,7 @@
         TString periodDCA = "",
         TString photonCutSelection = ""
     ) {
+
 
         //*************************************************************************************************
         //************************************ Binning for Cluster ****************************************
@@ -5725,7 +5734,10 @@
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5TeVEMCPtRebin[i];
                     }else{
                         fBinsPt[i]         = fBinsEtaPbPb5TeVPt[i];
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5TeVPtRebin[i];
+                        if (i < fNBinsPt+1) {
+			  if (setPi0.CompareTo("Pi0EtaBinning") == 0) fNRebin[i] = fBinsPi0EtaBinningPbPb5TeVPtRebin[i];
+			  else                                        fNRebin[i] = fBinsEtaPbPb5TeVPtRebin[i];
+			}
                     }
                 }
 
