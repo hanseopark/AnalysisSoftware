@@ -1004,17 +1004,36 @@ void CorrectCaloNonLinearityV4(
 
     fstream fLog;
     fLog.open(Form("%s/CorrectCaloNonLinearity_%s.log",outputDirSampleSummary.Data(),select.Data()), ios::out);
-    fLog << "FitDataMC results:" << endl;
+    fLog << "use non-inverted with =/ in AliCaloPhotonCuts, and the inverted with *=" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "Exponential function fitted" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "FitDataMC results ([0]+exp([1]+([2]*x)), AliCaloPhotonCuts::FunctionNL_kSDM, use with /=):" << endl;
     for(Int_t i=0;i<=2;i++) fLog << "Par " << i << ": " << fFitMassPos->GetParameter(i) << " +- " << fFitMassPos->GetParError(i) << endl;
-
+    fLog << "-----------------------------------" << endl;
+    fLog << "-----------------------------------" << endl;
     fLog << WriteParameterToFile(fFitConst) << endl;
     fLog << WriteParameterToFile(fFitConstFull) << endl;
     fLog << WriteParameterToFile(fFitConstFullInv) << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "Ind. Mass fitted with powerlaws" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" << endl;
+    fLog << "AliCaloPhotonCuts::FunctionNL_DPOW" << endl;
     fLog << WriteParameterToFile(fFitComposit) << endl;
     fLog << WriteParameterToFile(fFitCompositFitted) << endl;
     fLog << WriteParameterToFile(fFitCompositInverted) << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "Ind. Mass fitted with exponentials" << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" << endl;
+    fLog << "AliCaloPhotonCuts::FunctionNL_DExp" << endl;
     fLog << WriteParameterToFile(fFitExpComb) << endl;
     fLog << WriteParameterToFile(fFitExpCombInverted) << endl;
+    fLog << "-----------------------------------" << endl;
+    fLog << "-----------------------------------" << endl;
     fLog.close();
 
     //*******************************************************************************
