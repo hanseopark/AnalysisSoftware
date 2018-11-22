@@ -1542,6 +1542,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     boxPCMGammaRatio->Draw("l");
     boxEMCALGammaRatio               = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[1]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[1]+ heightBoxPCMcomb);
     boxEMCALGammaRatio->Draw("l");
+    TLatex * textFigureLabelGammaA = new TLatex(0.88, 0.17, "(a)");
+    SetStyleTLatex(textFigureLabelGammaA, textSizeLabelsPixel, 4, 1, 43);
+    textFigureLabelGammaA->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_combPCM.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_combPCM.pdf",outputDir.Data()));
@@ -1868,6 +1871,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         TLatex *labelDRSingle = new TLatex(0.95,0.92,Form("%s, %s",textALICE.Data(),collisionSystempp2760GeV.Data()));
         SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
         labelDRSingle->Draw();
+        TLatex *textFigureLabelDRIndA = new TLatex(0.95, 0.15, "(a)");
+        SetStyleTLatex(textFigureLabelDRIndA, textSizeSinglePad, 4, 1, 42, kTRUE, 31);
+        textFigureLabelDRIndA->Draw();
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -1894,6 +1900,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         if (histoDRNonFitStatErr[4]) histoDRNonFitStatErr[4]->Draw("p,same,e0,X0");
         legendDRSingle->Draw();
         labelDRSingle->Draw();
+        textFigureLabelDRIndA->Draw();
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -1994,6 +2001,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombDRStatPlot->Draw("p,same,z");
 
         labelDRSingle->Draw();
+            textFigureLabelDRIndA->Draw();
         hist2DDRDummySingle->Draw("same,axis");
 
     canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
@@ -2011,10 +2019,11 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombDRNonFitStatPlot->Draw("p,same,z");
 
         labelDRSingle->Draw();
+        textFigureLabelDRIndA->Draw();
         hist2DDRDummySingle->Draw("same,axis");
 
-    canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV_NonFit.%s", outputDir.Data(), suffix.Data()));
-    canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV_NonFit.pdf", outputDir.Data()));
+        canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV_NonFit.%s", outputDir.Data(), suffix.Data()));
+        canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV_NonFit.pdf", outputDir.Data()));
 
         hist2DDRDummySingle->DrawCopy();
 
@@ -2076,7 +2085,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         labelDRSingle = new TLatex(0.95,0.92,Form("%s",collisionSystempp2760GeV.Data()));
         SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
         labelDRSingle->Draw();
-        hist2DDRDummySingle->Draw("same,axis");
+          textFigureLabelDRIndA->Draw();
+      hist2DDRDummySingle->Draw("same,axis");
 
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV.pdf", outputDir.Data()));
@@ -2117,6 +2127,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
 
+        textFigureLabelDRIndA->Draw();
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV_NonFit.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV_NonFit.pdf", outputDir.Data()));
 
@@ -3072,58 +3083,63 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
+        TLatex *labelXSecFigureA = new TLatex(0.94, 0.965-0.04*5, "(a)");
+        SetStyleTLatex(labelXSecFigureA, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelXSecFigureA->Draw();
 
+        histo2DXSecGamma->Draw("same,axis");
+        canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.%s", outputDir.Data(), suffix.Data()));
+        canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.pdf", outputDir.Data()));
 
-    histo2DXSecGamma->Draw("same,axis");
-    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.%s",outputDir.Data(),suffix.Data()));
-    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.pdf",outputDir.Data()));
+        // **********************************************************************************************************************
+        // ******************************** plotting  InvXSection with theory and TCM fit ***************************************
+        // **********************************************************************************************************************
+        histo2DXSecGamma->Draw("copy");
 
-    // **********************************************************************************************************************
-    // ******************************** plotting  InvXSection with theory and TCM fit ***************************************
-    // **********************************************************************************************************************
-    histo2DXSecGamma->Draw("copy");
+        graphXSecCombIncGammaSys->Draw("E2same");
+        graphXSecCombIncGammaStatPlot->Draw("Epsame");
 
-    graphXSecCombIncGammaSys->Draw("E2same");
-    graphXSecCombIncGammaStatPlot->Draw("Epsame");
+        TLegend *legendTCMfitXSec = GetAndSetLegend2(0.68, 0.87 - (2 * textSizeLabelsRel * 0.85), 0.93, 0.87, textSizeLabelsPixel, 1, "", 43, 0.3);
+        legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data", "pf");
 
-    TLegend* legendTCMfitXSec      = GetAndSetLegend2(0.68, 0.87-(2*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
-    legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
+        // TF1 *fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb, xSection2760GeV * recalcBarn, "xsecTCMfit");
+        Double_t paramTCM2[5] = {graphXSecCombIncGammaTot->GetY()[1], 0.1, graphXSecCombIncGammaTot->GetY()[4], 0.6, 3};
+        TF1 *fitXSecTCMGammaComb = FitObject("tcm", "fitXSecTCMGammaComb", "Gamma", graphXSecCombIncGammaTot, graphXSecCombIncGammaTot->GetX()[0], graphXSecCombIncGammaTot->GetX()[graphXSecCombIncGammaTot->GetN()], paramTCM2, "QNRME+");
+        DrawGammaSetMarkerTF1(fitXSecTCMGammaComb, 4, 2, kBlue + 2);
+        legendTCMfitXSec->AddEntry(fitXSecTCMGammaComb, "#gamma_{inc} TCM fit", "l");
+        fitXSecTCMGammaComb->SetRange(0.38, 11);
+        fitXSecTCMGammaComb->Draw("same");
+        legendTCMfitXSec->Draw();
 
-    TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection2760GeV*recalcBarn,"xsecTCMfit");
-    DrawGammaSetMarkerTF1( fitXSecTCMGammaComb, 4, 2, kBlue+2);
-    legendTCMfitXSec->AddEntry(fitXSecTCMGammaComb,"#gamma_{inc} TCM fit","l");
-    fitXSecTCMGammaComb->SetRange(0.38, 11);
-    fitXSecTCMGammaComb->Draw("same");
-    legendTCMfitXSec->Draw();
+        if (graphXSecTheoryNLOpp2760GeV)
+        {
+            // graphXSecTheoryNLOpp2760GeV->Draw("3,same");
+            graphXSecTheoryNLOpp2760GeVCenter->Draw("lX,same");
+        }
 
-    if (graphXSecTheoryNLOpp2760GeV) {
-        // graphXSecTheoryNLOpp2760GeV->Draw("3,same");
-        graphXSecTheoryNLOpp2760GeVCenter->Draw("lX,same");
-  }
+        if (graphXSecTheoryNLOpp2760GeVPaquettCenter) {
+            graphXSecTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
+        }
+        if (graphXSecTheoryJETPHOXpp2760GeV) {
+            graphXSecTheoryJETPHOXpp2760GeV->Draw("3,same");
+            graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
+        }
+        if (graphXSecTheoryPOWHEGpp2760GeV) {
+            graphXSecTheoryPOWHEGpp2760GeV->Draw("3,same");
+            graphXSecTheoryPOWHEGpp2760GeVCenter->Draw("lX,same");
+        }
+        legendYieldDirGammaTheo2->Draw();
 
-    if (graphXSecTheoryNLOpp2760GeVPaquettCenter) {
-        graphXSecTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
-    }
-    if (graphXSecTheoryJETPHOXpp2760GeV) {
-        graphXSecTheoryJETPHOXpp2760GeV->Draw("3,same");
-        graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
-    }
-    if (graphXSecTheoryPOWHEGpp2760GeV) {
-        graphXSecTheoryPOWHEGpp2760GeV->Draw("3,same");
-        graphXSecTheoryPOWHEGpp2760GeVCenter->Draw("lX,same");
-    }
-    legendYieldDirGammaTheo2->Draw();
-
-    if (graphXSecCombDirGammaNonFitSpectrumSystErr){
-        graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
-    }
-    if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
-        graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,same");//Draw("p,E1Z,same");
-    }
-    if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
-        graphXSecCombDirGammaNonFitSpectrumSumErrAr->Draw(">,same");
-        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
-    }
+        if (graphXSecCombDirGammaNonFitSpectrumSystErr){
+            graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
+        }
+        if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
+            graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,same");//Draw("p,E1Z,same");
+        }
+        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+            graphXSecCombDirGammaNonFitSpectrumSumErrAr->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
+        }
 
         // if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
         //     dummyForLegend->Draw(">,same");
@@ -3132,6 +3148,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendULXSecDirGamma->Draw();
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
+        labelXSecFigureA->Draw();
+        // labelXSecFigureA->Draw();
 
 
     histo2DXSecGamma->Draw("same,axis");
@@ -3356,6 +3374,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     dummyHist->Draw("same,axis");
 
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll.%s",outputDir.Data(),suffix.Data()));
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll.pdf",outputDir.Data()));
 
     cout << __LINE__ << endl;
 
@@ -3483,6 +3502,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TLatex* labelALICECocktailPlot   = new TLatex(0.16,0.92,"ALICE simulation");
     SetStyleTLatex( labelALICECocktailPlot, 46, 4, 1, 43, kTRUE, 41);
     labelALICECocktailPlot->Draw();
+    TLatex* labelFigureb   = new TLatex(0.87,0.11,"(b)");
+    SetStyleTLatex(labelFigureb, 46, 4, 1, 43, kTRUE, 41);
+    labelFigureb->Draw();
     TLatex* labelEnergyCocktailPlot   = new TLatex(0.95,0.92,Form("%s",collisionSystempp2760GeV.Data()));
     SetStyleTLatex( labelEnergyCocktailPlot, 46, 4, 1, 43, kTRUE, 31);
     labelEnergyCocktailPlot->Draw();
@@ -3492,6 +3514,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     dummyHist->Draw("same,axis");
 
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums.%s",outputDir.Data(),suffix.Data()));
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums.pdf",outputDir.Data()));
 
     dummyHist->Draw();
     for (Int_t i=0; i<14; i++) {
@@ -3508,7 +3531,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     labelALICECocktailPlot->Draw();
     labelEnergyCocktailPlot->Draw();
     labelGammaFromCocktailPlot->Draw();
+    labelFigureb->Draw();
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSumsCentral.%s",outputDir.Data(),suffix.Data()));
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSumsCentral.pdf",outputDir.Data()));
 
 
     dummyHist->GetYaxis()->SetRangeUser(3e-3,5);

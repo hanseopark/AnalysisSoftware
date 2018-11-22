@@ -1780,6 +1780,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     boxPCMGammaRatio->Draw("l");
     boxEMCALGammaRatio               = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[1]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[1]+ heightBoxPCMcomb);
     boxEMCALGammaRatio->Draw("l");
+    TLatex *textFigureLabelGammaA = new TLatex(0.88, 0.17, "(b)");
+    SetStyleTLatex(textFigureLabelGammaA, textSizeLabelsPixel, 4, 1, 43);
+    textFigureLabelGammaA->Draw();
 
     // canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_0.pdf",outputDir.Data()));
 
@@ -2093,7 +2096,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         // TLatex *labelALICEDRSingle = new TLatex(0.95,0.87,textALICE.Data());
         // SetStyleTLatex( labelALICEDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
         // labelALICEDRSingle->Draw();
-
+        TLatex *textFigureLabelDRIndA = new TLatex(0.95, 0.15, "(b)");
+        SetStyleTLatex(textFigureLabelDRIndA, textSizeSinglePad, 4, 1, 42, kTRUE, 31);
+        textFigureLabelDRIndA->Draw();
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -2123,6 +2128,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         labelDRSingle->Draw();;
         // labelALICEDRSingle->Draw();
 
+        textFigureLabelDRIndA->Draw();
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -2311,6 +2317,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         graphCombDRStatPlot->Draw("p,same,z");
         legendDRTheoryComb->Draw();
         legendDRTheoryComb2->Draw();
+        textFigureLabelDRIndA->Draw();
 
         // labelALICEDRSingle->Draw();
         labelDRSingle = new TLatex(0.95,0.92,Form("%s",collisionSystempp8TeV.Data()));
@@ -2357,6 +2364,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         legendDRTheoryComb->Draw();
         legendDRTheoryComb2->Draw();
 
+        textFigureLabelDRIndA->Draw();
         // labelALICEDRSingle->Draw();
 
         labelDRSingle->Draw();
@@ -2412,6 +2420,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         legendDRTheoryComb2Thermal->Draw();
 
         // labelALICEDRSingle->Draw();
+        textFigureLabelDRIndA->Draw();
 
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
@@ -3417,7 +3426,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         legendYieldDirGammaTheo2->Draw();
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
-
+        TLatex *labelXSecFigureA = new TLatex(0.94, 0.965-0.04*5, "(b)");
+        SetStyleTLatex(labelXSecFigureA, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelXSecFigureA->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_8.%s",outputDir.Data(),suffix.Data()));
