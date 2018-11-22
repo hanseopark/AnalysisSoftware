@@ -230,8 +230,15 @@ void EventQA_Runwise(
             TIter nextMC(fCutFileMC->GetListOfKeys());
             while ((keyMC=(TKey*)nextMC())){
                 cout << Form("Found TopDir for MC: '%s' ",keyMC->GetName());
+<<<<<<< HEAD
                 nameMainDirMC             = keyMC->GetName();
                 if (nameMainDirMC.Contains("Gamma")) break;
+=======
+                TStrNameKey = keyMC->GetName();
+                if (TStrNameKey.BeginsWith("Gamma")){
+                    nameMainDirMC             = keyMC->GetName();
+                }
+>>>>>>> Add checks to prevent Crash by use of 'wrong' Files in PrimaryTracks; Change when MainDirs are used => Code Crashes when last seen MainDir has no Gamma in it, but should not crash when last seen Dirs are QA Trees and Gamma exists
             }
         } else {
             nameMainDirMC = fixedTopDir;
