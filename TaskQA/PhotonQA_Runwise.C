@@ -90,11 +90,20 @@ void PhotonQA_Runwise(
     }
 
     //******************************************************************************
-    cout << "creating: " << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(),fileName.Data()) << endl;
-    TFile* fPhotonQAFile = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(),fileName.Data()));
-    if(fPhotonQAFile->IsZombie()) {
-        cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, testing stages output!" << endl;
-        delete fPhotonQAFile;
+    UInt_t ActualRunIndexInVector=0;
+    TFile* fPhotonQAFile=NULL;
+    while ( (fPhotonQAFile==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
+        cout << "creating: " << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(),fileName.Data()) << endl;
+        fPhotonQAFile = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(),fileName.Data()));
+        if(fPhotonQAFile->IsZombie()) {
+            cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileName.Data()) << "' could not be openend, trying next output file!" << endl;
+            fPhotonQAFile->Close();
+            delete fPhotonQAFile;
+            fPhotonQAFile=NULL;
+        }
+        ActualRunIndexInVector++;
+    }
+    if (fPhotonQAFile==NULL){
 
         // check wether there are subfiles
         TString listForTesting  = Form("%s/%s/%s/Stage*/*/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data());
