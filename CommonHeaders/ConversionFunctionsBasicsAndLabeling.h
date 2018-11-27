@@ -2271,7 +2271,7 @@
 	    return  1./1. -1.;
          } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
             cout << "Same as 7 TeV K0 scaling factor" << endl;
-            return  1./0.75 -1.;
+            return  1./1. - 1; //1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
             return  1./0.685 -1.;
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {

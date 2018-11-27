@@ -879,6 +879,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
     TList *folder2050 = (TList*)fileCocktail->Get("PbPb_2.76TeV_2050");
         TGraphAsymmErrors* graphPi0Comb2050 = (TGraphAsymmErrors*)folder2050->FindObject("NPionCombStat");
+        TGraphAsymmErrors* graphEtaComb2050 = (TGraphAsymmErrors*)folder2050->FindObject("EtaCombStat");
         TF1* paramPi0PCM2050 = (TF1*)folder2050->FindObject("NPionPCMStat_Fit");
         TF1* paramPi0Comb2050 = (TF1*)folder2050->FindObject("NPionCombStat_Fit");
         TF1* paramEtaPCM2050 = (TF1*)folder2050->FindObject("EtaPCMStat_Fit");
@@ -2914,7 +2915,35 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     labelRawEtaPbPb->Draw();
     dummyHist->Draw("axis,same");
     canvasEtaSpectra->Update();
-    canvasEtaSpectra->Print(Form("%s/SpectraEtaParamPbPb2760GeVforThesis.%s",outputDir.Data(),suffix.Data()));
+    canvasEtaSpectra->Print(Form("%s/SpectraEtaParamPbPb2760GeVforThesis_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasEtaSpectra->cd();
+    dummyHist->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(graphEtaComb2050, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040, colorCombPbPb2040, widthLinesBoxes, kTRUE);
+    graphEtaComb2050->Draw("e1,same,p");
+
+    paramEtaComb2050->SetLineColor(colorCombPbPb2040+1);
+    paramEtaComb2050->SetLineStyle(2);
+    paramEtaComb2050->SetLineWidth(2);
+    paramEtaComb2050->Draw("same");
+
+    TLegend* legendEtaComp2050 = GetAndSetLegend2(0.2, 0.26-(0.045*3), 0.85, 0.26, 40);
+    legendEtaComp2050->SetFillColor(0);
+    legendEtaComp2050->SetLineColor(0);
+    legendEtaComp2050->SetTextSize(0.035);
+    legendEtaComp2050->SetTextFont(42);
+    legendEtaComp2050->SetMargin(0.17);
+    legendEtaComp2050->SetHeader(collisionSystemPbPb2050.Data());
+    legendEtaComp2050->AddEntry(graphEtaComb2050, "#eta combined","p");
+    legendEtaComp2050->AddEntry(paramEtaComb2050, "#eta standard parametrisation", "l");
+    legendEtaComp2050->Draw();
+
+//     if(thesisPlotting) thesisLabel->Draw();
+    labelRawEtaPbPb->Draw();
+    dummyHist->Draw("axis,same");
+    canvasEtaSpectra->Update();
+    canvasEtaSpectra->Print(Form("%s/SpectraEtaParamPbPb2760GeVforThesis_2050.%s",outputDir.Data(),suffix.Data()));
 
     canvasEtaSpectra->cd();
     histo2DInvYieldSectionEtaLHC11h->DrawCopy();
@@ -3112,7 +3141,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	canvasPi0Spectra->Update();
 	canvasPi0Spectra->Print(Form("%s/SpectraPi0PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
 
-    if(thesisPlotting){
+//     if(thesisPlotting){
 
         canvasPi0Spectra->cd();
         histo2DInvYieldSectionPi0LHC11h->GetXaxis()->SetRangeUser(0.5,20.);
@@ -3187,7 +3216,37 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         labelSpectraPi0LabelPbPb->Draw();
         dummyHist->Draw("axis,same");
         canvasPi0Spectra->Update();
-        canvasPi0Spectra->Print(Form("%s/SpectraPi0ParamPbPb2760GeVforThesis.%s",outputDir.Data(),suffix.Data()));
+        canvasPi0Spectra->Print(Form("%s/SpectraPi0ParamPbPb2760GeVforThesis_0010.%s",outputDir.Data(),suffix.Data()));
+
+
+        canvasPi0Spectra->cd();
+        dummyHist->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPi0Comb2050, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040 , colorCombPbPb2040, widthLinesBoxes, kTRUE);
+        graphPi0Comb2050->Draw("e1,same,p");
+
+        paramPi0Comb2050->SetLineColor(colorCombPbPb2040+1);
+        paramPi0Comb2050->SetLineStyle(2);
+        paramPi0Comb2050->SetLineWidth(2);
+        paramPi0Comb2050->Draw("same");
+
+        TLegend* legendPi0Comp2050 = GetAndSetLegend2(0.2, 0.26-(0.045*nPi0CompLegendEntries), 0.85, 0.26, 40);
+        legendPi0Comp2050->SetFillColor(0);
+        legendPi0Comp2050->SetLineColor(0);
+        legendPi0Comp2050->SetTextSize(0.035);
+        legendPi0Comp2050->SetTextFont(42);
+        legendPi0Comp2050->SetMargin(0.17);
+        legendPi0Comp2050->SetBorderSize(0);
+        legendPi0Comp2050->SetHeader(collisionSystemPbPb2050.Data());
+        legendPi0Comp2050->AddEntry(graphPi0Comb2050, "#pi^{0} combined","p");
+        legendPi0Comp2050->AddEntry(paramPi0Comb2050, "#pi^{0} standard parametrisation", "l");
+        legendPi0Comp2050->Draw();
+
+//         if(thesisPlotting) thesisLabel->Draw();
+        labelSpectraPi0LabelPbPb->Draw();
+        dummyHist->Draw("axis,same");
+        canvasPi0Spectra->Update();
+        canvasPi0Spectra->Print(Form("%s/SpectraPi0ParamPbPb2760GeVforThesis_2050.%s",outputDir.Data(),suffix.Data()));
 
         canvasPi0Spectra->cd();
         histo2DInvYieldSectionPi0LHC11h->DrawCopy();
@@ -3324,7 +3383,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         canvasPi0Spectra->Print(Form("%s/SpectraPi0PbPb2760GeVforThesisWithPhenix_2050.%s",outputDir.Data(),suffix.Data()));
 
 
-    }
+//     }
 
 	// *******************************************************************************************************
 	// ************************** 			Eta to Pi0 ratio			**************************************

@@ -1,12 +1,12 @@
 #example config	LHC17pq	- PCM
 select	LHC17pq
 mode	0
-nSets	8
+nSets	6
 cutNr	0
-labelData   17p_fast    STOP
+labelData
 energy	5TeV
-pathDataSets    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_woSDD/GammaConvV1_400.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_woSDD/GammaConvV1_400.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_fast/GammaConvV1_400.root /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_woSDD/GammaConvV1_400.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_fast/GammaConvV1_400.root /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_woSDD/GammaConvV1_400.root    STOP
-pathPhotonQA    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_fast/PhotonQA_LHC17p_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_woSDD/PhotonQA_LHC17p_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_fast/PhotonQA_LHC17q_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_woSDD/PhotonQA_LHC17q_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_fast/PhotonQA_LHC17l3b_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_woSDD/PhotonQA_LHC17l3b_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_fast/PhotonQA_LHC17l4b_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_woSDD/PhotonQA_LHC17l4b_woSDD.root    STOP
-DataSetNames    LHC17p_fast LHC17p_woSDD    LHC17q_fast LHC17q_woSDD    LHC17l3b_fast   LHC17l3b_woSDD     LHC17l4b_fast    LHC17l4b_woSDD  STOP
-DataSetNamesPlot    17p_fast 17p_woSDD    17q_fast 17q_woSDD    17l3b_fast  17l3b_woSDD 17l4b_fast   17l4b_woSDD  STOP
+pathDataSets    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17p_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17p_woSDD/GammaConvV1_400.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17q_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17q_woSDD/GammaConvV1_400.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17l3b_fast/GammaConvV1_400.root /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17l3b_woSDD/GammaConvV1_400.root    STOP
+pathPhotonQA    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17p_fast/PhotonQA_LHC17p_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17p_woSDD/PhotonQA_LHC17p_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17q_fast/PhotonQA_LHC17q_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17q_woSDD/PhotonQA_LHC17q_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17l3b_fast/PhotonQA_LHC17l3b_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20181029-1_QAforNote/LHC17l3b_woSDD/PhotonQA_LHC17l3b_woSDD.root    STOP
+DataSetNames    LHC17p_fast LHC17p_woSDD    LHC17q_fast LHC17q_woSDD    LHC17l3b_fast   LHC17l3b_woSDD  STOP
+DataSetNamesPlot    17p_fast 17p_woSDD    17q_fast 17q_woSDD    17l3b_fast  17l3b_woSDD STOP
 addPhotonCutNr   0005314140

@@ -7,7 +7,7 @@
 
 BASEDIR=/home/admin1/leardini/GridOutput/PbPb
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180824-1_DPwithppMBW;
+TRAINDIR=Legotrain-vAN-20181028-1_forNote;
 
 
 LHC11hData=426_20180801-1350 #421_20180626-1334; #

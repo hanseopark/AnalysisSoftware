@@ -4,16 +4,16 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20181003-1_MatBugMultWeights;
+TRAINDIR=Legotrain-vAN-20181029-1_QAforNote;
 
 ### Data
-LHC17pqMETA=2498_20180927-1712; #451_20180831-1144 ,
+LHC17pqMETA=2519_20181030-1120; #451_20180831-1144 ,
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
 LHC17q_woSDD=$LHC17pqMETA\_child_4
-LHC17p_wSDD=2499_20180927-1712;
-LHC17q_wSDD=2499_20180927-1712;
+LHC17p_wSDD=;
+LHC17q_wSDD=;
 
 # LHC17p_fast=$LHC17pqMETA\_child_1
 # LHC17p_wSDD=$LHC17pqMETA\_child_2
@@ -23,12 +23,12 @@ LHC17q_wSDD=2499_20180927-1712;
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
 ### MC
-LHC17lMETA=3537_20180927-1726; #997_20180831-1159;
+LHC17lMETA=3588_20181030-1122; #997_20180831-1159;
 LHC17l3b_fast=$LHC17lMETA\_child_1
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
-LHC17l3b_cent=; #3496_20180830-1024;
-LHC17l4b_fast=;#$LHC17lMETA\_child_3
-LHC17l4b_woSDD=; #$LHC17lMETA\_child_4
+LHC17l3b_cent=;
+LHC17l4b_fast=;
+LHC17l4b_woSDD=;
 LHC17l4b_cent=;
 
 # LHC17l3b_fast=$LHC17lMETA\_child_1
@@ -46,7 +46,7 @@ LHC18d6c_woSDD_part2=; #$LHC18d6cMETA\_child_3;
 LHC18d6c_wSDD=; #$LHC18d6cMETA\_child_4;
 
 ###### all low intensity pythia ######
-LowIntPythiaMETA=3547_20181004-1019; #3477_20180823-1142;
+LowIntPythiaMETA=; #3477_20180823-1142;
 LHC17b3lLowInt_fast=$LowIntPythiaMETA\_child_1;
 LHC17b3lLowInt_woSDD=$LowIntPythiaMETA\_child_2;
 LHC17b3lLowInt_wSDD=$LowIntPythiaMETA\_child_3;
@@ -57,7 +57,7 @@ LHC18d6cLowInt_wSDD=$LowIntPythiaMETA\_child_7;
 
 
 ############## Phojet ################
-LHC18d6bMETA=3548_20181004-1019; #3477_20180823-1142;
+LHC18d6bMETA=; #3477_20180823-1142;
 LHC18d6b_fast=$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=$LHC18d6bMETA\_child_2;
 LHC18d6b_fastpart2=$LHC18d6bMETA\_child_3;
@@ -73,11 +73,10 @@ LHC18b8_woSDD=$LHC18b8META\_child_3
 
 ###################### Data 2015 #####################
 LHC15n_pass4=;
-
-LHC16k5a_pass3=3482_20180824-1813;
-LHC16k5b_pass3=3483_20180824-1814;
-LHC17e2_pass4=3484_20180824-1814;
-LHC16h3_JJ_pass4=; #3458_20180817-1713;
+LHC16k5a_pass3=;
+LHC16k5b_pass3=;
+LHC17e2_pass4=;
+LHC16h3_JJ_pass4=;
 ######################################################
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -109,8 +108,8 @@ mergeFolder=merge_runlist_1;
 #17e2 3446_20180815-1252
 
 
-# fileToDownload=AnalysisResults.root;
-fileToDownload=GammaConvV1_400.root;
+fileToDownloadQAPhoton=AnalysisResults.root;
+fileToDownloadQAEvent=GammaConvV1_400.root;
 # fileName=GammaConvV1_406.root;
 
 # fileToDownload=GammaConv_Material_121.root;
@@ -138,31 +137,32 @@ elif [ $1 = "yes" ]; then
 
         ################################ LHC17p_fast
         if [ $LHC17p_fast != "" ]; then
-            rm runNumbersLHC17pfastNotMerged.txt
+            rm runNumbersLHC17pfastNotMergedQAP.txt
+            rm runNumbersLHC17pfastNotMergedQAE.txt
             echo $OUTPUTDIR_LHC17p_fast
             runs=`cat runlists/runNumbersLHC17p_all.txt`
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_fast/$run
-                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileToDownload file:$OUTPUTDIR_LHC17p_fast/$run/
+                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17p_fast/$run/
+                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17p_fast/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileToDownload ]; then
-                echo "file " $OUTPUTDIR_LHC17p_fast/$run/$fileToDownload "has already been copied for sucessfully for run " $runNumber
+            if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileToDownloadQAEvent ]; then
+                echo "file " $OUTPUTDIR_LHC17p_fast/$run/$fileToDownloadQAEvent "has already been copied for sucessfully for run " $runNumber
             else
-                echo $run >> runNumbersLHC17pfastNotMerged.txt
+                echo $run >> runNumbersLHC17pfastNotMergedQAE.txt
             fi
-
-            NotMergedruns=`cat runNumbersLHC17pfastNotMerged.txt`
+            NotMergedruns=`cat runNumbersLHC17pfastNotMergedQAE.txt`
             for run in $NotMergedruns; do
                 echo "copying stage_1 output for " $run
                 mkdir -p $run
                 stageOutputs=`alien_ls /alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
-                if [ $fileName != "AnalysisResults.root" ]; then
+                if [ $fileToDownloadQAEvent != "AnalysisResults.root" ]; then
                     for stageOutput in $stageOutputs; do
                         ls $OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/GammaConvV1_*.root > fileStagedToMergeLHC17p_fast.txt
                         fileNames =`cat fileStagedToMergeLHC17p_fast.txt`
@@ -181,6 +181,23 @@ elif [ $1 = "yes" ]; then
                     done;
                     mv $OUTPUTDIR_LHC17p_fast/$run/intermediate_$run.root $OUTPUTDIR_LHC17p_fast/$run/$fileName
                 fi
+            done;
+
+
+            if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileToDownloadQAPhoton ]; then
+                echo "file " $OUTPUTDIR_LHC17p_fast/$run/$fileToDownloadQAPhoton "has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17pfastNotMergedQAP.txt
+            fi
+            NotMergedruns=`cat runNumbersLHC17pfastNotMergedQAP.txt`
+            for run in $NotMergedruns; do
+                echo "copying stage_1 output for " $run
+                mkdir -p $run
+                stageOutputs=`alien_ls /alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/`
+                for stageOutput in $stageOutputs; do
+                    mkdir -p $OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
+                done;
             done;
         fi
 
@@ -234,31 +251,32 @@ elif [ $1 = "yes" ]; then
 
         ################################ LHC17p_woSDD
         if [ $LHC17p_woSDD != "" ]; then
-            rm runNumbersLHC17pwoSDDNotMerged.txt
+            rm runNumbersLHC17pwoSDDNotMergedQAP.txt
+            rm runNumbersLHC17pwoSDDNotMergedQAE.txt
             echo $OUTPUTDIR_LHC17p_woSDD
             runs=`cat runlists/runNumbersLHC17p_all.txt`
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run
-                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17p_woSDD/$run/
+                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17p_woSDD/$run/
+                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17p_woSDD/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
-                echo $run >> runNumbersLHC17pwoSDDNotMerged.txt
+                echo $run >> runNumbersLHC17pwoSDDNotMergedQAE.txt
             fi
-
-            NotMergedruns=`cat runNumbersLHC17pwoSDDNotMerged.txt`
+            NotMergedruns=`cat runNumbersLHC17pwoSDDNotMergedQAE.txt`
             for run in $NotMergedruns; do
                 echo "copying stage_1 output for " $run
                 mkdir -p $run
                 stageOutputs=`alien_ls /alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
-                if [ $fileName != "AnalysisResults.root" ]; then
+                if [ $fileToDownloadQAEvent != "AnalysisResults.root" ]; then
                     for stageOutput in $stageOutputs; do
                         ls $OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput/GammaConvV1_*.root > fileStagedToMergeLHC17p_woSDD.txt
                         fileNames =`cat fileStagedToMergeLHC17p_woSDD.txt`
@@ -278,35 +296,52 @@ elif [ $1 = "yes" ]; then
                     mv $OUTPUTDIR_LHC17p_woSDD/$run/intermediate_$run.root $OUTPUTDIR_LHC17p_woSDD/$run/$fileName
                 fi
             done;
+
+            if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileToDownloadQAPhoton ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17pwoSDDNotMergedQAP.txt
+            fi
+            NotMergedruns=`cat runNumbersLHC17pwoSDDNotMergedQAP.txt`
+            for run in $NotMergedruns; do
+                echo "copying stage_1 output for " $run
+                mkdir -p $run
+                stageOutputs=`alien_ls /alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/Stage_1/`
+                for stageOutput in $stageOutputs; do
+                    mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/Stage_1/$stageOutput/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17p_woSDD/$run/Stage_1/$stageOutput/
+                done;
+            done;
         fi
 
         ################################ LHC17q_fast
         if [ $LHC17q_fast != "" ]; then
-            rm runNumbersLHC17qfastNotMerged.txt
+            rm runNumbersLHC17qfastNotMergedQAE.txt
+            rm runNumbersLHC17qfastNotMergedQAP.txt
             echo $OUTPUTDIR_LHC17q_fast
             runs=`cat runlists/runNumbersLHC17q_all.txt`
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17q_fast/$run
-                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/$fileToDownload file:$OUTPUTDIR_LHC17q_fast/$run/
+                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17q_fast/$run/
+                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17q_fast/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
-                echo $run >> runNumbersLHC17qfastNotMerged.txt
+                echo $run >> runNumbersLHC17qfastNotMergedQAE.txt
             fi
-
-            NotMergedruns=`cat runNumbersLHC17qfastNotMerged.txt`
+            NotMergedruns=`cat runNumbersLHC17qfastNotMergedQAE.txt`
             for run in $NotMergedruns; do
                 echo "copying stage_1 output for " $run
                 mkdir -p $run
                 stageOutputs=`alien_ls /alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
-                if [ $fileName != "AnalysisResults.root" ]; then
+                if [ $fileToDownloadQAEvent != "AnalysisResults.root" ]; then
                     for stageOutput in $stageOutputs; do
                         ls $OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput/GammaConvV1_*.root > fileStagedToMergeLHC17q_fast.txt
                         fileNames =`cat fileStagedToMergeLHC17q_fast.txt`
@@ -326,6 +361,23 @@ elif [ $1 = "yes" ]; then
                     mv $OUTPUTDIR_LHC17q_fast/$run/intermediate_$run.root $OUTPUTDIR_LHC17q_fast/$run/$fileName
                 fi
             done;
+
+            if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileToDownloadQAPhoton ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17qfastNotMergedQAP.txt
+            fi
+            NotMergedruns=`cat runNumbersLHC17qfastNotMergedQAP.txt`
+            for run in $NotMergedruns; do
+                echo "copying stage_1 output for " $run
+                mkdir -p $run
+                stageOutputs=`alien_ls /alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/Stage_1/`
+                for stageOutput in $stageOutputs; do
+                    mkdir -p $OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput
+                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/Stage_1/$stageOutput/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17q_fast/$run/Stage_1/$stageOutput/
+                done;
+            done;
+
         fi
 
         ################################ LHC17q_wSDD
@@ -378,31 +430,32 @@ elif [ $1 = "yes" ]; then
 
         ################################ LHC17q_woSDD
         if [ $LHC17q_woSDD != "" ]; then
-            rm runNumbersLHC17qwoSDDNotMerged.txt
+            rm runNumbersLHC17qwoSDDNotMergedQAE.txt
+            rm runNumbersLHC17qwoSDDNotMergedQAP.txt
             echo $OUTPUTDIR_LHC17q_woSDD
             runs=`cat runlists/runNumbersLHC17q_all.txt`
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17q_woSDD/$run
-                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17q_woSDD/$run/
+                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17q_woSDD/$run/
+                alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17q_woSDD/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
-                echo $run >> runNumbersLHC17qwoSDDNotMerged.txt
+                echo $run >> runNumbersLHC17qwoSDDNotMergedQAE.txt
             fi
-
-            NotMergedruns=`cat runNumbersLHC17qwoSDDNotMerged.txt`
+            NotMergedruns=`cat runNumbersLHC17qwoSDDNotMergedQAE.txt`
             for run in $NotMergedruns; do
                 echo "copying stage_1 output for " $run
                 mkdir -p $run
                 stageOutputs=`alien_ls /alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
-                if [ $fileName != "AnalysisResults.root" ]; then
+                if [ $fileToDownloadQAEvent != "AnalysisResults.root" ]; then
                     for stageOutput in $stageOutputs; do
                         ls $OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput/GammaConvV1_*.root > fileStagedToMergeLHC17q_woSDD.txt
                         fileNames =`cat fileStagedToMergeLHC17q_woSDD.txt`
@@ -422,9 +475,26 @@ elif [ $1 = "yes" ]; then
                     mv $OUTPUTDIR_LHC17q_woSDD/$run/intermediate_$run.root $OUTPUTDIR_LHC17q_woSDD/$run/$fileName
                 fi
             done;
+
+            if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileToDownloadQAPhoton ]; then
+                echo "file has already been copied for sucessfully for run " $runNumber
+            else
+                echo $run >> runNumbersLHC17qwoSDDNotMergedQAP.txt
+            fi
+            NotMergedruns=`cat runNumbersLHC17qwoSDDNotMergedQAP.txt`
+            for run in $NotMergedruns; do
+                echo "copying stage_1 output for " $run
+                mkdir -p $run
+                stageOutputs=`alien_ls /alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/Stage_1/`
+                for stageOutput in $stageOutputs; do
+                    mkdir -p $OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput
+                    alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/Stage_1/$stageOutput/$fileToDownloadQAPhoton file:$OUTPUTDIR_LHC17q_woSDD/$run/Stage_1/$stageOutput/
+                done;
+            done;
+
         fi
 
-        if [ $fileName != "AnalysisResults.root" ]; then
+        if [ $fileToDownloadQAEvent != "AnalysisResults.root" ]; then
             runs=`cat runlists/runNumbersLHC17p_all.txt`
             for run in $runs; do
                 ls $OUTPUTDIR_LHC17p_fast/$run/GammaConvV1_*.root > fileLHC17p_fast.txt
@@ -524,7 +594,6 @@ elif [ $1 = "yes" ]; then
                         alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/Stage_1/$stageOutput/AnalysisResults.root file:$OUTPUTDIR_LHC17p_fast/$run/Stage_1/$stageOutput/
                     fi
                 done;
-                counter=0;
             done;
         fi
 
@@ -1357,9 +1426,9 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run
-                alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileToDownload file:$OUTPUTDIR_LHC17l3b_fast/$run/
+                alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_fast/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
                 echo $run >> runNumbersLHC17l3bfastNotMerged.txt
@@ -1372,7 +1441,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l3b_fast/$run/$fileName
@@ -1408,7 +1477,7 @@ elif [ $2 = "yes" ]; then
                 mkdir -p $OUTPUTDIR_LHC17l3b_cent/$run
                 alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/GammaConv* file:$OUTPUTDIR_LHC17l3b_cent/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
                 echo $run >> runNumbersLHC17l3bwSDDNotMerged.txt
@@ -1421,7 +1490,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l3b_cent/$run/$fileName
@@ -1455,9 +1524,9 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run
-                alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
+                alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
             done;
-            if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileToDownload ]; then
+            if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileToDownloadQAEvent ]; then
                 echo "file has already been copied for sucessfully for run " $runNumber
             else
                 echo $run >> runNumbersLHC17l3bwoSDDNotMerged.txt
@@ -1470,7 +1539,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName
@@ -1514,7 +1583,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l4b_fast/$run/$fileName
@@ -1558,7 +1627,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l4b_cent/$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l4b_cent/$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l4b_cent/$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l4b_cent/$run/$fileName
@@ -1602,7 +1671,7 @@ elif [ $2 = "yes" ]; then
                 stageOutputs=`alien_ls /alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/Stage_1/`
                 for stageOutput in $stageOutputs; do
                     mkdir -p $OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput
-                    alien_cp alien:/alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput/
+                    alien_cp alien:/alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput/
                 done;
                 counter=0;
                 rm $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName
@@ -1723,7 +1792,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_fast/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -1755,7 +1824,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_cent/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -1787,7 +1856,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_woSDD/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -1819,7 +1888,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_fast/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -1851,7 +1920,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l4b_cent/$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l4b_cent/$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_cent/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -1883,7 +1952,7 @@ elif [ $2 = "yes" ]; then
                     if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput/AnalysisResults.root ]; then
                         echo "file has already been copied"
                     else
-                        alien_cp alien:/alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/Stage_1/$stageOutput/$fileToDownload file:$OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput/
+                        alien_cp alien:/alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/Stage_1/$stageOutput/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l4b_woSDD/$run/Stage_1/$stageOutput/
                     fi
                 done;
             done;
@@ -2472,7 +2541,7 @@ if [ $2 = "material" ]; then
                 if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileToDownload file:$OUTPUTDIR_LHC17l3b_fast/$run/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_fast/$run/
                 fi
             done;
 
@@ -2497,7 +2566,7 @@ if [ $2 = "material" ]; then
                 if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileToDownload file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
                 fi
             done;
 
@@ -2522,7 +2591,7 @@ if [ $2 = "material" ]; then
                 if [ -f $OUTPUTDIR_LHC17l3b_wSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
-                    alien_cp alien:/alice/sim/2017/LHC17l3b_wSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_wSDD/$fileToDownload file:$OUTPUTDIR_LHC17l3b_wSDD/$run/
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_wSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_wSDD/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC17l3b_wSDD/$run/
                 fi
             done;
 
@@ -2634,7 +2703,7 @@ if [ $2 = "jetjet" ]; then
 #             if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
 #                 echo "file has already been copied"
 #             else
-#             alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileToDownload file:$OUTPUTDIR_LHC18b8_cent/$binNumber/$run
+#             alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileToDownloadQAEvent file:$OUTPUTDIR_LHC18b8_cent/$binNumber/$run
 #             fi
 #             if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
 #                 echo "file has already been copied"
