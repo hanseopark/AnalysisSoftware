@@ -4,10 +4,10 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20181029-1_QAforNote;
+TRAINDIR=Legotrain-vAN-20181127-1_increasedMCStat;
 
 ### Data
-LHC17pqMETA=2519_20181030-1120; #451_20180831-1144 ,
+LHC17pqMETA=2532_20181127-1634;
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
@@ -23,13 +23,15 @@ LHC17q_wSDD=;
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
 ### MC
-LHC17lMETA=3588_20181030-1122; #997_20180831-1159;
+LHC17lMETA=1150_20181127-1648; #997_20180831-1159;
 LHC17l3b_fast=$LHC17lMETA\_child_1
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
 LHC17l3b_cent=;
 LHC17l4b_fast=;
 LHC17l4b_woSDD=;
 LHC17l4b_cent=;
+LHC18j2_fast=$LHC17lMETA\_child_3;
+LHC18j2_woSDD=$LHC17lMETA\_child_4;
 
 # LHC17l3b_fast=$LHC17lMETA\_child_1
 # LHC17l3b_cent=$LHC17lMETA\_child_2
@@ -46,7 +48,7 @@ LHC18d6c_woSDD_part2=; #$LHC18d6cMETA\_child_3;
 LHC18d6c_wSDD=; #$LHC18d6cMETA\_child_4;
 
 ###### all low intensity pythia ######
-LowIntPythiaMETA=; #3477_20180823-1142;
+LowIntPythiaMETA=; #3619_20181127-1812; #3477_20180823-1142;
 LHC17b3lLowInt_fast=$LowIntPythiaMETA\_child_1;
 LHC17b3lLowInt_woSDD=$LowIntPythiaMETA\_child_2;
 LHC17b3lLowInt_wSDD=$LowIntPythiaMETA\_child_3;
@@ -57,7 +59,7 @@ LHC18d6cLowInt_wSDD=$LowIntPythiaMETA\_child_7;
 
 
 ############## Phojet ################
-LHC18d6bMETA=; #3477_20180823-1142;
+LHC18d6bMETA=; #3622_20181127-1813; #3477_20180823-1142;
 LHC18d6b_fast=$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=$LHC18d6bMETA\_child_2;
 LHC18d6b_fastpart2=$LHC18d6bMETA\_child_3;
@@ -84,9 +86,9 @@ TRAINPATHData=GA_pp #_AOD
 if [ $2 = "jetjet" ]; then
     TRAINPATHMC=GA_pp_MC_AOD
 else
-    TRAINPATHMC=GA_pp_MC
+#     TRAINPATHMC=GA_pp_MC
+    TRAINPATHMC=GA_pp_MC_AOD
 fi
-# TRAINPATHMC=GA_pp_MC_AOD
 
 NSlashes=10 #without mergelist = 9
 NSlashes2=10
@@ -117,21 +119,6 @@ fileToDownloadQAEvent=GammaConvV1_400.root;
 if [ $1 = "no" ]; then
    echo "Not dowloading data";
 elif [ $1 = "yes" ]; then
-
-    OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/LHC17p_fast/$mergeFolder
-    OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/LHC17p_wSDD/$mergeFolder
-    OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/LHC17p_woSDD/$mergeFolder
-    mkdir -p $OUTPUTDIR_LHC17p_fast
-    mkdir -p $OUTPUTDIR_LHC17p_wSDD
-    mkdir -p $OUTPUTDIR_LHC17p_woSDD
-
-    OUTPUTDIR_LHC17q_fast=$BASEDIR/$TRAINDIR/LHC17q_fast/$mergeFolder
-    OUTPUTDIR_LHC17q_wSDD=$BASEDIR/$TRAINDIR/LHC17q_wSDD/$mergeFolder
-    OUTPUTDIR_LHC17q_woSDD=$BASEDIR/$TRAINDIR/LHC17q_woSDD/$mergeFolder
-    mkdir -p $OUTPUTDIR_LHC17q_fast
-    mkdir -p $OUTPUTDIR_LHC17q_wSDD
-    mkdir -p $OUTPUTDIR_LHC17q_woSDD
-
 
     if [ $3 = "runwise" ]; then
 
@@ -758,7 +745,10 @@ elif [ $1 = "yes" ]; then
         fi
     fi
 
+
     if [ $LHC17p_fast != "" ]; then
+        OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/LHC17p_fast/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17p_fast
         echo "Downloading " $LHC17p_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_fast/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17p_fast/
         ls $OUTPUTDIR_LHC17p_fast/GammaConvV1_*.root > fileLHC17p_fast.txt
@@ -773,6 +763,8 @@ elif [ $1 = "yes" ]; then
         fi
 
     if [ $LHC17p_wSDD != "" ]; then
+        OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/LHC17p_wSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17p_wSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_wSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17p_wSDD/
         ls $OUTPUTDIR_LHC17p_wSDD/GammaConvV1_*.root > fileLHC17p_wSDD.txt
         fileNumbers=`cat fileLHC17p_wSDD.txt`
@@ -786,6 +778,8 @@ elif [ $1 = "yes" ]; then
     fi
 
     if [ $LHC17p_woSDD != "" ]; then
+        OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/LHC17p_woSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17p_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17p_woSDD/
         ls $OUTPUTDIR_LHC17p_woSDD/GammaConvV1_*.root > fileLHC17p_woSDD.txt
         fileNumbers=`cat fileLHC17p_woSDD.txt`
@@ -799,6 +793,8 @@ elif [ $1 = "yes" ]; then
     fi
 
     if [ $LHC17q_fast != "" ]; then
+        OUTPUTDIR_LHC17q_fast=$BASEDIR/$TRAINDIR/LHC17q_fast/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17q_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_fast/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17q_fast/
         ls $OUTPUTDIR_LHC17q_fast/GammaConvV1_*.root > fileLHC17q_fast.txt
         fileNumbers=`cat fileLHC17q_fast.txt`
@@ -812,6 +808,8 @@ elif [ $1 = "yes" ]; then
     fi
 
     if [ $LHC17q_wSDD != "" ]; then
+        OUTPUTDIR_LHC17q_wSDD=$BASEDIR/$TRAINDIR/LHC17q_wSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17q_wSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_wSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17q_wSDD/
         ls $OUTPUTDIR_LHC17q_wSDD/GammaConvV1_*.root > fileLHC17q_wSDD.txt
         fileNumbers=`cat fileLHC17q_wSDD.txt`
@@ -825,6 +823,8 @@ elif [ $1 = "yes" ]; then
     fi
 
     if [ $LHC17q_woSDD != "" ]; then
+        OUTPUTDIR_LHC17q_woSDD=$BASEDIR/$TRAINDIR/LHC17q_woSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17q_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17q_woSDD/
         ls $OUTPUTDIR_LHC17q_woSDD/GammaConvV1_*.root > fileLHC17q_woSDD.txt
         fileNumbers=`cat fileLHC17q_woSDD.txt`
@@ -992,14 +992,9 @@ fi
 
 if [ $1 = "material" ]; then
 
-    OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/Material_LHC17p_fast_LowInt
-    mkdir -p $OUTPUTDIR_LHC17p_fast
-    OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_woSDD_LowInt
-    mkdir -p $OUTPUTDIR_LHC17p_woSDD
-    OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_wSDD_LowInt
-    mkdir -p $OUTPUTDIR_LHC17p_wSDD
-
     if [ $LHC17p_fast != "" ]; then
+        OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/Material_LHC17p_fast_LowInt
+        mkdir -p $OUTPUTDIR_LHC17p_fast
         echo "Downloading " $LHC17p_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_fast/merge_runlist_3/GammaConv_Material_* file:$OUTPUTDIR_LHC17p_fast/
         ls $OUTPUTDIR_LHC17p_fast/GammaConv*Material*.root > fileLHC17p_fast.txt
@@ -1013,6 +1008,8 @@ if [ $1 = "material" ]; then
     fi
 
     if [ $LHC17p_woSDD != "" ]; then
+        OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_woSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC17p_woSDD
         echo "Downloading " $LHC17p_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_woSDD/merge_runlist_3/GammaConv_Material_*  file:$OUTPUTDIR_LHC17p_woSDD/
         ls $OUTPUTDIR_LHC17p_woSDD/GammaConv*Material*.root > fileLHC17p_woSDD.txt
@@ -1026,6 +1023,8 @@ if [ $1 = "material" ]; then
     fi
 
     if [ $LHC17p_wSDD != "" ]; then
+        OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_wSDD_LowInt
+        mkdir -p $OUTPUTDIR_LHC17p_wSDD
         echo "Downloading " $LHC17p_wSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_wSDD/merge_runlist_3/GammaConv_Material_* file:$OUTPUTDIR_LHC17p_wSDD/
         ls $OUTPUTDIR_LHC17p_wSDD/GammaConv*Material*.root > fileLHC17p_wSDD.txt
@@ -1401,20 +1400,6 @@ if [ $2 = "no" ]; then
    echo "Not dowloading MC";
 
 elif [ $2 = "yes" ]; then
-
-    OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/LHC17l3b_fast/$mergeFolder
-    OUTPUTDIR_LHC17l3b_cent=$BASEDIR/$TRAINDIR/LHC17l3b_wSDD/$mergeFolder
-    OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/LHC17l3b_woSDD/$mergeFolder
-    mkdir -p $OUTPUTDIR_LHC17l3b_fast
-    mkdir -p $OUTPUTDIR_LHC17l3b_cent
-    mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
-
-    OUTPUTDIR_LHC17l4b_fast=$BASEDIR/$TRAINDIR/LHC17l4b_fast/$mergeFolder
-    OUTPUTDIR_LHC17l4b_cent=$BASEDIR/$TRAINDIR/LHC17l4b_wSDD/$mergeFolder
-    OUTPUTDIR_LHC17l4b_woSDD=$BASEDIR/$TRAINDIR/LHC17l4b_woSDD/$mergeFolder
-    mkdir -p $OUTPUTDIR_LHC17l4b_fast
-    mkdir -p $OUTPUTDIR_LHC17l4b_cent
-    mkdir -p $OUTPUTDIR_LHC17l4b_woSDD
 
     if [ $3 = "runwise" ]; then
 
@@ -1959,7 +1944,10 @@ elif [ $2 = "yes" ]; then
         fi
     fi
 
+
     if [ $LHC17l3b_fast != "" ]; then
+        OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/LHC17l3b_fast/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l3b_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l3b_fast/
         ls $OUTPUTDIR_LHC17l3b_fast/GammaConvV1_*.root > fileLHC17l3b_fast.txt
         fileNumbers=`cat fileLHC17l3b_fast.txt`
@@ -1973,6 +1961,8 @@ elif [ $2 = "yes" ]; then
     fi
 
     if [ $LHC17l3b_cent != "" ]; then
+        OUTPUTDIR_LHC17l3b_cent=$BASEDIR/$TRAINDIR/LHC17l3b_wSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l3b_cent
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l3b_cent/
         ls $OUTPUTDIR_LHC17l3b_cent/GammaConvV1_*.root > fileLHC17l3b_cent.txt
         fileNumbers=`cat fileLHC17l3b_cent.txt`
@@ -1986,6 +1976,8 @@ elif [ $2 = "yes" ]; then
     fi
 
     if [ $LHC17l3b_woSDD != "" ]; then
+        OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/LHC17l3b_woSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l3b_woSDD/
         ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConvV1_*.root > fileLHC17l3b_woSDD.txt
         fileNumbers=`cat fileLHC17l3b_woSDD.txt`
@@ -1999,6 +1991,8 @@ elif [ $2 = "yes" ]; then
     fi
 
     if [ $LHC17l4b_fast != "" ]; then
+        OUTPUTDIR_LHC17l4b_fast=$BASEDIR/$TRAINDIR/LHC17l4b_fast/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l4b_fast
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l4b_fast/
         ls $OUTPUTDIR_LHC17l4b_fast/GammaConvV1_*.root > fileLHC17l4b_fast.txt
         fileNumbers=`cat fileLHC17l4b_fast.txt`
@@ -2012,6 +2006,8 @@ elif [ $2 = "yes" ]; then
     fi
 
     if [ $LHC17l4b_cent != "" ]; then
+        OUTPUTDIR_LHC17l4b_cent=$BASEDIR/$TRAINDIR/LHC17l4b_wSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l4b_cent
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l4b_cent/
         ls $OUTPUTDIR_LHC17l4b_cent/GammaConvV1_*.root > fileLHC17l4b_cent.txt
         fileNumbers=`cat fileLHC17l4b_cent.txt`
@@ -2025,6 +2021,8 @@ elif [ $2 = "yes" ]; then
     fi
 
     if [ $LHC17l4b_woSDD != "" ]; then
+        OUTPUTDIR_LHC17l4b_woSDD=$BASEDIR/$TRAINDIR/LHC17l4b_woSDD/$mergeFolder
+        mkdir -p $OUTPUTDIR_LHC17l4b_woSDD
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/$mergeFolder/GammaConv* file:$OUTPUTDIR_LHC17l4b_woSDD/
         ls $OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_*.root > fileLHC17l4b_woSDD.txt
         fileNumbers=`cat fileLHC17l4b_woSDD.txt`
@@ -2092,6 +2090,36 @@ elif [ $2 = "yes" ]; then
             root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_woSDDpart2/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_woSDDpart2_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
         done;
     fi
+
+    if [ $LHC18j2_fast != "" ]; then
+        OUTPUTDIR_LHC18j2_fast=$BASEDIR/$TRAINDIR/LHC18j2_fast
+        mkdir -p $OUTPUTDIR_LHC18j2_fast
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18j2_fast/merge/GammaConv* file:$OUTPUTDIR_LHC18j2_fast/
+        ls $OUTPUTDIR_LHC18j2_fast/GammaConv*.root > fileLHC18j2_fast.txt
+        fileNumbers=`cat fileLHC18j2_fast.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18j2_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18j2_fast_$number.root\"\,\"GammaConvV1_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18j2_woSDD != "" ]; then
+        OUTPUTDIR_LHC18j2_woSDD=$BASEDIR/$TRAINDIR/LHC18j2_woSDD
+        mkdir -p $OUTPUTDIR_LHC18j2_woSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18j2_woSDD/merge/GammaConv* file:$OUTPUTDIR_LHC18j2_woSDD/
+        ls $OUTPUTDIR_LHC18j2_woSDD/GammaConv*.root > fileLHC18j2_woSDD.txt
+        fileNumbers=`cat fileLHC18j2_woSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18j2_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18j2_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
+        done;
+    fi
+
+
 
 #     if [ $LHC18d6b_wSDD != "" ]; then
 #         OUTPUTDIR_LHC18d6b_wSDD=$BASEDIR/$TRAINDIR/LHC18d6b_wSDD_LowInt
