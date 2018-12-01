@@ -193,9 +193,12 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TH1F * histoDiffWeightCut          [ConstNumberOfCuts];
     TH1F * histRelUncWeightCut         [ConstNumberOfCuts];
     TH1F * rData [ConstNumberOfCuts];
+
     TFile*  WeightFileAdditional       [ConstNumberOfCuts];
     TH1F * histoWeightsEachRPtMin[nBinsR][ConstNumberOfCuts];
     TH1F * histoWeightsEachRPtMinSecSub[nBinsR][ConstNumberOfCuts];   // Still a test
+    TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR][ConstNumberOfCuts];   // Still a test
+    TH1F * histoPurityPtEachRBin[nBinsR][ConstNumberOfCuts];
 
     for (Int_t i=0; i< NumberOfCuts; i++){
 
@@ -217,6 +220,8 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 	  //	  cout<< "name:"<< Form("histoWeightsEachRPtMin%i",j)<< endl;
 	  histoWeightsEachRPtMin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMin%i",j));
 	  histoWeightsEachRPtMinSecSub[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMinSecSub%i",j));
+	  histoWeightsEachRPtMinSecSubUsingCocktail[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMinSecSubUsingCocktail%i",j));
+	  histoPurityPtEachRBin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoPurityPtEachRBin_%i",j)); ;
 	  //	  cout<< "mean" <<histoWeightsEachRPtMin[i][j]->GetMean() <<endl;
 	}
         if(sequence==0){
@@ -720,7 +725,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 //         if(j>1 && j<=3)      histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
 //         else if(j>3 && j<=6) histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
 //         else if(j>7 )        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
-        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.82,1.3);
+        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.82,1.5);
 
         histoDummyWeightEachROnfly->DrawCopy();
         DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
@@ -728,6 +733,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         for(Int_t i = 0; i< 2; i++){
             if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
             else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	    if(j<2) histoWeightsEachRPtMin[j][i]->SetLineStyle(3);
 	    histoWeightsEachRPtMin[j][i]->Draw("same");
 	    // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
             // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
@@ -777,7 +783,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 //         if(j>1 && j<=3)      histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
 //         else if(j>3 && j<=6) histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
 //         else if(j>7 )       histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
-        histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.85,1.5);
+        histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.82,1.5);
 
         histoDummyWeightEachROffline->DrawCopy();
         DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
@@ -785,6 +791,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         for(Int_t i = 2; i< NumberOfCuts; i++){
 	  if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i],color[i]);
 	  else     DrawGammaSetMarker(histoWeightsEachRPtMin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	  if(j<2) histoWeightsEachRPtMin[j][i]->SetLineStyle(3);
 	  histoWeightsEachRPtMin[j][i]->Draw("same");
 	  // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
 	  // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
@@ -797,6 +804,141 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
 
    //____________________________________________________________________________________
+
+   //_______________________ Ploting weights vs pT in each R bin On-the-fly finder Secondary Subtracted usingCocktail__________________________
+
+    TCanvas *canvasMBWeightEachROnflySecSubCock          = new TCanvas("canvasMBWeighEachROnflySecSubCock","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBWeightEachROnflySecSubCock, 0, 0, 0, 0);
+    canvasMBWeightEachROnflySecSubCock->cd();
+    TPad * padMBWeightEachROnflySecSubCock               = new TPad("padMBWeightEachROnflySecSubCock","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBWeightEachROnflySecSubCock, 0, 0, 0, 0);
+    padMBWeightEachROnflySecSubCock->Divide(4,3,0.0,0.0);
+    padMBWeightEachROnflySecSubCock->Draw();
+    place  = 0;
+    TH2F *histoDummyWeightEachROnflySecSubCock =  new TH2F("histoDummyWeightEachROnflySecSubCock","histoDummyWeightEachROnflySecSubCock",1000,0.,1.,1000,0.5,2.);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnflySecSubCock, "#it{p}_{T}^{Min} (GeV/c)","purity,w_i", 0.05,0.05, 0.05,0.05);
+
+    TLegend* legendWeightPtOnflySecSubCock= new TLegend(0.4,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
+    legendWeightPtOnflySecSubCock->SetFillColor(0);
+    legendWeightPtOnflySecSubCock->SetMargin(0.17);
+    legendWeightPtOnflySecSubCock->SetLineColor(0);
+    legendWeightPtOnflySecSubCock->SetTextFont(42);
+    legendWeightPtOnflySecSubCock->SetTextSize(0.05);
+    legendWeightPtOnflySecSubCock->SetHeader("On-the-Fly V0 finder SecSubCock");
+    for(Int_t i = 0; i< 2; i++){
+        if(V0ReaderName[i].Contains("On-the-Fly"))
+            legendWeightPtOnflySecSubCock->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+    }
+
+    for(Int_t j=0; j < nBinsR; j++){
+        place  = place + 1;
+        padMBWeightEachROnflySecSubCock->cd(place);
+        padMBWeightEachROnflySecSubCock->cd(place)->SetTopMargin(0.04);
+        padMBWeightEachROnflySecSubCock->cd(place)->SetBottomMargin(0.15);
+        padMBWeightEachROnflySecSubCock->cd(place)->SetLeftMargin(0.15);
+        padMBWeightEachROnflySecSubCock->cd(place)->SetRightMargin(0.05);
+        histoDummyWeightEachROnflySecSubCock->GetYaxis()->SetNdivisions(504);
+
+//         if(j>1 && j<=3)      histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
+//         else if(j>3 && j<=6) histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
+//         else if(j>7 )        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
+        histoDummyWeightEachROnflySecSubCock->GetYaxis()->SetRangeUser(0.82,1.35);
+
+        histoDummyWeightEachROnflySecSubCock->DrawCopy();
+        DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+        DrawGammaLines(0.4,0.4,0.82,1.3,1.,kGray,2);
+        for(Int_t i = 0; i< 2; i++){
+            if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSubUsingCocktail[j][i], marker[i], 0.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSubUsingCocktail[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	    if(j<2) histoWeightsEachRPtMinSecSubUsingCocktail[j][i]->SetLineStyle(3);
+	    histoWeightsEachRPtMinSecSubUsingCocktail[j][i]->Draw("same");
+
+	    if(i<12) DrawGammaSetMarker(histoPurityPtEachRBin[j][i], marker[i], 0.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histoPurityPtEachRBin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	    histoPurityPtEachRBin[j][i]->SetLineStyle(3);
+	    histoPurityPtEachRBin[j][i]->Draw("same");
+	    // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
+            // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
+            // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
+        }
+        if (j==0)  legendWeightPtOnflySecSubCock->Draw();
+    }
+
+    canvasMBWeightEachROnflySecSubCock->Print(Form("%s/MBWeightVSPtMinOnflyEachRSecSubCock_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
+
+
+
+ //_______________________ Ploting weights vs pT in each R bin Offline findersecondary subtracted using cocktail__________________________
+
+    TCanvas *canvasMBWeightEachROfflineSecSubCock          = new TCanvas("canvasMBWeighEachROfflineSecSubCock","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBWeightEachROfflineSecSubCock, 0, 0, 0, 0);
+    canvasMBWeightEachROfflineSecSubCock->cd();
+    TPad * padMBWeightEachROfflineSecSubCock               = new TPad("padMBWeightEachROfflineSecSubCock","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBWeightEachROfflineSecSubCock, 0, 0, 0, 0);
+    padMBWeightEachROfflineSecSubCock->Divide(4,3,0.0,0.0);
+    padMBWeightEachROfflineSecSubCock->Draw();
+    place  = 0;
+    TH2F *histoDummyWeightEachROfflineSecSubCock =  new TH2F("histoDummyWeightEachROfflineSecSubCock","histoDummyWeightEachROfflineSecSubCock",1000,0.,1.,1000,0.5,2.);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightEachROfflineSecSubCock, "#it{p}_{T}^{Min} (GeV/c)","purity,w_i", 0.05,0.05, 0.05,0.05);
+
+    TLegend* legendWeightPtOfflineSecSubCock = new TLegend(0.4,0.31-(1+counterOnfly)*0.05,0.8,0.31); //0.17,0.13,0.5,0.24);
+    legendWeightPtOfflineSecSubCock->SetFillColor(0);
+    legendWeightPtOfflineSecSubCock->SetMargin(0.17);
+    legendWeightPtOfflineSecSubCock->SetLineColor(0);
+    legendWeightPtOfflineSecSubCock->SetTextFont(42);
+    legendWeightPtOfflineSecSubCock->SetTextSize(0.05);
+    legendWeightPtOfflineSecSubCock->SetHeader("Offline V0 finder SecSubCock");
+    for(Int_t i = 2; i< NumberOfCuts; i++){
+        if(V0ReaderName[i].Contains("Offline"))
+            legendWeightPtOfflineSecSubCock->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+    }
+
+    for(Int_t j=0; j < nBinsR; j++){
+        place  = place + 1;
+        padMBWeightEachROfflineSecSubCock->cd(place);
+        padMBWeightEachROfflineSecSubCock->cd(place)->SetTopMargin(0.04);
+        padMBWeightEachROfflineSecSubCock->cd(place)->SetBottomMargin(0.15);
+        padMBWeightEachROfflineSecSubCock->cd(place)->SetLeftMargin(0.15);
+        padMBWeightEachROfflineSecSubCock->cd(place)->SetRightMargin(0.05);
+        histoDummyWeightEachROfflineSecSubCock->GetYaxis()->SetNdivisions(504);
+
+//         if(j>1 && j<=3)      histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
+//         else if(j>3 && j<=6) histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
+//         else if(j>7 )       histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
+        histoDummyWeightEachROfflineSecSubCock->GetYaxis()->SetRangeUser(0.82,1.35);
+
+        histoDummyWeightEachROfflineSecSubCock->DrawCopy();
+        DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
+        DrawGammaLines(0.4,0.4,0.85, 1.5,1.,kGray,2);
+        for(Int_t i = 2; i< NumberOfCuts; i++){
+	  if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSubUsingCocktail[j][i], marker[i], 0.5,color[i],color[i]);
+	  else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSubUsingCocktail[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	  if(j<2)histoWeightsEachRPtMinSecSubUsingCocktail[j][i]->SetLineStyle(3);
+	  histoWeightsEachRPtMinSecSubUsingCocktail[j][i]->Draw("same");
+	  if(i<12) DrawGammaSetMarker(histoPurityPtEachRBin[j][i], marker[i], 0.5,color[i],color[i]);
+	  else     DrawGammaSetMarker(histoPurityPtEachRBin[j][i], marker[i], 0.5,color[i-12],color[i-12]);
+	  histoPurityPtEachRBin[j][i]->SetLineStyle(3);
+	  histoPurityPtEachRBin[j][i]->Draw("same");
+
+	  // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
+	  // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
+	  // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
+        }
+
+        if (j==0)  legendWeightPtOfflineSecSubCock->Draw();
+    }
+    canvasMBWeightEachROfflineSecSubCock->Print(Form("%s/MBWeightVSPtMinOfflineEachRSecSubCock_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
+
+
+   //____________________________________________________________________________________
+
+
+
+
+
+
+
+
 
     TFile outFile(Form("%s/weightsWithErrors_Test.root",outputDir.Data()) ,"RECREATE");
     histWeightStaErr->Write();

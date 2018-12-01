@@ -60,8 +60,11 @@ fi
 
 
 
-
 if [ $FINDERTYPE -eq 1 ]; then
+    echo "    "
+    echo " Running prepare secondaries for Onfly"
+    root -l -b -x -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\",\"$COCKTAILROOTFILE\",\"pdf\",\"$CUT1\_0152103500000000\",\"$ENERGY\",\"No\",\"0.80\",\"\",70,0,kFALSE\)
+    echo "  "
     echo "  "
     echo "Onfly V0 finder running Pythia"
     # running with Pythia Onfly
@@ -77,6 +80,10 @@ if [ $FINDERTYPE -eq 1 ]; then
 fi
 
 if [ $FINDERTYPE -eq 2 ]; then
+    echo "    "
+    echo " Running prepare secondaries for Offline"
+    root -l -b -x -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\",\"$COCKTAILROOTFILE\",\"pdf\",\"$CUT2\_0152103500000000\",\"$ENERGY\",\"No\",\"0.80\",\"\",70,0,kFALSE\)
+    echo "  "
     echo "  "
     echo "Offline V0 finder running Pythia"
     # running with Pythia Offline

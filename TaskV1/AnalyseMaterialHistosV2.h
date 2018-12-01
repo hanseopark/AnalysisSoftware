@@ -25,60 +25,50 @@ Double_t fMaxPt                   = 20.;
 
 Int_t rebinRPlots                 = 1;
 Int_t rebinZPlots                 = 4;
-Int_t rebinPtPlots                = 4;
+Int_t rebinPtPlots                = 2;
 Int_t rebinPhiPlots               = 3;
 
 Double_t rMinGas                  = 95.;
 Double_t rMaxGas                  = 145.;
 
-const int nBinsPtFine             = 15;
-Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
-                                            0.3,  0.35, 0.4, 0.45, 0.5,
-                                            0.55, 0.6, 0.65, 0.7, 0.75};
+const int nBinsPt=69;
+Double_t arrayPtBins[nBinsPt]; 
+
+//const int nBinsPtFine             = 15;
+//Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
+//                                            0.3,  0.35, 0.4, 0.45, 0.5,
+//                                            0.55, 0.6, 0.65, 0.7, 0.75};
+const int nBinsPtFine             = 7;
+Double_t projPtBinsFine[nBinsPtFine]     = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
+
+
 TH1F *histoRinPtBinDataFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL, NULL, NULL, NULL
-                                           };
+                                            NULL, NULL}; 
+                                           
 TH1F *histoRinPtBinMCFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL, NULL, NULL, NULL
-                                           };
+                                            NULL, NULL};
 Double_t nconvInRangeDataFine[nBinsPtFine];
 Double_t dataStatErrorGasFine[nBinsPtFine];
 Double_t dataStatRelErrorGasFine[nBinsPtFine];
 
 TH1D * histoIntegralGasDataFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL, NULL, NULL, NULL
-                                                 };
+                                                  NULL, NULL};
 TH1F * histoRinPtBinDataRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL, NULL, NULL, NULL
-                                                 };
+                                                  NULL, NULL};
 TH1F * histoRinPtBinDataScaledToGasRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                                             NULL, NULL, NULL, NULL, NULL,
-                                                             NULL, NULL, NULL, NULL, NULL
-                                                            };
+                                                             NULL, NULL };
 
 Double_t nconvInRangeMCFine[nBinsPtFine];
 Double_t dataStatErrorGasMCFine[nBinsPtFine];
 Double_t dataStatRelErrorGasMCFine[nBinsPtFine];
 TH1D * histoIntegralGasMCFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                             NULL, NULL, NULL, NULL, NULL,
-                                             NULL, NULL, NULL, NULL, NULL
-                                            };
+                                             NULL, NULL};
 TH1F * histoRinPtBinMCRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                               NULL, NULL, NULL, NULL, NULL,
-                                               NULL, NULL, NULL, NULL, NULL
-                                              };
+                                               NULL, NULL};
 TH1F * histoRinPtBinMCScaledToGasRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                                          NULL, NULL, NULL, NULL, NULL,
-                                                          NULL, NULL, NULL, NULL, NULL
-                                                         };
+                                                          NULL, NULL};
 TH1F * histoDataMCRatioRinPtBinScaledToGasFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                                              NULL, NULL, NULL, NULL, NULL,
-                                                              NULL, NULL, NULL, NULL, NULL
-                                                             };
+                                                              NULL, NULL};
 
 
 
@@ -111,7 +101,7 @@ TString arrayNamesRBins[12]       = { "Vertex",                                 
                                       "Ne: CO_{2}: N_{2}",                            //10
                                       "Ne: CO_{2}: N_{2}"                             //11
                                     };
-const int nBinsPtMin= 15;
+const int nBinsPtMin= 7;
 Double_t  arrayBinsPtMin[nBinsPtMin+1];
 TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL,
                                          NULL, NULL, NULL, NULL,
@@ -121,18 +111,30 @@ TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL,
                                          NULL, NULL, NULL, NULL,
                                          NULL, NULL, NULL, NULL
                                         };
+TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR] = {NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL,
+                                         NULL, NULL, NULL, NULL
+                                        };
 
 Double_t nConvInRangeFromPtMinSecSubtractedData[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedDataRelErr[nBinsR][nBinsPtFine];
+
+Double_t nConvInRangeFromPtMinSecSubtractedDataUsingCocktail[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[nBinsR][nBinsPtFine];
+
 Double_t nConvInRangeFromPtMinSecSubtractedMC[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedMCRelErr[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedDataToGas[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGas[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedMCToGas[nBinsR][nBinsPtFine];
 Double_t weightInRangeFromPtMinSecSubtracted[nBinsR][nBinsPtFine];
+Double_t weightInRangeFromPtMinSecSubtractedUsingCocktail[nBinsR][nBinsPtFine];
 
 Double_t nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[nBinsR][nBinsPtFine];
+Double_t nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[nBinsR][nBinsPtFine];
 Double_t weightInRangeFromPtMinSecSubtractedRelErr[nBinsR][nBinsPtFine];
+Double_t weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[nBinsR][nBinsPtFine];
 
 
 const int nBinsZ                  = 12;
@@ -290,6 +292,32 @@ Color_t color[12] = { kBlack, kAzure, kGreen+2, kOrange+2, kCyan+2,
                       kYellow+2, kViolet-3, kSpring+10, kRed+1, kMagenta-8,
                       kGray, kGray+3};
 
+TH1F* histoMCSecGammaPtBySource[4];
+TH1F* histoMCSecConvGammaPtBySource[4][nBinsR];
+TH1F* histoMCTrueRecSecGammaPtBySource[4][nBinsR];
+TH1F * histoTrueRecEffSecEachRBinBySource[4][nBinsR];
+TH1F * histoConvProbSecEachRBinBySource[4][nBinsR];
+
+//TH1F* histoMCAllGammaPt = NULL;
+//TH2F * histoConvRPtMC = { NULL, NULL, NULL, NULL };
+
+
+TH1F * histoRecEffPrimaryEachRBin[nBinsR];
+TH1F * histoConvProbPrimaryEachRBin[nBinsR];
+
+
+
+// Taken from ExtractGammaSignalV2.h
+TFile*      fFileCocktailInput                                          = NULL;
+TH1F*       fHistoSecGammaCocktailFromXPt[4]                                              = { NULL, NULL, NULL, NULL };
+TH1F*       fHistoSecGammaCocktailFromXPtOrBin[4]                                         = { NULL, NULL, NULL, NULL };
+TString     fSecondaries[4]                                         = {"K0s", "K0l", "Lambda", "Rest"};
+
+Bool_t   LoadSecondariesFromCocktailFile    (   TString,
+						TString                                         );
+
+
+
 void PlotRDistribRunwise(   TH1D** fHistoData,
                             TH1D** fHistoMC,
                             TString namePlot,
@@ -396,4 +424,40 @@ void PlotRDistribRunwise(   TH1D** fHistoData,
     canvasDataSpectra->Print(namePlot.Data());
     delete padDataSpectra;
     delete canvasDataSpectra;
+}
+
+//*********************************************************************************************************
+//*********** Convert secondary spectrum from cocktail to raw (conversion method)            **************
+// - multiply with secondary conv. prob.
+// - use unfolding for resolution correction if response matrix given
+// - multiply with secondary reco. eff.
+// - scale with nEvts for same event norm as data spectrum
+//*********************************************************************************************************
+Bool_t ConvertCocktailSecondaryToRaw(TH1F*       histoGammaSec,
+                                     TH1F*       histoConvProb,
+                                     TH1F*       histoRecoEff,
+                                     TH2F*       responseMatrix,
+                                     Double_t    nEvt,
+                                     Bool_t      useResponseMatrix,
+                                     Int_t       nIterationsUnfolding = 5
+                                     ){
+    // multiply with conv. prob.
+    if (!histoConvProb) return kFALSE;
+    //histoGammaSec->Multiply(histoConvProb);
+    // multiply with reco. eff. (in MC pT if unfolding is used)
+    if (!histoRecoEff) return kFALSE;
+    histoGammaSec->Multiply(histoRecoEff);
+    // correct for resolution, if response matrix given (otherwise included in reco. eff.)
+    //    if (useResponseMatrix) {
+    //        if (!responseMatrix) return kFALSE;
+    //        cout << "will use unfolding for " << histoGammaSec->GetName() << endl;
+    //        RooUnfoldResponse response(0,0,responseMatrix);
+    //        RooUnfoldBayes unfold_SpectrumCocktail (&response, histoGammaSec, nIterationsUnfolding);
+    //        histoGammaSec = (TH1D*)unfold_SpectrumCocktail.Hreco();
+    //    }
+    // scale with nEvt from data
+
+    histoGammaSec->Scale(nEvt);
+    
+    return kTRUE;
 }
