@@ -3038,6 +3038,8 @@
                 return kGreen+3;
             } else if (generator.Contains("AOD")){
                 return kRed;
+            } else if (generator.Contains("FILTER")) {
+                return kGreen;
             } else if (generator.Contains("ESD")){
                 return kGreen-2;;
             } else if (generator.Contains("LHC16d")||generator.Contains("LHC17c")) {
