@@ -131,17 +131,18 @@ void PhotonQA_Runwise(
     TKey *keyPQA;
     TIter nextPQA(fPhotonQAFile->GetListOfKeys());
     while ((keyPQA=(TKey*)nextPQA())){
-      cout << Form("Found TopDir: '%s' ",keyPQA->GetName()) << endl;
+        cout << Form("Found TopDir: '%s' ",keyPQA->GetName()) << endl;
         nameMainDir = keyPQA->GetName();
-	  if(nameMainDir.Contains("GammaConvV1_QA_")){
-	    nameCutsPQA = Form("%s",nameMainDir.Data());
-	    nameCutsPQAshort = Form("%s",nameMainDir.Data());
-	    nameCutsPQA.Replace(0,15,"");
-	    nameCutsPQAshort.Replace(0,15,"");
-	    nameCutsPQAshort.Replace(8,35,"");
-	    cutsPQA.push_back(nameCutsPQA);
-	    cutsPQAshort.push_back(nameCutsPQAshort);
-	  }
+        if(nameMainDir.Contains("GammaConvV1_QA_")){
+            nameCutsPQA = Form("%s",nameMainDir.Data());
+            nameCutsPQAshort = Form("%s",nameMainDir.Data());
+            nameCutsPQA.Replace(0,15,"");
+            nameCutsPQAshort.Replace(0,15,"");
+            nameCutsPQAshort.Replace(8,35,"");
+            cutsPQA.push_back(nameCutsPQA);
+            cutsPQAshort.push_back(nameCutsPQAshort);
+            break;
+        }
     }
     cout << "The following cuts are available:" << endl;
     for(Int_t i = 0; i < (Int_t) cutsPQA.size(); i++) {
