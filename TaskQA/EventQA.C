@@ -104,7 +104,6 @@ void EventQA(
 
     vector <TString> cutsTemp;
     map<TString,Int_t> mapCuts;
-    TString TStrNameKey;
 
     for(Int_t i=0; i<nSets; i++){
         TFile *fFile = new TFile(pathDataSets[i].Data(),"READ");
