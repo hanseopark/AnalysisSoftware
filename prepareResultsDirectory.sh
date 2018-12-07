@@ -56,6 +56,7 @@ mkdir -p DownloadAndDataPrep
 mkdir -p ToyModels
 mkdir -p SimulationStudies
 mkdir -p SupportingMacros
+mkdir -p LocalTrainTests
 
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/
 ln -sf $PHOTONCONVDIR/CommonHeaders/*.h CommonHeaders/
@@ -75,6 +76,9 @@ ln -sf $PHOTONCONVDIR/SimulationStudies/*.C SimulationStudies/
 ln -sf $PHOTONCONVDIR/SimulationStudies/*.h SimulationStudies/
 ln -sf $PHOTONCONVDIR/SupportingMacros/*.C SupportingMacros/
 ln -sf $PHOTONCONVDIR/SupportingMacros/*.h SupportingMacros/
+ln -sf $PHOTONCONVDIR/LocalTrainTests/*.C LocalTrainTests/
+ln -sf $PHOTONCONVDIR/LocalTrainTests/*.h LocalTrainTests/
+ln -sf $PHOTONCONVDIR/LocalTrainTests/*.sh LocalTrainTests/
 
 if [ $1 = "dmuhlhei" ]; then
 	ln -sf $PHOTONCONVDIR/DataQA DataQA
