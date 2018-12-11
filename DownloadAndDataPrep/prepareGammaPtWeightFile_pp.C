@@ -65,9 +65,9 @@ void prepareGammaPtWeightFile_pp(TString inputPath = "/Users/marin/analysis/gamm
                                                   "GammaConv_Material_MC_LHC18d6a2_23.root" };  // Phojet 13 TeV
 
     TString productionNames5TeV[nProductions] = {"LHC17p", "LHC17l3b","LHC18d6b" };
-    TString fileNames5TeV[nProductions]       = {"MaterialBudget_LHC17p_fastwoSDD_LowInt_23.root",  // LHC16d
-                                                 "MaterialBudget_PythiaLowInt_fastwoSDD_23.root", // Pythia 13 TeV
-                                                 "MaterialBudget_PhojetLowInt_fastwoSDD_23.root" };  // Phojet 13 TeV
+    TString fileNames5TeV[nProductions]       = {"MaterialBudget_LHC17p_fastwoSDD_LowInt_23.root",  // LHC17p
+                                                 "MaterialBudget_Pythia_fastwoSDD_LowInt_23.root", // Pythia 5 TeV
+                                                 "MaterialBudget_Phojet_fastwoSDD_LowInt_23.root" };  // Phojet 5 TeV
 
     TString productions;
     TString fileNames;
@@ -75,7 +75,7 @@ void prepareGammaPtWeightFile_pp(TString inputPath = "/Users/marin/analysis/gamm
 
     const int nBinsPt = 69;
     Double_t fMaxPt = 20.;
-    Double_t arrayPtBins[nBinsPt]; 
+    Double_t arrayPtBins[nBinsPt];
 
     for(Int_t i=0; i<nBinsPt+1;i++){
       if (i < 40) arrayPtBins[i]              = 0.05*i;
@@ -84,7 +84,7 @@ void prepareGammaPtWeightFile_pp(TString inputPath = "/Users/marin/analysis/gamm
       else if(i<69) arrayPtBins[i]          = 10.+ 2.0*(i-64);
       else arrayPtBins[i]                    = fMaxPt;
     }
-    
+
 
     //########## start ########################
     TFile targetFile( Form("%s/%s", inputPath.Data(),targetFileName.Data()),"RECREATE");

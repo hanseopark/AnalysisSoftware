@@ -64,9 +64,9 @@ void prepareMultWeightFile_pp(TString inputPath = "/Users/marin/analysis/multWei
                                                   "GammaConv_Material_MC_LHC18d6a2_23.root" };  // Phojet 13 TeV
 
     TString productionNames5TeV[nProductions] = {"LHC17p", "LHC17l3b","LHC18d6b" };
-    TString fileNames5TeV[nProductions]       = {"MaterialBudget_LHC17p_fastwoSDD_LowInt_23.root",  // LHC16d
-                                                 "MaterialBudget_PythiaLowInt_fastwoSDD_23.root", // Pythia 13 TeV
-                                                 "MaterialBudget_PhojetLowInt_fastwoSDD_23.root" };  // Phojet 13 TeV
+    TString fileNames5TeV[nProductions]       = {"MaterialBudget_LHC17p_fastwoSDD_LowInt_23.root",  //
+                                                 "MaterialBudget_Pythia_fastwoSDD_LowInt_23.root", //
+                                                 "MaterialBudget_Phojet_fastwoSDD_LowInt_23.root" };  //
 
     TString productions;
     TString fileNames;

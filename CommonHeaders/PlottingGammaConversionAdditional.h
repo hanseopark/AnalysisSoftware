@@ -2887,6 +2887,8 @@
                 return kRed+1;
             } else if (!generator.CompareTo("LHC17l4b_fast")){
                 return kViolet+2;
+            } else if (!generator.CompareTo("LHC18j2_fast")){
+                return kViolet+2;
             } else if (!generator.CompareTo("LHC17l3b_wSDD")){
                 return kOrange+7;
             } else if (!generator.CompareTo("LHC17l4b_wSDD")){
@@ -2894,6 +2896,8 @@
             } else if (!generator.CompareTo("LHC17l3b_woSDD")){
                 return kRed-6;
             } else if (!generator.CompareTo("LHC17l4b_woSDD")){
+                return kPink+6;
+            } else if (!generator.CompareTo("LHC18j2_woSDD")){
                 return kPink+6;
             } else if (generator.Contains("LHC17l3b")){
                 return kOrange+7;
@@ -3446,6 +3450,8 @@
             } else if(generator.Contains("LHC17l3b")){
                 return 28;
             } else if(generator.Contains("LHC17l4b")){
+                return 29;
+            } else if(generator.Contains("LHC18j2")){
                 return 29;
             } else {
                 return 34;
