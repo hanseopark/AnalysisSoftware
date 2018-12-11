@@ -2065,7 +2065,7 @@
                     case 3: //PCM-PHOS
                         switch(SpecialTrigger) {
                             default:
-                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 135 );
+                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 82 );
                                 break;
                         }
                         break;
@@ -5267,7 +5267,12 @@
                                 case 3: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG2PtRebin, fNRebin); break;
                             }
                             break;
-                        case 3: CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7PtRebin,fNRebin); break;
+                        case 3:
+                            switch(specialTrigg) {
+                                default:
+                                    CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7PtRebin,fNRebin); break;
+                            }
+                            break;
                         case 4:
                             switch(specialTrigg) {
                                 case 0:
@@ -5291,6 +5296,12 @@
                                 case 5: CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigEG1PtRebin, fNRebin); break;
                                 case 3: CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigEG2PtRebin, fNRebin); break;
+                            }
+                            break;
+                        case 3:
+                            switch(specialTrigg) {
+                                default:
+                                    CopyVectorToArray(fBinsPi0EtaBinning13TeVPCMPHOSTrigINT7PtRebin,fNRebin); break;
                             }
                             break;
                         case 4:
