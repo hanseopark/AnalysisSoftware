@@ -33,6 +33,8 @@ Double_t rMaxGas                  = 145.;
 
 const int nBinsPt=69;
 Double_t arrayPtBins[nBinsPt]; 
+const int nBinsPtTwo=49;
+Double_t arrayPtBinsTwo[nBinsPtTwo]; 
 
 //const int nBinsPtFine             = 15;
 //Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
@@ -71,7 +73,6 @@ TH1F * histoDataMCRatioRinPtBinScaledToGasFine[nBinsPtFine]= {NULL, NULL, NULL, 
                                                               NULL, NULL};
 
 
-
 const int nBinsR                  = 12;
 Double_t arrayRBins[13]           = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
 TString arrayRangesRBins[12]      = { "0 cm < R #leq 1.5 cm",     //0
@@ -101,6 +102,51 @@ TString arrayNamesRBins[12]       = { "Vertex",                                 
                                       "Ne: CO_{2}: N_{2}",                            //10
                                       "Ne: CO_{2}: N_{2}"                             //11
                                     };
+
+
+TH1F * histoMCSecGammaPtBySource[4]={NULL,NULL,NULL,NULL};
+TH1F * histoMCSecConvGammaPtBySource[4]={NULL,NULL,NULL,NULL};
+TH1F * histoMCSecConvGammaPtEachRBinBySource[4][nBinsR];
+
+TH1F * histoMCTrueRecSecGammaPtEachRBinBySource[4][nBinsR];
+TH1F * histoTrueEffSecEachRBinBySource[4][nBinsR];
+TH1F * histoTrueRecEffSecEachRBinBySource[4][nBinsR];
+TH1F * histoConvProbSecEachRBinBySource[4][nBinsR];
+TH1F * histoConvProbSecBySource[4];
+TH1F * histoFracSecPtEachRBinBySource[4][nBinsR];
+TH1F * histoPtEachRBinDataSecYieldFromSecFracBySourceRaw[4][nBinsR];
+TH1F * histoPtEachRBinDataSecSubtractedUsingCocktail[nBinsR];
+TH1F * histoDataFromCocktailSecConvGammaPtEachRBinBySourceRaw[4][nBinsR];
+
+Int_t       nBins                                           = 0;
+Double_t    xMin                                            = 0.;
+Double_t    xMax                                            = 20;
+
+
+// pT distribution of data reconstructed in each R Bin
+TH1F *histoPtEachRBinData[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+
+// pT distribution of MC reconstructed in each R Bin, validated true and validated true primary
+TH1F *histoPtEachRBinMC[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoPtTrueMCEachRBin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};    
+TH1F *histoPtTruePrimMCEachRBin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+//  pT distribution of secondary from K0S in each R bin
+TH1F * histoPtTrueSecEachRBinFromK0S[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoPtTrueSecEachRBinAllSources[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoPurityPtEachRBin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; 
+TH1F * histoPurityPrimPtEachRBin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; 
+TH1F * histoFracSecPtEachRBin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; 
+TH1F * histoEfficiencySecEachRBinAllSources[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; 
+
+TH1F *histoPtEachRBinDataSecSubtracted[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoPtEachRBinMCSecSubtracted[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+TH1F *histoPtEachRBinDataSecYieldFromSecFrac[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoPtEachRBinMCSecYieldFromSecFrac[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+
 const int nBinsPtMin= 7;
 Double_t  arrayBinsPtMin[nBinsPtMin+1];
 TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL,
@@ -135,6 +181,14 @@ Double_t nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[nBinsR][
 Double_t nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[nBinsR][nBinsPtFine];
 Double_t weightInRangeFromPtMinSecSubtractedRelErr[nBinsR][nBinsPtFine];
 Double_t weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[nBinsR][nBinsPtFine];
+
+TH1F *histoPtinRBinTrueMC[3]     = {NULL, NULL, NULL};
+TH1F *histoPtinRBinTruePrimMC[3] = {NULL, NULL, NULL};
+TH1F *histoPtinRBinTrueSecMC[3]  = {NULL, NULL, NULL};
+
+TH1F *histoRinPtBinTrueMC[6]     = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoRinPtBinTruePrimMC[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoRinPtBinTrueSecMC[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
 
 
 const int nBinsZ                  = 12;
@@ -292,11 +346,11 @@ Color_t color[12] = { kBlack, kAzure, kGreen+2, kOrange+2, kCyan+2,
                       kYellow+2, kViolet-3, kSpring+10, kRed+1, kMagenta-8,
                       kGray, kGray+3};
 
-TH1F* histoMCSecGammaPtBySource[4];
-TH1F* histoMCSecConvGammaPtBySource[4][nBinsR];
+//TH1F* histoMCSecGammaPtBySource[4];
+//TH1F* histoMCSecConvGammaPtBySource[4][nBinsR];
 TH1F* histoMCTrueRecSecGammaPtBySource[4][nBinsR];
-TH1F * histoTrueRecEffSecEachRBinBySource[4][nBinsR];
-TH1F * histoConvProbSecEachRBinBySource[4][nBinsR];
+//TH1F * histoTrueRecEffSecEachRBinBySource[4][nBinsR];
+//TH1F * histoConvProbSecEachRBinBySource[4][nBinsR];
 
 //TH1F* histoMCAllGammaPt = NULL;
 //TH2F * histoConvRPtMC = { NULL, NULL, NULL, NULL };
