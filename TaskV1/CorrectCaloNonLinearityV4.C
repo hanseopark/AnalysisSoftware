@@ -81,6 +81,7 @@ void CorrectCaloNonLinearityV4(
     TString select              = "";
     TString optionEnergy        = "";
     Int_t mode                  = -1;
+    TString FittingFunction    ="";
 
     // variables for data set indentifiers and maximum number of sets
     Int_t nSets                 = 0;
@@ -102,7 +103,8 @@ void CorrectCaloNonLinearityV4(
     Int_t firstPtBinSet[6]      = { -1, -1, -1, -1, -1,     -1};
     Double_t ptBinsForRebin[10] = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
     Int_t rebin[10]             = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1};
-    Int_t exampleBin[30]        = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
+    Int_t exampleBin[40]        = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
+                                    -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
                                     -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
                                     -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
     Int_t nExampleBins          = 0;
@@ -261,7 +263,7 @@ void CorrectCaloNonLinearityV4(
         // read example bins
         } else if (tempValue.BeginsWith("exampleBins",TString::kIgnoreCase)){
             if (enableAddCouts) cout << "setting exampleBins" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 30+1 ; i++){
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 40+1 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     exampleBin[i-1]         = (((TString)((TObjString*)tempArr->At(i))->GetString())).Atoi();
@@ -802,6 +804,7 @@ void CorrectCaloNonLinearityV4(
     //*********************************************************************************************************************************
     //*********************************** Plotting Mean mass for data and MC vs PDG value *********************************************
     //*********************************************************************************************************************************
+    cout<<"Plotting Mean mass for data and MC vs PDG value"<<endl;
     TCanvas *canvasMassPDG = new TCanvas("canvasMassPDG","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings(canvasMassPDG, 0.08, 0.02, 0.055, 0.08);
     canvasMassPDG->SetLogx(1);
@@ -814,8 +817,12 @@ void CorrectCaloNonLinearityV4(
     histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyMeanMassVsPDG->DrawCopy("");
 
-    Double_t rangeExponent[2]   = {-0.5, -0.08};
-    Double_t rangeMult[2]       = {-0.2, -0.001};
+    Double_t standardrangeExponent0 =   -0.5;
+    Double_t standardrangeExponent1 =   -0.08;
+    Double_t rangeMult0             =   -0.2;
+    Double_t rangeMult1             =   -0.001;
+    Double_t rangeExponent[2]       =   {standardrangeExponent0, standardrangeExponent1};
+    Double_t rangeMult[2]           =   {rangeMult0, rangeMult1};
 
     TLegend *legend = GetAndSetLegend2(0.15, 0.95, 0.95, 0.99, 0.043, 2, "", 42);
 
@@ -841,40 +848,84 @@ void CorrectCaloNonLinearityV4(
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
 
     // fitting data mass positions
-    TF1* fitMassDataVsPDG       = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    FittingFunction="[0] + [1]*pow(x,[2])";
+    if (mode==3) {
+        rangeExponent[0]   = 0.08;
+        rangeExponent[1]   = 2.5;
+        rangeMult[0]       = 0.001;
+        rangeMult[1]       = 0.3;
+    }
+    TF1* fitMassDataVsPDG       = new TF1("fitMassDataVsPDG", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
     fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
     histDataResultsVsPDG->Fit(fitMassDataVsPDG,"QRME0");
     cout << WriteParameterToFile(fitMassDataVsPDG) << endl;
 
-    TF1* fitMassDataVsPDGConst  = new TF1("fitMassDataVsPDGConst", "[0]" ,rangeHighPtFitMass[0],rangeHighPtFitMass[1]);
+    FittingFunction="[0]";
+    if (mode==3) {
+        rangeExponent[0]   = standardrangeExponent0;
+        rangeExponent[1]   = standardrangeExponent1;
+        rangeMult[0]       = rangeMult0;
+        rangeMult[1]       = rangeMult1;
+    }
+    TF1* fitMassDataVsPDGConst  = new TF1("fitMassDataVsPDGConst", FittingFunction ,rangeHighPtFitMass[0],rangeHighPtFitMass[1]);
     histDataResultsVsPDG->Fit(fitMassDataVsPDGConst,"QRME0");
     cout << WriteParameterToFile(fitMassDataVsPDGConst) << endl;
 
-    TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    FittingFunction="[0]-TMath::Exp(-[1]*x+[2])";
+    if (mode==3) {
+        rangeExponent[0]   = standardrangeExponent0;
+        rangeExponent[1]   = standardrangeExponent1;
+        rangeMult[0]       = rangeMult0;
+        rangeMult[1]       = rangeMult1;
+    }
+    TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
-    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
+    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.1*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.1*fitMassDataVsPDGConst->GetParError(0));
-    else if (mode == 2 || mode == 4 || mode == 12)
+    } else if (mode == 2 || mode == 4 || mode == 12){
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
-    else
+    } else {
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
+    }
 
     histDataResultsVsPDG->Fit(fitMassDataVsPDG2,"QRME0");
     cout << WriteParameterToFile(fitMassDataVsPDG2) << endl;
-
     // fitting MC mass positions
-    TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    FittingFunction="[0] + [1]*pow(x,[2])";
+    if (mode==3) {
+        rangeExponent[0]   = standardrangeExponent0;
+        rangeExponent[1]   = standardrangeExponent1;
+        //rangeMult[0]       = rangeMult0;
+        //rangeMult[1]       = rangeMult1;
+        rangeMult[0]       = -rangeMult1;
+        rangeMult[1]       = -rangeMult0;
+    }
+    TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
     fitMassMCVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
     histMCResultsVsPDG->Fit(fitMassMCVsPDG,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG) << endl;
 
-    TF1* fitMassMCVsPDGConst  = new TF1("fitMassMCVsPDGConst", "[0]" ,rangeHighPtFitMass[2],rangeHighPtFitMass[3]);
+    FittingFunction="[0]";
+    if (mode==3) {
+        rangeExponent[0]   = standardrangeExponent0;
+        rangeExponent[1]   = standardrangeExponent1;
+        rangeMult[0]       = rangeMult0;
+        rangeMult[1]       = rangeMult1;
+    }
+    TF1* fitMassMCVsPDGConst  = new TF1("fitMassMCVsPDGConst", FittingFunction ,rangeHighPtFitMass[2],rangeHighPtFitMass[3]);
     histMCResultsVsPDG->Fit(fitMassMCVsPDGConst,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDGConst) << endl;
 
-    TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    FittingFunction="[0]-TMath::Exp(-[1]*x+[2])";
+    if (mode==3) {
+        rangeExponent[0]   = standardrangeExponent0;
+        rangeExponent[1]   = standardrangeExponent1;
+        rangeMult[0]       = rangeMult0;
+        rangeMult[1]       = rangeMult1;
+    }
+    TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
     if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
