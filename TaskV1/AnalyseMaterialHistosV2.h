@@ -40,37 +40,37 @@ Double_t arrayPtBinsTwo[nBinsPtTwo];
 //Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
 //                                            0.3,  0.35, 0.4, 0.45, 0.5,
 //                                            0.55, 0.6, 0.65, 0.7, 0.75};
-const int nBinsPtFine             = 7;
-Double_t projPtBinsFine[nBinsPtFine]     = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
+
+Double_t projRBins[4]      = {0., 5., 35., 180.};
+TH1F *histoPtinRBinData[3] = {NULL, NULL, NULL};
+TH1F *histoPtinRBinMC[3]  = {NULL, NULL, NULL};
+//AM . Changed from 0.15 to 0.1 to be able to use the secondary subtracted
+Double_t projPtBins[6]     = {0.1, 0.3, 0.4, 0.5, 0.6, 0.7};
+TH1F *histoRinPtBinData[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F *histoRinPtBinMC[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+
+const int nBinsPtFine             = 8;
+Double_t projPtBinsFine[nBinsPtFine]     = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
 
 
-TH1F *histoRinPtBinDataFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL}; 
+TH1F *histoRinPtBinDataFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,NULL, NULL, NULL}; 
                                            
-TH1F *histoRinPtBinMCFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
-                                            NULL, NULL};
+TH1F *histoRinPtBinMCFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,NULL, NULL, NULL};
 Double_t nconvInRangeDataFine[nBinsPtFine];
 Double_t dataStatErrorGasFine[nBinsPtFine];
 Double_t dataStatRelErrorGasFine[nBinsPtFine];
 
-TH1D * histoIntegralGasDataFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL};
-TH1F * histoRinPtBinDataRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                                  NULL, NULL};
-TH1F * histoRinPtBinDataScaledToGasRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,
-                                                             NULL, NULL };
+TH1D * histoIntegralGasDataFine[nBinsPtFine]   = {NULL, NULL, NULL, NULL, NULL,NULL, NULL, NULL};
+TH1F * histoRinPtBinDataRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL,NULL, NULL, NULL};
+TH1F * histoRinPtBinDataScaledToGasRebinFine[nBinsPtFine] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 Double_t nconvInRangeMCFine[nBinsPtFine];
 Double_t dataStatErrorGasMCFine[nBinsPtFine];
 Double_t dataStatRelErrorGasMCFine[nBinsPtFine];
-TH1D * histoIntegralGasMCFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                             NULL, NULL};
-TH1F * histoRinPtBinMCRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                               NULL, NULL};
-TH1F * histoRinPtBinMCScaledToGasRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                                          NULL, NULL};
-TH1F * histoDataMCRatioRinPtBinScaledToGasFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL,
-                                                              NULL, NULL};
+TH1D * histoIntegralGasMCFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoRinPtBinMCRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoRinPtBinMCScaledToGasRebinFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoDataMCRatioRinPtBinScaledToGasFine[nBinsPtFine]= {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 
 const int nBinsR                  = 12;
@@ -149,18 +149,9 @@ TH1F *histoPtEachRBinMCSecYieldFromSecFrac[nBinsR] = {NULL, NULL, NULL, NULL, NU
 
 const int nBinsPtMin= 7;
 Double_t  arrayBinsPtMin[nBinsPtMin+1];
-TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL
-                                        };
-TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL
-                                        };
-TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR] = {NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL,
-                                         NULL, NULL, NULL, NULL
-                                        };
+TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 Double_t nConvInRangeFromPtMinSecSubtractedData[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedDataRelErr[nBinsR][nBinsPtFine];
@@ -207,6 +198,7 @@ TH1F*   histoRFullPtMCScaledToGas;
 TH1F*   histoRDataScaledToGasRebin;
 TH1F*   histoRMCScaledToGasRebin;
 TH1F*   histoDataMCRatioRScaledToGas;
+TH1F*   histoDataMCRatioRScaledToGasSecSub;
 TH1F*   histoRFullPtDataScaledToGasRebin;
 TH1F*   histoRFullPtMCScaledToGasRebin;
 TH1F*   histoDataMCRatioRFullPtScaledToGas;
@@ -216,18 +208,21 @@ TH1F*   histoRinPtBinMCScaledToGasPtBin1;
 TH1F*   histoRinPtBinDataScaledToGasPtBin1Rebin;
 TH1F*   histoRinPtBinMCScaledToGasPtBin1Rebin;
 TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin1;
+TH1F*   histoDataMCRatioRScaledToGasSecSubPtBin1;
 
 TH1F*   histoRinPtBinDataScaledToGasPtBin2;
 TH1F*   histoRinPtBinMCScaledToGasPtBin2;
 TH1F*   histoRinPtBinDataScaledToGasPtBin2Rebin;
 TH1F*   histoRinPtBinMCScaledToGasPtBin2Rebin;
 TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin2;
+TH1F*   histoDataMCRatioRScaledToGasSecSubPtBin2;
 
 TH1F*   histoRinPtBinDataScaledToGasPtBin3;
 TH1F*   histoRinPtBinMCScaledToGasPtBin3;
 TH1F*   histoRinPtBinDataScaledToGasPtBin3Rebin;
 TH1F*   histoRinPtBinMCScaledToGasPtBin3Rebin;
 TH1F*   histoDataMCRatioRinPtBinScaledToGasPtBin3;
+TH1F*   histoDataMCRatioRScaledToGasSecSubPtBin3;
 
 TH1F*	histoDataMCRatioR;
 TH1F*	histoDataMCRatioRRebin;

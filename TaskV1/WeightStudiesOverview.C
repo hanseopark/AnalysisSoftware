@@ -204,7 +204,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
         WeightFile[i] = TFile::Open(FileNames[i]);
         profileWeight[i]=  (TProfile*)WeightFile[i]->Get("profileContainingMaterialBudgetWeights_manyRadialBins");
-        histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRinPtBinScaledToGasPtBin3");
+	//histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRinPtBinScaledToGasPtBin3");
+	//AM: Take the scondary subtracted histogram
+        histWeight[i]   = (TH1F*)WeightFile[i]->Get("histoDataMCRatioRScaledToGasSecSubPtBin3");
         rData[i]        = (TH1F*)WeightFile[i]->Get("Data");
 
 	WeightFileAdditional[i] = TFile::Open(FileNamesAdditional[i]);
@@ -698,7 +700,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROnfly->Divide(4,3,0.0,0.0);
     padMBWeightEachROnfly->Draw();
     Int_t place  = 0;
-    TH2F *histoDummyWeightEachROnfly =  new TH2F("histoDummyWeightEachROnfly","histoDummyWeightEachROnfly",1000,0.,1.,1000,0.5,2.);
+    TH2F *histoDummyWeightEachROnfly =  new TH2F("histoDummyWeightEachROnfly","histoDummyWeightEachROnfly",1000,-0.05,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnfly, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
 
     TLegend* legendWeightPtOnfly= new TLegend(0.5,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
@@ -756,7 +758,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROffline->Divide(4,3,0.0,0.0);
     padMBWeightEachROffline->Draw();
      place  = 0;
-    TH2F *histoDummyWeightEachROffline =  new TH2F("histoDummyWeightEachROffline","histoDummyWeightEachROffline",1000,0.,1.,1000,0.5,2.);
+    TH2F *histoDummyWeightEachROffline =  new TH2F("histoDummyWeightEachROffline","histoDummyWeightEachROffline",1000,-0.05,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROffline, "#it{p}_{T}^{Min} (GeV/c)","w_i", 0.05,0.05, 0.05,0.05);
 
     TLegend* legendWeightPtOffline= new TLegend(0.5,0.31-(1+counterOnfly)*0.05,0.8,0.31); //0.17,0.13,0.5,0.24);
@@ -815,7 +817,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROnflySecSubCock->Divide(4,3,0.0,0.0);
     padMBWeightEachROnflySecSubCock->Draw();
     place  = 0;
-    TH2F *histoDummyWeightEachROnflySecSubCock =  new TH2F("histoDummyWeightEachROnflySecSubCock","histoDummyWeightEachROnflySecSubCock",1000,0.,1.,1000,0.5,2.);
+    TH2F *histoDummyWeightEachROnflySecSubCock =  new TH2F("histoDummyWeightEachROnflySecSubCock","histoDummyWeightEachROnflySecSubCock",1000,-0.05,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnflySecSubCock, "#it{p}_{T}^{Min} (GeV/c)","purity,w_i", 0.05,0.05, 0.05,0.05);
 
     TLegend* legendWeightPtOnflySecSubCock= new TLegend(0.4,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
@@ -878,7 +880,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     padMBWeightEachROfflineSecSubCock->Divide(4,3,0.0,0.0);
     padMBWeightEachROfflineSecSubCock->Draw();
     place  = 0;
-    TH2F *histoDummyWeightEachROfflineSecSubCock =  new TH2F("histoDummyWeightEachROfflineSecSubCock","histoDummyWeightEachROfflineSecSubCock",1000,0.,1.,1000,0.5,2.);
+    TH2F *histoDummyWeightEachROfflineSecSubCock =  new TH2F("histoDummyWeightEachROfflineSecSubCock","histoDummyWeightEachROfflineSecSubCock",1000,-0.05,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROfflineSecSubCock, "#it{p}_{T}^{Min} (GeV/c)","purity,w_i", 0.05,0.05, 0.05,0.05);
 
     TLegend* legendWeightPtOfflineSecSubCock = new TLegend(0.4,0.31-(1+counterOnfly)*0.05,0.8,0.31); //0.17,0.13,0.5,0.24);

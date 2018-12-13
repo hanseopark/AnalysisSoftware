@@ -329,8 +329,6 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoRDataRebin = (TH1F*)histoRData->Clone("histoRDataRebin");
     ConvGammaRebinWithBinCorrection(histoRDataRebin,rebinRPlots);
 
-    Double_t projRBins[4]      = {0., 5., 35., 180.};
-    TH1F *histoPtinRBinData[3] = {NULL, NULL, NULL};
     for(Int_t i=0; i<3; i++){
         histoPtinRBinData[i]   = (TH1F*)histoRPtData->ProjectionX(Form("histoPtinRBinData_%i",i),
                                                                   histoRPtData->GetYaxis()->FindBin(projRBins[i]+eps),
@@ -339,8 +337,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     }
  
     TH1F *histoPtData          = (TH1F*)histoRPtData->ProjectionX("histoPtData");
-    Double_t projPtBins[6]     = {0.15,0.3, 0.4, 0.5, 0.6, 0.7};
-    TH1F *histoRinPtBinData[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+
     for(Int_t i=0; i<6; i++){
       histoRinPtBinData[i]   = (TH1F*)histoRPtData->ProjectionY(Form("histoRinPtBinData_%i",i),
                                                                   histoRPtData->GetXaxis()->FindBin(projPtBins[i]+eps),
@@ -372,7 +369,6 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     cout << "Projection MC reconstructed histograms..." << endl;
     TH1F *histoRMC            = (TH1F*)histoRPtMC->ProjectionY("histoRMC");
-    TH1F *histoPtinRBinMC[3]  = {NULL, NULL, NULL};
     for(Int_t i=0; i<3; i++){
         histoPtinRBinMC[i]    = (TH1F*)histoRPtMC->ProjectionX(Form("histoPtinRBinMC_%i",i),
                                                                 histoRPtMC->GetYaxis()->FindBin(projRBins[i]+eps),
@@ -388,7 +384,6 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
     TH1F *histoPtMC          = (TH1F*)histoRPtMC->ProjectionX("histoPtMC");
-    TH1F *histoRinPtBinMC[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
     for(Int_t i=0; i<6; i++){
         histoRinPtBinMC[i]   = (TH1F*)histoRPtMC->ProjectionY(Form("histoRinPtBinMC_%i",i),
                                                               histoRPtMC->GetXaxis()->FindBin(projPtBins[i]+eps),
@@ -931,18 +926,40 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     cout << __LINE__ << endl;
     histoDataMCRatioRScaledToGas = (TH1F*)histoRDataScaledToGasRebin->Clone("histoDataMCRatioRScaledToGas");
     histoDataMCRatioRScaledToGas->Divide(histoRDataScaledToGasRebin,histoRMCScaledToGasRebin,1.,1.,"");
+    histoDataMCRatioRScaledToGasSecSub = (TH1F*)histoRDataScaledToGasRebin->Clone("histoDataMCRatioRScaledToGasSecSub");
+    for(Int_t i=0;i<histoDataMCRatioRScaledToGasSecSub->GetNbinsX()+1;i++){
+      //      cout<< "testing new histograms" << i<< "   "<< histoDataMCRatioRScaledToGasSecSub->GetBinCenter(i+1)<< endl;
+      histoDataMCRatioRScaledToGasSecSub->SetBinContent(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][0]);
+      histoDataMCRatioRScaledToGasSecSub->SetBinError(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][0]*weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[i][0]);
+    }
 
-    cout << "scaling to Nconv in gas for pT>0.15" << endl;
+    cout << "scaling to Nconv in gas for pT>0.1" << endl;
     histoDataMCRatioRinPtBinScaledToGasPtBin1  = (TH1F*)histoRinPtBinDataScaledToGasPtBin1Rebin->Clone("histoDataMCRatioRinPtBinScaledToGasPtBin1");
     histoDataMCRatioRinPtBinScaledToGasPtBin1->Divide(histoRinPtBinDataScaledToGasPtBin1Rebin ,histoRinPtBinMCScaledToGasPtBin1Rebin ,1.,1.,"");
+    histoDataMCRatioRScaledToGasSecSubPtBin1 = (TH1F*)histoRinPtBinDataScaledToGasPtBin1Rebin->Clone("histoDataMCRatioRScaledToGasSecSubPtBin1");
+    for(Int_t i=0;i<histoDataMCRatioRScaledToGasSecSubPtBin1->GetNbinsX()+1;i++){
+      histoDataMCRatioRScaledToGasSecSubPtBin1->SetBinContent(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][1]);
+      histoDataMCRatioRScaledToGasSecSubPtBin1->SetBinError(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][1]*weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[i][1]);
+    }
 
     cout << "scaling to Nconv in gas for pT>0.3" << endl;
     histoDataMCRatioRinPtBinScaledToGasPtBin2  = (TH1F*)histoRinPtBinDataScaledToGasPtBin2Rebin->Clone("histoDataMCRatioRinPtBinScaledToGasPtBin2");
     histoDataMCRatioRinPtBinScaledToGasPtBin2->Divide(histoRinPtBinDataScaledToGasPtBin2Rebin ,histoRinPtBinMCScaledToGasPtBin2Rebin ,1.,1.,"");
+    histoDataMCRatioRScaledToGasSecSubPtBin2 = (TH1F*)histoRinPtBinDataScaledToGasPtBin2Rebin->Clone("histoDataMCRatioRScaledToGasSecSubPtBin2");
+    for(Int_t i=0;i<histoDataMCRatioRScaledToGasSecSubPtBin2->GetNbinsX()+1;i++){
+      histoDataMCRatioRScaledToGasSecSubPtBin2->SetBinContent(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][3]);
+      histoDataMCRatioRScaledToGasSecSubPtBin2->SetBinError(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][3]*weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[i][3]);
+    }
 
     cout << "scaling to Nconv in gas for pT>0.4" << endl;
     histoDataMCRatioRinPtBinScaledToGasPtBin3  = (TH1F*)histoRinPtBinDataScaledToGasPtBin3Rebin->Clone("histoDataMCRatioRinPtBinScaledToGasPtBin3");
     histoDataMCRatioRinPtBinScaledToGasPtBin3->Divide(histoRinPtBinDataScaledToGasPtBin3Rebin ,histoRinPtBinMCScaledToGasPtBin3Rebin ,1.,1.,"");
+    histoDataMCRatioRScaledToGasSecSubPtBin3 = (TH1F*)histoRinPtBinDataScaledToGasPtBin3Rebin->Clone("histoDataMCRatioRScaledToGasSecSubPtBin3");
+    for(Int_t i=0;i<histoDataMCRatioRScaledToGasSecSubPtBin3->GetNbinsX()+1;i++){
+      histoDataMCRatioRScaledToGasSecSubPtBin3->SetBinContent(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][4]);
+      histoDataMCRatioRScaledToGasSecSubPtBin3->SetBinError(i+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[i][4]*weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[i][4]);
+    }
+
 
     for(Int_t i=0; i < nBinsPtFine; i++){
         histoDataMCRatioRinPtBinScaledToGasFine[i] = (TH1F*)histoRinPtBinDataScaledToGasRebinFine[i]->Clone(Form("histoDataMCRatioRinPtBinScaledToGasFine%d",i));
@@ -1378,7 +1395,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         TString legendWithPeriod = Form("From proj, Period %s",optionPeriod.Data());
 
         legenLowPanel->AddEntry(histoDataMCRatioRScaledToGas,"full #it{p}_{T} range");//legendWithPeriod.Data(),"lp");
-        legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGasPtBin1,"#it{p}_{T} > 0.15 GeV/#it{c}","lp");
+        legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGasPtBin1,"#it{p}_{T} > 0.1 GeV/#it{c}","lp");
         legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGasPtBin2,"#it{p}_{T} > 0.3 GeV/#it{c}","lp");
         legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGasPtBin3,"#it{p}_{T} > 0.4 GeV/#it{c}","lp");
         legenLowPanel->Draw();
@@ -1386,6 +1403,50 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoDummyTwoPanelsDown->Draw("same,axis");
     canvasTwoPanels->Print(Form("%s/PhotonConvRScaledToGas%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
+    //---------------------------
+    // Weights vs R . Different pT Min sec. subtracted
+    //---------------------------
+
+    TCanvas * canvasWeightsSecSub_singlepad = new TCanvas("canvasWeightsSecSub_singlepad","",1200,1000);
+    DrawGammaCanvasSettings( canvasWeightsSecSub_singlepad, 0.095, 0.02, 0.02, 0.08);
+
+    TH2F *histoDummyWeightsSecSub =  new TH2F("histoDummyWeightsSecSub","histoDummyWeightsSecSub",1000,0.,180.,1000,0.,2.);
+    SetStyleHistoTH2ForGraphs(histoDummyWeightsSecSub, "R (cm)","#frac{Data}{MC} (Sec. sub.)", 0.9*textsizeLabelsDown, textsizeLabelsDown,0.9*textsizeLabelsDown,textsizeLabelsDown, 1,0.15/(textsizeFacDown*marginXRatio));
+    histoDummyWeightsSecSub->GetYaxis()->SetRangeUser(0.3,1.55);
+    if (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.Contains("5TeV")) histoDummyWeightsSecSub->GetYaxis()->SetRangeUser(0.8,1.55);
+
+    histoDummyWeightsSecSub->DrawCopy();
+
+    DrawGammaLines(0.,180,1., 1.,1.,kGray,1);
+    DrawGammaLines(0.,180,1.15, 1.15,1.,kGray,4);
+    DrawGammaLines(0.,180,1.1, 1.1,1.,kGray,2);
+    DrawGammaLines(0.,180,1.05, 1.05,1.,kGray,3);
+    DrawGammaLines(0.,180,0.95, 0.95,1.,kGray,3);
+    
+    DrawGammaSetMarker(histoDataMCRatioRScaledToGasSecSub, 20, markerSize, colorData, colorData);
+    DrawGammaSetMarker(histoDataMCRatioRScaledToGasSecSubPtBin1, 25, markerSize, color[2], color[2]);
+    DrawGammaSetMarker(histoDataMCRatioRScaledToGasSecSubPtBin2, 25, markerSize, color[4], color[4]);
+    DrawGammaSetMarker(histoDataMCRatioRScaledToGasSecSubPtBin3, 25, markerSize, color[6], color[6]);
+    
+    histoDataMCRatioRScaledToGasSecSub->Draw("same,pE");
+    histoDataMCRatioRScaledToGasSecSubPtBin1->Draw("same,pE");
+    histoDataMCRatioRScaledToGasSecSubPtBin2->Draw("same,pE");
+    histoDataMCRatioRScaledToGasSecSubPtBin3->Draw("same,pE");
+    
+    TLegend* legenWeightSecSub = GetAndSetLegend2(0.5, 0.85-(4*0.9*textsizeLabelsDown), 0.7, 0.85, textSizeLabels);
+    TString legenWeightSecSubWithPeriod = Form("From proj, Period %s",optionPeriod.Data());
+	
+    legenWeightSecSub->AddEntry(histoDataMCRatioRScaledToGasSecSub,"full #it{p}_{T} range");//legendWithPeriod.Data(),"lp");
+    legenWeightSecSub->AddEntry(histoDataMCRatioRScaledToGasSecSubPtBin1,"#it{p}_{T} > 0.1 GeV/#it{c}","lp");
+    legenWeightSecSub->AddEntry(histoDataMCRatioRScaledToGasSecSubPtBin2,"#it{p}_{T} > 0.3 GeV/#it{c}","lp");
+    legenWeightSecSub->AddEntry(histoDataMCRatioRScaledToGasSecSubPtBin3,"#it{p}_{T} > 0.4 GeV/#it{c}","lp");
+    legenWeightSecSub->Draw();
+    
+    histoDummyWeightsSecSub->Draw("same,axis");
+    canvasWeightsSecSub_singlepad->Print(Form("%s/PhotonConvRScaledToGasSecSub%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+
+    //---------------------------
 
     TCanvas * canvasComparisonOldMethod = new TCanvas("canvasComparisonOldMethod","",1200,1000);
     DrawGammaCanvasSettings( canvasComparisonOldMethod, 0.095, 0.02, 0.02, 0.08);
@@ -1527,13 +1588,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
             histoRinPtBinTrueMC[i]->DrawCopy("same,histo");
         }
         // AM- pT limits wrong !!!!
+	// AM- pT limits corrected
         TLegend* legenRdistribPtcuts = GetAndSetLegend2(0.05, 0.35-(6.2*0.9*textsizeLabelsUp), 0.35, 0.35, textSizeLabels);
         legenRdistribPtcuts->AddEntry(histoRData,"Data","l");
         legenRdistribPtcuts->AddEntry(histoRMC,"MC","l");
         legenRdistribPtcuts->AddEntry(histoRTrueMC,"True MC","l");
-        legenRdistribPtcuts->AddEntry(histoRinPtBinData[1],"Data, 0.4 < #it{p}_{T} < 1.5 GeV/#it{c}","l");
-        legenRdistribPtcuts->AddEntry(histoRinPtBinMC[1],"MC, 0.4 < #it{p}_{T} < 1.5 GeV/#it{c}","lf");
-        legenRdistribPtcuts->AddEntry(histoRinPtBinTrueMC[1],"True MC, 0.4 < #it{p}_{T} < 1.5 GeV/#it{c}","fl");
+        legenRdistribPtcuts->AddEntry(histoRinPtBinData[1],"Data,  #it{p}_{T} > 0.3 GeV/#it{c}","l");
+        legenRdistribPtcuts->AddEntry(histoRinPtBinMC[1],"MC,  #it{p}_{T} >0.3 GeV/#it{c}","lf");
+        legenRdistribPtcuts->AddEntry(histoRinPtBinTrueMC[1],"True MC,  #it{p}_{T} > 0.3 GeV/#it{c}","fl");
         legenRdistribPtcuts->Draw();
 
     histoDummy4PanelsUp->Draw("axis,same");
@@ -2227,26 +2289,26 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasMBWeightEachR->Print(Form("%s/MBWeightVSPtMinEachR%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
-    //_______________________ creation TProfile for MB weights ___________________________________
+    //_______________________ creation TProfile for MB weights Secondary subtracted___________________________________
     TProfile* fProfileContainingMaterialBudgetWeightsFullPt = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBinsFullPt","profileContainingMaterialBudgetWeights_manyRadialBinsFullPt",nBinsR,arrayRBins);
     fProfileContainingMaterialBudgetWeightsFullPt->GetXaxis()->SetTitle("R (cm)");
     fProfileContainingMaterialBudgetWeightsFullPt->GetYaxis()->SetTitle("weight_per_gamma");
 
     cout << "MB weights for full pT range:" << endl;
     for(Int_t i=0; i<nBinsR; i++){
-      cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGas->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGas->GetBinError(i+1)<< endl;
-      fProfileContainingMaterialBudgetWeightsFullPt->Fill(arrayRBins[i],histoDataMCRatioRScaledToGas->GetBinContent(i+1));
+      cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGasSecSub->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGasSecSub->GetBinError(i+1)<< endl;
+      fProfileContainingMaterialBudgetWeightsFullPt->Fill(arrayRBins[i],histoDataMCRatioRScaledToGasSecSub->GetBinContent(i+1));
     }
     cout<< endl;
 
     TProfile* fProfileContainingMaterialBudgetWeightsPtBin1 = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBins01","profileContainingMaterialBudgetWeights_manyRadialBins01",nBinsR,arrayRBins);
     fProfileContainingMaterialBudgetWeightsPtBin1->GetXaxis()->SetTitle("R (cm)");
-    fProfileContainingMaterialBudgetWeightsPtBin1->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.15 GeV/c");
+    fProfileContainingMaterialBudgetWeightsPtBin1->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.1 GeV/c");
 
     cout << "MB weights for " << projPtBins[0] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c" << endl;
     for(Int_t i=0; i<nBinsR; i++){
-        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinError(i+1)<< endl;
-        fProfileContainingMaterialBudgetWeightsPtBin1->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinContent(i+1));
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGasSecSubPtBin1->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGasSecSubPtBin1->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsPtBin1->Fill(arrayRBins[i], histoDataMCRatioRScaledToGasSecSubPtBin1->GetBinContent(i+1));
     }
     cout<< endl;
 
@@ -2256,8 +2318,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     cout << "MB weights for " << projPtBins[1] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c" << endl;
     for(Int_t i=0; i<nBinsR; i++){
-        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinError(i+1)<< endl;
-        fProfileContainingMaterialBudgetWeightsPtBin2->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinContent(i+1));
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGasSecSubPtBin2->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGasSecSubPtBin2->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsPtBin2->Fill(arrayRBins[i], histoDataMCRatioRScaledToGasSecSubPtBin2->GetBinContent(i+1));
     }
     cout<< endl;
 
@@ -2267,19 +2329,64 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     cout << "MB weights for " << projPtBins[2] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c (-> DEFAULT)" << endl;
     for(Int_t i=0; i<nBinsR; i++){
-        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinError(i+1)<< endl;
-        fProfileContainingMaterialBudgetWeightsPtBin3->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1));
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsPtBin3->Fill(arrayRBins[i], histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinContent(i+1));
     }
     cout<< endl;
 
-    //________________________ pT > 0.4 taken as default: __________________________
+    //_______________________ creation TProfile for MB weights with secondaries ___________________________________
+    TProfile* fProfileContainingMaterialBudgetWeightsWithSecFullPt = new TProfile("profileContainingMaterialBudgetWeightsWithSec_manyRadialBinsFullPt","profileContainingMaterialBudgetWeightsWithSec_manyRadialBinsFullPt",nBinsR,arrayRBins);
+    fProfileContainingMaterialBudgetWeightsWithSecFullPt->GetXaxis()->SetTitle("R (cm)");
+    fProfileContainingMaterialBudgetWeightsWithSecFullPt->GetYaxis()->SetTitle("weight_per_gamma");
+
+    cout << "MB weights for full pT range:" << endl;
+    for(Int_t i=0; i<nBinsR; i++){
+      cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRScaledToGas->GetBinContent(i+1) << " +- " << histoDataMCRatioRScaledToGas->GetBinError(i+1)<< endl;
+      fProfileContainingMaterialBudgetWeightsWithSecFullPt->Fill(arrayRBins[i],histoDataMCRatioRScaledToGas->GetBinContent(i+1));
+    }
+    cout<< endl;
+
+    TProfile* fProfileContainingMaterialBudgetWeightsWithSecPtBin1 = new TProfile("profileContainingMaterialBudgetWeightsWithSec_manyRadialBins01","profileContainingMaterialBudgetWeightsWithSec_manyRadialBins01",nBinsR,arrayRBins);
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin1->GetXaxis()->SetTitle("R (cm)");
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin1->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.1 GeV/c");
+
+    cout << "MB weights for " << projPtBins[0] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c" << endl;
+    for(Int_t i=0; i<nBinsR; i++){
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsWithSecPtBin1->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin1->GetBinContent(i+1));
+    }
+    cout<< endl;
+
+    TProfile* fProfileContainingMaterialBudgetWeightsWithSecPtBin2 = new TProfile("profileContainingMaterialBudgetWeightsWithSec_manyRadialBins02","profileContainingMaterialBudgetWeightsWithSec_manyRadialBins02",nBinsR,arrayRBins);
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin2->GetXaxis()->SetTitle("R (cm)");
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin2->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.3 GeV/c");
+
+    cout << "MB weights for " << projPtBins[1] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c" << endl;
+    for(Int_t i=0; i<nBinsR; i++){
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsWithSecPtBin2->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin2->GetBinContent(i+1));
+    }
+    cout<< endl;
+
+    TProfile* fProfileContainingMaterialBudgetWeightsWithSecPtBin3 = new TProfile("profileContainingMaterialBudgetWeightsWithSec_manyRadialBins03","profileContainingMaterialBudgetWeightsWithSec_manyRadialBins03",nBinsR,arrayRBins);
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin3->GetXaxis()->SetTitle("R (cm)");
+    fProfileContainingMaterialBudgetWeightsWithSecPtBin3->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.4 GeV/c");
+
+    cout << "MB weights for " << projPtBins[2] << " GeV/c to " << histoRPtData->GetXaxis()->GetBinUpEdge(histoRPtData->GetNbinsX()) << " GeV/c (-> DEFAULT)" << endl;
+    for(Int_t i=0; i<nBinsR; i++){
+        cout << arrayRBins[i] << " < R < " << arrayRBins[i+1] << " cm, weight = " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1) << " +- " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinError(i+1)<< endl;
+        fProfileContainingMaterialBudgetWeightsWithSecPtBin3->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1));
+    }
+    cout<< endl;
+
+
+
+    //________________________ pT > 0.4 taken as default secondary subtracted: __________________________
     TProfile* fProfileContainingMaterialBudgetWeights = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBins","profileContainingMaterialBudgetWeights_manyRadialBins",nBinsR,arrayRBins);
     fProfileContainingMaterialBudgetWeights->GetXaxis()->SetTitle("R (cm)");
     fProfileContainingMaterialBudgetWeights->GetYaxis()->SetTitle("weight_per_gamma, #it{p}_{T} > 0.4 GeV/c");
-
     for(Int_t i=0; i<nBinsR; i++){
-        //cout<< arrayRBins[i] << " " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1) <<"  " << histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinError(i+1) << endl;
-        fProfileContainingMaterialBudgetWeights->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1));
+      fProfileContainingMaterialBudgetWeights->Fill(arrayRBins[i], histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinContent(i+1));
     }
     cout<< endl;
 
@@ -2314,10 +2421,10 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         TProfile* fProfileMaterialBudgetWeightsWithGasCorr = new TProfile("profileContainingMaterialBudgetWeights_manyRadialBins", "profileContainingMaterialBudgetWeights_manyRadialBins", nBinsR, arrayRBins);
         fProfileMaterialBudgetWeightsWithGasCorr->GetXaxis()->SetTitle("R (cm)");
         fProfileMaterialBudgetWeightsWithGasCorr->GetYaxis()->SetTitle("weight_per_gamma");
-
+	//Am: Take secondary subtracted weights
         for(Int_t i=0; i<nBinsR; i++){
-            if(arrayRBins[i] < 95.) fProfileMaterialBudgetWeightsWithGasCorr->Fill(arrayRBins[i], histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1));
-            else if(arrayRBins[i] >= 95.) fProfileMaterialBudgetWeightsWithGasCorr->Fill(arrayRBins[i], mcGasCorrectionFactor*histoDataMCRatioRinPtBinScaledToGasPtBin3->GetBinContent(i+1));
+            if(arrayRBins[i] < 95.) fProfileMaterialBudgetWeightsWithGasCorr->Fill(arrayRBins[i], histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinContent(i+1));
+            else if(arrayRBins[i] >= 95.) fProfileMaterialBudgetWeightsWithGasCorr->Fill(arrayRBins[i], mcGasCorrectionFactor*histoDataMCRatioRScaledToGasSecSubPtBin3->GetBinContent(i+1));
         }
 
         fProfileMaterialBudgetWeightsWithGasCorr->Write();
@@ -2336,6 +2443,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         fProfileContainingMaterialBudgetWeightsPtBin2->Write();
         fProfileContainingMaterialBudgetWeightsPtBin3->Write();
         histoDataMCRatioRinPtBinScaledToGasPtBin3->Write();
+        histoDataMCRatioRScaledToGasSecSubPtBin3->Write();
         histoRData->Write("Data");
 
         outFile.Close();
@@ -2351,10 +2459,15 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoRMCRebin->Write("MCRebin");
     histoRDataScaledToGas->Write("DataScaledToGas");
     histoRMCScaledToGas->Write("MCScaledToGas");
-    
+    histoDataMCRatioRScaledToGas ->Write();
     histoDataMCRatioRinPtBinScaledToGasPtBin1->Write();
     histoDataMCRatioRinPtBinScaledToGasPtBin2->Write();
     histoDataMCRatioRinPtBinScaledToGasPtBin3->Write();
+    histoDataMCRatioRScaledToGasSecSub-> Write();
+    histoDataMCRatioRScaledToGasSecSubPtBin1->Write();
+    histoDataMCRatioRScaledToGasSecSubPtBin2->Write();
+    histoDataMCRatioRScaledToGasSecSubPtBin3->Write();
+
     histoPurityR->Write();
     histoPurityPrimR->Write();
     histoPuritySecR->Write();
