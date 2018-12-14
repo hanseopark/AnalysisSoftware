@@ -157,13 +157,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     }
 
     for(Int_t i=0; i<nBinsPtTwo+1;i++){
-      if (i < 30) arrayPtBinsTwo[i]            = 0.1*i;
-      else if(i<44) arrayPtBinsTwo[i]          = 3. + 0.5*(i-30);
-      else if(i<49) arrayPtBinsTwo[i]          = 10.+ 2.0*(i-44);
+      if (i < 20) arrayPtBinsTwo[i]            = 0.1*i;
+      else if(i<28) arrayPtBinsTwo[i]          = 2. + 0.5*(i-20);
+      else if(i<30) arrayPtBinsTwo[i]          = 6. + 2.0*(i-28);
+      else if(i<31) arrayPtBinsTwo[i]          = 10. + 10*(i-30);
       else arrayPtBinsTwo[i]                   = fMaxPt;
-      //  cout<< i<< " "<<  arrayPtBinsTwo[i]<< endl;
+      //        cout<< i<< " "<<  arrayPtBinsTwo[i]<< endl;
     }
-
 
 
     //_______________________ Data _______________________
@@ -462,6 +462,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
  
     for(Int_t j=0; j<nBinsR; j++){
+      //      cout<< "testing secondary weighting with MBW:: "<<fMaterialWeightsForSecEffCor[j]<< endl;
       // Data reconstructed
       histoPtEachRBinData[j] = (TH1F*)histoRPtData->ProjectionX(Form("histoPtEachRBinData_%i",j),
 								histoRPtData->GetYaxis()->FindBin(arrayRBins[j]+eps),
@@ -555,6 +556,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 	histoPtEachRBinDataSecYieldFromSecFracBySourceRaw[k][j]  =  (TH1F*)histoPtEachRBinData[j]->Clone(Form("histoPtEachRBinDataSecYieldFromSecFracBySource%s_Raw%i",fSecondaries[k].Data(),j));
 	histoPtEachRBinDataSecYieldFromSecFracBySourceRaw[k][j] ->Sumw2();
 	histoPtEachRBinDataSecYieldFromSecFracBySourceRaw[k][j] ->Multiply(histoFracSecPtEachRBinBySource[k][j]);
+	
+	histoDataFromCocktailSecConvGammaPtEachRBinBySourceRaw[k][j]->Scale(fMaterialWeightsForSecEffCor[j]);
 
 	//AM: subtracting each of the sources one by one
 	histoPtEachRBinDataSecSubtractedUsingCocktail[j]->Add(histoDataFromCocktailSecConvGammaPtEachRBinBySourceRaw[k][j],-1.);
@@ -633,23 +636,36 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     for(Int_t j=0; j < nBinsR; j++){
       for(Int_t k=0; k < nBinsPtFine; k++){
 	nConvInRangeFromPtMinSecSubtractedDataToGas[j][k] =  nConvInRangeFromPtMinSecSubtractedData[j][k]/nConvInRangeFromPtMinSecSubtractedData[10][k];
-	nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataRelErr[j][k],2)+
-										TMath::Power(nConvInRangeFromPtMinSecSubtractedDataRelErr[10][k],2) ),0.5);
 	nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGas[j][k] =  nConvInRangeFromPtMinSecSubtractedDataUsingCocktail[j][k]/nConvInRangeFromPtMinSecSubtractedDataUsingCocktail[10][k];
-	nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[j][k],2)+
-										TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[10][k],2) ),0.5);
+
+
 	//  mcGasCorrectionFactor applied to the gas here when integrating pT histograms. it is set to 1 except for LHC10b,c and PbPb at 2.76
 	nConvInRangeFromPtMinSecSubtractedMCToGas[j][k] = nConvInRangeFromPtMinSecSubtractedMC[j][k]/(mcGasCorrectionFactor*nConvInRangeFromPtMinSecSubtractedMC[10][k]);
-	nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedMCRelErr[j][k],2)+
-										TMath::Power(nConvInRangeFromPtMinSecSubtractedMCRelErr[10][k],2) ),0.5);
 	weightInRangeFromPtMinSecSubtracted[j][k] = nConvInRangeFromPtMinSecSubtractedDataToGas[j][k] /	nConvInRangeFromPtMinSecSubtractedMCToGas[j][k];
-
-	weightInRangeFromPtMinSecSubtractedRelErr[j][k] =  TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[j][k],2)+
-									  TMath::Power(nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k],2)),0.5);
-
 	weightInRangeFromPtMinSecSubtractedUsingCocktail[j][k] = nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGas[j][k] /nConvInRangeFromPtMinSecSubtractedMCToGas[j][k];
 
-	weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[j][k] =  TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[j][k],2)+
+
+	// AM: For the gas we count the stat error only once. Otherwise error sqrt(2) too large
+	if(j!=10){
+
+	  nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataRelErr[j][k],2)+
+										TMath::Power(nConvInRangeFromPtMinSecSubtractedDataRelErr[10][k],2) ),0.5);
+	  nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[j][k],2)+
+										TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[10][k],2) ),0.5);
+
+	  nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedMCRelErr[j][k],2)+
+										TMath::Power(nConvInRangeFromPtMinSecSubtractedMCRelErr[10][k],2) ),0.5);
+	}else{
+
+	  nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataRelErr[j][k],2) ),0.5);
+	  nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailRelErr[j][k],2)),0.5);
+	  nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k] =TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedMCRelErr[j][k],2)),0.5);
+	}
+
+	  weightInRangeFromPtMinSecSubtractedRelErr[j][k] =  TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataToGasRelErr[j][k],2)+
+									  TMath::Power(nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k],2)),0.5);
+
+	  weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[j][k] =  TMath::Power( (TMath::Power(nConvInRangeFromPtMinSecSubtractedDataUsingCocktailToGasRelErr[j][k],2)+
 									  TMath::Power(nConvInRangeFromPtMinSecSubtractedMCToGasRelErr[j][k],2)),0.5);
 
       }
@@ -777,59 +793,75 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         histoIntegralGasDataFine[i] = new TH1D(Form("histoIntegralGasDataFine%d",i), Form("histoIntegralGasDataFine%d",i), nBinsR, arrayRBins);
         for(Int_t j=1; j<nBinsR+1; j++){
             histoIntegralGasDataFine[i]->SetBinContent(j,nconvInRangeDataFine[i]);
-            histoIntegralGasDataFine[i]->SetBinError(j,dataStatErrorGasFine[i]);
+            if(j!=11){
+	      histoIntegralGasDataFine[i]->SetBinError(j,dataStatErrorGasFine[i]);
+	    }else{
+	      histoIntegralGasDataFine[i]->SetBinError(j,0.);
+	    } 
         }
 
         histoRinPtBinDataRebinFine[i]  = (TH1F*)histoRinPtBinDataFine[i]->Rebin(nBinsR,Form("histoRinPtBinDataRebinFine%d",i), arrayRBins);
         histoRinPtBinDataRebinFine[i]->Sumw2();
         histoRinPtBinDataScaledToGasRebinFine[i] = (TH1F*)histoRinPtBinDataRebinFine[i]->Clone(Form("histoRinPtBinDataScaledToGasRebinFine%d",i));
-        histoRinPtBinDataScaledToGasRebinFine[i]->Divide(histoRinPtBinDataRebinFine[i],histoIntegralGasDataFine[i],1.,1.,"B");
+        histoRinPtBinDataScaledToGasRebinFine[i]->Divide(histoRinPtBinDataRebinFine[i],histoIntegralGasDataFine[i],1.,1.,"");
     }
 
 
     for(Int_t i=1; i<nBinsR+1; i++){
-        histoIntegralGasDataFullRange->SetBinContent(i,nconvInRangeData);
-        histoIntegralGasDataFullRange->SetBinError(i,dataStatErrorGas);
-
-        histoIntegralGasDataPtBin1->SetBinContent(i,nconvInRangeDataPtBin1);
-        histoIntegralGasDataPtBin1->SetBinError(i,dataStatErrorGasPtBin1);
-
-        histoIntegralGasDataPtBin2->SetBinContent(i,nconvInRangeDataPtBin2);
-        histoIntegralGasDataPtBin2->SetBinError(i,dataStatErrorGasPtBin2);
-
-        histoIntegralGasDataPtBin3->SetBinContent(i,nconvInRangeDataPtBin3);
-        histoIntegralGasDataPtBin3->SetBinError(i,dataStatErrorGasPtBin3);
+      histoIntegralGasDataFullRange->SetBinContent(i,nconvInRangeData);
+      histoIntegralGasDataPtBin1->SetBinContent(i,nconvInRangeDataPtBin1);
+      histoIntegralGasDataPtBin2->SetBinContent(i,nconvInRangeDataPtBin2);
+      histoIntegralGasDataPtBin3->SetBinContent(i,nconvInRangeDataPtBin3);
+      if(i!=11){
+	histoIntegralGasDataFullRange->SetBinError(i,dataStatErrorGas);
+	histoIntegralGasDataPtBin1->SetBinError(i,dataStatErrorGasPtBin1);
+	histoIntegralGasDataPtBin2->SetBinError(i,dataStatErrorGasPtBin2);
+	histoIntegralGasDataPtBin3->SetBinError(i,dataStatErrorGasPtBin3);
+      }else{
+	histoIntegralGasDataFullRange->SetBinError(i,0.);
+	histoIntegralGasDataPtBin1->SetBinError(i,0.);
+	histoIntegralGasDataPtBin2->SetBinError(i,0.);
+	histoIntegralGasDataPtBin3->SetBinError(i,0.);
+      } 
     }
 
     TH1F* histoIntegralGasDataWide = (TH1F*) histoRData->Clone("histoIntegralGasDataWide");
     for(Int_t i=1; i<histoIntegralGasDataWide->GetNbinsX()+1; i++){
-        histoIntegralGasDataWide->SetBinContent(i,nconvInRangeData);
-        histoIntegralGasDataWide->SetBinError(i,dataStatErrorGas);
+      histoIntegralGasDataWide->SetBinContent(i,nconvInRangeData);
+      if(i!=11){
+	histoIntegralGasDataWide->SetBinError(i,dataStatErrorGas);
+      }else{
+	histoIntegralGasDataWide->SetBinError(i,0.);
+      } 
     }
 
     histoRDataScaledToGas = (TH1F*) histoRData->Clone("histoRDataScaledToGas");
     histoRDataScaledToGas->Sumw2();
-    histoRDataScaledToGas->Divide(histoRDataScaledToGas , histoIntegralGasDataWide,1.,1.,"B");
+    histoRDataScaledToGas->Divide(histoRDataScaledToGas , histoIntegralGasDataWide,1.,1.,"");
 
     histoRDataRebin   = (TH1F*)histoRData->Rebin(nBinsR,"histoRDataRebin", arrayRBins);
     histoRDataRebin->Sumw2();
     histoRDataScaledToGasRebin =(TH1F*)histoRDataRebin->Clone("histoRDataScaledToGasRebin");
-    histoRDataScaledToGasRebin->Divide(histoRDataRebin,histoIntegralGasDataFullRange,1.,1.,"B");
+    histoRDataScaledToGasRebin->Divide(histoRDataRebin,histoIntegralGasDataFullRange,1.,1.,"");
+
+    cout<< "testing Data::"<< histoRDataRebin->GetBinContent(11)<< " " <<histoRDataRebin->GetBinError(11)<<endl; 
+    cout<< "testing Data-Gas::"<< histoIntegralGasDataFullRange->GetBinContent(11)<< " " << histoIntegralGasDataFullRange->GetBinError(11)<< "  "<<histoIntegralGasDataFullRange->GetBinError(11)/histoIntegralGasDataFullRange->GetBinContent(11) << endl;
+    cout<< "Testing::"<< histoRDataScaledToGasRebin->GetBinContent(11)<< " "<< histoRDataScaledToGasRebin->GetBinError(11)<<endl;
 
     histoRinPtBinDataPtBin1Rebin = (TH1F*)histoRinPtBinData[0]->Rebin(nBinsR,"histoRinPtBinDataPtBin1Rebin", arrayRBins);
     histoRinPtBinDataPtBin1Rebin->Sumw2();
     histoRinPtBinDataScaledToGasPtBin1Rebin= (TH1F*)histoRinPtBinDataPtBin1Rebin->Clone("histoRinPtBinDataScaledToGasPtBin1Rebin");
-    histoRinPtBinDataScaledToGasPtBin1Rebin->Divide(histoRinPtBinDataPtBin1Rebin,histoIntegralGasDataPtBin1,1.,1.,"B");
+    histoRinPtBinDataScaledToGasPtBin1Rebin->Divide(histoRinPtBinDataPtBin1Rebin,histoIntegralGasDataPtBin1,1.,1.,"");
 
     histoRinPtBinDataPtBin2Rebin = (TH1F*)histoRinPtBinData[1]->Rebin(nBinsR,"histoRinPtBinDataPtBin2Rebin", arrayRBins);
     histoRinPtBinDataPtBin2Rebin->Sumw2();
     histoRinPtBinDataScaledToGasPtBin2Rebin= (TH1F*)histoRinPtBinDataPtBin2Rebin->Clone("histoRinPtBinDataScaledToGasPtBin2Rebin");
-    histoRinPtBinDataScaledToGasPtBin2Rebin->Divide(histoRinPtBinDataPtBin2Rebin,histoIntegralGasDataPtBin2,1.,1.,"B");
+    histoRinPtBinDataScaledToGasPtBin2Rebin->Divide(histoRinPtBinDataPtBin2Rebin,histoIntegralGasDataPtBin2,1.,1.,"");
 
     histoRinPtBinDataPtBin3Rebin = (TH1F*)histoRinPtBinData[2]->Rebin(nBinsR,"histoRinPtBinDataPtBin3Rebin", arrayRBins);
     histoRinPtBinDataPtBin3Rebin->Sumw2();
     histoRinPtBinDataScaledToGasPtBin3Rebin= (TH1F*)histoRinPtBinDataPtBin3Rebin->Clone("histoRinPtBinDataScaledToGasPtBin3Rebin");
-    histoRinPtBinDataScaledToGasPtBin3Rebin->Divide(histoRinPtBinDataPtBin3Rebin,histoIntegralGasDataPtBin3,1.,1.,"B");
+    histoRinPtBinDataScaledToGasPtBin3Rebin->Divide(histoRinPtBinDataPtBin3Rebin,histoIntegralGasDataPtBin3,1.,1.,"");
 
 
     cout << __LINE__ << endl;
@@ -865,29 +897,38 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         dataStatRelErrorGasMCFine[i] = TMath::Sqrt(nconvInRangeMCFine[i])/nconvInRangeMCFine[i];
         histoIntegralGasMCFine[i] = new TH1D(Form("histoIntegralGasMCFine%d",i), Form("histoIntegralGasMCFine%d",i), nBinsR, arrayRBins);
         for(Int_t j=1; j<nBinsR+1; j++){
-            histoIntegralGasMCFine[i]->SetBinContent(j,nconvInRangeMCFine[i]);
-            histoIntegralGasMCFine[i]->SetBinError(j,dataStatErrorGasMCFine[i]);
+	  histoIntegralGasMCFine[i]->SetBinContent(j,nconvInRangeMCFine[i]);
+	  if(j!=11){
+	    histoIntegralGasMCFine[i]->SetBinError(j,dataStatErrorGasMCFine[i]);
+	  }else{
+	    //	    cout<< "testing setting error to 0::"<< histoIntegralGasMCFine[i]->GetBinCenter(j) << endl;
+	    histoIntegralGasMCFine[i]->SetBinError(j,0.);
+	  } 
         }
 
         histoRinPtBinMCRebinFine[i]  = (TH1F*)histoRinPtBinMCFine[i]->Rebin(nBinsR,Form("histoRinPtBinMCRebinFine%d",i), arrayRBins);
         histoRinPtBinMCRebinFine[i]->Sumw2();
         histoRinPtBinMCScaledToGasRebinFine[i] = (TH1F*)histoRinPtBinMCRebinFine[i]->Clone(Form("histoRinPtBinMCScaledToGasRebinFine%d",i));
-        histoRinPtBinMCScaledToGasRebinFine[i]->Divide(histoRinPtBinMCRebinFine[i],histoIntegralGasMCFine[i],1.0,1.0,"B");
+        histoRinPtBinMCScaledToGasRebinFine[i]->Divide(histoRinPtBinMCRebinFine[i],histoIntegralGasMCFine[i],1.0,1.0,"");
     }
     cout << "*******************************" << endl;
 
     for(Int_t i=1; i<nBinsR+1; i++){
         histoIntegralGasMCFullRange->SetBinContent(i,nconvInRangeMC);
-        histoIntegralGasMCFullRange->SetBinError(i,mcStatErrorGas);
-
         histoIntegralGasMCPtBin1->SetBinContent(i,nconvInRangeMCPtBin1);
-        histoIntegralGasMCPtBin1->SetBinError(i,mcStatErrorGasPtBin1);
-
         histoIntegralGasMCPtBin2->SetBinContent(i,nconvInRangeMCPtBin2);
-        histoIntegralGasMCPtBin2->SetBinError(i,mcStatErrorGasPtBin2);
-
         histoIntegralGasMCPtBin3->SetBinContent(i,nconvInRangeMCPtBin3);
-        histoIntegralGasMCPtBin3->SetBinError(i,mcStatErrorGasPtBin3);
+	if(i!=11){
+	  histoIntegralGasMCFullRange->SetBinError(i,mcStatErrorGas);
+	  histoIntegralGasMCPtBin1->SetBinError(i,mcStatErrorGasPtBin1);
+	  histoIntegralGasMCPtBin2->SetBinError(i,mcStatErrorGasPtBin2);
+	  histoIntegralGasMCPtBin3->SetBinError(i,mcStatErrorGasPtBin3);
+	}else{
+	  histoIntegralGasMCFullRange->SetBinError(i,0.);
+	  histoIntegralGasMCPtBin1->SetBinError(i,0.);
+	  histoIntegralGasMCPtBin2->SetBinError(i,0.);
+	  histoIntegralGasMCPtBin3->SetBinError(i,0.);
+	}
     }
 
     // -AM The histogram is cloned to get the binning. Taking histoRData is ok
@@ -899,33 +940,38 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     histoRMCScaledToGas = (TH1F*) histoRMC->Clone("histoRMCScaledToGas");
     histoRMCScaledToGas->Sumw2();
-    histoRMCScaledToGas->Divide(histoRMCScaledToGas , histoIntegralGasMCWide,1.,1.,"B");
+    histoRMCScaledToGas->Divide(histoRMCScaledToGas , histoIntegralGasMCWide,1.,1.,"");
 
     histoRMCRebin   = (TH1F*)histoRMC->Rebin(nBinsR,"histoRMCRebin", arrayRBins);
     histoRMCRebin->Sumw2();
     histoRMCScaledToGasRebin =(TH1F*)histoRMCRebin->Clone("histoRMCScaledToGasRebin");
-    histoRMCScaledToGasRebin->Divide(histoRMCRebin,histoIntegralGasMCFullRange,1.,1.,"B");
+    histoRMCScaledToGasRebin->Divide(histoRMCRebin,histoIntegralGasMCFullRange,1.,1.,"");
 
     histoRinPtBinMCPtBin1Rebin = (TH1F*)histoRinPtBinMC[0]->Rebin(nBinsR,"histoRinPtBinMCPtBin1Rebin", arrayRBins);
     histoRinPtBinMCPtBin1Rebin->Sumw2();
     histoRinPtBinMCScaledToGasPtBin1Rebin= (TH1F*)histoRinPtBinMCPtBin1Rebin->Clone("histoRinPtBinMCScaledToGasPtBin1Rebin");
-    histoRinPtBinMCScaledToGasPtBin1Rebin->Divide(histoRinPtBinMCPtBin1Rebin,histoIntegralGasMCPtBin1,1.,1.,"B");
+    histoRinPtBinMCScaledToGasPtBin1Rebin->Divide(histoRinPtBinMCPtBin1Rebin,histoIntegralGasMCPtBin1,1.,1.,"");
 
     histoRinPtBinMCPtBin2Rebin = (TH1F*)histoRinPtBinMC[1]->Rebin(nBinsR,"histoRinPtBinMCPtBin2Rebin", arrayRBins);
     histoRinPtBinMCPtBin2Rebin->Sumw2();
     histoRinPtBinMCScaledToGasPtBin2Rebin= (TH1F*)histoRinPtBinMCPtBin2Rebin->Clone("histoRinPtBinMCScaledToGasPtBin2Rebin");
-    histoRinPtBinMCScaledToGasPtBin2Rebin->Divide(histoRinPtBinMCPtBin2Rebin,histoIntegralGasMCPtBin2,1.,1.,"B");
+    histoRinPtBinMCScaledToGasPtBin2Rebin->Divide(histoRinPtBinMCPtBin2Rebin,histoIntegralGasMCPtBin2,1.,1.,"");
 
     histoRinPtBinMCPtBin3Rebin = (TH1F*)histoRinPtBinMC[2]->Rebin(nBinsR,"histoRinPtBinMCPtBin3Rebin", arrayRBins);
     histoRinPtBinMCPtBin3Rebin->Sumw2();
     histoRinPtBinMCScaledToGasPtBin3Rebin= (TH1F*)histoRinPtBinMCPtBin3Rebin->Clone("histoRinPtBinMCScaledToGasPtBin3Rebin");
-    histoRinPtBinMCScaledToGasPtBin3Rebin->Divide(histoRinPtBinMCPtBin3Rebin,histoIntegralGasMCPtBin3,1.,1.,"B");
+    histoRinPtBinMCScaledToGasPtBin3Rebin->Divide(histoRinPtBinMCPtBin3Rebin,histoIntegralGasMCPtBin3,1.,1.,"");
 
 
     //_______________ ratio data to MC after scaling __________________
     cout << __LINE__ << endl;
     histoDataMCRatioRScaledToGas = (TH1F*)histoRDataScaledToGasRebin->Clone("histoDataMCRatioRScaledToGas");
     histoDataMCRatioRScaledToGas->Divide(histoRDataScaledToGasRebin,histoRMCScaledToGasRebin,1.,1.,"");
+    //   cout<< "checking stat errors Ratio::"<<  histoDataMCRatioRScaledToGas->GetBinCenter(11)<< " "<< histoDataMCRatioRScaledToGas->GetBinContent(11)<< " " << histoDataMCRatioRScaledToGas->GetBinError(11)<< endl;
+    //    cout<< "checking stat errors Data::"<<  histoRDataScaledToGasRebin->GetBinContent(11)<< " " << histoRDataScaledToGasRebin->GetBinError(11)<< endl;
+    //    cout<< "checking stat errors MC::"<<  histoRMCScaledToGasRebin->GetBinContent(11)<< " " << histoRMCScaledToGasRebin->GetBinError(11)<< endl;
+
+
     histoDataMCRatioRScaledToGasSecSub = (TH1F*)histoRDataScaledToGasRebin->Clone("histoDataMCRatioRScaledToGasSecSub");
     for(Int_t i=0;i<histoDataMCRatioRScaledToGasSecSub->GetNbinsX()+1;i++){
       //      cout<< "testing new histograms" << i<< "   "<< histoDataMCRatioRScaledToGasSecSub->GetBinCenter(i+1)<< endl;

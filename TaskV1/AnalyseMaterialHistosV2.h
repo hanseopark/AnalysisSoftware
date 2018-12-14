@@ -33,7 +33,7 @@ Double_t rMaxGas                  = 145.;
 
 const int nBinsPt=69;
 Double_t arrayPtBins[nBinsPt]; 
-const int nBinsPtTwo=49;
+const int nBinsPtTwo=31;
 Double_t arrayPtBinsTwo[nBinsPtTwo]; 
 
 //const int nBinsPtFine             = 15;
@@ -103,6 +103,9 @@ TString arrayNamesRBins[12]       = { "Vertex",                                 
                                       "Ne: CO_{2}: N_{2}"                             //11
                                     };
 
+Double_t fMaterialWeightsForSecEffCor[12]={1.0377,1.19547,1.24405,1.22941,1.07585,1.12396, 1.09077, 1.03798,0.948079,0.981036, 1.,0.964843};
+//1.0313, 1.18782, 1.23548, 1.22107 ,1.07171, 1.11886, 1.08748, 1.0367, 0.950803, 0.982077, 1., 0.966804};
+//{1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.};
 
 TH1F * histoMCSecGammaPtBySource[4]={NULL,NULL,NULL,NULL};
 TH1F * histoMCSecConvGammaPtBySource[4]={NULL,NULL,NULL,NULL};
@@ -147,7 +150,7 @@ TH1F *histoPtEachRBinDataSecYieldFromSecFrac[nBinsR] = {NULL, NULL, NULL, NULL, 
 TH1F *histoPtEachRBinMCSecYieldFromSecFrac[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 
-const int nBinsPtMin= 7;
+const int nBinsPtMin= 8;
 Double_t  arrayBinsPtMin[nBinsPtMin+1];
 TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
