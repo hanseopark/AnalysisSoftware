@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <iomanip>      // std::setprecision
 #include <fstream>
 #include <math.h>
 #include <TROOT.h>
@@ -57,7 +58,7 @@ TH1F* ScaleByIntegralWithinLimits(const TH1F* hist, Double_t rmin, Double_t rmax
     TH1F * histToBeScaled = (TH1F*)hist->Clone();
     Double_t nconvInGas =  histToBeScaled->Integral(hist->GetXaxis()->FindBin(rmin),hist->GetXaxis()->FindBin(rmax));
     GammaScalingHistogramm(histToBeScaled,1./(mcGasCorrectionFactor*nconvInGas));
-    cout << "NconvInGas = " << nconvInGas << "  sqrt(nconvInGas) = " << TMath::Sqrt(nconvInGas) << " sqrt(nconvInGas)/nconvInGas = "<<  TMath::Sqrt(nconvInGas)/nconvInGas<<endl;
+    std::cout << std::setprecision(5) << "NconvInGas = " << nconvInGas << "  sqrt(nconvInGas) = " << TMath::Sqrt(nconvInGas) << " sqrt(nconvInGas)/nconvInGas = "<<  TMath::Sqrt(nconvInGas)/nconvInGas<<endl;
     return histToBeScaled;
 }
 
@@ -67,7 +68,7 @@ Double_t CalculateIntegralWithinLimits(const TH1F* hist, Double_t rmin, Double_t
     // Option "width" removed becase it does not give proper number of entries
     Double_t nconvInRange =  histToBeIntegrated->Integral(hist->GetXaxis()->FindBin(rmin),hist->GetXaxis()->FindBin(rmax));
     nconvInRange*=mcGasCorrectionFactor;
-    cout << "nconvInRange = " << nconvInRange << endl;
+    std::cout << std::setprecision(4)   << "nconvInRange = " << nconvInRange << endl;
     //cout << "nconvInRange = " << nconvInRange << " for bins "  << hist->GetXaxis()->FindBin(rmin) << " - " << hist->GetXaxis()->FindBin(rmax)<< endl;
     return nconvInRange;
 }
@@ -284,12 +285,12 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     normFactorReconstMC = 1./(numberGoodEventsMC*meanMultMC);
 
     cout << "*********************************************" << endl;
-    cout << "Number of good events in data -> " << numberGoodEventsData << endl;
-    cout << "Mean multiplicity in data -> " << meanMultData << endl;
+    std::cout << "Number of good events in data -> " << std::setprecision(4)  << numberGoodEventsData << endl;
+    std::cout << "Mean multiplicity in data -> " << std::setprecision(4)  << meanMultData << endl;
     cout << "Normalization factor in data -> " << normFactorReconstData << endl;
     cout << "-----" << endl;
-    cout << "Number of good events in MC -> " << numberGoodEventsMC << endl;
-    cout << "Mean multiplicity in MC -> " << meanMultMC << endl;
+    std::cout << "Number of good events in MC -> " << std::setprecision(4)  << numberGoodEventsMC << endl;
+    std::cout << "Mean multiplicity in MC -> " << std::setprecision(4)  << meanMultMC << endl;
     cout << "Normalization factor in MC -> " << normFactorReconstMC << endl;
     cout << "-----" << endl;
     cout << "Ratio multiplicity data/MC = " << meanMultData/meanMultMC << endl;

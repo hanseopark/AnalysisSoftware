@@ -328,7 +328,14 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         }
         totalWeightError[j-1] = TMath::Sqrt( weightSta[j-1]* weightSta[j-1]+ totalWeightSys[j-1] *totalWeightSys[j-1] );
 
-        cout << "R = " << histoDiffWeightCut[1]->GetBinCenter(j) << "cm, Weight = " << weightValue[j-1] << ", Stat = " <<  weightSta[j-1] << " (Stat = "<<  (weightSta[j-1]/histWeight[0]->GetBinContent(j))*100 << "%), Sys = " << totalWeightSys[j-1] << " (Sys = " << (totalWeightSys[j-1]/histWeight[0]->GetBinContent(j))*100 << "%), Tot = "  << totalWeightError[j-1] << " (Tot = "<< (totalWeightError[j-1]/histWeight[0]->GetBinContent(j))*100 << "%)" << endl ;
+	std::cout << std::setprecision(4)  << "R = " << histoDiffWeightCut[1]->GetBinCenter(j) 
+		  << "cm, Weight = "<< std::setprecision(4) << weightValue[j-1] 
+		  << ", Stat = "    << std::setprecision(3) << weightSta[j-1] 
+		  << " (Stat = "    << std::setprecision(3) << (weightSta[j-1]/histWeight[0]->GetBinContent(j))*100 
+		  << "%), Sys = "   << std::setprecision(3) << totalWeightSys[j-1] 
+		  << " (Sys = "     << std::setprecision(3) << (totalWeightSys[j-1]/histWeight[0]->GetBinContent(j))*100 
+		  << "%), Tot = "   << std::setprecision(3) << totalWeightError[j-1] 
+		  << " (Tot = "     << std::setprecision(3) << (totalWeightError[j-1]/histWeight[0]->GetBinContent(j))*100 << "%)" << endl ;
     }
 
     // Calculation of average sys. for 1 photon based on the R weight beyond 5 cm
@@ -383,7 +390,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         averageWeightTot+=totalWeightError[j]*(totInRBin/totInRRange);
         averageWeight+=weightValue[j] *(totInRBin/totInRRange);
     }
-    cout << "Average Weight = " << averageWeight << ", Stat = " << (averageWeightSta/averageWeight)*100 << "%, Sys = " << (averageWeightSys/averageWeight)*100 << "%, Tot = " << (averageWeightTot/averageWeight)*100 << "%" << endl;
+    std::cout<< std::setprecision(4)  << "Average Weight = " << averageWeight << ", Stat = " << (averageWeightSta/averageWeight)*100 << "%, Sys = " << (averageWeightSys/averageWeight)*100 << "%, Tot = " << (averageWeightTot/averageWeight)*100 << "%" << endl;
 
 
     // plotting
