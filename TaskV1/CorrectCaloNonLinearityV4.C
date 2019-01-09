@@ -733,7 +733,10 @@ void CorrectCaloNonLinearityV4(
 
             // special setting for PHOS
             } else if( mode == 5){
+                minMax[0]       = 0.04;
                 minMax[1]       = 0.25;
+                if (fBinsPt[iClusterPt] < 0.7)
+                    minMax[1]   = 0.2;
                 Double_t min    = 0.005*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
