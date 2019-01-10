@@ -851,7 +851,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 //         if(j>1 && j<=3)      histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
 //         else if(j>3 && j<=6) histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
 //         else if(j>7 )        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
-        histoDummyWeightEachROnflySecSubCock->GetYaxis()->SetRangeUser(0.82,1.35);
+        histoDummyWeightEachROnflySecSubCock->GetYaxis()->SetRangeUser(0.82,1.5);
 
         histoDummyWeightEachROnflySecSubCock->DrawCopy();
         DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);
@@ -914,7 +914,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 //         if(j>1 && j<=3)      histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.3);
 //         else if(j>3 && j<=6) histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.2);
 //         else if(j>7 )       histoDummyWeightEachROffline->GetYaxis()->SetRangeUser(0.9,1.1);
-        histoDummyWeightEachROfflineSecSubCock->GetYaxis()->SetRangeUser(0.82,1.35);
+        histoDummyWeightEachROfflineSecSubCock->GetYaxis()->SetRangeUser(0.82,1.5);
 
         histoDummyWeightEachROfflineSecSubCock->DrawCopy();
         DrawGammaLines(0.,1.,1., 1.,1.,kGray,1);

@@ -155,10 +155,12 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: TopDirCocktail not found!" << endl;
         return;
     }
+    cout<< __LINE__<< endl;
     TList* histoListCocktail                                    = NULL;
     if (fAnalyzedMeson.CompareTo("Pi0") == 0) {
         cout << "searching for " << Form("HadronicCocktailMC_pi0_%s", rapidityAndeta.Data()) << endl;
         histoListCocktail                                       = (TList*)topDirCocktail->Get(Form("HadronicCocktailMC_pi0_%s", rapidityAndeta.Data()));
+	cout<< __LINE__<< endl;
         if (!histoListCocktail) {
             cout << "ERROR: Folder with rapidity " << rapidityAndeta.Data() << " not contained in cocktail file!" << endl;
             return;
@@ -174,6 +176,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: Meson not specified correctly, returning" << endl;
         return;
     }
+    cout<< __LINE__<< endl;
     TTree* cocktailSettingsTree                                 = (TTree*)histoListCocktail->FindObject("cocktailSettings");
     TList* cocktailSettingsList                                 = NULL;
     if (cocktailSettingsTree) cocktailSettingsList              = (TList*)cocktailSettingsTree->GetUserInfo();
@@ -181,7 +184,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: Cocktail settings not contained in cocktail file!" << endl;
         return;
     }
-
+    cout<< __LINE__<< endl;
     //***************************** read cocktail settings **********************************************************
     histMtScalingFactors                                        = (TH1F*)cocktailSettingsList->FindObject("histoMtScaleFactor");
     // initialize mt scaling factors

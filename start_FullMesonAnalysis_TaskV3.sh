@@ -102,7 +102,7 @@ function ExtractSignalGamma()
 function ExtractSignalGammaV2()
 {
     if [ $ISROOT6 -eq 0 ]; then
-        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\,\"\"\,\"$2\"\)
+	root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\,\"\"\,\"$2\"\)
     else
         root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\($1\,0\,\"\"\,\"$2\"\)
     fi
@@ -258,6 +258,8 @@ if [[ "$ROOTVERSION" == *v6* ]]; then
     ISROOT6=1
     echo "root 6 version detected"
 fi
+
+
 
 if [[ "$1" == *-*gammaOff* ]]; then
     DOGAMMA=0
@@ -941,7 +943,7 @@ do
             fi
         elif [ $ENERGY = "8TeV" ]; then
             GiveBinning8TeV
-        elif [ $ENERGY = "13TeV" ] || [ $ENERGY = "13TeVLowB" ]; then
+        elif [ $ENERGY = "13TeV" ] || [ $ENERGY = "13TeVLowB" ]|| [ $ENERGY = "13TeVRBins" ]; then
             GiveBinning13TeV
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption

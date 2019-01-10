@@ -106,7 +106,7 @@ if [ $FINDERTYPE -eq 2 ]; then
     echo "  "
     echo "Running systematic evaluation"
 
-    root -l -b -x -q TaskV1/WeightStudiesOverview.C\+\(\"weightStudies.log\"\,\"pdf\"\,\"$ENERGY\"\,\"PythiaPhojetMultWeights$ENERGY\",4,0,0,\"kFALSE\"\)  
+    root -l -b -x -q TaskV1/WeightStudiesOverview.C\+\(\"weightStudies.log\"\,\"pdf\"\,\"$ENERGY\"\,\"PythiaPhojetMultWeightsPtWeights$ENERGY\",4,0,0,\"kFALSE\"\)  
 fi
 
 

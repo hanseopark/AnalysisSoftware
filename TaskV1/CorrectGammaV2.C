@@ -45,6 +45,8 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 #ifdef __CLING__
 // include something for ROOT6 here
+R__ADD_INCLUDE_PATH($ALICE_ROOT)
+R__ADD_INCLUDE_PATH($ROOUNFOLD_ROOT)
 #else
 #include "../RooUnfold/src/RooUnfold.h"
 #include "../RooUnfold/src/RooUnfoldResponse.h"
