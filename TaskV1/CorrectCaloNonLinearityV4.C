@@ -875,7 +875,7 @@ void CorrectCaloNonLinearityV4(
     histDataResultsVsPDG->Fit(fitMassDataVsPDGConst,"QRME0");
     cout << WriteParameterToFile(fitMassDataVsPDGConst) << endl;
 
-    FittingFunction="[0]-TMath::Exp(-[1]*x+[2])";
+    FittingFunction="[0]-[3]*TMath::Exp(-[1]*x+[2])";
     if (mode==3) {
         rangeExponent[0]   = standardrangeExponent0;
         rangeExponent[1]   = standardrangeExponent1;
@@ -891,9 +891,10 @@ void CorrectCaloNonLinearityV4(
     } else {
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
     }
+    fitMassDataVsPDG2->FixParameter(3,1.);
 
     histDataResultsVsPDG->Fit(fitMassDataVsPDG2,"QRME0");
-    cout << WriteParameterToFile(fitMassDataVsPDG2) << endl;
+
     // fitting MC mass positions
     FittingFunction="[0] + [1]*pow(x,[2])";
     if (mode==3) {
@@ -903,6 +904,12 @@ void CorrectCaloNonLinearityV4(
         //rangeMult[1]       = rangeMult1;
         rangeMult[0]       = -rangeMult1;
         rangeMult[1]       = -rangeMult0;
+    }
+    if (mode==5){
+        rangeExponent[0]  = -3.;
+        rangeExponent[1]  = standardrangeExponent1;
+        rangeMult[0]      = -rangeMult1;
+        rangeMult[1]      = -rangeMult0;
     }
     TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
@@ -921,21 +928,36 @@ void CorrectCaloNonLinearityV4(
     histMCResultsVsPDG->Fit(fitMassMCVsPDGConst,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDGConst) << endl;
 
-    FittingFunction="[0]-TMath::Exp(-[1]*x+[2])";
+    FittingFunction="[0]-[3]*TMath::Exp(-[1]*x+[2])";
     if (mode==3) {
         rangeExponent[0]   = standardrangeExponent0;
         rangeExponent[1]   = standardrangeExponent1;
         rangeMult[0]       = rangeMult0;
         rangeMult[1]       = rangeMult1;
     }
+    if (mode==5){
+        rangeExponent[0]  = -10.;
+        rangeExponent[1]  = 10.;
+        rangeMult[0]      = -10.;
+        rangeMult[1]      = 10.;
+    }
     TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
-    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
+    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
-    else if (mode == 2 || mode == 4 || mode == 12)
+    } else if (mode == 2 || mode == 4 || mode == 12){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
-    else
+    } else if (mode == 5){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+        fitMassMCVsPDG2->SetParLimits(1, -10., 10.);
+        fitMassMCVsPDG2->SetParLimits(2, -10., 10.);
+    } else {
+        fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+        cout << fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0) << " " << fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0) << endl;
+    }
+    fitMassMCVsPDG2->FixParameter(3,1.);
+    if (mode == 5) fitMassMCVsPDG2->FixParameter(3,-1.);
+
 
     histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG2) << endl;
@@ -1039,22 +1061,26 @@ void CorrectCaloNonLinearityV4(
 
 
     // calculating fit functions with exponential like mass functions
-    TF1* fFitExpComb = new TF1("fFitExpComb", "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    TF1* fFitExpComb = new TF1("fFitExpComb", "([0]-[6]*TMath::Exp(-[1]*x+[2]))/([3]-[7]*TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fFitExpComb->SetParameter(0, fitMassMCVsPDG2->GetParameter(0) );
     fFitExpComb->SetParameter(1, fitMassMCVsPDG2->GetParameter(1) );
     fFitExpComb->SetParameter(2, fitMassMCVsPDG2->GetParameter(2) );
+    fFitExpComb->SetParameter(6, fitMassMCVsPDG2->GetParameter(3) );
     fFitExpComb->SetParameter(3, fitMassDataVsPDG2->GetParameter(0) );
     fFitExpComb->SetParameter(4, fitMassDataVsPDG2->GetParameter(1) );
     fFitExpComb->SetParameter(5, fitMassDataVsPDG2->GetParameter(2) );
+    fFitExpComb->SetParameter(7, fitMassDataVsPDG2->GetParameter(3) );
 
     // calculating fit functions with exponential like mass functions
-    TF1* fFitExpCombInverted = new TF1("fFitExpCombInverted", "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    TF1* fFitExpCombInverted = new TF1("fFitExpCombInverted", "([0]-[6]*TMath::Exp(-[1]*x+[2]))/([3]-[7]*TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fFitExpCombInverted->SetParameter(3, fitMassMCVsPDG2->GetParameter(0) );
     fFitExpCombInverted->SetParameter(4, fitMassMCVsPDG2->GetParameter(1) );
     fFitExpCombInverted->SetParameter(5, fitMassMCVsPDG2->GetParameter(2) );
+    fFitExpCombInverted->SetParameter(7, fitMassMCVsPDG2->GetParameter(3) );
     fFitExpCombInverted->SetParameter(0, fitMassDataVsPDG2->GetParameter(0) );
     fFitExpCombInverted->SetParameter(1, fitMassDataVsPDG2->GetParameter(1) );
     fFitExpCombInverted->SetParameter(2, fitMassDataVsPDG2->GetParameter(2) );
+    fFitExpCombInverted->SetParameter(6, fitMassDataVsPDG2->GetParameter(3) );
 
     fstream fLog;
     fLog.open(Form("%s/CorrectCaloNonLinearity_%s.log",outputDirSampleSummary.Data(),select.Data()), ios::out);
@@ -1082,7 +1108,7 @@ void CorrectCaloNonLinearityV4(
     fLog << "-----------------------------------" << endl;
     fLog << "Ind. Mass fitted with exponentials" << endl;
     fLog << "-----------------------------------" << endl;
-    fLog << "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" << endl;
+    fLog << "([0]-[3]*TMath::Exp(-[1]*x+[2]))/([4]-[7]*TMath::Exp(-[5]*x+[6]))" << endl;
     fLog << "AliCaloPhotonCuts::FunctionNL_DExp" << endl;
     fLog << WriteParameterToFile(fFitExpComb) << endl;
     fLog << WriteParameterToFile(fFitExpCombInverted) << endl;
