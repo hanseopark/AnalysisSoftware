@@ -971,6 +971,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
           } else if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 ){
             fMesonFitRange[0]       = 0.06;
             fMesonFitRange[1]       = 0.30;
+          } else if( fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0 ){
+            fMesonFitRange[0]       = 0.075;
+            fMesonFitRange[1]       = 0.25;
           }
         } else if (mode == 5){                                      // PHOS
             if (fEnergyFlag.CompareTo("XeXe_5.44TeV") == 0 ){

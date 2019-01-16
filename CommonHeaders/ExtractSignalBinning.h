@@ -634,7 +634,7 @@
                     if (directPhotonRunningOption.CompareTo("directPhoton") == 0)
                         return 13;
                     else
-                        return 25;
+                        return 16;
                 } else if (mode == 5){
                     return 45;
                 } else if (mode == 6){
@@ -700,7 +700,7 @@
                 } else if (mode == 1){
                     scaleFac    = 20;
                     return 3;
-                } else if (mode == 2 || mode == 13){
+                } else if (mode == 2 || mode == 3 || mode == 13){
                     scaleFac    = 5;
                     return 20;
                 } else if (mode == 4 || mode == 12 ){
@@ -1088,7 +1088,7 @@
                 } else
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
-                if (mode == 2 || mode == 13){
+                if (mode == 2 || mode == 3 || mode == 13){
                     return 15;
                 }else if (mode == 4 || mode == 12 ){
                     return 16;
@@ -1384,7 +1384,7 @@
                 } else if ( mode == 3 ){
                     startPtBin     = 5;
                 } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 3;
+                    startPtBin     = 7;
                 } else if ( mode == 5){
                     startPtBin     = 10;
                 } else if ( mode == 10){
@@ -1432,9 +1432,12 @@
                 } else if ( mode == 1 ){
                     startPtBin      = 2;
                 } else if ( mode == 2 || mode == 13 ){
-                    startPtBin      = 5;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0 || centrality.CompareTo("10-20%") == 0){
-                      startPtBin = 6;
+                    startPtBin      = 4;
+                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
+                      startPtBin = 10;
+                    }
+                    if (centrality.CompareTo("10-20%") == 0){
+                      startPtBin = 10;
                     }
                 } else if ( mode == 3 ){
                     startPtBin      = 3;
@@ -1445,9 +1448,11 @@
                         startPtBin      = 6;
                     else
                         startPtBin      = 6;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0
-                        || centrality.CompareTo("10-20%") == 0){
-                      startPtBin = 6;
+                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
+                      startPtBin = 14;
+                    }
+                    if (centrality.CompareTo("10-20%") == 0){
+                      startPtBin = 9;
                     }
                 } else if ( mode == 5){
                     startPtBin      = 4;
@@ -1540,7 +1545,7 @@
                       startPtBin = 1;
                   } else if ( mode == 4 ){
                     if (specialTrigg == 2) startPtBin = 16;
-                    else startPtBin = 4;
+                    else startPtBin = 2;
                   } else if ( mode == 13 ){
                       startPtBin = 1;
                   } else if ( mode == 12 ){
@@ -1686,7 +1691,7 @@
                     else
                         startPtBin     = 3;
                 } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 2;
+                    startPtBin     = 7;
                 } else if ( mode == 5){
                     startPtBin     = 4;
                 } else if (mode == 20){
@@ -2354,10 +2359,10 @@
                             binning[i] = fBinsPi0pPb5TeVPCMPHOSR2Pt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins    = 73;
-                    binningMax  = 74;
+                    maxNBins    = 33;
+                    binningMax  = 33;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                      binning[i] = fBinsPi0pPb5TeVEMCR2Pt[i];
+                      binning[i] = fBinsPi0pPb5TeVEMCR2CentPt[i];
                     }
                 } else if ( mode == 5 ) {
                     if ( !centrality.CompareTo("0-20%") ) {
@@ -2467,7 +2472,7 @@
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
-                } else if ( mode == 2 || mode == 13 ) {
+                } else if ( mode == 2 || mode == 3 || mode == 13 ) {
                     maxNBins = 33;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
@@ -3051,10 +3056,10 @@
                             binning[i] = fBinsEtapPb5TeVPCMPHOSR2Pt[i];
                     }
                 } else if (mode == 4 || mode == 12 ){ // EMC, DMC
-                    maxNBins    = 28;
-                    binningMax  = 29;
+                    maxNBins    = 21;
+                    binningMax  = 21;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsEtapPb5TeVEMCR2Pt[i];
+                        binning[i] = fBinsEtapPb5TeVEMCR2CentPt[i];
                     }
                 } else if (mode == 5 ){ // PHOS
                     if ( !centrality.CompareTo("0-20%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") ) {
@@ -4731,7 +4736,7 @@
                             fBinsPt[i]  = fBinsPi0PbPb5TeVPtDCA[i];
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPtRebin[i];
                         }else{
-                          if (modi == 2){
+                          if (modi == 2 || modi == 3){
                             fBinsPt[i]  = fBinsPi0PbPb5TeVPCMEMCPt[i];
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPCMEMCPtRebin[i];
                           }else if (modi == 4){
@@ -5441,10 +5446,8 @@
                             fNRebin[i]  = fBinsEtapPb5TeVEMCPtRebin[i];
                         else if (modi == 4 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0))                  // cent dependent eta for EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVEMCCentPtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )                           // MB eta for EMC run 2
-                            fNRebin[i]  = fBinsEtapPb5TeVEMCR2PtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && centrality.CompareTo("0-100%"))                             // cent dependent eta for EMC run 2
-                            fNRebin[i]  = fBinsEtapPb5TeVCentEMCR2PtRebin[i];
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0   )                           // MB eta for EMC run 2
+                            fNRebin[i]  = fBinsEtapPb5TeVEMCR2CentPtRebin[i];
                         else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%") )                                // MB eta for PHOS run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPHOSPtRebin[i];
                         else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                    // cent dependent eta for PHOS run 1
@@ -5748,7 +5751,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
                 fStartPtBin         = 1;
-                if( modi == 2 ){
+                if( modi == 2  || modi == 3){
                   fStartPtBin = 5;
                 } else if( modi == 4 ){
                   fStartPtBin = 4;
@@ -5760,7 +5763,7 @@
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                    if(modi == 2){
+                    if(modi == 2 || modi == 3){
                         fBinsPt[i]         = fBinsEtaPbPb5TeVPCMEMCPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5TeVPCMEMCPtRebin[i];
                     }else if(modi == 4){

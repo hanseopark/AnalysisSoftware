@@ -4180,6 +4180,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
             if(histoMappingSignalInvMassPtBinSingle->GetBinContent(i)>mesonAmplitude) mesonAmplitude = histoMappingSignalInvMassPtBinSingle->GetBinContent(i);
         }
     }
+
     Double_t mesonAmplitudeMin  = mesonAmplitude*10./100.;
     Double_t mesonAmplitudeMax  = mesonAmplitude*400./100.;
 
@@ -4197,13 +4198,26 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 }
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 13 || fMode == 3) {
+            if (fMode == 2 || fMode == 13) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
+                fMesonLambdaTail            = 0.015;
+                fMesonLambdaTailRange[0]    = 0.015;
+                fMesonLambdaTailRange[1]    = 0.015;
+            }
+            if (fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+                fMesonLambdaTail            = 0.007;
+                fMesonLambdaTailRange[0]    = 0.007;
+                fMesonLambdaTailRange[1]    = 0.007;
             }
             if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*800./100.;
+                fMesonLambdaTail            = 0.015;
+                fMesonLambdaTailRange[0]    = 0.015;
+                fMesonLambdaTailRange[1]    = 0.015;
             }
 
         } else {
@@ -4410,11 +4424,21 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
             } else if (fMode == 4 || fMode == 12 || fMode == 5){    // EMC, DMC, PHOS
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
                 mesonAmplitudeMax = mesonAmplitude*300./100.;
+                fMesonLambdaTail            = 0.012;
+                fMesonLambdaTailRange[0]    = 0.012;
+                fMesonLambdaTailRange[1]    = 0.012;
             } else {                                                // defaults
                 mesonAmplitudeMin = mesonAmplitude*50./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
         }
+    }
+    if( ((TString)histoMappingSignalInvMassPtBinSingle->GetName()).Contains("Left") && fPrefix.CompareTo("Eta") == 0 ){
+      Double_t mesonAmplitudeMinPlot     = histoMappingSignalInvMassPtBinSingle->GetMinimum();
+      if(mesonAmplitudeMinPlot < 0){
+        mesonAmplitudeMin = 0.;
+        mesonAmplitudeMax = abs( mesonAmplitude - mesonAmplitudeMinPlot) ;
+      }
     }
 
     //--------------------------------------------------------------------------------------

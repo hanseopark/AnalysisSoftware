@@ -50,7 +50,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                                             TString additionalNameOutput    = "",
                                             TString suffix                  = "eps",
                                             Int_t mode                      = 4,
-                                            Bool_t useMBSyst                = kTRUE
+                                            Bool_t useMBSyst                = kFALSE
                                         ){
 
  // ***************************************************************************************************
@@ -115,8 +115,8 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     Bool_t bsmooth[12]                      = { 0, 0, 0, 0, 0,
                                                 0, 0, 0, 0, 0,
                                                 0, 0 };
-    Bool_t bsmoothMBPi0[12]                 = { 0, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[12]                 = { 0, 0, 0, 1, 1,
+                                                0, 0, 1, 0, 1,
                                                 1, 1 };
     Bool_t bsmoothMBEta[12]                 = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
@@ -208,7 +208,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
-        if (i == 0 || i == 9 || i==10 || (i!=11 && useMBSyst)){// || i == 8 || i == 9 || i == 10special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 3 || i == 4 || i == 9 || i==10 || (i!=11 && useMBSyst)){// || i == 8 || i == 9 || i == 10special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
