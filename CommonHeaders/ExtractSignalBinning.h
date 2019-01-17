@@ -2043,12 +2043,12 @@
                             case -1: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigCombPt, binning, 103 ); break;
                             case 0:
 			      if(energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 14 );
-			      else                         maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 83 );
+                  else                         maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
 			      break;
                            case 4:
                             case 5:
                                 if( energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 14 );
-                                else                          maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 83 );
+                                else                          maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
                                 break;
                             case 1: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigEMC7Pt, binning, 64 ); break;
                             case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigEG1Pt, binning, 103 ); break;
