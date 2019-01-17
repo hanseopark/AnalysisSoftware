@@ -859,8 +859,10 @@ void CorrectCaloNonLinearityV4(
         rangeMult[1]       = 0.3;
     }
     TF1* fitMassDataVsPDG       = new TF1("fitMassDataVsPDG", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
-    fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
-    fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
+    if (mode != 5){
+        fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
+        fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
+    }
     histDataResultsVsPDG->Fit(fitMassDataVsPDG,"QRME0");
     cout << WriteParameterToFile(fitMassDataVsPDG) << endl;
 
@@ -892,6 +894,7 @@ void CorrectCaloNonLinearityV4(
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
     }
     fitMassDataVsPDG2->FixParameter(3,1.);
+    if (mode == 5) fitMassDataVsPDG2->FixParameter(3,-1.);
 
     histDataResultsVsPDG->Fit(fitMassDataVsPDG2,"QRME0");
 
@@ -912,8 +915,10 @@ void CorrectCaloNonLinearityV4(
         rangeMult[1]      = -rangeMult0;
     }
     TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
-    fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
-    fitMassMCVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
+    if (mode != 5){
+        fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
+        fitMassMCVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
+    }
     histMCResultsVsPDG->Fit(fitMassMCVsPDG,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG) << endl;
 
@@ -947,16 +952,15 @@ void CorrectCaloNonLinearityV4(
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
     } else if (mode == 2 || mode == 4 || mode == 12){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
-    } else if (mode == 5){
-        fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
-        fitMassMCVsPDG2->SetParLimits(1, -10., 10.);
-        fitMassMCVsPDG2->SetParLimits(2, -10., 10.);
+    // } else if (mode == 5){
+    //     fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+    //     fitMassMCVsPDG2->SetParLimits(1, -10., 10.);
+    //     fitMassMCVsPDG2->SetParLimits(2, -10., 10.);
     } else {
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
         cout << fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0) << " " << fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0) << endl;
     }
     fitMassMCVsPDG2->FixParameter(3,1.);
-    if (mode == 5) fitMassMCVsPDG2->FixParameter(3,-1.);
 
 
     histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
@@ -1088,8 +1092,8 @@ void CorrectCaloNonLinearityV4(
     fLog << "-----------------------------------" << endl;
     fLog << "Exponential function fitted" << endl;
     fLog << "-----------------------------------" << endl;
-    fLog << "FitDataMC results ([0]+exp([1]+([2]*x)), AliCaloPhotonCuts::FunctionNL_kSDM, use with /=):" << endl;
-    for(Int_t i=0;i<=2;i++) fLog << "Par " << i << ": " << fFitMassPos->GetParameter(i) << " +- " << fFitMassPos->GetParError(i) << endl;
+    fLog << "FitDataMC results ([0]+[3]*exp([1]+([2]*x)), AliCaloPhotonCuts::FunctionNL_kSDM, use with /=):" << endl;
+    for(Int_t i=0;i<=3;i++) fLog << "Par " << i << ": " << fFitMassPos->GetParameter(i) << " +- " << fFitMassPos->GetParError(i) << endl;
     fLog << "-----------------------------------" << endl;
     fLog << "-----------------------------------" << endl;
     fLog << WriteParameterToFile(fFitConst) << endl;
@@ -1281,7 +1285,7 @@ TF1* FitBckg(TH1* fHisto, Double_t minFit, Double_t maxFit){
 TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection, Double_t constPar, Int_t mode){
 
     cout << "running standard fit from " <<  minFit << "\t"<<  maxFit << endl;
-    TF1* fFitReco = new TF1("DataMC", "[0]+exp([1]+([2]*x))" ,minFit,maxFit);
+    TF1* fFitReco = new TF1("DataMC", "[0]+[3]*exp([1]+([2]*x))" ,minFit,maxFit);
 
     fFitReco->SetParameter(0,1.);
 
@@ -1293,6 +1297,12 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
       fFitReco->SetParameter(1,-1.);
     }
 
+    if (mode == 5){
+      fFitReco->FixParameter(3,-1.);
+    } else {
+      fFitReco->FixParameter(3, 1.);
+    }
+
     if(constPar!=-1 && (mode != 3 || mode != 5 || mode != 13)) fFitReco->FixParameter(0,constPar);
     fHisto->Fit(fFitReco,"QRME0");
 
@@ -1302,7 +1312,7 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
 
     if(TString(gMinuit->fCstatu.Data()).Contains("CONVERGED") == 1 || TString(gMinuit->fCstatu.Data()).Contains("SUCCESSFUL") == 1 || TString(gMinuit->fCstatu.Data()).Contains("PROBLEMS") == 1){
         cout << "Parameters for DataMC: " << endl;
-        for(Int_t i=0;i<=2;i++) cout << "Par " << i << ": " << fFitReco->GetParameter(i) << " +- " << fFitReco->GetParError(i) << endl;
+        for(Int_t i=0;i<=3;i++) cout << "Par " << i << ": " << fFitReco->GetParameter(i) << " +- " << fFitReco->GetParError(i) << endl;
     } else {
         cout << "DataMC fitting failed with status " << gMinuit->fCstatu.Data() <<endl << endl;
     }
