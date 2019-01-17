@@ -5912,7 +5912,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               fitEtaRelMassDiff->SetParameter(0,0.);
               graphMassRelDifferenceEtaDatavsMC->Fit(fitEtaRelMassDiff,"QNRMEX0+","",0.,maxPtGlobalEta);
               fitEtaRelMassDiff->SetLineColor(kRed);
-              fitEtaRelMassDiff->SetLineWidth(0.5);
+              fitEtaRelMassDiff->SetLineWidth(1);//Argument is Short_t [Signed Short integer 2 bytes] => changed 0.5 to 1
               fitEtaRelMassDiff->Draw("same");
 
               fileFitsOutput << "average rel mass diff: " << fitEtaRelMassDiff->GetParameter(0) << "+-"<< fitEtaRelMassDiff->GetParError(0) << endl;
