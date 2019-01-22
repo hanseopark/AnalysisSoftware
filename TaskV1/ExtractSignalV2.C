@@ -296,7 +296,7 @@ void ExtractSignalV2(
         fIsMC               = 0;
         fPrefix2            = "data";
     }
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
     //***************************** Initialization of variables according to meson type ******************************
     if(meson.CompareTo("Pi0") == 0){
@@ -322,7 +322,7 @@ void ExtractSignalV2(
     cout << "Integration window narrow: "<< fMesonIntDeltaRangeNarrow[0] << "\t" << fMesonIntDeltaRangeNarrow[1] << endl;
     cout << "Integration window wide: "<< fMesonIntDeltaRangeWide[0] << "\t" << fMesonIntDeltaRangeWide[1] << endl;
 
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
 
     //************************* Start of Main routine ***************************************************************
@@ -459,7 +459,7 @@ void ExtractSignalV2(
 
     if(UseTHnSparse) ProduceBckProperWeighting(BackgroundContainer,MotherContainer,UseTHnSparse);
     else ProduceBckProperWeighting(ESDContainer,ESDContainer,UseTHnSparse);
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
     // enter pure simulation routines
     if(fIsMC){
@@ -489,7 +489,7 @@ void ExtractSignalV2(
                 fHistoMCSecPi0WAccSourcePt->Sumw2();
                 fNewMCOutput                     =  kTRUE;
             }
-            cout << "line " << __LINE__ << endl;
+            //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         }
 
         // Loading histograms for Eta
@@ -535,7 +535,7 @@ void ExtractSignalV2(
             if (fEnableDCCluster){
                 fHistoTrue2DGammaDCClusPt->Sumw2();
                 fHistoTrueGammaDCClusPt         = (TH1D*)fHistoTrue2DGammaDCClusPt->ProjectionX("TrueClusGamma_Pt",0,-1,"e");
-                cout << "line " << __LINE__ << endl;
+                //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
                 cout << "Cluster DC found " << endl;
                 fHistoTrueGammaClusMultipleCount    = (TH1F*)TrueConversionContainer->FindObject(ObjectNameGammaClusMultipleCount.Data());
                 fHistoTrueGammaClusPt               = (TH1F*)TrueConversionContainer->FindObject("TrueClusGamma_Pt");
@@ -561,7 +561,7 @@ void ExtractSignalV2(
         FillMassMCTrueReweightedMesonHistosArray(fHistoTrueMesonInvMassVSPtReweighted);
         FillMassMCTrueUnweightedMesonHistosArray(fHistoTrueMesonInvMassVSPtWOWeights);
 
-        cout << "line " << __LINE__ << endl;
+        //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         cout << "Mode: " << fMode << endl;
 
         if (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5){
@@ -644,16 +644,16 @@ void ExtractSignalV2(
 
         }
 
-        cout << "line " << __LINE__ << endl;
+        //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         fHistoTrueMesonDCInvMassVSPt                                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameDCMesonInvMassPt.Data());
         if (fHistoTrueMesonDCInvMassVSPt!= NULL) fEnableDCMeson = kTRUE;
-        cout << "line " << __LINE__ << endl;
+        //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         if (fEnableDCMeson){
             FillMassMCTrueMesonDCHistosArray(fHistoTrueMesonDCInvMassVSPt);
             fHistoTrueMesonMultipleCount = (TH1F*) TrueConversionContainer->FindObject(ObjectNameMesonMultipleCount.Data());
         }
 
-        cout << "line " << __LINE__ << endl;
+        //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     }
 
     // calculate meson mass from pdg code
@@ -669,7 +669,7 @@ void ExtractSignalV2(
 
     // Function to Project the 2D histos InvariantMass VS Pt into Invariant Mass spectrum
     FillMassHistosArray(fGammaGammaInvMassVSPt);
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
     ProcessEM( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
     fMesonFullPtBackNorm                        = fBckNorm;
@@ -974,7 +974,7 @@ void ExtractSignalV2(
             }
 
             fFitTrueSignalInvMassPtReweightedBin[iPt]   = 0x00;
-            cout << "line " << __LINE__ << endl;
+            //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             if(fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]){
                 cout << "Using exp fit"<<endl;
                 fFileErrLog << "Using exp fit"<<endl;
@@ -1018,7 +1018,7 @@ void ExtractSignalV2(
             }
 
             fFitTrueSignalInvMassPtUnweightedBin[iPt]=0x00;
-            cout << "line " << __LINE__ << endl;
+            //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             if(fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]){
                 cout << "Using exp fit"<<endl;
                 cout << "unweighted" << endl;
@@ -1751,7 +1751,7 @@ void ExtractSignalV2(
                                                     fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode);
 
         }
-        cout << "line" << __LINE__ << endl;
+        //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         if (fAdvancedMesonQA && (fMode == 4 || fMode == 12 || fMode == 5)){
             nameMesonTrue       = Form("%s_TrueMesonMixedCaloConvPhoton%s", plotPrefix.Data(), plotSuffix.Data());
             nameCanvasTrue      = "TrueMesonMixedCaloConvPhotonCanvasFitted";
@@ -2370,13 +2370,13 @@ if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
         SaveCorrectionHistos(fCutSelection, fPrefix2);
     }
     SaveHistos(fIsMC, fCutSelection, fPrefix2, UseTHnSparse);
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileErrLog.close();
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileDataLog.close();
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     Delete();
-    cout << "line " << __LINE__ << endl;
+    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 }
 
 //****************************************************************************
