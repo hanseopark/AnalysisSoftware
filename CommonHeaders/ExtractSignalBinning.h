@@ -5382,11 +5382,11 @@
                             break;
                         case 4:
                             switch(specialTrigg) {
-                                case 0:
-                                case 4:
-                                case 5: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
+                                case 0: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtRebin, fNRebin); break;
                                 case 3: CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtRebin, fNRebin); break;
+                                case 4: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
+                                case 5: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
                             }
                             break;
                         case 5:  CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin,     fNRebin); break;
