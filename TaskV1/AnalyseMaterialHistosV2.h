@@ -155,6 +155,7 @@ Double_t  arrayBinsPtMin[nBinsPtMin+1];
 TH1F * histoWeightsEachRPtMin[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 TH1F * histoWeightsEachRPtMinSecSub[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1F * histoWeightsEachRPtMinSecSubUsingCocktailNorm[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 Double_t nConvInRangeFromPtMinSecSubtractedData[nBinsR][nBinsPtFine];
 Double_t nConvInRangeFromPtMinSecSubtractedDataRelErr[nBinsR][nBinsPtFine];

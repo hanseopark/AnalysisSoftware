@@ -140,12 +140,12 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         minPtForFitsEta=0.4;
 
         if (useSameBinningPi0Eta.CompareTo("")==0){
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_Dummy_pp13TeV.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_Dummy_pp13TeVRBins.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeV.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeVRBins.dat";
             minPtForFits=0.4;
         }
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat";
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeVRBins.dat";
         cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
 
     } else if( optionEnergy.CompareTo("5TeV") == 0 ) {
