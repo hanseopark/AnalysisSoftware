@@ -858,7 +858,6 @@ void AnalyseDCADist(    TString meson           ="",
 
     cout << endl << endl << "all pT -- Category 1: \t" << (Double_t)mesonsCat[0]/(Double_t)mesonsAllCat*100 << "\t Category 2: \t" <<  (Double_t)mesonsCat[1]/(Double_t)mesonsAllCat*100 << "\t Category 3: \t" <<  (Double_t)mesonsCat[2]/(Double_t)mesonsAllCat*100 << "\t Category 4: \t" <<  (Double_t)mesonsCat[3]/(Double_t)mesonsAllCat*100<< "\t Category 5: \t" <<  (Double_t)mesonsCat[4]/(Double_t)mesonsAllCat*100 << "\t Category 6: \t" <<  (Double_t)mesonsCat[5]/(Double_t)mesonsAllCat*100<< endl << endl;
 
-
     //############################
     //######### PLOTS ############
     //############################
@@ -876,6 +875,7 @@ void AnalyseDCADist(    TString meson           ="",
                                         "canvas_cat5", "pad_cat5",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 5);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 6, suffix.Data()),
                                         "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 6);
+
     PlotDCADistPtBinWithFitAndEstimate(Form("%s/%s_%s_DCAProjections_AllCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
                                     "canvas_Allcat", "pad_Allcat",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate);
     PlotDCADistPtBinWithFitAndEstimateGoodCat(Form("%s/%s_%s_DCAProjections_GoodCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
@@ -1008,7 +1008,9 @@ void AnalyseDCADist(    TString meson           ="",
 
 	Int_t nCatFit=3;
 	TString rBin = fGammaCutSelection(2,1);
-	if((rBin.CompareTo("c") ==0) && (kMC==1)){
+	if((rBin.CompareTo("c") ==0) ){
+	  //&& (kMC==1)
+
  	  nCatFit=2;
  	}
 
@@ -1350,6 +1352,7 @@ void AnalyseDCADist(    TString meson           ="",
             if(fHistDCAZUnderMeson_Visual_CatIter_Data && fHistDCAZBG_Visual_CatIter_Data){
               fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data =  (TH1D*)fHistDCAZUnderMeson_Visual_CatIter_Data->Clone("fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data");
               fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Add(fHistDCAZBG_Visual_CatIter_Data,-1);
+              fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Scale(fHistDCAZUnderMeson_Visual_CatIter_Data->GetMaximum()/fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->GetMaximum());
               DrawGammaSetMarker(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data, markerstylesPlot[2], markersizePlot[2], colorDataPlot[2], colorDataPlot[2]);
               fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Draw("p,same,e");
               legendDCACatCompare->AddEntry(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data,"Pileup Subtracted","p");
@@ -1750,7 +1753,6 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
     for(Int_t iPt = fStartBinPtRange; iPt < fNumberPtBins; iPt++){
         Double_t startPt 			= fRangeBinsPt[iPt];
         Double_t endPt                 = fRangeBinsPt[iPt+1];
-
         place = place + 1;                  //give the right place in the page
         if (place == fColumnPlot){
             iPt--;

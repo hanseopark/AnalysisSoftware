@@ -632,7 +632,23 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F* histoPtSumRBinDataSecSubtractedUsingCocktailRebin = (TH1F*)histoPtSumRBinDataSecSubtractedUsingCocktail->Rebin(nBinsPtTwo,"histoPtSumRBinDataSecSubtractedUsingCocktailRebin",arrayPtBinsTwo);
     DivideTH1ByBinWidth(histoPtSumRBinDataSecSubtractedUsingCocktailRebin);
 
+   // Create a pT spectrum after secondary subtraction for R>5cm
+    TH1F* histoPtSumRMCSecSubtractedR5 = (TH1F*)histoPtEachRBinMCSecSubtracted[2]->Clone("histoPtSumRMCSecSubtractedR5");
+    histoPtSumRMCSecSubtractedR5->Sumw2();
+    TH1F* histoPtSumRBinDataSecSubtractedUsingCocktailR5 = (TH1F*)histoPtEachRBinDataSecSubtractedUsingCocktail[2]->Clone("histoPtSumRBinDataSecSubtractedUsingCocktailR5");
+    histoPtSumRBinDataSecSubtractedUsingCocktailR5->Sumw2();
+    for(Int_t j=3; j < nBinsR; j++){
+      histoPtSumRMCSecSubtractedR5->Add(histoPtEachRBinMCSecSubtracted[j]);
+      histoPtSumRBinDataSecSubtractedUsingCocktailR5->Add(histoPtEachRBinDataSecSubtractedUsingCocktail[j]);
+    }
 
+    TH1F* histoPtSumRMCSecSubtractedRebinR5 = (TH1F*) histoPtSumRMCSecSubtractedR5->Rebin(nBinsPtTwo,"histoPtSumRMCSecSubtractedRebinR5",arrayPtBinsTwo);
+    DivideTH1ByBinWidth(histoPtSumRMCSecSubtractedRebinR5);
+
+    TH1F* histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5 = (TH1F*)histoPtSumRBinDataSecSubtractedUsingCocktailR5->Rebin(nBinsPtTwo,"histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5",arrayPtBinsTwo);
+    DivideTH1ByBinWidth(histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5);
+
+    cout << __LINE__ << endl;
 
     for(Int_t j=0; j < nBinsR; j++){
       for(Int_t k=0; k < nBinsPtFine; k++){
@@ -679,15 +695,18 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     //   }
     //   cout<< endl;
     // }
-
+    cout << __LINE__ << endl;
     for(Int_t j=0; j < nBinsR; j++){
       histoWeightsEachRPtMinSecSub[j] = new TH1F(Form("histoWeightsEachRPtMinSecSub%i",j), Form("histoWeightsEachRPtMinSecSub%i",j), nBinsPtMin,  arrayBinsPtMin);
       histoWeightsEachRPtMinSecSubUsingCocktail[j] = new TH1F(Form("histoWeightsEachRPtMinSecSubUsingCocktail%i",j), Form("histoWeightsEachRPtMinSecSubUsingCocktail%i",j), nBinsPtMin,  arrayBinsPtMin);
+      histoWeightsEachRPtMinSecSubUsingCocktailNorm[j] = new TH1F(Form("histoWeightsEachRPtMinSecSubUsingCocktailNorm%i",j), Form("histoWeightsEachRPtMinSecSubUsingCocktailNorm%i",j), nBinsPtMin,  arrayBinsPtMin);
       for(Int_t k=0; k < nBinsPtMin; k++){
 	histoWeightsEachRPtMinSecSub[j]->SetBinContent(k+1,weightInRangeFromPtMinSecSubtracted[j][k]);
 	histoWeightsEachRPtMinSecSub[j]->SetBinError(k+1,weightInRangeFromPtMinSecSubtractedRelErr[j][k]*weightInRangeFromPtMinSecSubtracted[j][k]);
 	histoWeightsEachRPtMinSecSubUsingCocktail[j]->SetBinContent(k+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[j][k]);
 	histoWeightsEachRPtMinSecSubUsingCocktail[j]->SetBinError(k+1,weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[j][k]*weightInRangeFromPtMinSecSubtractedUsingCocktail[j][k]);
+	histoWeightsEachRPtMinSecSubUsingCocktailNorm[j]->SetBinContent(k+1,weightInRangeFromPtMinSecSubtractedUsingCocktail[j][k]/weightInRangeFromPtMinSecSubtractedUsingCocktail[j][4]);
+	histoWeightsEachRPtMinSecSubUsingCocktailNorm[j]->SetBinError(k+1,weightInRangeFromPtMinSecSubtractedUsingCocktailRelErr[j][k]*weightInRangeFromPtMinSecSubtractedUsingCocktail[j][k]/weightInRangeFromPtMinSecSubtractedUsingCocktail[j][4]);
 
       }
     }
@@ -1055,6 +1074,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoPtSumRMCSecSubtractedRebin,normFactorReconstMC);
     GammaScalingHistogramm(histoPtSumRBinDataSecSubtractedUsingCocktailRebin,normFactorReconstData);
 
+    GammaScalingHistogramm(histoPtSumRBinDataSecSubtractedUsingCocktailR5,normFactorReconstData);
+    GammaScalingHistogramm(histoPtSumRMCSecSubtractedRebinR5,normFactorReconstMC);
+    GammaScalingHistogramm(histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5,normFactorReconstData);
+
+
     GammaScalingHistogramm(histoRPhiData,normFactorReconstData);
     GammaScalingHistogramm(histoRPhiMC,normFactorReconstMC);
     GammaScalingHistogramm(histoRPhiTrueMC,normFactorReconstMC);
@@ -1078,6 +1102,10 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F * histoPtDataToMCSecSubtractedRebin = (TH1F*)histoPtSumRBinDataSecSubtractedUsingCocktailRebin->Clone("histoPtDataToMCSecSubtractedRebin");
     histoPtDataToMCSecSubtractedRebin->Sumw2();
     histoPtDataToMCSecSubtractedRebin->Divide(histoPtSumRBinDataSecSubtractedUsingCocktailRebin,histoPtSumRMCSecSubtractedRebin);
+
+    TH1F * histoPtDataToMCSecSubtractedRebinR5 = (TH1F*)histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5->Clone("histoPtDataToMCSecSubtractedRebinR5");
+    histoPtDataToMCSecSubtractedRebinR5->Sumw2();
+    histoPtDataToMCSecSubtractedRebinR5->Divide(histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5,histoPtSumRMCSecSubtractedRebinR5);
 
 
 
@@ -2491,6 +2519,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         fProfileContainingMaterialBudgetWeightsPtBin3->Write();
         histoDataMCRatioRinPtBinScaledToGasPtBin3->Write();
         histoDataMCRatioRScaledToGasSecSubPtBin3->Write();
+        histoDataMCRatioRScaledToGasSecSubPtBin1->Write();
+        histoDataMCRatioRScaledToGasSecSub->Write();
         histoRData->Write("Data");
 
         outFile.Close();
@@ -2543,6 +2573,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     }
     for(Int_t j=0; j < nBinsR; j++){
       histoWeightsEachRPtMinSecSubUsingCocktail[j]->Write();
+    }
+    for(Int_t j=0; j < nBinsR; j++){
+      histoWeightsEachRPtMinSecSubUsingCocktailNorm[j]->Write();
     }
 
     histoSecConvGammaPtAllSources ->Write();
@@ -2630,10 +2663,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     }
    histoPtSumRMCSecSubtracted->Write();
    histoPtSumRBinDataSecSubtractedUsingCocktail->Write();
+   histoPtSumRBinDataSecSubtractedUsingCocktailR5->Write();
    histoPtSumRMCSecSubtractedRebin->Write();
    histoPtSumRBinDataSecSubtractedUsingCocktailRebin->Write();
+   histoPtSumRBinDataSecSubtractedUsingCocktailRebinR5->Write();
    histoPtDataRebin->Write();
    histoPtDataToMCSecSubtractedRebin->Write();
+   histoPtDataToMCSecSubtractedRebinR5->Write();
    outAddHistoFile.Close();
 
 
