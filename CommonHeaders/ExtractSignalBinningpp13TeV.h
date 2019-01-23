@@ -688,10 +688,14 @@
     // PCM-Dal
     std::vector<Int_t> fBinsPi0Eta13TeVDalitzPtRebin {      // size: 9
         8, 2, 2, 2, 2, 2, 4, 4, 4 };
+
     // PCM
-    std::vector<Int_t> fBinsPi0Eta13TeVPtPCMTrigINT7Rebin { // size: 13
-        8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
-        4, 4, 4 };
+    std::vector<Int_t> fBinsPi0Eta13TeVPtPCMTrigINT7Rebin { // size: 40
+        8, 8, 8, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };
+
     // EMC
     std::vector<Int_t> fBinsPi0Eta13TeVPtEMCTrigINT7Rebin { // size: 34
         4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
