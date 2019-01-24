@@ -45,6 +45,8 @@ passNr="1";
 
 if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/XeXe
+elif [ $1 = "fbockExt" ]; then
+    BASEDIR=/media/fbock/Elements/OutputLegoTrains/XeXe
 elif [ $1 = "dmuhlhei" ]; then
     BASEDIR=~/data/work/Grid
 fi
@@ -57,19 +59,34 @@ NSlashes3=`expr $NSlashes + 1`
 NSlashes4=`expr $NSlashes + 2`
 echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
-TRAINDIR=Legotrain-vAN20180531-EMCAndPHOSAndPCM
-ISAOD=0
-LHC17nData="406"; #pass 1
-LHC17j7MC="936";
-LHC17j7MCa="child_1";
-LHC17j7MCb="child_2";
-LHC17j7MCc="child_3";
-LHC18d2MC="943"; # PCM
-LHC18d2MCa="child_1";
+# TRAINDIR=Legotrain-vAN20180531-EMCAndPHOSAndPCM
+# ISAOD=0
+# LHC17nData="406"; #pass 1
+# LHC17j7MC="936";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+# LHC18d2MC="943"; # PCM
+# LHC18d2MCa="child_1";
 # LHC18d2MCb="child_2";
 # LHC18d2MCc="child_3";
 # LHC18d2MCd="child_4";
 
+TRAINDIR=Legotrain-vAN20180612-EMCAndPHOSAndPCM
+ISAOD=0
+LHC17nData="412"; #pass 1
+# LHC17nData="407"; #pass 1
+# LHC17j7MC="935"; # EMC nl
+# LHC17j7MC="940"; # PHOS nl
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+LHC18d2MC="950"; # PHOS nl
+# LHC18d2MC="944"; # PHOS nl
+LHC18d2MCa="child_1";
+# LHC18d2MCb="child_2";
+# LHC18d2MCc="child_3";
+# LHC18d2MCd="child_4";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
