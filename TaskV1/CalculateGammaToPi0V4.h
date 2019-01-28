@@ -1,7 +1,7 @@
 #ifndef GAMMACONV_CalculateGammaToPi0
 #define GAMMACONV_CalculateGammaToPi0
 
-    #include "../CommonHeaders/ExtractSignalBinning.h"
+
 
     //***********************************************************************************************
     //**************************  variables for global configuration ********************************

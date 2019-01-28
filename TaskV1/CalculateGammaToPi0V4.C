@@ -38,15 +38,14 @@
 #include "TGraphAsymmErrors.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "CalculateGammaToPi0V4.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctions.h"
-#include "TMath.h"
-#include "TSpline.h"
+#include "../CommonHeaders/ExtractSignalBinning.h"
+#include "CalculateGammaToPi0V4.h"
 
-extern TRandom    *gRandom;
-extern TBenchmark *gBenchmark;
-extern TSystem    *gSystem;
+ extern TRandom    *gRandom;
+ extern TBenchmark *gBenchmark;
+ extern TSystem    *gSystem;
 
 //*****************************************************************************************************
 //*****************************************************************************************************

@@ -260,6 +260,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
         return;
     }
     TList* HistosGammaConversion                                                = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+
+
     // *********************************** test whether cut is contained in file *************************
     if (!HistosGammaConversion){
         if ( (mode == 2 || mode == 4 || mode == 12 || mode == 13 ) && optionMC.CompareTo("kTRUE") == 0 ){
@@ -315,6 +317,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     fMesonMassExpect                                                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
     cout<< "The mass of the meson is: "<< fMesonMassExpect<< " Events analysed: "<< fNEvents<< endl;
 
+
     // *******************************************************************************************************
     // ******************************* Read histograms from data for PCM *************************************
     // *******************************************************************************************************
@@ -324,6 +327,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fHistoGammaConvPt->Sumw2();
         fHistoGammaConvPtOrBin                                                  = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_OriginalBinning");
         RebinSpectrum(fHistoGammaConvPt,"");
+
 
         // read dca tree for conversions
         if(!addSig && !(mode == 4 || mode == 5)){
@@ -362,7 +366,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 dcaTree                                                         = (TTree*)f->Get(Form("%s Photon DCA tree", fCutSelectionRead.Data()));
                 if(dcaTree){
                     FillDCAHistogramsFromTree(dcaTree,kFALSE);
-                    CalculatePileUpBackground(kFALSE);
+		    CalculatePileUpBackground(kFALSE);
                     pileUpCorrection                                                = kTRUE;
                 }
             }
@@ -1358,6 +1362,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             }
 
         }
+
         TString plotPrefix  = Form("%s/%s_%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data());
         TString plotSuffix  = Form("%s_%s.%s",fPeriodFlag.Data(),fCutSelection.Data(),fSuffix.Data());
 
@@ -1399,7 +1404,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                     fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig, kTRUE );
 
         TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
-
 
         if(fIsMC){
             TString nameMesonTrue   = Form("%s_GammaConvPt_TrueMesonFitted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1606,6 +1610,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
       fHistoPi0TaggingEfficiency->Sumw2();
       fHistoPi0TaggingEfficiency->Divide(fHistoPi0TaggingEfficiency,fHistoTruePrimaryPi0Sum,1.,1.,"B");
 
+
       // **************************************************************************************************************
       // ************************ TruePi0 & MissedPi0 & TotalPi0 ******************************************************
       // **************************************************************************************************************
@@ -1682,7 +1687,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
     if (fIsMC){
         //************************************** Calculate correction factors **************************************
         CalculateGammaCorrection();
-
         if (fMode == 2 || fMode == 3){
             for (Int_t k = 0; k < 3; k++){
                 fHistoTruePi0EffiGammaPt[k]             = CalculateMesonEfficiency( fHistoYieldTrueMeson[k], NULL, fHistoMCPrimPi0InAccPtGammaReb[2], Form("TruePi0EffiGammaPt%s", nameIntRange[k].Data()));
@@ -1739,6 +1743,7 @@ void RebinSpectrumToDCAzDistBinning(TH1D *Spectrum, TString NewName){
 //******** including distribution for MC (which doesn't contain pileup) to estimate fake pileup ****
 //**************************************************************************************************
 void CalculatePileUpBackground(Bool_t doMC){
+
     if(fIsMC && doMC){
 
         fMCrecGammaPtDCAzBins                                                               = new TH1D**[4];
@@ -1975,6 +1980,7 @@ void CalculatePileUpBackground(Bool_t doMC){
             fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC,  "MinBias");
         }
 
+
         // building ratios with / without fake pileup
         CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 0, 0, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
         CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 1, 3, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning);
@@ -2071,14 +2077,17 @@ void CalculatePileUpBackground(Bool_t doMC){
                 fHistoGammaTrueSecondaryConvGammaFromXPtPileUp[i]                   = NULL;
             }
         }
+	Double_t maxCorrFacDCA      = 1.1;
+	if (fEnergyFlag.CompareTo("13TeV") == 0)
+	  maxCorrFacDCA      = 1.3;
 
         // plotting ratios + fits
         TCanvas *RatioWithWithoutPileUpCanvasMC                                     = GetAndSetCanvas("canvasRatioWithWithoutPileUpMC");
 
-        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
+        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
+        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
+        SetHistogramm(fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
 
         DrawGammaSetMarker(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kRed, kRed);
@@ -2112,6 +2121,7 @@ void CalculatePileUpBackground(Bool_t doMC){
         RatioWithWithoutPileUpCanvasMC->Print(Form("%s/%s_%s_With_vs_Without_Pileup_pT_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
         delete RatioWithWithoutPileUpCanvasMC;
     } else {
+
         // *****************************************************************************************************
         // ************************* Processing pileup estimation based on DCAz for Data ***********************
         // *****************************************************************************************************
@@ -2241,6 +2251,7 @@ void CalculatePileUpBackground(Bool_t doMC){
 
 
                 }
+
                 if(!fIsMC&&catIter==3){
                   Double_t textSizeLabelsRel      = 55./1200;
                   TCanvas* canvasDummy       = new TCanvas("canvasDummy", "", 200, 10, 1200, 1100);  // gives the page size
@@ -2338,6 +2349,7 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDGammaPileUpCorrFactor[oobEstMethod]->Sumw2();
         }
 
+
         // calculate pileup correction factors
         fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat           = new TF1*[fNOOBEstMethods];
         fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                 = new TF1*[fNOOBEstMethods];
@@ -2365,6 +2377,8 @@ void CalculatePileUpBackground(Bool_t doMC){
         TString labelLegend[5]          = {"std., sep. cat", "var. 1, sep. cat", "var. 2, sep. cat", "var. 3, sep. cat", "var. 4, sep. cat" };
         Double_t maxCorrFacDCA      = 1.1;
         if (fEnergyFlag.CompareTo("2.76TeV") == 0)
+            maxCorrFacDCA           = 1.3;
+        if (fEnergyFlag.CompareTo("13TeV") == 0)
             maxCorrFacDCA           = 1.3;
 
         TLegend* legendDCAZData                                             = GetAndSetLegend(0.7,0.65,6,1);
@@ -2553,12 +2567,10 @@ void CalculateGammaCorrection(){
         fHistoGammaMCConvProb                                       = new TH1D("MCGammaConvProb_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCConvProb->Sumw2();
         fHistoGammaMCConvProb->Divide(fHistoGammaMCConvPt,fHistoGammaMCAllPt,1,1,"B");
-        cout << __LINE__ << endl;
 
         fHistoGammaMCConvProbOrBin                                  = (TH1D*)fHistoGammaMCConvPtOrBin->Clone("MCGammaConvProb_MCPt_OriginalBinning");
         fHistoGammaMCConvProbOrBin->Sumw2();
         fHistoGammaMCConvProbOrBin->Divide(fHistoGammaMCConvProbOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
-        cout << __LINE__ << endl;
 
         // secondary conversion probabilities
         if(fUseCocktail && nHistogramDimension==2){
@@ -2566,13 +2578,13 @@ void CalculateGammaCorrection(){
                 fHistoSecondaryGammaFromXMCConvProb[k]              = new TH1D(Form("SecondaryGammaFromXFrom%sMCGammaConvProb_MCPt",fSecondaries[k].Data()),"",fNBinsPt,fBinsPt);
                 fHistoSecondaryGammaFromXMCConvProb[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProb[k]->Divide(fHistoSecondaryGammaConvFromXPt[k],fHistoAllSecondaryGammaFromXPt[k],1,1,"B");
-                cout << __LINE__ << endl;
+
 
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]         = (TH1D*)fHistoSecondaryGammaConvFromXPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sMCGammaConvProb_MCPtOrBin",
                                                                                                                                  fSecondaries[k].Data()));
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Divide(fHistoSecondaryGammaConvFromXPtOrBin[k],fHistoAllSecondaryGammaFromXPtOrBin[k],1,1,"B");
-                cout << __LINE__ << endl;
+ 
             }
         }
         // ==========================================
@@ -2581,21 +2593,19 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPurity                                         = new TH1D("GammaPurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCPurity->Sumw2();
         fHistoGammaMCPurity->Divide(fHistoGammaTrueConvPt,fHistoGammaConvPt,1,1,"B");
-        cout << __LINE__ << endl;
 
         fHistoGammaMCrecPrimaryConvPt                               = (TH1D*) fHistoGammaConvPt->Clone("MCrec_PrimaryConvGamma_Pt");
         fHistoGammaMCrecPrimaryConvPt->Add(fHistoGammaTrueSecondaryConvPt,-1);
         fHistoGammaMCTruePurity                                     = new TH1D("GammaTruePurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCTruePurity->Sumw2();
         fHistoGammaMCTruePurity->Divide(fHistoGammaTruePrimaryConvPt,fHistoGammaMCrecPrimaryConvPt,1,1,"B");
-        cout << __LINE__ << endl;
 
         fHistoGammaMCrecPrimaryConvPtOrBin                          = (TH1D*) fHistoGammaConvPtOrBin->Clone("MC_ESDPrimaryConvGammaPt");
         fHistoGammaMCrecPrimaryConvPtOrBin->Add(fHistoGammaTrueSecondaryConvPtOrBin,-1);
         fHistoGammaMCTruePurityOrBin                                = (TH1D*)fHistoGammaMCrecPrimaryConvPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
         fHistoGammaMCTruePurityOrBin->Sumw2();
         fHistoGammaMCTruePurityOrBin->Divide(fHistoGammaTruePrimaryConvPtOrBin,fHistoGammaMCrecPrimaryConvPtOrBin,1,1,"B");
-        cout << __LINE__ << endl;
+
         // ==========================================
 
         // ================ Reco Eff ================
@@ -2918,17 +2928,58 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         }
     }
 
+
+    TString rBin = fGammaCutSelection(2,1);
+    
+
     // initialize ShowBackground for DCAz distributions
     if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
-        nIterationsShowBackground[0]                    = 13;
-        nIterationsShowBackground[1]                    = 13;
-        nIterationsShowBackground[2]                    = 18;
-        nIterationsShowBackground[3]                    = 20;
-        optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
+      if((rBin.CompareTo("a") ==0) ){
+        nIterationsShowBackground[0]                    = 5;
+        nIterationsShowBackground[1]                    = 4;
+        nIterationsShowBackground[2]                    = 7;
+        nIterationsShowBackground[3]                    = 6;
+        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
-        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
-        optionShowBackground[3]                         = "BackDecreasingWindow";                   // standard
-        optionShowBackground[4]                         = "BackDecreasingWindow";                   // standard
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+      } else if ((rBin.CompareTo("b") ==0) ){
+        nIterationsShowBackground[0]                    = 7;
+        nIterationsShowBackground[1]                    = 6;
+        nIterationsShowBackground[2]                    = 8;
+        nIterationsShowBackground[3]                    = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+
+
+      } else if ((rBin.CompareTo("c") ==0) ){
+        nIterationsShowBackground[0]                    = 7;
+        nIterationsShowBackground[1]                    = 6;
+        nIterationsShowBackground[2]                    = 8;
+        nIterationsShowBackground[3]                    = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+
+      } else {
+        nIterationsShowBackground[0]                    = 5;
+        nIterationsShowBackground[1]                    = 4;
+        nIterationsShowBackground[2]                    = 7;
+        nIterationsShowBackground[3]                    = 6;
+        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+
+      }
+
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 11;
         nIterationsShowBackground[1]                    = 11;
@@ -4238,6 +4289,11 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
         if (fEnergyFlag.CompareTo("2.76TeV") == 0)
             maxCorrFacDCAComp           = 1.3;
 
+        if (fEnergyFlag.CompareTo("13TeV") == 0)
+            maxCorrFacDCAComp           = 1.5;
+
+
+
         DrawGammaSetMarker(RatioWithWithoutPileUpData, 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(RatioWithWithoutPileUpMC, 24, 1.0, kRed, kRed);
 
@@ -4539,8 +4595,8 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
         if (stopX == 0) stopX               = pileupCorrectionFactor->GetXaxis()->GetBinUpEdge(pileupCorrectionFactor->GetNbinsX());
 
         // fit over whole range, otherwise sharp onset possible
-        fitToRatio                          = new TF1("fitRatio", "1+[0]/TMath::Power((x-[1]), [2])", fBinsPtDummy[1], fBinsPtDummy[fNBinsPtDummy]);
-        fitToRatio->SetParameters(1, 0, 1);
+        fitToRatio                          = new TF1("fitRatio", "1.0+[0]/TMath::Power((x-[1]), [2])", fBinsPtDummy[1], fBinsPtDummy[fNBinsPtDummy]);
+        fitToRatio->SetParameters(1., -1., 1.);
         fitToRatio->SetName(Form("%s_fit", ratioWithWithoutPileUp->GetName()));
         TFitResultPtr fitToRatioResult      = ratioWithWithoutPileUp->Fit(fitToRatio, "SIMNRE");
         fitStatus                           = fitToRatioResult;
