@@ -179,13 +179,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     TString fClusterCutSelectionRead        = fClusterCutSelection.Data();
     TString fClusterMergedCutSelectionRead  = fClusterMergedCutSelection.Data();
     TString fMesonCutSelectionRead          = fMesonCutSelection.Data();
-    if (!fIsMC && mode==10 && fEnergyFlag.Contains("pPb_8TeV")  ) {
-            cout << "changing data cut for pPb 8 TeV" << endl;
-            cout << fEventCutSelectionRead.Data() << endl;
-            fEventCutSelectionRead.Replace(GetEventRejectExtraSignalsCutPosition(),1,"1");
-            cout << fEventCutSelectionRead.Data() << endl;
-                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelectionRead.Data(), fClusterMergedCutSelectionRead.Data(), fMesonCutSelectionRead.Data());
-    }
+
     //************************* Start of Main routine ***************************************************************
     const char* fFileErrLogDatname  = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(),
                                            fPeriodFlag.Data(), fCutSelectionRead.Data());
@@ -203,6 +197,9 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
+
+    if(optionMC && mode==10 && !fEnergyFlag.CompareTo("pPb_8TeV"))
+        fCutSelectionRead.Replace(6,1,"2");
 
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if(HistosGammaConversion == NULL){
@@ -617,14 +614,17 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     FillPtHistos();
 
     if (!fIsMC && meson.Contains("Pi0") ){
-        fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
-        if (fHaveToyMCInputForSec){
-            cout << "I am gonna add the toy MC ouput to the uncorrected file" << endl;
+        fHaveCocktailInputForSec     = LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
+        if(!fHaveCocktailInputForSec)
+            fHaveToyMCInputForSec     = LoadSecondaryPionsFromExternalFile();
+        if (fHaveCocktailInputForSec){
+            cout << "SECONDARIES: I am gonna add the cocktail output to the uncorrected file" << endl;
+        } else if (fHaveToyMCInputForSec){
+            cout << "SECONDARIES: I am gonna add the toy MC output to the uncorrected file" << endl;
         } else {
-            cout << "no ToyMC input has been found for the secondaries" << endl;
+            cout << "SECONDARIES: no ToyMC or cocktail input has been found for the secondaries" << endl;
         }
     }
-
     if (fIsMC){
         FillHistosArrayMC(fHistoMCMesonWithinAccepPt, fHistoMCMesonPt, fDeltaPt);
         if (meson.Contains("Pi0") && fNewMCOutput){
@@ -2154,6 +2154,64 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
 }
 
 
+//******************************************************************************
+// Load secondary neutral pions from cocktail file
+// - put them in proper scaling
+// - rebin them according to current pi0 binning
+//******************************************************************************
+Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEnergy){
+    TString nameCocktailFile                     = Form("%s/%s/SecondaryPi0%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
+    fFileCocktailInput                           = new TFile(nameCocktailFile.Data());
+    if (!fFileCocktailInput->IsZombie()){
+        cout << "found correct input: " << nameCocktailFile.Data() << endl;
+
+        // secondary neutral pions
+        for (Int_t j = 0; j < 3; j++){
+            cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+
+            // fHistoYieldExternSecInput[j]           = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
+            // if (fHistoYieldExternSecInput[j]){
+            //     fHistoYieldExternSecInput[j]->Sumw2();
+            //     fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
+
+            //     fHistoYieldExternSecInputReb[j]     = (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+            //     if (fHistoYieldExternSecInputReb[j]){
+            //         fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+            //         fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
+            //     }
+
+            TH1D *nCocktailEvents = (TH1D*)fFileCocktailInput->Get("NEvents");
+
+            // fHistoYieldExternSecInput[j]           = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_Y_OrBin", nameSecondariesCocktail[j].Data()));
+            TH2F *h2temp = 0x0;
+
+            h2temp           = (TH2F*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_Y_OrBin", nameSecondariesCocktail[j].Data()));
+            if (h2temp){
+                h2temp->Sumw2();
+                h2temp->Scale(1/(h2temp->GetXaxis()->GetBinWidth(1)));
+                fHistoYieldExternSecInput[j] = (TH1D*)h2temp->ProjectionX(Form("Pi0_from_%s_cocktail", nameSecondaries[j].Data()));
+                fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
+
+                fHistoYieldExternSecInputReb[j]     = (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+                if (fHistoYieldExternSecInputReb[j]){
+                    fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+                    fHistoYieldExternSecInputReb[j]->Scale(1./nCocktailEvents->GetBinContent(1));
+                    fHistoYieldExternSecInputReb[j]->SetDirectory(0);
+
+                    fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
+                printf("secondary histogram found for pi0 feed-down from %s\n", nameSecondaries[j].Data());
+                }else{
+                    printf("secondary histogram NOT FOUND for pi0 feed-down from %s\n", nameSecondaries[j].Data());
+                }
+
+            } else {
+                cout << "file didn't contain " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+            }
+        }
+        return kTRUE;
+    }
+    return kFALSE;
+}
 
 //****************************************************************************
 //*********************** creation of momentum dependent histos **************
@@ -3079,7 +3137,16 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
                 if (fHistoYieldToyMCSecInputReb[j])     fHistoYieldToyMCSecInputReb[j]->Write();
             }
         }
-
+        if (fHaveCocktailInputForSec){
+            cout << "Writing input for secondary pi0 correction" << endl;
+            for (Int_t j = 0; j < 3; j++){
+                if (fHistoYieldExternSecInput[j]){
+                    cout << "writing external sec input: " << nameSecondaries[j].Data() << endl;
+                    fHistoYieldExternSecInput[j]->Write();
+                }
+                if (fHistoYieldExternSecInputReb[j])     fHistoYieldExternSecInputReb[j]->Write();
+            }
+        }
     fOutput1->Write();
     fOutput1->Close();
 }
@@ -3413,5 +3480,6 @@ void Delete(){
     for (Int_t j = 0; j < 3; j++){
         if (fFileToyMCInput[j] )                                   delete fFileToyMCInput[j];
     }
+    if (fFileCocktailInput)                                     delete fFileCocktailInput;
 
 }

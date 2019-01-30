@@ -3190,9 +3190,9 @@
                     return 633;
                 } else if (!generator.CompareTo("LHC16s")){
                     return 807;
-                } else if (generator.Contains("LHC17f3a")){
+                } else if (generator.Contains("LHC17f3a") || generator.Contains("LHC18f3b")){
                     return 418;
-                } else if (generator.Contains("LHC17f4a")){
+                } else if (generator.Contains("LHC17f4a") || generator.Contains("LHC18f3c")){
                     return 601;
                 } else if (generator.Contains("LHC17f3b")){
                     return kViolet-3;
@@ -3200,16 +3200,20 @@
                     return kViolet+2;
                 } else if (generator.Contains("LHC16r") && generator.Contains("woSDD")){
                     return 633;
-                  } else if (generator.Contains("LHC16r") && (generator.Contains("wSDD")|| generator.Contains("mcp2"))){
+                } else if (generator.Contains("LHC16r") && (generator.Contains("wSDD")|| generator.Contains("mcp2"))){
                     return 807;
-                  } else if (generator.Contains("LHC16r") && (generator.Contains("fast") || generator.Contains("FAST")) ){
+                } else if (generator.Contains("LHC16r") && (generator.Contains("fast") || generator.Contains("FAST")) ){
                     return 800;
-                  } else if (generator.Contains("LHC16s") && generator.Contains("woSDD")){
-                    return kGreen+4;
-                  } else if (generator.Contains("LHC16s") && (generator.Contains("wSDD")|| generator.Contains("mcp2"))){
+                } else if (generator.Contains("LHC16s") && generator.Contains("woSDD")){
+                    return kGreen+2;
+                } else if (generator.Contains("LHC16s") && (generator.Contains("wSDD")|| generator.Contains("mcp2"))){
                     return 418;
-                  } else if (generator.Contains("LHC16s") && (generator.Contains("fast") || generator.Contains("FAST")) ){
+                } else if (generator.Contains("LHC16s") && (generator.Contains("fast") || generator.Contains("FAST")) ){
                     return 633;
+                } else if (generator.Contains("LHC16r")){
+                    return 633;
+                } else if (generator.Contains("LHC16s")){
+                    return 807;
                 } else if (generator.Contains("LHC17g8b") || generator.Contains("EPOS")){
                     return kViolet+1;
                 } else if (generator.Contains("LHC17g8c") || generator.Contains("DPMJET")){
@@ -3621,11 +3625,11 @@
                 return 33;
             } else if (generator.Contains("LHC16r")){
                 return 24;
-            } else if (!generator.Contains("LHC16s")){
+            } else if (generator.Contains("LHC16s")){
                 return 27;
-            } else if (generator.Contains("LHC17f3")){
+            } else if (generator.Contains("LHC17f3") || generator.Contains("LHC18f3b")){
                 return 30;
-            } else if (generator.Contains("LHC17f4")){
+            } else if (generator.Contains("LHC17f4") || generator.Contains("LHC18f3c")){
                 return 26;
             } else if (generator.Contains("LHC17g8b")){
                 return 24;
@@ -4307,6 +4311,10 @@
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return kGreen-8;
         else if (triggerName.Contains("EG1") && !isShade)  return kCyan+2;
         else if (triggerName.Contains("EG1") && isShade)   return kCyan-6;
+        else if ((triggerName.Contains("EJ2") ) && !isShade)  return kRed+2;
+        else if ((triggerName.Contains("EJ2") ) && isShade)   return kRed-6;
+        else if (triggerName.Contains("EJ1") && !isShade)  return kRed+2;
+        else if (triggerName.Contains("EJ1") && isShade)   return kRed-6;
         else return kBlack;
 
         return kBlack;
@@ -4333,6 +4341,10 @@
         else if (triggerName.Contains("EG1_NLM1") && !isShade)  return 27;
         else if (triggerName.Contains("EG1") && !isShade)  return 33;
         else if (triggerName.Contains("EG1") && isShade)   return 27;
+        else if (triggerName.Contains("EJ2") && !isShade) return 21;
+        else if (triggerName.Contains("EJ2") && isShade)  return 25;
+        else if (triggerName.Contains("EJ1") && !isShade) return 33;
+        else if (triggerName.Contains("EJ1") && isShade)  return 24;
         else return 20;
 
         return 20;
@@ -4359,6 +4371,10 @@
         else if (triggerName.Contains("EG1_NLM1") && !isShade)  return (Size_t)2;
         else if (triggerName.Contains("EG1") && !isShade)  return (Size_t)2;
         else if (triggerName.Contains("EG1") && isShade)   return (Size_t)2;
+        else if (triggerName.Contains("EJ2") && !isShade)  return (Size_t)2;
+        else if (triggerName.Contains("EJ2") && isShade)   return (Size_t)2;
+        else if (triggerName.Contains("EJ1") && !isShade)  return (Size_t)2;
+        else if (triggerName.Contains("EJ1") && isShade)   return (Size_t)2;
         else return (Size_t)1.5;
 
         return (Size_t)1.5;

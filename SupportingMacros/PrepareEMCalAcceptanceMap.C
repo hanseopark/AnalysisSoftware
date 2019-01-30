@@ -2,7 +2,8 @@
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
  ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
  *******************************************************************************/
-
+R__ADD_INCLUDE_PATH($ALICE_ROOT)
+R__ADD_INCLUDE_PATH($ALICE_PHYSICS)
 using namespace std;
 
 #include <Riostream.h>
@@ -66,9 +67,9 @@ void PrepareEMCalAcceptanceMap(TString str = "ModAcc"){
   TString pathOutput = "~/Desktop/out";
   gSystem->mkdir(pathOutput.Data());
 
-  AliEMCALGeometry* rec = new AliEMCALGeometry("EMCAL_COMPLETE12SMV1"); // EMCAL_COMPLETE12SMV1
+  AliEMCALGeometry* rec = new AliEMCALGeometry("EMCAL_COMPLETE12SMV1_DCAL_8SM"); // EMCAL_COMPLETE12SMV1
 
-  Int_t nMaxCellsEMCAL  = 10*48*24;
+  Int_t nMaxCellsEMCAL  = (12*48*24)+(8*32*24);
   Int_t imod = -1;Int_t iTower = -1, iIphi = -1, iIeta = -1;
   Int_t icol = -1;Int_t irow = -1;
 
@@ -77,11 +78,15 @@ void PrepareEMCalAcceptanceMap(TString str = "ModAcc"){
   //********************
   TH1S* output = new TH1S(str.Data(),str.Data(),nMaxCellsEMCAL,0,nMaxCellsEMCAL);
 
-  TH2S* histCells[10];
-  TH2S* histModules[10];
+  TH2S* histCells[20];
+  TH2S* histModules[20];
   for(Int_t i=0; i<10; i++){
     histCells[i] = new TH2S(Form("cellID - SM%i",i),Form("cellID - SM%i",i),48,0,48,24,0,24);
     histModules[i] = new TH2S(Form("moduleID - SM%i",i),Form("moduleID - SM%i",i),24,0,24,12,0,12);
+  }
+  for(Int_t i=10; i<20; i++){
+    histCells[i] = new TH2S(Form("cellID - SM%i",i),Form("cellID - SM%i",i),32,0,32,24,0,24);
+    histModules[i] = new TH2S(Form("moduleID - SM%i",i),Form("moduleID - SM%i",i),16,0,16,12,0,12);
   }
 
   //********************
@@ -175,7 +180,7 @@ void PrepareEMCalAcceptanceMap(TString str = "ModAcc"){
   output->Write(str.Data(),TObject::kOverwrite);
 
   tmpDir->cd();
-  for(Int_t i=0; i<10; i++){
+  for(Int_t i=0; i<20; i++){
     histCells[i]->Write(Form("CellID_SM%i",i),TObject::kOverwrite);
     histModules[i]->Write(Form("ModuleID_SM%i",i),TObject::kOverwrite);
   }

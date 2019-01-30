@@ -94,15 +94,15 @@ Int_t GetOrderedTrigger(TString triggerNameDummy){
         return 5;
     } else if ((triggerNameDummy.CompareTo("MB_NLM1") == 0 || triggerNameDummy.CompareTo("INT1_NLM1") == 0  ) ){
         return 6;
-    } else if (triggerNameDummy.CompareTo("INT7_NLM1") == 0 ){
+    } else if (triggerNameDummy.CompareTo("INT7_NLM1") == 0){
         return 7;
     } else if (triggerNameDummy.CompareTo("EMC1_NLM1") == 0 ){
         return 8;
     } else if (triggerNameDummy.CompareTo("EMC7_NLM1") == 0 ){
         return 9;
-    } else if (triggerNameDummy.CompareTo("EG2_NLM1") == 0 ){
+    } else if (triggerNameDummy.CompareTo("EG2_NLM1") == 0 || triggerNameDummy.CompareTo("EJ2") == 0){
         return 10;
-    } else if (triggerNameDummy.CompareTo("EG1_NLM1") == 0 ){
+    } else if (triggerNameDummy.CompareTo("EG1_NLM1") == 0  || triggerNameDummy.CompareTo("EJ1") == 0){
         return 11;
     } else
      return -1;
@@ -167,7 +167,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 10){
             maxPtGlobalCluster          = 200;
         }
-    } else if (optionEnergy.CompareTo("pPb_8TeV")==0){
+    } else if (optionEnergy.Contains("pPb_8TeV")){
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
       } else if (mode == 10){
@@ -179,25 +179,25 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Int_t textSizePixelSpectra      = textSizeSpectra*1000;
     const Int_t MaxNumberOfFiles    = 12;
 
-    Color_t colorTrigg      [12]    = { kBlack, kBlack, kBlack, kBlack, kBlack,
-                                        kBlack, kBlack, kBlack, kBlack, kBlack,
-                                        kBlack, kBlack  };
-    Color_t colorTriggShade [12]    = { kGray+1, kGray+1, kGray+1, kGray+1, kGray+1,
-                                        kGray+1, kGray+1, kGray+1, kGray+1, kGray+1,
-                                        kGray+1, kGray+1 };
-    Marker_t markerTrigg    [12]    = { 20, 20, 20, 20, 20,
-                                        20, 20, 20, 20, 20,
-                                        20, 20 };
-    Marker_t markerTriggMC  [12]    = { 24, 24, 24, 24, 24,
-                                        24, 24, 24, 24, 24,
-                                        24, 24 };
-    Size_t sizeTrigg        [12]    = { 1.5, 1.5, 1.5, 1.5, 1.5,
-                                        1.5, 1.5, 1.5, 1.5, 1.5,
-                                        1.5, 1.5 };
+    Color_t colorTrigg      [MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTrigg[set]= kBlack;
+    Color_t colorTriggShade [MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTriggShade[set]= kGray+1;
+    Marker_t markerTrigg    [MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) markerTrigg[set]= 20;
+    Marker_t markerTriggMC  [MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) markerTriggMC[set]= 24;
+    Size_t sizeTrigg        [MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) sizeTrigg[set]= 1.5;
 
     TString strEG2_A = "EG2";
     if(optionEnergy.CompareTo("8TeV")==0) strEG2_A = "EGA";
-
+    TString nameTriggerWeighted[MaxNumberOfFiles]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
+                                            "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
+    if(optionEnergy.CompareTo("2.76TeV")!=0){
+        nameTriggerWeighted[10] = "EJ2";
+        nameTriggerWeighted[11] = "EJ1";
+    }
     TString system              = "PCM";
     if (mode == 2) system       = "PCM-EMCAL";
     if (mode == 3) system       = "PCM-PHOS";
@@ -876,8 +876,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 200;
         else if (mode == 10 && !optionEnergy.CompareTo("8TeV"))
             maxTriggReject = 49000;
-        // else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV"))
-            // maxTriggReject = 390;
+        else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV"))
+            maxTriggReject = 9000;
         else if (optionEnergy.CompareTo("13TeV") == 0)
             maxTriggReject = 4200;
         else if (mode == 10)
@@ -1072,6 +1072,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if( optionEnergy.CompareTo("13TeV")==0 ){
             if (mode == 2 || mode == 4 || mode == 10 )
                 maxTriggRejectLin = 1005;
+        } else if( optionEnergy.CompareTo("pPb_8TeV")==0 ){
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 4005;
         }
         TH2F * histo2DTriggRejectLinear;
         histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
@@ -1475,6 +1478,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     } else if (mode == 10){
         maxEffiPi0      = 20e-1;
         minEffiPi0      = 1e-2;
+        if(optionEnergy.CompareTo("pPb_8TeV")==0){
+            minEffiPi0  = 0.1;
+            maxEffiPi0  = 4;
+        }
     } else if (mode == 2){
         if(optionEnergy.CompareTo("8TeV")==0)
             minEffiPi0  = 5e-5;
@@ -1664,7 +1671,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         histo2DEffiPi0->DrawCopy();
 
-        TGraphErrors* graphEffBasePi0[12]   = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+        TGraphErrors* graphEffBasePi0[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) graphEffBasePi0[set]= NULL;
         TLegend* legendEffiPi0W0TriggEff    = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
         legendEffiPi0W0TriggEff->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
@@ -2209,16 +2217,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
     }
     // definition of predefined arrays for trigger correlation filling
-    TH1D*               histoStatPi0    [12];
-    TGraphAsymmErrors*  graphSystPi0    [12];
-    TH1D*               histoRelStatPi0 [12];
-    TGraphAsymmErrors*  graphRelSystPi0 [12];
+    TH1D*               histoStatPi0    [MaxNumberOfFiles];
+    TGraphAsymmErrors*  graphSystPi0    [MaxNumberOfFiles];
+    TH1D*               histoRelStatPi0 [MaxNumberOfFiles];
+    TGraphAsymmErrors*  graphRelSystPi0 [MaxNumberOfFiles];
 
-    Int_t offSetsPi0[12]        =   { 0, 0, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 0 };
-    Int_t offSetsPi0Sys[12]     =   { 0, 0, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 0 };
-
+    Int_t offSetsPi0[MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsPi0[set]= 0;
+    Int_t offSetsPi0Sys[MaxNumberOfFiles];
+        for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsPi0Sys[set]= 0;
     if(optionEnergy.CompareTo("8TeV")==0){
       if(mode == 2){
         offSetsPi0[1] = 3; //INT7
@@ -2232,7 +2239,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
 
     // set all graphs to NULL first
-    for (Int_t j = 0; j<12; j++){
+    for (Int_t j = 0; j< MaxNumberOfFiles; j++){
         histoStatPi0[j]                 = NULL;
         graphSystPi0[j]                 = NULL;
         histoRelStatPi0[j]              = NULL;
@@ -2679,41 +2686,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         // preparations for weight readout
         Double_t xValuesReadPi0[400];
-        Double_t weightsReadPi0[12][400];
-        Int_t availableMeasPi0[12]       = {-1, -1, -1, -1, -1, -1,
-                                            -1, -1, -1, -1, -1, -1};
+        Double_t weightsReadPi0[MaxNumberOfFiles][400];
+        Int_t availableMeasPi0[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) availableMeasPi0[set]= -1;
         Int_t nMeasSetPi0               = nrOfTrigToBeCombPi0Red;
         Int_t nPtBinsReadPi0            = 0;
 
         // labeling and plotting settings
-        TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
-                                            "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
-        Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[2], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[3], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[4], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[5], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[6], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[7], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[8], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[9], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[10], 0),
-                                           GetDefaultTriggerColorName(nameTriggerWeighted[11], 0)
-                                          };
-        Marker_t markerTriggWeighted[12] = {GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[0], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[1], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[2], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[3], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[4], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[5], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[6], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[7], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[8], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[9], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[10], 0),
-                                           GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
-                                          };
+        Color_t colorTriggWeighted[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTriggWeighted[set]= GetDefaultTriggerColorName(nameTriggerWeighted[set], 0);
+        Marker_t markerTriggWeighted[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) markerTriggWeighted[set]= GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[set], 0);
 
         // Reading weights from output file for plotting
         ifstream fileWeightsPi0;
@@ -2749,8 +2732,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         fileWeightsPi0.close();
 
         // creating & filling the weight graphs
-        TGraph* graphWeightsPi0[12];
-        for (Int_t i = 0; i < 12; i++){
+        TGraph* graphWeightsPi0[MaxNumberOfFiles];
+        for (Int_t i = 0; i < MaxNumberOfFiles; i++){
             graphWeightsPi0[i]                    = NULL;
         }
         for (Int_t i = 0; i < nMeasSetPi0; i++){
@@ -2812,7 +2795,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         delete canvasWeights;
 
         // Calculating relative error for pi0
-        for (Int_t i = 0; i < 12; i++){
+        for (Int_t i = 0; i < MaxNumberOfFiles; i++){
             if (histoStatPi0[i])
                 histoRelStatPi0[i]      = CalculateRelErrUpTH1D( histoStatPi0[i], Form("relativeStatErrorPi0_%s", nameTriggerWeighted[i].Data()));
             if (graphSystPi0[i])
@@ -4949,16 +4932,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TGraphAsymmErrors* graphsCorrectedYieldSysShrunkEta     [MaxNumberOfFiles];
 
         // create inputs for combination function
-        TH1D*               histoStatEta    [12];
-        TGraphAsymmErrors*  graphSystEta    [12];
-        TH1D*               histoRelStatEta [12];
-        TGraphAsymmErrors*  graphRelSystEta [12];
+        TH1D*               histoStatEta    [MaxNumberOfFiles];
+        TGraphAsymmErrors*  graphSystEta    [MaxNumberOfFiles];
+        TH1D*               histoRelStatEta [MaxNumberOfFiles];
+        TGraphAsymmErrors*  graphRelSystEta [MaxNumberOfFiles];
 
-        Int_t offSetsEta[12]            = { 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0 };
-        Int_t offSetsEtaSys[12]         = { 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0 };
-
+        Int_t offSetsEta[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsEta[set]= 0;
+        Int_t offSetsEtaSys[MaxNumberOfFiles];
+            for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsEtaSys[set]= 0;
         if(optionEnergy.CompareTo("8TeV")==0){
           if(mode == 2){
             offSetsEta[1] = 0; //INT7
@@ -4972,7 +4954,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
 
         Bool_t hasSysEta                = kFALSE;
-        for (Int_t j = 0; j<12; j++){
+        for (Int_t j = 0; j< MaxNumberOfFiles; j++){
             histoStatEta[j]                 = NULL;
             graphSystEta[j]                 = NULL;
             histoRelStatEta[j]              = NULL;
@@ -5306,40 +5288,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             // Prepare arrays for reading weighting numbers
             Double_t xValuesReadEta[400];
-            Double_t weightsReadEta[12][400];
-            Int_t availableMeasEta[12]  = { -1, -1, -1, -1, -1, -1,
-                                            -1, -1, -1, -1, -1, -1};
+            Double_t weightsReadEta[MaxNumberOfFiles][400];
+            Int_t availableMeasEta[MaxNumberOfFiles];
+                for(Int_t set=0;set<MaxNumberOfFiles;set++) availableMeasEta[set]= -1;
             Int_t nMeasSetEta           = nrOfTrigToBeCombEtaRed;
             Int_t nPtBinsReadEta        = 0;
 
-            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
-                                                "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
-            Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[2], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[3], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[4], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[5], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[6], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[7], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[8], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[9], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[10], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[11], 0)
-                                            };
-            Marker_t markerTriggWeighted[12] = {GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[0], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[1], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[2], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[3], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[4], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[5], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[6], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[7], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[8], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[9], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[10], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
-                                            };
+            Color_t colorTriggWeighted[MaxNumberOfFiles];
+                for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTriggWeighted[set]= GetDefaultTriggerColorName(nameTriggerWeighted[set], 0);
+            Marker_t markerTriggWeighted[MaxNumberOfFiles];
+                for(Int_t set=0;set<MaxNumberOfFiles;set++) markerTriggWeighted[set]= GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[set], 0);
 
 
             // Reading weights from output file for plotting
@@ -5376,7 +5334,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileWeightsEta.close();
 
             // create and fill weighting graphs
-            TGraph* graphWeightsEta[12];
+            TGraph* graphWeightsEta[MaxNumberOfFiles];
             for (Int_t i = 0; i < numberOfTrigg; i++){
                 graphWeightsEta[i]                    = NULL;
             }
@@ -5435,7 +5393,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             delete canvasWeights;
 
             // Calculating relative error for eta
-            for (Int_t i = 0; i < 12; i++){
+            for (Int_t i = 0; i < MaxNumberOfFiles; i++){
                 if (histoStatEta[i])
                     histoRelStatEta[i]      = CalculateRelErrUpTH1D( histoStatEta[i], Form("relativeStatErrorEta_%s", nameTriggerWeighted[i].Data()));
                 if (graphSystEta[i])
@@ -6331,14 +6289,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TH1D* histoEtaToPi0Masked                       [MaxNumberOfFiles];
 
             // create variables for combination functions
-            TH1D*               histoStatEtaToPi0    [12];
-            TGraphAsymmErrors*  graphSystEtaToPi0    [12];
-            TH1D*               histoRelStatEtaToPi0 [12];
-            TGraphAsymmErrors*  graphRelSystEtaToPi0 [12];
-            Int_t offSetsEtaToPi0[12]           = { 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0 };
-            Int_t offSetsEtaToPi0Sys[12]        = { 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0 };
+            TH1D*               histoStatEtaToPi0    [MaxNumberOfFiles];
+            TGraphAsymmErrors*  graphSystEtaToPi0    [MaxNumberOfFiles];
+            TH1D*               histoRelStatEtaToPi0 [MaxNumberOfFiles];
+            TGraphAsymmErrors*  graphRelSystEtaToPi0 [MaxNumberOfFiles];
+            Int_t offSetsEtaToPi0[MaxNumberOfFiles];
+                for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsEtaToPi0[set]= 0;
+            Int_t offSetsEtaToPi0Sys[MaxNumberOfFiles];
+                for(Int_t set=0;set<MaxNumberOfFiles;set++) offSetsEtaToPi0Sys[set]= 0;
 
             if(optionEnergy.CompareTo("8TeV")==0){
               if(mode == 2){
@@ -6354,7 +6312,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
 
             Bool_t hasSysEtaToPi0            = kFALSE;
-            for (Int_t j = 0; j<12; j++){
+            for (Int_t j = 0; j< MaxNumberOfFiles; j++){
                 histoStatEtaToPi0[j]        = NULL;
                 graphSystEtaToPi0[j]        = NULL;
                 histoRelStatEtaToPi0[j]     = NULL;
@@ -6625,40 +6583,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 fileWeightsEtaToPi0.open(nameWeightsLogFileEtaToPi0,ios_base::in);
                 cout << "reading" << nameWeightsLogFileEtaToPi0 << endl;
                 Double_t xValuesReadEtaToPi0[400];
-                Double_t weightsReadEtaToPi0[12][400];
-                Int_t availableMeasEtaToPi0[12]     = { -1, -1, -1, -1, -1, -1,
-                                                        -1, -1, -1, -1, -1, -1};
+                Double_t weightsReadEtaToPi0[MaxNumberOfFiles][400];
+                Int_t availableMeasEtaToPi0[MaxNumberOfFiles];
+                    for(Int_t set=0;set<MaxNumberOfFiles;set++) availableMeasEtaToPi0[set]= -1;
                 Int_t nMeasSetEtaToPi0              = numberOfTrigg;
                 Int_t nPtBinsReadEtaToPi0           = 0;
 
-                TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
-                                                    "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
-                Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[2], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[3], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[4], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[5], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[6], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[7], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[8], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[9], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[10], 0),
-                                                GetDefaultTriggerColorName(nameTriggerWeighted[11], 0)
-                                                };
-                Marker_t markerTriggWeighted[12] = {GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[0], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[1], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[2], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[3], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[4], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[5], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[6], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[7], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[8], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[9], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[10], 0),
-                                                GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
-                                                };
+                Color_t colorTriggWeighted[MaxNumberOfFiles];
+                    for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTriggWeighted[set]= GetDefaultTriggerColorName(nameTriggerWeighted[set], 0);
+
+                Marker_t markerTriggWeighted[MaxNumberOfFiles];
+                    for(Int_t set=0;set<MaxNumberOfFiles;set++) markerTriggWeighted[set]= GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[set], 0);
 
                 while(!fileWeightsEtaToPi0.eof() && nPtBinsReadEtaToPi0 < 400){
                     TString garbage = "";
@@ -6837,7 +6772,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 delete canvasWeights;
 
                 // Calculating relative error for eta/pi0
-                for (Int_t i = 0; i < 12; i++){
+                for (Int_t i = 0; i < MaxNumberOfFiles; i++){
                     if (histoStatEtaToPi0[i])
                         histoRelStatEtaToPi0[i]      = CalculateRelErrUpTH1D( histoStatEtaToPi0[i], Form("relativeStatErrorEtaToPi0_%s", nameTriggerWeighted[i].Data()));
                     if (graphSystEtaToPi0[i])

@@ -1,7 +1,10 @@
+// R__ADD_INCLUDE_PATH($ALICE_ROOT)
+// R__ADD_INCLUDE_PATH($ALICE_PHYSICS)
+
 void run_EMCalAccMap()
 {
-  gSystem->AddIncludePath("-I/home/daniel/alice/sw/ubuntu1404_x86-64/AliRoot/latest-ali-master/include");
-  gSystem->AddIncludePath("-I/home/daniel/alice/sw/ubuntu1404_x86-64/AliPhysics/latest-ali-master/include");
+  // gSystem->AddIncludePath("-I/home/nschmidt/alice/sw/ubuntu1604_x86-64/AliRoot/ali-master-1/include");
+  // gSystem->AddIncludePath("-I/home/nschmidt/alice/sw/ubuntu1604_x86-64/AliPhysics/ali-master-1/include");
   gROOT->ProcessLine(".L PrepareEMCalAcceptanceMap.C+");
 
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM0\")");
@@ -14,6 +17,16 @@ void run_EMCalAccMap()
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM7\")");
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM8\")");
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM9\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM10\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM11\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM12\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM13\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM14\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM15\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM16\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM17\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM18\")");
+  gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"SM19\")");
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"ModAccEMCAL\")");
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"ModAcc12\")");
   gROOT->ProcessLine("PrepareEMCalAcceptanceMap(\"ModAcc21\")");

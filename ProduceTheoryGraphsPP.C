@@ -1118,7 +1118,7 @@ void ProduceTheoryGraphsPP(){
     histoEtaToPi0RatioPythia8Monash8TeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash8TeV->Divide(histoEtaToPi0RatioPythia8Monash8TeV,histoPi0Pythia8MonashInvSec8TeV);
 
-    TFile* filePythia8Monash2013_8TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8TeV_3640Mio.root");
+    TFile* filePythia8Monash2013_8TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8000GeV_5914Mio.root");
     TH1F* histoPi0Pythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Pi0_MB_XSec");
     TH1F* histoEtaPythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Eta_MB_XSec");
     TH1F* histoEtaToPi0RatioPythia8Monash8TeVLego= (TH1F*)histoEtaPythia8MonashInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Monash8TeVLego");
@@ -1139,6 +1139,20 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoChPionPythia8Tune4CInvSec8TeVLego = (TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_PiPl_MB_XSec");
     histoChPionPythia8Tune4CInvSec8TeVLego->Add((TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_PiMi_MB_XSec"),1);
     histoChPionPythia8Tune4CInvSec8TeVLego->Scale(0.5);
+
+    //**********************************************************************************************************************
+    //***************************** Pythia calculations 8.16TeV ************************************************************
+    //**********************************************************************************************************************
+    TFile* filePythia8Monash2013_8160GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8160GeV_5919Mio.root");
+    TH1F* histoPi0Pythia8MonashInvSec8160GeVLego    = (TH1F*)filePythia8Monash2013_8160GeVLego->Get("hPt_Pi0_MB_XSec");
+    TH1F* histoEtaPythia8MonashInvSec8160GeVLego    = (TH1F*)filePythia8Monash2013_8160GeVLego->Get("hPt_Eta_MB_XSec");
+    TH1F* histoEtaToPi0RatioPythia8Monash8160GeVLego= (TH1F*)histoEtaPythia8MonashInvSec8160GeVLego->Clone("histoEtaToPi0RatioPythia8Monash8160GeVLego");
+    histoEtaToPi0RatioPythia8Monash8160GeVLego->Sumw2();
+    histoEtaToPi0RatioPythia8Monash8160GeVLego->Divide(histoEtaToPi0RatioPythia8Monash8160GeVLego,histoPi0Pythia8MonashInvSec8160GeVLego);
+    //charged pions
+    TH1F* histoChPionPythia8MonashInvSec8160GeVLego = (TH1F*)filePythia8Monash2013_8160GeVLego->Get("hPt_PiPl_MB_XSec");
+    histoChPionPythia8MonashInvSec8160GeVLego->Add((TH1F*)filePythia8Monash2013_8160GeVLego->Get("hPt_PiMi_MB_XSec"),1);
+    histoChPionPythia8MonashInvSec8160GeVLego->Scale(0.5);
 
     //**********************************************************************************************************************
     //***************************** Pythia calculations 13TeV ************************************************************
@@ -1565,6 +1579,14 @@ void ProduceTheoryGraphsPP(){
         graphRatioElecFromWeakBoson->Write("graphRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
         splineRatioElecFromWeakBoson->Write("splineRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
 
+        //***********************************************************************
+        // write  calculations for 8.16TeV
+        //***********************************************************************
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (central)
+        histoPi0Pythia8MonashInvSec8160GeVLego->Write("histoInvSecPythia8Monash2013LegoPi08160GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec8160GeVLego->Write("histoInvSecPythia8Monash2013LegoEta8160GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash8160GeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego8160GeV", TObject::kOverwrite);
+        histoChPionPythia8MonashInvSec8160GeVLego->Write("histoInvSecPythia8Monash2013LegoChPion8160GeV", TObject::kOverwrite);
         //***********************************************************************
         // write  calculations for 13TeV
         //***********************************************************************

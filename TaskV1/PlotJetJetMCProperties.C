@@ -252,6 +252,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         maxPt           = 30;
     } else if (mode == 2){
         maxPt           = 30;
+    } else if (mode == 10 && period.Contains("LHC18b9")){
+        maxPt           = 50;
     } else if (mode == 10){
         maxPt           = 50;
     } else if (mode == 0 && period.Contains("LHC18b8") ){
@@ -412,7 +414,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         temp = (TH1F*)MCContainer->FindObject("MC_Pi0_WOEventWeights_Pt");
         histoMCPi0InputW0EvtWeigth[i]               = new TH1F(*temp);
         histoMCPi0InputW0EvtWeigth[i]->SetName(Form("MC_Pi0_WOEventWeights_Pt%d",i));
-        if (optionEnergy.CompareTo("pPb_5.023TeVRun2") == 0 || optionEnergy.CompareTo("13TeV") == 0){
+        if (optionEnergy.CompareTo("pPb_5.023TeVRun2") == 0 || optionEnergy.CompareTo("13TeV") == 0|| optionEnergy.Contains("pPb_8TeV")){
             histoMCPi0Input[i]->Rebin(8);
             histoMCPi0InputAcc[i]->Rebin(8);
             histoMCPi0InputW0EvtWeigth[i]->Rebin(8);

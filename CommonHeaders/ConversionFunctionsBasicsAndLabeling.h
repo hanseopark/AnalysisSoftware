@@ -960,6 +960,8 @@
             return 5444;
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 )  {
             return 5023;
+        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_8.16TeVCent") == 0 )  {
+            return 8160;
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
             return 1;
@@ -1023,7 +1025,7 @@
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 ||  fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return  "5TeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
-            return  "8TeV";
+            return  "pPb8TeV";
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
             return "";
@@ -1462,6 +1464,8 @@
                 return -0.4;
             case 8:
                 return -0.66112;
+            case 9:
+                return -0.6687;
             default:
                 return 0;
         }
@@ -1490,6 +1494,8 @@
                 return 0.4;
             case 8:
                 return 0.66112;
+            case 9:
+                return 0.66465;
             default:
                 return 0;
         }
@@ -1514,6 +1520,8 @@
                 return 4.5572;
             case 6:
                 return 4.36;
+            case 7:
+                return 1.39626;
             default:
                 return 0;
         }
@@ -1538,6 +1546,8 @@
                 return 5.5658;
             case 6:
                 return 5.59;
+            case 7:
+                return 5.7;
             default:
                 return 0;
         }
@@ -1578,7 +1588,7 @@
     //************************************************************************************
     //****** Analyzes photon (cluster) phi cut, returns double for normalization *********
     //************************************************************************************
-    Double_t ReturnDeltaPhiCalo(TString caloCutNumber){
+    Double_t ReturnDeltaPhiCalo(TString caloCutNumber, Int_t mode = -1){
 
         TString phiMinCutNumber(caloCutNumber(GetClusterPhiMinCutPosition(caloCutNumber),1));
         TString phiMaxCutNumber(caloCutNumber(GetClusterPhiMaxCutPosition(caloCutNumber),1));
@@ -5338,7 +5348,7 @@
     //************************************************************************************
     //** Return correct trigger rejection factor based on trigger cutnumber and energy ***
     //************************************************************************************
-    Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
+    Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger, TString strTrigger = ""){
         Double_t triggerRejec   = 1;
         if (energy.CompareTo("2.76TeV") == 0){
             cout << "Trigger used: " << trigger << endl;
@@ -5351,13 +5361,24 @@
             } else if (trigger == 83){  // EG1
                 triggerRejec    = 7217;
             }
-        }else  if (energy.CompareTo("8TeV") == 0){
+        } else  if (energy.CompareTo("8TeV") == 0){
+            cout << "Trigger used: " << trigger << endl;
+            if (trigger == 52){  // EMC7
+                triggerRejec    = 67.3;
+            } else if (trigger == 81){  // EGA
+                triggerRejec    = 15075;
+            }
+        }else  if (energy.CompareTo("pPb_8TeV") == 0){
         cout << "Trigger used: " << trigger << endl;
-        if (trigger == 52){  // EMC7
-            triggerRejec    = 67.3;
-        } else if (trigger == 81){  // EGA
-            triggerRejec    = 15075;
-        }
+            if (!strTrigger.CompareTo("8e")){  // EG2
+                triggerRejec    = 355;
+            } else if (!strTrigger.CompareTo("8d")){  // EG1
+                triggerRejec    = 1230;
+            } else if (!strTrigger.CompareTo("9c")){  // EJ2
+                triggerRejec    = 1;
+            } else if (!strTrigger.CompareTo("9b")){  // EJ1
+                triggerRejec    = 1;
+            }
     }
         return triggerRejec;
     }
@@ -5393,7 +5414,7 @@
 
         Double_t    xSec                = ReturnCorrectXSection(energy, selTrig);
         Double_t    xSecINEL            = ReturnCorrectXSection(energy, 3);
-        Double_t    triggerRejection    = ReturnTriggerRejectionFactor(energy, trigger.Atoi());
+        Double_t    triggerRejection    = ReturnTriggerRejectionFactor(energy, trigger.Atoi(),trigger);
         Double_t    scaleFactor         = 1.;
         if (energy.BeginsWith("PbPb") || energy.BeginsWith("XeXe")) {
             scaleFactor                 = 1.;
@@ -5419,7 +5440,7 @@
     //************************************************************************************
     //************ Return correct trigger name based on trigger cutnumber ****************
     //************************************************************************************
-    TString ReturnTriggerName(Int_t trigger, TString energy = ""){
+    TString ReturnTriggerName(Int_t trigger, TString energy = "", TString strTrigger = ""){
         cout << trigger << endl;
         if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
             cout << "energy: " << energy << endl;
@@ -5451,9 +5472,13 @@
             return "EGA";
         } else if (trigger == 81){                          // EGA
             return "EGA";
-        } else if (trigger == 85){                          // EG2
+        } else if (trigger == 85 || !strTrigger.CompareTo("8e")){                          // EG2
             return "EG2";
-        } else if (trigger == 83){                          // EG1
+        } else if (trigger == 83 || !strTrigger.CompareTo("8d")){                          // EG1
+            return "EG1";
+        } else if (trigger == 95 || !strTrigger.CompareTo("9c")){                          // EG2
+            return "EG2";
+        } else if (trigger == 93 || !strTrigger.CompareTo("9b")){                          // EG1
             return "EG1";
         }
         return "";

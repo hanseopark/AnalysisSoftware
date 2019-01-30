@@ -245,7 +245,11 @@
         TString formula2                    = f2->GetExpFormula();
 
         for (Int_t i = 0; i< nPar2; i++){
-            formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #ifndef __CLING__
+                formula2.ReplaceAll(Form("[p%d]",i), Form("[p%d]",i+nPar1));
+            #else
+                formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #endif
         }
 
         TF1* result = new TF1(name.Data(),Form("(%s)*(%s)",formula1.Data(), formula2.Data()), xmin, xmax);
@@ -274,7 +278,11 @@
         TString formula2                    = f2->GetExpFormula();
 
         for (Int_t i = 0; i< nPar2; i++){
-            formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #ifndef __CLING__
+                formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #else
+                formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #endif
         }
 
         TF1* result = new TF1(name.Data(),Form("(%s)/(%s)",formula1.Data(), formula2.Data()), xmin, xmax);
@@ -4753,7 +4761,11 @@
         TString formula2    = fit2->GetExpFormula();
 
         for (Int_t i = 0; i< nParFunc2; i++){
-            formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nParFunc1));
+            #ifdef __CLING__
+                formula2.ReplaceAll(Form("[p%d]",i), Form("[p%d]",i+nParFunc1));
+            #else
+                formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nParFunc1));
+            #endif
         }
         TF1* newFunction = new TF1(name.Data(),Form("(%s)/(%s)",formula1.Data(), formula2.Data()));
         for (Int_t i = 0; i < nParFunc1; i++ ){

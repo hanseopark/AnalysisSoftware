@@ -58,7 +58,8 @@
     TString     labelsElectron[9]                                           = { "DirE", "Gamma", "PiN", "Eta", "C", 
                                                                                 "B", "WOrZ", "Tau", "Rest"};
     TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
-
+    TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
+    Int_t       maxNSec                                                     = 4;
     //****************************************************************************
     //************************* MC object names **********************************
     //****************************************************************************
@@ -148,6 +149,7 @@
     void Delete();                                                                                              // Deleting all pointers
     void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
     Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
+    Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
     void CreateRatioHistos();                                                                                   // creates ratio histos for MC inputs
 
     //****************************************************************************
@@ -462,6 +464,10 @@
     TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
     TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
     TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};
+    Bool_t      fHaveCocktailInputForSec                                    = kFALSE;
+    TFile*      fFileCocktailInput                                          = NULL;
+    TH1D*       fHistoYieldExternSecInput[3]                                = {NULL, NULL, NULL};
+    TH1D*       fHistoYieldExternSecInputReb[3]                             = {NULL, NULL, NULL};
 
     //****************************************************************************
     //******************* Exotics QA histograms **********************************
