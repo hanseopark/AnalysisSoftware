@@ -1,12 +1,12 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Friederike Bock, fbock@cern.ch                                 ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Friederike Bock, fbock@cern.ch                                 *****
  *******************************************************************************/
 
 #include "QA.h"
 
-void EventQA_Compare( TString suffix  = "eps", 
+void EventQA_Compare( TString suffix  = "eps",
                         Int_t mode      = 2
                       ){
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -53,8 +53,8 @@ void EventQA_Compare( TString suffix  = "eps",
                                     "00085013_1111121063032200000_1111121063022210001_0163301100000000",
                                     "00083013_1111121063032200000_1111121063022210001_0163301100000000"
                                   };
-    
-    
+
+
     //**************************************************************************************************************
 
 //  const Int_t nSets = 4;
@@ -117,9 +117,9 @@ void EventQA_Compare( TString suffix  = "eps",
 //                                     "00003113_1111121053032200000_1111121053022210001_0163301100000000",
 //                                     "00051013_1111121053032200000_1111121053022210001_0163301100000000"
 //                                    };
-//     
-//                                   
-                                  
+//
+//
+
 //**************************************************************************************************************
     Style_t hMarkerStyle[nSets];
     Size_t hMarkerSize[nSets];
@@ -200,7 +200,7 @@ void EventQA_Compare( TString suffix  = "eps",
     TH1D* hcGammaCandidates[nSets];
     TH1D* hcMergedCandidates[nSets];
 
-   
+
     //--------------------------------------------------------------------------------------------------
     //----------------- runwise histograms -------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------
@@ -219,20 +219,20 @@ void EventQA_Compare( TString suffix  = "eps",
     TH1D* hFracWtxOut[nSets];
     TH1D* hFracSPDClusTrack[nSets];
     TH1D* hFracPileUp[nSets];
-    TH1D* hFracWOVtx[nSets];    
+    TH1D* hFracWOVtx[nSets];
     TH1D* hConvNCandidates[nSets];
     TH1D* hConvNCandidatesQA[nSets];
     TH1D* hCaloNClusters[nSets];
     TH1D* hCaloNClustersQA[nSets];
     TH1D* hCaloNMergedClusters[nSets];
     TH1D* hCaloNMergedClustersQA[nSets];
-    
+
 
     Int_t nRange = 0;
     Int_t nRangeRunwise = 0;
 
     for(Int_t i=0; i<nSets; i++){
-        
+
         vecHistos[i].push_back(hcVertexZ[i]);
         vecHistosName[i].push_back("VertexZ");
         vecHistosNameForSaving[i].push_back("VertexZ");
@@ -243,12 +243,12 @@ void EventQA_Compare( TString suffix  = "eps",
         vecHistosNameForSaving[i].push_back("GoodESDTracks");
         if(i==0)nRange++;
 
-        
+
         vecHistos[i].push_back(hcV0Mult[i]);
         vecHistosName[i].push_back("V0 Multiplicity");
         vecHistosNameForSaving[i].push_back("V0Mult");
         if(i==0)nRange++;
-    
+
         vecHistos[i].push_back(hcGammaCandidates[i]);
         vecHistosName[i].push_back("GammaCandidates");
         vecHistosNameForSaving[i].push_back("GammaCandidates");
@@ -260,7 +260,7 @@ void EventQA_Compare( TString suffix  = "eps",
             vecHistosNameForSaving[i].push_back("MergedCandidates");
             if(i==0)nRange++;
         }
-        
+
         //--------------------------------------------------------------------------------------------------
         //----------------- runwise histograms -------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------
@@ -279,7 +279,7 @@ void EventQA_Compare( TString suffix  = "eps",
         vecHistosRunwise[i].push_back(hNEventsFracGood[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracGoodEvents");
         if(i==0)nRangeRunwise++;
-                                          
+
         vecHistosRunwise[i].push_back(hNEventsFracGood[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracGoodEvents");
         if(i==0)nRangeRunwise++;
@@ -287,11 +287,11 @@ void EventQA_Compare( TString suffix  = "eps",
         vecHistosRunwise[i].push_back(hNEventsFracNorm[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracNormAll");
         if(i==0)nRangeRunwise++;
-                                          
+
         vecHistosRunwise[i].push_back(hNEventsFracMinBias[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracMinBias");
         if(i==0)nRangeRunwise++;
-                                          
+
         vecHistosRunwise[i].push_back(hTracksMeanGood[i]);
         vecHistosRunwiseName[i].push_back("hTracksGood-Mean");
         if(i==0)nRangeRunwise++;
@@ -315,7 +315,7 @@ void EventQA_Compare( TString suffix  = "eps",
         vecHistosRunwise[i].push_back(hFracSPDClusTrack[i]);
         vecHistosRunwiseName[i].push_back("hFracSPDClusTrack");
         if(i==0)nRangeRunwise++;
-  
+
         vecHistosRunwise[i].push_back(hFracPileUp[i]);
         vecHistosRunwiseName[i].push_back("hFracPileUp");
         if(i==0)nRangeRunwise++;
@@ -323,7 +323,7 @@ void EventQA_Compare( TString suffix  = "eps",
         vecHistosRunwise[i].push_back(hFracWOVtx[i]);
         vecHistosRunwiseName[i].push_back("hFracWOVtx");
         if(i==0)nRangeRunwise++;
-        
+
         if (mode == 0 || mode == 2 || mode == 3){
             vecHistosRunwise[i].push_back(hConvNCandidates[i]);
             vecHistosRunwiseName[i].push_back("hConvNCandidates");
@@ -333,7 +333,7 @@ void EventQA_Compare( TString suffix  = "eps",
             vecHistosRunwiseName[i].push_back("hConvNCandidatesQA");
             if(i==0)nRangeRunwise++;
         }
-            
+
         vecHistosRunwise[i].push_back(hCaloNClusters[i]);
         vecHistosRunwiseName[i].push_back("hCaloNClusters");
         if(i==0)nRangeRunwise++;
@@ -365,10 +365,10 @@ void EventQA_Compare( TString suffix  = "eps",
         if(FileRunwise->IsZombie()) {cout << "Warning: ROOT file '" << fFileRunwise.Data() << "' could not be openend!" << endl;}
         if(File->IsZombie()&&FileRunwise->IsZombie()) {cout << "ERROR: Only Zombies around, return..." << endl; return;}
 
-                        
+
         if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
             nEvents[i]      = ((TH1*) File->Get("NEvents"))->GetBinContent(1);
-        else 
+        else
             nEvents[i]      = GetNEvents((TH1*) File->Get("NEvents"),kFALSE);
 
         cout << endl;
@@ -454,12 +454,12 @@ void EventQA_Compare( TString suffix  = "eps",
         for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++){
             cout << h << " " << vecHistosRunwiseName[0].at(h).Data() <<  ", " ;
             Double_t scaleFactor    = 1.2;
-            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
-                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") ) 
+            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||
+                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") )
                 scaleFactor    = 12.;
             if (vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean"))
                 scaleFactor    = 2.5;
-            
+
             AdjustHistRange(vecHistosRunwise, scaleFactor, scaleFactor, h, nSets, kTRUE);
             for(Int_t i=0; i<nSets; i++){
                 TString draw;
@@ -470,9 +470,9 @@ void EventQA_Compare( TString suffix  = "eps",
             }
             legend->Draw();
             PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), plotDataSet.Data());
-            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
-                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")  
-               ) 
+            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||
+                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")
+               )
                SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/%s.%s", outputDir.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
             else SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/%s.%s", outputDir.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()));
             legend->Clear();
@@ -493,11 +493,11 @@ void EventQA_Compare( TString suffix  = "eps",
             legend->AddEntry(((TH1D*) vecHistos[i].at(h)),plotDataSets[i].Data(),"p");
         }
         legend->Draw();
-        if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") ) 
+        if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") )
             PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), plotDataSet.Data());
-        else 
+        else
             PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", plotDataSet.Data());
-        
+
         SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/QA/%s.%s", outputDir.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
         legend->Clear();
 //         if(h==9) TGaxis::SetExponentOffset(0, 0, "x");

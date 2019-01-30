@@ -55,9 +55,11 @@ void EventQA(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged PHOS
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
+    //          14 // new output PCM-EDC (EMCal + DCal)
+    //          15 // new output EDC (EMCal + DCal)
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14)
         isConv                          = kTRUE;
-    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12) || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 200)
+    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12 || fMode == 15 ) || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 200)
         isCalo                          = kTRUE;
     if (fMode == 10 || fMode == 11)
         isMergedCalo                    = kTRUE;
@@ -271,7 +273,10 @@ void EventQA(
         } else if(fClusterCutSelection[0].BeginsWith('3')){
             calo            = "DCal";
             fClusters       = Form("%s clusters", calo.Data());
-        } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
+        } else if(fClusterCutSelection[0].BeginsWith('4')){
+            calo            = "EMCal+DCal";
+            fClusters       = Form("%s clusters", calo.Data());
+        } else {cout << "No correct calorimeter type found: " << calo.Data()<<", returning..." << endl; return;}
     }
 
     //*****************************************************************************************************

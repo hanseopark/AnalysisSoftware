@@ -81,8 +81,10 @@ void ClusterQA_Runwise(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged EMCal
+    //          14 // new output PCM-EDC (EMCal + DCal)
+    //          15 // new output EDC (EMCal + DCal)
     if(fMode == 0 || fMode == 1 || fMode == 9){ cout << "Returning, given mode contains no calo information: " << fMode << endl; return;}
-    if(fMode != 2 && fMode != 3)
+    if(fMode != 2 && fMode != 3 && fMode != 14)
         isPCMCalo               = kFALSE;
     if(fMode == 10 || fMode == 11)
         isMerged                = kTRUE;
@@ -281,6 +283,11 @@ void ClusterQA_Runwise(
         calo                        = "DCal";
         iCalo                       = 3;
         nCaloModules                = 18;
+        nCaloCells                  = 18000;
+    } else if(fClusterCutSelection.BeginsWith('4')){
+        calo                        = "EMCal+DCal";
+        iCalo                       = 4;
+        nCaloModules                = 20;
         nCaloCells                  = 18000;
     } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
 

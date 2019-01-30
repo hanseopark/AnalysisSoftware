@@ -80,6 +80,8 @@ void EventQA_Runwise(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged PHOS
+    //          14 // new output PCM-EDC (EMCal + DCal)
+    //          15 // new output EDC (EMCal + DCal)
     if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv          = kTRUE;
     if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11)
@@ -315,6 +317,9 @@ void EventQA_Runwise(
             fClusters           = Form("%s clusters", calo.Data());
         } else if(fClusterCutSelection.BeginsWith('3')){
             calo                = "DCal";
+            fClusters           = Form("%s clusters", calo.Data());
+        } else if(fClusterCutSelection.BeginsWith('4')){
+            calo                = "EMCal+DCal";
             fClusters           = Form("%s clusters", calo.Data());
         }else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
     }

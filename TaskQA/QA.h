@@ -251,12 +251,12 @@ public:
         fFitRecoPi->SetParLimits(0,mesonAmplitudeMinPi,mesonAmplitudeMaxPi);
         fFitRecoPi->SetParLimits(1,0.1,0.2);
 
-        if(mode==2){
+        if(mode==2 || mode==14){
             fFitRecoPi->SetParameter(2,0.008);
             fFitRecoPi->SetParameter(3,0.015);
             fFitRecoPi->SetParLimits(2,0.005,0.02);
             fFitRecoPi->SetParLimits(3,0.010,0.04);
-        }else if(mode==4){
+        }else if(mode==4 || mode==15){
             fFitRecoPi->SetParameter(2,0.012);
             fFitRecoPi->SetParameter(3,0.020);
             fFitRecoPi->SetParLimits(2,0.01,0.03);
@@ -3028,7 +3028,7 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
     for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
         SetXRange(DataMCHists.at(i),1,DataMCHists.at(i)->GetNbinsX());
     }
-
+    
     for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++){
 
         if (isGoodCell && iGoodCellTot > 0){
@@ -3091,8 +3091,8 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
                 DrawGammaSetMarker(fHistDataMC, 1, 0.5, color[i], color[i]);
                 leg1->AddEntry(fHistDataMC,plotDataSets[i].Data());
             }
-            if(i==0) fHistDataMC->DrawCopy("x0,e,p,same");
-            else if(i==iStart) fHistDataMC->DrawCopy("e,hist");
+            if(i==iStart) fHistDataMC->DrawCopy("e,hist");
+            else if(i==0) fHistDataMC->DrawCopy("x0,e,p,same");
             else fHistDataMC->DrawCopy("e,hist,same");
         }
         leg1->Draw("same");
