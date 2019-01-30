@@ -84,7 +84,7 @@ void EventQA_Runwise(
     //          15 // new output EDC (EMCal + DCal)
     if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv          = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11)
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 14 || fMode == 15)
         isCalo          = kTRUE;
     if (fMode == 10 || fMode == 11 )
         isMerged        = kTRUE;
