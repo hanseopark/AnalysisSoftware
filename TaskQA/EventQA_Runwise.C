@@ -82,7 +82,7 @@ void EventQA_Runwise(
     //          11 // merged PHOS
     //          14 // new output PCM-EDC (EMCal + DCal)
     //          15 // new output EDC (EMCal + DCal)
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14)
         isConv          = kTRUE;
     if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 14 || fMode == 15)
         isCalo          = kTRUE;

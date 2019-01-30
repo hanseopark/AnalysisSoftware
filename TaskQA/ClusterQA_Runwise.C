@@ -284,11 +284,6 @@ void ClusterQA_Runwise(
         iCalo                       = 3;
         nCaloModules                = 18;
         nCaloCells                  = 18000;
-    } else if(fClusterCutSelection.BeginsWith('4')){
-        calo                        = "EMCal+DCal";
-        iCalo                       = 4;
-        nCaloModules                = 20;
-        nCaloCells                  = 18000;
     } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
 
 
