@@ -284,7 +284,7 @@
             gammaCutNumber      = objstrGamma->GetString();
             electronCutNumber   = objstrElectron->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        } else if (type == 2 || type == 13){ //PCM-EMCal (PCM-DCal)
+        } else if (type == 2 || type == 13 || type == 14){ //PCM-EMCal (PCM-DCal)
             objstrEvent         = (TObjString*)arr->At(pos);
             objstrGamma         = (TObjString*)arr->At(1+pos);
             objstrCluster       = (TObjString*)arr->At(2+pos);
@@ -304,7 +304,7 @@
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        } else if (type == 4 || type == 12 || type == 200){ //EMCal-EMCal (DCal-DCal), TriggerQA
+        } else if (type == 4 || type == 12 || type == 15 || type == 200){ //EMCal-EMCal (DCal-DCal), TriggerQA
             objstrEvent         = (TObjString*)arr->At(pos);
             objstrCluster       = (TObjString*)arr->At(1+pos);
             objstrMeson         = (TObjString*)arr->At(2+pos);
