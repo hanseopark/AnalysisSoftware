@@ -4309,18 +4309,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphNLOCalcRGammaALICECocktail60100Center->GetYaxis()->SetTitle("R_{#gamma}");
                 graphNLOCalcRGammaALICECocktail60100Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphNLOCalcRGammaALICECocktail60100Center->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center_60100",TObject::kOverwrite);
-                // pPb 8 TeV
-                graphpppPb8TeVPythia8_prompt->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphpppPb8TeVPythia8_prompt->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
-                graphpppPb8TeVPythia8_prompt->Write("graphPromptPhotonPythia8_pPb8TeV", TObject::kOverwrite);
-                fitGammaPromptpPb8TeV_Pythia8->Write("fitPromptPhotonPythia8_pPb8TeV", TObject::kOverwrite);
-                graphpppPb8TeVPythia8_frag_onlyJJ->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphpppPb8TeVPythia8_frag_onlyJJ->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
-                graphpppPb8TeVPythia8_frag_onlyJJ->Write("graphFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
-                fitGammaFragpPb8TeV_Pythia8->Write("fitFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
-                graphRatioPythia8PromptGammaDivFragpPb8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                graphRatioPythia8PromptGammaDivFragpPb8TeV->Write("graphPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
-                fitPromptDivFragGammapPb8TeV_Pythia8->Write("ratioFitPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+
                 // writing McGill calcs
                 graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
                 graphGammaSpecMcGill5023GeV0020->Write("graphDirectPhotonSpecMcGill5023GeV_0020", TObject::kOverwrite);
@@ -4463,7 +4452,26 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphRGammaDirectPhotonPWGGAAlwina->Write("graphRGammaDirectPhotonPWGGAAlwina",TObject::kOverwrite);
 
                 cout << __LINE__ << endl;
+                TDirectoryFile* directory8TeV = (TDirectoryFile*)fileTheoryGraphsPPb->Get("pPb_8.16TeV");
+                if (!directory8TeV){
+                    fileTheoryGraphsPPb->mkdir("pPb_8.16TeV");
+                }
+                fileTheoryGraphsPPb->cd("pPb_8.16TeV");
+                // pPb 8 TeV
+                graphpppPb8TeVPythia8_prompt->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphpppPb8TeVPythia8_prompt->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
+                graphpppPb8TeVPythia8_prompt->Write("graphPromptPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+                fitGammaPromptpPb8TeV_Pythia8->Write("fitPromptPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+                graphpppPb8TeVPythia8_frag_onlyJJ->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphpppPb8TeVPythia8_frag_onlyJJ->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
+                graphpppPb8TeVPythia8_frag_onlyJJ->Write("graphFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+                fitGammaFragpPb8TeV_Pythia8->Write("fitFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+                graphRatioPythia8PromptGammaDivFragpPb8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphRatioPythia8PromptGammaDivFragpPb8TeV->Write("graphPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
+                fitPromptDivFragGammapPb8TeV_Pythia8->Write("ratioFitPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
 
+
+                cout << __LINE__ << endl;
                 fileTheoryGraphsPPb->Close();
 
                 delete graphNLOCalcDirGampPb5TeV;

@@ -402,9 +402,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     // contact hendrik.poppenborg@cern.ch
     TString fileNameTheorypPb          = "ExternalInputpPb/Theory/TheoryCompilationPPb.root";
     TFile* fileTheory_pPb8TeV                           = new TFile(fileNameTheorypPb.Data());
-    TString nameTheoryFit_pPb8TeV                       = Form("ratioFitPromptPhotonDivFragPhotonPythia8_%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
-    TDirectory* directoryTheoDirGamma_pPb8TeV           = (TDirectory*)fileTheory_pPb8TeV->Get("DirectPhoton");
-    TF1* fitPromptdivFragTheo_pPb8TeV                   = (TF1*)directoryTheoDirGamma->Get(nameTheoryFit_pPb8TeV.Data());
+    TString nameTheoryFit_pPb8TeV                       = Form("pPb_8.16TeV/ratioFitPromptPhotonDivFragPhotonPythia8_%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
+    TF1* fitPromptdivFragTheo_pPb8TeV                   = (TF1*)fileTheory_pPb8TeV->Get(nameTheoryFit_pPb8TeV.Data());
 
     // load ratio (POWHGEG electrons from weak bosons)/(electrons from JJ)
     TSpline3 *splineRatioElecFromWeakBoson_8TeV = (TSpline3*)fileTheory_8TeV->Get("splineRatioElecFromWeakBoson_8TeV");
@@ -1149,8 +1148,72 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     canvasPurity->SaveAs(Form("%s/%s_%s_TruePurity_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
     delete legendPurity;
     delete canvasPurity;
-    
-     
+
+    //*********************************************************************************
+    //************************** Relative Purity Corrections Plot ******************************************
+    //*********************************************************************************
+    if (histoMesonPurityUnmodPt){
+        cout << "Plotting purity" << endl;
+        TCanvas* canvasRelPurityCorr = new TCanvas("canvasRelPurityCorr","",0,0,1000,900);// gives the page size
+        DrawGammaCanvasSettings( canvasRelPurityCorr, 0.09, 0.017, 0.015, 0.08);
+        canvasRelPurityCorr->SetLogy(0);
+        TH1D* histoMesonPurityPtRel = (TH1D*) histoMesonPurityUnmodPt->Clone("histoMesonPurityPtRel");
+        histoMesonPurityPtRel->Divide(histoMesonPurityPt);
+        DrawAutoGammaMesonHistos( histoMesonPurityPtRel,
+                                    "", "#it{p}_{T} (GeV/#it{c})", "relative #it{P}_{#pi^{0}} correction",
+                                    kFALSE, 0.75, 3e-6, kFALSE,
+                                    kTRUE, 0.941, 1.14,
+                                    kFALSE, 0., 10.);
+        histoMesonPurityPtRel->GetYaxis()->SetTitleOffset(1.05);
+        DrawGammaSetMarker(histoMesonPurityPtRel,  20 , 1.5, kAzure+2, kAzure+2);
+        histoMesonPurityPtRel->Draw("e1");
+        DrawGammaLines(0.,maxPtMeson , 1.0, 1.0,1, kGray, 7);
+        TH1D* histoMesonPurityPtOnlyGammaCorrRel=NULL;
+        if (histoMesonPurityPtOnlyGammaCorr){
+            histoMesonPurityPtOnlyGammaCorrRel = (TH1D*) histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyGammaCorrRel");
+            histoMesonPurityPtOnlyGammaCorrRel->Sumw2();
+            histoMesonPurityPtOnlyGammaCorrRel->Divide(histoMesonPurityPtOnlyGammaCorr);
+            DrawGammaSetMarker(histoMesonPurityPtOnlyGammaCorrRel,  22 , 1.5, kGreen+1, kGreen+1);
+            histoMesonPurityPtOnlyGammaCorrRel->Draw("same,e1");
+        }
+        TH1D* histoMesonPurityPtOnlyEtaCorrRel=NULL;
+        if (histoMesonPurityPtOnlyEtaCorr){
+            histoMesonPurityPtOnlyEtaCorrRel = (TH1D*) histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyEtaCorrRel");
+            histoMesonPurityPtOnlyEtaCorrRel->Sumw2();
+            histoMesonPurityPtOnlyEtaCorrRel->Divide(histoMesonPurityPtOnlyEtaCorr);
+            DrawGammaSetMarker(histoMesonPurityPtOnlyEtaCorrRel,  22 , 1.5, kBlue+2, kBlue+2);
+            histoMesonPurityPtOnlyEtaCorrRel->Draw("same,e1");
+        }
+        TH1D* histoMesonPurityPtOnlyElecCorrRel=NULL;
+        if (histoMesonPurityPtOnlyElecCorr){
+            histoMesonPurityPtOnlyElecCorrRel = (TH1D*) histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyElecCorrRel");
+            histoMesonPurityPtOnlyElecCorrRel->Sumw2();
+            histoMesonPurityPtOnlyElecCorrRel->Divide(histoMesonPurityPtOnlyElecCorr);
+            DrawGammaSetMarker(histoMesonPurityPtOnlyElecCorrRel,  22 , 1.5, kRed+2, kRed+2);
+            histoMesonPurityPtOnlyElecCorrRel->Draw("same,e1");
+        }
+
+        TLegend* legendRelPurityCorr = GetAndSetLegend2(0.2, 0.125, 0.65, 0.285, 28);
+        legendRelPurityCorr->SetMargin(0.12);
+        if (histoMesonPurityPtRel)
+            legendRelPurityCorr->AddEntry(histoMesonPurityPtRel,Form("%s Purity rel. corr. #gamma,#eta,e^{#pm}",textMeson.Data()));
+        if (histoMesonPurityPtOnlyGammaCorrRel)
+            legendRelPurityCorr->AddEntry(histoMesonPurityPtOnlyGammaCorrRel,Form("%s Purity, rel corr. for #gamma",textMeson.Data()));
+        if (histoMesonPurityPtOnlyEtaCorrRel)
+            legendRelPurityCorr->AddEntry(histoMesonPurityPtOnlyEtaCorrRel,Form("%s Purity, rel corr. for #eta",textMeson.Data()));
+        if (histoMesonPurityPtOnlyElecCorrRel)
+            legendRelPurityCorr->AddEntry(histoMesonPurityPtOnlyElecCorrRel,Form("%s Purity, rel corr. for e^{#pm}",textMeson.Data()));
+
+        legendRelPurityCorr->Draw();
+
+        PutProcessLabelAndEnergyOnPlot(0.95, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 43, 0.03, "", 1, 1.25, 31);
+        canvasRelPurityCorr->Update();
+
+        canvasRelPurityCorr->SaveAs(Form("%s/%s_%s_TruePurityRelCorrections_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        delete legendRelPurityCorr;
+        delete canvasRelPurityCorr;
+    }
+
     if (kIsMC){ 
         //**********************************************************************************
         //********************** BG distribution *******************************************
