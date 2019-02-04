@@ -104,13 +104,13 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     TFile* fileRawSignalMC = new TFile(mcFilename);
 
 
-    cout << dataFilename << endl;
-    cout << mcFilename << endl;
-    cout << fCutSelection.Data() << endl;
-    cout << mesonType.Data() << endl;
-    cout << fSuffix.Data()<< endl;
-    cout << energyFlag.Data() << endl;
-    cout << numberOfBins << endl;
+    cout << "dataFilename: " << dataFilename << endl;
+    cout << "mcFilename: " << mcFilename << endl;
+    cout << "fCutSelection: " << fCutSelection.Data() << endl;
+    cout << "mesonType: " << mesonType.Data() << endl;
+    cout << "fSuffix: " << fSuffix.Data()<< endl;
+    cout << "energyFlag: " << energyFlag.Data() << endl;
+    cout << "numberOfBins: " << numberOfBins << endl;
 
     TH1D* histoChi2Data                     = (TH1D*) fileRawSignalData->Get("histoChi2_0");
     TH1D* histoChi2_Pol2_Data               = (TH1D*) fileRawSignalData->Get("histoChi2_1");
