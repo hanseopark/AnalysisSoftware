@@ -1985,7 +1985,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                                 histoGammaTruePurity_Pt_OrBin
                                             );
         }
-        cout << "done with seondary corrections" << endl;
+        cout << "done with secondary corrections" << endl;
         // create histograms for unfolding for different techniques
         histoGammaCorrUnfoldReso_PtCopy                         = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_PtCopy");
         histoGammaCorrUnfoldReso_Pt                             = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_Pt");

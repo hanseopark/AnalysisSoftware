@@ -512,7 +512,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     Int_t markerType            = 24;
 
     TF1 *One                    = new TF1("One","1",0,25);
-    One->SetLineWidth(1.2);
+    One->SetLineWidth(1);
     One->SetLineColor(1);
     TString nameIntRanges[6]    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 

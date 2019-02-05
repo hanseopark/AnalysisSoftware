@@ -205,21 +205,21 @@
         Double_t    xMin, xMax;
         TString     formula         = func->GetExpFormula();
         func->GetRange(xMin, xMax);
-#ifndef __CLING__
-        for (Int_t i=0; i<func->GetNpar(); i++) {
-            formula.ReplaceAll(Form("[p%d]", i), Form("[placeholder%d]",i+1));
-        }
-        for (Int_t i=1; i<func->GetNpar()+1; i++) {
-            formula.ReplaceAll(Form("[placeholder%d]", i), Form("[p%d]",i));
-        }
-#else
-        for (Int_t i=0; i<func->GetNpar(); i++) {
-            formula.ReplaceAll(Form("[%d]", i), Form("[placeholder%d]",i+1));
-        }
-        for (Int_t i=1; i<func->GetNpar()+1; i++) {
-            formula.ReplaceAll(Form("[placeholder%d]", i), Form("[%d]",i));
-        }
-  #endif
+        #ifndef __CLING__
+            for (Int_t i=0; i<func->GetNpar(); i++) {
+                formula.ReplaceAll(Form("[p%d]", i), Form("[placeholder%d]",i+1));
+            }
+            for (Int_t i=1; i<func->GetNpar()+1; i++) {
+                formula.ReplaceAll(Form("[placeholder%d]", i), Form("[p%d]",i));
+            }
+        #else
+            for (Int_t i=0; i<func->GetNpar(); i++) {
+                formula.ReplaceAll(Form("[%d]", i), Form("[placeholder%d]",i+1));
+            }
+            for (Int_t i=1; i<func->GetNpar()+1; i++) {
+                formula.ReplaceAll(Form("[placeholder%d]", i), Form("[%d]",i));
+            }
+        #endif
 
         TF1* result                 = new TF1(name.Data(), Form("[0] * (%s)", formula.Data()), xMin, xMax);
         for (Int_t i=0; i<func->GetNpar()+1; i++) {

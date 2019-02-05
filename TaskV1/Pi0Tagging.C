@@ -317,7 +317,7 @@ void Pi0Tagging(    TString nameFileGamma   = "",
   //plotting nominator/denominator
   //**********************************************************************************
 
-  TCanvas *canvasRatio = new TCanvas("canvasRatio","",0.095,0.09,1000,815);
+  TCanvas *canvasRatio = new TCanvas("canvasRatio","",0,0,1000,815);
   DrawGammaCanvasSettings( canvasRatio, 0.09, 0.02, 0.02, 0.09);
   canvasRatio->cd();
   canvasRatio->SetLogx();
@@ -365,7 +365,7 @@ void Pi0Tagging(    TString nameFileGamma   = "",
   //plotting RGamma
   //**********************************************************************************
 
-  TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
+  TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0,0,1000,815);
   DrawGammaCanvasSettings( canvasDoubleRatio, 0.09, 0.02, 0.02, 0.09);
   canvasDoubleRatio->cd();
   canvasDoubleRatio->SetLogx();

@@ -1079,11 +1079,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                 fi
             fi
             if [ $USECOCK -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
-		if [ $ISROOT6 -eq 0 ]; then
-                    root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
-		else
-		    root -b -x -l -q TaskV1/PrepareSecondaries.C\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
-		fi
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then
@@ -1370,11 +1366,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                 Pi0MCCorrFILE=`ls $CUTSELECTION/$ENERGY/Pi0_MC_GammaConvV1Correction_*.root`
                 GammaPi0MCCorrFILE=`ls $CUTSELECTION/$ENERGY/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
                 if [ $USECOCK -eq 1 ] && [ -f $Pi0dataCorrFILE ]; then
-		    if [ $ISROOT6 -eq 0 ]; then
-			root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$COCKROOTFILE\"\,\"$Pi0dataCorrFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE\)
-		    else
-			root -b -x -l -q TaskV1/PrepareCocktail.C\(\"$COCKROOTFILE\"\,\"$Pi0dataCorrFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE\)
-		    fi
+                root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$COCKROOTFILE\"\,\"$Pi0dataCorrFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE\)
 
                 fi
                 GammaCocktailFile=`ls $CUTSELECTION/$ENERGY/GammaCocktail_$COCKRAP*.root`

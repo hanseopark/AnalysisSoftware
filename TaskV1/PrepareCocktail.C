@@ -62,7 +62,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
                         Bool_t      producePlotsInOrPtRange     = kFALSE,
                         Bool_t      producePlotsForThesis       = kFALSE,
                         Bool_t      produceOutputForPaper       = kFALSE,
-                        TString     specialNameForOutput        = ""
+                        TString     specialNameForOutput        = "",
+                        Bool_t      disableParamPlotting        = kTRUE
+
                      ) {
 
     gROOT->Reset();
@@ -202,21 +204,29 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     cocktailInputParametrizationsMtScaled                       = new TF1*[nMotherParticles];
     TF1* paramTemp                                              = NULL;
     TF1* paramMtTemp                                            = NULL;
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        paramTemp                                               = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt", motherParticlesPDG[i].Data()));
-        paramMtTemp                                             = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
-        if (paramTemp)  cocktailInputParametrizations[i]        = new TF1(*paramTemp);
-        else            cocktailInputParametrizations[i]        = NULL;
-        if (paramMtTemp)
-            cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
-        else {
-            cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], motherParticlesPDG[i].Atoi(), motherParticlesPDG[0].Atoi(), mtScaleFactor[i], kFALSE, kTRUE);
-            cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+    if (!disableParamPlotting){
+        for (Int_t i=0; i<nMotherParticles; i++) {
+            paramTemp                                               = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt", motherParticlesPDG[i].Data()));
+            paramMtTemp                                             = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+            if (paramTemp)  cocktailInputParametrizations[i]        = new TF1(*paramTemp);
+            else            cocktailInputParametrizations[i]        = NULL;
+            if (paramMtTemp)
+                cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
+            else {
+                cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], motherParticlesPDG[i].Atoi(), motherParticlesPDG[0].Atoi(), mtScaleFactor[i], kFALSE, kTRUE);
+                cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+            }
+        }
+
+        if (cocktailSettingsList->FindObject("2212_pt"))
+            cocktailInputParametrizationProton                      = (TF1*)cocktailSettingsList->FindObject(Form("2212_pt"));
+    } else {
+        for (Int_t i=0; i<nMotherParticles; i++) {
+            cocktailInputParametrizations[i]                        = NULL;
+            cocktailInputParametrizationsMtScaled[i]                = NULL;
+
         }
     }
-
-    if (cocktailSettingsList->FindObject("2212_pt"))
-        cocktailInputParametrizationProton                      = (TF1*)cocktailSettingsList->FindObject(Form("2212_pt"));
 
     for (Int_t i=0; i<nMotherParticles; i++) {
         for (Int_t j=0; j<18; j++) {
@@ -234,13 +244,14 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
 
     //***************************** scale parametrizations with eventNormScalingFactor ******************************
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        if (cocktailInputParametrizations[i])
-            cocktailInputParametrizations[i]                    = ScaleTF1(cocktailInputParametrizations[i], eventNormScalingFactor, cocktailInputParametrizations[i]->GetName());
-        if (cocktailInputParametrizationsMtScaled[i])
-            cocktailInputParametrizationsMtScaled[i]            = ScaleTF1(cocktailInputParametrizationsMtScaled[i], eventNormScalingFactor, cocktailInputParametrizationsMtScaled[i]->GetName());
+    if (!disableParamPlotting){
+      for (Int_t i=0; i<nMotherParticles; i++) {
+          if (cocktailInputParametrizations[i])
+              cocktailInputParametrizations[i]                    = ScaleTF1(cocktailInputParametrizations[i], eventNormScalingFactor, cocktailInputParametrizations[i]->GetName());
+          if (cocktailInputParametrizationsMtScaled[i])
+              cocktailInputParametrizationsMtScaled[i]            = ScaleTF1(cocktailInputParametrizationsMtScaled[i], eventNormScalingFactor, cocktailInputParametrizationsMtScaled[i]->GetName());
+      }
     }
-
     //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaRap                                           = 2*rapidity;
@@ -1286,69 +1297,71 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     dummyHist                                                   = NULL;
     TH1D* tempRatio1                                            = NULL;
     TH1D* tempRatio2                                            = NULL;
-    for (Int_t particle=0; particle<nMotherParticles; particle++) {
-        if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && (particle==0 || cocktailInputParametrizationsMtScaled[particle])) {
-            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
-            padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
-            padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.048*3), 0.9, 0.87, 40);
-            legendMtCrossCheck->SetBorderSize(0);
+    if (!disableParamPlotting){
+        for (Int_t particle=0; particle<nMotherParticles; particle++) {
+            if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && (particle==0 || cocktailInputParametrizationsMtScaled[particle])) {
+                canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
+                padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
+                padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
+                legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.048*3), 0.9, 0.87, 40);
+                legendMtCrossCheck->SetBorderSize(0);
 
-            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
-            DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
-            DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
+                DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
+                DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
+                DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
 
-            padMtCrossCheck->Draw();
-            padMtCrossCheck->SetLogy();
-            padMtCrossCheck->SetLogx();
+                padMtCrossCheck->Draw();
+                padMtCrossCheck->SetLogy();
+                padMtCrossCheck->SetLogx();
 
-            padMtCrossCheckRatio->Draw();
-            padMtCrossCheckRatio->SetLogx();
+                padMtCrossCheckRatio->Draw();
+                padMtCrossCheckRatio->SetLogx();
 
-            // dummy hist
-            dummyHist                                           = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-            dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+                // dummy hist
+                dummyHist                                           = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+                dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
 
-            // spectrum + parametrizations
-            padMtCrossCheck->cd();
-            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
-            dummyHist->Draw();
+                // spectrum + parametrizations
+                padMtCrossCheck->cd();
+                SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
+                dummyHist->Draw();
 
-            legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
-            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
-            if(particle!=0){
-                cocktailInputParametrizationsMtScaled[particle]->SetLineColor(kBlack);
-                cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
-                cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
-                cocktailInputParametrizationsMtScaled[particle]->Draw("same");
-                legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
+                legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
+                legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
+                if(particle!=0){
+                    cocktailInputParametrizationsMtScaled[particle]->SetLineColor(kBlack);
+                    cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
+                    cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
+                    cocktailInputParametrizationsMtScaled[particle]->Draw("same");
+                    legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
+                }
+                histoGammaMotherPtOrBin[particle]->Draw("e1same");
+                cocktailInputParametrizations[particle]->Draw("same");
+                legendMtCrossCheck->Draw("same");
+
+                PutProcessLabelAndEnergyOnPlot(                 0.19, 0.185, 40, cent, textMeasurement, "", 43, 0.03);
+                if (producePlotsForThesis) PutThisThesisLabel(  0.19, 0.15, 40, 0.03, 1.25, 43);
+                else PutALICESimulationLabel(                   0.19, 0.15, 40, 0.03, 1.25, 43);
+
+                // ratios of parametrizations to spectrum
+                padMtCrossCheckRatio->cd();
+                SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+                dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+                dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
+
+                tempRatio1                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizations[particle]);
+                tempRatio1->SetLineColor(cocktailColor[particle]);
+                if(particle!=0){
+                tempRatio2                                        = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizationsMtScaled[particle]);
+                tempRatio2->SetLineColor(kBlack);
+                tempRatio2->SetMarkerColor(kBlack);
+                }
+                dummyHistRatio->Draw();
+                tempRatio1->Draw("e1same");
+                if(particle!=0)tempRatio2->Draw("e1same");
+
+                canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%s_%s.%s",outputDir.Data(), motherParticles[particle].Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
             }
-            histoGammaMotherPtOrBin[particle]->Draw("e1same");
-            cocktailInputParametrizations[particle]->Draw("same");
-            legendMtCrossCheck->Draw("same");
-
-            PutProcessLabelAndEnergyOnPlot(                 0.19, 0.185, 40, cent, textMeasurement, "", 43, 0.03);
-            if (producePlotsForThesis) PutThisThesisLabel(  0.19, 0.15, 40, 0.03, 1.25, 43);
-            else PutALICESimulationLabel(                   0.19, 0.15, 40, 0.03, 1.25, 43);
-
-            // ratios of parametrizations to spectrum
-            padMtCrossCheckRatio->cd();
-            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
-            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-            dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
-
-            tempRatio1                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizations[particle]);
-            tempRatio1->SetLineColor(cocktailColor[particle]);
-            if(particle!=0){
-              tempRatio2                                        = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizationsMtScaled[particle]);
-              tempRatio2->SetLineColor(kBlack);
-              tempRatio2->SetMarkerColor(kBlack);
-            }
-            dummyHistRatio->Draw();
-            tempRatio1->Draw("e1same");
-            if(particle!=0)tempRatio2->Draw("e1same");
-
-            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%s_%s.%s",outputDir.Data(), motherParticles[particle].Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
         }
     }
 
@@ -1582,221 +1595,225 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
     //***************************** Plot pi0 from data vs. cocktail inputs + param **********************************
     cout << "*****  Plot pi0 from data vs. cocktail inputs + param *****" << endl;
-    if (histoPi0YieldData && cocktailInputParametrizations[0] && hasPi0CocktailInput) {
+    if (!disableParamPlotting){
+        if (histoPi0YieldData && cocktailInputParametrizations[0] && hasPi0CocktailInput) {
 
-        ptPlotMin                                                   = 0.2;
-        ptPlotMax                                                   = 30;
+            ptPlotMin                                                   = 0.2;
+            ptPlotMax                                                   = 30;
 
-        TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
-        DrawGammaCanvasSettings(canvasPi0, 0.165, 0.015, 0.025, 0.25);
-        canvasPi0->SetLogy();
-        canvasPi0->SetLogx();
+            TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
+            DrawGammaCanvasSettings(canvasPi0, 0.165, 0.015, 0.025, 0.25);
+            canvasPi0->SetLogy();
+            canvasPi0->SetLogx();
 
-        TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.3, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
-        padSpectrum->SetBorderSize(0);
-        padSpectrum->Draw();
-        padSpectrum->SetLogy();
-        padSpectrum->SetLogx();
+            TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.3, 1., 1.,-1, -1, -2);
+            DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
+            padSpectrum->SetBorderSize(0);
+            padSpectrum->Draw();
+            padSpectrum->SetLogy();
+            padSpectrum->SetLogx();
 
-        TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.3,-1, -1, -2);
-        DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
-        padRatio->Draw();
-        padRatio->SetLogx();
+            TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.3,-1, -1, -2);
+            DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
+            padRatio->Draw();
+            padRatio->SetLogx();
 
-        padSpectrum->cd();
+            padSpectrum->cd();
 
-        Int_t nPi0CompLegendEntries                                 = 2;
-        for (Int_t i=0; i<nCocktailInputMethods; i++) {
-            if (histoPi0CocktailInput[i]) nPi0CompLegendEntries     = nPi0CompLegendEntries+1;
+            Int_t nPi0CompLegendEntries                                 = 2;
+            for (Int_t i=0; i<nCocktailInputMethods; i++) {
+                if (histoPi0CocktailInput[i]) nPi0CompLegendEntries     = nPi0CompLegendEntries+1;
+            }
+
+            TLegend* legendPi0Comp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nPi0CompLegendEntries), 0.85, 0.95, 40);
+            dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+            SetStyleHistoTH1ForGraphs(  dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})",
+                                        40, 40*1.15, 40, 40*1.15, 1.0, 1.85, 510, 510, 43, 63);
+            dummyHist->GetYaxis()->SetRangeUser( histoPi0YieldData->GetMinimum(0)*0.01, histoPi0YieldData->GetMaximum()*10);
+            dummyHist->SetLabelOffset(-0.015, "X");
+            dummyHist->SetTitleOffset(0.8, "X");
+            dummyHist->Draw();
+
+                DrawGammaSetMarker(     histoPi0YieldData, 20, 2, kRed,  kRed);
+                legendPi0Comp->AddEntry(histoPi0YieldData, Form("%s current ana.", motherParticlesLatex[0].Data()), "p");
+
+
+                cocktailInputParametrizations[0]->SetLineColor(kBlack);
+                cocktailInputParametrizations[0]->SetLineStyle(1);
+                cocktailInputParametrizations[0]->SetLineWidth(2);
+                legendPi0Comp->AddEntry(cocktailInputParametrizations[0], Form("%s param.", motherParticlesLatex[0].Data()), "l");
+                cocktailInputParametrizations[0]->Draw("same");
+
+                for (Int_t i=0; i<nCocktailInputMethods; i++) {
+                    if (!histoPi0CocktailInput[i]) continue;
+                    DrawGammaSetMarker(     histoPi0CocktailInput[i],  GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
+                                            GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
+                                            GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
+                    legendPi0Comp->AddEntry(histoPi0CocktailInput[i], Form("%s %s", motherParticlesLatex[0].Data(), cocktailInputMethodsLabels[i].Data()), "p");
+                    histoPi0CocktailInput[i]->Draw("e1,same");
+                }
+                histoPi0YieldData->Draw("e1,same");
+                legendPi0Comp->Draw("same");
+
+                PutProcessLabelAndEnergyOnPlot(                 0.21, 0.12, 40, cent, textMeasurement, "", 43, 0.03);
+                if (producePlotsForThesis) PutThisThesisLabel(  0.21, 0.07, 40, 0.03, 1.25, 43);
+                else PutALICESimulationLabel(                   0.21, 0.07, 40, 0.03, 1.25, 43);
+
+            padRatio->cd();
+            dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","data/gen", 40, 40*1.15, 40, 40*1.15, 2.8, 1.6, 510, 505, 43, 63);
+            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.05);
+            dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
+            dummyHistRatio->Draw();
+
+            DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+            DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+            DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
+
+                TH1F* ratioPi0CurrToParam                                   = (TH1F*)histoPi0YieldData->Clone("ratioPi0CurrToParam");
+                ratioPi0CurrToParam->Sumw2();
+                ratioPi0CurrToParam->Divide(cocktailInputParametrizations[0]);
+
+                TH1F** ratioPi0ToParam                                      = new TH1F*[nCocktailInputMethods];
+                for (Int_t i=0; i<nCocktailInputMethods; i++) {
+
+                    if (histoPi0CocktailInput[i]) {
+                        ratioPi0ToParam[i]                                  = (TH1F*)histoPi0CocktailInput[i]->Clone(Form("ratioPi0ToParam%d", i));
+                        ratioPi0ToParam[i]->Sumw2();
+                        ratioPi0ToParam[i]->Divide(cocktailInputParametrizations[0]);
+                    } else {
+                        ratioPi0ToParam[i]                                  = NULL;
+                    }
+                }
+
+                for (Int_t i=0; i<nCocktailInputMethods; i++) {
+                    if (!ratioPi0ToParam[i]) continue;
+                    DrawGammaSetMarker(     ratioPi0ToParam[i], GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
+                                            GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
+                                            GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
+                    ratioPi0ToParam[i]->Draw("e1,same");
+                }
+                DrawGammaSetMarker(     ratioPi0CurrToParam, 20, 2, kRed,  kRed);
+                ratioPi0CurrToParam->Draw("e1,same");
+
+            canvasPi0->SaveAs(Form("%s/Pi0Comp_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
+            delete legendPi0Comp;
+            delete padSpectrum;
+            delete padRatio;
+            delete canvasPi0;
         }
+    }
 
-        TLegend* legendPi0Comp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nPi0CompLegendEntries), 0.85, 0.95, 40);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(  dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})",
-                                    40, 40*1.15, 40, 40*1.15, 1.0, 1.85, 510, 510, 43, 63);
-        dummyHist->GetYaxis()->SetRangeUser( histoPi0YieldData->GetMinimum(0)*0.01, histoPi0YieldData->GetMaximum()*10);
-        dummyHist->SetLabelOffset(-0.015, "X");
-        dummyHist->SetTitleOffset(0.8, "X");
-        dummyHist->Draw();
+    //***************************** Plot eta from data vs. cocktail inputs + param **********************************
+    cout << "*****  Plot eta from data vs. cocktail inputs + param *****" << endl;
+    if (!disableParamPlotting){
+        if (histoEtaYieldData && cocktailInputParametrizations[1] && hasEtaCocktailInput) {
 
-            DrawGammaSetMarker(     histoPi0YieldData, 20, 2, kRed,  kRed);
-            legendPi0Comp->AddEntry(histoPi0YieldData, Form("%s current ana.", motherParticlesLatex[0].Data()), "p");
+            ptPlotMin                                                   = 0.2;
+            ptPlotMax                                                   = 30;
+
+
+            TCanvas *canvasEta                                          = new TCanvas("canvasEta","",1100,1200);
+            DrawGammaCanvasSettings(canvasEta, 0.165, 0.015, 0.025, 0.25);
+            canvasEta->SetLogy();
+            canvasEta->SetLogx();
+
+            TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.3, 1., 1.,-1, -1, -2);
+            DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
+            padSpectrum->SetBorderSize(0);
+            padSpectrum->Draw();
+            padSpectrum->SetLogy();
+            padSpectrum->SetLogx();
+
+            TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.3,-1, -1, -2);
+            DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
+            padRatio->Draw();
+            padRatio->SetLogx();
+
+            padSpectrum->cd();
+
+            Int_t nEtaCompLegendEntries                                 = 2;
+            for (Int_t i=0; i<nCocktailInputMethods; i++) {
+                if (histoEtaCocktailInput[i]) nEtaCompLegendEntries     = nEtaCompLegendEntries+1;
+            }
+
+            TLegend* legendEtaComp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nEtaCompLegendEntries), 0.85, 0.95, 40);
+            dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+            SetStyleHistoTH1ForGraphs(  dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})",
+                                        40, 40*1.15, 40, 40*1.15, 1.0, 1.85, 510, 510, 43, 63);
+            dummyHist->GetYaxis()->SetRangeUser( histoEtaYieldData->GetMinimum(0)*0.01, histoEtaYieldData->GetMaximum()*10);
+            dummyHist->SetLabelOffset(-0.015, "X");
+            dummyHist->SetTitleOffset(0.8, "X");
+            dummyHist->Draw();
+
+            DrawGammaSetMarker(     histoEtaYieldData, 20, 2, kRed,  kRed);
+            legendEtaComp->AddEntry(histoEtaYieldData, Form("%s current ana.", motherParticlesLatex[1].Data()), "p");
 
 
             cocktailInputParametrizations[0]->SetLineColor(kBlack);
             cocktailInputParametrizations[0]->SetLineStyle(1);
             cocktailInputParametrizations[0]->SetLineWidth(2);
-            legendPi0Comp->AddEntry(cocktailInputParametrizations[0], Form("%s param.", motherParticlesLatex[0].Data()), "l");
+            legendEtaComp->AddEntry(cocktailInputParametrizations[1], Form("%s param.", motherParticlesLatex[1].Data()), "l");
             cocktailInputParametrizations[0]->Draw("same");
 
             for (Int_t i=0; i<nCocktailInputMethods; i++) {
-                if (!histoPi0CocktailInput[i]) continue;
-                DrawGammaSetMarker(     histoPi0CocktailInput[i],  GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
+                if (!histoEtaCocktailInput[i]) continue;
+                DrawGammaSetMarker(     histoEtaCocktailInput[i],  GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
                                         GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
                                         GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
-                legendPi0Comp->AddEntry(histoPi0CocktailInput[i], Form("%s %s", motherParticlesLatex[0].Data(), cocktailInputMethodsLabels[i].Data()), "p");
-                histoPi0CocktailInput[i]->Draw("e1,same");
+                legendEtaComp->AddEntry(histoEtaCocktailInput[i], Form("%s %s", motherParticlesLatex[1].Data(), cocktailInputMethodsLabels[i].Data()), "p");
+                histoEtaCocktailInput[i]->Draw("e1,same");
             }
-            histoPi0YieldData->Draw("e1,same");
-            legendPi0Comp->Draw("same");
+            histoEtaYieldData->Draw("e1,same");
+            legendEtaComp->Draw("same");
 
             PutProcessLabelAndEnergyOnPlot(                 0.21, 0.12, 40, cent, textMeasurement, "", 43, 0.03);
             if (producePlotsForThesis) PutThisThesisLabel(  0.21, 0.07, 40, 0.03, 1.25, 43);
             else PutALICESimulationLabel(                   0.21, 0.07, 40, 0.03, 1.25, 43);
 
-        padRatio->cd();
-        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","data/gen", 40, 40*1.15, 40, 40*1.15, 2.8, 1.6, 510, 505, 43, 63);
-        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.05);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
-        dummyHistRatio->Draw();
+            padRatio->cd();
+            dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","data/gen", 40, 40*1.15, 40, 40*1.15, 2.8, 1.6, 510, 505, 43, 63);
+            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.05);
+            dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
+            dummyHistRatio->Draw();
 
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
+            DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
+            DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
+            DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
 
-            TH1F* ratioPi0CurrToParam                                   = (TH1F*)histoPi0YieldData->Clone("ratioPi0CurrToParam");
-            ratioPi0CurrToParam->Sumw2();
-            ratioPi0CurrToParam->Divide(cocktailInputParametrizations[0]);
+            TH1F* ratioEtaCurrToParam                                   = (TH1F*)histoEtaYieldData->Clone("ratioEtaCurrToParam");
+            ratioEtaCurrToParam->Sumw2();
+            ratioEtaCurrToParam->Divide(cocktailInputParametrizations[1]);
 
-            TH1F** ratioPi0ToParam                                      = new TH1F*[nCocktailInputMethods];
+            TH1F** ratioEtaToParam                                      = new TH1F*[nCocktailInputMethods];
             for (Int_t i=0; i<nCocktailInputMethods; i++) {
 
-                if (histoPi0CocktailInput[i]) {
-                    ratioPi0ToParam[i]                                  = (TH1F*)histoPi0CocktailInput[i]->Clone(Form("ratioPi0ToParam%d", i));
-                    ratioPi0ToParam[i]->Sumw2();
-                    ratioPi0ToParam[i]->Divide(cocktailInputParametrizations[0]);
+                if (histoEtaCocktailInput[i]) {
+                    ratioEtaToParam[i]                                  = (TH1F*)histoEtaCocktailInput[i]->Clone(Form("ratioEtaToParam%d", i));
+                    ratioEtaToParam[i]->Sumw2();
+                    ratioEtaToParam[i]->Divide(cocktailInputParametrizations[1]);
                 } else {
-                    ratioPi0ToParam[i]                                  = NULL;
+                    ratioEtaToParam[i]                                  = NULL;
                 }
             }
 
             for (Int_t i=0; i<nCocktailInputMethods; i++) {
-                if (!ratioPi0ToParam[i]) continue;
-                DrawGammaSetMarker(     ratioPi0ToParam[i], GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
+                if (!ratioEtaToParam[i]) continue;
+                DrawGammaSetMarker(     ratioEtaToParam[i], GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
                                         GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
                                         GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
-                ratioPi0ToParam[i]->Draw("e1,same");
+                ratioEtaToParam[i]->Draw("e1,same");
             }
-            DrawGammaSetMarker(     ratioPi0CurrToParam, 20, 2, kRed,  kRed);
-            ratioPi0CurrToParam->Draw("e1,same");
+            DrawGammaSetMarker(     ratioEtaCurrToParam, 20, 2, kRed,  kRed);
+            ratioEtaCurrToParam->Draw("e1,same");
 
-        canvasPi0->SaveAs(Form("%s/Pi0Comp_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
-        delete legendPi0Comp;
-        delete padSpectrum;
-        delete padRatio;
-        delete canvasPi0;
-    }
-
-    //***************************** Plot eta from data vs. cocktail inputs + param **********************************
-    cout << "*****  Plot eta from data vs. cocktail inputs + param *****" << endl;
-    if (histoEtaYieldData && cocktailInputParametrizations[1] && hasEtaCocktailInput) {
-
-        ptPlotMin                                                   = 0.2;
-        ptPlotMax                                                   = 30;
-
-
-        TCanvas *canvasEta                                          = new TCanvas("canvasEta","",1100,1200);
-        DrawGammaCanvasSettings(canvasEta, 0.165, 0.015, 0.025, 0.25);
-        canvasEta->SetLogy();
-        canvasEta->SetLogx();
-
-        TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.3, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
-        padSpectrum->SetBorderSize(0);
-        padSpectrum->Draw();
-        padSpectrum->SetLogy();
-        padSpectrum->SetLogx();
-
-        TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.3,-1, -1, -2);
-        DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
-        padRatio->Draw();
-        padRatio->SetLogx();
-
-        padSpectrum->cd();
-
-        Int_t nEtaCompLegendEntries                                 = 2;
-        for (Int_t i=0; i<nCocktailInputMethods; i++) {
-            if (histoEtaCocktailInput[i]) nEtaCompLegendEntries     = nEtaCompLegendEntries+1;
+            canvasEta->SaveAs(Form("%s/EtaComp_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
+            delete legendEtaComp;
+            delete padSpectrum;
+            delete padRatio;
+            delete canvasEta;
         }
-
-        TLegend* legendEtaComp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nEtaCompLegendEntries), 0.85, 0.95, 40);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(  dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})",
-                                    40, 40*1.15, 40, 40*1.15, 1.0, 1.85, 510, 510, 43, 63);
-        dummyHist->GetYaxis()->SetRangeUser( histoEtaYieldData->GetMinimum(0)*0.01, histoEtaYieldData->GetMaximum()*10);
-        dummyHist->SetLabelOffset(-0.015, "X");
-        dummyHist->SetTitleOffset(0.8, "X");
-        dummyHist->Draw();
-
-        DrawGammaSetMarker(     histoEtaYieldData, 20, 2, kRed,  kRed);
-        legendEtaComp->AddEntry(histoEtaYieldData, Form("%s current ana.", motherParticlesLatex[1].Data()), "p");
-
-
-        cocktailInputParametrizations[0]->SetLineColor(kBlack);
-        cocktailInputParametrizations[0]->SetLineStyle(1);
-        cocktailInputParametrizations[0]->SetLineWidth(2);
-        legendEtaComp->AddEntry(cocktailInputParametrizations[1], Form("%s param.", motherParticlesLatex[1].Data()), "l");
-        cocktailInputParametrizations[0]->Draw("same");
-
-        for (Int_t i=0; i<nCocktailInputMethods; i++) {
-            if (!histoEtaCocktailInput[i]) continue;
-            DrawGammaSetMarker(     histoEtaCocktailInput[i],  GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
-                                    GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
-                                    GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
-            legendEtaComp->AddEntry(histoEtaCocktailInput[i], Form("%s %s", motherParticlesLatex[1].Data(), cocktailInputMethodsLabels[i].Data()), "p");
-            histoEtaCocktailInput[i]->Draw("e1,same");
-        }
-        histoEtaYieldData->Draw("e1,same");
-        legendEtaComp->Draw("same");
-
-        PutProcessLabelAndEnergyOnPlot(                 0.21, 0.12, 40, cent, textMeasurement, "", 43, 0.03);
-        if (producePlotsForThesis) PutThisThesisLabel(  0.21, 0.07, 40, 0.03, 1.25, 43);
-        else PutALICESimulationLabel(                   0.21, 0.07, 40, 0.03, 1.25, 43);
-
-        padRatio->cd();
-        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","data/gen", 40, 40*1.15, 40, 40*1.15, 2.8, 1.6, 510, 505, 43, 63);
-        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.05);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0.81,1.19);
-        dummyHistRatio->Draw();
-
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,1, kGray+1, 7);
-
-        TH1F* ratioEtaCurrToParam                                   = (TH1F*)histoEtaYieldData->Clone("ratioEtaCurrToParam");
-        ratioEtaCurrToParam->Sumw2();
-        ratioEtaCurrToParam->Divide(cocktailInputParametrizations[1]);
-
-        TH1F** ratioEtaToParam                                      = new TH1F*[nCocktailInputMethods];
-        for (Int_t i=0; i<nCocktailInputMethods; i++) {
-
-            if (histoEtaCocktailInput[i]) {
-                ratioEtaToParam[i]                                  = (TH1F*)histoEtaCocktailInput[i]->Clone(Form("ratioEtaToParam%d", i));
-                ratioEtaToParam[i]->Sumw2();
-                ratioEtaToParam[i]->Divide(cocktailInputParametrizations[1]);
-            } else {
-                ratioEtaToParam[i]                                  = NULL;
-            }
-        }
-
-        for (Int_t i=0; i<nCocktailInputMethods; i++) {
-            if (!ratioEtaToParam[i]) continue;
-            DrawGammaSetMarker(     ratioEtaToParam[i], GetDefaultMarkerStyleDiffDetectors(cocktailInputMethodsLabels[i],kTRUE),
-                                    GetDefaultMarkerSizeDiffDetectors(cocktailInputMethodsLabels[i],kTRUE), GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE),
-                                    GetDefaultColorDiffDetectors(cocktailInputMethodsLabels[i],kFALSE));
-            ratioEtaToParam[i]->Draw("e1,same");
-        }
-        DrawGammaSetMarker(     ratioEtaCurrToParam, 20, 2, kRed,  kRed);
-        ratioEtaCurrToParam->Draw("e1,same");
-
-        canvasEta->SaveAs(Form("%s/EtaComp_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
-        delete legendEtaComp;
-        delete padSpectrum;
-        delete padRatio;
-        delete canvasEta;
     }
     delete dummyHist;
     delete dummyHistRatio;
