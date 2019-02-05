@@ -86,25 +86,29 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins                        = 0;
     Double_t* ptBinsErr                     = 0;
-    TString nameCutVariationSC[16];
-    TString nameCutVariationSCCurrent[16]   = { "RemovePileUp",                   // 0
+    TString nameCutVariationSC[19];
+    TString nameCutVariationSCCurrent[19]   = { "RemovePileUp",                   // 0
                                                 "Calo_NonLin",                    // 1
                                                 "Calo_Timing",                    // 2
                                                 "Calo_TrackMatching",             // 3
                                                 "Calo_MinEnergy",                 // 4
                                                 "Calo_MinNCells",                 // 5
                                                 "Calo_MinMaxM02",                 // 6
-                                                "Clusterizer",                    // 7
-                                                "ChargedPion_ClsTPCCut",          // 8
-                                                "ChargedPion_DCACut",             // 9
-                                                "ChargedPion_pTCut",              // 10
-                                                "ChargedPion_TPCdEdxCutPion",     // 11
-                                                "ChargedPion_MassCut",            // 12
-                                                "NeutralPion_SelectionWindows",   // 13
-                                                "Omega_BackgroundScheme",         // 14
-                                                "YieldExtraction"};               // 15
-    TString nameCutVariation[16] = {"pileup","#gamma_{clus.} non-linearity","#gamma_{clus.} timing","#gamma_{clus.} trackmatching","#gamma_{clus.} min. energy","#gamma_{clus.} N_{cells,min}","#gamma_{clus.} shape", "clusterizer algorithm",
-                                    "#pi^{#pm} rec. N_{cls,TPC}","#pi^{#pm} rec. DCA","#pi^{#pm}  rec.min p_{T}","#pi^{#pm} rec. PID","M_{#pi^{+}#pi^{-}} cut","#pi^{0} rec. M_{#gamma#gamma} cut","background description","yield extraction"};
+                                                "Calo_ClusterEnergyScale",        // 7
+                                                "Clusterizer",                    // 8
+                                                "ChargedPion_ClsTPCCut",          // 9
+                                                "ChargedPion_DCACut",             // 10
+                                                "ChargedPion_pTCut",              // 11
+                                                "ChargedPion_TPCdEdxCutPion",     // 12
+                                                "ChargedPion_MassCut",            // 13
+                                                "NeutralPion_SelectionWindows",   // 14
+                                                "Omega_BackgroundScheme",         // 15
+                                                "Omega_RecoEfficiency",           // 16
+                                                "Omega_BranchingRatio",           // 17
+                                                "YieldExtraction"};               // 18
+    TString nameCutVariation[19] = {"pileup","#gamma_{clus.} non-linearity","#gamma_{clus.} timing","#gamma_{clus.} trackmatching","#gamma_{clus.} min. energy","#gamma_{clus.} N_{cells,min}","#gamma_{clus.} shape","cluster energy scale", "clusterizer algorithm",
+                                    "#pi^{#pm} rec. N_{cls,TPC}","#pi^{#pm} rec. DCA","#pi^{#pm}  rec.min p_{T}","#pi^{#pm} rec. PID","M_{#pi^{+}#pi^{-}} cut","#pi^{0} rec. M_{#gamma#gamma} cut","background description",
+                                    "reco. efficiency","branching ratio","yield extraction"};
 
     Color_t color[34] = {kTeal+3,
                          kCyan-2,kGray+2,kViolet+1,kAzure+1,kAzure+4,kPink+4,kOrange,
@@ -136,20 +140,20 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[16]                      = { 0,  0, 0,  0, 0,  0, 0, 0, 0, 0, 0, 0,
-                                                0,  0, 0,  0 };
-    Bool_t bsmoothMBOmega07TeV[16]             = { 1,                  // pileup
-                                                   1, 1, 1, 1, 1, 1,1,   // calo
-                                                   1, 1, 1, 1, 1,      // charged pion
-                                                   1,                 // neutral pion
-                                                   1,                // omega
-                                                   0};                 // yield extraction
-    Bool_t bsmoothMBEta07TeV[16]             = { 1,                  // pileup
-                                                   1, 1, 1, 1, 1, 1,1,   // calo
-                                                   1, 1, 1, 1, 1,      // charged pion
-                                                   1,                 // neutral pion
-                                                   1,                // omega
-                                                   0};                 // yield extraction
+    Bool_t bsmooth[19]                      = { 0,  0, 0,  0, 0,  0, 0, 0, 0, 0, 0, 0,
+                                                0,  0, 0,  0, 0, 0, 0};
+    Bool_t bsmoothMBOmega07TeV[19]             = { 1,                      // pileup
+                                                   1, 1, 1, 1, 1, 1,1,1,   // calo
+                                                   1, 1, 1, 1, 1,          // charged pion
+                                                   1,                      // neutral pion
+                                                   1, 1, 1,                // omega
+                                                   0};                     // yield extraction
+    Bool_t bsmoothMBEta07TeV[19]             = { 1,                        // pileup
+                                                   1, 1, 1, 1, 1, 1,1,1,   // calo
+                                                   1, 1, 1, 1, 1,          // charged pion
+                                                   1,                      // neutral pion
+                                                   1, 1, 1,                // omega
+                                                   0};                     // yield extraction
     if(meson.Contains("Eta") && (mode == 45)) bsmoothMBEta07TeV[15] = 1;
     Bool_t bsmoothMBOmegaToPi07TeV[16]             = { 0, 0, 0,  0, 0,  0, 0, 0, 0,
                                                 0, 0 ,0 , 0, 0, 0, 0}; // currently not used
@@ -460,6 +464,20 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
+                // cluster energy scale -> check actual value!
+            } else if (nameCutVariationSC[i].CompareTo("Calo_ClusterEnergyScale")==0 ){
+                minPt       = startPtSys;
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (!energy.CompareTo("7TeV")){
+                        errorReset = 0.5; // 0.045% * 7 = 0.31 (slope omega) 0.5 conservative for all
+                    }
+                    if (ptBins[k] > minPt){
+                        errorsMean[i][k]            = errorReset;
+                        errorsMeanErr[i][k]         = errorReset*0.01;
+                        errorsMeanCorr[i][k]        = errorReset;
+                        errorsMeanErrCorr[i][k]     = errorReset*0.01;
+                    }
+                }
                 // clusterization Energy taken from pi0
             } else if (nameCutVariationSC[i].CompareTo("Clusterizer")==0 ){
                 minPt       = startPtSys;
@@ -561,12 +579,12 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
-            // background description
-            } else if (nameCutVariationSC[i].CompareTo("Omega_BackgroundScheme")==0 ){
+            // omega branching ratio
+            } else if (nameCutVariationSC[i].CompareTo("Omega_BranchingRatio")==0 ){
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 13-(0.66*ptBins[k]);
+                        errorReset = 0.8;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -576,6 +594,35 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
+             // background description
+             } else if (nameCutVariationSC[i].CompareTo("Omega_BackgroundScheme")==0 ){
+                 minPt       = startPtSys;
+                 for (Int_t k = 0; k < nPtBins; k++){
+                     if (!energy.CompareTo("7TeV")){
+                         errorReset = 13-(0.66*ptBins[k]);
+                        }
+                        if (ptBins[k] > minPt){
+                            errorsMean[i][k]            = errorReset;
+                            errorsMeanErr[i][k]         = errorReset*0.01;
+                            errorsMeanCorr[i][k]        = errorReset;
+                            errorsMeanErrCorr[i][k]     = errorReset*0.01;
+                        }
+                    }
+
+             // reconstruction efficiency -> TODO
+             } else if (nameCutVariationSC[i].CompareTo("Omega_RecoEfficiency")==0 ){
+                minPt       = startPtSys;
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (!energy.CompareTo("7TeV")){
+                        errorReset = 2.0; //dummy
+                       }
+                       if (ptBins[k] > minPt){
+                           errorsMean[i][k]            = errorReset;
+                           errorsMeanErr[i][k]         = errorReset*0.01;
+                           errorsMeanCorr[i][k]        = errorReset;
+                           errorsMeanErrCorr[i][k]     = errorReset*0.01;
+                       }
+                   }
             // Yield Extraction
             } else if (nameCutVariationSC[i].CompareTo("YieldExtraction")==0 ){
                 minPt       = startPtSys;
@@ -937,15 +984,17 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
 
         // Signal extraction: Yield extraction, Alpha ,BG, YieldExtraction,, "ChargedPion_MassCut"
 
-        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[12][l],2)+    // charged pion mass
-                                                            pow(errorsMeanCorr[14][l],2)+    // BG
-                                                            pow(errorsMeanCorr[15][l],2));   // YieldExtraction
+        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[13][l],2)+    // charged pion mass
+                                                            pow(errorsMeanCorr[15][l],2)+    // BG
+                                                            pow(errorsMeanCorr[16][l],2)+    // reco efficiency
+                                                            pow(errorsMeanCorr[17][l],2)+    // branching ratio
+                                                            pow(errorsMeanCorr[18][l],2));   // YieldExtraction
 
         // charged pion cuts: "ChargedPion_ClsTPCCut","ChargedPion_TPCdEdxCutPion"
-        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[8][l],2) +   // ClsTPC
-                                                                        pow(errorsMeanCorr[9][l],2) +  // DCA
-                                                                        pow(errorsMeanCorr[10][l],2) +  // pT
-                                                                        pow(errorsMeanCorr[11][l],2));  //PID
+        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[9][l],2) +   // ClsTPC
+                                                                        pow(errorsMeanCorr[10][l],2) +  // DCA
+                                                                        pow(errorsMeanCorr[11][l],2) +  // pT
+                                                                        pow(errorsMeanCorr[12][l],2));  //PID
 
         // photon reco (cluster) :
         errorsMeanCorrPhotonReco[l]         =   TMath::Sqrt(pow(errorsMeanCorr[1][l],2)+    // NonLin
@@ -954,10 +1003,11 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                                                             pow(errorsMeanCorr[4][l],2)+    // Min Energy
                                                             pow(errorsMeanCorr[5][l],2)+    // Min N Cells
                                                             pow(errorsMeanCorr[6][l],2)+    // Min Max N02
-                                                            pow(errorsMeanCorr[7][l],2));   // Min E Clusterizer
+                                                            pow(errorsMeanCorr[7][l],2)+    // cluster energy scale
+                                                            pow(errorsMeanCorr[8][l],2));   // Min E Clusterizer
 
         // pi0 reco: pT, alpha, mass window
-        errorsMeanCorrPi0Reco[l]          =                    errorsMeanCorr[13][l];   // mass window
+        errorsMeanCorrPi0Reco[l]          =                    errorsMeanCorr[14][l];   // mass window
 
         // pileup
         if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV")){

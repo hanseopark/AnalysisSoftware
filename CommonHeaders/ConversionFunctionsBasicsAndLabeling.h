@@ -5222,21 +5222,21 @@
         if( mode >= 100 ) mode -= 100;
         if (separate == 0){
             switch (mode){
-                case 0: case 40:
+                case 0: case 40: case 60:
                     return "#gamma's rec. with PCM";
-                case 1: case 47:
+                case 1: case 47: case 67:
                     return "#gamma's rec. with PCM, Dalitz";
-                case 2: case 41:
+                case 2: case 41: case 61:
                     return "#gamma's rec. with PCM, EMCal";
-                case 3: case 42:
+                case 3: case 42: case 62:
                     return "#gamma's rec. with PCM, PHOS";
-                case 4: case 44:
+                case 4: case 44: case 64:
                     return "#gamma's rec. with EMCal";
-                case 5: case 45: case -5:
+                case 5: case 45: case -5: case 65:
                     return "#gamma's rec. with PHOS";
-                case 6: case 48:
+                case 6: case 48: case 68:
                     return "#gamma's rec. with EMCal, Dalitz";
-                case 7: case 49:
+                case 7: case 49: case 69:
                     return "#gamma's rec. with PHOS, Dalitz";
                 case 10:
                     if (clusterCutNumber.CompareTo("") != 0){

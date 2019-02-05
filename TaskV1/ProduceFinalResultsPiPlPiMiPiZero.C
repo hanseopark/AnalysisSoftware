@@ -359,11 +359,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     else if(mode == 3)  sysStringComb = "PCMPHOS";
     else if(mode == 4)  sysStringComb = "EMCEMC";
     else if(mode == 5)  sysStringComb = "PHOS";
-    else if(mode == 40) sysStringComb = "PCM";
-    else if(mode == 41) sysStringComb = "PCMEMC";
-    else if(mode == 42) sysStringComb = "PCMPHOS";
-    else if(mode == 44) sysStringComb = "EMC";
-    else if(mode == 45) sysStringComb = "PHOS";
+    else if(mode == 40 || mode == 60) sysStringComb = "PCM";
+    else if(mode == 41 || mode == 61) sysStringComb = "PCMEMC";
+    else if(mode == 42 || mode == 62) sysStringComb = "PCMPHOS";
+    else if(mode == 44 || mode == 64) sysStringComb = "EMC";
+    else if(mode == 45 || mode == 65) sysStringComb = "PHOS";
 
     //***************************************************************************************************************
     //******************************** Load Omega histograms **********************************************************
@@ -1325,7 +1325,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     } else if (mode == 0){
         maxEffiOmega      = 8e-3;
         minEffiOmega      = 5e-5;
-    } else if (mode == 40){
+    } else if (mode == 40 || mode == 60){
         minEffiOmega = 0.8e-4;
         maxEffiOmega = 1.5e-3;
     } else{
@@ -1546,7 +1546,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     if (mode == 0){
         maxAccOmega       = 1.05;
         minAccOmega       = 0.7;
-    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode ==45){
+    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode ==45 ||
+             mode == 60 || mode == 61 || mode == 62 || mode == 64 || mode ==65){
       maxAccOmega= 1.0;
       minAccOmega= 0.5;
     }
@@ -1611,7 +1612,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     if (mode == 0){
         maxMassOmega              = 0.142;
         minMassOmega              = 0.130;
-    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45 ||
+             mode == 60 || mode == 61 || mode == 62 || mode == 64 || mode == 65){
         maxMassOmega              = 0.84;
         minMassOmega              = 0.74;
     }
@@ -1637,7 +1639,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
     if (mode == 4 && optionEnergy.CompareTo("8TeV")==0){
       maxWidthOmega        = 0.0395;
-    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+    }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45 ||
+             mode == 60 || mode == 61 || mode == 62 || mode == 64 || mode == 65){
       minWidthOmega             = 0.0;
       maxWidthOmega             = 0.02;
     }
@@ -1783,7 +1786,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     if (mode == 4) {
       minCorrYieldRawUnscaled         = 7e-8;
       maxCorrYieldRawUnscaled         = 1;
-    } else if (mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+    } else if (mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45 ||
+               mode == 60 || mode == 61 || mode == 62 || mode == 64 || mode == 65){
       minCorrYieldRawUnscaled         = 2e-8;
       maxCorrYieldRawUnscaled         = 4e-3;
     }
@@ -6896,11 +6900,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     if (mode == 4) system       = "EMCAL-EMCAL";
     if (mode == 5) system       = "PHOS-PHOS";
     if (mode == 11) system      = "PHOS-merged";
-    if (mode == 40) system      = "PCM";
-    if (mode == 41) system      = "PCMEMC";
-    if (mode == 42) system      = "PCMPHOS";
-    if (mode == 44) system      = "EMC";
-    if (mode == 45) system      = "PHOS";
+    if (mode == 40 || mode == 60) system      = "PCM";
+    if (mode == 41 || mode == 61) system      = "PCMEMC";
+    if (mode == 42 || mode == 62) system      = "PCMPHOS";
+    if (mode == 44 || mode == 64) system      = "EMC";
+    if (mode == 45 || mode == 65) system      = "PHOS";
 
     cout << "starting to write out data" << endl;
     TGraphAsymmErrors* graphInvXSectionWeightedAverageOmegaStat   = NULL;

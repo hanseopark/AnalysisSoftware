@@ -288,18 +288,23 @@ void EventQA_Runwise(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     TString fCutSelection            = cuts.at(cutNr);
+    TString fTypeCutSelection        = "";
     TString fEventCutSelection       = "";
     TString fGammaCutSelection       = "";
     TString fClusterCutSelection     = "";
     TString fMClusterCutSelection    = "";
     TString fElectronCutSelection    = "";
+    TString fNDMCutSelection         = "";
     TString fMesonCutSelection       = "";
-    if (!isMerged){
+    if (!isMerged && (mode!=40)){
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     }
 
+    if(((mode>=40)&&(mode<=50)) || ((mode>=60)&&(mode<=70))){
+       ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection,fTypeCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fNDMCutSelection, fMesonCutSelection);
+    }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++ Set proper cluster nomenclature ++++++++++++++++++++++++++++++++++++++++++

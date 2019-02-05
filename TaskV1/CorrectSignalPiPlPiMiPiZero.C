@@ -1056,7 +1056,11 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		Double_t ptStart = histoTrueEffiPt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiPt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffi->Integral(ptStart, ptEnd, resultEffi->GetParams()) / binWidth;
+
+        // needed in ROOT6
+        for(UInt_t ipar = 0; ipar < resultEffi->NPar(); ipar++) fitTrueEffi->SetParameter(ipar, resultEffi->GetParams()[ipar]);
+
+        Double_t effi = fitTrueEffi->Integral(ptStart, ptEnd) / binWidth;
 		Double_t errorEffi = fitTrueEffi->IntegralError(ptStart, ptEnd, resultEffi->GetParams(), resultEffi->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiPtFit->SetBinContent(i, effi);
 		histoTrueEffiPtFit->SetBinError(i, errorEffi);
@@ -1074,7 +1078,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		Double_t ptStart = histoTrueEffiNarrowPt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiNarrowPt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffiNarrow->Integral(ptStart, ptEnd, resultEffiNarrow->GetParams()) / binWidth;
+        for(UInt_t ipar = 0; ipar < resultEffiNarrow->NPar(); ipar++) fitTrueEffiNarrow->SetParameter(ipar, resultEffiNarrow->GetParams()[ipar]);
+        Double_t effi = fitTrueEffiNarrow->Integral(ptStart, ptEnd) / binWidth;
 		Double_t errorEffiNarrow = fitTrueEffiNarrow->IntegralError(ptStart, ptEnd, resultEffiNarrow->GetParams(), resultEffiNarrow->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiNarrowPtFit->SetBinContent(i, effi);
 		histoTrueEffiNarrowPtFit->SetBinError(i, errorEffiNarrow);
@@ -1090,7 +1095,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		Double_t ptStart = histoTrueEffiWidePt->GetXaxis()->GetBinLowEdge(i);
 		Double_t ptEnd = histoTrueEffiWidePt->GetXaxis()->GetBinUpEdge(i);
 		Double_t binWidth = ptEnd-ptStart;
-		Double_t effi = fitTrueEffiWide->Integral(ptStart, ptEnd, resultEffiWide->GetParams()) / binWidth;
+        for(UInt_t ipar = 0; ipar < resultEffiWide->NPar(); ipar++) fitTrueEffiWide->SetParameter(ipar, resultEffiWide->GetParams()[ipar]);
+        Double_t effi = fitTrueEffiWide->Integral(ptStart, ptEnd) / binWidth;
 		Double_t errorEffiWide = fitTrueEffiWide->IntegralError(ptStart, ptEnd, resultEffiWide->GetParams(), resultEffiWide->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
 		histoTrueEffiWidePtFit->SetBinContent(i, effi);
 		histoTrueEffiWidePtFit->SetBinError(i, errorEffiWide);
@@ -1279,7 +1285,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 								kTRUE, 3., 4e-10, kTRUE,
 								kFALSE, 0., 0.7, 
 								kTRUE, 0., 25.);
-	histoUnCorrectedYieldDrawing->SetLineWidth(0.5);                
+    histoUnCorrectedYieldDrawing->SetLineWidth(1.);
 	DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 0.5, kBlack, kBlack);                             
 	histoUnCorrectedYieldDrawing->DrawCopy("e1");   
 

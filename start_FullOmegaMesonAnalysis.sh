@@ -75,7 +75,7 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\($1\)
+    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiNDM.C\+\($1\)
     #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
@@ -288,6 +288,7 @@ correct=0
 while [ $correct -eq 0 ]
 do
     echo "Which mode are you running? 40 (PCM-PCM *), 41 (PCM-EMCAL *), 42 (PCM-PHOS *), 43 (PCM-DCAL), 44 (EMCAL-EMCAL *), 45 (PHOS-PHOS*), 46 (DCAL-DCAL), 47 (PCM-DALITZ), 48 (EMCAL-DALITZ), 49 (PHOS-DALITZ), 50 (DCAL-DALITZ)"
+    echo "For new NDM task choose:    60 (PCM-PCM *), 61 (PCM-EMCAL *), 62 (PCM-PHOS *), 63 (PCM-DCAL), 64 (EMCAL-EMCAL *), 65 (PHOS-PHOS*), 66 (DCAL-DCAL), 67 (PCM-DALITZ), 68 (EMCAL-DALITZ), 69 (PHOS-DALITZ), 70 (DCAL-DALITZ)"
     read answer
     if [ $answer = "40" ]; then
         echo "You are analysing PCM-PCM output";
@@ -338,11 +339,66 @@ do
         mode=49
         AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "47" ]; then
+    elif [ $answer = "50" ]; then
         echo "You are analysing DCAL-DALITZ output";
         mode=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
+    elif [ $answer = "60" ]; then
+        echo "You are analysing PCM-PCM output";
+        mode=60
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "61" ]; then
+         echo "You are analysing PCM-EMCAL output";
+         mode=61
+        #AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "62" ]; then
+         echo "You are analysing PCM-PHOS output";
+         mode=62
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "63" ]; then
+         echo "You are analysing PCM-DCAL output";
+         mode=63
+         #AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "64" ]; then
+         echo "You are analysing EMCAL-EMCAL output";
+         mode=64
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "65" ]; then
+ .       echo "You are analysing PHOS-PHOS output";
+         mode=65
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "66" ]; then
+         echo "You are analysing DCAL-DCAL output";
+         mode=66
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "67" ]; then
+         echo "You are analysing PCM-DALITZ output";
+         mode=67
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "68" ]; then
+         echo "You are analysing EMCAL-DALITZ output";
+         mode=68
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "69" ]; then
+         echo "You are analysing PHOS-DALITZ output";
+         mode=69
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "70" ]; then
+         echo "You are analysing DCAL-DALITZ output";
+         mode=70
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
     else
         echo "Command not found. Please try again.";
     fi
@@ -665,8 +721,16 @@ if [ $ONLYRESULTS = 0 ] ; then
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done
 
-    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-    root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    if [ $ONLYOMEGA -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    elif [ $ONLYETA -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    else
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+    fi
 fi
