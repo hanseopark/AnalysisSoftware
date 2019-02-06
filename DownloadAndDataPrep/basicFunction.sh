@@ -24,6 +24,7 @@ function FindCorrectTrainDirectory()
   tempDir=""
   tempPath=""
   tempBool=1
+  echo $1 $2 $3 $4
   if [ "$1" == "" ]; then
     tempBool=0;
   fi
@@ -37,7 +38,14 @@ function FindCorrectTrainDirectory()
 
   if [ $tempBool == 1 ]; then
       if [ $testSub == 1 ]; then
-          tempDir=`alien_ls $3 | grep $4\_ | grep $1`
+#           tempDir=`alien_ls $3 | grep $4\_ | grep $1`
+          alien_ls $3 | grep $4\_ > listGrid.txt
+          InterMediate=`head -n1 listGrid.txt`\_$1
+          InterMediate=${InterMediate/$1\_$1/$1}
+          InterMediate=${InterMediate/child_1_$1/$1}
+          InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+          tempDir="$InterMediate"
+          rm listGrid.txt
       else
           tempDir=`alien_ls $3 | grep $1\_`
       fi
@@ -195,6 +203,60 @@ function SeparateCutsIfNeeded()
     fi
 }
 
+function CopyRunwiseAndMergeAccordingToRunlistMC()
+{
+    if [ $2 == 1 ]; then
+        echo "downloading $1"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbers$1.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $3/$runNumber "$7/$1/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/Stage_1/" kTRUE
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
+                cd $currentDir
+                rm $3/${10}*.root*
+                echo runlists/runNumbers$1.txt
+                firstrunNumber=`head -n1 runlists/runNumbers$1.txt`
+                echo $firstrunNumber
+                ls $3/$firstrunNumber/${10}\_*.root > file$1.txt
+
+                listsToMerge=`cat $9`
+                for runListName in $listsToMerge; do
+                    MergeAccordingToSpecificRunlist file$1.txt $3 $8 ${10} $runListName runlists/runNumbers$1_$runListName.txt "no"
+                done
+            fi
+        else
+            CopyFileIfNonExisitent $3 "/alice/cern.ch/user/a/alitrain/PWGGA/$6/$4/merge" $NSlashes "" kTRUE
+        fi
+    fi
+}
+
+function CopyRunwiseAndMergeAccordingToRunlistData()
+{
+    if [ $2 == 1 ]; then
+        echo "downloading $1"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbers$1\_${10}.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $3/$runNumber "$7/$1/000$runNumber/$5/$4" $8 "$7/$1/000$runNumber/$5/$4" kTRUE
+            done;
+            if [ $MERGEONSINGLEData == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
+                rm $3/${11}*.root*
+                firstrunNumber=`head -n1 runlists/runNumbers$1\_${10}.txt`
+                ls $3/$firstrunNumber/${11}\_*.root > file$1.txt
+                listsToMerge=`cat $9`
+                for runListName in $listsToMerge; do
+                    MergeAccordingToSpecificRunlist file$1.txt $3 $8 ${11} $runListName runlists/runNumbers$1\_${10}\_$runListName.txt "no"
+                done
+            fi
+        else
+            CopyFileIfNonExisitent $3 "/alice/cern.ch/user/a/alitrain/PWGGA/$6/$4/merge_runlist_1" $NSlashes "" kTRUE
+        fi
+    fi
+
+}
 
 function CopyFileIfNonExisitent()
 {
@@ -517,72 +579,77 @@ function MergeAccordingToSpecificRunlist()
     echo "runlist $6"
     echo "binlist $7"
 
-    fileNumbers=`cat $1`
-    for fileName in $fileNumbers; do
-        echo $fileName
-        GetFileNumberMerging2 $fileName $3
-        echo $number
-        if [[ $number == *"WTree"* ]]; then
-            echo "won't merge these";
-        else
-            TOMERGE="";
-            runs=`cat $6`
-            if [ "$7" == "no" ]; then
-                for run in $runs; do
-                    nameCurrFile=`echo $2/$run/$4\_$number.root`
-                    if [ -f $nameCurrFile ]; then
-                        TOMERGE="$TOMERGE $nameCurrFile"
-                    else
-                        echo "I couldn't find the file for bin $run, $nameCurrFile";
-                    fi
-                done
-                hadd -n 10 -f $2/$4-$5_$number.root $TOMERGE
+    if [ -e $6 ] && [ -f $6 ]; then
+
+        fileNumbers=`cat $1`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            GetFileNumberMerging2 $fileName $3
+            echo $number
+            if [[ $number == *"WTree"* ]]; then
+                echo "won't merge these";
             else
-                bins=`cat $7`
-                TOMERGEJJ="";
-                for bin in $bins; do
-                    TOMERGE="";
-                    nameCurrJJFile=`echo "$2/$bin/$4-$5""_$number.root"`
-                    if [ -f $nameCurrJJFile ] && [ $(stat -c %s $nameCurrJJFile) -gt $minFileSize ]; then
-                        echo "file $nameCurrJJFile has been created already nothing to be done, will be added to list merge"
-                        TOMERGEJJ="$TOMERGEJJ $nameCurrJJFile"
-                    else
-                        for run in $runs; do
-                            nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
-                            if [ -f $nameCurrFile ]; then
-                                TOMERGE="$TOMERGE $nameCurrFile"
-                            else
-                                echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
-                            fi
-                        done
-                        hadd -n 10 -f $nameCurrJJFile $TOMERGE
-                    fi
-                done
-                hadd -n 10 -f "$2/$4-$5""_$number.root" $TOMERGEJJ
+                TOMERGE="";
+                runs=`cat $6`
+                if [ "$7" == "no" ]; then
+                    for run in $runs; do
+                        nameCurrFile=`echo $2/$run/$4\_$number.root`
+                        if [ -f $nameCurrFile ]; then
+                            TOMERGE="$TOMERGE $nameCurrFile"
+                        else
+                            echo "I couldn't find the file for bin $run, $nameCurrFile";
+                        fi
+                    done
+                    hadd -n 10 -f $2/$4-$5_$number.root $TOMERGE
+                else
+                    bins=`cat $7`
+                    TOMERGEJJ="";
+                    for bin in $bins; do
+                        TOMERGE="";
+                        nameCurrJJFile=`echo "$2/$bin/$4-$5""_$number.root"`
+                        if [ -f $nameCurrJJFile ] && [ $(stat -c %s $nameCurrJJFile) -gt $minFileSize ]; then
+                            echo "file $nameCurrJJFile has been created already nothing to be done, will be added to list merge"
+                            TOMERGEJJ="$TOMERGEJJ $nameCurrJJFile"
+                        else
+                            for run in $runs; do
+                                nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
+                                if [ -f $nameCurrFile ]; then
+                                    TOMERGE="$TOMERGE $nameCurrFile"
+                                else
+                                    echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                                fi
+                            done
+                            hadd -n 10 -f $nameCurrJJFile $TOMERGE
+                        fi
+                    done
+                    hadd -n 10 -f "$2/$4-$5""_$number.root" $TOMERGEJJ
 
-                for run in $runs; do
-                    nameCurrJJFileRun=`echo "$2/$run/$4""_$number.root"`
-                    if [ -f $nameCurrJJFileRun ] && [ $(stat -c %s $nameCurrJJFileRun) -gt $minFileSize ]; then
-                        echo "file $nameCurrJJFileRun has been created already nothing to be done"
-                    else
-                        TOMERGERun="";
-                        for bin in $bins; do
-                            nameCurrFile=`  echo $2/$bin/$run/$4\_$number.root`
-                            if [ -f $nameCurrFile ]; then
-                                TOMERGERun="$TOMERGERun $nameCurrFile"
-                            else
-                                echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
-                            fi
-                        done
-                        mkdir -p $2/$run/
-                        hadd -n 10 -f $nameCurrJJFileRun $TOMERGERun
-                    fi
-                done
+                    for run in $runs; do
+                        nameCurrJJFileRun=`echo "$2/$run/$4""_$number.root"`
+                        if [ -f $nameCurrJJFileRun ] && [ $(stat -c %s $nameCurrJJFileRun) -gt $minFileSize ]; then
+                            echo "file $nameCurrJJFileRun has been created already nothing to be done"
+                        else
+                            TOMERGERun="";
+                            for bin in $bins; do
+                                nameCurrFile=`  echo $2/$bin/$run/$4\_$number.root`
+                                if [ -f $nameCurrFile ]; then
+                                    TOMERGERun="$TOMERGERun $nameCurrFile"
+                                else
+                                    echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                                fi
+                            done
+                            mkdir -p $2/$run/
+                            hadd -n 10 -f $nameCurrJJFileRun $TOMERGERun
+                        fi
+                    done
 
+                fi
             fi
-        fi
-    done;
-    echo "done" > $2/mergedAll$4.txt
+        done;
+        echo "done" > $2/mergedAll$4.txt
+    else
+        echo "runlist: $6 not found"
+    fi
 }
 
 function MergeAccordingToList()
