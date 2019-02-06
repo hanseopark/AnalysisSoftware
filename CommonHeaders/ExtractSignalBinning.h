@@ -1300,7 +1300,7 @@
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 1;
                 } else if ( mode == 5){ //PHOS-PHOS
-                    startPtBin     = 1;
+                    startPtBin     = 3;
                 } else if ( mode == 10){
                     startPtBin     = 28;
                 } else if (mode == 20){
