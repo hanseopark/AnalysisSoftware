@@ -1561,6 +1561,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 minYCorrFac     = 0.84;
             if (!optionEnergy.CompareTo("8TeV"))
                 minYCorrFac     = 0.6;
+	    if (optionEnergy.Contains("13TeV"))
+                minYCorrFac     = 0.4;
+
             DrawAutoGammaMesonHistos(   histoBGEstimateA,
                                         "", "#it{p}_{T,#pi^{0}} (GeV/#it{c})", "Correction factor",
                                         kFALSE, 2.,1e-8, kFALSE,

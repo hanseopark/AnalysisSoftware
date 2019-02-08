@@ -2381,6 +2381,10 @@ void CalculatePileUpBackground(Bool_t doMC){
         if (fEnergyFlag.CompareTo("13TeV") == 0)
             maxCorrFacDCA           = 1.3;
 
+	if (fEnergyFlag.CompareTo("13TeV") == 0)
+            maxCorrFacDCA           = 1.6;
+
+
         TLegend* legendDCAZData                                             = GetAndSetLegend(0.7,0.65,6,1);
         SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 28, 1.0, kGray+2, kGray+2);
@@ -2928,23 +2932,21 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         }
     }
 
-
     TString rBin = fGammaCutSelection(2,1);
-    
 
     // initialize ShowBackground for DCAz distributions
     if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
-      if((rBin.CompareTo("a") ==0) ){
-        nIterationsShowBackground[0]                    = 5;
-        nIterationsShowBackground[1]                    = 4;
-        nIterationsShowBackground[2]                    = 7;
-        nIterationsShowBackground[3]                    = 6;
-        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+      if (rBin.CompareTo("2") ==0){
+        nIterationsShowBackground[0]                    = 7;
+        nIterationsShowBackground[1]                    = 6;
+        nIterationsShowBackground[2]                    = 8;
+        nIterationsShowBackground[3]                    = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-      } else if ((rBin.CompareTo("b") ==0) ){
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+      }else if( rBin.CompareTo("a") ==0){
         nIterationsShowBackground[0]                    = 7;
         nIterationsShowBackground[1]                    = 6;
         nIterationsShowBackground[2]                    = 8;
@@ -2954,30 +2956,36 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-
-
-      } else if ((rBin.CompareTo("c") ==0) ){
+      }else if( rBin.CompareTo("b") ==0){
+        nIterationsShowBackground[0]                    = 8;
+        nIterationsShowBackground[1]                    = 7;
+        nIterationsShowBackground[2]                    = 9;
+        nIterationsShowBackground[3]                    = 10;
+        optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+      }else if( rBin.CompareTo("c") ==0){
         nIterationsShowBackground[0]                    = 7;
         nIterationsShowBackground[1]                    = 6;
         nIterationsShowBackground[2]                    = 8;
         nIterationsShowBackground[3]                    = 9;
-        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+        optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-
-      } else {
-        nIterationsShowBackground[0]                    = 5;
-        nIterationsShowBackground[1]                    = 4;
-        nIterationsShowBackground[2]                    = 7;
-        nIterationsShowBackground[3]                    = 6;
-        optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
+      }else {
+        nIterationsShowBackground[0]                    = 9;
+        nIterationsShowBackground[1]                    = 9;
+        nIterationsShowBackground[2]                    = 14;
+        nIterationsShowBackground[3]                    = 9;
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
-
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
       }
 
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
