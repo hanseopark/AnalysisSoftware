@@ -93,8 +93,11 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
     //Int_t fMode = -1;
     // Extract Mode from CutString
+    Bool_t isNewTask = kTRUE;
+    if((UsrMode>=40) && (UsrMode <= 50)) isNewTask = kFALSE;
+
     fMode                       = ReturnSeparatedCutNumberPiPlPiMiPiZero( cutSelection, fTypeCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection,
-                                                                          fPionCutSelection, fNeutralPionCutSelection, fMesonCutSelection, kTRUE);
+                                                                          fPionCutSelection, fNeutralPionCutSelection, fMesonCutSelection, isNewTask);
     // Check if mode that was extracted from CutString is identical to the one given by user
     if(fMode!=UsrMode){
         cout << "ERROR: Chosen mode is not identical to mode extracted from cutstring! " << endl;
@@ -102,7 +105,13 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
     } // check if extracted mode from cutnumber is the same mode given by user
     Int_t mode                  = fMode;
 
-
+    cout << "fTypeCutSelection = " << fTypeCutSelection << endl;
+    cout << "fEventCutSelection = " << fEventCutSelection << endl;
+    cout << "fGammaCutSelection  = " << fGammaCutSelection << endl;
+    cout << "fClusterCutSelection  = " << fClusterCutSelection << endl;
+    cout << "fPionCutSelection  = " << fPionCutSelection << endl;
+    cout << "fNeutralPionCutSelection  = " << fNeutralPionCutSelection << endl;
+    cout << "fMesonCutSelection  = " << fMesonCutSelection << endl;
     cout << "\t MODE = " << mode << endl;
 
     StyleSettingsThesis();
@@ -196,7 +205,7 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
     TString nameMainDir = "";
 
-    nameMainDir     = AutoDetectMainTList(60 , f); // TODO: Change 40 to mode if modes are changed in ConversionFunctions correctly
+    nameMainDir     = AutoDetectMainTList(mode , f); // TODO: Change 40 to mode if modes are changed in ConversionFunctions correctly
     if(nameMainDir.CompareTo("")!=0){
         cout << "Succesfully detected " << nameMainDir <<" as MainDir!" << endl;
     } else{
@@ -241,22 +250,37 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                                       };
     // Get Names of alternative InvMass histos
     // InvMass minus Pi0 inv Mass
-    TString ObjectNameESDSubPiZero           =   "ESD_InvMass_Mother_Sub_InvMass_Neutral_Pt";
-    TString ObjectNameBckSubPiZero[4]        = { "ESD_Background_1_InvMass_Sub_InvMass_Neutral_Pt",
-                                                 "ESD_Background_2_InvMass_Sub_InvMass_Neutral_Pt",
-                                                 "ESD_Background_3_InvMass_Sub_InvMass_Neutral_Pt",
-                                                 "ESD_Background_4_InvMass_Sub_InvMass_Neutral_Pt"
+
+
+    TString oldNewTaskString;
+    oldNewTaskString ="_Neutral";
+
+    // file naems are different if old output is used
+    if(!isNewTask) oldNewTaskString = "(NeutralPion)";
+
+    TString ObjectNameESDSubPiZero           =   Form("ESD_InvMass_Mother_Sub_InvMass%s_Pt",oldNewTaskString.Data());
+    TString ObjectNameBckSubPiZero[4]        = { Form("ESD_Background_1_InvMass_Sub_InvMass%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_2_InvMass_Sub_InvMass%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_3_InvMass_Sub_InvMass%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_4_InvMass_Sub_InvMass%s_Pt",oldNewTaskString.Data())
                                       };
 
     // InvMass with fixed pi0 p_z
-    TString ObjectNameESDFixedPzPiZero       =   "ESD_InvMass_Mother_FixedPz_Neutral_Pt";
-    TString ObjectNameBckFixedPzPiZero[4]    = { "ESD_Background_1_InvMass_FixedPz_Neutral_Pt",
-                                                 "ESD_Background_2_InvMass_FixedPz_Neutral_Pt",
-                                                 "ESD_Background_3_InvMass_FixedPz_Neutral_Pt",
-                                                 "ESD_Background_4_InvMass_FixedPz_Neutral_Pt"
+    TString ObjectNameESDFixedPzPiZero       =   Form("ESD_InvMass_Mother_FixedPz%s_Pt",oldNewTaskString.Data());
+    TString ObjectNameBckFixedPzPiZero[4]    = { Form("ESD_Background_1_InvMass_FixedPz%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_2_InvMass_FixedPz%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_3_InvMass_FixedPz%s_Pt",oldNewTaskString.Data()),
+                                                 Form("ESD_Background_4_InvMass_FixedPz%s_Pt",oldNewTaskString.Data())
                                       };
+
+
     TString fBackMixingMode = fMesonCutSelection(1,1);
 
+    TString histBckName    = "ESD_Background_LikeSign_InvMass_Pt";
+    TString histBckNameSub = "ESD_Background_LikeSign_InvMass_Sub_InvMass_Neutral_Pt";
+    if(!isNewTask) histBckNameSub = "ESD_Background_LikeSign_InvMass_Sub_InvMass";
+    TString histBckNameFixed = "ESD_Background_LikeSign_InvMass_FixedPz_Neutral_Pt";
+    if(!isNewTask) histBckNameFixed = "ESD_Background_LikeSign_InvMass_FixedPz";
     if(fBackMixingMode.CompareTo("a")!=0){
         for(Int_t k=0;k<4;k++){
             hist_bck[k]                       = (TH2D*)ESDContainer->FindObject(ObjectNameBck[k].Data());
@@ -273,9 +297,9 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
             if(hist_bck_FixedPzPiZero[k-1]) fBckInvMassVSPt_FixedPzPiZero[k]->Sumw2();
         }
     } else{ // likesign exent mixing was chosen (rest of array will be empty because there is only one group for likesign mixing)
-        hist_bck[0]                                                           = (TH2D*) ESDContainer->FindObject("ESD_Background_LikeSign_InvMass_Pt");
-        hist_bck_SubPiZero[0]                                                 = (TH2D*) ESDContainer->FindObject("ESD_Background_LikeSign_InvMass_Sub_InvMass_Neutral_Pt");
-        hist_bck_FixedPzPiZero[0]                                             = (TH2D*) ESDContainer->FindObject("ESD_Background_LikeSign_InvMass_FixedPz_Neutral_Pt");
+        hist_bck[0]                                                           = (TH2D*) ESDContainer->FindObject(histBckName.Data());
+        hist_bck_SubPiZero[0]                                                 = (TH2D*) ESDContainer->FindObject(histBckNameSub.Data());
+        hist_bck_FixedPzPiZero[0]                                             = (TH2D*) ESDContainer->FindObject(histBckNameFixed.Data());
         if(hist_bck[0]) fBckInvMassVSPt[0]                                    = (TH2D*) hist_bck[0]->Clone("hist_bck0");
         if(hist_bck_SubPiZero[0]) fBckInvMassVSPt_SubPiZero[0]                = (TH2D*) hist_bck_SubPiZero[0]->Clone("hist_bck0_SubPiZero");
         if(hist_bck_FixedPzPiZero[0]) fBckInvMassVSPt_FixedPzPiZero[0]        = (TH2D*) hist_bck_FixedPzPiZero[0]->Clone("hist_bck0_FixedPzPiZero");
@@ -330,9 +354,24 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
         } else
             cout<<"MC analysis: TrueConversionContainer successfully initialized..."<<endl;
 
-            fHistoMCMesonPtWithinAcceptance = (TH1D*)MCContainer->FindObject("MC_HNMInAcc_Pt");
-            fHistoMCMesonPt                 = (TH1D*)MCContainer->FindObject("MC_HNM_Pt");   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
-            fHistoMCMesonPtWOWeights =(TH1D*)MCContainer->FindObject("MC_HNM_woWeights_Pt");
+
+        if(isNewTask){
+        fHistoMCMesonPtWithinAcceptance = (TH1D*)MCContainer->FindObject("MC_HNMInAcc_Pt");
+        fHistoMCMesonPt                 = (TH1D*)MCContainer->FindObject("MC_HNM_Pt");   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+        fHistoMCMesonPtWOWeights =(TH1D*)MCContainer->FindObject("MC_HNM_woWeights_Pt");
+        } else{
+            SetCorrectMCHistogrammNames();
+            if( fMesonId == 221){
+                fHistoMCMesonPtWithinAcceptance = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
+                fHistoMCMesonPt                 = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+                fHistoMCMesonPtWOWeights =(TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
+            } else if( fMesonId == 223){
+                fHistoMCMesonPtWithinAcceptance = (TH1D*)MCContainer->FindObject(ObjectNameMCOmegaAcc.Data());
+                fHistoMCMesonPt                 = (TH1D*)MCContainer->FindObject(ObjectNameMCOmega.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+                fHistoMCMesonPtWOWeights        = (TH1D*)MCContainer->FindObject(ObjectNameMCOmegaWOWeights.Data());
+            }
+
+        }
         fHistoMCMesonPt->Sumw2();
         fHistoMCMesonPtWithinAcceptance->Sumw2();
         if (fHistoMCMesonPtWOWeights){
@@ -340,11 +379,18 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
             fHistoMCMesonPtWeights->Divide(fHistoMCMesonPt,fHistoMCMesonPtWOWeights, 1.,1.,"B");
         }
 
-        fHistoTrueMesonInvMassVSPt          = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueMotherPiPlPiMiNDM_InvMass_Pt");
-        fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueMotherPiPlPiMiNDMWOWeights_InvMass_Pt");
-        if (fHistoTrueMesonInvMassVSPtWOWeights == NULL) fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)fHistoTrueMesonInvMassVSPt->Clone("WOWeights");
+        if(isNewTask){
+            fHistoTrueMesonInvMassVSPt          = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueMotherPiPlPiMiNDM_InvMass_Pt");
+            fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueMotherPiPlPiMiNDMWOWeights_InvMass_Pt");
+            if (fHistoTrueMesonInvMassVSPtWOWeights == NULL) fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)fHistoTrueMesonInvMassVSPt->Clone("WOWeights");
+            fProfileTrueMesonInvMassVSPtWeights = (TProfile2D*)TrueConversionContainer->FindObject("ESD_TruePrimaryMotherWeights_InvMass_Pt");
+        } else{
+            fHistoTrueMesonInvMassVSPt          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
+            fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueWOWeights.Data());
+            if (fHistoTrueMesonInvMassVSPtWOWeights == NULL) fHistoTrueMesonInvMassVSPtWOWeights = (TH2D*)fHistoTrueMesonInvMassVSPt->Clone("WOWeights");
 
-        fProfileTrueMesonInvMassVSPtWeights = (TProfile2D*)TrueConversionContainer->FindObject("ESD_TruePrimaryMotherWeights_InvMass_Pt");
+            fProfileTrueMesonInvMassVSPtWeights = (TProfile2D*)TrueConversionContainer->FindObject(ObjectNameProfileWeights.Data());
+        }
         if (fProfileTrueMesonInvMassVSPtWeights == NULL){
             fProfileTrueMesonInvMassVSPtWeights = new TProfile2D("name_TP2D","name_TP2D", fHistoTrueMesonInvMassVSPt->GetNbinsX(), 0., 2., fHistoTrueMesonInvMassVSPt->GetNbinsY(), 0., 25., "");
             for (Int_t i = 1; i<fProfileTrueMesonInvMassVSPtWeights->GetNbinsX(); i++)
@@ -432,6 +478,10 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
         // Get True combinatorical histo and True Contamination Histo
         TString ObjectNameTruePiPlPiMiPiZeroPureCombinatorical = "ESD_TruePiPlPiMiNDMPureCombinatorical_InvMassPt";
         TString ObjectNameTruePiPlPiMiPiZeroContamination = "ESD_TruePiPlPiMiNDMContamination_InvMassPt";
+        if(!isNewTask){
+            ObjectNameTruePiPlPiMiPiZeroPureCombinatorical = "ESD_TruePiPlPiMiPiZeroPureCombinatorical_InvMassPt";
+            ObjectNameTruePiPlPiMiPiZeroContamination = "ESD_TruePiPlPiMiPiZeroContamination_InvMassPt";
+        }
 
         fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt =  (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiPiZeroPureCombinatorical.Data());
         fTruePiPlPiMiPiZeroContamination_InvMassPt =  (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiPiZeroContamination.Data());
@@ -1831,12 +1881,12 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
             fMesonMassLeftError_SubPiZero[iPt]        = 0.;
             fMesonWidthLeft_SubPiZero[iPt]            = 0.;
             fMesonWidthLeftError_SubPiZero[iPt]       = 0.;
-            fMesonCurIntRange_SubPiZero[3][0]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRange[0];
-            fMesonCurIntRange_SubPiZero[4][0]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRangeWide[0];
-            fMesonCurIntRange_SubPiZero[5][0]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurIntRange_SubPiZero[3][1]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRange[1];
-            fMesonCurIntRange_SubPiZero[4][1]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRangeWide[1];
-            fMesonCurIntRange_SubPiZero[5][1]         = fMesonMassExpect - 0.134 + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange_SubPiZero[3][0]         = fMesonMassExpect  + fMesonIntDeltaRange[0];
+            fMesonCurIntRange_SubPiZero[4][0]         = fMesonMassExpect  + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRange_SubPiZero[5][0]         = fMesonMassExpect  + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRange_SubPiZero[3][1]         = fMesonMassExpect  + fMesonIntDeltaRange[1];
+            fMesonCurIntRange_SubPiZero[4][1]         = fMesonMassExpect  + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRange_SubPiZero[5][1]         = fMesonMassExpect  + fMesonIntDeltaRangeNarrow[1];
 
             fMesonMassLeft_FixedPzPiZero[iPt]             = 0.;
             fMesonMassLeftError_FixedPzPiZero[iPt]        = 0.;
@@ -3735,13 +3785,13 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitLinearBck = NULL;
     fFitLinearBckCheck = NULL; // used as crosscheck in case fFitReco fitting fails
     if(usePol2BckFitting){ // use for bckground
-        fFitReco = new TF1  ("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",FitRangeTmp[0],FitRangeTmp[1]);
-        fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitReco = new TF1  ("GaussExpPol2","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBck = new TF1("Linear","[0]+[1]*x+[2]*x*x",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBckCheck = new TF1("Linear","[0]+[1]*x+[2]*x*x",FitRangeTmp[0],FitRangeTmp[1]);
     } else{
-        fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",FitRangeTmp[0],FitRangeTmp[1]);
-        fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",FitRangeTmp[0],FitRangeTmp[1]);
+        fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBck = new TF1("Linear","[0]+[1]*x",FitRangeTmp[0],FitRangeTmp[1]);
         fFitLinearBckCheck = new TF1("Linear","[0]+[1]*x",FitRangeTmp[0],FitRangeTmp[1]);
     }
@@ -4004,17 +4054,16 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     }
 
     fFitReco = NULL;
-    fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
+    fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
 
     // Gaussian for pre-Fitting to get start parameters
-    TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", FitRangeTmp[0], FitRangeTmp[1]);
+    TF1* fFitRecoPre = new TF1("fGauss","([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))", FitRangeTmp[0], FitRangeTmp[1]);
     fFitRecoPre->SetParameter(0,mesonAmplitude);
 
     fFitRecoPre->SetParameter(1,fMesonMassExpect);
 
     fFitRecoPre->SetParameter(2,fMesonWidthExpect);
     fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
     if (fPrefix.CompareTo("Eta")==0){
         fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.05);
 
@@ -4252,10 +4301,10 @@ if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
 if (fPrefix.CompareTo("Omega") ==0) {fitRange[0]=0.4; fitRange[1]=0.9;}
 
 fFitReco = NULL;
-fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",fitRange[0] ,fitRange[1]);
+fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",fitRange[0] ,fitRange[1]);
 
 fFitGausExp = NULL;
-fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",0.05,0.3);
+fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",0.05,0.3);
 
 fFitLinearBck = NULL;
 fFitLinearBck = new TF1("Linear","[0]+[1]*x+[2]*x*x",fitRange[0] ,fitRange[1]);
@@ -5083,7 +5132,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 void CalculateFWHM(TF1 * fFunc, Double_t* InputMesonFitRange){
 // Default function
     TF1* fFunc_def;
-    fFunc_def = new TF1("fFunc_def","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
+    fFunc_def = new TF1("fFunc_def","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
     fFunc_def->SetParameter(0,fFunc->GetParameter(0));
     fFunc_def->SetParameter(1,fFunc->GetParameter(1));
     fFunc_def->SetParameter(2,fFunc->GetParameter(2));
@@ -5097,7 +5146,7 @@ void CalculateFWHM(TF1 * fFunc, Double_t* InputMesonFitRange){
     //FWHM error +
     TF1* fFunc_plus;
     //	fFunc_plus = fFunc;
-    fFunc_plus = new TF1("fFunc_plus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
+    fFunc_plus = new TF1("fFunc_plus","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
 
     fFunc_plus->SetParameter(0,fFunc->GetParameter(0) + fFunc->GetParError(0));
     fFunc_plus->SetParameter(1,fFunc->GetParameter(1) + fFunc->GetParError(1));
@@ -5108,7 +5157,7 @@ void CalculateFWHM(TF1 * fFunc, Double_t* InputMesonFitRange){
     //FWHM error -
     TF1* fFunc_minus;
     //	fFunc_minus = fFunc;
-    fFunc_minus = new TF1("fFunc_minus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
+    fFunc_minus = new TF1("fFunc_minus","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",InputMesonFitRange[0],InputMesonFitRange[1]);
     fFunc_minus->SetParameter(0,fFunc->GetParameter(0) - fFunc->GetParError(0));
     fFunc_minus->SetParameter(1,fFunc->GetParameter(1) - fFunc->GetParError(1));
     fFunc_minus->SetParameter(2,fFunc->GetParameter(2) - fFunc->GetParError(2));
@@ -5153,9 +5202,9 @@ Double_t CrystalBallBck(Double_t *x,Double_t *par) {
     Double_t absAlpha = fabs((Double_t)par[4]);
 
     if (t >= -absAlpha) {
-        return par[0]*exp(-0.5*t*t)+par[5]+par[6]*x[0];
+        return par[0]*TMath::Exp(-0.5*t*t)+par[5]+par[6]*x[0];
     } else {
-        Double_t a =  TMath::Power(par[3]/absAlpha,par[3])*exp(-0.5*absAlpha*absAlpha);
+        Double_t a =  TMath::Power(par[3]/absAlpha,par[3])*TMath::Exp(-0.5*absAlpha*absAlpha);
         Double_t b= par[3]/absAlpha - absAlpha;
 
         return par[0]*(a/TMath::Power(b - t, par[3]))+par[5]+par[6]*x[0];
@@ -5171,10 +5220,10 @@ Double_t CrystalBall(Double_t *x,Double_t *par) {
     Double_t absAlpha = fabs((Double_t)par[4]);
 
     if (t >= -absAlpha) {
-        return par[0]*exp(-0.5*t*t);
+        return par[0]*TMath::Exp(-0.5*t*t);
     }
     else {
-        Double_t a =  TMath::Power(par[3]/absAlpha,par[3])*exp(-0.5*absAlpha*absAlpha);
+        Double_t a =  TMath::Power(par[3]/absAlpha,par[3])*TMath::Exp(-0.5*absAlpha*absAlpha);
         Double_t b= par[3]/absAlpha - absAlpha;
 
         return par[0]*(a/TMath::Power(b - t, par[3]));
@@ -5383,6 +5432,20 @@ void Delete(){
     if (fFitWithPol2ForBG_FixedPzPiZero)    delete fFitWithPol2ForBG_FixedPzPiZero;
     if (fHistoWeightsBGZbinVsMbin)          delete fHistoWeightsBGZbinVsMbin;
     if (fHistoFillPerEventBGZbinVsMbin)     delete fHistoFillPerEventBGZbinVsMbin;
+}
+
+// only needed for backwards compability
+void SetCorrectMCHistogrammNames(){
+    cout << "standard MC chosen" << endl;
+    ObjectNameTrue 						= "ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt";
+    ObjectNameTrueWOWeights 			= "ESD_TrueMotherPiPlPiMiPiZeroWOWeights_InvMass_Pt";	//  n/a
+    ObjectNameProfileWeights 			= "ESD_TruePrimaryMotherWeights_InvMass_Pt";			//  n/a
+    ObjectNameMCEtaAcc 					= "MC_EtaInAcc_Pt";
+    ObjectNameMCOmegaAcc 				= "MC_OmegaInAcc_Pt";
+    ObjectNameMCEta 					= "MC_Eta_Pt";
+    ObjectNameMCEtaWOWeights 			= "MC_Eta_WOWeights_Pt";								//  n/a
+    ObjectNameMCOmega 					= "MC_Omega_Pt";
+    ObjectNameMCOmegaWOWeights 			= "MC_Omega_WOWeights_Pt";								//  n/a
 }
 
 

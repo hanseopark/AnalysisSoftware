@@ -700,6 +700,7 @@ Double_t LinearBGExclusion(Double_t *,Double_t *);                              
 Double_t Pol2BGExclusion(Double_t *,Double_t *);                                                          // Definition of pol2 BG with excluded region
 Double_t CrystalBallBck(Double_t *,Double_t *);
 Double_t CrystalBall(Double_t *,Double_t *);
+void SetCorrectMCHistogrammNames();
 void Delete();
 
 TString centralityString = 										"";

@@ -119,6 +119,10 @@
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,4,5,5,5,5,5,10,10};
 
+    // for sys
+    //Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[9]         = {0,1,1.4,1.8,2.5,3.5,5,8.,12.};
+    //Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[8]       = {4,4,4,4,4,4,4,8};
+
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[12]         = {0,1,1.5,2,2.5,3,3.5,4,5.,6.,8.,12.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[11]       = {10,10,10,10,10,10,8,8,8,6,6};
 

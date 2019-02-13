@@ -1171,16 +1171,16 @@
                 if(mode == 40 || mode == 60){
                     scaleFac        = 1.;
                     return 9;
-                } else if(mode == 41){
+                } else if(mode == 41 || mode == 61){
                     scaleFac        = 2.;
                     return 7;
-                } else if(mode == 42){
+                } else if(mode == 42 || mode == 62){
                     scaleFac        = 2.;
                     return 9;
-                } else if(mode == 44){
+                } else if(mode == 44 || mode == 64){
                     scaleFac        = 1.;
                     return 11;
-                } else if(mode == 45){
+                } else if(mode == 45 || mode == 65){
                     scaleFac        = 5.;
                     return 5;
                 } else{
@@ -5995,11 +5995,11 @@
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                 for (Int_t i = 0; i < fNBinsPt; i++) {
-                    if(modi == 40)      fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[i];
-                    else if(modi == 41) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
-                    else if(modi == 42) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
-                    else if(modi == 44) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[i];
-                    else if(modi == 45) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[i];
+                    if(modi == 40 || modi == 60)      fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[i];
+                    else if(modi == 41 || modi == 61) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
+                    else if(modi == 42 || modi == 62) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
+                    else if(modi == 44 || modi == 64) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[i];
+                    else if(modi == 45 || modi == 65) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[i];
                     else                fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[i];
                 }
             } else if (energy.CompareTo("13TeV") == 0) {

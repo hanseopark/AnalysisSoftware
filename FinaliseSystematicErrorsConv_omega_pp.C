@@ -872,8 +872,14 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
             pol0->SetLineColor(kBlack);
             bla->SetLineColor(kMagenta+2);
 
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorrBefore[cut], 20+cut, 1.,kGray+1,kGray+1);
+            DrawGammaSetMarkerTGraphErr(meanErrorsCorrBefore[cut], 20+cut, 1.,kGreen+1,kGreen+1);
+
+            DrawGammaSetMarkerTGraphErr(positiveErrors[cut], 20+cut, 1.,kRed-5,kRed-5);
+            DrawGammaSetMarkerTGraphErr(negativeErrors[cut], 20+cut, 1.,kGray+1,kGray);
+
             meanErrorsCorrBefore[cut]->Draw("p,csame");
+            positiveErrors[cut]->Draw("p,same");
+            negativeErrors[cut]->Draw("p,same");
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[cut], 20+cut, 1.,color[cut],color[cut]);
             meanErrorsCorr[cut]->Draw("p,csame");
             pol4->Draw("same");
@@ -881,6 +887,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
             pol1->Draw("same");
             pol0->Draw("same");
             bla->Draw("same");
+
 
 
             TLegend* legendMeanNewSingle = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);

@@ -46,6 +46,8 @@ void EventQA(
     Bool_t isCalo                       = kFALSE;
     Bool_t isMergedCalo                 = kFALSE;
     Bool_t isConv                       = kFALSE;
+    Bool_t isHeavyMeson                 = kFALSE;
+
     // mode:    0 // new output PCM-PCM
     //          1 // new output PCM dalitz
     //          2 // new output PCM-EMCal
@@ -57,12 +59,15 @@ void EventQA(
     //          11 // merged PHOS
     //          14 // new output PCM-EDC (EMCal + DCal)
     //          15 // new output EDC (EMCal + DCal)
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14)
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14 || fMode == 40 || fMode == 42 || fMode == 43 || fMode == 60 || fMode == 62 || fMode == 63)
         isConv                          = kTRUE;
-    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12 || fMode == 15 ) || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 200)
+    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12 || fMode == 15 ) || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 200 || fMode == 42 || fMode == 43 || fMode == 44 || fMode == 45 || fMode == 62 || fMode == 63 || fMode == 64 || fMode == 65)
         isCalo                          = kTRUE;
     if (fMode == 10 || fMode == 11)
         isMergedCalo                    = kTRUE;
+    if(((mode>=40)&&(mode<=50)) || ((mode>=60)&&(mode<=70))){
+        isHeavyMeson    = kTRUE;
+    }
 
     TString fCollisionSystem            = ReturnFullCollisionsSystem(fEnergyFlag);
     if (fCollisionSystem.CompareTo("") == 0){
@@ -92,12 +97,15 @@ void EventQA(
     Double_t processLabelOffsetX1       = 0.85;
 
     TString* fCutSelection              = new TString[nSets];
+    TString* fTypeCutSelection          = new TString[nSets];
     TString* fEventCutSelection         = new TString[nSets];
     TString* fGammaCutSelection         = new TString[nSets];
     TString* fClusterCutSelection       = new TString[nSets];
     TString* fElectronCutSelection      = new TString[nSets];
+    TString* fNDMCutSelection           = new TString[nSets];
     TString* fMesonCutSelection         = new TString[nSets];
     TString* fMClusterCutSelection      = new TString[nSets];
+
     //*****************************************************************************************************
     //*****************************************************************************************************
     //****************************** Determine which cut to process ***************************************
@@ -181,15 +189,19 @@ void EventQA(
         if (hasFixedCuts)
             fCutSelection[i]        = fixedCutSelections[i];
         else
-            fCutSelection[i]        = cuts.at(cutNr);
+        fCutSelection[i]        = cuts.at(cutNr);
         fEventCutSelection[i]       = "";
+        fTypeCutSelection[i]       = "";
         fGammaCutSelection[i]       = "";
         fClusterCutSelection[i]     = "";
         fMClusterCutSelection[i]    = "";
         fElectronCutSelection[i]    = "";
+        fNDMCutSelection[i]         = "";
         fMesonCutSelection[i]       = "";
-        if (!isMergedCalo){
+        if (!isMergedCalo && !isHeavyMeson){
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+        } else if (isHeavyMeson){
+            ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection[i],fTypeCutSelection[i],fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fNDMCutSelection[i], fMesonCutSelection[i],kTRUE);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         }
@@ -409,6 +421,12 @@ void EventQA(
         TList* MesonCutsContainer       = (TList*) TopContainer->FindObject(Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()));
             if(MesonCutsContainer == NULL && fMode != 200) {cout << "ERROR: " << Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(MesonCutsContainer) MesonCutsContainer->SetOwner(kTRUE);
+        TList* NDMCutsContainer = NULL;
+        if(isHeavyMeson){
+            NDMCutsContainer       = (TList*) TopContainer->FindObject(Form("ConvMesonCuts_%s",fNDMCutSelection[i].Data()));
+            if(NDMCutsContainer == NULL && fMode != 200) {cout << "ERROR: " << Form("ConvMesonCuts_%s",fNDMCutSelection[i].Data()) << " not found in File" << endl; return;}
+            else if(NDMCutsContainer) MesonCutsContainer->SetOwner(kTRUE);
+        }
         TList* TrueContainer            = (TList*) TopContainer->FindObject(Form("%s True histograms",fCutSelection[i].Data()));
             if(TrueContainer == NULL) {cout << "INFO: " << Form("%s True histograms",fCutSelection[i].Data()) << " not found in File, processing data?" << endl;}
             else TrueContainer->SetOwner(kTRUE);
@@ -531,7 +549,7 @@ void EventQA(
                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistVertexX);
             vecVertexX.push_back(new TH1D(*fHistVertexX));
-        }
+        } else cout << "INFO: Object |fHistVertexX| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality distribution stored in main task
         TH1D* fHistCentMain = (TH1D*)ESDContainer->FindObject("Centrality");
@@ -544,7 +562,7 @@ void EventQA(
             SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityMain_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             WriteHistogram(fHistCentMain);
             vecCentrality.push_back(new TH1D(*fHistCentMain));
-        }
+        } else cout << "INFO: Object |Centrality| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // vertex Y distribution, if available
         TH1D* fHistVertexY = (TH1D*)ESDContainer->FindObject("VertexY");
@@ -556,7 +574,7 @@ void EventQA(
                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistVertexY);
             vecVertexY.push_back(new TH1D(*fHistVertexY));
-        }
+        } else cout << "INFO: Object |fHistVertexY| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // number of good tracks in central acceptance (|\eta| < 0.8)
         TH1D* fHistNGoodTracks = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
@@ -772,7 +790,7 @@ void EventQA(
         } else cout << "INFO: Object |V0 Trigger vs Mult| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality
-        if(fIsPbPb && fMode != 200){
+        if(fIsPbPb && fMode != 200 && !isHeavyMeson){
             TH1D* fHistCentrality = (TH1D*)ESDContainer->FindObject("Centrality");
             if(fHistCentrality){
                 fHistCentrality->Rebin(4);
@@ -1168,6 +1186,43 @@ void EventQA(
                 SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             } else cout << Form("INFO: Object |MesonBGCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
         }
+
+        if (NDMCutsContainer){
+            //-------------------------------------------------------------------------------------------------------------------------------
+            //----------------------------------------------- Neutral Decay Meson properties  -----------------------------------------------
+            //-------------------------------------------------------------------------------------------------------------------------------
+            // meson cut tracking histo
+            TH2D* fHistNDMCuts = (TH2D*) NDMCutsContainer->FindObject(Form("MesonCuts %s", fNDMCutSelection[i].Data()));
+            if(fHistNDMCuts && fHistNDMCuts->IsA()==TH2F::Class()){
+                GetMinMaxBinY(fHistNDMCuts,minB,maxB);
+                SetYRange(fHistNDMCuts,1,maxB+1);
+                SetZMinMaxTH2(fHistNDMCuts,1,fHistNDMCuts->GetNbinsX(),1,maxB+1);
+                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                    fHistNDMCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                    "","#it{p}_{T}",0.9,0.8);
+                SaveCanvasAndWriteHistogram(canvas, fHistNDMCuts, Form("%s/NDM_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
+                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistNDMCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
+                                    5,10,0,0);
+                SaveCanvas(canvas, Form("%s/Meson_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+            } else cout << Form("INFO: Object |MesonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fNDMCutSelection[i].Data()) << endl;
+            //-------------------------------------------------------------------------------------------------------------------------------
+            // meson BG cut tracking histo
+            TH2D* fHistNDMBGCuts = (TH2D*)NDMCutsContainer->FindObject(Form("MesonBGCuts %s", fNDMCutSelection[i].Data()));
+            if(fHistNDMBGCuts && fHistNDMBGCuts->IsA()==TH2F::Class()){
+                GetMinMaxBinY(fHistNDMBGCuts,minB,maxB);
+                SetYRange(fHistNDMBGCuts,1,maxB+1);
+                SetZMinMaxTH2(fHistNDMBGCuts,1,fHistNDMBGCuts->GetNbinsX(),1,maxB+1);
+                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                    fHistNDMBGCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                    "","#it{p}_{T}",0.9,0.8);
+                SaveCanvasAndWriteHistogram(canvas, fHistNDMBGCuts, Form("%s/NDMBG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
+                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistNDMBGCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
+                                    5,10,0,0);
+                SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+            } else cout << Form("INFO: Object |MesonBGCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fNDMCutSelection[i].Data()) << endl;
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // define name for meson property histograms
         TString namePi0MesonY       = "ESD_MotherPi0_Pt_Y";
@@ -1229,7 +1284,7 @@ void EventQA(
 
         //-------------------------------------------------------------------------------------------------------------------------------
         // Eta properties
-        if ( !isMergedCalo && mode != 200 ){
+        if ( !isMergedCalo && mode != 200 && !isHeavyMeson ){
             //-------------------------------------------------------------------------------------------------------------------------------
             // eta meson pt vs rapidity
             TH2D* EtaPtY = (TH2D*) ESDContainer->FindObject("ESD_MotherEta_Pt_Y");
@@ -1291,7 +1346,7 @@ void EventQA(
         //-------------------------------------------------------------------------------------------------------------------------------
         // Invariant mass of BG candidates
         TH2D* ESDBackground = NULL;
-        if (mode != 10 && mode != 11 && mode != 200){
+        if (mode != 10 && mode != 11 && mode != 200 && !isHeavyMeson){
             ESDBackground = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
             if(ESDBackground){
                 WriteHistogram(ESDBackground);
@@ -1302,7 +1357,7 @@ void EventQA(
         //-------------------------------------------------------------------------------------------------------------------------------
         //--------------------------------- statistics for meson properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
-        if ( !isMergedCalo && mode != 200){
+        if ( !isMergedCalo && mode != 200 && !isHeavyMeson){
             cout << "started fitting" << endl;
             Bool_t kScs = fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog, fCollisionSystem);
 

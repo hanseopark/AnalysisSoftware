@@ -1037,20 +1037,20 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		maxPtMesonEffFit = maxPtMeson;
 		minPtMesonEffFit = 1.2;
 		offsetCorrectionHighPt= 1;
-		fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([2]*x)+[2]");
+        fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*TMath::Exp([2]*x)+[2]");
 	} else {
-		maxPtMesonEffFit = 4.;
-		minPtMesonEffFit = 1.2;
+        maxPtMesonEffFit = maxPtMeson;
+        minPtMesonEffFit = 1.2;
 		if (nameMeson.Contains("Eta")){
 			offsetCorrectionHighPt= -1;
 		} else {
 			offsetCorrectionHighPt= -2;
 			cout << "doing Omega" << endl;
 		}
-		fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([2]*x)+[2]");
+        fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*TMath::Exp([2]*x)+[2]");
 	}
 	fitTrueEffi->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
-    TFitResultPtr resultEffi = histoTrueEffiPt->Fit(fitTrueEffi,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
+    TFitResultPtr resultEffi = histoTrueEffiPt->Fit(fitTrueEffi,"SNRME+","",minPtMesonEffFit,maxPtMesonEffFit);
 	TH1D* histoTrueEffiPtFit = (TH1D*)histoTrueEffiPt->Clone("histoTrueEffiPtFit");
 	for (Int_t i = histoTrueEffiPt->GetXaxis()->FindBin(minPtMesonEffFit)+1; i < histoTrueEffiPt->GetXaxis()->FindBin(maxPtMesonEffFit)+offsetCorrectionHighPt; i++){
 		Double_t ptStart = histoTrueEffiPt->GetXaxis()->GetBinLowEdge(i);
@@ -1068,10 +1068,10 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TH1D* histoRatioTrueEffiDivFitted = (TH1D*)histoTrueEffiPt->Clone("histoRatioTrueEffiDivFitted");
 	histoRatioTrueEffiDivFitted->Divide(histoTrueEffiPt, histoTrueEffiPtFit, 1. ,1., "B");
 	
-	TF1* fitTrueEffiNarrow = new TF1("EffiNarrowFitDummy","1 - [0]*exp([2]*x)+[2] ");
+    TF1* fitTrueEffiNarrow = new TF1("EffiNarrowFitDummy","1 - [0]*TMath::Exp([2]*x)+[2] ");
 	fitTrueEffiNarrow->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 
-    TFitResultPtr resultEffiNarrow = histoTrueEffiNarrowPt->Fit(fitTrueEffiNarrow,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
+    TFitResultPtr resultEffiNarrow = histoTrueEffiNarrowPt->Fit(fitTrueEffiNarrow,"SNRME+","",minPtMesonEffFit,maxPtMesonEffFit);
 
 	TH1D* histoTrueEffiNarrowPtFit = (TH1D*)histoTrueEffiNarrowPt->Clone("histoTrueEffiNarrowPtFit");
 	for (Int_t i = histoTrueEffiNarrowPt->GetXaxis()->FindBin(minPtMesonEffFit)+1; i < histoTrueEffiNarrowPt->GetXaxis()->FindBin(maxPtMesonEffFit)+offsetCorrectionHighPt; i++){
@@ -1085,10 +1085,10 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		histoTrueEffiNarrowPtFit->SetBinError(i, errorEffiNarrow);
 	}
 
-	TF1* fitTrueEffiWide = new TF1("EffiWideFitDummy","1 - [0]*exp([2]*x)+[2] ");
+    TF1* fitTrueEffiWide = new TF1("EffiWideFitDummy","1 - [0]*TMath::Exp([2]*x)+[2] ");
 	fitTrueEffiWide->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 
-    TFitResultPtr resultEffiWide = histoTrueEffiWidePt->Fit(fitTrueEffiWide,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
+    TFitResultPtr resultEffiWide = histoTrueEffiWidePt->Fit(fitTrueEffiWide,"SNRME+","",minPtMesonEffFit,maxPtMesonEffFit);
 
 	TH1D* histoTrueEffiWidePtFit = (TH1D*)histoTrueEffiWidePt->Clone("histoTrueEffiWidePtFit");
 	for (Int_t i = histoTrueEffiWidePt->GetXaxis()->FindBin(minPtMesonEffFit)+1; i < histoTrueEffiWidePt->GetXaxis()->FindBin(maxPtMesonEffFit)+offsetCorrectionHighPt; i++){
@@ -1180,7 +1180,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		DrawGammaSetMarker(histoTrueEffiWidePt, 26, 1., kGray+3, kGray+3);                               
 		histoTrueEffiWidePt->DrawCopy("e1,same"); 
 		
-		if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 ){         //|| optionEnergy.CompareTo("2.76TeV")==0
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0  || optionEnergy.CompareTo("7TeV")==0 ){         //|| optionEnergy.CompareTo("2.76TeV")==0
 			fitTrueEffi->SetLineColor(kRed+2);
 			fitTrueEffi->Draw("same");
 			fitTrueEffiNarrow->SetLineColor(kRed-2);
@@ -1201,11 +1201,11 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		legendTrueEff->SetFillColor(0);
         legendTrueEff->SetBorderSize(0);
 		legendTrueEff->AddEntry(histoTrueEffiPt,"true normal");
-		if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 ) legendTrueEff->AddEntry(fitTrueEffi,"true fitted"); //|| optionEnergy.CompareTo("2.76TeV")==0 
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 || optionEnergy.CompareTo("7TeV")==0  ) legendTrueEff->AddEntry(fitTrueEffi,"true fitted"); //|| optionEnergy.CompareTo("2.76TeV")==0
 		legendTrueEff->AddEntry(histoTrueEffiWidePt,"true wide int");
-		if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 )  legendTrueEff->AddEntry(fitTrueEffiWide,"true wide fitted");
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 || optionEnergy.CompareTo("7TeV")==0 )  legendTrueEff->AddEntry(fitTrueEffiWide,"true wide fitted");
 		legendTrueEff->AddEntry(histoTrueEffiNarrowPt,"true narrow int");
-		if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 )  legendTrueEff->AddEntry(fitTrueEffiNarrow,"true narrow fitted");
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 || optionEnergy.CompareTo("7TeV")==0 )  legendTrueEff->AddEntry(fitTrueEffiNarrow,"true narrow fitted");
 		legendTrueEff->Draw();
 		
 		canvasEffi->Update();

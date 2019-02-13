@@ -166,7 +166,7 @@ void PrimaryTrackQA(
         fElectronCutSelection[i]    = "";
         //cout<<"fCutSelection["<<i<<"]: "<<fCutSelection[i].Data()<<endl;
         // Dirty fix, because cut string has wrong ordering!!
-        fMode=ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection[i], fTypeCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fNeutralPionCutSelection[i],fPionCutSelection[i], fMesonCutSelection[i]);
+        fMode=ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection[i], fTypeCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fPionCutSelection[i], fNeutralPionCutSelection[i], fMesonCutSelection[i]);
         if(fMode!=mode){// check if extracted mode from cutnumber is the same mode given by user
             cout << "ERROR: Chosen mode ("<<mode<<") is not identical to mode extracted from cutstring ("<<fMode<<")! " << endl;
         }

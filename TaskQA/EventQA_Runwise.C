@@ -71,6 +71,7 @@ void EventQA_Runwise(
     Bool_t isCalo       = kFALSE;
     Bool_t isMerged     = kFALSE;
     Bool_t isConv       = kFALSE;
+    Bool_t isHeavyMeson = kFALSE;
     // mode:    0 // new output PCM-PCM
     //          1 // new output PCM dalitz
     //          2 // new output PCM-EMCal
@@ -82,12 +83,16 @@ void EventQA_Runwise(
     //          11 // merged PHOS
     //          14 // new output PCM-EDC (EMCal + DCal)
     //          15 // new output EDC (EMCal + DCal)
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14)
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9 || fMode == 14 || fMode == 40 || fMode == 42 || fMode == 43 || fMode == 60 || fMode == 62 || fMode == 63)
         isConv          = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 14 || fMode == 15)
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 14 || fMode == 15 || fMode == 42 || fMode == 43 || fMode == 44 || fMode == 45 || fMode == 62 || fMode == 63 || fMode == 64 || fMode == 65)
         isCalo          = kTRUE;
     if (fMode == 10 || fMode == 11 )
         isMerged        = kTRUE;
+    if(((mode>=40)&&(mode<=50)) || ((mode>=60)&&(mode<=70))){
+        isHeavyMeson    = kTRUE;
+    }
+
 
 
     TString fDate               = ReturnDateString();
@@ -296,15 +301,14 @@ void EventQA_Runwise(
     TString fElectronCutSelection    = "";
     TString fNDMCutSelection         = "";
     TString fMesonCutSelection       = "";
-    if (!isMerged && (mode!=40)){
+    if (!isMerged && (!isHeavyMeson)){
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
+    } else if (isHeavyMeson){
+        ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection,fTypeCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fNDMCutSelection, fMesonCutSelection,kTRUE);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     }
 
-    if(((mode>=40)&&(mode<=50)) || ((mode>=60)&&(mode<=70))){
-       ReturnSeparatedCutNumberPiPlPiMiPiZero(fCutSelection,fTypeCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fNDMCutSelection, fMesonCutSelection);
-    }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++ Set proper cluster nomenclature ++++++++++++++++++++++++++++++++++++++++++
@@ -689,7 +693,7 @@ void EventQA_Runwise(
             vecHistos[i].push_back(hCaloMergedNClustersQA[i]);
         }
 
-        if (!isMerged && fMode != 200){
+        if (!isMerged && fMode != 200 && !isHeavyMeson){
             histoName               = "hPi0Frac";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Frac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Frac; Run Number ; N^{#pi^{0}}/N^{Evt}",hNBin,hFBin,hLBin);
@@ -710,7 +714,7 @@ void EventQA_Runwise(
 
         }
 
-        if (fMode != 200){
+        if (fMode != 200 && !isHeavyMeson){
             histoName               = "hPi0Pt";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Pt[i]               = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Pt; Run Number ; Mean #it{p}_{T}^{#pi^{0}}",hNBin,hFBin,hLBin);
@@ -760,7 +764,7 @@ void EventQA_Runwise(
             vecHistos[i].push_back(hPi0OpenAngleRMS[i]);
         }
 
-        if (!isMerged && fMode != 200){
+        if (!isMerged && fMode != 200 && !isHeavyMeson){
             histoName               = "hEtaFrac";
             if(i==0) vecHistosName.push_back(histoName);
             hEtaFrac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEtaFrac; Run Number ; N^{#eta}/N^{Evt}",hNBin,hFBin,hLBin);
@@ -1207,7 +1211,7 @@ void EventQA_Runwise(
                     tempV0MultRatio->GetYaxis()->SetRangeUser(0,2);
                     vecV0MultRatio[i-1].push_back(tempV0MultRatio);
                 }
-            }
+            } else cout << "INFO: Object |V0 Multiplicity| could not be found! Skipping Fill..." << endl;
             TH1D* V0Trigg                        = (TH1D*) ESDContainer->FindObject("V0 Trigger");
             if (V0Trigg){
                 Int_t binT       = 1;
@@ -1237,7 +1241,7 @@ void EventQA_Runwise(
                     tempV0TriggRatio->GetYaxis()->SetRangeUser(0,2);
                     vecV0TriggRatio[i-1].push_back(tempV0TriggRatio);
                 }
-            }
+            } else cout << "INFO: Object |V0 Trigger| could not be found! Skipping Fill..." << endl;
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Calorimeter selection histograms ---------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1298,10 +1302,10 @@ void EventQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Neutral meson properties --------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
-            if (!isMerged && fMode != 200){
+            if (!isMerged && fMode != 200 && !isHeavyMeson){
                 TH2D* ESD_Mother        = (TH2D*) ESDContainer->FindObject("ESD_Mother_InvMass_Pt");
                 TH2D* ESD_Background    = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
-                if( ESD_Mother && ESD_Background ){
+                if( ESD_Mother && ESD_Background && !isHeavyMeson){
                     if( nEvents > 10 ){
                         TString outputDirDataSet    = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
                         if(useDataRunListForMC && i>=nData) {
@@ -1393,7 +1397,7 @@ void EventQA_Runwise(
                 namePi0MesonOpen        = "ESD_Mother_Pt_OpenAngle";
             }
 
-            if (fMode != 200){
+            if (fMode != 200 && !isHeavyMeson){
                 TH2D* Pi0PtY                = (TH2D*) ESDContainer->FindObject(namePi0MesonY.Data());
                 if(Pi0PtY){
                     TH1D* Pi0Pt             = (TH1D*) Pi0PtY->ProjectionX("Pi0_Pt");
@@ -1434,7 +1438,7 @@ void EventQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Eta properties ------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
-            if (!isMerged && fMode != 200){
+            if (!isMerged && fMode != 200 && !isHeavyMeson){
                 TH2D* EtaPtY            = (TH2D*) ESDContainer->FindObject("ESD_MotherEta_Pt_Y");
                 if(EtaPtY){
                     TH1D* EtaPt         = (TH1D*) EtaPtY->ProjectionX("Eta_Pt");

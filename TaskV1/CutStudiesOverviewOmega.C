@@ -197,6 +197,9 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     TH1D*   histoRatioSignCut           [ConstNumberOfCuts];
     TH1D*   histoRatioSignNarrowCut     [ConstNumberOfCuts];
     TH1D*   histoRatioRawClusterPtCut   [ConstNumberOfCuts];
+    TH1D*   histoCorrectedYieldNorm;
+    TH1D*   histoCorrectedYieldTrueNarrow;
+    TH1D*   histoCorrectedYieldTrueWide;
     TString cutStringsName              [MaxNumberOfCuts];
 
     // Define yield extraction error graphs
@@ -225,8 +228,10 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         TString fNeutralPionCutSelection                        = "";
         TString fMesonCutSelection                              = "";
 
+        Bool_t isNewTask = kTRUE;
+        if((mode>=40) && (mode <=50)) isNewTask = kFALSE;
         // disentangle cut selection
-        ReturnSeparatedCutNumberPiPlPiMiPiZero(cutNumberAdv[i].Data(),fTypeCutNumber,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fPionCutSelection,fNeutralPionCutSelection ,fMesonCutSelection);
+        ReturnSeparatedCutNumberPiPlPiMiPiZero(cutNumberAdv[i].Data(),fTypeCutNumber,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fPionCutSelection,fNeutralPionCutSelection ,fMesonCutSelection,isNewTask);
 
         // Check if there was a special trigger among the cuts
         TString fTrigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),1);
@@ -283,13 +288,13 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         } else if (cutVariationName.Contains("SinglePt")){
             TString fSinglePtCut                                = fGammaCutSelection(GetPhotonSinglePtCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseSinglePtCut(CutNumberToInteger(fSinglePtCut));
-        } else if (cutVariationName.Contains("TPCCluster")){
+        } else if (cutVariationName.Contains("Conversion_ClsTPCCut")){
             TString fClusterCut                                 = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
-        } else if (cutVariationName.Contains("dEdxE")){
+        } else if (cutVariationName.Contains("TPCdEdxCutElectron")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
-        } else if (cutVariationName.Contains("dEdxPi")){
+        } else if (cutVariationName.Contains("TPCdEdxCutPion")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
             cutStringsName[i]                                   = fdEdxCut.Data();
             cout << fdEdxCut.Data() << "\t" << cutStringsName[i].Data() << endl;
@@ -375,6 +380,16 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         } else if (cutVariationName.Contains("PhotonAsymmetry")){
             TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fPhotonAsymmetry));
+        } else if (cutVariationName.Contains("SelectionWindows")){
+            cout << "GetMesonSelectionWindowCutPosition()" << GetMesonSelectionWindowCutPosition() << endl;
+            TString fMesonSelectionWindowCut                         = fNeutralPionCutSelection(GetMesonSelectionWindowCutPosition(),1);
+            cout << "fMesonSelectionWindowCut" << fMesonSelectionWindowCut << endl;
+            cout << "fNeutralPionCutSelection" << fNeutralPionCutSelection << endl;
+            cutStringsName[i]                                     = AnalyseMesonSelectionWindowCut(CutNumberToInteger(fMesonSelectionWindowCut));
+        // Charged Pion cuts
+        } else if (cutVariationName.Contains("ChargedPion_ClsTPCCut")){
+            TString fChargedPionClsTPC                            = fPionCutSelection(GetPionClsTPCCut(),1);
+            cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fChargedPionClsTPC));
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }
@@ -398,9 +413,17 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             }
 
             TString nameCorrectedYield                          = Form("CorrectedYieldTrueEff%s",InvMassTypeEnding.Data());
+            TString nameCorrectedYieldNorm                      = Form("CorrectedYieldNormEff%s",InvMassTypeEnding.Data());
+            TString nameCorrectedYieldTrueNarrow                = Form("CorrectedYieldTrueEffNarrow%s",InvMassTypeEnding.Data());
+            TString nameCorrectedYieldTrueWide                  = Form("CorrectedYieldTrueEffWide%s",InvMassTypeEnding.Data());
             TString nameEfficiency                              = Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data());
             TString nameAcceptance                              = "fMCMesonAccepPt";
 
+            if(i==0){
+               histoCorrectedYieldNorm                       = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYieldNorm.Data());
+               histoCorrectedYieldTrueNarrow                 = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYieldTrueNarrow.Data());
+               histoCorrectedYieldTrueWide                   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYieldTrueWide.Data());
+            }
             histoCorrectedYieldCut[i]                           = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
             histoCorrectedYieldCut[i]->SetName(Form("%s_%s", nameCorrectedYield.Data(),cutNumber[i].Data()));
             histoTrueEffiCut[i]                                 = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
@@ -475,6 +498,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         if (correctionFilesAvail){
             histoRatioCorrectedYieldCut[i]                      = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s", cutNumber[i].Data()));
             histoRatioCorrectedYieldCut[i]->Divide(histoRatioCorrectedYieldCut[i],histoCorrectedYieldCut[0],1.,1.,"B");
+
             if (i > 0){
                 maxPt= histoCorrectedYieldCut[i]->GetBinCenter(histoCorrectedYieldCut[i]->GetNbinsX()) + 0.5* histoCorrectedYieldCut[i]->GetBinWidth(histoCorrectedYieldCut[i]->GetNbinsX());
             }
@@ -1271,6 +1295,95 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
 
         canvasCorrectedYieldMeson->Update();
         canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield%s.%s",outputDir.Data(), meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
+        delete canvasCorrectedYieldMeson;
+
+
+        //*****************************************************************************************
+        //******************* Compare Corrected Yields of different efficiencies for std cuts ********************************************
+        //*****************************************************************************************
+
+        // Define canvas
+        canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);
+        DrawGammaCanvasSettings( canvasCorrectedYieldMeson,  0.13, 0.02, 0.02, 0.09);
+        // Define upper panel
+        padCorrectedYield = new TPad("padCorrectedYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padCorrectedYield, 0.12, 0.02, 0.02, 0.);
+        padCorrectedYield->SetLogy(1);
+        padCorrectedYield->Draw();
+        // Define lower panel
+        padCorrectedYieldRatios = new TPad("padCorrectedYieldRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+        DrawGammaPadSettings( padCorrectedYieldRatios, 0.12, 0.02, 0.0, 0.2);
+        padCorrectedYieldRatios->SetLogy(0);
+        padCorrectedYieldRatios->Draw();
+
+        // Plot corrected yield in upper panel
+        padCorrectedYield->cd();
+        legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*4, 1500*0.75*0.032);
+        //         if (cutVariationName.Contains("dEdxPi")){
+        //             legendCorrectedYieldMeson->SetTextSize(0.02);
+        //         }
+        DrawAutoGammaMesonHistos( histoCorrectedYieldCut[0],
+                                 "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)",
+                                 kTRUE, 5., 5e-10,kTRUE,
+                                 kFALSE, 0.0, 0.030,
+                                 kFALSE, 0., 10.);
+        DrawGammaSetMarker(histoCorrectedYieldCut[0], 20, 1., color[0], color[0]);
+        histoCorrectedYieldCut[0]->DrawCopy("e1,p");
+        legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[0], Form("standard (true effi): %s",cutStringsName[0].Data()));
+
+        DrawGammaSetMarker(histoCorrectedYieldNorm, 21, 1.,color[1],color[1]);
+        histoCorrectedYieldNorm->DrawCopy("same,e1,p");
+        DrawGammaSetMarker(histoCorrectedYieldTrueWide, 22, 1.,color[2],color[2]);
+        histoCorrectedYieldTrueWide->DrawCopy("same,e1,p");
+        DrawGammaSetMarker(histoCorrectedYieldTrueNarrow, 23, 1.,color[3],color[3]);
+        histoCorrectedYieldTrueNarrow->DrawCopy("same,e1,p");
+
+        legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldNorm, "norm. efficiency");
+        legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldTrueWide, "true efficiency wide");
+        legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldTrueNarrow, "true efficiency narrow");
+        legendCorrectedYieldMeson->Draw();
+
+        // labeling the plot
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+        // plot ratio of corrected yields in lower panel
+        padCorrectedYieldRatios->cd();
+
+        // Set ratio min and max
+       Double_t minYRatio = 0.65;
+       Double_t maxYRatio = 1.65;
+
+       SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[0], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+       DrawGammaSetMarker(histoRatioCorrectedYieldCut[0], 20, 1.,color[0],color[0]);
+       histoRatioCorrectedYieldCut[0]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+
+      for(Int_t b = 0; b< histoRatioCorrectedYieldCut[0]->GetNbinsX(); b++){
+          histoRatioCorrectedYieldCut[0]->SetBinError(b+1,histoCorrectedYieldCut[0]->GetBinError(b+1)/histoCorrectedYieldCut[0]->GetBinContent(b+1));
+      }
+      histoRatioCorrectedYieldCut[0]->SetFillColor(kGray+2);
+      histoRatioCorrectedYieldCut[0]->SetFillStyle(0);
+      histoRatioCorrectedYieldCut[0]->DrawCopy("p,e2");
+                //                 histoRatioCorrectedYieldCut[i]->DrawCopy("p,e1");
+
+      TH1D* histoRatioCorrectedYieldNorm                      = (TH1D*) histoCorrectedYieldNorm->Clone("histoRatioCorrectedYieldNorm");
+      histoRatioCorrectedYieldNorm->Divide(histoRatioCorrectedYieldNorm,histoCorrectedYieldCut[0],1.,1.,"B");
+      TH1D* histoRatioCorrectedYieldTrueWide                     = (TH1D*) histoCorrectedYieldTrueWide->Clone("histoRatioCorrectedYieldTrueWide");
+      histoRatioCorrectedYieldTrueWide->Divide(histoRatioCorrectedYieldTrueWide,histoCorrectedYieldCut[0],1.,1.,"B");
+      TH1D* histoRatioCorrectedYieldTrueNarrow                      = (TH1D*) histoCorrectedYieldTrueNarrow->Clone("histoRatioCorrectedYieldNorm");
+      histoRatioCorrectedYieldTrueNarrow->Divide(histoRatioCorrectedYieldTrueNarrow,histoCorrectedYieldCut[0],1.,1.,"B");
+
+      DrawGammaSetMarker(histoRatioCorrectedYieldNorm, 21, 1.,color[1],color[1]);
+      histoRatioCorrectedYieldNorm->DrawCopy("same,e1,p");
+      DrawGammaSetMarker(histoRatioCorrectedYieldTrueWide, 22, 1.,color[2],color[2]);
+      histoRatioCorrectedYieldTrueWide->DrawCopy("same,e1,p");
+      DrawGammaSetMarker(histoRatioCorrectedYieldTrueNarrow, 23, 1.,color[3],color[3]);
+      histoRatioCorrectedYieldTrueNarrow->DrawCopy("same,e1,p");
+
+
+        DrawGammaLines(0., maxPt,1., 1.,0.1);
+
+        canvasCorrectedYieldMeson->Update();
+        canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYieldEffiComparison%s.%s",outputDir.Data(), meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasCorrectedYieldMeson;
 
         //**************************************************************************************

@@ -419,8 +419,8 @@
             objstrType  = (TObjString*)arr->At(0);
             objstrEvent = (TObjString*)arr->At(1);
             objstrGamma = (TObjString*)arr->At(2);
-            objstrPion = (TObjString*)arr->At(3);
-            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrNeutralPion = (TObjString*)arr->At(3);
+            objstrPion = (TObjString*)arr->At(4);
             objstrMeson = (TObjString*)arr->At(5);
 
             typeCutNumber  = objstrType->GetString();
@@ -437,8 +437,8 @@
             objstrEvent = (TObjString*)arr->At(1);
             objstrGamma = (TObjString*)arr->At(2);
             objstrCluster = (TObjString*)arr->At(3);
-            objstrPion = (TObjString*)arr->At(4);
-            objstrNeutralPion = (TObjString*)arr->At(5);
+            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrPion = (TObjString*)arr->At(5);
             objstrMeson = (TObjString*)arr->At(6);
 
             typeCutNumber  = objstrType->GetString();
@@ -468,8 +468,8 @@
             objstrType  = (TObjString*)arr->At(0);
             objstrEvent = (TObjString*)arr->At(1);
             objstrCluster = (TObjString*)arr->At(2);
-            objstrPion = (TObjString*)arr->At(3);
-            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrNeutralPion = (TObjString*)arr->At(3);
+            objstrPion = (TObjString*)arr->At(4);
             objstrMeson = (TObjString*)arr->At(5);
 
             typeCutNumber  = objstrType->GetString();
@@ -1249,6 +1249,19 @@
     Int_t GetMesonDcaRCutPosition ()                        {return 12;}
     Int_t GetMesonDcaZCutPosition ()                        {return 13;}
     Int_t GetMesonOpeningAngleCutPosition ()                {return 14;}
+
+    //************************************************************************************
+    //***************************** Charged pion defintion **********************************
+    //************************************************************************************
+    Int_t GetPionEtaCut ()                        {return 0;}
+    Int_t GetPionClsITSCut ()                     {return 1;}
+    Int_t GetPionClsTPCCut ()                     {return 2;}
+    Int_t GetPionDCACut ()                        {return 3;}
+    Int_t GetPionPtCut ()                         {return 4;}
+    Int_t GetPiondEdxSigmaITSCut ()               {return 5;}
+    Int_t GetPiondEdxSigmaTPCCut ()               {return 6;}
+    Int_t GetPiondEdxSigmaTOFCut ()               {return 7;}
+    Int_t GetPionMassCut ()                       {return 8;}
 
     //************************************************************************************
     //*********************** date generation for plot labeling **************************
@@ -5129,6 +5142,37 @@
     }
     }
 
+    //************************************************************************************
+    //******** Analyze neutral meson mass selection window cut *********************
+    //************************************************************************************
+    TString AnalyseMesonSelectionWindowCut(Int_t SelectionWindowCut){   // Set Cut
+    switch(SelectionWindowCut){
+        case 0:
+        return "0 MeV < M_{#gamma#gamma} < 4000 MeV";
+        case 1:
+        return "100 MeV < M_{#gamma#gamma} < 145 MeV";
+        case 2:
+        return "110 MeV < M_{#gamma#gamma} < 145 MeV";
+        case 3:
+        return "120 MeV < M_{#gamma#gamma} < 145 MeV";
+        case 4:
+        return "100 MeV < M_{#gamma#gamma} < 150 MeV";
+        case 5:
+        return "110 MeV < M_{#gamma#gamma} < 150 MeV";
+        case 6:
+        return "120 MeV < M_{#gamma#gamma} < 150 MeV";
+        case 7:
+        return "100 MeV < M_{#gamma#gamma} < 155 MeV";
+        case 8:
+        return "125 MeV < M_{#gamma#gamma} < 145 MeV";
+        case 9:
+        return "110 MeV < M_{#gamma#gamma} < 155 MeV";
+        case 10:
+        return "80 MeV < M_{#gamma#gamma} < 145 MeV";
+        default:
+        return "M_{#gamma#gamma} cut unknown";
+    }
+    }
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************

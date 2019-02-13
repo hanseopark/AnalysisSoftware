@@ -342,7 +342,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     Double_t branchingEtaGG     = 0.3941;
     Double_t branchingEtaPiPiPi = 0.2292;
 
-    Double_t rapidityMeas[10]                   = {1.6, 1,1, 1.6,1,1,1};
+    Double_t rapidityMeas[10]                   = {0.85*2, 0.85*2,0.85*2, 0.85*2,0.85*2,0.85*2,0.85*2};
     Double_t availableMeas[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
     Int_t nMeasSet                              = 0;
 
@@ -3118,7 +3118,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     canvasAcceptanceTimesEff->SetLogy(1);
     canvasAcceptanceTimesEff->SetLogx(1);
 
-    TH2F* histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minPt,  maxPt, 1000, 4e-4, 0.2 );
+    TH2F* histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minPt,  maxPt, 1000, 4e-4, 0.3 );
     SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec}"),
                             0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
                             histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);

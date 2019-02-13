@@ -23,6 +23,9 @@ R__ADD_INCLUDE_PATH($ALICE_PHYSICS)
 #include <PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_pp.C>
 #include <PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_pPb.C>
 #include <PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_PbPb.C>
+#include <PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_ConvMode_pp.C>
+#include <PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_CaloMode_pp.C>
+#include <PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_MixedMode_pp.C>
 
 #endif
 #include "localRunningChain.h"
@@ -183,10 +186,10 @@ void runLocalAnalysisROOT6(
     Int_t intCustomPHOSBadMap = 1;
     #if !defined (__CINT__) || defined (__CLING__)
         AliAnalysisTask *phosTendTask=reinterpret_cast<AliAnalysisTask*>(
-        gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_PHOSTender_PCMconfig.C ( \"PHOSTenderTask\", \"PHOSTender\", \"%s\", 1, kFALSE, %i, \"%s\", \"Run2\",kTRUE )",runPeriod.Data(),intCustomPHOSBadMap,customPHOSBadMap.Data())));
+        gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_PHOSTender_PCMconfig.C ( \"PHOSTenderTask\", \"PHOSTender\", \"%s\", %i, kFALSE, %i, \"%s\", \"Run1\",kTRUE )",runPeriod.Data(),recoPassData,intCustomPHOSBadMap,customPHOSBadMap.Data())));
     #else
         gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_PHOSTender_PCMconfig.C");
-        AliAnalysisTask *phosTenderTask  = AddTask_PHOSTender_PCMconfig("PHOSTenderTask", "PHOSTender", runPeriod.Data(), 1, kFALSE,0, "",kFALSE);
+        AliAnalysisTask *phosTenderTask  = AddTask_PHOSTender_PCMconfig("PHOSTenderTask", "PHOSTender", runPeriod.Data(), recoPassData, kFALSE,0, "",kFALSE);
     #endif
 
     // -----------------------------------------
@@ -353,6 +356,36 @@ void runLocalAnalysisROOT6(
         #endif
     }
 
+    // -----------------------------------------
+    //              Heavy Meson task
+    // -----------------------------------------
+    if(runMode.Contains("O")){
+        #if !defined (__CINT__) || defined (__CLING__)
+            if(collsys==0){
+                AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_ConvMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+                AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_CaloMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+                AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_MixedMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+            }
+            if(collsys==1){
+            }
+            if(collsys==2){
+            }
+        #else
+            if(collsys==0){
+                gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_ConvMode_pp.C");
+                gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_CaloMode_pp.C");
+                gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_MixedMode_pp.C");
+                AliAnalysisTask *taskPCMpp =                 AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_ConvMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+                AliAnalysisTask *taskPCMpp =                 AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_CaloMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+                AliAnalysisTask *taskPCMpp =                 AddTask_GammaConvNeutralMesonPiPlPiMiNeutralMeson_MixedMode_pp(0,intMCrunning,"00000008400100001500000000",1,1,"",kFALSE,"",-1,runPeriod.Data(),0,"110");
+            if(collsys==1){
+                // TODO
+            }
+            if(collsys==2){
+                // TODO
+            }
+        #endif
+    }
 
 
     mgr->SetUseProgressBar(1, 1);
