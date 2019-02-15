@@ -53,37 +53,37 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
-//    const Int_t nSets = 10;
-//    const Int_t nData = 5;
-//    TString DataSets[nSets]={
-//      "LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f",
-//      "LHC14j4b", "LHC14j4c", "LHC14j4d", "LHC14j4e", "LHC14j4f"
-//    };
+    const Int_t nSets = 10;
+    const Int_t nData = 5;
+    TString DataSets[nSets]={
+      "LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f",
+      "LHC14j4b", "LHC14j4c", "LHC14j4d", "LHC14j4e", "LHC14j4f"
+    };
 
-//    TString train = "Legotrain-vAN-20180828-7TeV-rerun";
+    TString train = "Legotrain-vAN-20190212-7TeV-rerun_ROOT6";
 
-//    TString runlist[nSets] = {
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2",
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2"
-//    };
+    TString runlist[nSets] = {
+      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2",
+      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2"
+    };
 
-//    Int_t trainRuns[nSets] = {
-//      2480,2480,2480,2480,2480,
-//      3494,3494,3494,3494,3494
-//    };
-//    const Int_t nFiles = 1;
-//    TString Files[nFiles] = {
-//      "GammaCalo_201"
-//    };
+    Int_t trainRuns[nSets] = {
+      2553,2553,2553,2553,2553,
+      3663,3663,3663,3663,3663
+    };
+    const Int_t nFiles = 3;
+    TString Files[nFiles] = {
+      "GammaCalo_219", "GammaCalo_220", "GammaConvCalo_201"
+    };
 
-//    const Int_t nMerge = 2;
-//    TString strMerge[nMerge]={"LHC10","LHC14j4"};
-//    std::vector<Int_t> mergeVec[nMerge];
-//    std::vector<Int_t>::iterator it;
-//    for(Int_t i=0; i<nSets; i++){
-//      if(0<=i && i<=4) mergeVec[0].push_back(i);
-//      if(5<=i && i<=9) mergeVec[1].push_back(i);
-//    }
+    const Int_t nMerge = 2;
+    TString strMerge[nMerge]={"LHC10","LHC14j4"};
+    std::vector<Int_t> mergeVec[nMerge];
+    std::vector<Int_t>::iterator it;
+    for(Int_t i=0; i<nSets; i++){
+      if(0<=i && i<=4) mergeVec[0].push_back(i);
+      if(5<=i && i<=9) mergeVec[1].push_back(i);
+    }
 
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
@@ -96,20 +96,20 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      "LHC14j4c_900GeV"
 //    };
 
-//    TString train = "Legotrain-vAN-20180828-900GeV-dirGamma_rerun";
+//    TString train = "Legotrain-vAN-20190212-900GeV-rerun_ROOT6";
 
 //    TString runlist[nSets] = {
-//      "merge",
-//      "merge"
+//      "merge_runlist_2",
+//      "merge_runlist_2"
 //    };
 
 //    Int_t trainRuns[nSets] = {
-//      2479,
-//      3493
+//      2554,
+//      3662
 //    };
-//    const Int_t nFiles = 6;
+//    const Int_t nFiles = 3;
 //    TString Files[nFiles] = {
-//      "GammaCalo_221","GammaCalo_222","GammaCalo_281","GammaConvCalo_200","GammaConvCalo_201","GammaConvCalo_281"
+//      "GammaCalo_219","GammaCalo_220","GammaConvCalo_201"
 //    };
 
 //    const Int_t nMerge = 2;
@@ -160,262 +160,6 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      if(7<=i && i<=13) mergeVec[1].push_back(i);
 //      if(14<=i && i<=20) mergeVec[2].push_back(i);
 //      if(7<=i && i<=20) mergeVec[3].push_back(i);
-//    }
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-    const Int_t nSets = 14;
-    const Int_t nData = 0;
-    TString DataSets[nSets]={
-      "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-      "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-    };
-
-    TString train = "Legotrain-vAN-20180828-8TeV-dirGamma_rerun_20180925";
-    Int_t trainRuns[nSets] = {
-      3532,3532,3532,3532,3532,3532,3532,
-      3533,3533,3533,3533,3533,3533,3533
-    };
-
-
-    TString runlist[nSets] = {
-      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
-      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
-    };
-
-    const Int_t nFiles = 3;
-    TString Files[nFiles] = {
-      "GammaCalo_119", "GammaCalo_120", "GammaConvCalo_131"
-    };
-
-    const Int_t nMerge = 3;
-    TString strMerge[nMerge]={"LHC15h1","LHC15h2","LHC15h"};
-    std::vector<Int_t> mergeVec[nMerge];
-    std::vector<Int_t>::iterator it;
-    for(Int_t i=0; i<nSets; i++){
-      if(0<=i && i<=6) mergeVec[0].push_back(i);
-      if(7<=i && i<=13) mergeVec[1].push_back(i);
-      if(0<=i && i<=13) mergeVec[2].push_back(i);
-    }
-
-
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-
-//    const Int_t nSets = 18;
-//    const Int_t nData = 18;
-//    TString DataSets[nSets]={
-//      "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
-//      "LHC12b-kEMC7", "LHC12c-kEMC7", "LHC12d-kEMC7", "LHC12f-kEMC7", "LHC12h-kEMC7", "LHC12i-kEMC7",
-//      "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
-//    };
-
-//    TString train = "Legotrain-vAN-20171016-8TeV-dirGamma_EMC";
-//    Int_t trainRuns[nSets] = {
-//                              2258,2258,2258,2258,2258,2258,2258,
-//                              2258,2258,2258,2258,2258,2258,
-//                              2258,2258,2258,2258,2258
-//                             };
-
-//    TString runlist[nSets] = {
-//                              "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
-//                              "_child_2/merge_runlist_3","_child_3/merge_runlist_3","_child_4/merge_runlist_3","_child_5/merge_runlist_3","_child_6/merge_runlist_3","_child_7/merge_runlist_3",
-//                              "_child_3/merge_runlist_4","_child_4/merge_runlist_4","_child_5/merge_runlist_4","_child_6/merge_runlist_4","_child_7/merge_runlist_4"
-//                             };
-
-//    const Int_t nFiles = 3;
-//    TString Files[nFiles] = {
-//      "GammaCalo_103", "GammaCalo_161", "GammaConvCalo_101"
-//                            };
-
-//    const Int_t nMerge = 3;
-//    TString strMerge[nMerge]={"LHC12", "LHC12-kEMC7", "LHC12-kEMCEGA"};
-//    std::vector<Int_t> mergeVec[nMerge];
-//    std::vector<Int_t>::iterator it;
-//    for(Int_t i=0; i<nSets; i++){
-//      if(0<=i && i<=6) mergeVec[0].push_back(i);
-//      if(7<=i && i<=12) mergeVec[1].push_back(i);
-//      if(13<=i && i<=17) mergeVec[2].push_back(i);
-//    }
-
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-
-//systematics DirGamma 8 TeV
-//    const Int_t nSets = 7;
-//    const Int_t nData = 7;
-//    TString DataSets[nSets]={
-//      "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
-//    };
-
-//    TString train = "Legotrain-vAN-20171002-8TeV-dirGamma_Systematics";
-//    Int_t trainRuns[nSets] = {
-//                              2246,2246,2246,2246,2246,2246,2246
-//                             };
-
-//    TString runlist[nSets] = {
-//                              "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
-//                             };
-
-//    const Int_t nFiles = 20;
-//    TString Files[nFiles] = {
-//      "GammaCalo_102", "GammaCalo_103", "GammaCalo_104", "GammaCalo_105",
-//      "GammaCalo_107", "GammaCalo_109", "GammaCalo_110",
-//      "GammaConvCalo_102", "GammaConvCalo_103", "GammaConvCalo_104", "GammaConvCalo_105",
-//      "GammaConvCalo_106", "GammaConvCalo_109", "GammaConvCalo_110", "GammaConvCalo_113",
-//      "GammaConvCalo_115", "GammaConvCalo_116", "GammaConvCalo_117", "GammaConvCalo_118", "GammaConvCalo_119"
-//                            };
-
-//    const Int_t nMerge = 1;
-//    TString strMerge[nMerge]={"LHC12"};
-//    std::vector<Int_t> mergeVec[nMerge];
-//    std::vector<Int_t>::iterator it;
-//    for(Int_t i=0; i<nSets; i++){
-//      if(0<=i && i<=6) mergeVec[0].push_back(i);
-//    }
-
-//    const Int_t nSets = 14;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-//      "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-//    };
-
-//    TString train = "Legotrain-vAN-20171002-8TeV-dirGamma_Systematics";
-//    Int_t trainRuns[nSets] = {
-////      3147,3147,3147,3147,3147,3147,3147,
-////      3148,3148,3148,3148,3148,3148,3148
-
-////      3145,3145,3145,3145,3145,3145,3145,
-////      3146,3146,3146,3146,3146,3146,3146
-
-////      3143,3143,3143,3143,3143,3143,3143,
-////      3144,3144,3144,3144,3144,3144,3144
-
-////      3141,3141,3141,3141,3141,3141,3141,
-////      3142,3142,3142,3142,3142,3142,3142
-
-//      3139,3139,3139,3139,3139,3139,3139,
-//      3140,3140,3140,3140,3140,3140,3140
-//    };
-
-//    TString runlist[nSets] = {
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
-//    };
-
-////    const Int_t nFiles = 4;
-
-////    const Int_t nFiles = 3;
-
-////    const Int_t nFiles = 4;
-
-////    const Int_t nFiles = 5;
-
-//    const Int_t nFiles = 4;
-
-//    TString Files[nFiles] = {
-////      "GammaCalo_105", "GammaCalo_107", "GammaCalo_109", "GammaCalo_110"
-
-////      "GammaCalo_102", "GammaCalo_103", "GammaCalo_104"
-
-////      "GammaConvCalo_116", "GammaConvCalo_117", "GammaConvCalo_118", "GammaConvCalo_119"
-
-////      "GammaConvCalo_106", "GammaConvCalo_109", "GammaConvCalo_110", "GammaConvCalo_113", "GammaConvCalo_115"
-
-//        "GammaConvCalo_102", "GammaConvCalo_103", "GammaConvCalo_104", "GammaConvCalo_105"
-//    };
-
-//    const Int_t nMerge = 0;
-//    TString strMerge[nMerge]={ /*"LHC15h1","LHC15h2"*/};
-//    std::vector<Int_t> mergeVec[nMerge];
-//    std::vector<Int_t>::iterator it;
-//    for(Int_t i=0; i<nSets; i++){
-//      //if(0<=i && i<=13) mergeVec[0].push_back(i);
-////      if(0<=i && i<=6) mergeVec[0].push_back(i);
-////      if(7<=i && i<=13) mergeVec[1].push_back(i);
-//    }
-
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-
-//        const Int_t nSets = 18;
-//        const Int_t nData = 18;
-//        TString DataSets[nSets]={
-//          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
-//          "LHC12b-kEMC7", "LHC12c-kEMC7", "LHC12d-kEMC7", "LHC12f-kEMC7", "LHC12h-kEMC7", "LHC12i-kEMC7",
-//          "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
-//        };
-
-//        TString train = "Legotrain-vAN-20180123-8TeV-dirGamma-JetJet";
-//        Int_t trainRuns[nSets] = {
-//                                  2300,2300,2300,2300,2300,2300,2300,
-//                                  2300,2300,2300,2300,2300,2300,
-//                                  2300,2300,2300,2300,2300
-//                                 };
-
-//        TString runlist[nSets] = {
-//                                  "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
-//                                  "_child_2/merge_runlist_3","_child_3/merge_runlist_3","_child_4/merge_runlist_3","_child_5/merge_runlist_3","_child_6/merge_runlist_3","_child_7/merge_runlist_3",
-//                                  "_child_3/merge_runlist_4","_child_4/merge_runlist_4","_child_5/merge_runlist_4","_child_6/merge_runlist_4","_child_7/merge_runlist_4"
-//                                 };
-
-//        const Int_t nFiles = 6;
-//        TString Files[nFiles] = {
-//          "GammaCalo_120", "GammaCalo_140", "GammaCalo_160",
-//          "GammaConvCalo_130", "GammaConvCalo_159", "GammaConvCalo_181"
-//                                };
-
-//        const Int_t nMerge = 3;
-//        TString strMerge[nMerge]={"LHC12", "LHC12-kEMC7", "LHC12-kEMCEGA"};
-//        std::vector<Int_t> mergeVec[nMerge];
-//        std::vector<Int_t>::iterator it;
-//        for(Int_t i=0; i<nSets; i++){
-//          if(0<=i && i<=6) mergeVec[0].push_back(i);
-//          if(7<=i && i<=12) mergeVec[1].push_back(i);
-//          if(13<=i && i<=17) mergeVec[2].push_back(i);
-//        }
-
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-
-//    const Int_t nSets = 14;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-//      "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-//    };
-
-//    TString train = "Legotrain-vAN-20171213-8TeV-dirGamma_EMC_SysVar";
-//    Int_t trainRuns[nSets] = {
-//      3205,3205,3205,3205,3205,3205,3205,
-//      3206,3206,3206,3206,3206,3206,3206
-//    };
-
-//    TString runlist[nSets] = {
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
-//      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
-//    };
-
-//    const Int_t nFiles = 3;
-//    TString Files[nFiles] = {
-//      "GammaCalo_165","GammaCalo_166","GammaCalo_167"
-//    };
-
-//    const Int_t nMerge = 3;
-//    TString strMerge[nMerge]={ "LHC15h","LHC15h1","LHC15h2"};
-//    std::vector<Int_t> mergeVec[nMerge];
-//    std::vector<Int_t>::iterator it;
-//    for(Int_t i=0; i<nSets; i++){
-//      if(0<=i && i<=13) mergeVec[0].push_back(i);
-//      if(0<=i && i<=6) mergeVec[1].push_back(i);
-//      if(7<=i && i<=13) mergeVec[2].push_back(i);
 //    }
 
     //---------------------------------------------------------------------------------------------------
@@ -566,53 +310,6 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
     return;
 }
-
-
-
-//void ChangeStrucToStd(TString nameInputFile, TString namefileOutput, TString nameInputList){
-
-//   TFile *fileInput = new TFile(nameInputFile.Data());
-//   cout << fileInput << endl;
-
-//   TList *listInput =(TList*)fileInput->Get(nameInputList.Data());
-//   if (listInput == NULL){
-//      return;
-//   }else listInput->SetOwner();
-
-//   TObjArray *rArr = nameInputList.Tokenize("_");
-//   TObjString* rString = (TObjString*)rArr->At(0);
-//   TString string = rString->GetString();
-
-//   TFile *fileOutput = new TFile(namefileOutput,"RECREATE");
-//   TList *listOutput =(TList*)fileOutput->Get(string.Data());
-//   Bool_t kNewList = kFALSE;
-//   if (!listOutput){
-//      kNewList = kTRUE;
-//      listOutput = new TList();
-//      listOutput->SetName(string.Data());
-//   }
-
-//   for(Int_t i = 0; i<listInput->GetSize(); i++){
-//      TList *listToSave = (TList*)listInput->At(i);
-//      TString dirname = listToSave->GetName();
-//      cout<<dirname<<endl;
-//      if(listToSave){
-//         cout<<"found"<<endl;
-//         listOutput->Add(listToSave);
-//      }
-//   }
-
-//   listOutput->Write("",TObject::kSingleKey);
-//   delete listOutput;
-//   fileOutput->Close();
-//   delete fileOutput;
-
-//   delete listInput;
-//   fileInput->Close();
-//   delete fileInput;
-
-//   return;
-//}
 
 Bool_t copyAlien2Local(TString loc, TString rem){
    TString sl(Form("alien://%s", loc.Data()));
