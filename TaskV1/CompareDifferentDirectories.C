@@ -139,6 +139,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
     TFile *Cutuncorrfile[ConstNumberOfCuts];
 
     TH1D *histoCorrectedYieldCut[ConstNumberOfCuts];
+    TH1D *histoCorrectedYieldWOSecCut[ConstNumberOfCuts];
     TH1D *histoTrueEffiCut[ConstNumberOfCuts];
     TH1D *histoAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRawYieldCut[ConstNumberOfCuts];
@@ -149,6 +150,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
     Bool_t isClusterE = kTRUE;
 
     TH1D *histoRatioCorrectedYieldCut[ConstNumberOfCuts];
+    TH1D *histoRatioCorrectedYieldWOSecCut[ConstNumberOfCuts];
     TH1D *histoRatioTrueEffiCut[ConstNumberOfCuts];
     TH1D *histoRatioAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRatioRawYieldCut[ConstNumberOfCuts];
@@ -195,17 +197,22 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         // Set correct histogram name for corrected yield and efficiency
         TString nameCorrectedYield;
         TString nameEfficiency;
+        TString nameCorrectedYieldWOSec;
         nameCorrectedYield = "CorrectedYieldTrueEff";
         nameEfficiency = "TrueMesonEffiPt";
+        nameCorrectedYieldWOSec = "CorrectedYieldWOSecTrueEff";
         if ( mode == 4 || mode == 5 ){
             nameCorrectedYield = "CorrectedYieldNormEff";
             nameEfficiency = "MesonEffiPt";
+            nameCorrectedYieldWOSec = "CorrectedYieldWOSecNormEff";
         }
 
         // Read histograms and rename them from the original files for each cut
         if(readCorrectedFile[i]){
           histoCorrectedYieldCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
           histoCorrectedYieldCut[i]->SetName(Form("%s_%s",nameCorrectedYield.Data(),cutStringsName[i].Data()));
+          histoCorrectedYieldWOSecCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYieldWOSec.Data());
+          histoCorrectedYieldWOSecCut[i]->SetName(Form("%s_%s",nameCorrectedYieldWOSec.Data(),cutStringsName[i].Data()));
           histoTrueEffiCut[i]         = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
           histoTrueEffiCut[i]->SetName(Form("%s_%s",nameEfficiency.Data(), cutStringsName[i].Data()));
           histoAcceptanceCut[i]       =(TH1D*)Cutcorrfile[i]->Get("fMCMesonAccepPt");
@@ -230,6 +237,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
           if (i > 0){
               maxPt= histoCorrectedYieldCut[i]->GetBinCenter(histoCorrectedYieldCut[i]->GetNbinsX()) + 0.5* histoCorrectedYieldCut[i]->GetBinWidth(histoCorrectedYieldCut[i]->GetNbinsX());
           }
+          histoRatioCorrectedYieldWOSecCut[i] = (TH1D*) histoCorrectedYieldWOSecCut[i]->Clone(Form("histoRatioCorrectedYieldWOSecCut_%s",cutStringsName[i].Data()));
+          histoRatioCorrectedYieldWOSecCut[i]->Divide(histoRatioCorrectedYieldWOSecCut[i],histoCorrectedYieldWOSecCut[0],1.,1.,"B");
           histoRatioTrueEffiCut[i]    = (TH1D*) histoTrueEffiCut[i]->Clone(Form("histoRatioTrueEffiCut_%s",cutStringsName[i].Data()));
           histoRatioTrueEffiCut[i]->Divide(histoRatioTrueEffiCut[i],histoTrueEffiCut[0],1.,1.,"B");
           histoRatioAcceptanceCut[i]  = (TH1D*) histoAcceptanceCut[i]->Clone(Form("histoRatioAcceptanceCut_%s",cutStringsName[i].Data()));
@@ -321,8 +330,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                     minYRatio = 0.9;
                     maxYRatio = 1.1;
                 } else if (cutVariationName.Contains("AODvalidation")){
-                    minYRatio = 0.9;
-                    maxYRatio = 1.1;
+                    minYRatio = 0.95;
+                    maxYRatio = 1.05;
                 }
                 SetStyleHistoTH1ForGraphs(histoRatioRawYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioRawYieldCut[i], 20, 1.,color[0],color[0]);
@@ -406,8 +415,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                       minYRatio = 0.81;
                       maxYRatio = 1.19;
                   } else if (cutVariationName.Contains("AODvalidation")){
-                      minYRatio = 0.9;
-                      maxYRatio = 1.1;
+                      minYRatio = 0.8;
+                      maxYRatio = 1.2;
                   }
                   SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                   DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
@@ -428,6 +437,92 @@ void CompareDifferentDirectories(   TString FolderList              = "",
       canvasCorrectedYieldMeson->Update();
       canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix.Data()));
       delete canvasCorrectedYieldMeson;
+    }
+
+    //*****************************************************************************************
+    //***************** Compare Corrected Yields without Secondary Correction *****************
+    //*****************************************************************************************
+    // Define canvas
+    if(!plotOnlyUncorrectedOutput){
+      TCanvas* canvasCorrectedYieldWOSecMeson = new TCanvas("canvasCorrectedYieldWOSecMeson","",1350,1500);
+      DrawGammaCanvasSettings( canvasCorrectedYieldWOSecMeson,  0.13, 0.02, 0.02, 0.09);
+      // Define upper panel
+      TPad* padCorrectedYieldWOSec = new TPad("padCorrectedYieldWOSec", "", 0., 0.33, 1., 1.,-1, -1, -2);
+      DrawGammaPadSettings( padCorrectedYieldWOSec, 0.12, 0.02, 0.02, 0.);
+      padCorrectedYieldWOSec->SetLogy(1);
+      padCorrectedYieldWOSec->Draw();
+      // Define lower panel
+      TPad* padCorrectedYieldWOSecRatios = new TPad("padCorrectedYieldWOSecRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+      DrawGammaPadSettings( padCorrectedYieldWOSecRatios, 0.12, 0.02, 0.0, 0.2);
+      padCorrectedYieldWOSecRatios->SetLogy(0);
+      padCorrectedYieldWOSecRatios->Draw();
+
+      // Plot corrected yield without secondary correction in upper panel
+      padCorrectedYieldWOSec->cd();
+          TLegend* legendCorrectedYieldWOSecMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
+          for(Int_t i = 0; i< NumberOfCuts; i++){
+              if(i == 0){
+                  DrawAutoGammaMesonHistos( histoCorrectedYieldWOSecCut[i],
+                                          "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)",
+                                          kTRUE, 5., 5e-10,kTRUE,
+                                          kFALSE, 0.0, 0.030,
+                                          kFALSE, 0., 10.);
+                  DrawGammaSetMarker(histoCorrectedYieldWOSecCut[i], 20, 1., color[0], color[0]);
+                  histoCorrectedYieldWOSecCut[i]->DrawCopy("e1,p");
+                  legendCorrectedYieldWOSecMeson->AddEntry(histoCorrectedYieldWOSecCut[i], Form("standard: %s",cutStringsName[i].Data()));
+              }
+              else{
+                  if(i<20){
+                      DrawGammaSetMarker(histoCorrectedYieldWOSecCut[i], 20+i, 1.,color[i],color[i]);
+                  } else {
+                      DrawGammaSetMarker(histoCorrectedYieldWOSecCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                  }
+                  histoCorrectedYieldWOSecCut[i]->DrawCopy("same,e1,p");
+                  legendCorrectedYieldWOSecMeson->AddEntry(histoCorrectedYieldWOSecCut[i], cutStringsName[i].Data());
+              }
+
+          }
+          legendCorrectedYieldWOSecMeson->Draw();
+          // Labeling of plot
+          PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+          // plot ratio of corrected yields without secondary correction in lower panel
+          padCorrectedYieldWOSecRatios->cd();
+          for(Int_t i = 0; i< NumberOfCuts; i++){
+              if(i==0){
+                  // Set ratio min and max
+                  Double_t minYRatio = 0.45;
+                  Double_t maxYRatio = 1.55;
+                  if (mode != 0 && mode!= 1 ){
+                      minYRatio = 0.75;
+                      maxYRatio = 1.55;
+                  }
+                  if (cutVariationName.Contains("LHC12NL") || cutVariationName.Contains("LHC12-MultWeight")){
+                      minYRatio = 0.81;
+                      maxYRatio = 1.19;
+                  } else if (cutVariationName.Contains("AODvalidation")){
+                      minYRatio = 0.8;
+                      maxYRatio = 1.2;
+                  }
+                  SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldWOSecCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                  DrawGammaSetMarker(histoRatioCorrectedYieldWOSecCut[i], 20, 1.,color[0],color[0]);
+                  histoRatioCorrectedYieldWOSecCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                  histoRatioCorrectedYieldWOSecCut[i]->DrawCopy("p,e1");
+              }
+              else{
+                  if(i<20){
+                      DrawGammaSetMarker(histoRatioCorrectedYieldWOSecCut[i], 20+i, 1.,color[i],color[i]);
+                  } else {
+                      DrawGammaSetMarker(histoRatioCorrectedYieldWOSecCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                  }
+                  histoRatioCorrectedYieldWOSecCut[i]->DrawCopy("same,e1,p");
+              }
+          }
+          DrawGammaLines(0., maxPt,1., 1.,0.1);
+
+      canvasCorrectedYieldWOSecMeson->Update();
+      canvasCorrectedYieldWOSecMeson->SaveAs(Form("%s/%s_%s_CorrectedYieldWOSec.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix.Data()));
+      delete canvasCorrectedYieldWOSecMeson;
     }
 
     //**************************************************************************************
@@ -471,7 +566,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                     else if (optionEnergy.Contains("PbPb_5") && meson.Contains("Pi0") )
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.05,0.25);
                     else if (optionEnergy.Contains("pPb") && meson.Contains("Pi0") )
-                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.3);
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.1,0.4);
                     else if (optionEnergy.Contains("PbPb_2.76TeV") )
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
                     else
@@ -512,7 +607,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                     maxYRatio = 1.19;
                 }else if (cutVariationName.Contains("AODvalidation")){
                       minYRatio = 0.9;
-                      maxYRatio = 1.1;
+                      maxYRatio = 1.09;
                   }
                 SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
@@ -571,6 +666,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         TLegend* legendAcceptance = GetAndSetLegend2(0.55, 0.93-(1.1*NumberOfCuts*0.038), 0.95, 0.93,38);
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
+                Double_t minY = 0.0001;
+                Double_t maxY = 0.04;
                 DrawGammaSetMarker(histoAcceptanceCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoAcceptanceCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("A_{%s}",textMeson.Data()),
@@ -579,6 +676,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                                         kFALSE, 0., 10.);
   //               if (mode == 9 || mode == 0 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
   //               if (mode == 2 || mode == 3 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
+                histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(minY, maxY);
                 histoAcceptanceCut[i]->DrawCopy("e1,p");
                 legendAcceptance->AddEntry(histoAcceptanceCut[i],Form("standard: %s",cutStringsName[i].Data()));
             } else {
@@ -603,8 +701,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
 
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
-                Double_t minYRatio = 0.85;
-                Double_t maxYRatio = 1.15;
+                Double_t minYRatio = 0.95;
+                Double_t maxYRatio = 1.05;
                 SetStyleHistoTH1ForGraphs(histoRatioAcceptanceCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20, 1.,color[0],color[0]);
                 histoRatioAcceptanceCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -756,7 +854,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
 
     for(Int_t i = 0; i< NumberOfCuts; i++){
         if(i==0){
-            Double_t minYRatio = 0.8;
+            Double_t minYRatio = 0.6;
             Double_t maxYRatio = 1.2;
             SetStyleHistoTH1ForGraphs(histoRatioWidthCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.08, 0.1, 0.75, 0.5, 510,505);
             DrawGammaSetMarker(histoRatioWidthCut[i], 20, 1.,color[0],color[0]);
@@ -829,8 +927,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
                 // Set ratio min and max
-                Double_t minYRatio = 0.45;
-                Double_t maxYRatio = 1.55; //qui
+                Double_t minYRatio = 0.7;
+                Double_t maxYRatio = 1.3; //qui
                 if (cutVariationName.Contains("LHC12DistBC")){
                     minYRatio = 0.81;
                     maxYRatio = 1.29;
@@ -908,8 +1006,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
           for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
               // Set ratio min and max
-              Double_t minYRatio = 0.45;
-              Double_t maxYRatio = 1.55; //qui
+              Double_t minYRatio = 0.85;
+              Double_t maxYRatio = 1.059; //qui
               SetStyleHistoTH1ForGraphs(histoRatioClusterE[i], "cluster E (GeV)", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
               DrawGammaSetMarker(histoRatioClusterE[i], 20, 1.,color[0],color[0]);
               histoRatioClusterE[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
