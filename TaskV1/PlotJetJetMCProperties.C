@@ -253,7 +253,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     } else if (mode == 2){
         maxPt           = 30;
     } else if (mode == 10 && period.Contains("LHC18b9")){
-        maxPt           = 50;
+        maxPt           = 200;
     } else if (mode == 10){
         maxPt           = 50;
     } else if (mode == 0 && period.Contains("LHC18b8") ){
@@ -325,7 +325,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     else if (period.Contains("LHC18b8"))
         anchoredTo                      = "LHC17pq";
     else if (period.Contains("LHC18b9"))
-        anchoredTo                      = "LHC16qt";
+        anchoredTo                      = "LHC16rs";
 
     TString acceptanceOf = "";
     if (mode == 0) acceptanceOf     = "|#eta_{#gamma}| < 0.9 (PCM acc.)";
@@ -609,7 +609,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     Float_t minimumPi0Scaled = FindSmallestEntryIn1D(histoMCPi0Input[nrOfPtHardBins-1]);
 
     TH2F * histo2DInputScaledPi0;
-    histo2DInputScaledPi0 = new TH2F("histo2DInputScaledPi0","histo2DInputScaledPi0",1000,0., maxPt,10000,minimumPi0Scaled,maximumPi0Scaled);
+    histo2DInputScaledPi0 = new TH2F("histo2DInputScaledPi0","histo2DInputScaledPi0",1000,0., maxPt,10000,minimumPi0Scaled*0.001,maximumPi0Scaled*10);
     SetStyleHistoTH2ForGraphs(histo2DInputScaledPi0, "#it{p}_{T} (GeV/#it{c})","N_{#pi^{0}} reweighted",
                             0.032,0.04, 0.032,0.04, 0.8,1.2);
     histo2DInputScaledPi0->GetXaxis()->SetRangeUser(0,maxPt);
@@ -619,6 +619,10 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     legendScaled->SetMargin(0.12);
     legendScaled->SetNColumns(2);
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
+        for(Int_t j=1;j<histoMCPi0Input[i]->GetNbinsX()+1;j++){
+            histoMCPi0Input[i]->SetBinContent(j,histoMCPi0Input[i]->GetBinContent(j)/histoMCPi0Input[i]->GetBinWidth(j));
+            histoMCPi0Input[i]->SetBinError(j,histoMCPi0Input[i]->GetBinError(j)/histoMCPi0Input[i]->GetBinWidth(j));
+            }
         DrawGammaSetMarker(histoMCPi0Input[i], markerBins[i], 1., colorBins[i], colorBins[i]);
         histoMCPi0Input[i]->DrawCopy("e1,same");
         if (i == 0) legendScaled->AddEntry(histoMCPi0Input[i],"summed","p");

@@ -705,7 +705,11 @@
             case 12:
                 return "DMC";
             case 13:
-                return "DMC-PCM";
+                return "PCM-DMC";
+            case 14:
+                return "PCM-EDC";
+            case 15:
+                return "EDC";
             case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
@@ -764,6 +768,10 @@
                 return "mEMC";
             case 11:
                 return "mPHOS";
+            case 14:
+                return "PCM-EDC";
+            case 15:
+                return "EDC";
             case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
@@ -852,8 +860,8 @@
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 8 TeV ",textProcessOpt.Data());
         } else if(fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0){
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 13 TeV ",textProcessOpt.Data());
-        } else if(fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ){
-        return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.02 TeV ",textProcessOpt.Data());
+        } else if(fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0  || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ){
+            return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.02 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return  Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 900 GeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -914,7 +922,7 @@
             return  "pp, #sqrt{#it{s}} = 13TeV (RBins)";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("5.02TeV") == 0 ) {
             return  "pp, #sqrt{#it{s}} = 5.02TeV";
-        } else if( fEnergyFlagOpt.CompareTo("5TeV2017") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("5TeV2017") == 0 || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0) {
             return  "pp, #sqrt{#it{s}} = 5.02TeV";
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 900 GeV";
@@ -946,7 +954,7 @@
             return 8000;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0 ) {
             return 13000;
-        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0  ) {
             return 5020;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
             return 2760;
@@ -974,7 +982,7 @@
     TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "pp7TeV";
-        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0|| fEnergyFlagOpt.CompareTo("5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0|| fEnergyFlagOpt.CompareTo("5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             return  "pp5020GeV";
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
             return  "pp8TeV";
@@ -1006,7 +1014,7 @@
     TString ReturnCollisionEnergyStringForTheory( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "7TeV";
-        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             return  "5TeV";
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
             return  "8TeV";
@@ -2292,7 +2300,7 @@
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0  ) {
             cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
 	    return  1./1. -1.;
-         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0  || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             cout << "Same as 7 TeV K0 scaling factor" << endl;
             return  1./1. - 1; //1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -5203,7 +5211,7 @@
                 xSectionInt = xSection2760GeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
             }
-        } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 || energy.CompareTo("5TeV2017") == 0){
+        } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 || energy.CompareTo("5TeV2017") == 0 || energy.CompareTo("5TeVSpecial") == 0){
             if (selTrig == 1){
                 xSectionInt = xSection5023GeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
@@ -5304,6 +5312,10 @@
                     return "#gamma's rec. with DCal";
                 case 13: case 43:
                     return "#gamma's rec. with PCM, DCal";
+                case 14:
+                    return "#gamma's rec. with PCM, EMCal/DCal";
+                case 15:
+                    return "#gamma's rec. with EMCal/DCal";
                 case 20: case 21: case 22: case 23:
                     return "combined";
                 default:
@@ -5323,6 +5335,10 @@
                     return "#gamma's rec. with DCAL";
                 case 13:
                     return "#gamma's rec. with PCM, DCal";
+                case 14:
+                    return "#gamma's rec. with PCM, EMCAL/DCAL";
+                case 15:
+                    return "#gamma's rec. with EMCAL/DCAL";
                 default:
                     return "not known";
             }
@@ -5344,6 +5360,10 @@
                     return "#gamma's rec. with DCAL";
                 case 13:
                     return "#gamma's rec. with PCM, DCal";
+                case 14:
+                    return "#gamma's rec. with PCM, EMCAL/DCAL";
+                case 15:
+                    return "#gamma's rec. with EMCAL/DCAL";
                 default:
                     return "not known";
             }
@@ -5432,9 +5452,9 @@
     //************************************************************************************
     Double_t ReturnMeanR(Int_t mode){
         Double_t meanR   = 1.;
-        if(mode == 0 || (mode == 2 || mode == 13) || mode == 3){
+        if(mode == 0 || (mode == 2 || mode == 13) || mode == 3  || mode == 14){
         meanR = 60.;
-        }else if((mode == 4 || mode == 12) || mode == 10){
+        }else if(mode == 4 || mode == 12 || mode == 10  || mode == 15){
         meanR = 428.;
         }else if(mode == 5 || mode == 11 || mode == -5){
         meanR = 460.;

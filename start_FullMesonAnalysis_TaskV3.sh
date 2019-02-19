@@ -796,6 +796,9 @@ do
     elif [ $answer = "5TeV2017" ] || [ $answer = "5.02TeV2017" ] || [ $answer = "52" ] || [ $answer = "5.022017" ]; then
         ENERGY="5TeV2017";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "5TeVSpecial" ]; then
+        ENERGY="5TeVSpecial";
+        EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         ENERGY="7TeV";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
@@ -931,7 +934,7 @@ do
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
             fi
-        elif [ $ENERGY = "5TeV2017" ]; then
+        elif [ $ENERGY = "5TeV2017" ] || [ $ENERGY = "5TeVSpecial" ]; then
             GiveBinning5TeV2017
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
@@ -1492,11 +1495,7 @@ echo ""
                 root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEVTSTOY,2,\"$ENERGY\"\,$MINPTTOY\,$MAXPTTOY\,\"$EXTINPUTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,$MODE\)
             fi
             if [ $USECOCK -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
-		if [ $ISROOT6 -eq 0 ]; then
-                    root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
-		else
-		    root -b -x -l -q TaskV1/PrepareSecondaries.C\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
-		fi
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then

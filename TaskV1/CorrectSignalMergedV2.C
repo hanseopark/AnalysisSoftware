@@ -1939,6 +1939,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     // ********************************************************************************************************************************
     Double_t scaleFactorSingleBin           = 1.0;
     Int_t fExampleBin                       = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), scaleFactorSingleBin, -1);
+    cout << "example bin for detailed M02 plots is: " << fExampleBin << endl;
     TH1D* histoDataM02ExBin                 = (TH1D*)fileUncorrected.Get(Form("M02_PtBin%d",fExampleBin));    
     if(histoDataM02ExBin){
         histoDataM02ExBin->SetName(Form("Data_M02_in_Pt_Bin%d",fExampleBin));\
@@ -1956,7 +1957,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoTruePi0OneElectronM02ExBin   = (TH1D*)fileCorrections->Get(Form("TrueClusOneElectronFromPi0_M02_in_Pt_Bin%d",fExampleBin));
     if(histoMCrecM02ExBin){
         histoMCrecM02ExBin->SetName(Form("MCrec_M02_in_Pt_Bin%d",fExampleBin));
-        Int_t integMC = histoMCrecM02ExBin->Integral();
+        Double_t integMC = histoMCrecM02ExBin->Integral();
+        cout << "MC integration amount for M02 normalization is: " << integMC << endl;
         histoMCrecM02ExBin->Scale(1./integMC);
         histoTruePi0M02ExBin->Scale(1./integMC);
         histoTrueEtaM02ExBin->Scale(1./integMC);

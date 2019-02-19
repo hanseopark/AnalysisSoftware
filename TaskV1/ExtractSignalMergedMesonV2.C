@@ -90,6 +90,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     fCutSelection                   = cutSelection;
     TString fCutSelectionRead       = cutSelection;
+
     TString dummyString             = "";
     ReturnSeparatedCutNumberAdvanced( cutSelection, fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
 
@@ -197,9 +198,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
-
-    if(optionMC && mode==10 && !fEnergyFlag.CompareTo("pPb_8TeV"))
-        fCutSelectionRead.Replace(6,1,"2");
 
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if(HistosGammaConversion == NULL){
@@ -2197,8 +2195,8 @@ Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEn
                     fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
                     fHistoYieldExternSecInputReb[j]->Scale(1./nCocktailEvents->GetBinContent(1));
                     fHistoYieldExternSecInputReb[j]->SetDirectory(0);
-
                     fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
+
                 printf("secondary histogram found for pi0 feed-down from %s\n", nameSecondaries[j].Data());
                 }else{
                     printf("secondary histogram NOT FOUND for pi0 feed-down from %s\n", nameSecondaries[j].Data());

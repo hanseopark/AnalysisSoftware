@@ -4835,9 +4835,9 @@
             nominalMainDir         = "GammaConvV1";
         else if( mode == 1 )
             nominalMainDir         = "GammaConvDalitzV1";
-        else if (mode == 2 || mode == 3 || mode == 13)
+        else if (mode == 2 || mode == 3 || mode == 13 || mode == 14)
             nominalMainDir         = "GammaConvCalo";
-        else if (mode == 4 || mode == 12 || mode == 5)
+        else if (mode == 4 || mode == 12 || mode == 5 || mode == 15)
             nominalMainDir         = "GammaCalo";
         else if( mode == 6 || mode == 7 )
             nominalMainDir         = "GammaConvDalitzCalo";
@@ -5119,6 +5119,8 @@
         if(mode==11) return 4; // 11 mPHOS
         if(mode==12) return 2; // 12 DMC-DMC
         if(mode==13) return 1; // 13 PCM-DMC
+        if(mode==14) return 2; // 14 PCM-EMC/DMC
+        if(mode==15) return 1; // 15 EMC/DMC-EMC/DMC
         // If invalid mode was chosen
         std::cout << "Not chosen a valid mode (mode=" << mode << ")" << std::endl;
         return -1;

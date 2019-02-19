@@ -2389,6 +2389,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
             optionEnergy.CompareTo("2.76TeV") == 0     ||
             optionEnergy.CompareTo("5TeV2017") == 0    ||
+            optionEnergy.CompareTo("5TeVSpecial") == 0    ||
             optionEnergy.CompareTo("13TeV") == 0       ||
             optionEnergy.CompareTo("13TeVRBins") == 0 ||
             ((mode == 2 || mode == 3 || mode == 4) && optionEnergy.Contains("pPb_5.023TeV"))

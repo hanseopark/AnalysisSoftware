@@ -785,7 +785,15 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 } else if ( trigger.CompareTo("81")==0 || triggerSet == 2 ){
                     fBGFitRange[0] = 0.26;
                 }
-            } if ( fEnergyFlag.CompareTo("13TeV") == 0 ){
+            }
+            if ( fEnergyFlag.CompareTo("pPb_8TeV") == 0 ){
+                if( trigger.CompareTo("8e") == 0 || triggerSet == 1 ){
+                    fBGFitRange[0] = 0.25;
+                } else if ( trigger.CompareTo("8d")==0 || triggerSet == 2 ){
+                    fBGFitRange[0] = 0.26;
+                }
+            }
+            if ( fEnergyFlag.CompareTo("13TeV") == 0 ){
                 if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
                     fBGFitRange[0] = 0.25;
                 } else if ( trigger.CompareTo("85")==0 || triggerSet == 3 ){
@@ -872,6 +880,23 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonIntDeltaRangeNarrow[0]= fMesonIntDeltaRange[0]*0.6;
                     fMesonIntDeltaRangeNarrow[1]= fMesonIntDeltaRange[1]*0.6;
                 }else if(trigger.CompareTo("81")==0 || triggerSet == 2 ){
+                    fMesonIntDeltaRange[0]      = -0.06;
+                    fMesonIntDeltaRange[1]      = 0.08;
+                    fMesonIntDeltaRangeWide[0]  = fMesonIntDeltaRange[0]*1.2;
+                    fMesonIntDeltaRangeWide[1]  = fMesonIntDeltaRange[1]*1.2;
+                    fMesonIntDeltaRangeNarrow[0]= fMesonIntDeltaRange[0]*0.8;
+                    fMesonIntDeltaRangeNarrow[1]= fMesonIntDeltaRange[1]*0.8;
+                }
+            }
+            if(fEnergyFlag.CompareTo("pPb_8TeV") == 0){
+                if(trigger.CompareTo("8e")==0 || triggerSet == 2){
+                    fMesonIntDeltaRange[0]      = -0.05;
+                    fMesonIntDeltaRange[1]      = 0.06;
+                    fMesonIntDeltaRangeWide[0]  = fMesonIntDeltaRange[0]*1.4;
+                    fMesonIntDeltaRangeWide[1]  = fMesonIntDeltaRange[1]*1.4;
+                    fMesonIntDeltaRangeNarrow[0]= fMesonIntDeltaRange[0]*0.6;
+                    fMesonIntDeltaRangeNarrow[1]= fMesonIntDeltaRange[1]*0.6;
+                }else if(trigger.CompareTo("8d")==0 || triggerSet == 3 ){
                     fMesonIntDeltaRange[0]      = -0.06;
                     fMesonIntDeltaRange[1]      = 0.08;
                     fMesonIntDeltaRangeWide[0]  = fMesonIntDeltaRange[0]*1.2;
@@ -968,6 +993,27 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
               fMesonFitRange[0] = 0.08;
               fMesonFitRange[1] = 0.25;
             }
+          } else if( fEnergyFlag.CompareTo("pPb_8TeV") == 0 ){
+            if (setPi0.CompareTo("Pi0EtaBinning") == 0){
+                fMesonFitRange[0]               = 0.06;
+                fMesonFitRange[1]               = 0.30;
+                if( trigger.CompareTo("8d") == 0 || triggerSet == 3){
+                    fMesonFitRange[0] = 0.08;
+                    fMesonFitRange[1] = 0.28;
+                } else if( trigger.CompareTo("8e") == 0 ){
+                    fMesonFitRange[0] = 0.06;
+                    fMesonFitRange[1] = 0.27;
+                }
+            } else if ( trigger.CompareTo("8d") == 0 || triggerSet == 2){
+              fMesonFitRange[0] = 0.08;
+              fMesonFitRange[1] = 0.29;
+            } else if( trigger.CompareTo("8e") == 0 ){
+              fMesonFitRange[0] = 0.04;
+              fMesonFitRange[1] = 0.26;
+            } else {
+              fMesonFitRange[0] = 0.08;
+              fMesonFitRange[1] = 0.25;
+            }
           } else if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 ){
             fMesonFitRange[0]       = 0.06;
             fMesonFitRange[1]       = 0.30;
@@ -1044,6 +1090,18 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonWidthRange[0]     = 0.001;
                     fMesonWidthRange[1]     = 0.040;
                 } else if ( trigger.CompareTo("52") == 0 ){
+                    fMesonLambdaTailRange[0]= 0.003;
+                    fMesonWidthExpect       = 0.012;
+                    fMesonWidthRange[0]     = 0.001;
+                    fMesonWidthRange[1]     = 0.030;
+                }
+            }if (fEnergyFlag.CompareTo("pPb_8TeV") == 0){
+                fMesonLambdaTailRange[0]    = 0.005;
+                if ( trigger.CompareTo("8d") == 0 || triggerSet == 3){
+                    fMesonWidthExpect       = 0.035;
+                    fMesonWidthRange[0]     = 0.001;
+                    fMesonWidthRange[1]     = 0.040;
+                } else if ( trigger.CompareTo("8e") == 0 ){
                     fMesonLambdaTailRange[0]= 0.003;
                     fMesonWidthExpect       = 0.012;
                     fMesonWidthRange[0]     = 0.001;

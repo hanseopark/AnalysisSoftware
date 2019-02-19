@@ -1730,6 +1730,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     } else if (mode == 5){
         minAccPi0       = 0.;
         maxAccPi0       = 0.05;
+    } else if (mode == 10){
+        minAccPi0       = 0.;
+        maxAccPi0       = 0.6;
     }
 
 

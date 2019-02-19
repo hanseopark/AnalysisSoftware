@@ -62,7 +62,8 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                                         Int_t NumberOfCuts          = 1,
                                         TString optionPeriod        = "No",
                                         Int_t mode                  = 10,
-                                        TString cutVariationName    = "NonLinearity"
+                                        TString cutVariationName    = "NonLinearity",
+                                        Bool_t setFullPathInInputFile   = kFALSE
                                       ){
 
     if (!(mode == 10 || mode == 11 )){
@@ -136,7 +137,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     cout<<"=========================="<<endl;
 
     // Definition of necessary histogram arrays
-    const Int_t ConstNumberOfCuts = 10;
+    const Int_t ConstNumberOfCuts = 15;
     TString FileNameCorrected[ConstNumberOfCuts];
 
     TFile *Cutcorrfile[ConstNumberOfCuts];
@@ -165,7 +166,10 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         ReturnSeparatedCutNumberAdvanced( cutNumber[i].Data(), fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
 
         // read file with corrections
-        FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaMergedCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        if(setFullPathInInputFile)
+            FileNameCorrected[i] = Form("%s/%s_%s_GammaMergedCorrection_%s.root", fileDirectory[i].Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        else
+            FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaMergedCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameCorrected[i] << endl;
         Cutcorrfile[i] = new TFile(FileNameCorrected[i]);
         if (Cutcorrfile[i]->IsZombie()) return;
@@ -424,6 +428,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                                       kTRUE, -0.1, 0.00030,
                                       kFALSE, 0., 10.);
               if (mode == 10 && fNLMmin == 1) histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.01,0.2);
+              if (!optionEnergy.CompareTo("pPb_8TeV")) histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.01,2.65);
               if (mode == 10 && fNLMmin == 2) histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.01,0.35);
               histoTrueEffiCut[i]->DrawCopy("e1,p");
               legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));

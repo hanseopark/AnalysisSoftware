@@ -4279,12 +4279,25 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     }
                 }
             } else if (fMode == 4 || fMode == 12) {   // EMC, DMC
-                mesonAmplitudeMin = mesonAmplitude*10./100.;
-                mesonAmplitudeMax = mesonAmplitude*1000./100.;
-                if(fBinsPt[ptBin] >= 10) {
-                    fMesonLambdaTail            = 0.015;
-                    fMesonLambdaTailRange[0]    = 0.015;
-                    fMesonLambdaTailRange[1]    = 0.015;
+                if( fEnergyFlag.CompareTo("pPb_8TeV") == 0 ){
+                    mesonAmplitudeMin = mesonAmplitude*90./100.;
+                    mesonAmplitudeMax = mesonAmplitude*400./100.;
+                    TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+                    if(trigger.CompareTo("8e") == 0 && fBinsPt[ptBin]==13. && !fPrefix.Contains("Pi0EtaBinning")){
+                        fMesonFitRange[0] = 0.08;
+                        fMesonFitRange[1] = 0.25;
+                    }else if(trigger.CompareTo("8d") == 0 && fBinsPt[ptBin]>=14. && !fPrefix.Contains("Pi0EtaBinning")){
+                        fMesonFitRange[0] = 0.08;
+                        fMesonFitRange[1] = 0.29;
+                    }
+                } else {
+                    mesonAmplitudeMin = mesonAmplitude*10./100.;
+                    mesonAmplitudeMax = mesonAmplitude*1000./100.;
+                    if(fBinsPt[ptBin] >= 10) {
+                        fMesonLambdaTail            = 0.015;
+                        fMesonLambdaTailRange[0]    = 0.015;
+                        fMesonLambdaTailRange[1]    = 0.015;
+                    }
                 }
             } else if (fMode == 5) {                                // PHOS
                 if (ptBin < 21) mesonAmplitudeMin = 1./100.;
