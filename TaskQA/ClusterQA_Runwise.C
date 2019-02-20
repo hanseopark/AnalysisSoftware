@@ -108,10 +108,17 @@ void ClusterQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++){
         vecDataSet.push_back(DataSets[i].Data());
-        hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
-        hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
-        hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
-        hMarkerSize[i]          = markerSize;
+        if (i < nDataIn){
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerSize[i]          = markerSize;
+        } else {
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerSize[i]          = markerSize;
+        }
     }
 
 
@@ -284,6 +291,11 @@ void ClusterQA_Runwise(
         iCalo                       = 3;
         nCaloModules                = 18;
         nCaloCells                  = 18000;
+    } else if(fClusterCutSelection.BeginsWith('4')){
+        calo                        = "EMCal+DCal";
+        iCalo                       = 1;
+        nCaloModules                = 20;
+        nCaloCells                  = 19000;
     } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
 
 
@@ -467,7 +479,7 @@ void ClusterQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
         histoName                   = "hNEvents";
         if(i==0) vecHistosName.push_back(histoName);
-        hNEvents[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hNEvents; Run Number ; # of Events",hNBin,hFBin,hLBin);
+        hNEvents[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hNEvents; Run Number ; #Ge of Events",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hNEvents[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hNEvents[i]);
 

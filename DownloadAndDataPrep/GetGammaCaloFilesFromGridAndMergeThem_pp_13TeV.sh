@@ -23,57 +23,68 @@ echo $2
 # echo $PATH
 
 # check if train configuration has actually been given
-HAVETOBUILD16Data=1
-    HAVELHC16d=1
-    HAVELHC16e=1
-    HAVELHC16f=1
-    HAVELHC16g=1
-    HAVELHC16h=1
-    HAVELHC16i=1
-    HAVELHC16j=1
-    HAVELHC16k=1
-    HAVELHC16l=1
-    HAVELHC16o=1
-    HAVELHC16p=1
+HAVELHC16d=1
+HAVELHC16e=1
+HAVELHC16f=1
+HAVELHC16g=1
+HAVELHC16h=1
+HAVELHC16i=1
+HAVELHC16j=1
+HAVELHC16k=1
+HAVELHC16l=1
+HAVELHC16o=1
+HAVELHC16p=1
 
-HAVETOBUILD18Data=1
-    HAVELHC18b=1
-    HAVELHC18d=1
-    HAVELHC18e=1
-    HAVELHC18f=1
-    HAVELHC18g=1
-    HAVELHC18h=1
-    HAVELHC18i=1
-    HAVELHC18j=1
-    HAVELHC18k=1
-    HAVELHC18l=1
-    HAVELHC18m=1
-    HAVELHC18n=1
-    HAVELHC18o=1
-    HAVELHC18p=1
-HAVETOBUILD16xMC=1
-    HAVELHC17f6=1;
-    HAVELHC17f9=1;
-    HAVELHC17d17=1;
-    HAVELHC17f5=1;
-    HAVELHC17d3=1;
-    HAVELHC17e5=1;
-    HAVELHC18f1=1
-    HAVELHC18d8=1
-    HAVELHC17d16=1;
-    HAVELHC17d18=1;
-    HAVELHC17d1=1;
-HAVETOBUILD18xMC=1
-    HAVELHC18g4=1
-    HAVELHC18g5=1
-    HAVELHC18g6=1
-    HAVELHC18h2=1
-    HAVELHC18h4=1
-    HAVELHC18j1=1
-    HAVELHC18j4=1
-    HAVELHC18k1=1
-    HAVELHC18k2=1
-    HAVELHC18k3=1
+HAVELHC17c=1
+HAVELHC17e=1
+HAVELHC17f=1
+HAVELHC17h=1
+HAVELHC17i=1
+HAVELHC17j=1
+HAVELHC17k=1
+HAVELHC17l=1
+HAVELHC17m=1
+HAVELHC17o=1
+HAVELHC17r=1
+
+HAVELHC18b=1
+HAVELHC18d=1
+HAVELHC18e=1
+HAVELHC18f=1
+HAVELHC18g=1
+HAVELHC18h=1
+HAVELHC18i=1
+HAVELHC18j=1
+HAVELHC18k=1
+HAVELHC18l=1
+HAVELHC18m=1
+HAVELHC18n=1
+HAVELHC18o=1
+HAVELHC18p=1
+
+HAVELHC17f6=1;
+HAVELHC17f9=1;
+HAVELHC17d17=1;
+HAVELHC17f5=1;
+HAVELHC17d3=1;
+HAVELHC17e5=1;
+HAVELHC18f1=1
+HAVELHC18d8=1
+HAVELHC17d16=1;
+HAVELHC17d18=1;
+HAVELHC17d1=1;
+
+HAVELHC18g4=1
+HAVELHC18g5=1
+HAVELHC18g6=1
+HAVELHC18h2=1
+HAVELHC18h4=1
+HAVELHC18j1=1
+HAVELHC18j4=1
+HAVELHC18k1=1
+HAVELHC18k2=1
+HAVELHC18k3=1
+
 # default trainconfigurations
 LHC16Data="";
     LHC16dData="";
@@ -87,6 +98,19 @@ LHC16Data="";
     LHC16lData="";
     LHC16oData="";
     LHC16pData="";
+
+LHC17Data="";
+    LHC17cData="";
+    LHC17eData="";
+    LHC17fData="";
+    LHC17hData="";
+    LHC17iData="";
+    LHC17jData="";
+    LHC17kData="";
+    LHC17lData="";
+    LHC17mData="";
+    LHC17oData="";
+    LHC17rData="";
 
 LHC18Data="";
     LHC18bData="";
@@ -145,12 +169,14 @@ if [ $3 = "AOD" ]; then
     baseLegoData=GA_pp_AOD
     baseLegoMC=GA_pp_MC_AOD
     pathData=pass$passNr/AOD208/PWGGA/GA_pp_AOD
+    pathData3=pass$passNr\_withTRDtracking/AOD208/PWGGA/GA_pp_AOD
     pathData2=pass2/AOD208/PWGGA/GA_pp_AOD
     pathMC=AOD209/PWGGA/GA_pp_MC_AOD
 else
     baseLegoData=GA_pp
     baseLegoMC=GA_pp_MC
     pathData=pass$passNr/PWGGA/GA_pp
+    pathData3=pass$passNr\_withTRDtracking/PWGGA/GA_pp
     pathData2=pass2/PWGGA/GA_pp
     pathMC=PWGGA/GA_pp_MC
 fi
@@ -179,23 +205,37 @@ TRAINDIR=Legotrain-vAN-QA2019 # SECOND TRAIN RUN
 # LHC16oData="child_10"; #pass 1
 # LHC16pData="child_11"; #pass 1
 
+# LHC17 data
+# LHC17Data="635"; #pass 1 SECOND TRAIN RUN
+# LHC17cData="child_1"; #pass 1
+# LHC17eData="child_2"; #pass 1
+# LHC17fData="child_3"; #pass 1
+# LHC17hData="child_4"; #pass 1
+# LHC17iData="child_5"; #pass 1
+# LHC17jData="child_6"; #pass 1
+# LHC17kData="child_7"; #pass 1
+# LHC17lData="child_8"; #pass 1
+# LHC17mData="child_9"; #pass 1
+# LHC17oData="child_10"; #pass 1
+# LHC17rData="child_11"; #pass 1
+
 
 # LHC18 data
-# LHC18Data="620"; #pass 1 SECOND TRAIN RUN
-# LHC18bData="child_1";
-# LHC18dData="child_2";
-# LHC18eData="child_3";
-# LHC18fData="child_4";
-# LHC18gData="child_5";
-# LHC18hData="child_6";
-# LHC18iData="child_7";
-# LHC18jData="child_8";
-# LHC18kData="child_9";
-# LHC18lData="child_10";
-# LHC18mData="child_11";
-# LHC18nData="child_12";
-# LHC18oData="child_13";
-# LHC18pData="child_14";
+LHC18Data="705"; #pass 1 SECOND TRAIN RUN
+LHC18bData="child_1";
+LHC18dData="child_2";
+LHC18eData="child_3";
+LHC18fData="child_4";
+LHC18gData="child_5";
+LHC18hData="child_6";
+LHC18iData="child_7";
+LHC18jData="child_8";
+LHC18kData="child_9";
+LHC18lData="child_10";
+LHC18mData="child_11";
+LHC18nData="child_12";
+LHC18oData="child_13";
+LHC18pData="child_14";
 
 # LHC16 MC
 # LHC16xMCPHY="1276"; #pass 1
@@ -213,12 +253,12 @@ TRAINDIR=Legotrain-vAN-QA2019 # SECOND TRAIN RUN
 
 
 # LHC18 MC
-LHC18xMCPHY="1277"; #pass 1 FIRST TRAIN RUN
-# LHC18g4MC="child_1"
-# LHC18g5MC="child_2"
-# LHC18g6MC="child_3"
-# LHC18h2MC="child_4"
-# LHC18h4MC="child_5"
+LHC18xMCPHY="1325"; #pass 1 FIRST TRAIN RUN
+LHC18g4MC="child_1"
+LHC18g5MC="child_2"
+LHC18g6MC="child_3"
+LHC18h2MC="child_4"
+LHC18h4MC="child_5"
 LHC18j1MC="child_6"
 LHC18j4MC="child_7"
 LHC18k1MC="child_8"
@@ -298,6 +338,73 @@ HAVELHC16p=$tempBool
 LHC16pData=$tempDir
 OUTPUTDIR_LHC16p=$tempPath
 echo "16p: $HAVELHC16p $LHC16pData $OUTPUTDIR_LHC16p"
+
+FindCorrectTrainDirectory $LHC17cData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17c=$tempBool
+LHC17cData=$tempDir
+OUTPUTDIR_LHC17c=$tempPath
+echo "17c: $HAVELHC17c $LHC17cData $OUTPUTDIR_LHC17c"
+
+FindCorrectTrainDirectory $LHC17eData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17e=$tempBool
+LHC17eData=$tempDir
+OUTPUTDIR_LHC17e=$tempPath
+echo "17e: $HAVELHC17e $LHC17eData $OUTPUTDIR_LHC17e"
+
+FindCorrectTrainDirectory $LHC17fData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17f=$tempBool
+LHC17fData=$tempDir
+OUTPUTDIR_LHC17f=$tempPath
+echo "17f: $HAVELHC17f $LHC17fData $OUTPUTDIR_LHC17f"
+
+FindCorrectTrainDirectory $LHC17hData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17h=$tempBool
+LHC17hData=$tempDir
+OUTPUTDIR_LHC17h=$tempPath
+echo "17h: $HAVELHC17h $LHC17hData $OUTPUTDIR_LHC17h"
+
+FindCorrectTrainDirectory $LHC17iData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17i=$tempBool
+LHC17iData=$tempDir
+OUTPUTDIR_LHC17i=$tempPath
+echo "17i: $HAVELHC17i $LHC17iData $OUTPUTDIR_LHC17i"
+
+FindCorrectTrainDirectory $LHC17jData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17j=$tempBool
+LHC17jData=$tempDir
+OUTPUTDIR_LHC17j=$tempPath
+echo "17j: $HAVELHC17j $LHC17jData $OUTPUTDIR_LHC17j"
+
+FindCorrectTrainDirectory $LHC17kData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17k=$tempBool
+LHC17kData=$tempDir
+OUTPUTDIR_LHC17k=$tempPath
+echo "17k: $HAVELHC17k $LHC17kData $OUTPUTDIR_LHC17k"
+
+FindCorrectTrainDirectory $LHC17lData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17l=$tempBool
+LHC17lData=$tempDir
+OUTPUTDIR_LHC17l=$tempPath
+echo "17l: $HAVELHC17l $LHC17lData $OUTPUTDIR_LHC17l"
+
+FindCorrectTrainDirectory $LHC17mData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17m=$tempBool
+LHC17mData=$tempDir
+OUTPUTDIR_LHC17m=$tempPath
+echo "17m: $HAVELHC17m $LHC17mData $OUTPUTDIR_LHC17m"
+
+FindCorrectTrainDirectory $LHC17oData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17o=$tempBool
+LHC17oData=$tempDir
+OUTPUTDIR_LHC17o=$tempPath
+echo "17o: $HAVELHC17o $LHC17oData $OUTPUTDIR_LHC17o"
+
+FindCorrectTrainDirectory $LHC17rData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17r=$tempBool
+LHC17rData=$tempDir
+OUTPUTDIR_LHC17r=$tempPath
+echo "17r: $HAVELHC17r $LHC17rData $OUTPUTDIR_LHC17r"
+
 
 FindCorrectTrainDirectory $LHC18bData $OUTPUTDIRData $ALIENDIRData $LHC18Data
 HAVELHC18b=$tempBool
@@ -528,6 +635,18 @@ if [ $CLEANUPMAYOR == 0 ]; then
     CopyRunwiseAndMergeAccordingToRunlistData "LHC16o" $HAVELHC16o $OUTPUTDIR_LHC16o $LHC16oData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC16p" $HAVELHC16p $OUTPUTDIR_LHC16p $LHC16pData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
 
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17c" $HAVELHC17c $OUTPUTDIR_LHC17c $LHC17cData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17e" $HAVELHC17e $OUTPUTDIR_LHC17e $LHC17eData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17f" $HAVELHC17f $OUTPUTDIR_LHC17f $LHC17fData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17h" $HAVELHC17h $OUTPUTDIR_LHC17h $LHC17hData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17i" $HAVELHC17i $OUTPUTDIR_LHC17i $LHC17iData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17j" $HAVELHC17j $OUTPUTDIR_LHC17j $LHC17jData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17k" $HAVELHC17k $OUTPUTDIR_LHC17k $LHC17kData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17l" $HAVELHC17l $OUTPUTDIR_LHC17l $LHC17lData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17m" $HAVELHC17m $OUTPUTDIR_LHC17m $LHC17mData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17o" $HAVELHC17o $OUTPUTDIR_LHC17o $LHC17oData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17r" $HAVELHC17r $OUTPUTDIR_LHC17r $LHC17rData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18b" $HAVELHC18b $OUTPUTDIR_LHC18b $LHC18bData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18d" $HAVELHC18d $OUTPUTDIR_LHC18d $LHC18dData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18e" $HAVELHC18e $OUTPUTDIR_LHC18e $LHC18eData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
@@ -538,7 +657,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1_withTRDtracking" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18n" $HAVELHC18n $OUTPUTDIR_LHC18n $LHC18nData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18o" $HAVELHC18o $OUTPUTDIR_LHC18o $LHC18oData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18p" $HAVELHC18p $OUTPUTDIR_LHC18p $LHC18pData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
@@ -661,6 +780,99 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-$runListName" "-$runListName"
             done;
         fi
+
+
+        if [ $HAVELHC17c == 1 ]; then
+            ls $OUTPUTDIR_LHC17c/GammaCalo-$runListName\_*.root > fileLHC17c.txt
+            fileNumbers=`cat fileLHC17c.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17c $NSlashes "LHC17c-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17e == 1 ]; then
+            ls $OUTPUTDIR_LHC17e/GammaCalo-$runListName\_*.root > fileLHC17e.txt
+            fileNumbers=`cat fileLHC17e.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17e $NSlashes "LHC17e-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17f == 1 ]; then
+            ls $OUTPUTDIR_LHC17f/GammaCalo-$runListName\_*.root > fileLHC17f.txt
+            fileNumbers=`cat fileLHC17f.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17f $NSlashes "LHC17f-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17h == 1 ]; then
+            ls $OUTPUTDIR_LHC17h/GammaCalo-$runListName\_*.root > fileLHC17h.txt
+            fileNumbers=`cat fileLHC17h.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17h $NSlashes "LHC17h-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17i == 1 ]; then
+            ls $OUTPUTDIR_LHC17i/GammaCalo-$runListName\_*.root > fileLHC17i.txt
+            fileNumbers=`cat fileLHC17i.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17i $NSlashes "LHC17i-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17j == 1 ]; then
+            ls $OUTPUTDIR_LHC17j/GammaCalo-$runListName\_*.root > fileLHC17j.txt
+            fileNumbers=`cat fileLHC17j.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17j $NSlashes "LHC17j-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17k == 1 ]; then
+            ls $OUTPUTDIR_LHC17k/GammaCalo-$runListName\_*.root > fileLHC17k.txt
+            fileNumbers=`cat fileLHC17k.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17k $NSlashes "LHC17k-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17l == 1 ]; then
+            ls $OUTPUTDIR_LHC17l/GammaCalo-$runListName\_*.root > fileLHC17l.txt
+            fileNumbers=`cat fileLHC17l.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17l $NSlashes "LHC17l-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17m == 1 ]; then
+            ls $OUTPUTDIR_LHC17m/GammaCalo-$runListName\_*.root > fileLHC17m.txt
+            fileNumbers=`cat fileLHC17m.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17m $NSlashes "LHC17m-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17o == 1 ]; then
+            ls $OUTPUTDIR_LHC17o/GammaCalo-$runListName\_*.root > fileLHC17o.txt
+            fileNumbers=`cat fileLHC17o.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17o $NSlashes "LHC17o-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17r == 1 ]; then
+            ls $OUTPUTDIR_LHC17r/GammaCalo-$runListName\_*.root > fileLHC17r.txt
+            fileNumbers=`cat fileLHC17r.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededCalo $fileName $OUTPUTDIR_LHC17r $NSlashes "LHC17r-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+
+
+
         if [ $HAVELHC18b == 1 ]; then
             ls $OUTPUTDIR_LHC18b/GammaCalo-$runListName\_*.root > fileLHC18b.txt
             fileNumbers=`cat fileLHC18b.txt`

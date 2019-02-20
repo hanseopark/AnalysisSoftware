@@ -40,6 +40,15 @@ function FindCorrectTrainDirectory()
       if [ $testSub == 1 ]; then
 #           tempDir=`alien_ls $3 | grep $4\_ | grep $1`
           alien_ls $3 | grep $4\_ > listGrid.txt
+          folderNames=`cat listGrid.txt`
+          rm listGrid.txt
+          for folderName in $folderNames; do
+            testing=`echo $folderName  | cut -d "_" -f1`
+            echo $folderName " " $4 " " $testing;
+            if [[ $testing == $4 ]]; then
+                echo "$folderName" >> listGrid.txt
+            fi
+          done
           InterMediate=`head -n1 listGrid.txt`\_$1
           InterMediate=${InterMediate/$1\_$1/$1}
           InterMediate=${InterMediate/child_1_$1/$1}

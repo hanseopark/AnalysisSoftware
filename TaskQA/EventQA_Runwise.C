@@ -130,10 +130,17 @@ void EventQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++){
         vecDataSet.push_back(DataSets[i].Data());
-        hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
-        hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
-        hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
-        hMarkerSize[i]          = markerSize;
+        if (i < nDataIn){
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerSize[i]          = markerSize;
+        } else {
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerSize[i]          = markerSize;
+        }
     }
 
     Float_t xPosLabel = 0.8;

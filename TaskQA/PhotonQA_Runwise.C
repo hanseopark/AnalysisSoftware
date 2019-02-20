@@ -169,9 +169,16 @@ void PhotonQA_Runwise(
     cout << "Corresponding to centrality: " << fCentralityFromCut << endl;
     // plotting settings according to default for energy, dataset and centrality
     for(Int_t i=0; i<nSets; i++){
-        hMarkerStyle[i]=GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
-        hMarkerColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
-        hLineColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
+
+        if (i < nDataIn){
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+        } else {
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+        }
     }
 
     Bool_t cutTreeStdCut = kFALSE;

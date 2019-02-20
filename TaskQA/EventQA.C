@@ -670,8 +670,8 @@ void EventQA(
                                     fHistSPDtracklets_clusters_before,"",
                                     "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
                                     processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-		TF1 *cut;
-		if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+            TF1 *cut;
+            if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
                 else cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
                 cut->SetLineColor(kRed);
                 cut->SetLineStyle(2);
@@ -692,8 +692,8 @@ void EventQA(
                                 fHistSPDtracklets_clusters_beforePileUp,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
                                 processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-	    TF1 *cut;
-	    if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+            TF1 *cut;
+            if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             else cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -752,6 +752,8 @@ void EventQA(
             }
             vecGammaCandidatesPerTrack.push_back(fHistCandidatesPerTrack);  // save histos in vector for comparison plot
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
+
+
         //-------------------------------------------------------------------------------------------------------------------------------
         // VZERO multiplicity vs TPC out Tracks
         TH2D* fHistV0MultVsTracks = (TH2D*)ESDContainer->FindObject("V0Mult vs TPCout Tracks");
@@ -765,13 +767,13 @@ void EventQA(
                                     fHistV0MultVsTracks,"",
                                     "TPC out tracks","V0 Multiplicity",1,1.4,
                                     processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-	    if(fIsPbPb){
-	      TF1 *cut = new TF1("fFPileUpRejectV0MTPCout","-2500. + 5.0*x",fHistV0MultVsTracks->GetXaxis()->GetBinLowEdge(1),fHistV0MultVsTracks->GetXaxis()->GetBinUpEdge(maxB));
-	      cut->SetLineColor(kRed);
-	      cut->SetLineStyle(2);
-	      cut->SetLineWidth(4);
-	      cut->Draw("SAME");
-	    }
+            if(fIsPbPb){
+                TF1 *cut = new TF1("fFPileUpRejectV0MTPCout","-2500. + 5.0*x",fHistV0MultVsTracks->GetXaxis()->GetBinLowEdge(1),fHistV0MultVsTracks->GetXaxis()->GetBinUpEdge(maxB));
+                cut->SetLineColor(kRed);
+                cut->SetLineStyle(2);
+                cut->SetLineWidth(4);
+                cut->Draw("SAME");
+            }
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
         // VZERO multiplicity vs TPC out Tracks
@@ -1340,6 +1342,15 @@ void EventQA(
         if(ESDMother){
             WriteHistogram(ESDMother);
             vecESDMother.push_back(new TH2D(*ESDMother));
+
+            GetMinMaxBinY(ESDMother,minB,maxB);
+            SetYRange(ESDMother,1,maxB+1);
+            SetZMinMaxTH2(ESDMother,1,ESDMother->GetNbinsX(),1,maxB+1);
+            DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                 ESDMother,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                 "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","#it{p}_{T} (GeV/#it{c})",0.9,0.8);
+            SaveCanvasAndWriteHistogram(canvas, ESDMother, Form("%s/InvMass_vs_pT_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
         } else if (mode == 200) {
             cout << "ERROR: Object |ESD_Mother_InvMass_Pt| could not be found! Skipping Draw " << endl;
         } else {cout << "ERROR: Object |ESD_Mother_InvMass_Pt| could not be found! Skipping Draw & return..." << endl; return;}
