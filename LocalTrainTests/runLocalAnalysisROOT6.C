@@ -72,7 +72,6 @@ void runLocalAnalysisROOT6(
 
     if(dataType.Contains("AOD")){
         AliAODInputHandler* aodH                = new AliAODInputHandler();
-        aodH->AddFriend((char*)"AliAODGammaConversion.root");
         mgr->SetInputEventHandler(aodH);
     } else if(dataType.Contains("ESD")){
         AliESDInputHandler* esdH                = new AliESDInputHandler();
@@ -171,11 +170,18 @@ void runLocalAnalysisROOT6(
         correctionTaskSpezial->Initialize();
     }else{
         #if !defined (__CINT__) || defined (__CLING__)
-            AliAnalysisTask *tenderTask=reinterpret_cast<AliAnalysisTask*>(
-            gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWG/EMCAL/macros/AddTaskEMCALTender.C ( kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kFALSE, kFALSE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6, \"%s\", kFALSE )",tenderPassData.Data())));
+            if(intMCrunning>0)
+                AliAnalysisTask *tenderTask=reinterpret_cast<AliAnalysisTask*>(
+                gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWG/EMCAL/macros/AddTaskEMCALTender.C ( kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kFALSE, kFALSE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6, \"%s\", kFALSE, \"raw://\", 0, 0, 0, 1, \"\", \"\", \"\", kFALSE )",tenderPassData.Data())));
+            else
+                AliAnalysisTask *tenderTask=reinterpret_cast<AliAnalysisTask*>(
+                    gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWG/EMCAL/macros/AddTaskEMCALTender.C ( kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kTRUE, kTRUE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6, \"%s\", kFALSE, \"raw://\", 0, 0, 0, 1, \"\", \"\", \"\", kTRUE )",tenderPassData.Data()))); // last argument loads temperature calib now new calib for Run1 and Run2
         #else
             gROOT->LoadMacro("$ALICE_PHYSICS/PWG/EMCAL/macros/AddTaskEMCALTender.C");
-            AliAnalysisTask *emcalTender            = AddTaskEMCALTender(  kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kFALSE, kFALSE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6,tenderPassData,kFALSE   );
+            if(intMCrunning>0)
+                AliAnalysisTask *emcalTender            = AddTaskEMCALTender(  kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kFALSE, kFALSE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6,tenderPassData,kFALSE   );
+            else
+                AliAnalysisTask *emcalTender            = AddTaskEMCALTender(  kTRUE, kTRUE, kTRUE, kTRUE, kFALSE, kFALSE, kTRUE, kTRUE, kTRUE, kTRUE, AliEMCALRecoUtils::kNoCorrection, kTRUE, 0.5, 0.1, AliEMCALRecParam::kClusterizerv2, kFALSE, kFALSE, -500e9, 500e9, 1e6,tenderPassData,kFALSE   );
         #endif
     }
 
@@ -208,8 +214,15 @@ void runLocalAnalysisROOT6(
     // -----------------------------------------
     if(runMode.Contains("S")){
         #if !defined (__CINT__) || defined (__CLING__)
-            // if(dataType.Contains("AOD"))
-            //     AddTaskAodSkim(-1, 0.9, Form("GammaConv_%s_gamma",aodConversionCutnumber.Data()), AliVEvent::kAny, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,"skim");
+            // if(dataType.Contains("AOD")){
+            //     AliAodSkimTask *AODskimtask = reinterpret_cast<AliAodSkimTask *>(
+            //         gInterpreter->ExecuteMacro(Form("$ALICE_PHYSICS/PWG/EMCAL/macros/AddTaskAodSkim.C ( -1, 0.9, NULL, AliVEvent::kINT7, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,\"skimROOT6\" )")));
+            //     AODskimtask->SetGammaBrName(Form("GammaConv_%s_gamma",aodConversionCutnumber.Data()));
+            //     AODskimtask->SetCopyConv(kTRUE);
+            //     AODskimtask->SetDoVertWoRefs(kFALSE);
+            //     AODskimtask->SetCleanTracks(kTRUE);
+            //     AODskimtask->SetRemoveTracks(kTRUE);
+            // }
             // if(dataType.Contains("ESD"))
             //     AddTaskEsdSkim(kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, "Tracks", "AliSkimmedESD.root");
         #else
@@ -268,18 +281,18 @@ void runLocalAnalysisROOT6(
     if(runMode.Contains("C")){
         #if !defined (__CINT__) || defined (__CLING__)
             if(collsys==0){
-                AddTask_GammaCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
                 AddTask_GammaCalo_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 0, "",kFALSE, "",kTRUE,kFALSE,!taskNameSpecial.CompareTo("") ? "218" : Form("218_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==2){
-                AddTask_GammaCalo_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 1, 0, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE, !taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaCalo_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 1, 0, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE, !taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
             }
         #else
             if(collsys==0){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCalo_pp.C");
-                AliAnalysisTask *taskPCMpp = AddTask_GammaCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE,!taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMpp = AddTask_GammaCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE,!taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCalo_PbPb.C");
@@ -287,7 +300,7 @@ void runLocalAnalysisROOT6(
             }
             if(collsys==2){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCalo_pPb.C");
-                AliAnalysisTask *taskPCMpPb = AddTask_GammaCalo_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE,!taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMpPb = AddTask_GammaCalo_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, kFALSE, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, "",kFALSE, "",kTRUE,!taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
             }
         #endif
     }
@@ -299,7 +312,7 @@ void runLocalAnalysisROOT6(
     if(runMode.Contains("H")){
         #if !defined (__CINT__) || defined (__CLING__)
             if(collsys==0){
-                AddTask_GammaConvCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, "",kFALSE, "",kTRUE,kFALSE,kFALSE,1.,0.,0.,kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaConvCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, "",kFALSE, "",kTRUE,kFALSE,kFALSE,1.,0.,0.,kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
                 AddTask_GammaConvCalo_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, "",kFALSE, "",kFALSE,kTRUE, kFALSE, kTRUE, 0, kTRUE, !taskNameSpecial.CompareTo("") ? "300" : Form("300_CF%s",taskNameSpecial.Data()));
@@ -311,7 +324,7 @@ void runLocalAnalysisROOT6(
         #else
             if(collsys==0){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaConvCalo_pp.C");
-                AliAnalysisTask *taskPCMEMCpp = AddTask_GammaConvCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, "",kFALSE, "",kTRUE,kFALSE,kFALSE,1.,0.,0.,kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMEMCpp = AddTask_GammaConvCalo_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, kFALSE,3., 0,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, "",kFALSE, "",kTRUE,kFALSE,kFALSE,1.,0.,0.,kTRUE, !taskNameSpecial.CompareTo("") ? "106" : Form("106_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaConvCalo_PbPb.C");
@@ -332,26 +345,26 @@ void runLocalAnalysisROOT6(
     if(runMode.Contains("M")){
         #if !defined (__CINT__) || defined (__CLING__)
             if(collsys==0){
-                AddTask_GammaCaloMerged_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "137" : Form("137_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaCaloMerged_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "137" : Form("137_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
-                AddTask_GammaCaloMerged_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 0, 0,1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "201" : Form("201_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaCaloMerged_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 0, 0,1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "201" : Form("201_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==2){
-                AddTask_GammaCaloMerged_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
+                AddTask_GammaCaloMerged_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE, !taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
             }
         #else
             if(collsys==0){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_pp.C");
-                AliAnalysisTask *taskPCMpp = AddTask_GammaCaloMerged_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "137" : Form("137_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMpp = AddTask_GammaCaloMerged_pp(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "137" : Form("137_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==1){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_PbPb.C");
-                AliAnalysisTask *taskPCMPbPb = AddTask_GammaCaloMerged_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 0, 0,1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "201" : Form("201_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMPbPb = AddTask_GammaCaloMerged_PbPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", kFALSE, 0, 0,1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "201" : Form("201_CF%s",taskNameSpecial.Data()));
             }
             if(collsys==2){
                 gROOT->LoadMacro("$ALICE_PHYSICS/PWGGA/GammaConv/macros/AddTask_GammaCaloMerged_pPb.C");
-                AliAnalysisTask *taskPCMpPb = AddTask_GammaCaloMerged_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(), runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
+                AliAnalysisTask *taskPCMpPb = AddTask_GammaCaloMerged_pPb(0, intMCrunning, "00000008400100001500000000", runPeriod.Data(),  1, 2, 5, 0, kFALSE, kFALSE, 3.,"FMUW:fileNameMultWeights;FEPC:fileNamedEdxPostCalib", 0, 1,kTRUE, kFALSE,1.0,kFALSE,kFALSE,!taskNameSpecial.CompareTo("") ? "200" : Form("200_CF%s",taskNameSpecial.Data()));
             }
         #endif
     }
@@ -388,14 +401,14 @@ void runLocalAnalysisROOT6(
     }
 
 
-    mgr->SetUseProgressBar(1, 1);
+    mgr->SetUseProgressBar(1, 10);
     if (!mgr->InitAnalysis()) return;
     mgr->PrintStatus();
 
     // LOCAL CALCULATION
     TChain* chain = 0;
     if (usedData == "AOD") {
-        chain = CreateAODChain(localFiles.Data(), numLocalFiles);
+        chain = CreateAODChain(localFiles.Data(), numLocalFiles,0,kFALSE,"AliAODGammaConversion.root");
     } else {  // ESD
         chain = CreateESDChain(localFiles.Data(), numLocalFiles);
     }
