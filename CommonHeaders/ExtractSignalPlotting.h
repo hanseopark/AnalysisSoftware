@@ -2764,6 +2764,197 @@
         delete canvasDataSpectra;
     }
 
+
+    //____________________________ Plotting Signal To Background Ratio with Multiple Fits________________________________________________________
+    void PlotWithManyFitSigToBckRatioInPtBins(  TH1D ** fHistoMappingSignalInvMassPtBinPlot,
+                                                    TF1 ** fFitSignalInvMassPtBinPlot,
+                                                    TF1 *** fFitSigWithOtherBGInvMassPtBinPlot,
+                                                    Int_t nFits,
+                                                    TString* fTextFitAdd,
+                                                    TString namePlot,
+                                                    TString nameCanvas,
+                                                    TString namePad,
+                                                    Double_t* fPlottingRangeMeson,
+                                                    TString dateDummy,
+                                                    TString fMesonType,
+                                                    Int_t fRowPlot,
+                                                    Int_t fColumnPlot,
+                                                    Int_t fStartBinPtRange,
+                                                    Int_t fNumberPtBins,
+                                                    Double_t* fRangeBinsPt,
+                                                    TString fDecayChannel,
+                                                    Bool_t fMonteCarloInfo,
+                                                    TString decayChannel,
+                                                    TString fDetectionChannel,
+                                                    TString fEnergy,
+                                                    TString fTextMCvalidated    = "",
+                                                    Bool_t labelData            = kTRUE,
+                                                    TString fTextFit            = "Fit",
+                                                    TString fTextMGammaGamma    = "Signal To Bck Ratio",
+                                                    Bool_t isVsPtConv           = kFALSE,
+                                                    TString fPlottingType       = "performance"
+                                                ){
+        TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasDataFit, 0, 0, 0, 0);
+
+        TPad * padDataFit               = new TPad(namePad.Data(),"",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+        DrawGammaPadSettings( padDataFit, 0, 0, 0, 0);
+        padDataFit->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+        padDataFit->Draw();
+
+        Int_t place                     = 0;
+        Int_t legendPlace[2]            = {fColumnPlot, fColumnPlot};
+        if (fColumnPlot > 7)
+            legendPlace[0]              = fColumnPlot-1;
+        for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+            //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+            Double_t startPt            = fRangeBinsPt[iPt];
+            Double_t endPt              = fRangeBinsPt[iPt+1];
+
+            place                       = place + 1; //give the right place in the page
+            if (place > legendPlace[0]-1 && place < legendPlace[1]+1){
+                iPt--;
+            } else {
+                padDataFit->cd(place);
+                padDataFit->cd(place)->SetTopMargin(0.12);
+                padDataFit->cd(place)->SetBottomMargin(0.15);
+                padDataFit->cd(place)->SetRightMargin(0.02);
+                int remaining = (place-1)%fColumnPlot;
+                if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
+                else padDataFit->cd(place)->SetLeftMargin(0.25);
+
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+                DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("Signal / Background"),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+
+                if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
+                    fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(2);
+                    fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
+                }
+                Color_t colorFit[3]     = {kRed+1, kAzure+2, 807};
+                Style_t styleFit[3]     = {7, 3, 6};
+
+                for (Int_t m = 0; (m < nFits && m < 3); m++){
+                    if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]){
+    //                     cout << m << "\t"<< iPt << "\t" << fFitSigWithOtherBGInvMassPtBinPlot[m][iPt] << endl;
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetNpx(10000);
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineColor(colorFit[m]);
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineStyle(styleFit[m]);
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(2);
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->DrawCopy("same");
+                    }
+                }
+            }
+        }
+
+        canvasDataFit->cd();
+        Double_t nPixels        = 13;
+        Double_t textHeight     = 0.08;
+        Double_t startTextX     = 0.10;
+        Int_t columnsLegend     = 1;
+        Double_t widthLegend    = 1./fColumnPlot;
+        Double_t heightLegend   = 1./fRowPlot;
+        Double_t marginWidthLeg = 0.15;
+        Int_t exampleBin        = fColumnPlot+fStartBinPtRange-1;
+        if (fColumnPlot > 7){
+            startTextX          = 0.05;
+            columnsLegend       = 2;
+            nPixels             = 12;
+            widthLegend         = 2./fColumnPlot;
+            marginWidthLeg      = 0.25;
+        }
+
+        // plotting Legend
+        TPad * padLegend                = new TPad("dummyPad","",1-widthLegend,1-heightLegend,1.,1.,0);   // gives the size of the histo areas
+        DrawGammaPadSettings( padLegend, 0, 0, 0, 0);
+        padLegend->Draw();
+        padLegend->cd();
+
+        TString textAlice;
+        if(fPlottingType.CompareTo("wip")==0){
+            textAlice       = "ALICE work in progress";
+        } else if (fPlottingType.CompareTo("thesis")==0){
+            textAlice       = "ALICE this thesis";
+        } else if (fPlottingType.CompareTo("performance")==0){
+            textAlice       = "ALICE performance";
+        } else{
+            textAlice       = "ALICE";
+        }
+        TString textEvents;
+        if(fMonteCarloInfo){
+            textEvents          = "MC";
+        } else {
+            textEvents          = "Data";
+        }
+
+        if (padLegend->XtoPixel(padLegend->GetX2()) < padLegend->YtoPixel(padLegend->GetY1())){
+            textHeight          = (Double_t)nPixels/padLegend->XtoPixel(padLegend->GetX2()) ;
+        } else {
+            textHeight          = (Double_t)nPixels/padLegend->YtoPixel(padLegend->GetY1());
+        }
+        Double_t startTextY     = 0.9;
+        Double_t differenceText = textHeight*1.05;
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( startTextX, startTextY, textHeight, differenceText, textAlice, dateDummy, fEnergy, fDecayChannel, fDetectionChannel, textEvents, fNEvents);
+
+        if (fMonteCarloInfo) {
+            Double_t totalheightLeg     = ceil((2+nFits)/columnsLegend);
+            TLegend* legendMC           = GetAndSetLegend2(  startTextX, startTextY-5.75*differenceText, 0.85, startTextY-(5.75+totalheightLeg)*differenceText, nPixels, columnsLegend, "", 43,
+                                                             marginWidthLeg);
+
+            if (labelData){
+                Size_t markersize       = fHistoMappingSignalInvMassPtBinPlot[exampleBin]->GetMarkerSize();
+                fHistoMappingSignalInvMassPtBinPlot[exampleBin]->SetMarkerSize(3*markersize);
+                legendMC->AddEntry(fHistoMappingSignalInvMassPtBinPlot[exampleBin],fTextMGammaGamma.Data(),"ep");
+            }
+            if (fFitSignalInvMassPtBinPlot[exampleBin]!=0x00){
+                Size_t linewidth        = fFitSignalInvMassPtBinPlot[exampleBin]->GetLineWidth();
+                fFitSignalInvMassPtBinPlot[exampleBin]->SetLineWidth(3*linewidth);
+                legendMC->AddEntry(fFitSignalInvMassPtBinPlot[exampleBin],fTextFit.Data(),"l");
+            }
+            for (Int_t m = 0; (m < nFits && m < 3); m++){
+                if (fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]!=0x00){
+                    Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->GetLineWidth();
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->SetLineWidth(3*linewidth);
+                    legendMC->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin],fTextFitAdd[m].Data(),"l");
+                }
+            }
+            legendMC->Draw();
+        }else {
+            Double_t totalheightLeg     = ceil((2+nFits)/columnsLegend);
+
+            TLegend* legendData         = GetAndSetLegend2(  startTextX, startTextY-5.75*differenceText, 0.85,  startTextY-(5.75+totalheightLeg)*differenceText, nPixels, columnsLegend, "", 43,
+                                                             marginWidthLeg);
+            Size_t markersize           = fHistoMappingSignalInvMassPtBinPlot[exampleBin]->GetMarkerSize();
+            fHistoMappingSignalInvMassPtBinPlot[exampleBin]->SetMarkerSize(3*markersize);
+            legendData->AddEntry(fHistoMappingSignalInvMassPtBinPlot[exampleBin],fTextMGammaGamma.Data(),"ep");
+            if (fFitSignalInvMassPtBinPlot[exampleBin]!=0x00){
+                Size_t linewidth        = fFitSignalInvMassPtBinPlot[exampleBin]->GetLineWidth();
+                fFitSignalInvMassPtBinPlot[exampleBin]->SetLineWidth(3*linewidth);
+                legendData->AddEntry(fFitSignalInvMassPtBinPlot[exampleBin],fTextFit.Data(),"l");
+            }
+            for (Int_t m = 0; (m < nFits && m < 3); m++){
+                if (fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]!=0x00){
+                    Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->GetLineWidth();
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->SetLineWidth(3*linewidth);
+                    legendData->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin],fTextFitAdd[m].Data(),"l");
+                }
+            }
+            legendData->Draw();
+        }
+        canvasDataFit->Print(namePlot.Data());
+        delete padLegend;
+        delete padDataFit;
+        delete canvasDataFit;
+
+    }
+
+
     //____________________________ Plotting Invariant Mass with Subtraction for Single Bin ______________________________________
     void PlotWithFitSubtractedInvMassSinglePtBin(   TH1D * fHistoMappingSignalInvMassPtBinPlot,
                                                     TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot,

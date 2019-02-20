@@ -185,7 +185,12 @@ TH1D*     fDeltaPt                                                        = NULL
 //****************************************************************************
 //******************************** Functions *********************************
 //****************************************************************************
+void ProcessEM_switch(TH1D*,TH1D*,Double_t *);                                                              // Function that calls different Normalization of Signal and BG Methods
 void ProcessEM(TH1D*,TH1D*,Double_t *);                                                                     // Normalization of Signal and BG
+Double_t FitFunctionPHOSBck(Double_t *, Double_t *);
+Double_t FitFunctionPHOSBckPol1(Double_t *, Double_t *);
+Double_t FitFunctionPHOSBckPol2(Double_t *, Double_t *);
+void ProcessEM_FitBins(TH1D*,TH1D*,Double_t *);                                                             // Normalization of Signal and BG For PHOS
 void ProcessRatioSignalBackground(TH1D* , TH1D* );                                                          // Calculate Ratio of Signal and BG in momentum slices
 void FillMassHistosArray(TH2D*);                                                                            // Fill invariant mass histograms for Signal and Backgrounf
 TH1D* FillProjectionX (TH2*, TString, Double_t, Double_t, Int_t);                                           // Fill Projection in according to Y bins
@@ -292,6 +297,8 @@ TH2F**      fHistoFillPerEventBGZbinVsPsibin                            = 0x0;
 //****************************************************************************
 //************************ sample histograms for inv Mass ********************
 //****************************************************************************
+Int_t       iBckSwitch                                                  = 0;
+Int_t       iNumberOfOtherSigToBckRatioFits                             = 1;
 TH1D*       fBckNorm                                                    = NULL;
 TH1D*       fSignal                                                     = NULL;
 TH1D*       fRatioSB                                                    = NULL;
@@ -356,6 +363,8 @@ TF1 *       fFitGausExp                                                 = NULL;
 TF1 *       fFitLinearBck                                               = NULL;
 TF1 *       fFitLinearBckExcl                                           = NULL;
 TF1 *       fFitLinearBckOut                                            = NULL;
+TF1 *       fFitPHOSPol1                                                = NULL;
+TF1 *       fFitPHOSPol2                                                = NULL;
 Double_t    fYields;
 Double_t    fYieldsError;
 Double_t    fFWHMFunc;
@@ -416,6 +425,8 @@ TF1**       fFitBckOtherInvMassPtBin[3]                                 = { NULL
 TF1**       fFitTrueSignalInvMassPtBin                                  = NULL;
 TF1**       fFitTrueSignalInvMassPtReweightedBin                        = NULL;
 TF1**       fFitTrueSignalInvMassPtUnweightedBin                        = NULL;
+TF1**       fFitPHOSAllOtherSigToBckFits[1]                             = { NULL };
+TF1**       fFitPHOSPol2PtBin                                           = NULL;
 Double_t*   fMesonMass                                                  = NULL;
 Double_t*   fMesonMassError                                             = NULL;
 Double_t*   fMesonTrueMass                                              = NULL;

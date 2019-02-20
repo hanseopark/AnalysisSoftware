@@ -87,8 +87,11 @@ void ExtractSignalV2(
 
     // Heavy meson fix
     if(mode>=100) fMode -= 100;
-
-
+    if ( fMode == 5 ){ //PHOS
+        iBckSwitch=5;
+    } else {
+        iBckSwitch=0;
+    }
     //******************************************************************************************************
     //***************************** Get selected file and main dir *****************************************
     //******************************************************************************************************
@@ -671,10 +674,10 @@ void ExtractSignalV2(
     FillMassHistosArray(fGammaGammaInvMassVSPt);
     //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
-    ProcessEM( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
+    ProcessEM_switch( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
     fMesonFullPtBackNorm                        = fBckNorm;
 
-    ProcessEM( fFittingHistMidPtSignal, fFittingHistMidPtBackground, fBGFitRange);
+    ProcessEM_switch( fFittingHistMidPtSignal, fFittingHistMidPtBackground, fBGFitRange);
     fFittingHistMidPtSignalSub                  = fSignal;
     if(fCrysFitting==0){
         fFileErrLog << "Using exp fit"<<endl;
@@ -727,9 +730,18 @@ void ExtractSignalV2(
         fFileDataLog << "----------------------------------new pT bin ------------------------------------" << endl;
         fFileDataLog << "---------------------------------------------------------------------------------" << endl;
 
-        ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRange);
-        fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
-        fHistoMappingBackNormInvMassPtBin[iPt] = fBckNorm;
+        ProcessEM_switch( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRange);
+        fHistoMappingSignalInvMassPtBin[iPt]            = fSignal;
+        fHistoMappingBackNormInvMassPtBin[iPt]          = fBckNorm;
+        if (iBckSwitch == 5){
+            fHistoMappingRatioSBInvMassPtBin[iPt]       = fRatioSB;
+            fFitPHOSAllOtherSigToBckFits[0][iPt]        = fFitPHOSPol1;
+            fFitPHOSPol2PtBin[iPt]                      = fFitPHOSPol2;
+            //-----------------------------------------
+            fRatioSB                                    = NULL;
+            fFitPHOSPol1                                = NULL;
+            fFitPHOSPol2                                = NULL;
+        }
         if(fEnableNormBckHistoComparisonToTrueBck) fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt] = (TH1D*) fHistoMappingBackNormInvMassPtBin[iPt]->Clone(Form("histoBackNormAndRemainingBGBin%02d",iPt));
 
         fHistoMappingSignalInvMassPtBin[iPt]->SetName(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",iPt));
@@ -1353,7 +1365,7 @@ void ExtractSignalV2(
         //////////////////////////////// Start Analysis with  Normalization at the left of the Meson Peak
         // Function to subtract GG minus Bck
         cout << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-        ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRangeLeft);
+        ProcessEM_switch( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRangeLeft);
         fHistoMappingSignalInvMassLeftPtBin[iPt]        = fSignal;
         fHistoMappingBackNormInvMassLeftPtBin[iPt]      = fBckNorm;
 
@@ -1555,6 +1567,7 @@ void ExtractSignalV2(
     TString nameCanvasSub   = "";
     TString namePadSub      = "";
     TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
+    TString labelsOtherFitsRatio[1]  = {"pol1 Ratio Fit"};
     if (fCrysFitting == 0){
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
@@ -1580,6 +1593,17 @@ void ExtractSignalV2(
         PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitBckInvMassPtBin, fFitBckOtherInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
                                                     nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
+
+        if (iBckSwitch == 5){
+            nameMesonSub    = Form("%s_MesonSignalBckRatioFits%s", plotPrefix.Data(), plotSuffix.Data());
+            nameCanvasSub   = "MesonCanvasSignalBckRatioFits";
+            namePadSub      = "MesonPadSignalBckRatioFits";
+            cout << nameMesonSub.Data() << endl;
+
+            PlotWithManyFitSigToBckRatioInPtBins(   fHistoMappingRatioSBInvMassPtBin, fFitPHOSPol2PtBin, fFitPHOSAllOtherSigToBckFits, 1, labelsOtherFitsRatio, nameMesonSub,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
+                                                    fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol2 Ratio Fit");
+        }
 
         nameMesonSub    = Form("%s_MesonSubtractedWithFits%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtractedWithFits";
@@ -3053,6 +3077,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fFitBckOtherInvMassPtBin[m]                                 = new TF1*[fNBinsPt];
     }
 
+    for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
+        fFitPHOSAllOtherSigToBckFits[m]                             = new TF1*[fNBinsPt];
+    }
+
     // Histograms for normalization on the left of the peak
     fHistoMappingBackNormInvMassLeftPtBin                           = new TH1D*[fNBinsPt];
     fHistoMappingSignalInvMassLeftPtBin                             = new TH1D*[fNBinsPt];
@@ -3063,6 +3091,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fFitRemainingBGInvMassLeftPtBin                                 = new TF1*[fNBinsPt];
     fFitSignalPeakPosInvMassLeftPtBin                               = new TF1*[fNBinsPt];
     fFitBckInvMassLeftPtBin                                         = new TF1*[fNBinsPt];
+    fFitPHOSPol2PtBin                                               = new TF1*[fNBinsPt];
 
     fFitSignalGaussianInvMassPtBin                                  = new TF1*[fNBinsPt];
     fFitTrueSignalGaussianInvMassPtBin                              = new TF1*[fNBinsPt];
@@ -3123,6 +3152,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fFitSignalWithOtherBGInvMassPtBin[m][i]                         = NULL;
             fFitBckOtherInvMassPtBin[m][i]                                  = NULL;
         }
+        for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
+            fFitPHOSAllOtherSigToBckFits[m][i]                              = NULL;
+        }
 
         // Histograms for normalization on the left of the peak
         fHistoMappingBackNormInvMassLeftPtBin[i]                            = NULL;
@@ -3134,6 +3166,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fFitRemainingBGInvMassLeftPtBin[i]                                  = NULL;
         fFitSignalPeakPosInvMassLeftPtBin[i]                                = NULL;
         fFitBckInvMassLeftPtBin[i]                                          = NULL;
+        fFitPHOSPol2PtBin[i]                                                = NULL;
 
         fFitSignalGaussianInvMassPtBin[i]                                   = NULL;
         fFitTrueSignalGaussianInvMassPtBin[i]                               = NULL;
@@ -3443,6 +3476,16 @@ void ProduceBckWithoutWeighting(TH2D *fBckInvMassVSPtDummy){
 //****************************************************************************
 //************** Remove BG from Signal ***************************************
 //****************************************************************************
+void ProcessEM_switch(TH1D* fGammaGamma, TH1D* fBck, Double_t * fBGFitRangeEM){
+    if ( iBckSwitch == 0 ){
+        ProcessEM(fGammaGamma, fBck, fBGFitRangeEM);
+    } else if ( iBckSwitch == 5 ) {
+        ProcessEM_FitBins(fGammaGamma, fBck, fBGFitRangeEM);
+    } else {
+        ProcessEM(fGammaGamma, fBck, fBGFitRangeEM);
+    }
+}
+
 void ProcessEM(TH1D* fGammaGamma, TH1D* fBck, Double_t * fBGFitRangeEM) {
     for (Int_t binx= 0; binx < fGammaGamma->GetNbinsX()+1; binx++){
         if(fGammaGamma->GetBinContent(binx) == 0){
@@ -3477,6 +3520,90 @@ void ProcessEM(TH1D* fGammaGamma, TH1D* fBck, Double_t * fBGFitRangeEM) {
     if ((Double_t)numberOfZeros/fBck->GetNbinsX()< 0.25) fSignal->Add(fBckNorm,-1.);
 }
 
+Double_t FitFunctionPHOSBck(Double_t *x, Double_t *par){
+    Double_t result=0;
+    result=FitFunctionPHOSBckPol2(x, par);
+    return result;
+}
+
+Double_t FitFunctionPHOSBckPol1(Double_t *x, Double_t *par){
+    Double_t result=0;
+    Double_t xx=x[0];
+    if (xx > fBGFitRangeLeft[1] && xx < fBGFitRange[0]) {
+    //if (xx > fPeakRange[0] && xx < fPeakRange[1]) {
+        ;
+        TF1::RejectPoint();
+        //return 0;
+    }
+    result=par[0];
+    result+=(par[1]*xx);
+    return result;
+}
+
+Double_t FitFunctionPHOSBckPol2(Double_t *x, Double_t *par){
+    Double_t result=0;
+    Double_t xx=x[0];
+    if (xx > fBGFitRangeLeft[1] && xx < fBGFitRange[0]) {
+    //if (xx > fPeakRange[0] && xx < fPeakRange[1]) {
+        ;
+        TF1::RejectPoint();
+        //return 0;
+    }
+    result=par[0];
+    result+=(par[1]*xx);
+    result+=(par[2]*xx*xx);
+    return result;
+}
+
+void ProcessEM_FitBins(TH1D* fGammaGamma, TH1D* fBck, Double_t * fBGFitRangeEM) {
+    for (Int_t binx= 0; binx < fGammaGamma->GetNbinsX()+1; binx++){
+        if(fGammaGamma->GetBinContent(binx) == 0){
+            fGammaGamma->SetBinError(binx,1.);
+            fGammaGamma->SetBinContent(binx,0.);
+        }
+    }
+    fBckNorm = (TH1D*)fBck->Clone("fBckNorm");
+    fGammaGamma->Sumw2();
+    fBck->Sumw2();
+    fBckNorm->Sumw2();
+    if (fRatioSB != NULL){delete fRatioSB; fRatioSB=NULL;}
+    ProcessRatioSignalBackground(fGammaGamma, fBck);
+    Double_t    norm    = 1;
+    TString fFitBackgroundHistogramFitNamePol1="PolFitBackgroundPol1";
+    Int_t iNumberOfFitParametersPol1=2;
+    TString fFitBackgroundHistogramFitNamePol2="PolFitBackgroundPol2";
+    Int_t iNumberOfFitParametersPol2=3;
+    if (fFitPHOSPol1!=NULL){delete fFitPHOSPol1; fFitPHOSPol1=NULL;}
+    if (fFitPHOSPol2!=NULL){delete fFitPHOSPol2; fFitPHOSPol2=NULL;}
+    fFitPHOSPol1 = new TF1(fFitBackgroundHistogramFitNamePol1.Data(), FitFunctionPHOSBckPol1,fBGFitRangeLeft[0],fBGFitRange[1],iNumberOfFitParametersPol1);
+    fFitPHOSPol2 = new TF1(fFitBackgroundHistogramFitNamePol2.Data(), FitFunctionPHOSBckPol2,fBGFitRangeLeft[0],fBGFitRange[1],iNumberOfFitParametersPol2);
+    fRatioSB->Fit(fFitBackgroundHistogramFitNamePol1,"QRME0");
+    fRatioSB->Fit(fFitBackgroundHistogramFitNamePol2,"QRME0");
+    Double_t CurrentBinContentRatio;
+    Double_t CurrentBinContentBckNorm;
+    Double_t CurrentBinErrorBckNorm;
+    Double_t CurrentBinCenter;
+    Int_t numberOfZeros = 0;
+    for (Int_t i = 1; i < fBckNorm->GetNbinsX()+1; i++){
+        CurrentBinContentBckNorm=fBckNorm->GetBinContent(i);
+        CurrentBinErrorBckNorm=fBckNorm->GetBinError(i);
+        CurrentBinCenter=fBckNorm->GetBinCenter(i);
+        CurrentBinContentRatio=fFitPHOSPol2->Eval(CurrentBinCenter);
+        if (fBckNorm->GetBinContent(i) == 0){
+            numberOfZeros++;
+            if (norm > 1.){
+                fBckNorm->SetBinError(i,1.);
+                fBckNorm->SetBinContent(i,0.);
+            }
+        } else {
+            fBckNorm->SetBinContent(i,CurrentBinContentRatio*CurrentBinContentBckNorm);
+            fBckNorm->SetBinError(i,CurrentBinContentRatio*CurrentBinErrorBckNorm);
+        }
+    }
+    fSignal             = (TH1D*)fGammaGamma->Clone("fSignal");
+    fSignal->Sumw2();
+    if ((Double_t)numberOfZeros/fBck->GetNbinsX()< 0.25) fSignal->Add(fBckNorm,-1.);
+}
 
 //****************************************************************************
 //************** Calculate ratio of signal/ background ***********************
@@ -6739,6 +6866,9 @@ void Delete(){
     if (fFitRemainingBGInvMassLeftPtBin)                        delete fFitRemainingBGInvMassLeftPtBin;
     if (fFitSignalPeakPosInvMassPtBin)                          delete fFitSignalPeakPosInvMassPtBin;
     if (fFitBckInvMassPtBin)                                    delete fFitBckInvMassPtBin;
+    if (fFitPHOSPol1)                                           delete fFitPHOSPol1;
+    if (fFitPHOSPol2)                                           delete fFitPHOSPol2;
+    if (fFitPHOSPol2PtBin)                                      delete fFitPHOSPol2PtBin;
     if (fHistoMappingBackNormInvMassLeftPtBin)                  delete fHistoMappingBackNormInvMassLeftPtBin;
     if (fHistoMappingSignalInvMassLeftPtBin)                    delete fHistoMappingSignalInvMassLeftPtBin;
     if (fFitInvMassLeftPtBin)                                   delete fFitInvMassLeftPtBin;
@@ -6752,6 +6882,9 @@ void Delete(){
         if (fFitSignalWithOtherBGInvMassPtBin[m])               delete fFitSignalWithOtherBGInvMassPtBin[m];
 
         if (fFitBckOtherInvMassPtBin[m])                        delete fFitBckOtherInvMassPtBin[m];
+    }
+    for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
+        if (fFitPHOSAllOtherSigToBckFits[m])                        delete fFitPHOSAllOtherSigToBckFits[m];
     }
     // delete Gaussian fit histograms
     if (fMesonMassGaussian)                                     delete fMesonMassGaussian;
