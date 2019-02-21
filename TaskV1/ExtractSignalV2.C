@@ -88,8 +88,10 @@ void ExtractSignalV2(
     // Heavy meson fix
     if(mode>=100) fMode -= 100;
     if ( fMode == 5 ){ //PHOS
-        iBckSwitch=5;
+        //iBckSwitch=5;
+        iBckSwitch=0;
     } else {
+        //iBckSwitch=5;
         iBckSwitch=0;
     }
     //******************************************************************************************************
