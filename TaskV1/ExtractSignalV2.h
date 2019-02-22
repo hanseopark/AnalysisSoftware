@@ -298,7 +298,7 @@ TH2F**      fHistoFillPerEventBGZbinVsPsibin                            = 0x0;
 //************************ sample histograms for inv Mass ********************
 //****************************************************************************
 Int_t       iBckSwitch                                                  = 0;
-Int_t       iNumberOfOtherSigToBckRatioFits                             = 1;
+Int_t       iNumberOfOtherSigToBckRatioFits                             = 1; //If u change this value remember to also change: fHistoChi2SigToBckFit, fHistoChi2SigToBckFit, colorFitSigToBckFit, styleFitSigToBckFit, fSigToBckFitChi2, fFitPHOSAllOtherSigToBckFits
 TH1D*       fBckNorm                                                    = NULL;
 TH1D*       fSignal                                                     = NULL;
 TH1D*       fRatioSB                                                    = NULL;
@@ -450,6 +450,7 @@ Double_t*   fMesonResidualBGlinError                                    = NULL;
 Double_t*   fMesonResidualBGcon                                         = NULL;
 Double_t*   fMesonResidualBGconError                                    = NULL;
 Double_t*   fMesonChi2[4]                                               = {NULL, NULL, NULL, NULL};
+Double_t*   fSigToBckFitChi2[2]                                         = {NULL, NULL};
 
 TH1D*       fHistoMassMeson                                             = NULL;
 TH1D*       fHistoFWHMMeson                                             = NULL;
@@ -577,6 +578,7 @@ TH1D*       fHistoTrueSigma                                             = NULL;
 TH1D*       fHistoResidualBGlin                                         = NULL;
 TH1D*       fHistoResidualBGcon                                         = NULL;
 TH1D*       fHistoChi2[4]                                               = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoChi2SigToBckFit[2]                                    = { NULL, NULL };
 TH1D*       fHistoRatioResBGYield                                       = NULL;
 TH1D*       fHistoRatioResBGYieldToSPlusResBG                           = NULL;
 TH1D*       fHistoResBGYield[4]                                         = { NULL, NULL, NULL, NULL };

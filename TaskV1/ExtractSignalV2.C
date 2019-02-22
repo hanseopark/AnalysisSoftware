@@ -87,13 +87,16 @@ void ExtractSignalV2(
 
     // Heavy meson fix
     if(mode>=100) fMode -= 100;
-    if ( fMode == 5 ){ //PHOS
-        //iBckSwitch=5;
-        iBckSwitch=0;
+    TString TStrBckSwitchEnable="Ratio";
+    if(optionCrystalBall.EndsWith(TStrBckSwitchEnable.Data())){
+        cout<<"Signal to Background Fitting Chosen to be Scaling Option for Background Chosen due to optionCrystalBall: "<<optionCrystalBall;
+        optionCrystalBall.Replace(optionCrystalBall.Length()-TStrBckSwitchEnable.Length(),TStrBckSwitchEnable.Length(),"");
+        cout<<" => Fitting Method: "<<optionCrystalBall<<endl;
+        iBckSwitch=5; //activate Fitting Signal To Background Ratio Fitting
     } else {
-        //iBckSwitch=5;
-        iBckSwitch=0;
+        iBckSwitch=0; //deactivate Fitting Signal To Background Ratio Fitting
     }
+
     //******************************************************************************************************
     //***************************** Get selected file and main dir *****************************************
     //******************************************************************************************************
@@ -739,6 +742,15 @@ void ExtractSignalV2(
             fHistoMappingRatioSBInvMassPtBin[iPt]       = fRatioSB;
             fFitPHOSAllOtherSigToBckFits[0][iPt]        = fFitPHOSPol1;
             fFitPHOSPol2PtBin[iPt]                      = fFitPHOSPol2;
+            if (fFitPHOSPol2PtBin[iPt]){
+                fSigToBckFitChi2[0][iPt]                      = fFitPHOSPol2PtBin[iPt]->GetChisquare()/fFitReco->GetNDF();
+            } else {
+                fSigToBckFitChi2[0][iPt]                      = -1;}
+            if (fFitPHOSAllOtherSigToBckFits[0][iPt]){
+                fSigToBckFitChi2[1][iPt]                      = fFitPHOSAllOtherSigToBckFits[0][iPt]->GetChisquare()/fFitReco->GetNDF();
+            } else {
+                fSigToBckFitChi2[1][iPt]                      = -1;}
+
             //-----------------------------------------
             fRatioSB                                    = NULL;
             fFitPHOSPol1                                = NULL;
@@ -1569,7 +1581,7 @@ void ExtractSignalV2(
     TString nameCanvasSub   = "";
     TString namePadSub      = "";
     TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
-    TString labelsOtherFitsRatio[1]  = {"pol1 Ratio Fit"};
+    TString labelsOtherFitsRatio[1]  = {"pol1 SigToBG Fit"};
     if (fCrysFitting == 0){
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
@@ -1604,7 +1616,7 @@ void ExtractSignalV2(
 
             PlotWithManyFitSigToBckRatioInPtBins(   fHistoMappingRatioSBInvMassPtBin, fFitPHOSPol2PtBin, fFitPHOSAllOtherSigToBckFits, 1, labelsOtherFitsRatio, nameMesonSub,
                                                     nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
-                                                    fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol2 Ratio Fit");
+                                                    fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol2 SigToBG Fit");
         }
 
         nameMesonSub    = Form("%s_MesonSubtractedWithFits%s", plotPrefix.Data(), plotSuffix.Data());
@@ -2254,6 +2266,50 @@ if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
     canvasChi2->Update();
     if (fIsMC) canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    // **************************************************************************************************************
+    // ************************ Chi2/ndf Different Signal To Ratio Fits *********************************************
+    // **************************************************************************************************************
+    if (iBckSwitch!=0){
+        TCanvas* canvasChi2SigToBckFit = new TCanvas("canvasChi2SigToBckFit","",200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasChi2SigToBckFit, 0.092, 0.01, 0.02, 0.082);
+
+        Double_t maxChi2SigToBckFit    = fHistoChi2SigToBckFit[0]->GetMaximum();
+        for (Int_t m = 1; m <= iNumberOfOtherSigToBckRatioFits; m++){
+            if (maxChi2SigToBckFit < fHistoChi2SigToBckFit[m]->GetMaximum())
+                maxChi2SigToBckFit     = fHistoChi2SigToBckFit[m]->GetMaximum();
+        }
+        maxChi2SigToBckFit             = maxChi2SigToBckFit*1.2;
+
+        TLegend* legendChi2SigToBckFit = GetAndSetLegend2(0.75, 0.95-(0.035*4), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
+
+        fHistoChi2SigToBckFit[0]->GetYaxis()->SetRangeUser(0, maxChi2SigToBckFit);
+        DrawAutoGammaMesonHistos(   fHistoChi2SigToBckFit[0],
+                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf",
+                kFALSE, 0., 0.7, kFALSE,
+                kFALSE, 0., 0.7,
+                kFALSE, 0., 10.);
+        DrawGammaSetMarker(fHistoChi2SigToBckFit[0], 20, 2, kCyan+2, kCyan+2);
+        fHistoChi2SigToBckFit[0]->DrawCopy("same,e1,p");
+        legendChi2SigToBckFit->AddEntry(fHistoChi2SigToBckFit[0],"pol2 SigToBG Fit","p");
+
+        Color_t colorFitSigToBckFit[3] = {kRed+1, kAzure+2, 807};
+        Style_t styleFitSigToBckFit[3] = {34, 21, 33};
+
+        for (Int_t m = 1; m <= iNumberOfOtherSigToBckRatioFits; m++){
+            DrawGammaSetMarker(fHistoChi2SigToBckFit[m], styleFitSigToBckFit[m-1], 2, colorFitSigToBckFit[m-1], colorFitSigToBckFit[m-1]);
+            fHistoChi2SigToBckFit[m]->DrawCopy("same,e1,p");
+            legendChi2SigToBckFit->AddEntry(fHistoChi2SigToBckFit[m],labelsOtherFitsRatio[m-1],"p");
+        }
+        fHistoChi2SigToBckFit[0]->DrawCopy("same,e1,p");
+        legendChi2SigToBckFit->Draw();
+
+
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        canvasChi2SigToBckFit->Update();
+        if (fIsMC) canvasChi2SigToBckFit->SaveAs(Form("%s/%s_MC_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+        else canvasChi2SigToBckFit->SaveAs(Form("%s/%s_data_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    }
 
     // **************************************************************************************************************
     // ************************ ResBG compared MC vs Data ********************************************************
@@ -2964,6 +3020,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonResidualBGconError                                        = new Double_t[fNBinsPt];
     for (Int_t m = 0; m < 4; m++){
         fMesonChi2[m]                                               = new Double_t[fNBinsPt];
+    }
+    for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+        fSigToBckFitChi2[m]                                         = new Double_t[fNBinsPt];
     }
 
     // initialize pt-arrays for different mass & width fitting procedures
@@ -4083,6 +4142,10 @@ void CreatePtHistos(){
         fHistoResBGYield[m]             = new TH1D(Form("histoResBGYield_%d",m),"",fNBinsPt,fBinsPt);
         fHistoResBGYield[m]->Sumw2();
     }
+    for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+        fHistoChi2SigToBckFit[m]                   = new TH1D(Form("histoChi2SigToBckFit_%d",m),"",fNBinsPt,fBinsPt);
+        fHistoChi2SigToBckFit[m]->Sumw2();
+    }
 
     // create secondary histos
     for (Int_t k = 0; k < 3; k++){
@@ -4219,6 +4282,10 @@ void FillPtHistos(){
         for (Int_t m = 0; m < 4; m++){
             fHistoChi2[m]->SetBinContent(iPt,fMesonChi2[m][iPt-1]);
             fHistoChi2[m]->SetBinError(iPt,0);
+        }
+        for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+            fHistoChi2SigToBckFit[m]->SetBinContent(iPt,fSigToBckFitChi2[m][iPt-1]);
+            fHistoChi2SigToBckFit[m]->SetBinError(iPt,0);
         }
 
         fHistoResBGYield[0]->SetBinContent(iPt,fMesonYieldsResidualBckFunc[0][iPt-1]);
@@ -6230,6 +6297,9 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
         fHistoChi2[m]->Write();
         fHistoResBGYield[m]->Write();
     }
+    for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+        fHistoChi2SigToBckFit[m]->Write();
+    }
 
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
@@ -6830,6 +6900,9 @@ void Delete(){
     for (Int_t m = 0; m < 4; m++){
         if (fMesonChi2[m])                                      delete fMesonChi2[m];
     }
+    for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+        if (fSigToBckFitChi2[m])                                delete fSigToBckFitChi2[m];
+    }
 
     if (fMesonTrueSB)                                           delete fMesonTrueSB;
     if (fMesonTrueSign)                                         delete fMesonTrueSign;
@@ -6886,7 +6959,10 @@ void Delete(){
         if (fFitBckOtherInvMassPtBin[m])                        delete fFitBckOtherInvMassPtBin[m];
     }
     for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
-        if (fFitPHOSAllOtherSigToBckFits[m])                        delete fFitPHOSAllOtherSigToBckFits[m];
+        if (fFitPHOSAllOtherSigToBckFits[m])                    delete fFitPHOSAllOtherSigToBckFits[m];
+    }
+    for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
+         if (fHistoChi2SigToBckFit[m])                          delete fHistoChi2SigToBckFit[m];
     }
     // delete Gaussian fit histograms
     if (fMesonMassGaussian)                                     delete fMesonMassGaussian;
