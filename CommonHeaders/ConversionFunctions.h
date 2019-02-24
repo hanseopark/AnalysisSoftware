@@ -4851,6 +4851,8 @@
         else if (mode == 60 || mode == 61 || mode == 62 || mode == 63|| mode == 64 || mode == 65 ||
                  mode == 66 || mode == 67 || mode == 68 || mode == 69|| mode == 70)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiNeutralMeson";
+        else if (mode == 90 || mode == 91 || mode == 92)
+            nominalMainDir         = "ConvCaloCalibration";
         else if (mode>=100) // for heavy meson analysis
             nominalMainDir = "HeavyNeutralMesonToGG";
         return nominalMainDir;
