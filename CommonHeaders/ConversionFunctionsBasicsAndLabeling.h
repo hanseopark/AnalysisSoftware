@@ -5314,15 +5314,9 @@
                 case 13: case 43:
                     return "#gamma's rec. with PCM, DCal";
                 case 14:
-<<<<<<< Updated upstream
-                    return "#gamma's rec. with PCM, EMCal/DCal";
-                case 15:
-                    return "#gamma's rec. with EMCal/DCal";
-=======
                     return "#gamma's rec. with PCM, EMCal + DCal";
                 case 15:
                     return "#gamma's rec. with DCal + EMCal";
->>>>>>> Stashed changes
                 case 20: case 21: case 22: case 23:
                     return "combined";
                 default:
