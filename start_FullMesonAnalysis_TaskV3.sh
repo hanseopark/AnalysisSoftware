@@ -1027,6 +1027,14 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                 echo -e "--> Gaussian chosen ...\n";
                 CORRECT=1
                 crystal=Gaussian
+            elif [ $answer = "CrystalBallRatio" ] || [ $answer = "CRatio" ] || [ $answer = "cRatio" ]; then
+                echo -e "--> CrystalBall with Signal To Background Fit Option chosen ...\n";
+                CORRECT=1
+                crystal=CrystalBallRatio
+            elif [ $answer = "GaussianRatio" ] || [ $answer = "GRatio" ] || [ $answer = "gRatio" ]; then
+                echo -e "--> Gaussian with Signal To Background Fit Option  chosen ...\n";
+                CORRECT=1
+                crystal=GaussianRatio
             else
                 echo "--> Command \"$answer\" not found. Please try again."
             fi
