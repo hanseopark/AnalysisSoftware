@@ -403,20 +403,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
 
         fHistoTrueClustersBGPtSource            = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusBG_Source.Data());
-        if (fHistoTrueClustersBGPtSource){
-            fHistoTrueClustersBGPtSource->Sumw2();
-            FillMCBGSeparated(fHistoTrueClustersBGPtSource);
-        }
         fHistoTrueClustersElectronPtSource       = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusElectron_Source.Data());
-        if (fHistoTrueClustersElectronPtSource){
-            fHistoTrueClustersElectronPtSource->Sumw2();
-            FillMCElectronSeparated(fHistoTrueClustersElectronPtSource);
-        }
         fHistoTrueClustersGammaPtSource          = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusGamma_Source.Data());
-        if (fHistoTrueClustersGammaPtSource){
-            fHistoTrueClustersGammaPtSource->Sumw2();
-            FillMCGammaSeparated(fHistoTrueClustersGammaPtSource);
-        }
 
         if (meson.Contains("Pi0")){
             fHistoTrueClustersPrimPi0PtM02                  = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusPrimMesonM02.Data());
@@ -624,6 +612,18 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         }
     }
     if (fIsMC){
+        if (fHistoTrueClustersBGPtSource){
+            fHistoTrueClustersBGPtSource->Sumw2();
+            FillMCBGSeparated(fHistoTrueClustersBGPtSource);
+        }
+        if (fHistoTrueClustersElectronPtSource){
+            fHistoTrueClustersElectronPtSource->Sumw2();
+            FillMCElectronSeparated(fHistoTrueClustersElectronPtSource);
+        }
+        if (fHistoTrueClustersGammaPtSource){
+            fHistoTrueClustersGammaPtSource->Sumw2();
+            FillMCGammaSeparated(fHistoTrueClustersGammaPtSource);
+        }
         FillHistosArrayMC(fHistoMCMesonWithinAccepPt, fHistoMCMesonPt, fDeltaPt);
         if (meson.Contains("Pi0") && fNewMCOutput){
             FillHistosArrayMCSecAndCalcAcceptance(fHistoMCSecPi0WithinAccepPtSource, fHistoMCSecPi0PtSource);
@@ -2748,6 +2748,7 @@ void FillMCBGSeparated (TH2F* dummy2D){
         for (Int_t i = 0; i< 9; i++){
             TH1D* dummy1D               = (TH1D*)dummy2D->ProjectionX(Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),i+1,i+1,"e");
             fHistoTrueClustersBGPt[i]   = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),fBinsPt);
+            fHistoTrueClustersBGPt[i]->Divide(fDeltaPt);
             if (i == 0) fHistoTrueClustersBGPt[9]    = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("TrueClusBG_%s_Pt",labelsBG[9].Data()));
                 else fHistoTrueClustersBGPt[9]->Add(fHistoTrueClustersBGPt[i]);
         }
@@ -2762,6 +2763,7 @@ void FillMCElectronSeparated (TH2F* dummy2D){
         for (Int_t i = 0; i< 9; i++){
             TH1D* dummy1D                   = (TH1D*)dummy2D->ProjectionX(Form("TrueClusElectron_%s_Pt",labelsElectron[i].Data()),i+1,i+1,"e");
             fHistoTrueClustersElectronPt[i] = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusElectron_%s_Pt",labelsElectron[i].Data()),fBinsPt);
+            fHistoTrueClustersElectronPt[i]->Divide(fDeltaPt);
         }
     }
 }
@@ -2774,6 +2776,7 @@ void FillMCGammaSeparated (TH2F* dummy2D){
         for (Int_t i = 0; i< 8; i++){
             TH1D* dummy1D                   = (TH1D*)dummy2D->ProjectionX(Form("TrueClusGamma_%s_Pt",labelsGamma[i].Data()),i+1,i+1,"e");
             fHistoTrueClustersGammaPt[i]    = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusGamma_%s_Pt",labelsGamma[i].Data()),fBinsPt);
+            fHistoTrueClustersGammaPt[i]->Divide(fDeltaPt);
         }
     }
 }

@@ -137,7 +137,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     cout<<"=========================="<<endl;
 
     // Definition of necessary histogram arrays
-    const Int_t ConstNumberOfCuts = 15;
+    const Int_t ConstNumberOfCuts = 20;
     TString FileNameCorrected[ConstNumberOfCuts];
 
     TFile *Cutcorrfile[ConstNumberOfCuts];
@@ -380,6 +380,10 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                 // Set ratio min and max
                 Double_t minYRatio = 0.75;
                 Double_t maxYRatio = 1.25;
+                if(!cutVariationName.CompareTo("pThcompareMerged")){
+                    minYRatio = 0.8;
+                    maxYRatio = 1.05;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);

@@ -786,6 +786,7 @@ void CorrectCaloNonLinearityV4(
     if (select.Contains("LHC12-JetJet"))    minPlotY = 0.93;
     if (select.Contains("LHC16"))           minPlotY = 0.89;
     if (select.Contains("LHC15o"))           minPlotY = 0.8;
+    if (select.Contains("LHC11cd") && mode==2)           minPlotY = 0.89;
 
     Double_t minMass  = 0.89;
     Double_t maxMass  = 1.1;
@@ -793,6 +794,9 @@ void CorrectCaloNonLinearityV4(
         minMass  = 0.87;
         maxMass  = 1.25;
     } else if ((mode == 2 || mode == 13) && select.Contains("LHC16")){
+        minMass  = 0.89;
+        maxMass  = 1.14;
+    } else if ((mode == 2 || mode == 13) && select.Contains("LHC11cd")){
         minMass  = 0.89;
         maxMass  = 1.14;
     }
@@ -969,7 +973,7 @@ void CorrectCaloNonLinearityV4(
 
     // draw data graphs and fits
     DrawGammaSetMarkerTF1( fitMassDataVsPDG, 1, 2, kBlack);
-    fitMassDataVsPDG->Draw("same");
+     if (!(select.Contains("LHC11cd") && mode == 2))fitMassDataVsPDG->Draw("same");
     DrawGammaSetMarkerTF1( fitMassDataVsPDGConst, 7, 2, kGray);
     fitMassDataVsPDGConst->Draw("same");
     DrawGammaSetMarkerTF1( fitMassDataVsPDG2, 7, 2, kGray+1);
@@ -978,7 +982,7 @@ void CorrectCaloNonLinearityV4(
     legend->AddEntry(histDataResultsVsPDG,"Data");
 
     DrawGammaSetMarkerTF1( fitMassMCVsPDG, 1, 2, kRed+2);
-    fitMassMCVsPDG->Draw("same");
+    if (!(select.Contains("LHC11cd") && mode == 2))fitMassMCVsPDG->Draw("same");
     DrawGammaSetMarkerTF1( fitMassMCVsPDGConst, 7, 2, kRed-8);
     fitMassMCVsPDGConst->Draw("same");
     DrawGammaSetMarkerTF1( fitMassMCVsPDG2, 7, 2, kRed-6);
@@ -992,8 +996,8 @@ void CorrectCaloNonLinearityV4(
     }
 
     TLegend *legendFits   = GetAndSetLegend2(0.12, 0.12 , 0.37, 0.12 + 3*0.03, 0.03, 2, "", 42, 0.35);
-    legendFits->AddEntry(fitMassDataVsPDG, " ", "l");
-    legendFits->AddEntry(fitMassMCVsPDG, "powerlaw fit","l" );
+    if (!(select.Contains("LHC11cd") && mode == 2))legendFits->AddEntry(fitMassDataVsPDG, " ", "l");
+    if (!(select.Contains("LHC11cd") && mode == 2))legendFits->AddEntry(fitMassMCVsPDG, "powerlaw fit","l" );
     legendFits->AddEntry(fitMassDataVsPDG2, " ", "l");
     legendFits->AddEntry(fitMassMCVsPDG2, "exponential fit","l" );
     legendFits->AddEntry(fitMassDataVsPDGConst, " ", "l");
@@ -1130,6 +1134,7 @@ void CorrectCaloNonLinearityV4(
 
     Double_t maxPlotY = 1.05;
     if (select.Contains("LHC15o"))           maxPlotY = 1.2;
+    if (select.Contains("LHC11cd") && mode==2)           maxPlotY = 1.03;
 
     TH2F * histoDummyDataMCRatio;
     histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minPlotY, maxPlotY);
@@ -1158,7 +1163,7 @@ void CorrectCaloNonLinearityV4(
     DrawGammaSetMarkerTF1( fFitMassPos, 1, 2, kRed+1);
 
     fFitMassPos->Draw("same");
-    fFitComposit->Draw("same");
+    if (!(select.Contains("LHC11cd") && mode == 2))fFitComposit->Draw("same");
     fFitExpComb->Draw("same");
     histDataMCResults->Draw("same,pe");
 
@@ -1169,7 +1174,7 @@ void CorrectCaloNonLinearityV4(
 
     TLegend* legendCorrectionFunctions = GetAndSetLegend2(0.125,0.15, 0.4,0.15+nCorrections*1.1*0.03, 0.03, 1, "", 42, 0.15);
     legendCorrectionFunctions->AddEntry(fFitMassPos,"Exponential function fitted","l");
-    legendCorrectionFunctions->AddEntry(fFitComposit,"Ind. Mass fitted with powerlaws","l");
+    if (!(select.Contains("LHC11cd") && mode == 2))legendCorrectionFunctions->AddEntry(fFitComposit,"Ind. Mass fitted with powerlaws","l");
     legendCorrectionFunctions->AddEntry(fFitExpComb,"Ind. Mass fitted with exponentials","l");
     if(isNotFirstIte) legendCorrectionFunctions->AddEntry(fFitConstFull,"Constant fitted","l");
     legendCorrectionFunctions->Draw();
@@ -1187,6 +1192,7 @@ void CorrectCaloNonLinearityV4(
     TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
     totalCorrection->GetYaxis()->SetRangeUser(minPlotY+0.031,1.1);
+    if(select.Contains("LHC11cd") && mode==2)totalCorrection->GetYaxis()->SetRangeUser(0.98,1.15);
     totalCorrection->GetXaxis()->SetMoreLogLabels();
     totalCorrection->GetXaxis()->SetLabelOffset(-0.01);
     SetLogBinningXTH(totalCorrection);
@@ -1205,14 +1211,14 @@ void CorrectCaloNonLinearityV4(
 
     if(isNotFirstIte) fFitConstFullInv->Draw("same");
     fFitMassPosInverted->Draw("same");
-    fFitCompositInverted->Draw("same");
+    if (!(select.Contains("LHC11cd") && mode == 2))fFitCompositInverted->Draw("same");
     fFitExpCombInverted->Draw("same");
 
 
 
     TLegend *legend2 = GetAndSetLegend2(0.45,0.15, 0.725,0.15+nCorrections*1.1*0.03, 0.03, 1, "", 42, 0.15);//GetAndSetLegend2(0.2, 0.2, 0.4, 0.29, 0.03, 1, "", 42);
     legend2->AddEntry(fFitMassPosInverted,"Correction factor for MC, exponential function (ratio fit)","l");
-    legend2->AddEntry(fFitCompositInverted,"Correction factor for MC from mass fits (powerlaws)","l");
+    if (!(select.Contains("LHC11cd") && mode == 2))legend2->AddEntry(fFitCompositInverted,"Correction factor for MC from mass fits (powerlaws)","l");
     legend2->AddEntry(fFitExpCombInverted,"Correction factor for MC from mass fits (exponentials)","l");
     if(isNotFirstIte) legend2->AddEntry(fFitConstFullInv,"Constant fitted","l");
     legend2->Draw("same");

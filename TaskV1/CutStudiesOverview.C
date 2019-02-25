@@ -1293,6 +1293,11 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                         maxYRatio = 2;
                         padRawClusterPtRatios->SetLogy(1);
                     }
+                    if (cutVariationName.Contains("Timing")){
+                        minYRatio = 0.971;
+                        maxYRatio = 1.49;
+                        // padRawClusterPtRatios->SetLogy(1);
+                    }
                     SetStyleHistoTH1ForGraphs(histoRatioRawClusterPtCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioRawClusterPtCut[i], 20, 1.,color[0],color[0]);
                     histoRatioRawClusterPtCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1480,9 +1485,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
 //                 } else if (cutVariationName.Contains("ClusterTrackMatching")){
 //                     minYRatio = 0.75;      maxYRatio = 1.25;
 //                 }
-//                 if (mode != 0 && mode!= 1 ){
-//                     minYRatio = 0.75;      maxYRatio = 1.25;
-//                 }
+                if (cutVariationName.Contains("Timing") ){
+                    minYRatio = 0.951;      maxYRatio = 1.049;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
