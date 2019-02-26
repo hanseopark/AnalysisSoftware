@@ -1,0 +1,30 @@
+#configuration for CorrectCaloNonLinearityV4_SM.C for LHC16&17x
+select	LHC16x17x
+
+
+mode	14	STOP
+ptRangeBins	1	30.	STOP
+energy	13TeV	STOP
+maxNPtBins	31	STOP
+fBinsPt	0.0	0.7	0.8	0.9	1.0	1.2	1.4	1.6	1.8	2.0	2.5	3.0	3.5	4.0	4.5	5.0	5.5	6.0	6.5	7.0	7.5	8.0	8.5	9.0	10.0	11.0	12.0	13.0	15.0	20.0	25.0	30.0	STOP
+rebinValue	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	2	STOP
+exampleBins	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32  STOP
+onlyConstFit	1	STOP
+
+
+
+
+nSets	3	STOP
+dataFileNames	/media/gustav/external_drive/Data/Calib_1617/ConvCaloCalibration_1_1.root	/media/gustav/external_drive/Data/Calib_1617/ConvCaloCalibration_1_2.root	/media/gustav/external_drive/Data/Calib_1617/ConvCaloCalibration_1_2.root	STOP
+
+cutData	1_00010113_00200009327000008250400000_4117900067032220000_0163103100000010	1_0008e113_00200009327000008250400000_41179000a7032230000_0163103100000010	1_0008d113_00200009327000008250400000_41179000a7032230000_0163103100000010	STOP
+
+plotLabels	min_bias	EG2+DG2		EG1+DG1		STOP
+
+#rebinPt	0	2.2	5.0	STOP
+
+rangeHighPtFitRatio	6	14	14	STOP
+rangeHighPtFitMass	6	25	5	12	5	12	STOP
+
+
+firstPtBinSet	0	15	23	 STOP
