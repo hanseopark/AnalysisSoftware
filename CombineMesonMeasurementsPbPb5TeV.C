@@ -258,6 +258,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   //                      {"PCM","EMCal","PHOS" ,"PCM-EMCal","PCM-PHOS"};
   Double_t startpT[5]   = {0    ,1.4    ,0.4    ,1.0        ,0.8};
   Double_t endpT[5]     = {35.  ,16.    ,30.    ,12.        ,12.};
+
   if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 3.0; startpT[3] = 2.2;}
   if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 2.0; startpT[3] = 2.2;}
   if(centralityString.CompareTo("40-60%") == 0 ) {endpT[2] = 20.;}
