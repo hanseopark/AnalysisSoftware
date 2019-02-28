@@ -3310,7 +3310,7 @@
                 } else if (!centrality.CompareTo("0-90%")){
                     return kRed+2;
                 } else return kGray+2;
-            } else if (!generator.CompareTo("LHC16g1")){
+            } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC18e1")){
                 if (!centrality.CompareTo("0-10%")){
                     return kBlue-4;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3320,7 +3320,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kOrange+1;
                 } else return kBlue+1;
-            } else if (!generator.CompareTo("LHC16g1a")){
+            } else if (!generator.CompareTo("LHC16g1a") || !generator.CompareTo("LHC18e1a")){
                 if (!centrality.CompareTo("0-10%")){
                     return kRed-7;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3330,7 +3330,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kBlue-4;
                 } else return kMagenta+1;
-            } else if (!generator.CompareTo("LHC16g1b")){
+            } else if (!generator.CompareTo("LHC16g1b") || !generator.CompareTo("LHC18e1be")){
                 if (!centrality.CompareTo("0-10%")){
                     return kGreen+1;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3340,7 +3340,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kRed-7;
                 } else return kRed+2;
-            } else if (!generator.CompareTo("LHC16g1c")){
+            } else if (!generator.CompareTo("LHC16g1c") || !generator.CompareTo("LHC18e1ce")){
                 if (!centrality.CompareTo("0-10%")){
                     return kOrange+1;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3714,7 +3714,7 @@
                 } else if (!centrality.CompareTo("0-90%")){
                     return 24;
                 } else return 25;
-            } else if (!generator.CompareTo("LHC16g1")){
+            } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC18e1")){
                 if (!centrality.CompareTo("0-10%")){
                     return 25;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3724,7 +3724,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return 27;
                 } else return 28;
-            } else if (!generator.CompareTo("LHC16g1a")){
+            } else if (!generator.CompareTo("LHC16g1a") || !generator.CompareTo("LHC18e1a")){
                 if (!centrality.CompareTo("0-10%")){
                     return 24;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3734,7 +3734,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return 25;
                 } else return 2;
-            } else if (!generator.CompareTo("LHC16g1b")){
+            } else if (!generator.CompareTo("LHC16g1b") || !generator.CompareTo("LHC18e1be")){
                 if (!centrality.CompareTo("0-10%")){
                     return 30;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3744,7 +3744,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return 24;
                 } else return 3;
-            } else if (!generator.CompareTo("LHC16g1c")){
+            } else if (!generator.CompareTo("LHC16g1c") || !generator.CompareTo("LHC18e1ce")){
                 if (!centrality.CompareTo("0-10%")){
                     return 27;
                 } else if (!centrality.CompareTo("10-20%")){

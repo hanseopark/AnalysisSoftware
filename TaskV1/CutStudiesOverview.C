@@ -630,6 +630,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
 //                     maxYRatio = 2;
 //                     padRawYieldRatios->SetLogy(1);
 //                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioRawYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioRawYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -864,6 +868,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 // Set ratio min and max
                 Double_t minYRatio = 0.45;
                 Double_t maxYRatio = 1.55; //qu
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioWidthMeson[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioWidthMeson[i], 20, 1.,color[0],color[0]);
                 histoRatioWidthMeson[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -948,6 +956,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     maxYRatio = 2;
                     padSBRatios->SetLogy(1);
                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSBCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSBCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSBCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1029,6 +1041,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSBNarrowRatios->SetLogy(1);
+                }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
                 }
                 SetStyleHistoTH1ForGraphs(histoRatioSBNarrowCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSBNarrowCut[i], 20, 1.,color[0],color[0]);
@@ -1113,6 +1129,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     maxYRatio = 2;
                     padSignNarrowRatios->SetLogy(1);
                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSignNarrowCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSignNarrowCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSignNarrowCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1196,6 +1216,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSignRatios->SetLogy(1);
+                }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
                 }
                 SetStyleHistoTH1ForGraphs(histoRatioSignCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSignCut[i], 20, 1.,color[0],color[0]);
@@ -1297,6 +1321,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                         minYRatio = 0.971;
                         maxYRatio = 1.49;
                         // padRawClusterPtRatios->SetLogy(1);
+                    }
+                    if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                      minYRatio = 0.01;
+                      maxYRatio = 1.99;
                     }
                     SetStyleHistoTH1ForGraphs(histoRatioRawClusterPtCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioRawClusterPtCut[i], 20, 1.,color[0],color[0]);
@@ -1488,6 +1516,13 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if (cutVariationName.Contains("Timing") ){
                     minYRatio = 0.951;      maxYRatio = 1.049;
                 }
+//                 if (mode != 0 && mode!= 1 ){
+//                     minYRatio = 0.75;      maxYRatio = 1.25;
+//                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1602,6 +1637,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
 //                     padTrueEffiRatios->SetLogy(1);
 //                     minYRatio = 0.001;        maxYRatio = 2;
 //                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
                 histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1745,6 +1784,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     padAcceptanceRatios->SetLogy(1);
                     minYRatio = 0.001;        maxYRatio = 2;
                 }
+                if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                  minYRatio = 0.01;
+                  maxYRatio = 1.99;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioAcceptanceCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20, 1.,color[0],color[0]);
                 histoRatioAcceptanceCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1829,6 +1872,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if(i==0){
                     Double_t minYRatio = 0.95;
                     Double_t maxYRatio = 1.05;
+                    if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                      minYRatio = 0.01;
+                      maxYRatio = 1.99;
+                    }
                     SetStyleHistoTH1ForGraphs(histoRatioMassRatioCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioMassRatioCut[i], 20, 1.,color[0],color[0]);
                     histoRatioMassRatioCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1915,6 +1962,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if(i==0){
                     Double_t minYRatio = 0.95;
                     Double_t maxYRatio = 1.05;
+                    if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                      minYRatio = 0.01;
+                      maxYRatio = 1.99;
+                    }
                     SetStyleHistoTH1ForGraphs(histoRatioWidthRatioCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioWidthRatioCut[i], 20, 1.,color[0],color[0]);
                     histoRatioWidthRatioCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1999,6 +2050,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if(i==0){
                     Double_t minYRatio = 0.2;
                     Double_t maxYRatio = 1.8;
+                    if( optionEnergy.Contains("PbPb_5.02TeV") ){
+                      minYRatio = 0.01;
+                      maxYRatio = 1.99;
+                    }
                     SetStyleHistoTH1ForGraphs(histoRatioEtaToPi0Cut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioEtaToPi0Cut[i], 20, 1.,color[0],color[0]);
                     histoRatioEtaToPi0Cut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);

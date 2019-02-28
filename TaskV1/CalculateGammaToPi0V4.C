@@ -1030,6 +1030,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
     histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.2, 20);
     if(mode==2) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.5, 20);
     if(mode==4) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.8, 20);
+    if(mode==3) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.5, 20);
+    if(mode==3) histoIncRatioPurityTrueEff[0]->GetYaxis()->SetRangeUser(0, 1.8);
     histoIncRatioPurityTrueEff[0]->Draw();
     cocktailAllGammaPi0->Draw("same");
 

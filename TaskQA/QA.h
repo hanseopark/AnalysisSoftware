@@ -3025,6 +3025,7 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
 {
     std::vector<TH1D*> fVecDataMC;
     std::vector<TH1D*> fVecDataMCTime;
+    TRandom3 randy1;
     for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
         SetXRange(DataMCHists.at(i),1,DataMCHists.at(i)->GetNbinsX());
     }
@@ -3066,7 +3067,7 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
             if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
             fHistDataMC->Scale(1./nEvents[i]);
             GetMinMaxBin(fHistDataMC,minBC,maxBC,1e-11);
-            if (calo.Contains("EMC"))
+            if (calo.Contains("EMC") || calo.Contains("EDC"))
                 minBC = fHistDataMC->FindBin(0.101);
             if (minBC < minB )
                 minB    = minBC;

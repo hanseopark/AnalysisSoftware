@@ -66,10 +66,8 @@ Int_t fBinsEtaPbPb5TeVPtRebin[10]                = { 10, 4, 4, 8, 8, 8, 8 , 8, 8
 Double_t fBinsEtaPbPb5TeVPtDCA[4]               = { 0.0, 1.0, 3.0, 6.0};
 
 // EMCal
-Double_t fBinsEtaPbPb5TeVEMCPt[23]              = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
-                                                    4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
-Int_t fBinsEtaPbPb5TeVEMCPtRebin[22]            = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                                                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+Double_t fBinsEtaPbPb5TeVEMCPt[12]              = { 0.0, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0, 30.0};
+Int_t fBinsEtaPbPb5TeVEMCPtRebin[11]            = { 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16};
 // PCM-EMCal:
 Double_t fBinsEtaPbPb5TeVPCMEMCPt[23]           = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                     4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};

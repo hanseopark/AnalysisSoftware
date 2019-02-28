@@ -4576,6 +4576,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTail            = 0.007;
                 fMesonLambdaTailRange[0]    = 0.007;
                 fMesonLambdaTailRange[1]    = 0.007;
+                fMesonFitRange[0] = 0.08;
+                fMesonFitRange[1] = 0.17;
             }
             if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
@@ -4757,6 +4759,14 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     }else if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=14. && fPrefix.CompareTo("Pi0EtaBinning")){
                         fMesonFitRange[0] = 0.08;
                         fMesonFitRange[1] = 0.29;
+                    }
+                } else if( fEnergyFlag.CompareTo("5TeV2017") == 0 ){
+                    mesonAmplitudeMin = mesonAmplitude*10./100.;
+                    mesonAmplitudeMax = mesonAmplitude*400./100.;
+                    if(fBinsPt[ptBin] >= 10) {
+                      fMesonLambdaTail            = 0.015;
+                      fMesonLambdaTailRange[0]    = 0.015;
+                      fMesonLambdaTailRange[1]    = 0.015;
                     }
                 }else if(fDoJetAnalysis){
                     fMesonLambdaTailRange[0]        = 0.013;

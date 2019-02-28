@@ -3030,8 +3030,19 @@
         TString centralityCutNumberStart    = cutNumber(GetEventCentralityMinCutPosition(),1);
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
+        TString triggerNumber               = cutNumber(3,2);
         if (ppCutNumber.CompareTo("0") ==0 || ppCutNumber.CompareTo("h") ==0 || ppCutNumber.CompareTo("i") ==0 || ppCutNumber.CompareTo("j") ==0){
+          if( triggerNumber.CompareTo("a0") ==0 ) { // INT7 CALOFAST
+            return "calofastINT7";
+          } else if ( triggerNumber.CompareTo("a1") ==0 ){ // EMC7 CALOFAST
+            return "calofastEMC7";
+          } else if ( triggerNumber.CompareTo("a2") ==0 ){ // EG2 CALOFAST
+            return "calofastEG2";
+          } else if ( triggerNumber.CompareTo("a3") ==0 ){ // EG1 CALOFAST
+            return "calofastEG1";
+          } else {
             return "pp";
+          }
         } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("4") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-100%";

@@ -155,6 +155,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 10){
             maxPtGlobalCluster          = 50;
         }
+    } else if (optionEnergy.CompareTo("5TeV2017")==0){
+      if(mode==2 || mode==4){
+        maxPtGlobalCluster          = 50;
+      }
     } else if (optionEnergy.CompareTo("8TeV")==0){
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
@@ -6511,6 +6515,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         graphsEtaToPi0SysShrunk[i]->GetX()[graphsEtaToPi0SysShrunk[i]->GetN()-1] > ptFromSpecPi0[i][1] )
                     graphsEtaToPi0SysShrunk[i]->RemovePoint(graphsEtaToPi0SysShrunk[i]->GetN()-1);
 
+                if(optionEnergy.CompareTo("5TeV2017")==0 && mode == 4){
+                  cout << "GOING TO REMOVE : " << graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] << " > 20 ? " << endl;
+                  while (graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] > 20){
+                    cout << "GOING TO REMOVE : " << graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] << " > 20 " << endl;
+                    graphsEtaToPi0Shrunk[i]->RemovePoint(graphsEtaToPi0Shrunk[i]->GetN()-1);
+                    graphsEtaToPi0SysShrunk[i]->RemovePoint(graphsEtaToPi0SysShrunk[i]->GetN()-1);
+                  }
+                }
                 // put systematics on graph
                 for (Int_t j = 0; j< graphsEtaToPi0Shrunk[i]->GetN(); j++){
                     xValueFinalEtaToPi0[nPointFinalEtaToPi0]        = graphsEtaToPi0Shrunk[i]->GetX()[j];
@@ -6562,8 +6574,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         }
                     }
                 }
-                if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
+                if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)){
                   offSetsEtaToPi0Sys[4]+=3; //EGA
+                }
             }
 
             TString nameWeightsLogFileEtaToPi0                  = Form("%s/weightsEtaToPi0_%s.dat",outputDir.Data(),isMC.Data());

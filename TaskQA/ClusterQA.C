@@ -4190,6 +4190,7 @@ void ClusterQA(
         if((Int_t)allCellsBad.size()>0){
             cout << "start plotting bad cells" << endl;
             PlotBadCellReasons(cellQA,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
+
             PlotBadCellOverview(kTRUE,kFALSE,DataMCHists.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
             PlotBadCellOverview(kFALSE,kFALSE,DataMCHistsTime.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
             for(Int_t j=1; j<nSets; j++){
