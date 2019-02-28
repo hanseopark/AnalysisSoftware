@@ -125,6 +125,7 @@ void CorrectCaloNonLinearityV4_SM(
     Bool_t doLightOutput       = kTRUE;
 
     TString dataMC[21]           = {"ALL SMs", "SM0", "SM1","SM2","SM3","SM4","SM5","SM6","SM7","SM8","SM9","SM10","SM11","SM12","SM13","SM14","SM15","SM16","SM17","SM18","SM19"};
+
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
     //**************************************************************************************************************
@@ -407,7 +408,14 @@ void CorrectCaloNonLinearityV4_SM(
     TString nameOutput              = Form("%s/CorrectCaloNonLinearity_%s.root",outputDirSampleSummary.Data(),select.Data());
     TFile* fOutput                = new TFile(nameOutput,"RECREATE");
 
-
+    fstream fLogOffsets;
+        fLogOffsets.open(Form("%s/SuperModuleOffsets_%s.log",outputDirSampleSummary.Data(),select.Data()), ios::out);
+        fLogOffsets << "------------------------------------------------------------------------------------" << endl;
+        fLogOffsets << "------------------------------------------------------------------------------------" << endl;
+        fLogOffsets << "List of offsets for each SM compared to the average of all" << endl;
+        fLogOffsets << "Energy of clusters in each supermodule needs to be divided by the respective offset:" << endl;
+        fLogOffsets << "------------------------------------------------------------------------------------" << endl;
+        fLogOffsets << "------------------------------------------------------------------------------------" << endl;
     //*******************************************************************************
     //***************** set up proper labeling **************************************
     //*******************************************************************************
@@ -709,6 +717,14 @@ void CorrectCaloNonLinearityV4_SM(
     DrawGammaCanvasSettings(canvas_All, 0.082, 0.15, 0.02, 0.1);
     canvas_All->SetLogx(1);
     canvas_All->SetLogy(0);
+    TCanvas *canvas_All_Fitted = new TCanvas("canvasMassRatioMCData_All_Fitted","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings(canvas_All_Fitted, 0.082, 0.15, 0.02, 0.1);
+    canvas_All_Fitted->SetLogx(1);
+    canvas_All_Fitted->SetLogy(0);
+    TCanvas *canvas_All_FitOnly = new TCanvas("canvasMassRatioMCData_All_FitOnly","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings(canvas_All_FitOnly, 0.082, 0.15, 0.02, 0.1);
+    canvas_All_FitOnly->SetLogx(1);
+    canvas_All_FitOnly->SetLogy(0);
     Bool_t fitconst = kTRUE;
 
     TH1D* histSMResultsRatio = nullptr;
@@ -934,6 +950,7 @@ void CorrectCaloNonLinearityV4_SM(
       fFitConstFull      = new TF1("ConstFullPtRange", "[0]" ,fBinsPt[ptBinRange[0]], fBinsPt[ptBinRange[1]]);
       histSMResultsRatio->Fit(fFitConst,"QRME0");
       histSMResultsRatio->Fit(fFitConstFull,"QRME0");
+      cout << "Offset SM" << iSM << ": " << fFitConstFull->GetParameter(0) << endl;
       Double_t highPtConst            = fixedOffSet;
       if (highPtConst == -1){
           highPtConst = fFitConst->GetParameter(0);
@@ -1008,6 +1025,8 @@ void CorrectCaloNonLinearityV4_SM(
         fFitExpCombInverted->SetParameter(2, fitMassDataVsPDG2->GetParameter(2) );
         fFitExpCombInverted->SetParameter(6, fitMassDataVsPDG2->GetParameter(3) );
       }
+        fLogOffsets << "SM" << iSM << ":" << fFitConstFull->GetParameter(0) << endl;
+        // fLogOffsets << WriteParameterToFile(fFitConstFull) << endl;
 
         fstream fLog;
         fLog.open(Form("%s/CorrectCaloNonLinearity_%s_SM%i.log",outputDirSampleSummary.Data(),select.Data(), iSM), ios::out);
@@ -1124,6 +1143,9 @@ void CorrectCaloNonLinearityV4_SM(
       histSMResultsRatio->DrawCopy("same");
       if(iSM == 0) legend_All->Draw("same");
       canvas_All->Update();
+      canvas_All->SaveAs(Form("%s/MeanMassRatio_All.%s",outputDir.Data(),suffix.Data()));
+
+
       //*******************************************************************************
       // plotting total correction
       //*******************************************************************************
@@ -1177,6 +1199,51 @@ void CorrectCaloNonLinearityV4_SM(
       canvasMassRatioMCData->SaveAs(Form("%s/TotalCorrection_%s_SM%i.%s", outputDir.Data(), select.Data(), iSM, suffix.Data()));
       canvasMassRatioMCData->Clear();
       delete canvasMassRatioMCData;
+
+      //*******************************************************************************
+      // plotting mass ratios for all SM
+      //*******************************************************************************
+      canvas_All_Fitted->cd();
+
+      if(isFirstLoop){
+        histoDummyDataMCRatio->GetYaxis()->SetRangeUser(0.971,1.049);
+        histoDummyDataMCRatio->DrawCopy("");
+        PutProcessLabelAndEnergyOnPlot(0.75, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 42, 0.03, "", 1, 1.25, 31);
+        DrawGammaLines(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1.0, 1.0, 1, kGray+2, 2);
+        for (Int_t i = 0; i < nSets; i++){
+           PutProcessLabelAndEnergyOnPlot(0.12, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "", 42, 0.03, "", 1, 1.25, 11);
+        }
+      }
+      fFitConstFull->SetRange(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5);
+      DrawGammaSetMarkerTF1( fFitConstFull, 1, 1, color[iSM+1]);
+      fFitConstFull->Draw("same");
+    //   legend_All->AddEntry(histSMResults[iSM],Form("%s",dataMC[iSM + 1].Data()),"p");
+      DrawGammaSetMarker(histSMResultsRatio, 24, 1, color[iSM+1], color[iSM+1]);
+      histSMResultsRatio->DrawCopy("same");
+      if(iSM == 0) legend_All->Draw("same");
+      canvas_All_Fitted->Update();
+      canvas_All_Fitted->SaveAs(Form("%s/MeanMassRatio_All_Fitted.%s",outputDir.Data(),suffix.Data()));
+      //*******************************************************************************
+      // plotting mass ratio fits for all SM
+      //*******************************************************************************
+      canvas_All_FitOnly->cd();
+
+      if(isFirstLoop){
+        histoDummyDataMCRatio->GetYaxis()->SetRangeUser(0.991,1.019);
+        histoDummyDataMCRatio->DrawCopy("");
+        PutProcessLabelAndEnergyOnPlot(0.75, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 42, 0.03, "", 1, 1.25, 31);
+        DrawGammaLines(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1.0, 1.0, 1, kGray+2, 2);
+        for (Int_t i = 0; i < nSets; i++){
+           PutProcessLabelAndEnergyOnPlot(0.12, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "", 42, 0.03, "", 1, 1.25, 11);
+        }
+      }
+      fFitConstFull->SetRange(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5);
+      DrawGammaSetMarkerTF1( fFitConstFull, 2, 2, color[iSM+1]);
+      fFitConstFull->Draw("same");
+      if(iSM == 0) legend_All->Draw("same");
+      canvas_All_FitOnly->Update();
+      canvas_All_FitOnly->SaveAs(Form("%s/MeanMassRatio_All_FitOnly.%s",outputDir.Data(),suffix.Data()));
+
       cout << "-----------------------------------------------------" << endl;
       cout << "-----------------------------------------------------" << endl;
       fOutput->cd();
@@ -1196,7 +1263,7 @@ void CorrectCaloNonLinearityV4_SM(
       fOutput->Close();
       isFirstLoop = kFALSE;
     }
-    canvas_All->SaveAs(Form("%s/MeanMassRatio_All.%s",outputDir.Data(),suffix.Data()));
+    fLogOffsets.close();
     return;
 }
 

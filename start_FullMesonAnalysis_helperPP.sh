@@ -186,7 +186,7 @@ function GiveBinning7TeV()
         echo "  PCM, EMC, PCM-EMC pi0: 36(7GeV/c), 37(8GeV/c), 38(10GeV/c), 39(12GeV/c), 40 (16GeV/c), 41 (20GeV/c), 42 (25GeV/c)";
         echo "  PCM, EMC, PCM-EMC dir gamma: 19(8GeV), 20(10GeV), 21(12GeV), 22(16GeV) 23 (20GeV)"
         read answer
-        if [ $answer -ge 19 ] && [ $answer -lt 45 ]; then
+        if [ $answer -ge 2 ] && [ $answer -lt 45 ]; then
             echo "--> $answer bins ";
             CORRECTPI0=1
             BINSPTPI0=$answer
@@ -200,7 +200,7 @@ function GiveBinning7TeV()
     if [ $DOETA -eq 1 ] || [ $DOPI0INETABINS -eq 1 ]; then
         echo "How many p_T bins do you want to use for the Eta? 9(3GeV/c), 11(4GeV/c), 12(5GeV/c), 13(6GeV/c), 14(8GeV/c) 15(10GeV/c)";
         read answer
-        if [ $answer -ge 10 ] && [ $answer -lt 19 ] ; then
+        if [ $answer -ge 2 ] && [ $answer -lt 25 ] ; then
             echo "--> $answer bins";
             CORRECTETA=1
             BINSPTETA=$answer
