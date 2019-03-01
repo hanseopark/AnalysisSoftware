@@ -3692,6 +3692,7 @@
                 triggerSetTemp = 2; // EG2
             } else if ( trigger.CompareTo("a3") == 0    ){
                 triggerSetTemp = 3; // EG1
+            }
         } else if (energy.CompareTo("7TeV") == 0) {
             if (trigger.CompareTo("52") == 0){
                 triggerSetTemp = 1; // L0 EMC7
