@@ -55,17 +55,6 @@ extern TBenchmark* gBenchmark;
 extern TSystem*    gSystem;
 extern TMinuit*    gMinuit;
 
-
-// *** CONTENT
-// *** settings
-// *** read files: PCM
-// *** plot mass & width 
-//     - Pi0 PCM
-//     - Eta PCM 
-// *** plot example invariant mass bins 
-//     - PCM
-// *** save results   
-
 //____________________________________________________________________________________________________________________________________________
 void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
                                         TString fileNameEMCAL       = "/home/mike/1_PbPb_EMC/0_analysis/190226_EMC_new/pdf/PbPb_5.02TeV/2019_02_26/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
@@ -73,7 +62,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
                                         TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190226_PCMEMC_new/pdf/PbPb_5.02TeV/2019_02_26/data_PCM-EMCALResultsFullCorrection_PbPb.root",
                                         TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190226_PCMPHOS_new/pdf/PbPb_5.02TeV/2019_02_26/data_PCM-PHOSResultsFullCorrection_PbPb.root",
                                         TString suffix              = "pdf",
-                                        TString centralityString = "20-40%",
+                                        TString centralityString = "40-60%",
                                         TString fileInputCorrFactors= ""
                                     ){
 
@@ -269,6 +258,16 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   //                      {"PCM","EMCal","PHOS" ,"PCM-EMCal","PCM-PHOS"};
   Double_t startpT[5]   = {0    ,1.4    ,0.4    ,1.0        ,0.8};
   Double_t endpT[5]     = {35.  ,16.    ,30.    ,12.        ,12.};
+  if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 3.0; startpT[3] = 2.2;}
+  if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 2.0; startpT[3] = 2.2;}
+  if(centralityString.CompareTo("40-60%") == 0 ) {endpT[2] = 20.;}
+  if(centralityString.CompareTo("60-80%") == 0 ) {endpT[2] = 20.; endpT[4] = 10.;}
+  
+  Int_t      offSetMethod[5] = {0,6,1,4,3};
+  if(centralityString.CompareTo("0-10%") == 0 )  {offSetMethod[1] = 14; offSetMethod[3] = 10;}
+  if(centralityString.CompareTo("10-20%") == 0 ) {offSetMethod[1] = 9; offSetMethod[3] = 10;}
+  if(centralityString.CompareTo("40-60%") == 0 ) {}
+  if(centralityString.CompareTo("60-80%") == 0 ) {}
                                                           
   // **********************************************************************************************************************
   // ******************************************* Calculate simple combination      ****************************************
@@ -298,7 +297,6 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   Double_t EStat0, EStat1, EStat2, EStat3, EStat4;
   
   Int_t      n_Meas[5];
-  Int_t      offSetMethod[5] = {0,6,1,4,3};
   Double_t*  x_Meas[5];
   Double_t*  x_Meas_syst[5];
   Double_t*  y_Meas[5];
