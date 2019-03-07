@@ -2747,7 +2747,7 @@
         TString formulaName                 = Form("%s",tsallis->GetName());
         Int_t nPar                          = tsallis->GetNpar();
         TString formula                     = Form("%s - [%d]",(tsallis->GetExpFormula()).Data(),nPar);
-    //     cout << "Formula used for bin shift: " << formula << endl;
+        // cout << "Formula used for bin shift: " << formula << endl;
         TF1 * fYield;
         if(useRangesFromTF1) fYield        = new TF1(formulaName.Data(), formula, tsallis->GetMinimumX(),tsallis->GetMaximumX());
         else fYield                        = new TF1(formulaName.Data(), formula, 0.2,25.0);
@@ -2766,7 +2766,7 @@
                 fYield->SetParameter(p,tsallis->GetParameter(p));
             }
 
-    //         cout << "iteration " <<iter << endl;
+            // cout << "iteration " <<iter << endl;
             for (Int_t i=0; i<numberPoints; i++) {
                 Double_t ptMin  = xPoint[i]-errorXlow[i];
                 Double_t ptMax  = xPoint[i]+errorXhigh[i];

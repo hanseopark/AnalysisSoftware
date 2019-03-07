@@ -263,7 +263,7 @@ fileNameEMCAL2="";
         directoryEta[i] = NULL;
       }
     }
-        
+
     TH1D* histoPi0Mass[11]                                  = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     TH1D* histoPi0FWHMMeV[11]                               = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     TH1D* histoPi0TrueMass[11]                              = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
@@ -720,7 +720,7 @@ fileNameEMCAL2="";
       offSetsEtaToPi0[8]    = 1;
       offSetsSysEtaToPi0[8] = 7;
     }
-    
+
     //**********************************************************************************************************************
     //**********************************************************************************************************************
     //**********************************************************************************************************************
@@ -777,7 +777,7 @@ fileNameEMCAL2="";
 
     //return;
     if(doOutput) graphCombPi0InvXSectionStat->Print();
-    
+
     TGraphAsymmErrors* graphCombEtaInvXSectionStat= NULL;
     TGraphAsymmErrors* graphCombEtaInvXSectionSys = NULL;
     TGraphAsymmErrors* graphCombEtaInvXSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEta, sysErrorCollectionEta,
@@ -789,8 +789,8 @@ fileNameEMCAL2="";
                                                                                          );
     //return;
     if(doOutput) graphCombEtaInvXSectionStat->Print();
-    
-    
+
+
     TGraphAsymmErrors* graphCombEtaToPi0Stat= NULL;
     TGraphAsymmErrors* graphCombEtaToPi0Sys = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0Tot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEtaToPi0, sysErrorCollectionEtaToPi0,
@@ -802,8 +802,8 @@ fileNameEMCAL2="";
                                                                                );
     //return;
     if(doOutput) graphCombEtaToPi0Stat->Print();
-    
-    
+
+
     //**********************************************************************************************************************
     //**********************************************************************************************************************
     //**********************************************************************************************************************
@@ -1481,6 +1481,7 @@ fileNameEMCAL2="";
     if(bWCorrection.Contains("X")){
         TF1* fitTsallisPi0PtMult        = FitObject("tmpt","TsallisMultWithPtPi07TeV","Pi0");
         fitTsallisPi0PtMult->SetParameters(paramGraph[0],paramGraph[1], paramGraph[2]) ; // standard parameter optimize if necessary
+        fitTsallisPi0PtMult->SetRange(0.3,25.);
 
         graphCombPi0InvXSectionTot      = ApplyXshift(graphCombPi0InvXSectionTot, fitTsallisPi0PtMult, "Pi0", kTRUE);
 
@@ -4799,15 +4800,15 @@ fileNameEMCAL2="";
 //             if(i==2)
 //                 histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub[i]->GetMinimum(),1.35*histoPi0InvMassSigPlusBG[i]->GetMaximum());
 //             histo2DPi0InvMassDummy->DrawCopy();
-// 
+//
 //             TLatex *labelInvMassPtRange = new TLatex(0.945,0.9,Form("#pi^{0}: %s GeV/#it{c} < #it{p}_{T} < %s GeV/#it{c}",strLowerEdgeExamplePi0[i].Data(),strUpperEdgeExamplePi0[i].Data()));
-// 
+//
 //             DrawGammaSetMarker(histoPi0InvMassSigPlusBG[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
 //             histoPi0InvMassSigPlusBG[i]->SetLineWidth(1);
 //             histoPi0InvMassSigPlusBG[i]->Draw("hist,e,same");
 //             DrawGammaSetMarker(histoPi0InvMassBGTot[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
 //             histoPi0InvMassBGTot[i]->Draw("same");
-// 
+//
 //             DrawGammaSetMarker(histoPi0InvMassSigRemBGSub[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
 //             histoPi0InvMassSigRemBGSub[i]->Draw("same");
 //             fitPi0InvMassSig[i]->SetNpx(1000);
@@ -4815,27 +4816,27 @@ fileNameEMCAL2="";
 //             fitPi0InvMassSig[i]->SetLineColor(fitColorInvMassSG);
 //             fitPi0InvMassSig[i]->SetLineWidth(1);
 //             fitPi0InvMassSig[i]->Draw("same");
-// 
+//
 //             TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem7TeV.Data());
 //             SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
 //             labelInvMassEnergy->SetTextFont(43);
 //             labelInvMassEnergy->Draw();
-// 
+//
 //             TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"MinBias");
 //             SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
 //             labelInvMassTrigger->SetTextFont(43);
 //             labelInvMassTrigger->Draw();
-// 
+//
 //             TLatex *labelInvMassReco  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,Form("%s",nameMeasGlobal[i].Data()));
 //             SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
 //             labelInvMassReco->SetTextFont(43);
 //             labelInvMassReco->Draw();
-// 
+//
 //             SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
 //             labelInvMassPtRange->SetTextAlign(31);
 //             labelInvMassPtRange->SetTextFont(43);
 //             labelInvMassPtRange->Draw();
-// 
+//
 //             TLegend* legendInvMass  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
 //             legendInvMass->SetMargin(0.25);
 //             legendInvMass->AddEntry(histoPi0InvMassSigPlusBG[i],"Raw real events","l");
@@ -4853,8 +4854,8 @@ fileNameEMCAL2="";
 //             cout << "missing partial input for invariant mass bin for  for trigger: " << nameMeasGlobal[i].Data() << endl;
 //         }
 //     }
-    
-   
+
+
 }
 
 
