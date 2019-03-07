@@ -4231,7 +4231,7 @@
         Double_t mass                           = 0.135; // pi0 mass
         TF1* fTsallis                           = new TF1("Tsallis", Form("[0] * TMath::Power(1.+(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",
                                                                             mass, mass, mass),0.,30.);
-        fTsallis->SetParNames("A","n","T_{Tsallis} (GeV/c)");
+        //fTsallis->SetParNames("A","n","T_{Tsallis} (GeV/c)");
         fTsallis->SetParameters(1.,5.,0.18);
 
         //
@@ -4258,7 +4258,7 @@
         // takes a given value yieldPbPb
         TF1* fdNdPtScaledPP                     = new TF1(  "fdNdPtScaledPP", Form("[0] * x * x * TMath::Power(1.+(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) - [3]",
                                                                 mass, mass, mass),0.,30.);
-        fdNdPtScaledPP->SetParNames("A","n","T_{Tsallis} (GeV/c)","yieldPbPb");
+        //fdNdPtScaledPP->SetParNames("A","n","T_{Tsallis} (GeV/c)","yieldPbPb");
 
         // create root finder
         ROOT::Math::BrentRootFinder brf;
