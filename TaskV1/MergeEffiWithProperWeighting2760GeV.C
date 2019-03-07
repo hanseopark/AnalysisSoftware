@@ -97,7 +97,7 @@ void MergeEffiWithProperWeighting2760GeV(   TString fCutSelection,
 		Double_t weightAddSig 		= 1/TMath::Power(histoTrueEffiPtAddedSignal->GetBinError(i),2);
 		Double_t weightSum 			= weightMinBias + weightAddSig;
 		Double_t weightedEffi 		= (weightMinBias*histoTrueEffiPtMinBias->GetBinContent(i) + weightAddSig * histoTrueEffiPtAddedSignal->GetBinContent(i))/weightSum;
-		Double_t weightedEffiErr 	= pow((weightMinBias +  weightAddSig),-0.5);
+        Double_t weightedEffiErr 	= TMath::Power((weightMinBias +  weightAddSig),-0.5);
 
 		if (isfinite(weightedEffi) && isfinite(weightedEffiErr)){
 			histoTrueEffiPt->SetBinContent(i, weightedEffi);
@@ -129,7 +129,7 @@ void MergeEffiWithProperWeighting2760GeV(   TString fCutSelection,
 		Double_t weightAddSigNarrow = 1/TMath::Power(histoTrueEffiNarrowPtAddedSignal->GetBinError(i),2);
 		Double_t weightSumNarrow = weightMinBiasNarrow + weightAddSigNarrow;
 		Double_t weightedEffiNarrow = (weightMinBiasNarrow*histoTrueEffiNarrowPtMinBias->GetBinContent(i) + weightAddSigNarrow * histoTrueEffiNarrowPtAddedSignal->GetBinContent(i))/weightSumNarrow;
-		Double_t weightedEffiErrNarrow = pow((weightMinBiasNarrow +  weightAddSigNarrow),-0.5);
+        Double_t weightedEffiErrNarrow = TMath::Power((weightMinBiasNarrow +  weightAddSigNarrow),-0.5);
 
 		if (isfinite(weightedEffiNarrow) && isfinite(weightedEffiErrNarrow)){
 			histoTrueEffiNarrowPt->SetBinContent(i, weightedEffiNarrow);
@@ -152,7 +152,7 @@ void MergeEffiWithProperWeighting2760GeV(   TString fCutSelection,
 		Double_t weightAddSigWide = 1/TMath::Power(histoTrueEffiWidePtAddedSignal->GetBinError(i),2);
 		Double_t weightSumWide = weightMinBiasWide + weightAddSigWide;
 		Double_t weightedEffiWide = (weightMinBiasWide*histoTrueEffiWidePtMinBias->GetBinContent(i) + weightAddSigWide * histoTrueEffiWidePtAddedSignal->GetBinContent(i))/weightSumWide;
-		Double_t weightedEffiErrWide = pow((weightMinBiasWide +  weightAddSigWide),-0.5);
+        Double_t weightedEffiErrWide = TMath::Power((weightMinBiasWide +  weightAddSigWide),-0.5);
 
 		if (isfinite(weightedEffiWide) && isfinite(weightedEffiErrWide)){
 			histoTrueEffiWidePt->SetBinContent(i, weightedEffiWide);

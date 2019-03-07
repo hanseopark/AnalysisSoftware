@@ -1463,19 +1463,19 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                 }
                 if( (fGGYields[k][iPt] - fMesonTrueYields[k][iPt]) > 0) {
                     fMesonTrueSB[k][iPt]           = fMesonTrueYields[k][iPt] / ( fGGYields[k][iPt] - fMesonTrueYields[k][iPt] );
-                    fMesonTrueSign[k][iPt]         = fMesonTrueYields[k][iPt] / pow( ( fGGYields[k][iPt] - fMesonTrueYields[k][iPt] ) , 0.5);
+                    fMesonTrueSign[k][iPt]         = fMesonTrueYields[k][iPt] / TMath::Power( ( fGGYields[k][iPt] - fMesonTrueYields[k][iPt] ) , 0.5);
                     fMesonTrueSBError[k][iPt]      = 0;
                     fMesonTrueSignError[k][iPt]    = 0;
                 }
                 if( (fGGYields_SubPiZero[k][iPt] - fMesonTrueYields_SubPiZero[k][iPt]) > 0) {
                     fMesonTrueSB_SubPiZero[k][iPt]           = fMesonTrueYields_SubPiZero[k][iPt] / ( fGGYields_SubPiZero[k][iPt] - fMesonTrueYields_SubPiZero[k][iPt] );
-                    fMesonTrueSign_SubPiZero[k][iPt]         = fMesonTrueYields_SubPiZero[k][iPt] / pow( ( fGGYields_SubPiZero[k][iPt] - fMesonTrueYields_SubPiZero[k][iPt] ) , 0.5);
+                    fMesonTrueSign_SubPiZero[k][iPt]         = fMesonTrueYields_SubPiZero[k][iPt] / TMath::Power( ( fGGYields_SubPiZero[k][iPt] - fMesonTrueYields_SubPiZero[k][iPt] ) , 0.5);
                     fMesonTrueSBError_SubPiZero[k][iPt]      = 0;
                     fMesonTrueSignError_SubPiZero[k][iPt]    = 0;
                 }
                 if( (fGGYields_FixedPzPiZero[k][iPt] - fMesonTrueYields_FixedPzPiZero[k][iPt]) > 0) {
                     fMesonTrueSB_FixedPzPiZero[k][iPt]           = fMesonTrueYields_FixedPzPiZero[k][iPt] / ( fGGYields_FixedPzPiZero[k][iPt] - fMesonTrueYields_FixedPzPiZero[k][iPt] );
-                    fMesonTrueSign_FixedPzPiZero[k][iPt]         = fMesonTrueYields_FixedPzPiZero[k][iPt] / pow( ( fGGYields_FixedPzPiZero[k][iPt] - fMesonTrueYields_FixedPzPiZero[k][iPt] ) , 0.5);
+                    fMesonTrueSign_FixedPzPiZero[k][iPt]         = fMesonTrueYields_FixedPzPiZero[k][iPt] / TMath::Power( ( fGGYields_FixedPzPiZero[k][iPt] - fMesonTrueYields_FixedPzPiZero[k][iPt] ) , 0.5);
                     fMesonTrueSBError_FixedPzPiZero[k][iPt]      = 0;
                     fMesonTrueSignError_FixedPzPiZero[k][iPt]    = 0;
                 }
@@ -1490,9 +1490,9 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
             fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
             fTotalBckYields_SubPiZero[k][iPt]               = fBckYields_SubPiZero[k][iPt] + fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
             fTotalBckYields_FixedPzPiZero[k][iPt]           = fBckYields_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
-            fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
-            fTotalBckYieldsError_SubPiZero[k][iPt]          = pow(fBckYieldsError_SubPiZero[k][iPt]*fBckYieldsError_SubPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt],0.5);
-            fTotalBckYieldsError_FixedPzPiZero[k][iPt]     = pow(fBckYieldsError_FixedPzPiZero[k][iPt]*fBckYieldsError_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt],0.5);
+            fTotalBckYieldsError[k][iPt]                    = TMath::Power(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
+            fTotalBckYieldsError_SubPiZero[k][iPt]          = TMath::Power(fBckYieldsError_SubPiZero[k][iPt]*fBckYieldsError_SubPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt],0.5);
+            fTotalBckYieldsError_FixedPzPiZero[k][iPt]     = TMath::Power(fBckYieldsError_FixedPzPiZero[k][iPt]*fBckYieldsError_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt],0.5);
 
             fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
@@ -1510,7 +1510,7 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                         << fBckYields_FixedPzPiZero[k][iPt] << "\t +- \t" << fBckYieldsError_FixedPzPiZero[k][iPt] << endl<< endl;
             if (k<3){
                 fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-                fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+                fMesonYieldsCorResidualBckFuncError[k][iPt]     = TMath::Power(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
                                                                         fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
 
                 fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
@@ -1518,7 +1518,7 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
                 fMesonYieldsCorResidualBckFuncBackFit[k][iPt]          = fMesonYieldsBackFit[k][iPt]- fMesonYieldsResidualBckFuncBackFit[iPt];
                 fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]     =
-                        pow((fMesonYieldsBackFitError[k][iPt]*fMesonYieldsBackFitError[k][iPt]+
+                        TMath::Power((fMesonYieldsBackFitError[k][iPt]*fMesonYieldsBackFitError[k][iPt]+
                              fMesonYieldsResidualBckFuncBackFitError[iPt]*fMesonYieldsResidualBckFuncBackFitError[iPt]),0.5);
 
                 fMesonYieldsPerEventBackFit[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit[k][iPt]/fNEvents;
@@ -1527,7 +1527,7 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                 // Calculation for InvMass pi0 subtracted
 
                 fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]          = fMesonYields_SubPiZero[k][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
-                fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = pow(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
+                fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = TMath::Power(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
                                                                                   fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]),0.5);
                 fMesonYieldsPerEvent_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fNEvents;
                 fMesonYieldsPerEventError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
@@ -1535,7 +1535,7 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
                 fMesonYieldsCorResidualBckFuncBackFit_SubPiZero[k][iPt]          = fMesonYieldsBackFit_SubPiZero[k][iPt]- fMesonYieldsResidualBckFuncBackFit_SubPiZero[iPt];
                 fMesonYieldsCorResidualBckFuncBackFitError_SubPiZero[k][iPt]     =
-                        pow((fMesonYieldsBackFitError_SubPiZero[k][iPt]*fMesonYieldsBackFitError_SubPiZero[k][iPt]+
+                        TMath::Power((fMesonYieldsBackFitError_SubPiZero[k][iPt]*fMesonYieldsBackFitError_SubPiZero[k][iPt]+
                              fMesonYieldsResidualBckFuncBackFitError_SubPiZero[iPt]*fMesonYieldsResidualBckFuncBackFitError_SubPiZero[iPt]),0.5);
 
                 fMesonYieldsPerEventBackFit_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit_SubPiZero[k][iPt]/fNEvents;
@@ -1543,14 +1543,14 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
                 // Calculation for InvMass pz of pi0 fixes
                 fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]          = fMesonYields_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
-                fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = pow(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
+                fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = TMath::Power(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
                                                                                       fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]),0.5);
                 fMesonYieldsPerEvent_FixedPzPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/fNEvents;
                 fMesonYieldsPerEventError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]/fNEvents;
 
                 fMesonYieldsCorResidualBckFuncBackFit_FixedPzPiZero[k][iPt]          = fMesonYieldsBackFit_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFuncBackFit_FixedPzPiZero[iPt];
                 fMesonYieldsCorResidualBckFuncBackFitError_FixedPzPiZero[k][iPt]     =
-                        pow((fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]*fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]+
+                        TMath::Power((fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]*fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]+
                              fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]*fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]),0.5);
 
                 fMesonYieldsPerEventBackFit_FixedPzPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit_FixedPzPiZero[k][iPt]/fNEvents;
@@ -1559,8 +1559,8 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                 //SB default
                 if (fTotalBckYields[k][iPt] != 0){
                     fMesonSBdefault[k][iPt]                     = fMesonYieldsCorResidualBckFunc[k][iPt]/fTotalBckYields[k][iPt];
-                    fMesonSBdefaultError[k][iPt]                = pow( pow(fMesonYieldsCorResidualBckFuncError[k][iPt]/fTotalBckYields[k][iPt], 2.) +
-                                                                pow((fTotalBckYieldsError[k][iPt]*fMesonYieldsCorResidualBckFunc[k][iPt])/(fTotalBckYields[k][iPt] *fTotalBckYields[k][iPt]), 2.), 0.5);
+                    fMesonSBdefaultError[k][iPt]                = TMath::Power( TMath::Power(fMesonYieldsCorResidualBckFuncError[k][iPt]/fTotalBckYields[k][iPt], 2.) +
+                                                                TMath::Power((fTotalBckYieldsError[k][iPt]*fMesonYieldsCorResidualBckFunc[k][iPt])/(fTotalBckYields[k][iPt] *fTotalBckYields[k][iPt]), 2.), 0.5);
                 } else {
                     fMesonSBdefault[k][iPt]         = 0.;
                     fMesonSBdefaultError[k][iPt]    = 0.;
@@ -1569,8 +1569,8 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                 //SB default SubPiZero
                 if (fTotalBckYields_SubPiZero[k][iPt] != 0){
                     fMesonSBdefault_SubPiZero[k][iPt]                     = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fTotalBckYields_SubPiZero[k][iPt];
-                    fMesonSBdefaultError_SubPiZero[k][iPt]                = pow( pow(fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fTotalBckYields_SubPiZero[k][iPt], 2.) +
-                                                                pow((fTotalBckYieldsError_SubPiZero[k][iPt]*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt])/(fTotalBckYields_SubPiZero[k][iPt] *fTotalBckYields_SubPiZero[k][iPt]), 2.), 0.5);
+                    fMesonSBdefaultError_SubPiZero[k][iPt]                = TMath::Power( TMath::Power(fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fTotalBckYields_SubPiZero[k][iPt], 2.) +
+                                                                TMath::Power((fTotalBckYieldsError_SubPiZero[k][iPt]*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt])/(fTotalBckYields_SubPiZero[k][iPt] *fTotalBckYields_SubPiZero[k][iPt]), 2.), 0.5);
                 } else {
                     fMesonSBdefault_SubPiZero[k][iPt]         = 0.;
                     fMesonSBdefaultError_SubPiZero[k][iPt]    = 0.;
@@ -1579,50 +1579,50 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                 //SB default FixedPzPiZero
                 if (fTotalBckYields_FixedPzPiZero[k][iPt] != 0){
                     fMesonSBdefault_FixedPzPiZero[k][iPt]                     = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/fTotalBckYields_FixedPzPiZero[k][iPt];
-                    fMesonSBdefaultError_FixedPzPiZero[k][iPt]                = pow( pow(fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]/fTotalBckYields_FixedPzPiZero[k][iPt], 2.) +
-                                                                pow((fTotalBckYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt])/(fTotalBckYields_FixedPzPiZero[k][iPt] *fTotalBckYields_FixedPzPiZero[k][iPt]), 2.), 0.5);
+                    fMesonSBdefaultError_FixedPzPiZero[k][iPt]                = TMath::Power( TMath::Power(fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]/fTotalBckYields_FixedPzPiZero[k][iPt], 2.) +
+                                                                TMath::Power((fTotalBckYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt])/(fTotalBckYields_FixedPzPiZero[k][iPt] *fTotalBckYields_FixedPzPiZero[k][iPt]), 2.), 0.5);
                 } else {
                     fMesonSBdefault_FixedPzPiZero[k][iPt]         = 0.;
                     fMesonSBdefaultError_FixedPzPiZero[k][iPt]    = 0.;
                 }
 
                 //Significance default
-                if ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
-                    fMesonSigndefault[k][iPt]                   = fMesonYieldsCorResidualBckFunc[k][iPt]/pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
-                    Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
-                                                                    0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt] +
+                if ( TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
+                    fMesonSigndefault[k][iPt]                   = fMesonYieldsCorResidualBckFunc[k][iPt]/TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
+                    Double_t a                                  = ( TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
+                                                                    0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] +
                                                                     fTotalBckYields[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[k][iPt]);
-                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt]
+                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt]
                                                                   + fTotalBckYields[k][iPt],-1.5) * fTotalBckYieldsError[k][iPt];
-                    fMesonSigndefaultError[k][iPt]              = pow( a*a + b*b, 0.5);
+                    fMesonSigndefaultError[k][iPt]              = TMath::Power( a*a + b*b, 0.5);
                 } else {
                     fMesonSigndefault[k][iPt]       = 0.;
                     fMesonSigndefaultError[k][iPt]  = 0.;
                 }
 
                 //Significance default SubPiZero
-                if ( pow(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt],0.5) != 0){
-                    fMesonSigndefault_SubPiZero[k][iPt]                   = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/pow(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt],0.5);
-                    Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt], -0.5) -
-                                                                    0.5*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]*pow(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] +
+                if ( TMath::Power(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt],0.5) != 0){
+                    fMesonSigndefault_SubPiZero[k][iPt]                   = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/TMath::Power(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt],0.5);
+                    Double_t a                                  = ( TMath::Power(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] + fTotalBckYields_SubPiZero[k][iPt], -0.5) -
+                                                                    0.5*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt] +
                                                                     fTotalBckYields_SubPiZero[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]);
-                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]*pow(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]
+                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]
                                                                   + fTotalBckYields_SubPiZero[k][iPt],-1.5) * fTotalBckYieldsError_SubPiZero[k][iPt];
-                    fMesonSigndefaultError_SubPiZero[k][iPt]              = pow( a*a + b*b, 0.5);
+                    fMesonSigndefaultError_SubPiZero[k][iPt]              = TMath::Power( a*a + b*b, 0.5);
                 } else {
                     fMesonSigndefault_SubPiZero[k][iPt]       = 0.;
                     fMesonSigndefaultError_SubPiZero[k][iPt]  = 0.;
                 }
 
                 //Significance default FixedPzPiZero
-                if ( pow(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt],0.5) != 0){
-                    fMesonSigndefault_FixedPzPiZero[k][iPt]                   = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/pow(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt],0.5);
-                    Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt], -0.5) -
-                                                                    0.5*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]*pow(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] +
+                if ( TMath::Power(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt],0.5) != 0){
+                    fMesonSigndefault_FixedPzPiZero[k][iPt]                   = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/TMath::Power(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt],0.5);
+                    Double_t a                                  = ( TMath::Power(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] + fTotalBckYields_FixedPzPiZero[k][iPt], -0.5) -
+                                                                    0.5*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt] +
                                                                     fTotalBckYields_FixedPzPiZero[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]);
-                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]*pow(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]
+                    Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]
                                                                   + fTotalBckYields_FixedPzPiZero[k][iPt],-1.5) * fTotalBckYieldsError_FixedPzPiZero[k][iPt];
-                    fMesonSigndefaultError_FixedPzPiZero[k][iPt]              = pow( a*a + b*b, 0.5);
+                    fMesonSigndefaultError_FixedPzPiZero[k][iPt]              = TMath::Power( a*a + b*b, 0.5);
                 } else {
                     fMesonSigndefault_FixedPzPiZero[k][iPt]       = 0.;
                     fMesonSigndefaultError_FixedPzPiZero[k][iPt]  = 0.;
@@ -1679,13 +1679,13 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
 
             fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
-            fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
+            fTotalBckYieldsError[k][iPt]                    = TMath::Power(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
 
             fTotalBckYields_SubPiZero[k][iPt]               = fBckYields_SubPiZero[k][iPt] + fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
-            fTotalBckYieldsError_SubPiZero[k][iPt]                    = pow(fBckYieldsError_SubPiZero[k][iPt]*fBckYieldsError_SubPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt],0.5);
+            fTotalBckYieldsError_SubPiZero[k][iPt]                    = TMath::Power(fBckYieldsError_SubPiZero[k][iPt]*fBckYieldsError_SubPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt],0.5);
 
             fTotalBckYields_FixedPzPiZero[k][iPt]                         = fBckYields_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
-            fTotalBckYieldsError_FixedPzPiZero[k][iPt]                    = pow(fBckYieldsError_FixedPzPiZero[k][iPt]*fBckYieldsError_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt],0.5);
+            fTotalBckYieldsError_FixedPzPiZero[k][iPt]                    = TMath::Power(fBckYieldsError_FixedPzPiZero[k][iPt]*fBckYieldsError_FixedPzPiZero[k][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt],0.5);
 
             fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
@@ -1703,21 +1703,21 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                         << fBckYields_FixedPzPiZero[k][iPt] << "\t +- \t" << fBckYieldsError_FixedPzPiZero[k][iPt] << endl<< endl;
 
             fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+            fMesonYieldsCorResidualBckFuncError[k][iPt]     = TMath::Power(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
                                                                 fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
             fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
             fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
 
             // pi0 mass subtracted
             fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]          = fMesonYields_SubPiZero[k][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
-            fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = pow(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
+            fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = TMath::Power(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
                                                                 fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k][iPt]),0.5);
             fMesonYieldsPerEvent_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fNEvents;
             fMesonYieldsPerEventError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
 
             // pz of pi0 fixed
             fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]          = fMesonYields_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
-            fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = pow(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
+            fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = TMath::Power(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
                                                                 fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k][iPt]),0.5);
             fMesonYieldsPerEvent_FixedPzPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]/fNEvents;
             fMesonYieldsPerEventError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]/fNEvents;
@@ -1974,14 +1974,14 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                         << fMesonYieldsResidualBckFunc[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k+3][iPt] << endl<< endl;
 
             fTotalBckYields[k+3][iPt]                       = fBckYields[k+3][iPt] + fMesonYieldsResidualBckFunc[k+3][iPt];
-            fTotalBckYieldsError[k+3][iPt]                  = pow(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
+            fTotalBckYieldsError[k+3][iPt]                  = TMath::Power(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
             fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fTotalBckYields[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError[k+3][iPt] << endl<< endl;
             fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fBckYields[k+3][iPt] << "\t +- \t" << fBckYieldsError[k+3][iPt] << endl<< endl;
 
             fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
-            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
+            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = TMath::Power(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
                                                                     fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
             fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
@@ -1991,14 +1991,14 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                         << fMesonYieldsResidualBckFunc_SubPiZero[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt] << endl<< endl;
 
             fTotalBckYields_SubPiZero[k+3][iPt]                       = fBckYields_SubPiZero[k+3][iPt] + fMesonYieldsResidualBckFunc_SubPiZero[k+3][iPt];
-            fTotalBckYieldsError_SubPiZero[k+3][iPt]                  = pow(fBckYieldsError_SubPiZero[k+3][iPt]*fBckYieldsError_SubPiZero[k+3][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt],0.5);
+            fTotalBckYieldsError_SubPiZero[k+3][iPt]                  = TMath::Power(fBckYieldsError_SubPiZero[k+3][iPt]*fBckYieldsError_SubPiZero[k+3][iPt] + fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt],0.5);
             fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fTotalBckYields_SubPiZero[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError_SubPiZero[k+3][iPt] << endl<< endl;
             fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fBckYields_SubPiZero[k+3][iPt] << "\t +- \t" << fBckYieldsError_SubPiZero[k+3][iPt] << endl<< endl;
 
             fMesonYieldsCorResidualBckFunc_SubPiZero[k+3][iPt]        = fMesonYields_SubPiZero[k+3][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k+3][iPt];
-            fMesonYieldsCorResidualBckFuncError_SubPiZero[k+3][iPt]   = pow(( fMesonYieldsError_SubPiZero[k+3][iPt]*fMesonYieldsError_SubPiZero[k+3][iPt] +
+            fMesonYieldsCorResidualBckFuncError_SubPiZero[k+3][iPt]   = TMath::Power(( fMesonYieldsError_SubPiZero[k+3][iPt]*fMesonYieldsError_SubPiZero[k+3][iPt] +
                                                                     fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_SubPiZero[k+3][iPt]),0.5);
             fMesonYieldsPerEvent_SubPiZero[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc_SubPiZero[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError_SubPiZero[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError_SubPiZero[k+3][iPt]/fNEvents;
@@ -2008,14 +2008,14 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                         << fMesonYieldsResidualBckFunc_FixedPzPiZero[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt] << endl<< endl;
 
             fTotalBckYields_FixedPzPiZero[k+3][iPt]                       = fBckYields_FixedPzPiZero[k+3][iPt] + fMesonYieldsResidualBckFunc_FixedPzPiZero[k+3][iPt];
-            fTotalBckYieldsError_FixedPzPiZero[k+3][iPt]                  = pow(fBckYieldsError_FixedPzPiZero[k+3][iPt]*fBckYieldsError_FixedPzPiZero[k+3][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt],0.5);
+            fTotalBckYieldsError_FixedPzPiZero[k+3][iPt]                  = TMath::Power(fBckYieldsError_FixedPzPiZero[k+3][iPt]*fBckYieldsError_FixedPzPiZero[k+3][iPt] + fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt],0.5);
             fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fTotalBckYields_FixedPzPiZero[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError_FixedPzPiZero[k+3][iPt] << endl<< endl;
             fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fBckYields_FixedPzPiZero[k+3][iPt] << "\t +- \t" << fBckYieldsError_FixedPzPiZero[k+3][iPt] << endl<< endl;
 
             fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k+3][iPt]        = fMesonYields_FixedPzPiZero[k+3][iPt]- fMesonYieldsResidualBckFunc_FixedPzPiZero[k+3][iPt];
-            fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k+3][iPt]   = pow(( fMesonYieldsError_FixedPzPiZero[k+3][iPt]*fMesonYieldsError_FixedPzPiZero[k+3][iPt] +
+            fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k+3][iPt]   = TMath::Power(( fMesonYieldsError_FixedPzPiZero[k+3][iPt]*fMesonYieldsError_FixedPzPiZero[k+3][iPt] +
                                                                     fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt]*fMesonYieldsResidualBckFuncError_FixedPzPiZero[k+3][iPt]),0.5);
             fMesonYieldsPerEvent_FixedPzPiZero[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError_FixedPzPiZero[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k+3][iPt]/fNEvents;
@@ -3941,7 +3941,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             Float_t intLinearBack = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
                     0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
 
-            Float_t errorLinearBck  = pow((pow( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)
+            Float_t errorLinearBck  = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)
                                            +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
             fFileDataLog << "Parameter for bin " << ptBin << endl;
@@ -4251,7 +4251,7 @@ if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinu
     Float_t intLinearBack = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
         0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
 
-    Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitReco->GetParError(5),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(6),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+    Float_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitReco->GetParError(5),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(6),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
     fFileDataLog << "Parameter for bin " << ptBin << endl;
     fFileDataLog << "CrystalBall: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<< "\t "<< fFitReco->GetParameter(4) <<"+-" << fFitReco->GetParError(4)<<endl;
@@ -5199,7 +5199,7 @@ Double_t CrystalBallBck(Double_t *x,Double_t *par) {
     Double_t t = (x[0]-par[1])/par[2];
     if (par[4] < 0) t = -t;
 
-    Double_t absAlpha = fabs((Double_t)par[4]);
+    Double_t absAlpha = TMath::Abs((Double_t)par[4]);
 
     if (t >= -absAlpha) {
         return par[0]*TMath::Exp(-0.5*t*t)+par[5]+par[6]*x[0];
@@ -5217,7 +5217,7 @@ Double_t CrystalBall(Double_t *x,Double_t *par) {
     Double_t t = (x[0]-par[1])/par[2];
     if (par[4] < 0) t = -t;
 
-    Double_t absAlpha = fabs((Double_t)par[4]);
+    Double_t absAlpha = TMath::Abs((Double_t)par[4]);
 
     if (t >= -absAlpha) {
         return par[0]*TMath::Exp(-0.5*t*t);

@@ -621,8 +621,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         TF1* linearMCPt                                             = new TF1("linearMCPt",    "[0]+[1]*x",                    0, 50);
         TF1* exponentRecPt                                          = new TF1("exponentRecPt", "[0]-TMath::Exp(-[1]*x+[2])",   0, 50);
         TF1* exponentMCPt                                           = new TF1("exponentMCPt",  "[0]-TMath::Exp(-[1]*x+[2])",   0, 50);
-        TF1* powerRecPt                                             = new TF1("powerRecPt",    "[0]/pow(x,[1])+[2]",           0, 50);
-        TF1* powerMCPt                                              = new TF1("powerMCPt",     "[0]/pow(x,[1])+[2]",           0, 50);
+        TF1* powerRecPt                                             = new TF1("powerRecPt",    "[0]/TMath::Power(x,[1])+[2]",           0, 50);
+        TF1* powerMCPt                                              = new TF1("powerMCPt",     "[0]/TMath::Power(x,[1])+[2]",           0, 50);
 
         // taken directly from MC (if statistics sufficient)
         for (Int_t k = 0; k < 3; k++ ){
@@ -900,7 +900,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         TF1* powerCP                                                = new TF1("powerCP",       "[0]/TMath::Power((x-[1]), [2])", 0, 50);
         TF1* constantCP                                             = new TF1("constantCP",    "[0]",                            0, 50);
         TF1* linearCP                                               = new TF1("linearCP",      "[0]+[1]*x",                      0, 50);
-        TF1* powerOffsetCP                                          = new TF1("powerOffsetCP", "[0]/pow(x,[1])+[2]",             0, 50);
+        TF1* powerOffsetCP                                          = new TF1("powerOffsetCP", "[0]/TMath::Power(x,[1])+[2]",    0, 50);
 
         for (Int_t k = 0; k < 3; k++) {
             histoGammaSecondaryFromXConvProb_MCPt[k]                = (TH1D*)fileCorrections->Get(Form(                                 "SecondaryGammaFromXFrom%sConvProb_MCPt",

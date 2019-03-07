@@ -141,7 +141,7 @@ fileNameEMCAL2="";
     Double_t xSection7TeV                       = 62.22*1e-3;
     Double_t recalcBarn                         = 1e12; //NLO in pbarn!!!!
 
-    Width_t widthLinesBoxes                     = 1.4;
+    Width_t widthLinesBoxes                     = 1;
     Width_t widthCommonFit                      = 2;
 
     // Definition of colors, styles and markers sizes
@@ -1475,8 +1475,8 @@ fileNameEMCAL2="";
     }
 
     // Calculating binshifts
-    Double_t paramGraph[3]                      = {1.0e12, 8., 0.13};
-    TF1* fitInvXSectionPi0              = FitObject("l","fitInvXSectionPi0","Pi0",graphCombPi0InvXSectionTot,0.3,25.,paramGraph,"QNRMEX0+");
+    Double_t paramGraph[3]                      = {2e11, 7., 0.13};
+    TF1* fitInvXSectionPi0              = FitObject("l","fitInvXSectionPi0","Pi0",graphCombPi0InvXSectionTot,0.3,25.,paramGraph,"QNRME+");
 
     if(bWCorrection.Contains("X")){
         TF1* fitTsallisPi0PtMult        = FitObject("tmpt","TsallisMultWithPtPi07TeV","Pi0");

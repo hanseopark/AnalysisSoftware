@@ -40,16 +40,16 @@
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 
 Float_t FunctionNL_kTestBeamv3(Float_t e){
-    return ( 0.9615 / ( 0.976941 *( 1. / ( 1. + 0.162310 * exp( -e / 1.08689 ) ) * 1. / ( 1. + 0.0819592 * exp( ( e - 152.338 ) / 30.9594 ) ) ) ) );
+    return ( 0.9615 / ( 0.976941 *( 1. / ( 1. + 0.162310 * TMath::Exp( -e / 1.08689 ) ) * 1. / ( 1. + 0.0819592 * TMath::Exp( ( e - 152.338 ) / 30.9594 ) ) ) ) );
 }
 Float_t FunctionNL_kPi0MCv3(Float_t e){
-    return ( 1.0 / ( 0.981039 * ( 1. / ( 1. + 0.113508 * exp( -e / 1.00173 ) ) * 1. / ( 1. + 0.0967998 * exp( ( e - 219.381 ) / 63.1604 ) ) ) ) );
+    return ( 1.0 / ( 0.981039 * ( 1. / ( 1. + 0.113508 * TMath::Exp( -e / 1.00173 ) ) * 1. / ( 1. + 0.0967998 * TMath::Exp( ( e - 219.381 ) / 63.1604 ) ) ) ) );
 }
 Float_t FunctionNL_kPi0MC(Float_t e, Float_t p0, Float_t p1, Float_t p2, Float_t p3, Float_t p4, Float_t p5, Float_t p6){
-    return ( p6 / ( p0 * ( 1. / ( 1. + p1 * exp( -e / p2 ) ) * 1. / ( 1. + p3 * exp( ( e - p4 ) / p5 ) ) ) ) );
+    return ( p6 / ( p0 * ( 1. / ( 1. + p1 * TMath::Exp( -e / p2 ) ) * 1. / ( 1. + p3 * TMath::Exp( ( e - p4 ) / p5 ) ) ) ) );
 }
 Float_t FunctionNL_kSDM(Float_t e, Float_t p0, Float_t p1, Float_t p2){
-    return ( p0 + exp( p1 + ( p2 * e ) ) );
+    return ( p0 + TMath::Exp( p1 + ( p2 * e ) ) );
 }
 Float_t FunctionNL_DPOW(Float_t e, Float_t p0, Float_t p1, Float_t p2, Float_t p3, Float_t p4, Float_t p5){
   Float_t ret = 1;

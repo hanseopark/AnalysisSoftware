@@ -1026,7 +1026,7 @@ void AnalyseDCADist(    TString meson           ="",
 	         }
 
                 DrawGammaSetMarker(fHistFracIntHistBGvsPt[k][i], styleCat[i], 1., colorCat[i], colorCat[i]);
-                fitFracIntHistBGvsPt[k][i]                 = new TF1(Form("fitFracIntHistBGvsPt_%i_%i",k,i),"[0]/pow(x,[1])");
+                fitFracIntHistBGvsPt[k][i]                 = new TF1(Form("fitFracIntHistBGvsPt_%i_%i",k,i),"[0]/TMath::Power(x,[1])");
                 fitFracIntHistBGvsPt[k][i]->SetRange(fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
                 TFitResultPtr resultFracIntHistBGvsPt1  = fHistFracIntHistBGvsPt[k][i]->Fit(fitFracIntHistBGvsPt[k][i],"QNRMESX0+","",fBinsPt[fStartPtBin],4);
                 fitFracIntHistBGvsPt[k][i]->SetLineColor(colorCat[i]);

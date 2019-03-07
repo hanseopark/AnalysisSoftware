@@ -763,8 +763,8 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
 
             // the bin shift correction factor
             ratio[ib] =  shiftedValue / trueValue;
-            ratioErrUp[ib] = TMath::Sqrt( pow(shiftedValueErr/trueValue,2)  + pow( trueValueErrUp*shiftedValue/pow(trueValue,2),2) );
-            ratioErrDown[ib] = TMath::Sqrt( pow(shiftedValueErr/trueValue,2)  + pow( trueValueErrDown*shiftedValue/pow(trueValue,2),2) );
+            ratioErrUp[ib] = TMath::Sqrt( TMath::Power(shiftedValueErr/trueValue,2)  + TMath::Power( trueValueErrUp*shiftedValue/TMath::Power(trueValue,2),2) );
+            ratioErrDown[ib] = TMath::Sqrt( TMath::Power(shiftedValueErr/trueValue,2)  + TMath::Power( trueValueErrDown*shiftedValue/TMath::Power(trueValue,2),2) );
 
             float pt = histoRecBinShiftPi0->GetBinCenter(ib);
 

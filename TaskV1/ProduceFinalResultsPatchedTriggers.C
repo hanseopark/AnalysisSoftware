@@ -813,7 +813,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 triggRejecFac[i][trigSteps[i][0]]           = pol0_2->GetParameter(0);
                 Double_t largestDev = 0;
                 for (Int_t  k = 0; k<11; k++ ){
-                    Double_t diffToFit                      = abs(histoTriggerRejection[i]->GetBinContent(k+1)-triggRejecFac[i][trigSteps[i][0]])+histoTriggerRejection[i]->GetBinError(k+1);
+                    Double_t diffToFit                      = TMath::Abs(histoTriggerRejection[i]->GetBinContent(k+1)-triggRejecFac[i][trigSteps[i][0]])+histoTriggerRejection[i]->GetBinError(k+1);
                     if (diffToFit > largestDev) largestDev  = diffToFit;
                 }
                 triggRejecFacErr[i][trigSteps[i][0]] = largestDev;

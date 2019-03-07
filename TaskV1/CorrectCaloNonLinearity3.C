@@ -1265,7 +1265,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
       histDataResultsVsPDG->SetYTitle("#LT M^{2}_{#pi^{0} (data)} #GT / M^{2}_{#pi^{0} (PDG)}");
     }
     DrawGammaSetMarker(histDataResultsVsPDG, markerStyle[0], 1, color[0], color[0]);
-    TF1* fitMassDataVsPDG = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
+    TF1* fitMassDataVsPDG = new TF1("fitMassDataVsPDG", "[0] + [1]*TMath::Power(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
     fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
     fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
     
@@ -1287,7 +1287,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
       histMCResultsVsPDG->SetYTitle("#LT M^{2}_{#pi^{0} (MC)} #GT / M^{2}_{#pi^{0} (PDG)}");
     }
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
-    TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", "[0] + [1]*pow(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
+    TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", "[0] + [1]*TMath::Power(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
     fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
     fitMassMCVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
 
@@ -1350,7 +1350,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     }else{
       fFitMassPos = FitDataMC(histDataMCResults, fBins[startPtBin], fBins[endPtBin], select,  highPtConst);
     }
-    TF1* fFitComposit = new TF1("fFitComposit", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
+    TF1* fFitComposit = new TF1("fFitComposit", "([0] + [1]*TMath::Power(x,[2]))/([3] + [4]*TMath::Power(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
     fFitComposit->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
     fFitComposit->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
     fFitComposit->SetParameter(2, fitMassMCVsPDG->GetParameter(2) );
@@ -1359,7 +1359,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     fFitComposit->SetParameter(5, fitMassDataVsPDG->GetParameter(2) );
 
     
-    TF1* fFitCompositFitted = new TF1("fFitCompositFitted", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBins[startPtBin],fBins[endPtBin-2]);
+    TF1* fFitCompositFitted = new TF1("fFitCompositFitted", "([0] + [1]*TMath::Power(x,[2]))/([3] + [4]*TMath::Power(x,[5]))" ,fBins[startPtBin],fBins[endPtBin-2]);
     fFitCompositFitted->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
     fFitCompositFitted->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
     fFitCompositFitted->FixParameter(2, fitMassMCVsPDG->GetParameter(2) );
@@ -1368,7 +1368,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     fFitCompositFitted->FixParameter(5, fitMassDataVsPDG->GetParameter(2) );
     histDataMCResults->Fit(fFitCompositFitted,"QRME0");
     
-    TF1* fFitCompositInverted = new TF1("fFitCompositInverted", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
+    TF1* fFitCompositInverted = new TF1("fFitCompositInverted", "([0] + [1]*TMath::Power(x,[2]))/([3] + [4]*TMath::Power(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
     fFitCompositInverted->SetParameter(0, fitMassDataVsPDG->GetParameter(0) );
     fFitCompositInverted->SetParameter(1, fitMassDataVsPDG->GetParameter(1) );
     fFitCompositInverted->SetParameter(2, fitMassDataVsPDG->GetParameter(2) );
@@ -1376,7 +1376,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     fFitCompositInverted->SetParameter(4, fitMassMCVsPDG->GetParameter(1) );
     fFitCompositInverted->SetParameter(5, fitMassMCVsPDG->GetParameter(2) );
     
-    TF1* fFitCompositInvertedFitted = new TF1("fFitCompositInvertedFitted", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
+    TF1* fFitCompositInvertedFitted = new TF1("fFitCompositInvertedFitted", "([0] + [1]*TMath::Power(x,[2]))/([3] + [4]*TMath::Power(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
     fFitCompositInvertedFitted->SetParameter(0, fFitCompositFitted->GetParameter(3) );
     fFitCompositInvertedFitted->SetParameter(1, fFitCompositFitted->GetParameter(4) );
     fFitCompositInvertedFitted->SetParameter(2, fFitCompositFitted->GetParameter(5) );
@@ -1496,7 +1496,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 //*******************************************************************************
 
 Float_t FunctionNL_kSDM(Float_t e, Float_t p0, Float_t p1, Float_t p2){
-    return ( p0 + exp( p1 + ( p2 * e ) ) );
+    return ( p0 + TMath::Exp( p1 + ( p2 * e ) ) );
 }
 Float_t FunctionNL_kLIN(Float_t e, Float_t p0, Float_t p1){
     return ( p0 + p1*e );
@@ -1525,7 +1525,7 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
 
 //     if (!selection.Contains("JetJet")){
         cout << "running standard fit from " <<  minFit << "\t"<<  maxFit << endl;
-        TF1* fFitReco = new TF1("DataMC", "[0]+exp([1]+([2]*x))" ,minFit,maxFit);
+        TF1* fFitReco = new TF1("DataMC", "[0]+TMath::Exp([1]+([2]*x))" ,minFit,maxFit);
 
         fFitReco->SetParameter(0,1.);
         fFitReco->SetParameter(1,0.1);
@@ -1579,7 +1579,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     mesonAmplitudeMin = mesonAmplitude*98./100.;
     mesonAmplitudeMax = mesonAmplitude*400./100.;
 
-    TF1* fFitReco    = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)", 
+    TF1* fFitReco    = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                                fitRangeMin, fitRangeMax);
     Double_t fMesonMassExpect = TDatabasePDG::Instance()->GetParticle(111)->Mass();
     

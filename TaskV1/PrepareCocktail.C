@@ -903,7 +903,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         if (histoGammaMotherPtOrBin[i]) {
             intpart[i] = histoGammaMotherPtOrBin[i]->IntegralAndError(histoGammaMotherPtOrBin[i]->FindBin( ptGenMin), histoGammaMotherPtOrBin[i]->FindBin(ptGenMax), intparterr[i], "width");
             intratio = intpart[i]/intpi0;
-            intratioerr = intratio*pow(pow(intparterr[i]/intpart[i],2)+pow(intpi0err/intpi0,2),0.5);
+            intratioerr = intratio*TMath::Power(TMath::Power(intparterr[i]/intpart[i],2)+TMath::Power(intpi0err/intpi0,2),0.5);
             histoIntPartRatios->SetBinContent(i+1,intratio);
             histomTscalingPoints->GetXaxis()->SetBinLabel(i+1,Form("%s/#pi^{0}",motherParticlesLatex[i].Data()));
             histomTscalingPoints->SetBinContent(i+1,mtScaleFactor[i]);

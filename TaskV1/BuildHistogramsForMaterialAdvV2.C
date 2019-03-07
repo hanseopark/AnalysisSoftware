@@ -217,8 +217,8 @@ void BuildHistogramsForMaterialAdvV2(TString fileName = "kkoch_GammaConvMaterial
 	} else {
 		cout << "Eta range: " <<  "|eta| < " << etaMaxCut << endl;
 	}
-	Double_t fLineCutZRSlope = tan (2*atan(exp(-etaMaxCut)));
-	Double_t fLineCutZRSlopeMin = tan (2*atan(exp(-etaMinCut)));
+    Double_t fLineCutZRSlope = tan (2*TMath::ATan(TMath::Exp(-etaMaxCut)));
+    Double_t fLineCutZRSlopeMin = tan (2*TMath::ATan(TMath::Exp(-etaMinCut)));
 	
 	Double_t minPtPhotonCut = 0.0;
 	if (minPtCutNumber.CompareTo("0") == 0){

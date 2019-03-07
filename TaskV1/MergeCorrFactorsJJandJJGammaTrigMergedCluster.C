@@ -105,7 +105,7 @@ void MergeCorrFactorsJJandJJGammaTrigMergedCluster( TString fCutSelection,
         Double_t weightJJGammaTrigg = 1/TMath::Power(histoTrueEffiPtJJGammaTrigg->GetBinError(i),2);
         Double_t weightSum          = weightJJ + weightJJGammaTrigg;
         Double_t weightedEffi       = (weightJJ*histoTrueEffiPtJJ->GetBinContent(i) + weightJJGammaTrigg * histoTrueEffiPtJJGammaTrigg->GetBinContent(i))/weightSum;
-        Double_t weightedEffiErr    = pow((weightJJ +  weightJJGammaTrigg),-0.5);
+        Double_t weightedEffiErr    = TMath::Power((weightJJ +  weightJJGammaTrigg),-0.5);
         
         if (isfinite(weightedEffi) && isfinite(weightedEffiErr)){
             histoTrueEffiPt->SetBinContent(i, weightedEffi);
@@ -119,7 +119,7 @@ void MergeCorrFactorsJJandJJGammaTrigMergedCluster( TString fCutSelection,
         Double_t weightPrimJJGammaTrigg = 1/TMath::Power(histoTrueEffiPrimPtJJGammaTrigg->GetBinError(i),2);
         Double_t weightPrimSum          = weightPrimJJ + weightPrimJJGammaTrigg;
         Double_t weightedEffiPrim       = (weightPrimJJ*histoTrueEffiPrimPtJJ->GetBinContent(i) + weightPrimJJGammaTrigg * histoTrueEffiPrimPtJJGammaTrigg->GetBinContent(i))/weightPrimSum;
-        Double_t weightedEffiPrimErr    = pow((weightPrimJJ +  weightPrimJJGammaTrigg),-0.5);
+        Double_t weightedEffiPrimErr    = TMath::Power((weightPrimJJ +  weightPrimJJGammaTrigg),-0.5);
         
         if (isfinite(weightedEffiPrim) && isfinite(weightedEffiPrimErr)){
             histoTrueEffiPrimPt->SetBinContent(i, weightedEffiPrim);
@@ -133,7 +133,7 @@ void MergeCorrFactorsJJandJJGammaTrigMergedCluster( TString fCutSelection,
         Double_t weightAJJGammaTrigg= 1/TMath::Power(histoAcceptPtJJGammaTrigg->GetBinError(i),2);
         Double_t weightASum         = weightJJ + weightJJGammaTrigg;
         Double_t weightedAcc        = (weightJJ*histoAcceptPtJJ->GetBinContent(i) + weightJJGammaTrigg * histoAcceptPtJJGammaTrigg->GetBinContent(i))/weightSum;
-        Double_t weightedAccErr     = pow((weightJJ +  weightJJGammaTrigg),-0.5);
+        Double_t weightedAccErr     = TMath::Power((weightJJ +  weightJJGammaTrigg),-0.5);
         
         if (isfinite(weightedAcc) && isfinite(weightedAccErr)){
             histoAcceptPt->SetBinContent(i, weightedAcc);

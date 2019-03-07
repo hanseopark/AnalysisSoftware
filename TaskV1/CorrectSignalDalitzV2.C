@@ -327,22 +327,22 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	histoDefaultTrueSecFracModeledToData->Scale(1+doubleAddFactorK0s);
 	histoDefaultTrueSecFracModeledToData->Add(histoDefaultTrueSecFracNotFromK0sMeson,1);
 	
-	TF1* fitDefaultSecFrac = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFrac = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFrac->SetRange(0.3,16.);
 	TFitResultPtr resultSecFrac = histoDefaultTrueSecFracMeson->Fit(fitDefaultSecFrac,"SINRME+","",0.3,16.);
-	TF1* fitDefaultSecFracWide = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFracWide = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFracWide->SetRange(0.3,16.);
 	TFitResultPtr resultSecFracWide = histoDefaultTrueSecFracMesonWide->Fit(fitDefaultSecFracWide,"SINRME+","",0.3,16.);
-	TF1* fitDefaultSecFracNarrow = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFracNarrow = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFracNarrow->SetRange(0.3,16.);
 	TFitResultPtr resultSecFracNarrow = histoDefaultTrueSecFracMesonNarrow->Fit(fitDefaultSecFracNarrow,"SINRME+","",0.3,16.);
-	TF1* fitDefaultSecFracFromK0 = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFracFromK0 = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFracFromK0->SetRange(0.3,16.);
 	TFitResultPtr resultSecFracFromK0 = histoDefaultTrueSecFracFromK0SMeson->Fit(fitDefaultSecFracFromK0,"SINRME+","",0.3,16.);
-	TF1* fitDefaultSecFracFromK0Wide = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFracFromK0Wide = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFracFromK0Wide->SetRange(0.3,16.);
 	TFitResultPtr resultSecFracFromK0Wide = histoDefaultTrueSecFracFromK0SMesonWide->Fit(fitDefaultSecFracFromK0Wide,"SINRME+","",0.3,16.);
-	TF1* fitDefaultSecFracFromK0Narrow = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
+    TF1* fitDefaultSecFracFromK0Narrow = new TF1("fitDefaultSecFrac","[0]/TMath::Power(x,[1])");
 	fitDefaultSecFracFromK0Narrow->SetRange(0.3,16.);
 	TFitResultPtr resultSecFracFromK0Narrow = histoDefaultTrueSecFracFromK0SMesonNarrow->Fit(fitDefaultSecFracFromK0Narrow,"SINRME+","",0.3,16.);
 	
@@ -470,12 +470,12 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	TH1D *histoYieldTrueSecFracFromK0SMesonWide = NULL;
 	TH1D *histoYieldTrueSecFracMeson_orig = NULL;
 	TH1D *histoYieldTrueSecFracFromK0SMeson_orig = NULL;
-	TF1* fitpPbSecFrac = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
-	TF1* fitpPbSecFracWide = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
-	TF1* fitpPbSecFracNarrow = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
-	TF1* fitpPbSecFracFromK0 = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
-	TF1* fitpPbSecFracFromK0Wide = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
-	TF1* fitpPbSecFracFromK0Narrow = new TF1("fitpPbSecFrac","[0]/pow(x,[1])");
+    TF1* fitpPbSecFrac = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
+    TF1* fitpPbSecFracWide = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
+    TF1* fitpPbSecFracNarrow = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
+    TF1* fitpPbSecFracFromK0 = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
+    TF1* fitpPbSecFracFromK0Wide = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
+    TF1* fitpPbSecFracFromK0Narrow = new TF1("fitpPbSecFrac","[0]/TMath::Power(x,[1])");
 	TH1D* histoYieldSecMesonLeft = NULL;
 	TH1D* histoYieldSecMeson = NULL;
 	TH1D* histoYieldSecMesonLeftNarrow = NULL;
@@ -1012,7 +1012,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPt, styleMethod[0], 1.2, colorMethod[0], colorMethod[0]);      
 		histoCorrectionFactorsHistvsPt->GetYaxis()->SetTitleOffset(0.8);
 		histoCorrectionFactorsHistvsPt->DrawCopy("p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPt->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPt = histoCorrectionFactorsHistvsPt->Fit(fitCorrectionFactorsHistvsPt,"SINRME+","",0.4, maxPtMeson);
 		TString bla= WriteParameterToFile(fitCorrectionFactorsHistvsPt);
@@ -1025,7 +1025,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		if (histoCorrectionFactorsFitvsPt) {
 			DrawGammaSetMarker(histoCorrectionFactorsFitvsPt, styleMethod[1], 1.2, colorMethod[1], colorMethod[1]);      
 			histoCorrectionFactorsFitvsPt->DrawCopy("same,p,e1"); 
-			fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/pow(x,[1])+[2]");
+            fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/TMath::Power(x,[1])+[2]");
 			fitCorrectionFactorsFitvsPt->SetRange(0.4, maxPtMeson);
 			resultCorrectionFactorsFitvsPt = histoCorrectionFactorsFitvsPt->Fit(fitCorrectionFactorsFitvsPt,"SINRME+","",0.4, maxPtMeson);
 			fitCorrectionFactorsFitvsPt->SetLineColor(colorMethod[1]);
@@ -1033,7 +1033,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		}
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatA, styleMethod[2], 1.2, colorMethod[2], colorMethod[2]);      
 		histoCorrectionFactorsHistvsPtCatA->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatA = new TF1("fitCorrectionFactorsHistvsPtCatA","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatA = new TF1("fitCorrectionFactorsHistvsPtCatA","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatA->SetRange(0.4, maxPtMeson);
 		
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatA = histoCorrectionFactorsHistvsPtCatA->Fit(fitCorrectionFactorsHistvsPtCatA,"SINRME+","",0.4, maxPtMeson);
@@ -1042,7 +1042,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatC, styleMethod[3], 1.2, colorMethod[3], colorMethod[3]);      
 		histoCorrectionFactorsHistvsPtCatC->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatC = new TF1("fitCorrectionFactorsHistvsPtCatC","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatC = new TF1("fitCorrectionFactorsHistvsPtCatC","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatC->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatC = histoCorrectionFactorsHistvsPtCatC->Fit(fitCorrectionFactorsHistvsPtCatC,"SINRME+","",0.4, maxPtMeson);
 		fitCorrectionFactorsHistvsPtCatC->SetLineColor(colorMethod[3]);
@@ -1050,7 +1050,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatD, styleMethod[4], 1.2, colorMethod[4], colorMethod[4]);      
 		histoCorrectionFactorsHistvsPtCatD->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatD = new TF1("fitCorrectionFactorsHistvsPtCatD","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatD = new TF1("fitCorrectionFactorsHistvsPtCatD","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatD->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatD = histoCorrectionFactorsHistvsPtCatD->Fit(fitCorrectionFactorsHistvsPtCatD,"SINRME+","",0.4, maxPtMeson);
 		fitCorrectionFactorsHistvsPtCatD->SetLineColor(colorMethod[4]);
@@ -1369,7 +1369,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		maxPtMesonEffFit = maxPtMeson;
 		minPtMesonEffFit = 1.2;
 		offsetCorrectionHighPt= 1;
-		fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([2]*x)+[2]");
+        fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*TMath::Exp([2]*x)+[2]");
 	} else {
 		maxPtMesonEffFit = 4.;
 		minPtMesonEffFit = 1.2;
@@ -1379,7 +1379,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 			offsetCorrectionHighPt= -2;
 			cout << "doing pi0" << endl;
 		}
-		fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([2]*x)+[2]");
+        fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*TMath::Exp([2]*x)+[2]");
 	}
 	fitTrueEffi->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 	TFitResultPtr resultEffi = histoTrueEffiPt->Fit(fitTrueEffi,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
@@ -1399,7 +1399,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	TH1D* histoRatioTrueEffiDivFitted = (TH1D*)histoTrueEffiPt->Clone("histoRatioTrueEffiDivFitted");
 	histoRatioTrueEffiDivFitted->Divide(histoTrueEffiPt, histoTrueEffiPtFit, 1. ,1., "B");
 	
-	TF1* fitTrueEffiNarrow = new TF1("EffiNarrowFitDummy","1 - [0]*exp([2]*x)+[2] ");
+    TF1* fitTrueEffiNarrow = new TF1("EffiNarrowFitDummy","1 - [0]*TMath::Exp([2]*x)+[2] ");
 	fitTrueEffiNarrow->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 	//       fitTrueEffiNarrow->SetParameter(2,1-fitTrueEffiNarrowHighPtCut[i]->GetParameter(0)   );
 	TFitResultPtr resultEffiNarrow = histoTrueEffiNarrowPt->Fit(fitTrueEffiNarrow,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
@@ -1416,7 +1416,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 		histoTrueEffiNarrowPtFit->SetBinError(i, errorEffiNarrow);
 	}
 
-	TF1* fitTrueEffiWide = new TF1("EffiWideFitDummy","1 - [0]*exp([2]*x)+[2] ");
+    TF1* fitTrueEffiWide = new TF1("EffiWideFitDummy","1 - [0]*TMath::Exp([2]*x)+[2] ");
 	fitTrueEffiWide->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
 	//       fitTrueEffiWide->SetParameter(2,1-fitTrueEffiWideHighPtCut[i]->GetParameter(0)   );
 	TFitResultPtr resultEffiWide = histoTrueEffiWidePt->Fit(fitTrueEffiWide,"SINRME+","",minPtMesonEffFit,maxPtMesonEffFit);
@@ -1468,7 +1468,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 		
 		TF1* fitEffiBiasWOWeightsNormalPol0 		= new TF1("fitEffiBiasWOWeightsNormalPol0","[0]",0.4,maxPtMeson);
-		TF1* fitEffiBiasWOWeightsNormalPol1 		= new TF1("fitEffiBiasWOWeightsNormalPol1","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
+        TF1* fitEffiBiasWOWeightsNormalPol1 		= new TF1("fitEffiBiasWOWeightsNormalPol1","[0]/TMath::Power(x,[1])+[2]",0.4,maxPtMeson);
 		fitEffiBiasWOWeightsNormalPol1->SetParLimits(2,0.5,1.5);
 		
 		histoRatioEffWOWeightingNormalEff->Fit(fitEffiBiasWOWeightsNormalPol0,"NRME+","",1.0,maxPtMeson);
@@ -1524,7 +1524,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 		
 		TF1* fitEffiBiasWOWeightsNormalPol0Nar 		= new TF1("fitEffiBiasWOWeightsNormalPol0Nar","[0]",0.4,maxPtMeson);
-		TF1* fitEffiBiasWOWeightsNormalPol1Nar 		= new TF1("fitEffiBiasWOWeightsNormalPol1Nar","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
+        TF1* fitEffiBiasWOWeightsNormalPol1Nar 		= new TF1("fitEffiBiasWOWeightsNormalPol1Nar","[0]/TMath::Power(x,[1])+[2]",0.4,maxPtMeson);
 		fitEffiBiasWOWeightsNormalPol1Nar->SetParLimits(2,0.5,1.5);
 		
 		histoRatioEffWOWeightingNormalEffNarrow->Fit(fitEffiBiasWOWeightsNormalPol0Nar,"NRME+","",1.0,maxPtMeson);
@@ -1577,7 +1577,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 		
 		TF1* fitEffiBiasWOWeightsNormalPol0Wi 		= new TF1("fitEffiBiasWOWeightsNormalPol0Wi","[0]",0.4,maxPtMeson);
-		TF1* fitEffiBiasWOWeightsNormalPol1Wi 		= new TF1("fitEffiBiasWOWeightsNormalPol1Wi","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
+        TF1* fitEffiBiasWOWeightsNormalPol1Wi 		= new TF1("fitEffiBiasWOWeightsNormalPol1Wi","[0]/TMath::Power(x,[1])+[2]",0.4,maxPtMeson);
 		fitEffiBiasWOWeightsNormalPol1Wi->SetParLimits(2,0.5,1.5);
 		
 		histoRatioEffWOWeightingNormalEff->Fit(fitEffiBiasWOWeightsNormalPol0Wi,"NRME+","",0.4,maxPtMeson);
@@ -2553,7 +2553,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 
 
 		for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-			binsMt[iPt]=pow((histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)*histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)+mesonMassExpect*mesonMassExpect),0.5);
+            binsMt[iPt]=TMath::Power((histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)*histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)+mesonMassExpect*mesonMassExpect),0.5);
 			cout << "recalculation pt to mt:    " << iPt<<"     pt      "<< histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)<< "      mt    " << binsMt[iPt]<< endl;
 		}
 

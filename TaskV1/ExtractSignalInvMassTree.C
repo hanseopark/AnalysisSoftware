@@ -1213,7 +1213,7 @@ void ExtractSignalInvMassTree(
 
             if( (fGGYields[0][iPt] - fMesonTrueYields[0][iPt]) > 0) {
                 fMesonTrueSB[iPt]               = fMesonTrueYields[0][iPt] / ( fGGYields[0][iPt] - fMesonTrueYields[0][iPt] );
-                fMesonTrueSign[iPt]             = fMesonTrueYields[0][iPt] / pow( ( fGGYields[0][iPt] - fMesonTrueYields[0][iPt] ) , 0.5);
+                fMesonTrueSign[iPt]             = fMesonTrueYields[0][iPt] / TMath::Power( ( fGGYields[0][iPt] - fMesonTrueYields[0][iPt] ) , 0.5);
                 fMesonTrueSBError[iPt]          = 0;
                 fMesonTrueSignError[iPt]        = 0;
             }
@@ -1252,7 +1252,7 @@ void ExtractSignalInvMassTree(
             
             /////////////////////// added to check yields //////////////////////////////////////////////////////////   
             fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
-            fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
+            fTotalBckYieldsError[k][iPt]                    = TMath::Power(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
             fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
                          << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
             fFileDataLog << "Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
@@ -1260,7 +1260,7 @@ void ExtractSignalInvMassTree(
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
                     
             fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+            fMesonYieldsCorResidualBckFuncError[k][iPt]     = TMath::Power(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
                                                                 fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
             fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
             fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
@@ -1272,21 +1272,21 @@ void ExtractSignalInvMassTree(
             //SB default
             if (fTotalBckYields[k][iPt] != 0){
                 fMesonSBdefault[k][iPt]                     = fMesonYieldsCorResidualBckFunc[k][iPt]/fTotalBckYields[k][iPt];
-                fMesonSBdefaultError[k][iPt]                = pow( pow(fMesonYieldsCorResidualBckFuncError[k][iPt]/fTotalBckYields[k][iPt], 2.) +
-                                                            pow((fTotalBckYieldsError[k][iPt]*fMesonYieldsCorResidualBckFunc[k][iPt])/(fTotalBckYields[k][iPt] *fTotalBckYields[k][iPt]), 2.), 0.5);
+                fMesonSBdefaultError[k][iPt]                = TMath::Power( TMath::Power(fMesonYieldsCorResidualBckFuncError[k][iPt]/fTotalBckYields[k][iPt], 2.) +
+                                                            TMath::Power((fTotalBckYieldsError[k][iPt]*fMesonYieldsCorResidualBckFunc[k][iPt])/(fTotalBckYields[k][iPt] *fTotalBckYields[k][iPt]), 2.), 0.5);
             } else {
                 fMesonSBdefault[k][iPt]         = 0.;
                 fMesonSBdefaultError[k][iPt]    = 0.;            
             }    
             //Significance default
-            if ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
-                fMesonSigndefault[k][iPt]                   = fMesonYieldsCorResidualBckFunc[k][iPt]/pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
-                Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
-                                                                0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt] +
+            if ( TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
+                fMesonSigndefault[k][iPt]                   = fMesonYieldsCorResidualBckFunc[k][iPt]/TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
+                Double_t a                                  = ( TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
+                                                                0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt] +
                                                                 fTotalBckYields[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[k][iPt]);
-                Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt]
+                Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*TMath::Power(fMesonYieldsCorResidualBckFunc[k][iPt]
                                                               + fTotalBckYields[k][iPt],-1.5) * fTotalBckYieldsError[k][iPt];
-                fMesonSigndefaultError[k][iPt]              = pow( a*a + b*b, 0.5);
+                fMesonSigndefaultError[k][iPt]              = TMath::Power( a*a + b*b, 0.5);
             } else {
                 fMesonSigndefault[k][iPt]       = 0.;
                 fMesonSigndefaultError[k][iPt]  = 0.;
@@ -1413,14 +1413,14 @@ void ExtractSignalInvMassTree(
                          << fMesonYieldsResidualBckFunc[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k+3][iPt] << endl<< endl;
             
             fTotalBckYields[k+3][iPt]                       = fBckYields[k+3][iPt] + fMesonYieldsResidualBckFunc[k+3][iPt];
-            fTotalBckYieldsError[k+3][iPt]                  = pow(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
+            fTotalBckYieldsError[k+3][iPt]                  = TMath::Power(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
             fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
                          << fTotalBckYields[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError[k+3][iPt] << endl<< endl;
             fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
                          << fBckYields[k+3][iPt] << "\t +- \t" << fBckYieldsError[k+3][iPt] << endl<< endl;
                     
             fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
-            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
+            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = TMath::Power(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
                                                                     fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
             fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
@@ -4326,10 +4326,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     }
     
     fFitReco= NULL;
-    fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitGausExp =NULL;
-    fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck = NULL;
     fFitLinearBck = new TF1("Linear","[0]+[1]*x",fMesonFitRange[0],fMesonFitRange[1]);
@@ -4416,7 +4416,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         Float_t intLinearBack = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
             0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
 
-        Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+        Float_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
         fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
@@ -4528,10 +4528,10 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     }
     
     fFitReco        = NULL;
-    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitGausExp     = NULL;
-    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck   = NULL;
     fFitLinearBck   = new TF1("BGfit","[0]+[1]*x+[2]*x*x",fMesonFitRange[0],fMesonFitRange[1]);
@@ -4706,13 +4706,13 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     }
     
     fFitReco        = NULL;
-    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]*exp([5]*x))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]*exp([5]*x))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]*TMath::Exp([5]*x))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]*TMath::Exp([5]*x))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitGausExp     = NULL;
-    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck   = NULL;
-    fFitLinearBck   = new TF1("BGfit","[0]*exp([1]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitLinearBck   = new TF1("BGfit","[0]*TMath::Exp([1]*x)",fMesonFitRange[0],fMesonFitRange[1]);
 
 
     fFitReco->SetParameter(0,mesonAmplitude);
@@ -4884,13 +4884,13 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     }
     
     fFitReco        = NULL;
-    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*exp([6]*x))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*exp([6]*x))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*TMath::Exp([6]*x))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*TMath::Exp([6]*x))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitGausExp     = NULL;
-    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck   = NULL;
-    fFitLinearBck   = new TF1("BGfit","[0]+[1]*exp([2]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitLinearBck   = new TF1("BGfit","[0]+[1]*TMath::Exp([2]*x)",fMesonFitRange[0],fMesonFitRange[1]);
 
 
     fFitReco->SetParameter(0,mesonAmplitude);
@@ -5083,10 +5083,10 @@ void GausFitSubtractedInvMassInPtBinsNew(TH1D* fHistoMappingSignalInvMassPtBinSi
     Double_t mesonAmplitudeMax = mesonAmplitude*400./100.;
     
     fFitReco = NULL;
-    fFitReco = new TF1(functionname,"(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitReco = new TF1(functionname,"(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
     
     fFitGausExp = NULL;
-    fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck = NULL;
     fFitLinearBck = new TF1("Linear","[0]+[1]*x",fMesonFitRange[0],fMesonFitRange[1]);
@@ -5126,7 +5126,7 @@ void GausFitSubtractedInvMassInPtBinsNew(TH1D* fHistoMappingSignalInvMassPtBinSi
             Double_t startBinEdge = fCopySignal->GetXaxis()->GetBinLowEdge(i);
             Double_t endBinEdge = fCopySignal->GetXaxis()->GetBinUpEdge(i);
             Double_t intLinearBack = fFitLinearBck->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-            Double_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix2[nFreePar2*nFreePar2-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+            Double_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix2[nFreePar2*nFreePar2-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
             fCopyOnlyBG->SetBinContent(i,intLinearBack);
             fCopyOnlyBG->SetBinError(i,errorLinearBck);
             fCopySignal->SetBinContent(i,fCopySignal->GetBinContent(i)-intLinearBack);
@@ -5180,9 +5180,9 @@ void GausFitSubtractedInvMassInPtBinsNew(TH1D* fHistoMappingSignalInvMassPtBinSi
             Double_t errorLin = fFitReco->GetParError(6);
             if (errorConst == 0) errorConst = fFitLinearBck->GetParError(0);
             if (errorLin == 0) errorLin = fFitLinearBck->GetParError(1);
-            if (errorConst == 0) errorConst = abs(fFitLinearBck->GetParameter(0)*0.005);
-            if (errorLin == 0) errorLin = abs(fFitLinearBck->GetParameter(1)*0.005);
-            Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*errorConst,2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*errorLin,2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+            if (errorConst == 0) errorConst = TMath::Abs(fFitLinearBck->GetParameter(0)*0.005);
+            if (errorLin == 0) errorLin = TMath::Abs(fFitLinearBck->GetParameter(1)*0.005);
+            Float_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*errorConst,2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*errorLin,2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
     
             fIntLinearBck = intLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
             fIntLinearBckError = errorLinearBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
@@ -5237,12 +5237,12 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     }
     
     fFitReco = NULL;
-    TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0], fMesonFitRange[1]);
+    TF1* fFitRecoPre = new TF1("fGauss","([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0], fMesonFitRange[1]);
     if (fMode == 2 || fMode == 4){
-        fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
+        fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                         fMesonFitRange[0], fMesonFitRange[1]);
     } else {
-        fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0],
+        fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0],
                         fMesonFitRange[1]);
     }
 
@@ -5437,7 +5437,7 @@ void FitCBSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle,
             Double_t startBinEdge = fCopySignal->GetXaxis()->GetBinLowEdge(i);
             Double_t endBinEdge = fCopySignal->GetXaxis()->GetBinUpEdge(i);
             Double_t intLinearBack = fFitLinearBck->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-            Double_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix2[nFreePar2*nFreePar2-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+            Double_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix2[nFreePar2*nFreePar2-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
             fCopyOnlyBG->SetBinContent(i,intLinearBack);
             fCopyOnlyBG->SetBinError(i,errorLinearBck);
             fCopySignal->SetBinContent(i,fCopySignal->GetBinContent(i)-intLinearBack);
@@ -5494,9 +5494,9 @@ void FitCBSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle,
             Double_t errorLin = fFitReco->GetParError(6);
             if (errorConst == 0) errorConst = fFitLinearBck->GetParError(0);
             if (errorLin == 0) errorLin = fFitLinearBck->GetParError(1);
-            if (errorConst == 0) errorConst = abs(fFitLinearBck->GetParameter(0)*0.005);
-            if (errorLin == 0) errorLin = abs(fFitLinearBck->GetParameter(1)*0.005);
-            Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*errorConst,2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*errorLin,2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+            if (errorConst == 0) errorConst = TMath::Abs(fFitLinearBck->GetParameter(0)*0.005);
+            if (errorLin == 0) errorLin = TMath::Abs(fFitLinearBck->GetParameter(1)*0.005);
+            Float_t errorLinearBck = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*errorConst,2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*errorLin,2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
             
             
@@ -6202,7 +6202,7 @@ void CalculateFWHM(TF1 * fFunc){
 // Default function
     if (fCrysFitting == 0){
         TF1* fFunc_def;
-        fFunc_def = new TF1("fFunc_def","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+        fFunc_def = new TF1("fFunc_def","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
         fFunc_def->SetParameter(0,fFunc->GetParameter(0));
         fFunc_def->SetParameter(1,fFunc->GetParameter(1));
         fFunc_def->SetParameter(2,fFunc->GetParameter(2));
@@ -6213,7 +6213,7 @@ void CalculateFWHM(TF1 * fFunc){
 
         //FWHM error +
         TF1* fFunc_plus;
-        fFunc_plus = new TF1("fFunc_plus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+        fFunc_plus = new TF1("fFunc_plus","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
         fFunc_plus->SetParameter(0,fFunc->GetParameter(0) + fFunc->GetParError(0));
         fFunc_plus->SetParameter(1,fFunc->GetParameter(1) + fFunc->GetParError(1));
         fFunc_plus->SetParameter(2,fFunc->GetParameter(2) + fFunc->GetParError(2));
@@ -6223,7 +6223,7 @@ void CalculateFWHM(TF1 * fFunc){
         //FWHM error -
         TF1* fFunc_minus;
         //   fFunc_minus = fFunc;
-        fFunc_minus = new TF1("fFunc_minus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+        fFunc_minus = new TF1("fFunc_minus","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
         fFunc_minus->SetParameter(0,fFunc->GetParameter(0) - fFunc->GetParError(0));
         fFunc_minus->SetParameter(1,fFunc->GetParameter(1) - fFunc->GetParError(1));
         fFunc_minus->SetParameter(2,fFunc->GetParameter(2) - fFunc->GetParError(2));

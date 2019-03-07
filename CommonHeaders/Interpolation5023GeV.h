@@ -1290,16 +1290,16 @@ void CalcRpPb(  TGraphAsymmErrors* PPSpectrumSystErr,
         (*graphRpPbSystErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint]);
         (*graphRpPbStatErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
     
-        Double_t errYStat       = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
+        Double_t errYStat       = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
         Double_t errYSystlow;
         Double_t errYSysthigh; 
         if (Individual) {//assigne TpPbErr only to combined result
             cout<<"Test Individual!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
-            errYSystlow     = pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
-            errYSysthigh    = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];    
+            errYSystlow     = TMath::Power( TMath::Power( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
+            errYSysthigh    = TMath::Power( TMath::Power( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
         } else{	   cout<<"Test Comb!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
-            errYSystlow     = pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
-            errYSysthigh    = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
+            errYSystlow     = TMath::Power( TMath::Power( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
+            errYSysthigh    = TMath::Power( TMath::Power( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
         }
         
         (*graphRpPbStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);
@@ -1343,9 +1343,9 @@ void CalcRpPbInvYield(  TGraphAsymmErrors* PPSpectrumSystErr,
         (*graphRpPbSystErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint]);
         (*graphRpPbStatErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
         
-        Double_t errYStat       = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
-        Double_t errYSystlow    = pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
-        Double_t errYSysthigh   = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
+        Double_t errYStat       = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
+        Double_t errYSystlow    = TMath::Power( TMath::Power( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
+        Double_t errYSysthigh   = TMath::Power( TMath::Power( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
         
         (*graphRpPbStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);
         (*graphRpPbSystErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYSystlow,errYSysthigh);

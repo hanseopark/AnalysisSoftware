@@ -4391,12 +4391,12 @@
 
     void DrawMergedClusterLambdaCuts (Int_t nlm = 1, Float_t maxPt = 50.05){
         if (nlm == 1 || nlm == 0 ){
-            TF1 *min1 = new TF1("min1","exp(2.135-0.245*x)",4.95,14.63);
+            TF1 *min1 = new TF1("min1","TMath::Exp(2.135-0.245*x)",4.95,14.63);
             min1->SetLineColor(kWhite);
             min1->SetLineWidth(4);
             min1->SetLineStyle(2);
             min1->Draw("same");
-            TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,14.63);
+            TF1 *min = new TF1("min","TMath::Exp(2.135-0.245*x)",4.95,14.63);
             min->SetLineColor(kRed+2);
             min->SetLineWidth(3);
             min->SetLineStyle(2);
@@ -4411,18 +4411,18 @@
             cnst->SetLineStyle(2);
             cnst->SetLineWidth(3);
             cnst->Draw("same");
-            TF1 *max1 = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
+            TF1 *max1 = new TF1("max","TMath::Exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
             max1->SetLineColor(kWhite);
             max1->SetLineWidth(4);
             max1->SetLineStyle(2);
             max1->Draw("same");
-            TF1 *max = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
+            TF1 *max = new TF1("max","TMath::Exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
             max->SetLineColor(kRed+2);
             max->SetLineWidth(3);
             max->SetLineStyle(2);
             max->Draw("same");
         } else if (nlm == 2){
-            TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,14.63);
+            TF1 *min = new TF1("min","TMath::Exp(2.135-0.245*x)",4.95,14.63);
             min->SetLineColor(kWhite);
             min->SetLineWidth(2);
             min->SetLineStyle(2);
@@ -4440,7 +4440,7 @@
             cnst->SetLineStyle(2);
             cnst->SetLineWidth(1);
             cnst->Draw("same");
-            TF1 *max = new TF1("max","exp(0.353-0.0264*x)-0.524+0.00559*x+21.9/x",9.5,maxPt);
+            TF1 *max = new TF1("max","TMath::Exp(0.353-0.0264*x)-0.524+0.00559*x+21.9/x",9.5,maxPt);
             max->SetLineColor(kWhite);
             max->SetLineWidth(2);
             max->SetLineStyle(2);

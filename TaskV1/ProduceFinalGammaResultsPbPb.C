@@ -398,8 +398,8 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
             Double_t xerrlow         = graphInvYieldPbPbTheoryEPS09->GetErrorXhigh(i);
 
             graphInvYieldPbPbTheoryCTEQ61EPS09->SetPointError( i,xerrlow,xerrlow,
-                                                        sqrt(yerrlow1*yerrlow1+ yerrlow2*yerrlow2),
-                                                        sqrt(yerrhigh1*yerrhigh1+ yerrhigh2*yerrhigh2));
+                                                        TMath::Sqrt(yerrlow1*yerrlow1+ yerrlow2*yerrlow2),
+                                                        TMath::Sqrt(yerrhigh1*yerrhigh1+ yerrhigh2*yerrhigh2));
         }
         
         cout << "======================================================================= DR EPS09 =================================================================" << endl;
@@ -425,8 +425,8 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
             Double_t xerrlow         = graphInvYieldPPTheoryCT10BFG2_scale->GetErrorXhigh(i);
 
             graphInvYieldPPTheoryCT10BFG2_pdfErr->SetPointError(i,xerrlow,xerrlow,
-                                                                sqrt(yerrlow1*yerrlow1+ yerrlow2*yerrlow2),
-                                                                sqrt(yerrhigh1*yerrhigh1+ yerrhigh2*yerrhigh2));
+                                                                TMath::Sqrt(yerrlow1*yerrlow1+ yerrlow2*yerrlow2),
+                                                                TMath::Sqrt(yerrhigh1*yerrhigh1+ yerrhigh2*yerrhigh2));
         }
         graphDRPbPbCT10BFG2_pdfErr                                 = (TGraphAsymmErrors*)graphInvYieldPPTheoryCT10BFG2_pdfErr->Clone("graphDRPbPbCT10BFG2_pdfErr");
         for (Int_t bin = 0; bin < graphDRPbPbCT10BFG2_pdfErr->GetN(); bin++){
@@ -820,7 +820,7 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
     
     for(Int_t i = 1; i<histoDoubleRatioWithSummedErrors->GetNbinsX();i++){
 //         cout<<systErrorsDoubleRatioX[i-1]<<"  "<<histoDoubleRatioWithSummedErrors->GetBinCenter(i+1)<<endl;
-        Double_t binErrorSummed = sqrt( pow( (histoDoubleRatioWithSummedErrors->GetBinError(i+1)/histoDoubleRatioWithSummedErrors->GetBinContent(i+1))*100,2) + pow(systErrorsDoubleRatio[i-1],2) );
+        Double_t binErrorSummed = TMath::Sqrt( TMath::Power( (histoDoubleRatioWithSummedErrors->GetBinError(i+1)/histoDoubleRatioWithSummedErrors->GetBinContent(i+1))*100,2) + TMath::Power(systErrorsDoubleRatio[i-1],2) );
         Double_t binErrorSyst = systErrorsDoubleRatio[i-1];
         Double_t binErrorSystA = systErrorsDoubleRatioA[i-1];
         Double_t binErrorSystB = systErrorsDoubleRatioB[i-1];
@@ -873,7 +873,7 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
         
         Double_t q1Error     = errRgamma/(Rgamma*Rgamma);
         Double_t content     = nIncGamma * ( 1 - 1/ Rgamma);
-        Double_t error         = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+        Double_t error         = TMath::Sqrt( TMath::Power( q1 * errNIncGam ,2) + TMath::Power( q1Error * nIncGamma ,2));
         Double_t errDR        = content - error;
         histoDirGammaSpectrumSyst->SetBinError(i+1, error);
         histoDirGammaSpectrumSyst->SetBinContent(i+1, content);
@@ -885,7 +885,7 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
         q1             = 1 - 1/ Rgamma;
         q1Error     = errRgamma/(Rgamma*Rgamma);
         content     = nIncGamma * ( 1 - 1/ Rgamma);
-        error         = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+        error         = TMath::Sqrt( TMath::Power( q1 * errNIncGam ,2) + TMath::Power( q1Error * nIncGamma ,2));
         errDR        = content - error;
         histoDirGammaSpectrumStat->SetBinError(i+1, error);
         histoDirGammaSpectrumStat->SetBinContent(i+1, content);
@@ -893,11 +893,11 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
         
         // calculating summed error graphs
         errRgamma    = histoDirGammaSpectrumSummed->GetBinError(i+1);
-        errNIncGam     = sqrt( pow( histoIncGammaSpec->GetBinError(i+1),2) + pow( graphIncGammaSysErr->GetEYhigh()[i-1], 2) );
+        errNIncGam     = TMath::Sqrt( TMath::Power( histoIncGammaSpec->GetBinError(i+1),2) + TMath::Power( graphIncGammaSysErr->GetEYhigh()[i-1], 2) );
         q1             = 1 - 1/ Rgamma;
         q1Error     = errRgamma/(Rgamma*Rgamma);
         content     = nIncGamma * ( 1 - 1/ Rgamma);
-        error         = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+        error         = TMath::Sqrt( TMath::Power( q1 * errNIncGam ,2) + TMath::Power( q1Error * nIncGamma ,2));
         errDR        = content - error;
         histoDirGammaSpectrumSummed->SetBinError(i+1, error);
         histoDirGammaSpectrumSummed->SetBinContent(i+1, content);
@@ -909,7 +909,7 @@ void ProduceFinalGammaResultsPbPb(TString inputFileName = "", TString cutSel = "
         q1             = 1 - 1/ Rgamma;
         q1Error     = errRgamma/(Rgamma*Rgamma);
         content     = nIncGamma * ( 1 - 1/ Rgamma);
-        error         = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+        error         = TMath::Sqrt( TMath::Power( q1 * errNIncGam ,2) + TMath::Power( q1Error * nIncGamma ,2));
         errDR        = content - error;
         histoDirGammaSpectrumSystWithoutMat->SetBinError(i+1, error);
         histoDirGammaSpectrumSystWithoutMat->SetBinContent(i+1, content);

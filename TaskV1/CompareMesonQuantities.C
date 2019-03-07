@@ -235,7 +235,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 intErrLowMassMC[iPt]            = TMath::Sqrt(intLowMassMC[iPt]);
                 if (intLowMassMC[iPt] != 0){
                     ratioLowMass[iPt]           = (intLowMassData[iPt]/integralData)/(intLowMassMC[iPt]/integralMC);
-                    ratioErrLowMass[iPt]        = ratioLowMass[iPt]* TMath::Sqrt(pow(intErrLowMassData[iPt]/intLowMassData[iPt],2) + pow(intErrLowMassMC[iPt]/intLowMassMC[iPt],2));
+                    ratioErrLowMass[iPt]        = ratioLowMass[iPt]* TMath::Sqrt(TMath::Power(intErrLowMassData[iPt]/intLowMassData[iPt],2) + TMath::Power(intErrLowMassMC[iPt]/intLowMassMC[iPt],2));
                 } else {
                     ratioLowMass[iPt]           = 1;
                     ratioErrLowMass[iPt]        = 0.1;

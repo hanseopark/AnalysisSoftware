@@ -639,7 +639,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 // Fit
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
                 //--------------------------------------------------------------------------------------------------------------------------------------------
-                    fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
+                    fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/TMath::Power(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
                     if(mode == 0 && kCollisionSystem==1 && !(centralityString.Contains("20-40%") || centralityString.Contains("20-50%"))) cout << "const factor not fixed" << endl;
                     else{
@@ -653,7 +653,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
               // Fit
                   histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
               //--------------------------------------------------------------------------------------------------------------------------------------------
-                  fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
+                  fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/TMath::Power(x,[1])+[2]");
                   fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
                   fithistoRatioSecEffDivTrueEff[k][j]->SetParameter(2,fitConst->GetParameter(0));
                   fithistoRatioSecEffDivTrueEff[k][j]->SetParLimits(2,0.,2.);
@@ -1004,11 +1004,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     for (Int_t k = 0; k < 3; k++){
         cout << "fitting default hist for "<< nameIntRange[k].Data() << " K0s" << endl;
-        fitDefaultSecFrac[k][0]                     = new TF1(Form("fitDefaultSecFromK0SFrac%s",nameIntRange[k].Data()),"[0]/pow(x,[1])");
+        fitDefaultSecFrac[k][0]                     = new TF1(Form("fitDefaultSecFromK0SFrac%s",nameIntRange[k].Data()),"[0]/TMath::Power(x,[1])");
         fitDefaultSecFrac[k][0]->SetRange(minPtMesonSec, maxPtMeson);
         resultSecFrac[k][0]                         = histoDefaultTrueSecFracMeson[k][0]->Fit(fitDefaultSecFrac[k][0],"SNRME+","",minPtMesonSec, maxPtMeson);
         cout << "fitting default hist for "<< nameIntRange[k].Data() << " Rest" << endl;
-        fitDefaultSecFrac[k][3]                     = new TF1(Form("fitDefaultSecFrac%s",nameIntRange[k].Data()),"[0]/pow(x,[1])");
+        fitDefaultSecFrac[k][3]                     = new TF1(Form("fitDefaultSecFrac%s",nameIntRange[k].Data()),"[0]/TMath::Power(x,[1])");
         fitDefaultSecFrac[k][3]->SetRange(minPtMesonSec, maxPtMeson);
         resultSecFrac[k][1]                         = histoDefaultTrueSecFracMeson[k][3]->Fit(fitDefaultSecFrac[k][3],"SNRME+","",minPtMesonSec, maxPtMeson);
     }
@@ -1023,8 +1023,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TF1* fitSecFracPLWithConst[3][4]                = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
     for (Int_t k = 0; k < 3; k++){
         for (Int_t j = 0; j < 4; j++){
-            fitSecFracPurePowerlaw[k][j]            = new TF1( Form("fitSecFracPurePowerlawFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])");
-            fitSecFracPLWithConst[k][j]             = new TF1( Form("fitSecFracPLWithConstFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])+[2]");
+            fitSecFracPurePowerlaw[k][j]            = new TF1( Form("fitSecFracPurePowerlawFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/TMath::Power(x,[1])");
+            fitSecFracPLWithConst[k][j]             = new TF1( Form("fitSecFracPLWithConstFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/TMath::Power(x,[1])+[2]");
             if ( optionEnergy.CompareTo("8TeV") == 0 ){
                if ( mode != 2 && mode != 4 ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
             }else if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
@@ -1492,7 +1492,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoCorrectionFactorsHistvsPt, styleMethod[0], sizeMethod[0], colorMethod[0], colorMethod[0]);
         histoCorrectionFactorsHistvsPt->GetYaxis()->SetTitleOffset(0.75);
         histoCorrectionFactorsHistvsPt->DrawCopy("p,e1");
-        TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/TMath::Power(x,[1])+[2]");
         fitCorrectionFactorsHistvsPt->SetRange(0.4, maxPtMeson);
         TFitResultPtr resultCorrectionFactorsHistvsPt = histoCorrectionFactorsHistvsPt->Fit(fitCorrectionFactorsHistvsPt,"SNRME+","",0.4, maxPtMeson);
         TString bla= WriteParameterToFile(fitCorrectionFactorsHistvsPt);
@@ -1505,7 +1505,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if (histoCorrectionFactorsFitvsPt) {
             DrawGammaSetMarker(histoCorrectionFactorsFitvsPt, styleMethod[1], sizeMethod[1], colorMethod[1], colorMethod[1]);
             histoCorrectionFactorsFitvsPt->DrawCopy("same,p,e1");
-            fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/pow(x,[1])+[2]");
+            fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/TMath::Power(x,[1])+[2]");
             fitCorrectionFactorsFitvsPt->SetRange(0.4, maxPtMeson);
             resultCorrectionFactorsFitvsPt = histoCorrectionFactorsFitvsPt->Fit(fitCorrectionFactorsFitvsPt,"SNRME+","",0.4, maxPtMeson);
             fitCorrectionFactorsFitvsPt->SetLineColor(colorMethod[1]);
@@ -1518,7 +1518,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t k = 0; k<5; k++){
             DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCat[k], styleMethod[k+2], sizeMethod[k+2], colorMethod[k+2], colorMethod[k+2]);
             histoCorrectionFactorsHistvsPtCat[k]->DrawCopy("same,p,e1");
-            fitCorrectionFactorsHistvsPtCat[k]                  = new TF1(Form("fitCorrectionFactorsHistvsPtCat%i",k),"[0]/pow(x,[1])+[2]");
+            fitCorrectionFactorsHistvsPtCat[k]                  = new TF1(Form("fitCorrectionFactorsHistvsPtCat%i",k),"[0]/TMath::Power(x,[1])+[2]");
             fitCorrectionFactorsHistvsPtCat[k]->SetRange(0.4, maxPtMeson);
             resultCorrectionFactorsHistvsPtCat[k]               = histoCorrectionFactorsHistvsPtCat[k]->Fit(fitCorrectionFactorsHistvsPtCat[k],"SNRME+","",0.4, maxPtMeson);
             fitCorrectionFactorsHistvsPtCat[k]->SetLineColor(colorMethod[k+2]);
@@ -2378,7 +2378,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     for (Int_t k = 0; k < 3; k++){
         histoTrueEffiPtUnmod[k]                 = (TH1D*) histoTrueEffiPt[k]->Clone(Form("histoTrueEffi%sPtUnmod", nameIntRange[k].Data()));
         fitEffiBiasWOWeightsPol0[k]             = new TF1(Form("fitEffiBiasWOWeights%sPol0", nameIntRange[k].Data()),"[0]",0.4,maxPtMeson);
-        fitEffiBiasWOWeightsPol1[k]             = new TF1(Form("fitEffiBiasWOWeights%sPol1", nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
+        fitEffiBiasWOWeightsPol1[k]             = new TF1(Form("fitEffiBiasWOWeights%sPol1", nameIntRange[k].Data()),"[0]/TMath::Power(x,[1])+[2]",0.4,maxPtMeson);
     }
 
     TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);// gives the page size

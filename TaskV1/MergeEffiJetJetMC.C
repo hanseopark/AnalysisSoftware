@@ -157,7 +157,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMC     = 1/TMath::Power(histoTrueEffiPtJetJetMC->GetBinError(i),2);
         Double_t weightSum          = weightMinBias + weightJetJetMC;
         Double_t weightedEffi       = (weightMinBias*histoTrueEffiPtMinBias->GetBinContent(i) + weightJetJetMC * histoTrueEffiPtJetJetMC->GetBinContent(i))/weightSum;
-        Double_t weightedEffiErr    = pow((weightMinBias +  weightJetJetMC),-0.5);
+        Double_t weightedEffiErr    = TMath::Power((weightMinBias +  weightJetJetMC),-0.5);
 
         if (isfinite(weightedEffi) && isfinite(weightedEffiErr)){
             histoTrueEffiPt->SetBinContent(i, weightedEffi);
@@ -173,7 +173,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
             Double_t weightJetJetMCW0We     = 1/TMath::Power(histoTrueEffiPtWOWeightsJetJetMC->GetBinError(i),2);
             Double_t weightSumW0We          = weightMinBiasW0We + weightJetJetMCW0We;
             Double_t weightedEffiW0We       = (weightMinBiasW0We*histoTrueEffiPtWOWeights->GetBinContent(i) + weightJetJetMCW0We * histoTrueEffiPtWOWeightsJetJetMC->GetBinContent(i))/weightSumW0We;
-            Double_t weightedEffiErrW0We    = pow((weightMinBiasW0We +  weightJetJetMCW0We),-0.5);
+            Double_t weightedEffiErrW0We    = TMath::Power((weightMinBiasW0We +  weightJetJetMCW0We),-0.5);
 
             if (isfinite(weightedEffiW0We) && isfinite(weightedEffiErrW0We)){
                 histoTrueEffiPtWOWeights->SetBinContent(i, weightedEffiW0We);
@@ -187,7 +187,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
             Double_t weightSumW0WeN          = weightMinBiasW0WeN + weightJetJetMCW0WeN;
             Double_t weightedEffiW0WeN       = (weightMinBiasW0WeN*histoTrueEffiNarrowPtWOWeightsMinBias->GetBinContent(i)
                                                 + weightJetJetMCW0WeN * histoTrueEffiNarrowPtWOWeightsJetJetMC->GetBinContent(i))/weightSumW0WeN;
-            Double_t weightedEffiErrW0WeN    = pow((weightMinBiasW0WeN +  weightJetJetMCW0WeN),-0.5);
+            Double_t weightedEffiErrW0WeN    = TMath::Power((weightMinBiasW0WeN +  weightJetJetMCW0WeN),-0.5);
 
             if (isfinite(weightedEffiErrW0WeN) && isfinite(weightedEffiW0WeN)){
                 histoTrueEffiNarrowPtWOWeights->SetBinContent(i, weightedEffiW0WeN);
@@ -201,7 +201,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
             Double_t weightSumW0WeW          = weightMinBiasW0WeW + weightJetJetMCW0WeW;
             Double_t weightedEffiW0WeW       = (weightMinBiasW0WeW*histoTrueEffiWidePtWOWeightsMinBias->GetBinContent(i)
                                                 + weightJetJetMCW0WeW * histoTrueEffiWidePtWOWeightsJetJetMC->GetBinContent(i))/weightSumW0WeW;
-            Double_t weightedEffiErrW0WeW    = pow((weightMinBiasW0WeW +  weightJetJetMCW0WeW),-0.5);
+            Double_t weightedEffiErrW0WeW    = TMath::Power((weightMinBiasW0WeW +  weightJetJetMCW0WeW),-0.5);
 
             if (isfinite(weightedEffiW0WeW) && isfinite(weightedEffiErrW0WeW)){
                 histoTrueEffiWidePtWOWeights->SetBinContent(i, weightedEffiW0WeW);
@@ -213,7 +213,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCAcc     = 1/TMath::Power(histoAcceptanceJetJetMC->GetBinError(i),2);
         Double_t weightSumAcc          = weightMinBiasAcc + weightJetJetMCAcc;
         Double_t weightedAcc       = (weightMinBiasAcc*histoAcceptanceMinBias->GetBinContent(i) + weightJetJetMCAcc * histoAcceptanceJetJetMC->GetBinContent(i))/weightSumAcc;
-        Double_t weightedAccErr    = pow((weightMinBiasAcc +  weightJetJetMCAcc),-0.5);
+        Double_t weightedAccErr    = TMath::Power((weightMinBiasAcc +  weightJetJetMCAcc),-0.5);
 
         if (isfinite(weightedAcc) && isfinite(weightedAccErr)){
             histoAcceptance->SetBinContent(i, weightedAcc);
@@ -226,7 +226,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
             Double_t weightSumAccW0We          = weightMinBiasAccW0We + weightJetJetMCAccW0We;
             Double_t weightedAccW0We           = (weightMinBiasAccW0We*histoAcceptanceWOWeightsMinBias->GetBinContent(i)
                                                 + weightJetJetMCAccW0We * histoAcceptanceWOWeightsJetJetMC->GetBinContent(i))/weightSumAccW0We;
-            Double_t weightedAccW0WeErr    = pow((weightMinBiasAccW0We +  weightJetJetMCAccW0We),-0.5);
+            Double_t weightedAccW0WeErr    = TMath::Power((weightMinBiasAccW0We +  weightJetJetMCAccW0We),-0.5);
 
             if (isfinite(weightedAccW0We) && isfinite(weightedAccW0WeErr)){
                 histoAcceptanceWOWeights->SetBinContent(i, weightedAccW0We);
@@ -238,7 +238,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEff     = 1/TMath::Power(histoEffiPtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEff          = weightMinBiasNEff + weightJetJetMCNEff;
         Double_t weightedNEff       = (weightMinBiasNEff*histoEffiPtMinBias->GetBinContent(i) + weightJetJetMCNEff * histoEffiPtJetJetMC->GetBinContent(i))/weightSumNEff;
-        Double_t weightedNEffErr    = pow((weightMinBiasNEff +  weightJetJetMCNEff),-0.5);
+        Double_t weightedNEffErr    = TMath::Power((weightMinBiasNEff +  weightJetJetMCNEff),-0.5);
 
         if (isfinite(weightedNEff) && isfinite(weightedNEffErr)){
             histoEffiPt->SetBinContent(i, weightedNEff);
@@ -249,7 +249,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEffL     = 1/TMath::Power(histoEffiLeftPtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEffL          = weightMinBiasNEffL + weightJetJetMCNEffL;
         Double_t weightedNEffL       = (weightMinBiasNEffL*histoEffiLeftPtMinBias->GetBinContent(i) + weightJetJetMCNEffL * histoEffiLeftPtJetJetMC->GetBinContent(i))/weightSumNEffL;
-        Double_t weightedNEffLErr    = pow((weightMinBiasNEffL +  weightJetJetMCNEffL),-0.5);
+        Double_t weightedNEffLErr    = TMath::Power((weightMinBiasNEffL +  weightJetJetMCNEffL),-0.5);
 
         if (isfinite(weightedNEffL) && isfinite(weightedNEffLErr)){
             histoEffiLeftPt->SetBinContent(i, weightedNEffL);
@@ -321,7 +321,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNarrow = 1/TMath::Power(histoTrueEffiNarrowPtJetJetMC->GetBinError(i),2);
         Double_t weightSumNarrow = weightMinBiasNarrow + weightJetJetMCNarrow;
         Double_t weightedEffiNarrow = (weightMinBiasNarrow*histoTrueEffiNarrowPtMinBias->GetBinContent(i) + weightJetJetMCNarrow * histoTrueEffiNarrowPtJetJetMC->GetBinContent(i))/weightSumNarrow;
-        Double_t weightedEffiErrNarrow = pow((weightMinBiasNarrow +  weightJetJetMCNarrow),-0.5);
+        Double_t weightedEffiErrNarrow = TMath::Power((weightMinBiasNarrow +  weightJetJetMCNarrow),-0.5);
 
         if (isfinite(weightedEffiNarrow) && isfinite(weightedEffiErrNarrow)){
             histoTrueEffiNarrowPt->SetBinContent(i, weightedEffiNarrow);
@@ -332,7 +332,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEffN     = 1/TMath::Power(histoEffiNarrowPtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEffN          = weightMinBiasNEffN + weightJetJetMCNEffN;
         Double_t weightedNEffN       = (weightMinBiasNEffN*histoEffiNarrowPtMinBias->GetBinContent(i) + weightJetJetMCNEffN * histoEffiNarrowPtJetJetMC->GetBinContent(i))/weightSumNEffN;
-        Double_t weightedNEffNErr    = pow((weightMinBiasNEffN +  weightJetJetMCNEffN),-0.5);
+        Double_t weightedNEffNErr    = TMath::Power((weightMinBiasNEffN +  weightJetJetMCNEffN),-0.5);
 
         if (isfinite(weightedNEffN) && isfinite(weightedNEffNErr)){
             histoEffiNarrowPt->SetBinContent(i, weightedNEffN);
@@ -343,7 +343,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEffLN     = 1/TMath::Power(histoEffiLeftNarrowPtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEffLN          = weightMinBiasNEffLN + weightJetJetMCNEffLN;
         Double_t weightedNEffLN       = (weightMinBiasNEffLN*histoEffiLeftNarrowPtMinBias->GetBinContent(i) + weightJetJetMCNEffLN * histoEffiLeftNarrowPtJetJetMC->GetBinContent(i))/weightSumNEffLN;
-        Double_t weightedNEffLNErr    = pow((weightMinBiasNEffLN +  weightJetJetMCNEffLN),-0.5);
+        Double_t weightedNEffLNErr    = TMath::Power((weightMinBiasNEffLN +  weightJetJetMCNEffLN),-0.5);
 
         if (isfinite(weightedNEffLN) && isfinite(weightedNEffLNErr)){
             histoEffiLeftNarrowPt->SetBinContent(i, weightedNEffLN);
@@ -366,7 +366,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCWide = 1/TMath::Power(histoTrueEffiWidePtJetJetMC->GetBinError(i),2);
         Double_t weightSumWide = weightMinBiasWide + weightJetJetMCWide;
         Double_t weightedEffiWide = (weightMinBiasWide*histoTrueEffiWidePtMinBias->GetBinContent(i) + weightJetJetMCWide * histoTrueEffiWidePtJetJetMC->GetBinContent(i))/weightSumWide;
-        Double_t weightedEffiErrWide = pow((weightMinBiasWide +  weightJetJetMCWide),-0.5);
+        Double_t weightedEffiErrWide = TMath::Power((weightMinBiasWide +  weightJetJetMCWide),-0.5);
 
         if (isfinite(weightedEffiWide) && isfinite(weightedEffiErrWide)){
             histoTrueEffiWidePt->SetBinContent(i, weightedEffiWide);
@@ -377,7 +377,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEffW     = 1/TMath::Power(histoEffiWidePtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEffW          = weightMinBiasNEffW + weightJetJetMCNEffW;
         Double_t weightedNEffW       = (weightMinBiasNEffW*histoEffiWidePtMinBias->GetBinContent(i) + weightJetJetMCNEffW * histoEffiWidePtJetJetMC->GetBinContent(i))/weightSumNEffW;
-        Double_t weightedNEffWErr    = pow((weightMinBiasNEffW +  weightJetJetMCNEffW),-0.5);
+        Double_t weightedNEffWErr    = TMath::Power((weightMinBiasNEffW +  weightJetJetMCNEffW),-0.5);
 
         if (isfinite(weightedNEffW) && isfinite(weightedNEffWErr)){
             histoEffiWidePt->SetBinContent(i, weightedNEffW);
@@ -388,7 +388,7 @@ void MergeEffiJetJetMC(  TString fCutSelection,
         Double_t weightJetJetMCNEffLW     = 1/TMath::Power(histoEffiLeftWidePtJetJetMC->GetBinError(i),2);
         Double_t weightSumNEffLW          = weightMinBiasNEffLW + weightJetJetMCNEffLW;
         Double_t weightedNEffLW       = (weightMinBiasNEffLW*histoEffiLeftWidePtMinBias->GetBinContent(i) + weightJetJetMCNEffLW * histoEffiLeftWidePtJetJetMC->GetBinContent(i))/weightSumNEffLW;
-        Double_t weightedNEffLWErr    = pow((weightMinBiasNEffLW +  weightJetJetMCNEffLW),-0.5);
+        Double_t weightedNEffLWErr    = TMath::Power((weightMinBiasNEffLW +  weightJetJetMCNEffLW),-0.5);
 
         if (isfinite(weightedNEffLW) && isfinite(weightedNEffLWErr)){
             histoEffiLeftWidePt->SetBinContent(i, weightedNEffLW);

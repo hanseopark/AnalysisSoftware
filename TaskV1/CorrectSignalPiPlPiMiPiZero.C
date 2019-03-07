@@ -765,7 +765,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPt, styleMethod[0], 1.2, colorMethod[0], colorMethod[0]);      
 		histoCorrectionFactorsHistvsPt->GetYaxis()->SetTitleOffset(0.8);
 		histoCorrectionFactorsHistvsPt->DrawCopy("p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPt->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPt = histoCorrectionFactorsHistvsPt->Fit(fitCorrectionFactorsHistvsPt,"SINRME+","",0.4, maxPtMeson);
 		TString bla= WriteParameterToFile(fitCorrectionFactorsHistvsPt);
@@ -778,7 +778,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		if (histoCorrectionFactorsFitvsPt) {
 			DrawGammaSetMarker(histoCorrectionFactorsFitvsPt, styleMethod[1], 1.2, colorMethod[1], colorMethod[1]);      
 			histoCorrectionFactorsFitvsPt->DrawCopy("same,p,e1"); 
-			fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/pow(x,[1])+[2]");
+            fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/TMath::Power(x,[1])+[2]");
 			fitCorrectionFactorsFitvsPt->SetRange(0.4, maxPtMeson);
 			resultCorrectionFactorsFitvsPt = histoCorrectionFactorsFitvsPt->Fit(fitCorrectionFactorsFitvsPt,"SINRME+","",0.4, maxPtMeson);
 			fitCorrectionFactorsFitvsPt->SetLineColor(colorMethod[1]);
@@ -786,7 +786,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		}
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatA, styleMethod[2], 1.2, colorMethod[2], colorMethod[2]);      
 		histoCorrectionFactorsHistvsPtCatA->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatA = new TF1("fitCorrectionFactorsHistvsPtCatA","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatA = new TF1("fitCorrectionFactorsHistvsPtCatA","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatA->SetRange(0.4, maxPtMeson);
 		
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatA = histoCorrectionFactorsHistvsPtCatA->Fit(fitCorrectionFactorsHistvsPtCatA,"SINRME+","",0.4, maxPtMeson);
@@ -795,7 +795,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatC, styleMethod[3], 1.2, colorMethod[3], colorMethod[3]);      
 		histoCorrectionFactorsHistvsPtCatC->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatC = new TF1("fitCorrectionFactorsHistvsPtCatC","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatC = new TF1("fitCorrectionFactorsHistvsPtCatC","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatC->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatC = histoCorrectionFactorsHistvsPtCatC->Fit(fitCorrectionFactorsHistvsPtCatC,"SINRME+","",0.4, maxPtMeson);
 		fitCorrectionFactorsHistvsPtCatC->SetLineColor(colorMethod[3]);
@@ -803,7 +803,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 
 		DrawGammaSetMarker(histoCorrectionFactorsHistvsPtCatD, styleMethod[4], 1.2, colorMethod[4], colorMethod[4]);      
 		histoCorrectionFactorsHistvsPtCatD->DrawCopy("same,p,e1"); 
-		TF1* fitCorrectionFactorsHistvsPtCatD = new TF1("fitCorrectionFactorsHistvsPtCatD","[0]/pow(x,[1])+[2]");
+        TF1* fitCorrectionFactorsHistvsPtCatD = new TF1("fitCorrectionFactorsHistvsPtCatD","[0]/TMath::Power(x,[1])+[2]");
 		fitCorrectionFactorsHistvsPtCatD->SetRange(0.4, maxPtMeson);
 		TFitResultPtr resultCorrectionFactorsHistvsPtCatD = histoCorrectionFactorsHistvsPtCatD->Fit(fitCorrectionFactorsHistvsPtCatD,"SINRME+","",0.4, maxPtMeson);
 		fitCorrectionFactorsHistvsPtCatD->SetLineColor(colorMethod[4]);
@@ -1704,7 +1704,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 
 
 		for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-			binsMt[iPt]=pow((histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)*histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)+mesonMassExpect*mesonMassExpect),0.5);
+            binsMt[iPt]=TMath::Power((histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)*histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)+mesonMassExpect*mesonMassExpect),0.5);
 			cout << "recalculation pt to mt:    " << iPt<<"     pt      "<< histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)<< "      mt    " << binsMt[iPt]<< endl;
 		}
 

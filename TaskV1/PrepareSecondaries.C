@@ -643,7 +643,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     //***************************** Scale spectra and params ********************************************************
     Double_t factorNEvents                                 = 1./nEvents;
     Double_t factorDecay                                   = 1.;
-    TF1* corrFactorFromDecayLength = new TF1("decayLaw","1-exp(-x/[0])",0,500);
+    TF1* corrFactorFromDecayLength = new TF1("decayLaw","1-TMath::Exp(-x/[0])",0,500);
     cout << "========================================"  << endl;
     cout << "correction factors from decay length (fraction of particles decayed up to R = '" << ReturnMeanR(fMode) << "cm'): " << endl;
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {

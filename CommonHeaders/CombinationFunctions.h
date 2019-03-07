@@ -188,10 +188,10 @@
                         Double_t wPCM               = 1./eTotL2PCM[i-bin0PCM];
                         Double_t wSum               = wPCM+wPHOS;
                         xSectionComb[i]             = (wPCM*yPCM[i-bin0PCM] +  wPHOS*yPHOS[i-bin0PHOS])/ wSum;
-                        xSectionCombErr[i]          = pow((wPCM +  wPHOS),-0.5);
-                        xSectionCombStatErr[i]      = pow( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
+                        xSectionCombErr[i]          = TMath::Power((wPCM +  wPHOS),-0.5);
+                        xSectionCombStatErr[i]      = TMath::Power( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eyStaPHOS[i-bin0PHOS]*eyStaPHOS[i-bin0PHOS],0.5);
-                        xSectionCombSysErr[i]       = pow( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
+                        xSectionCombSysErr[i]       = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysPHOS[i-bin0PHOS]*eySysPHOS[i-bin0PHOS],0.5);
                         cout<< " PHOS,PCM_L::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " " << xSectionCombStatErr[i] << " " << xSectionCombSysErr[i] << endl;
                     }else{
@@ -199,10 +199,10 @@
                         Double_t wPCM               = 1./eTotH2PCM[i-bin0PCM];
                         Double_t wSum               = wPCM+wPHOS;
                         xSectionComb[i]             = (wPCM*yPCM[i-bin0PCM] +  wPHOS*yPHOS[i-bin0PHOS])/ wSum;
-                        xSectionCombErr[i]          = pow((wPCM +  wPHOS),-0.5);
-                        xSectionCombStatErr[i]      = pow( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
+                        xSectionCombErr[i]          = TMath::Power((wPCM +  wPHOS),-0.5);
+                        xSectionCombStatErr[i]      = TMath::Power( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eyStaPHOS[i-bin0PHOS]*eyStaPHOS[i-bin0PHOS],0.5);
-                        xSectionCombSysErr[i]       = pow( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
+                        xSectionCombSysErr[i]       = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysPHOS[i-bin0PHOS]*eySysPHOS[i-bin0PHOS],0.5);
                         cout<< " PHOS,PCM_H::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " " << xSectionCombStatErr[i] << " " << xSectionCombSysErr[i] << endl;
                     }
@@ -215,7 +215,7 @@
                 xEComb[i]=exSysPHOS[i-bin0PHOS];
                 if( eTot2PHOS[i-bin0PHOS] !=0.){
                     xSectionComb[i]                 = yPHOS[i-bin0PHOS];
-                    xSectionCombErr[i]              = pow((eTot2PHOS[i-bin0PHOS]),0.5);
+                    xSectionCombErr[i]              = TMath::Power((eTot2PHOS[i-bin0PHOS]),0.5);
                     xSectionCombStatErr[i]          = eyStaPHOS[i-bin0PHOS];
                     xSectionCombSysErr[i]           = eySysPHOS[i-bin0PHOS];
                     cout<< " PHOS_OK::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " "  << xSectionCombStatErr[i] << " " << xSectionCombSysErr[i] << endl;
@@ -228,7 +228,7 @@
                 xEComb[i]=exSysPCM[i-bin0PCM];
                 if( eTotL2PCM[i-bin0PCM] !=0. && eTotH2PCM[i-bin0PCM]){
                     xSectionComb[i]                 = yPCM[i-bin0PCM];
-                    xSectionCombErr[i]              = pow((eTotL2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
+                    xSectionCombErr[i]              = TMath::Power((eTotL2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
                     xSectionCombStatErr[i]          = eyStaPCM[i-bin0PCM+offset];
                     xSectionCombSysErr[i]           = eySysHPCM[i-bin0PCM];
                     cout<< " PCM_OK::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " "  << xSectionCombStatErr[i] << " " << xSectionCombSysErr[i] << endl;
@@ -370,10 +370,10 @@
                         Double_t wPCM               = 1./eTotL2PCM[i-bin0PCM];
                         Double_t wSum               = wPCM+wPHOS;
                         xSectionComb[i]             = (wPCM*yPCM[i-bin0PCM] +  wPHOS*yPHOS[i-bin0PHOS])/ wSum;
-                        xSectionCombErr[i]          = pow((wPCM +  wPHOS),-0.5);
-                        xSectionCombStatErr[i]      = pow( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
+                        xSectionCombErr[i]          = TMath::Power((wPCM +  wPHOS),-0.5);
+                        xSectionCombStatErr[i]      = TMath::Power( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eyStaPHOS[i-bin0PHOS]*eyStaPHOS[i-bin0PHOS],0.5);
-                        xSectionCombSysErr[i]       = pow( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
+                        xSectionCombSysErr[i]       = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysPHOS[i-bin0PHOS]*eySysPHOS[i-bin0PHOS],0.5);
                         cout<< " " << detName.Data() << ",PCM_L::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " " << yPCM[i-bin0PCM]<< " "<< eTotLPCM[i-bin0PCM] << " "
                         << yPHOS[i-bin0PHOS]<<" "<< eTotPHOS[i-bin0PHOS]<< endl;
@@ -383,10 +383,10 @@
                         Double_t wPCM               = 1./eTotH2PCM[i-bin0PCM];
                         Double_t wSum               = wPCM+wPHOS;
                         xSectionComb[i]             = (wPCM*yPCM[i-bin0PCM] +  wPHOS*yPHOS[i-bin0PHOS])/ wSum;
-                        xSectionCombErr[i]          = pow((wPCM +  wPHOS),-0.5);
-                        xSectionCombStatErr[i]      = pow( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
+                        xSectionCombErr[i]          = TMath::Power((wPCM +  wPHOS),-0.5);
+                        xSectionCombStatErr[i]      = TMath::Power( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eyStaPHOS[i-bin0PHOS]*eyStaPHOS[i-bin0PHOS],0.5);
-                        xSectionCombSysErr[i]       = pow( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
+                        xSectionCombSysErr[i]       = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysHPCM[i-bin0PCM]*eySysHPCM[i-bin0PCM]
                                                     + wPHOS*wPHOS/(wSum*wSum)* eySysPHOS[i-bin0PHOS]*eySysPHOS[i-bin0PHOS],0.5);
                         cout<< " " << detName.Data() << ",PCM_H::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " " << yPCM[i-bin0PCM]<< " "<< eTotHPCM[i-bin0PCM] << " "
                         << yPHOS[i-bin0PHOS]<<" "<< eTotPHOS[i-bin0PHOS] <<endl;
@@ -402,7 +402,7 @@
                 xEComb[i]=exSysPHOS[i-bin0PHOS];
                 if( eTot2PHOS[i-bin0PHOS] !=0.){
                     xSectionComb[i]                 = yPHOS[i-bin0PHOS];
-                    xSectionCombErr[i]              = pow((eTot2PHOS[i-bin0PHOS]),0.5);
+                    xSectionCombErr[i]              = TMath::Power((eTot2PHOS[i-bin0PHOS]),0.5);
                     xSectionCombStatErr[i]          = eyStaPHOS[i-bin0PHOS];
                     xSectionCombSysErr[i]           = eySysPHOS[i-bin0PHOS];
                     cout<< detName.Data() << "_OK::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " "  << yPHOS[i-bin0PHOS]<<" "<< eTotPHOS[i-bin0PHOS] <<endl;
@@ -417,7 +417,7 @@
                 xEComb[i]=exSysPCM[i-bin0PCM];
                 if( eTotL2PCM[i-bin0PCM] !=0. && eTotH2PCM[i-bin0PCM]){
                     xSectionComb[i]                 = yPCM[i-bin0PCM];
-                    xSectionCombErr[i]              = pow((eTotL2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
+                    xSectionCombErr[i]              = TMath::Power((eTotL2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
                     xSectionCombStatErr[i]          = eyStaPCM[i-bin0PCM+offset];
                     xSectionCombSysErr[i]           = eySysHPCM[i-bin0PCM];
                     cout<< " PCM_OK::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " "  << yPCM[i-bin0PCM]<< " "<< eTotLPCM[i-bin0PCM] << " "<< endl;
@@ -1222,16 +1222,16 @@
                     Double_t wPCM                   = 1./eTot2PCM[i-bin0PCM];
                     Double_t wSum                   = wPCM+wPHOS;
                     xSectionComb[i]                 = (wPCM*yPCM[i-bin0PCM] +  wPHOS*yPHOS[i-bin0PHOS])/ wSum;
-                    xSectionCombErr[i]              = pow((wPCM +  wPHOS),-0.5);
-                    xSectionCombStatErr[i]          = pow( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
+                    xSectionCombErr[i]              = TMath::Power((wPCM +  wPHOS),-0.5);
+                    xSectionCombStatErr[i]          = TMath::Power( wPCM*wPCM/(wSum*wSum)* eyStaPCM[i-bin0PCM+offset]*eyStaPCM[i-bin0PCM+offset]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eyStaPHOS[i-bin0PHOS]*eyStaPHOS[i-bin0PHOS],0.5);
-                    xSectionCombSysErr[i]           = pow( wPCM*wPCM/(wSum*wSum)* eySysPCM[i-bin0PCM]*eySysPCM[i-bin0PCM]
+                    xSectionCombSysErr[i]           = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysPCM[i-bin0PCM]*eySysPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysPHOS[i-bin0PHOS]*eySysPHOS[i-bin0PHOS],0.5);
-                    xSectionCombSysAErr[i]          = pow( wPCM*wPCM/(wSum*wSum)* eySysAPCM[i-bin0PCM]*eySysAPCM[i-bin0PCM]
+                    xSectionCombSysAErr[i]          = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysAPCM[i-bin0PCM]*eySysAPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysAPHOS[i-bin0PHOS]*eySysAPHOS[i-bin0PHOS],0.5);
-                    xSectionCombSysBErr[i]          = pow( wPCM*wPCM/(wSum*wSum)* eySysBPCM[i-bin0PCM]*eySysBPCM[i-bin0PCM]
+                    xSectionCombSysBErr[i]          = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysBPCM[i-bin0PCM]*eySysBPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysBPHOS[i-bin0PHOS]*eySysBPHOS[i-bin0PHOS],0.5);
-                    xSectionCombSysCErr[i]          = pow( wPCM*wPCM/(wSum*wSum)* eySysCPCM[i-bin0PCM]*eySysCPCM[i-bin0PCM]
+                    xSectionCombSysCErr[i]          = TMath::Power( wPCM*wPCM/(wSum*wSum)* eySysCPCM[i-bin0PCM]*eySysCPCM[i-bin0PCM]
                                                         + wPHOS*wPHOS/(wSum*wSum)* eySysCPHOS[i-bin0PHOS]*eySysCPHOS[i-bin0PHOS],0.5);
 
                     cout<< " PHOS,PCM OK::"<< xSectionComb[i]<< " " << xSectionCombErr[i] << " " << xSectionCombStatErr[i] << " " << xSectionCombSysErr[i] << endl;
@@ -1244,7 +1244,7 @@
                 xEComb[i]=exSysPHOS[i-bin0PHOS];
                 if( eTot2PHOS[i-bin0PHOS] !=0.){
                     xSectionComb[i]                 = yPHOS[i-bin0PHOS];
-                    xSectionCombErr[i]              = pow((eTot2PHOS[i-bin0PHOS]),0.5);
+                    xSectionCombErr[i]              = TMath::Power((eTot2PHOS[i-bin0PHOS]),0.5);
                     xSectionCombStatErr[i]          = eyStaPHOS[i-bin0PHOS];
                     xSectionCombSysErr[i]           = eySysPHOS[i-bin0PHOS];
                     xSectionCombSysAErr[i]          = eySysAPHOS[i-bin0PHOS];
@@ -1260,7 +1260,7 @@
                 xEComb[i]=exSysPCM[i-bin0PCM];
                 if( eTot2PCM[i-bin0PCM] !=0. ){
                     xSectionComb[i]                 = yPCM[i-bin0PCM];
-                    xSectionCombErr[i]              = pow((eTot2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
+                    xSectionCombErr[i]              = TMath::Power((eTot2PCM[i-bin0PCM]),0.5);  // Asymmetric errors needed
                     xSectionCombStatErr[i]          = eyStaPCM[i-bin0PCM+offset];
                     xSectionCombSysErr[i]           = eySysPCM[i-bin0PCM];
                     xSectionCombSysAErr[i]          = eySysAPCM[i-bin0PCM];
@@ -1374,8 +1374,8 @@
                         cout << nameMeas[meas].Data() << ": pt " <<  histoStat[meas]->GetBinCenter(binCounters[meas]+1-startOffsets[meas])
                             << "\t value "<<histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas])
                             << "\t stat err: "<< histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]) <<endl;
-                        if (abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001
-                            &&  abs(xPtLimits[ptBin+1]-histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 ){
+                        if (TMath::Abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001
+                            &&  TMath::Abs(xPtLimits[ptBin+1]-histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 ){
     //                         cout << "matches bin edges" << endl;
                             isPresentForPt[meas]                    = kTRUE;
                             identCurr[1][numberOfMeasInPtBin]       = meas;
@@ -1393,7 +1393,7 @@
                             numberOfMeasInPtBin++;
                             Double_t pTDiff = (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]));
     //                         cout << "p_{T}: "<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] << "\t" << histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) << "\t diff: " << pTDiff << endl;
-                            if ( abs(pTDiff) > 0.001){
+                            if ( TMath::Abs(pTDiff) > 0.001){
                                 cout << "the offsets between stat and sys are wrong, please correct" << endl;
                                 return NULL;
                             }
@@ -1401,7 +1401,7 @@
                             isPresentForPt[meas] = kFALSE;
                             cout << "measurement: "  <<  nameMeas[meas].Data() << " not taken in this pT slice, due to mismatch in binwidth, bin: " << binCounters[meas]<< "\t" << ptBin<< " boarders: " << histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas]) <<" - "<< histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) << endl;
                             if (xPtLimits[ptBin+1] < histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) &&
-                                abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001){
+                                TMath::Abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001){
                                 cout << "binning is smaller" << endl;
                                 binCounters[meas] = binCounters[meas]-1;
                                 cout << "testing bin again" << endl;
@@ -1972,7 +1972,7 @@
                 }
                 yErrStatFinal[ptBin]                = TMath::Sqrt(yErrStatFinal[ptBin]);
                 yErrTotFinal[ptBin]                 = 1./TMath::Sqrt(fullSumOfWeights);
-                cout << "tot sys: " << yErrTotFinal[ptBin] << "\t"<< sqrt(fullSumOfWeights)<< endl;
+                cout << "tot sys: " << yErrTotFinal[ptBin] << "\t"<< TMath::Sqrt(fullSumOfWeights)<< endl;
                 yErrSysFinal[ptBin]                 = TMath::Sqrt(yErrTotFinal[ptBin]*yErrTotFinal[ptBin] - yErrStatFinal[ptBin]*yErrStatFinal[ptBin]);
 
                 cout << "final weighted average: " <<  yValueFinal[ptBin] << " +- " << yErrTotFinal[ptBin] << "( stat: " << yErrStatFinal[ptBin] << " , syst: " << yErrSysFinal[ptBin] << " )"<< endl;
@@ -2121,8 +2121,8 @@
                         cout << nameMeas[meas].Data() << ": pt " <<  histoStat[meas]->GetBinCenter(binCounters[meas]+1-startOffsets[meas])
                             << "\t value "<<histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas])
                             << "\t stat err: "<< histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]) << endl;
-                        if (abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001
-                            &&  abs(xPtLimits[ptBin+1]-histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 ){
+                        if (TMath::Abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001
+                            &&  TMath::Abs(xPtLimits[ptBin+1]-histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 ){
     //                      cout << "matches bin edges" << endl;
                             isPresentForPt[meas]                = kTRUE;
                             identCurr[1][numberOfMeasInPtBin]   = meas;
@@ -2139,7 +2139,7 @@
                             isPresentForPt[meas]                = kFALSE;
                         cout << "measurement: "  <<  nameMeas[meas].Data() << " not taken in this pT slice, due to mismatch in binwidth, bin: " << binCounters[meas]<< "\t" << ptBin<< " boarders: " << histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas]) <<" - "<< histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) << endl;
                         if (xPtLimits[ptBin+1] < histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) &&
-                                abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001){
+                                TMath::Abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001){
                                 cout << "binning is smaller" << endl;
                                 binCounters[meas] = binCounters[meas]-1;
                                 cout << "testing bin again" << endl;
@@ -3027,8 +3027,8 @@
                     offsets[meas]++;
                 }
                 offsets[meas]--;
-                if (abs(graphs[meas]->GetX()[0] - graphs[meas]->GetErrorXlow(0) - xPtLimits[offsets[meas]] ) < 0.000001 &&
-                    abs(graphs[meas]->GetX()[0] + graphs[meas]->GetErrorXhigh(0) - xPtLimits[offsets[meas]+1] ) < 0.000001
+                if (TMath::Abs(graphs[meas]->GetX()[0] - graphs[meas]->GetErrorXlow(0) - xPtLimits[offsets[meas]] ) < 0.000001 &&
+                    TMath::Abs(graphs[meas]->GetX()[0] + graphs[meas]->GetErrorXhigh(0) - xPtLimits[offsets[meas]+1] ) < 0.000001
                 )
                     correctBin[meas] = kTRUE;
                 cout << "offset measurement  " << meas << " \t:" << offsets[meas] << "\t"<< graphs[meas]->GetX()[0] << "\t"<< correctBin[meas] << "\t"<< xPtLimits[offsets[meas]]
@@ -3063,8 +3063,8 @@
                         }
                     }
 
-                    if (   abs(graphs[meas]->GetX()[binCounters[meas][0]] - graphs[meas]->GetErrorXlow(binCounters[meas][0]) - xPtLimits[ptBin] ) < 0.000001 &&
-                        abs(graphs[meas]->GetX()[binCounters[meas][0]] + graphs[meas]->GetErrorXhigh(binCounters[meas][0]) - xPtLimits[ptBin+1] ) < 0.000001
+                    if (   TMath::Abs(graphs[meas]->GetX()[binCounters[meas][0]] - graphs[meas]->GetErrorXlow(binCounters[meas][0]) - xPtLimits[ptBin] ) < 0.000001 &&
+                        TMath::Abs(graphs[meas]->GetX()[binCounters[meas][0]] + graphs[meas]->GetErrorXhigh(binCounters[meas][0]) - xPtLimits[ptBin+1] ) < 0.000001
                     ){
                         cout << meas << " entered" << endl;
                         // increase weight graph bin counter

@@ -125,13 +125,13 @@
             TF1* fmod_up                = (TF1*) fSigma->Clone();
             fmod_up->SetName("fmod_up");
             fmod_up->SetParameter(i, par+sigma);
-            Float_t delta_meanpt_up     = fabs(meanpt - CalculateMeanPt(fmod_up));
+            Float_t delta_meanpt_up     = TMath::Abs(meanpt - CalculateMeanPt(fmod_up));
 
             // mean pt for a function with par(i) = par(i) - sigma(par(i))
             TF1* fmod_down              = (TF1*) fSigma->Clone();
             fmod_up->SetName("fmod_down");
             fmod_down->SetParameter(i, par-sigma);
-            Float_t delta_meanpt_down   = fabs(meanpt - CalculateMeanPt(fmod_down));
+            Float_t delta_meanpt_down   = TMath::Abs(meanpt - CalculateMeanPt(fmod_down));
 
             // take the larger one of the two deltas
             Float_t delta_meanpt    = delta_meanpt_up;
@@ -144,7 +144,7 @@
 
         }
 
-        meanpt_error        = sqrt(sum_err2);
+        meanpt_error        = TMath::Sqrt(sum_err2);
     }
 
     //**********************************************************************************************************
@@ -602,7 +602,7 @@
 
         Int_t nPoints                   = graphACopy->GetN();
         for (Int_t i = 0; i < nPoints; i++){
-            if (abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
+            if (TMath::Abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
                 if (graphB->GetY()[i] != 0){
                     yValue[i]                   = yValue[i]/graphB->GetY()[i];
                     Double_t yErrorRatioHigh    = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYhigh()[i]/graphB->GetY()[i],2));
@@ -638,7 +638,7 @@
 
         Int_t nPoints                   = graphACopy->GetN();
         for (Int_t i = 0; i < nPoints; i++){
-            if (abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
+            if (TMath::Abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
                 yValue[i]                   = yValue[i]-graphB->GetY()[i];
                 Double_t yErrorRatioHigh    = TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i],2) + TMath::Power(graphB->GetEYhigh()[i],2));
                 yErrorHigh[i]               = yErrorRatioHigh;
@@ -1010,7 +1010,7 @@
     //         cout << i << "\t" << j<< endl;
     //         cout << "graph A: " << graph->GetX()[i] << endl;
     //         cout << "graph B: " << graphToDivBy2->GetX()[j] << endl;
-            while (abs(graph->GetX()[i] - graphToDivBy2->GetX()[j]) > 0.0001 && j < graphToDivBy2->GetN()){
+            while (TMath::Abs(graph->GetX()[i] - graphToDivBy2->GetX()[j]) > 0.0001 && j < graphToDivBy2->GetN()){
     //             cout << "graph B: " << graphToDivBy2->GetX()[j] << endl;
                 if (graph->GetX()[i] > graphToDivBy2->GetX()[j]){
                     graphToDivBy2->RemovePoint(j);
@@ -1158,9 +1158,9 @@
             xValue[i] = 2.0 * xValue[i] / E;
             xErrorLow[i] = 2.0 * xErrorLow[i] / E;
             xErrorHigh[i] = 2.0 * xErrorHigh[i] / E;
-            yValue[i] = yValue[i]*pow(E,n);
-            yErrorLow[i] = yErrorLow[i]*pow(E,n);
-            yErrorHigh[i] = yErrorHigh[i]*pow(E,n);
+            yValue[i] = yValue[i]*TMath::Power(E,n);
+            yErrorLow[i] = yErrorLow[i]*TMath::Power(E,n);
+            yErrorHigh[i] = yErrorHigh[i]*TMath::Power(E,n);
         }
         return dummyGraph;
     }
@@ -1177,8 +1177,8 @@
         for(int i = 0; i < dummyGraph->GetN(); i++){
             x[i] = 2.0 * x[i] / E;
             ex[i] = 2.0 * ex[i] / E;
-            y[i] = y[i]*pow(E,n);
-            ey[i] = ey[i]*pow(E,n);
+            y[i] = y[i]*TMath::Power(E,n);
+            ey[i] = ey[i]*TMath::Power(E,n);
         }
         return dummyGraph;
     }
@@ -1390,7 +1390,7 @@
         TH1D* returnHisto               = (TH1D*)histo->Clone(nameNewGraph.Data());
         cout << nameNewGraph.Data() << endl;
         for (Int_t i = 1; i < returnHisto->GetNbinsX()+1; i++){
-            if (abs(returnHisto->GetBinContent(i)) > 0){
+            if (TMath::Abs(returnHisto->GetBinContent(i)) > 0){
                 cout <<i << "\t" << returnHisto->GetBinContent(i) << "\t"<< returnHisto->GetBinError(i) << "\t" << returnHisto->GetBinError(i)/returnHisto->GetBinContent(i)*100 << endl;
                 returnHisto->SetBinContent(i,returnHisto->GetBinError(i)/returnHisto->GetBinContent(i)*100);
                 returnHisto->SetBinError(i,0);
@@ -1439,10 +1439,10 @@
             yValueRatio[i]                  = yValueAsymA[i]/yValueAsymB[i];
         //       cout << "before low: "<<yErrorLowAsymA[i]/yValueAsymA[i] << "\t" << commonPercentageADown << "\t"  <<  yErrorLowAsymB[i]/yValueAsymB[i] << "\t"  << commonPercentageBDown << endl;
         //       cout << "before up: "<<yErrorHighAsymA[i]/yValueAsymA[i] << "\t" << commonPercentageAUp << "\t"  <<  yErrorHighAsymB[i]/yValueAsymB[i] << "\t"  <<  commonPercentageBUp << endl;
-            yErrorLowAsymA[i]               = TMath::Sqrt(pow(yErrorLowAsymA[i],2) - pow(commonPercentageADown*yValueAsymA[i]/100,2));
-            yErrorHighAsymA[i]              = TMath::Sqrt(pow(yErrorHighAsymA[i],2) - pow(commonPercentageAUp*yValueAsymA[i]/100,2));
-            yErrorLowAsymB[i]               = TMath::Sqrt(pow(yErrorLowAsymB[i],2) - pow(commonPercentageBDown*yValueAsymB[i]/100,2));
-            yErrorHighAsymB[i]              = TMath::Sqrt(pow(yErrorHighAsymB[i],2) - pow(commonPercentageBUp*yValueAsymB[i]/100,2));
+            yErrorLowAsymA[i]               = TMath::Sqrt(TMath::Power(yErrorLowAsymA[i],2) - TMath::Power(commonPercentageADown*yValueAsymA[i]/100,2));
+            yErrorHighAsymA[i]              = TMath::Sqrt(TMath::Power(yErrorHighAsymA[i],2) - TMath::Power(commonPercentageAUp*yValueAsymA[i]/100,2));
+            yErrorLowAsymB[i]               = TMath::Sqrt(TMath::Power(yErrorLowAsymB[i],2) - TMath::Power(commonPercentageBDown*yValueAsymB[i]/100,2));
+            yErrorHighAsymB[i]              = TMath::Sqrt(TMath::Power(yErrorHighAsymB[i],2) - TMath::Power(commonPercentageBUp*yValueAsymB[i]/100,2));
         //       cout << "after low: "<< yErrorLowAsymA[i]/yValueAsymA[i] << "\t"  <<  yErrorLowAsymB[i]/yValueAsymB[i] << endl;
         //       cout << "after up: "<< yErrorHighAsymA[i]/yValueAsymA[i] << "\t"  <<  yErrorHighAsymB[i]/yValueAsymB[i] << endl;
             if (binomial){
@@ -1451,8 +1451,8 @@
                 yErrorHighAsymA[i]          = TMath::Abs( ( (1.-2.*w)*yErrorHighAsymA[i]*yErrorHighAsymA[i] + w*w*yErrorHighAsymB[i]*yErrorHighAsymB[i] )/(yValueAsymB[i]*yValueAsymB[i]) );
             } else {
 
-                yErrorLowAsymA[i]           = TMath::Sqrt( pow(yErrorLowAsymA[i]/yValueAsymB[i],2)  + pow( yErrorLowAsymB[i]*yValueAsymA[i]/pow(yValueAsymB[i],2),2) );
-                yErrorHighAsymA[i]          = TMath::Sqrt( pow(yErrorHighAsymA[i]/yValueAsymB[i],2) + pow( yErrorHighAsymB[i]*yValueAsymA[i]/pow(yValueAsymB[i],2),2) );
+                yErrorLowAsymA[i]           = TMath::Sqrt( TMath::Power(yErrorLowAsymA[i]/yValueAsymB[i],2)  + TMath::Power( yErrorLowAsymB[i]*yValueAsymA[i]/TMath::Power(yValueAsymB[i],2),2) );
+                yErrorHighAsymA[i]          = TMath::Sqrt( TMath::Power(yErrorHighAsymA[i]/yValueAsymB[i],2) + TMath::Power( yErrorHighAsymB[i]*yValueAsymA[i]/TMath::Power(yValueAsymB[i],2),2) );
             }
         }
         TGraphAsymmErrors* returnGraph      = new TGraphAsymmErrors(nPoints,xValueAsymA,yValueRatio,xErrorLowAsymA,xErrorHighAsymA,yErrorLowAsymA,yErrorHighAsymA);
@@ -1836,7 +1836,7 @@
                     Double_t wOnfly         = 1./eyStaOnfly[i];
                     Double_t wSum           = wOnfly+wOffline;
                     Double_t xSectionComb   = (wOnfly*yOnfly[i] +  wOffline*yOffline[i])/ wSum;
-                    Double_t xSectionCombErr= pow(1./2.* wOnfly/wSum* eyStaOnfly[i]*eyStaOnfly[i] + 1./2.* wOffline/wSum* eyStaOffline[i]*eyStaOffline[i],0.5);
+                    Double_t xSectionCombErr= TMath::Power(1./2.* wOnfly/wSum* eyStaOnfly[i]*eyStaOnfly[i] + 1./2.* wOffline/wSum* eyStaOffline[i]*eyStaOffline[i],0.5);
                     cout<< " Combined::"<< i << "\t" <<xSectionComb<< " " << xSectionCombErr << " " << yOnfly[i]<< " "<< eyStaOnfly[i] << " "
                     << yOffline[i]<<" "<< eyStaOffline[i]<< endl;
                     returnHisto->SetBinContent(i+1, xSectionComb);
@@ -1871,11 +1871,11 @@
             if (fitName.CompareTo("Levy") == 0 && i == 0){
                 fitresults[i*3]     = fitsys->GetParameter(i)/sigma;
                 fitresults[i*3+1]   = fitstat->GetParError(i)/sigma;
-                fitresults[i*3+2]   = TMath::Sqrt(TMath::Abs(pow((fitsys->GetParError(i)/sigma),2)-pow((fitstat->GetParError(i)/sigma),2)));
+                fitresults[i*3+2]   = TMath::Sqrt(TMath::Abs(TMath::Power((fitsys->GetParError(i)/sigma),2)-TMath::Power((fitstat->GetParError(i)/sigma),2)));
             } else {
                 fitresults[i*3]     = fitsys->GetParameter(i);
                 fitresults[i*3+1]   = fitstat->GetParError(i);
-                fitresults[i*3+2]   = TMath::Sqrt(TMath::Abs(pow((fitsys->GetParError(i)),2)-pow((fitstat->GetParError(i)),2)));
+                fitresults[i*3+2]   = TMath::Sqrt(TMath::Abs(TMath::Power((fitsys->GetParError(i)),2)-TMath::Power((fitstat->GetParError(i)),2)));
             }
             cout << fitresults[i*3] << "\t" << fitresults[i*3+1] << "\t" << fitresults[i*3+2] << endl;
         }
@@ -2379,7 +2379,7 @@
             }
 
             Double_t content        = histIn->GetBinContent(bin)*fraction->GetBinContent(bin);
-            Double_t error          = TMath::Sqrt(pow(histIn->GetBinError(bin)*fraction->GetBinContent(bin),2)+ pow(histIn->GetBinContent(bin)*fraction->GetBinError(bin),2) );
+            Double_t error          = TMath::Sqrt(TMath::Power(histIn->GetBinError(bin)*fraction->GetBinContent(bin),2)+ TMath::Power(histIn->GetBinContent(bin)*fraction->GetBinError(bin),2) );
 
             hist->SetBinContent(bin, content);
             cout << "\n converting n\n" << endl;
@@ -3047,21 +3047,21 @@
                 for(UInt_t ipar = 0; ipar < resultPP->NPar(); ipar++) fitPP->SetParameter(ipar, resultPP->GetParams()[ipar]);
                 Double_t yieldPP                = fitPP->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPP           = fitPP->IntegralError(ptStart, ptEnd, resultPP->GetParams(), resultPP->GetCovarianceMatrix().GetMatrixArray())/binWidth;
-                Double_t relErrPP               = abs(errorYieldPP)/yieldPP *100;
+                Double_t relErrPP               = TMath::Abs(errorYieldPP)/yieldPP *100;
 
                 cout << "yieldPP: " << yieldPP << " relErrPP: " << relErrPP << endl;
                 for(UInt_t ipar = 0; ipar < resultPPPowerlaw->NPar(); ipar++) fitPPPowerlaw->SetParameter(ipar, resultPPPowerlaw->GetParams()[ipar]);
                 Double_t yieldPPPowerlaw        = fitPPPowerlaw->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPPPowerlaw   = fitPPPowerlaw->IntegralError(ptStart, ptEnd, resultPPPowerlaw->GetParams(), resultPPPowerlaw->GetCovarianceMatrix().GetMatrixArray())/binWidth;
                 if(!quiet) cout << "pt: " << ptStart << " " << ptEnd << " , yieldPPvar1 " << yieldPPPowerlaw << "+-" << errorYieldPPPowerlaw << endl;
-                Double_t relErrPow1             = abs(yieldPPPowerlaw-yieldPP)/yieldPP*100;
+                Double_t relErrPow1             = TMath::Abs(yieldPPPowerlaw-yieldPP)/yieldPP*100;
                 if(!quiet) cout << "relErrPP var1: " << relErrPow1 << endl;
 
                 for(UInt_t ipar = 0; ipar < resultPPPowerlaw2->NPar(); ipar++) fitPPPowerlaw2->SetParameter(ipar, resultPPPowerlaw2->GetParams()[ipar]);
                 Double_t yieldPPPowerlaw2       = fitPPPowerlaw2->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPPPowerlaw2  = fitPPPowerlaw2->IntegralError(ptStart, ptEnd, resultPPPowerlaw2->GetParams(), resultPPPowerlaw2->GetCovarianceMatrix().GetMatrixArray())/binWidth;
                 if(!quiet) cout<< "pt: "<< ptStart << " " << ptEnd << " , yieldPPvar2 " << yieldPPPowerlaw2 << "+-" << errorYieldPPPowerlaw2 << endl;
-                Double_t relErrPow2             = abs(yieldPPPowerlaw2-yieldPP)/yieldPP *100;
+                Double_t relErrPow2             = TMath::Abs(yieldPPPowerlaw2-yieldPP)/yieldPP *100;
                 if(!quiet) cout << "relErrPP var2: " << relErrPow2 << endl;
 
                 graphPPSpectrumExtended->SetPoint(i,xBinsPbPb[i],yieldPP);
@@ -3120,7 +3120,7 @@
                     }
                 } else {
                     if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
-                    if (abs(relErrPow1) > abs(relErrPow2)){
+                    if (TMath::Abs(relErrPow1) > TMath::Abs(relErrPow2)){
                         syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
                         if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
                     } else {
@@ -3191,8 +3191,8 @@
 
         for(Int_t i=0; i<(*graphRAA)->GetN(); i++){
             (*graphRAA)->SetPoint(i,xBinsPbPb[i],yPbPb[i]/(fNcoll* yPPExtended[i]));
-            Double_t errYStat                   = pow( pow(graphPbPbSpectrum->GetErrorYlow(i)/yPbPb[i],2.) +
-                                                        pow(graphPPSpectrumExtended->GetErrorYlow(i)/yPPExtended[i],2.),
+            Double_t errYStat                   = TMath::Power( TMath::Power(graphPbPbSpectrum->GetErrorYlow(i)/yPbPb[i],2.) +
+                                                        TMath::Power(graphPPSpectrumExtended->GetErrorYlow(i)/yPPExtended[i],2.),
                                                         0.5)*yPbPb[i]/(fNcoll*yPPExtended[i]);
             (*graphRAA)->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errYStat, errYStat);
 
@@ -3203,12 +3203,12 @@
                     cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
                     cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
                 }
-                errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
-                                                        pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
-                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
-                errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) +
-                                                        pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.)
-                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
+                errYlow                         = TMath::Power(  TMath::Power(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
+                                                        TMath::Power(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
+                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
+                errYhigh                        = TMath::Power(  TMath::Power(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) +
+                                                        TMath::Power(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.)
+                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
                 if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
                 if(!quiet) cout << "---------------" << endl;
 
@@ -3218,12 +3218,12 @@
                     cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
                     cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
                 }
-                errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
-                                                        pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
-                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
-                errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) +
-                                                        pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.)
-                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
+                errYlow                         = TMath::Power(  TMath::Power(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
+                                                        TMath::Power(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
+                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
+                errYhigh                        = TMath::Power(  TMath::Power(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) +
+                                                        TMath::Power(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.)
+                                                        , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
                 if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
                 if(!quiet) cout << "---------------" << endl;
             }
@@ -3629,20 +3629,20 @@
             (*graphRpPbStatErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
             graphRpPbCombErr->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
 
-            Double_t errYStat       = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
-            Double_t errYSystlow    = pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
-            Double_t errYSysthigh   = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
-            Double_t errYComblow    = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint],2. )
-                                        + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
-            Double_t errYCombhigh   = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. )
-                                            + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
+            Double_t errYStat       = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
+            Double_t errYSystlow    = TMath::Power( TMath::Power( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
+            Double_t errYSysthigh   = TMath::Power( TMath::Power( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
+            Double_t errYComblow    = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( ypPbSystErrlow[iPoint]/ypPbBins[iPoint],2. )
+                                        + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
+            Double_t errYCombhigh   = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + TMath::Power( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. )
+                                            + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
 
             if (haveDetailedSyspPb && haveDetailedSyspPb){
                 if (TMath::Abs((Double_t)ptSysExternal.at(iPoint) - xBins[iPoint]) < 0.0001){
                     errYSystlow     = (Double_t)unCorrSys.at(iPoint)/100.*RpPb[iPoint];
                     errYSysthigh    = (Double_t)unCorrSys.at(iPoint)/100.*RpPb[iPoint];
-                    errYComblow     = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + pow( (Double_t)unCorrSys.at(iPoint)/100.,2.),   0.5) * RpPb[iPoint];
-                    errYCombhigh    = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + pow( (Double_t)unCorrSys.at(iPoint)/100.,2.) ,   0.5) * RpPb[iPoint];
+                    errYComblow     = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + TMath::Power( (Double_t)unCorrSys.at(iPoint)/100.,2.),   0.5) * RpPb[iPoint];
+                    errYCombhigh    = TMath::Power( TMath::Power( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + TMath::Power( (Double_t)unCorrSys.at(iPoint)/100.,2.) ,   0.5) * RpPb[iPoint];
 
                 } else {
                     cout << "BINNING of detailed syst incorrect!!" << endl<< endl<< endl;
@@ -3736,21 +3736,21 @@
 
                 (*graphRCP)->SetPoint(i,xBinsCentralPbPb[i],(yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral));
 
-                Double_t errYStat           = pow(  pow( (graphCentralSpectrum->GetErrorYlow(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
-                                                    pow( (graphPeripheralSpectrum->GetErrorYlow(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
+                Double_t errYStat           = TMath::Power(  TMath::Power( (graphCentralSpectrum->GetErrorYlow(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
+                                                    TMath::Power( (graphPeripheralSpectrum->GetErrorYlow(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
                                                     yPeripheralPbPb[i] *fNcollCentral *fNcollCentral),2.), 0.5);
                 (*graphRCP)->SetPointError(i, xBinsCentralErrPbPb[i], xBinsCentralErrPbPb[i], errYStat, errYStat);
 
 
                 (*graphRCPSys)->SetPoint(i,xBinsCentralPbPb[i],(yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral));
 
-                Double_t errYlow            = pow(  pow( (graphPbPbCentralSpectrumSysNoMat->GetErrorYlow(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
-                                                    pow( (graphPbPbPeripheralSpectrumSysNoMat->GetErrorYlow(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
-                                                    yPeripheralPbPb[i] *fNcollCentral *fNcollCentral),2.), 0.5); //+ something like pow(fNcollError/fNcoll,2.) fNcollError not taking into account
+                Double_t errYlow            = TMath::Power(  TMath::Power( (graphPbPbCentralSpectrumSysNoMat->GetErrorYlow(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
+                                                    TMath::Power( (graphPbPbPeripheralSpectrumSysNoMat->GetErrorYlow(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
+                                                    yPeripheralPbPb[i] *fNcollCentral *fNcollCentral),2.), 0.5); //+ something like TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
 
-                Double_t errYhigh           = pow(  pow( (graphPbPbCentralSpectrumSysNoMat->GetErrorYhigh(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
-                                                    pow( (graphPbPbPeripheralSpectrumSysNoMat->GetErrorYhigh(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
-                                                    yPeripheralPbPb[i] *fNcollCentral *fNcollCentral),2.), 0.5); //+ something like pow(fNcollError/fNcoll,2.) fNcollError not taking into account
+                Double_t errYhigh           = TMath::Power(  TMath::Power( (graphPbPbCentralSpectrumSysNoMat->GetErrorYhigh(i)*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral),2.) +
+                                                    TMath::Power( (graphPbPbPeripheralSpectrumSysNoMat->GetErrorYhigh(i)*yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i] *
+                                                    yPeripheralPbPb[i] *fNcollCentral *fNcollCentral),2.), 0.5); //+ something like TMath::Power(fNcollError/fNcoll,2.) fNcollError not taking into account
 
                 cout << i << "\t num: " << yCentralPbPb[i]<< "\t denum: " << yPeripheralPbPb[i] << "\t RCP: " << (yCentralPbPb[i]*fNcollPeripheral)/(yPeripheralPbPb[i]*fNcollCentral) <<"\t" << errYlow << "\t" << errYhigh << endl;
 
@@ -3772,7 +3772,7 @@
 
         Double_t pt         = x[0]*1000.; //GeV->MeV
         Double_t t          = par[1];
-        Double_t beta       = abs(par[2]);
+        Double_t beta       = TMath::Abs(par[2]);
         Double_t yt         = 0.5*TMath::Log((1+beta)/(1-beta)); // atanh(beta)
         Double_t m0         = 135.; //pi0
         Double_t mt         = TMath::Sqrt(m0*m0+pt*pt);
@@ -3788,7 +3788,7 @@
 
         Double_t pt         = x[0]*1000.; //GeV->MeV
         Double_t t          = par[1];
-        Double_t beta       = abs(par[2]);
+        Double_t beta       = TMath::Abs(par[2]);
         Double_t yt         = 0.5*TMath::Log((1+beta)/(1-beta)); // atanh(beta)
         Double_t m0         = 548.; //eta
         Double_t mt         = TMath::Sqrt(m0*m0+pt*pt);
@@ -3910,7 +3910,7 @@
 
         // define Tsallis function to parameterize scaled pp invariant yield
         Double_t mass                           = 0.135; // pi0 mass
-        TF1* fTsallis                           = new TF1("Tsallis", Form("[0] * pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",
+        TF1* fTsallis                           = new TF1("Tsallis", Form("[0] * TMath::Power(1.+(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",
                                                                             mass, mass, mass),0.,30.);
         fTsallis->SetParNames("A","n","T_{Tsallis} (GeV/c)");
         fTsallis->SetParameters(1.,5.,0.18);
@@ -3937,7 +3937,7 @@
 
         // function used to determine value of pTppStar at which the pp yield (pT * dN/dpT = pT^2 * inv. yield)
         // takes a given value yieldPbPb
-        TF1* fdNdPtScaledPP                     = new TF1(  "fdNdPtScaledPP", Form("[0] * x * x * pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) - [3]",
+        TF1* fdNdPtScaledPP                     = new TF1(  "fdNdPtScaledPP", Form("[0] * x * x * TMath::Power(1.+(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) - [3]",
                                                                 mass, mass, mass),0.,30.);
         fdNdPtScaledPP->SetParNames("A","n","T_{Tsallis} (GeV/c)","yieldPbPb");
 
@@ -3966,8 +3966,8 @@
 
             // combine the error of the Pb+Pb yield and the pp yield at pT,pp assuming that one can neglect the
             // the change in the relative error of the pp yield between pT and pT,pp
-            Double_t yCombinedStatErr           = sqrt(TMath::Power(yPbPbStatErr, 2) + TMath::Power(yPbPb * yppRelStatErr, 2));
-            Double_t yCombinedSysErr            = sqrt(TMath::Power(yPbPbSysErr, 2) + TMath::Power(yPbPb * yppRelSysErr, 2));
+            Double_t yCombinedStatErr           = TMath::Sqrt(TMath::Power(yPbPbStatErr, 2) + TMath::Power(yPbPb * yppRelStatErr, 2));
+            Double_t yCombinedSysErr            = TMath::Sqrt(TMath::Power(yPbPbSysErr, 2) + TMath::Power(yPbPb * yppRelSysErr, 2));
 
             //
             // calculate the pTppStar at which the scaled pp spectrum has the value of the PbPb yield
@@ -3987,8 +3987,8 @@
             Double_t pTppSysErr                 = inverseSlope * yCombinedSysErr;
 
             // sanity check
-            if (fabs(fdNdPtScaledPP->Eval(pTppStar)) > 1e-5) {
-                cout << "CalcDeltaPtOverPt: Warning: root calculation incorrect: " << fabs(fdNdPtScaledPP->Eval(pTppStar)) << endl;
+            if (TMath::Abs(fdNdPtScaledPP->Eval(pTppStar)) > 1e-5) {
+                cout << "CalcDeltaPtOverPt: Warning: root calculation incorrect: " << TMath::Abs(fdNdPtScaledPP->Eval(pTppStar)) << endl;
                 iStatus                         = 1;
             }
 
@@ -4458,8 +4458,8 @@
             if(CLsigma>0)
                 confi                       = CLsigma;
             //float confi                   = 1.28; // 90%
-            //float lowbound                = val - 1.28*abs(err); // 90% CL
-            float lowbound                  = val - confi*abs(err); // 95% CL
+            //float lowbound                = val - 1.28*TMath::Abs(err); // 90% CL
+            float lowbound                  = val - confi*TMath::Abs(err); // 95% CL
             //cout << "pt " << pt << " val " << val << " errt " << errt << " err " << err << " lowbound " << lowbound << endl;
             if(iFlag==0){ // points and errors > 0 syst
                 if(val>0&&errt>0){
@@ -4467,8 +4467,8 @@
                     xel[nPoints]            = errX/2;
                     xeh[nPoints]            = errX/2;
                     y[nPoints]              = val;
-                    yel[nPoints]            = abs(err);
-                    yeh[nPoints]            = abs(err);
+                    yel[nPoints]            = TMath::Abs(err);
+                    yeh[nPoints]            = TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==1){ // points and errors > 0 stat
@@ -4477,8 +4477,8 @@
                     xel[nPoints]            = 0;
                     xeh[nPoints]            = 0;
                     y[nPoints]              = val;
-                    yel[nPoints]            = abs(err);
-                    yeh[nPoints]            = abs(err);
+                    yel[nPoints]            = TMath::Abs(err);
+                    yeh[nPoints]            = TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==2){ // points and errors and confi > 0 syst
@@ -4487,8 +4487,8 @@
                     xel[nPoints]            = errX/2;
                     xeh[nPoints]            = errX/2;
                     y[nPoints]              = val;
-                    yel[nPoints]            = abs(err);
-                    yeh[nPoints]            = abs(err);
+                    yel[nPoints]            = TMath::Abs(err);
+                    yeh[nPoints]            = TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==3){ // points and errors and confi > 0 stat
@@ -4497,8 +4497,8 @@
                     xel[nPoints]            = 0;
                     xeh[nPoints]            = 0;
                     y[nPoints]              = val;
-                    yel[nPoints]            = abs(err);
-                    yeh[nPoints]            = abs(err);
+                    yel[nPoints]            = TMath::Abs(err);
+                    yeh[nPoints]            = TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==4){ // ALL Points Processed
@@ -4509,7 +4509,7 @@
                     xeh[nPoints]            = 0;
                     y[nPoints]              = val;
                     yel[nPoints]            = 0;
-                    yeh[nPoints]            = confi*abs(err);
+                    yeh[nPoints]            = confi*TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==5){ // arrow for points with zero
@@ -4517,10 +4517,10 @@
                     x[nPoints]              = pt;
                     xel[nPoints]            = 0;
                     xeh[nPoints]            = 0;
-                    y[nPoints]              = confi*abs(err)+val;
-                    //yel[nPoints]          = (1.575 * abs(err) + ScaleArrowlength * val);
-                    //yel[nPoints]          = confi*abs(err)+(val*ScaleArrowlength);
-                    yel[nPoints]            = abs(y[nPoints]-(0.08*y[nPoints]));
+                    y[nPoints]              = confi*TMath::Abs(err)+val;
+                    //yel[nPoints]          = (1.575 * TMath::Abs(err) + ScaleArrowlength * val);
+                    //yel[nPoints]          = confi*TMath::Abs(err)+(val*ScaleArrowlength);
+                    yel[nPoints]            = TMath::Abs(y[nPoints]-(0.08*y[nPoints]));
                     cout<<pt<<"  "<<yel[nPoints]<<"  "<<y[nPoints]<<endl;
                     yeh[nPoints]            = 0;
                     nPoints++;
@@ -4532,7 +4532,7 @@
                     xeh[nPoints]            = 0;
                     y[nPoints]              = val;
                     yel[nPoints]            = 0;
-                    yeh[nPoints]            = confi*abs(err);
+                    yeh[nPoints]            = confi*TMath::Abs(err);
                     nPoints++;
                 }
             } else if(iFlag==7){ // arrow for confi
@@ -4540,10 +4540,10 @@
                     x[nPoints]              = pt;
                     xel[nPoints]            = 0;
                     xeh[nPoints]            = 0;
-                    y[nPoints]              = confi*abs(err)+val;
-                    //yel[nPoints]          = (1.575 * abs(err) + ScaleArrowlength * val);
-                    //yel[nPoints]          = confi*abs(err)+(val*ScaleArrowlength);
-                    yel[nPoints]            = abs(y[nPoints]-(0.08*y[nPoints]));
+                    y[nPoints]              = confi*TMath::Abs(err)+val;
+                    //yel[nPoints]          = (1.575 * TMath::Abs(err) + ScaleArrowlength * val);
+                    //yel[nPoints]          = confi*TMath::Abs(err)+(val*ScaleArrowlength);
+                    yel[nPoints]            = TMath::Abs(y[nPoints]-(0.08*y[nPoints]));
                     yeh[nPoints]            = 0;
                     nPoints++;
                 }
@@ -4565,7 +4565,7 @@
 
         Double_t pt     = x[0]*1000.; //GeV->MeV
         Double_t t      = par[1];
-        Double_t beta   = abs(par[2]);
+        Double_t beta   = TMath::Abs(par[2]);
         Double_t yt     = 0.5*TMath::Log((1+beta)/(1-beta)); // atanh(beta)
         Double_t m0     = 0.; //pi0
         Double_t mt     = TMath::Sqrt(m0*m0+pt*pt);
@@ -4646,7 +4646,7 @@
     //*************************************************************************************************************
     Double_t PValueToNSigma(Double_t pvalue) {
 
-        TF1 f("f","1-TMath::Erf(x/sqrt(2.)) - [0]", -100, 100);
+        TF1 f("f","1-TMath::Erf(x/TMath::Sqrt(2.)) - [0]", -100, 100);
         f.SetParameter(0, pvalue);
 
         // create wrapper function
