@@ -368,7 +368,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
 
 
                 // calo photon nonlin
-            } else if (nameCutVariationSC[i].CompareTo("Calo_NonLin")==0 ){
+            } else if (nameCutVariationSC[i].CompareTo("Calo_NonLin")==0 ){ // taken from pi0
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
@@ -464,7 +464,7 @@ void FinaliseSystematicErrorsCalo_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
-                // cluster energy scale -> check actual value!
+                // cluster energy scale
             } else if (nameCutVariationSC[i].CompareTo("Calo_ClusterEnergyScale")==0 ){
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){

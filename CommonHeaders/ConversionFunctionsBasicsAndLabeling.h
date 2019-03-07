@@ -725,7 +725,7 @@
             case 44:
                 return "#pi^{0} rec w/ EMC";
             case 45:
-                return "#pi^{0} rec w/ PHOS, PHOS";
+                return "#pi^{0} rec w/ PHOS";
             case 46:
                 return "#pi^{0} rec w/ DCAL, DCAL";
             case 47:

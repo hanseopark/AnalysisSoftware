@@ -1180,8 +1180,8 @@
                     scaleFac        = 2.;
                     return 9;
                 } else if(mode == 44 || mode == 64){
-                    scaleFac        = 1.;
-                    return 11;
+                    scaleFac        = 2.;
+                    return 7;
                 } else if(mode == 45 || mode == 65){
                     scaleFac        = 5.;
                     return 5;

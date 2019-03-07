@@ -2110,6 +2110,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     histo2DOmegaRatioToPi0->GetYaxis()->SetMoreLogLabels(kTRUE);
     histo2DOmegaRatioToPi0->GetXaxis()->SetNoExponent(kTRUE);
     histo2DOmegaRatioToPi0->GetYaxis()->SetLabelOffset(0.01);
+
+    // uncomment if axis can't be shown
+    // histo2DOmegaRatioToPi0->GetYaxis()->SetTickLength(0);
+    // histo2DOmegaRatioToPi0->GetYaxis()->SetLabelSize(0);
+
     //histo2DOmegaRatioToPi0->GetXaxis()->SetTitleOffset(-0.01);
 
     histo2DOmegaRatioToPi0->GetYaxis()->SetRangeUser(-0.2,2.4);
@@ -2154,7 +2159,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     //funcRatioOmegaFitToPi0Fit->Draw("same");
 
 
-    legendCrossSectionRatioOmegaPi0->AddEntry(graphRatioOmegaCombPi0FitSys,"#omega#rightarrow #pi^{+}#pi^{-}#pi^{0} ,pp #sqrt{s} = 7000 GeV, ALICE this thesis","pf");
+    legendCrossSectionRatioOmegaPi0->AddEntry(graphRatioOmegaCombPi0FitSys,"#omega#rightarrow #pi^{+}#pi^{-}#pi^{0} ,pp #sqrt{s} = 7000 GeV, work in progress","pf");
     legendCrossSectionRatioOmegaPi0->AddEntry(graphOmegapipipiToPi0200GeVSys,"#omega#rightarrow #pi^{+}#pi^{-}#pi^{0} ,pp #sqrt{s} =   200 GeV, PHENIX","pf");
     legendCrossSectionRatioOmegaPi0->AddEntry(graphOmegapi0GammaToPi0200GeVSys,"#omega#rightarrow #pi^{0}#gamma     ,pp #sqrt{s} =   200 GeV, PHENIX","pf");
     legendCrossSectionRatioOmegaPi0->AddEntry(graphOmegaeeToPi0200GeVSys,"#omega#rightarrow e^{+}e^{-}    ,pp #sqrt{s} =   200 GeV, PHENIX","pf");
@@ -2263,6 +2268,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         
         histoDummyCrossSection->GetYaxis()->SetLabelOffset(0.001);
         histoDummyCrossSection->GetXaxis()->SetLabelOffset(-0.01);
+
         histoDummyCrossSection->GetXaxis()->SetMoreLogLabels(kTRUE);
         histoDummyCrossSection->DrawCopy();
         Int_t exampleInteger = 0;
@@ -2344,7 +2350,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         // legendOmegaErr2->AddEntry(graphGrey,  "syst. Err.","f");
         // legendOmegaErr2->Draw();
 
-        drawLatexAdd("ALICE this thesis",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+        drawLatexAdd("ALICE work in progress",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
         drawLatexAdd(collisionSystem7TeV,0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
         drawLatexAdd("#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
         histoDummyCrossSection->Draw("sameaxis");
@@ -2458,6 +2464,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     histoDummyCrossSectionCombined->GetYaxis()->SetLabelOffset(0.001);
     histoDummyCrossSectionCombined->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyCrossSectionCombined->GetXaxis()->SetMoreLogLabels(kTRUE);
+
+    // uncomment if axis can't be shown
+    // histoDummyCrossSectionCombined->GetYaxis()->SetTickLength(0);
+    // histoDummyCrossSectionCombined->GetYaxis()->SetLabelSize(0);
+
     histoDummyCrossSectionCombined->DrawCopy();
 
     TBox* boxErrorSigmaRatioOmega = CreateBoxConv(kGray+2, minPtOmega+0.1, 1.-(0.035 ), minPtOmega+0.3, 1.+(0.035));
@@ -2469,6 +2480,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     DrawGammaSetMarker(histoOmegaXSecSim7TeV, 24, 1.5, kRed+1 , kRed+1);
     histoOmegaXSecSim7TeV->SetLineWidth(2.);
     histoOmegaXSecSim7TeV->GetXaxis()->SetRangeUser(1.8,16.);
+
     histoOmegaXSecSim7TeV->Draw("p,same,z");
 
     DrawGammaSetMarkerTGraph(graphOmegaXSecPHOS7TeVStat,  24,  markerSizeDet[0]*0.55,kGray+2 , kGray+2);
@@ -2494,7 +2506,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
 
 
 
-    drawLatexAdd("ALICE this thesis",0.93,0.91,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE work in progress",0.93,0.91,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
     drawLatexAdd(collisionSystem7TeV,0.93,0.86,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
             // --
 
@@ -2512,6 +2524,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         ratio2PHOSPN->GetYaxis()->SetLabelFont(42);
         ratio2PHOSPN->GetYaxis()->SetLabelOffset(0.);
         ratio2PHOSPN->GetXaxis()->SetTickLength(0.07);
+
+        // uncomment if axis can't be shown
+        // ratio2PHOSPN->GetYaxis()->SetTickLength(0);
+        // ratio2PHOSPN->GetYaxis()->SetLabelSize(0);
+
         ratio2PHOSPN->DrawCopy();
 
         DrawGammaLines(minPtOmega,maxPtOmega , 1., 1.,3., kGray+2,7);
@@ -2547,6 +2564,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         ratio2DPythiaOmega->GetYaxis()->SetLabelOffset(0.);
         ratio2DPythiaOmega->GetXaxis()->SetTickLength(0.06);
         ratio2DPythiaOmega->GetYaxis()->SetTickLength(0.04);
+
+        // uncomment if axis can't be shown
+        // ratio2DPythiaOmega->GetYaxis()->SetTickLength(0);
+        // ratio2DPythiaOmega->GetYaxis()->SetLabelSize(0);
+
         ratio2DPythiaOmega->DrawCopy();
 
         DrawGammaLines(minPtOmega,maxPtOmega , 1., 1.,3., kGray+2,7);
