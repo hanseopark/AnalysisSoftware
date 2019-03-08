@@ -4578,7 +4578,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*150./100.;
             } else if (fMode == 4 || fMode == 12 || fMode == 5) {   // EMC, DMC, PHOS
-                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                if( fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0 ){
                     mesonAmplitudeMin = mesonAmplitude*90./100.;
                     mesonAmplitudeMax = mesonAmplitude*400./100.;
                     TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
@@ -4687,7 +4687,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 if (fBinsPt[ptBin] > 7. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.995,fMesonMassExpect*1.15);
                 if (fBinsPt[ptBin] > 9. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
             }
-        } else if (fEnergyFlag.CompareTo("8TeV") == 0 ){
+        } else if (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0 ){
             if (fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
         } else if (fEnergyFlag.CompareTo("13TeVLowB") == 0 && fMode == 0 && ptBin < 2 ){
@@ -4704,7 +4704,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
             else if  ( fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
-        } else if (fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ) {
+        } else if (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ) {
             if ( fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
         }

@@ -1282,7 +1282,8 @@
                     if (specialTrigg == 1) startPtBin = 1;
                     else startPtBin     = 6;
                 } else if ( mode == 4 ){
-                    startPtBin     = 10;
+                    if (specialTrigg == 1) startPtBin = 26;
+                    else startPtBin     = 10;
                 } else if ( mode == 5){
                     startPtBin     = 2;
                 } else if ( mode == 10){
@@ -1618,7 +1619,8 @@
                 } else if (mode == 3){
                     startPtBin     = 2;
                 } else if (mode == 4){
-                    startPtBin     = 6;
+                    if (specialTrigg == 1) startPtBin = 11;
+                    else startPtBin     = 6;
                 } else if (mode == 40 || mode == 60){
                     startPtBin     = 4;
                 } else if (mode == 41 || mode == 61){
@@ -2080,7 +2082,11 @@
                     }
                 } else {
                     if ( mode == 2 ){
-                        if(SpecialTrigger == 1 || SpecialTrigger == 2 || SpecialTrigger == 3){
+                        if(SpecialTrigger == -1 ){
+                              maxNBins = 41; // binning for combination
+                              for(Int_t i = 0; i < maxNBins+1; i++)
+                                  binning[i] = fBinsPi07TeVPCMEMCPt[i];
+                        } else if(SpecialTrigger == 1 || SpecialTrigger == 2 || SpecialTrigger == 3){
                             maxNBins = 14;
                             for(Int_t i = 0; i < maxNBins+1; i++){
                                 binning[i] = fBinsPi07TeVPCMEMCTrigPt[i];
@@ -2892,7 +2898,7 @@
                     }
                 } else if ( mode == 2  ){
                     if(SpecialTrigger == 1 || SpecialTrigger == 2 || SpecialTrigger == 3){
-                        maxNBins = 18;
+                        maxNBins = 20;
                         for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsEta7TeVPCMEMCPt[i];
                         }
@@ -2906,9 +2912,10 @@
                     maxNBins = 18;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta7TeVPCMPHOSPt[i];
+                        // binning[i] = fBinsEta7TeVPCMPHOSPt[i];
                     }
                 } else if ( mode == 4 ){
-                    maxNBins = 18;
+                    maxNBins = 20;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta7TeVPCMEMCPt[i];
                     }

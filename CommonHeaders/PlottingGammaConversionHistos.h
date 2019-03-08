@@ -877,7 +877,8 @@ using namespace std; // necessary for non-ROOT compilation
                                 Bool_t XRange,
                                 Double_t XMin,
                                 Double_t XMax,
-                                Double_t yOffset=1.) {
+                                Double_t yOffset=1.,
+                                Double_t xOffset=1.) {
         if (YRangeMax && !XRange){
             YRange = kFALSE;
             Double_t maxRangeR = histo1->GetMaximum();

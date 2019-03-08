@@ -880,7 +880,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 9000;
         else if (optionEnergy.CompareTo("13TeV") == 0)
             maxTriggReject = 4200;
-        else if (mode == 10)
+        else if (optionEnergy.CompareTo("7TeV") == 0){
+            minTriggReject = 0.01;
+            maxTriggReject = 110000;
+        }else if (mode == 10)
             maxTriggReject = 5200;
 
         TH2F * histo2DTriggReject;

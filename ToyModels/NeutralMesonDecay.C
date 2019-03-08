@@ -45,11 +45,12 @@
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
 #include "TGenPhaseSpace.h"
-#include "CommonHeaders/PlottingGammaConversionHistos.h"
-#include "CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "CommonHeaders/FittingGammaConversion.h"
-#include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-#include "CommonHeaders/ConversionFunctions.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ConversionFunctions.h"
+
 
 //****************************************************************************
 //*************** Draw 2D histogram ******************************************
@@ -161,6 +162,14 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
             ptDistribution->SetParameter(3,5.64798456522145997e-01);
             ptDistribution->SetParameter(4,3.19909580984167752e+00);   
             ptDistribution->SetRange(minPt,maxPt);
+        } else if (energy.CompareTo("pPb_8TeV") == 0){
+            ptDistribution      = FitObject("tcm","ptDistribution","Pi0",NULL,10,200.);
+            ptDistribution->SetParameter(0,59.7673972756);
+            ptDistribution->SetParameter(1,0.1133121714);
+            ptDistribution->SetParameter(2,4.2802668896);
+            ptDistribution->SetParameter(3,0.5676437241);
+            ptDistribution->SetParameter(4,2.9785817202);
+            ptDistribution->SetRange(minPt,maxPt);
         } else {
             cout << "ERROR: undefined energy for pi0" << endl;
             return;
@@ -214,14 +223,15 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
                                             {0., -0.2, 0.2, 0, 0}, 
                                             {0.20, -0.2, 0., 0, 0},
                                             {-0.2, 0.2, 0., 0, 0} };
-    Double_t ptBinning[69]              = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+    Double_t ptBinning[75]              = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                            1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
                                            2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
                                            3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8,
                                            5.0, 5.4, 5.8, 6.2, 6.6, 7.0, 7.5, 8.0, 8.5, 9.0,
                                            10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 18.0, 20.0, 25.0,
-                                           30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0};
-    Int_t nBinsX                        = 68;    
+                                           30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0,
+                                            80., 100.,125.,150.,175.,200};
+    Int_t nBinsX                        = 74;    
     
     //*************************************************************************************************    
     //************************** Loading the resolutions **********************************************
@@ -231,7 +241,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     TH2F* histoResolutionInput[5];
     TH1F* histoFractionsInput[5];
     TString labelResolHist[5];
-    Int_t nResolHist                = 1;
+    Int_t nResolHist                = 4;
     if (fileName.CompareTo("")!= 0 && cutSting.CompareTo("") != 0){
         TFile* resolutionFile           = new TFile(fileName.Data());
         TString autoDetectedMainDir     = AutoDetectMainTList(mode , resolutionFile);
@@ -312,20 +322,20 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     TGenPhaseSpace event;
     
 
-    TH2D *h2_ptMothervsDaughter = new TH2D("h2_ptMothervsDaughter","", 500,0,50,500,0,50);  
+    TH2D *h2_ptMothervsDaughter = new TH2D("h2_ptMothervsDaughter","", 500,0,maxPt,500,0,maxPt);  
     h2_ptMothervsDaughter->Sumw2();
-    TH2D *h2_asym_geom          = new TH2D("h2_asym_geom","", 500,-1,1, 500,0,50);
+    TH2D *h2_asym_geom          = new TH2D("h2_asym_geom","", 500,-1,1, 500,0,maxPt);
     h2_ptMothervsDaughter->Sumw2();
-    TH2D *h2_OpenAngle          = new TH2D("h2_OpenAngle","", 500,0,50, 400,0,4);
+    TH2D *h2_OpenAngle          = new TH2D("h2_OpenAngle","", 500,0,maxPt, 400,0,4);
     h2_OpenAngle->SetXTitle(Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()));
     h2_OpenAngle->SetYTitle("#theta_{open}");
     h2_OpenAngle->Sumw2();
-    TH2D *h2_ClusterDistance    = new TH2D("h2_ClusterDistance","", 500,0,50, 5000,0,100);
+    TH2D *h2_ClusterDistance    = new TH2D("h2_ClusterDistance","", 500,0,maxPt, 5000,0,100);
     h2_ClusterDistance->SetXTitle(Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()));
     h2_ClusterDistance->SetYTitle("#it{R}_{#gamma's at r=440cm} (cm)");
     h2_ClusterDistance->Sumw2();
     
-    TH1D *h1_ptdistribution     = new TH1D("h1_ptdistribution","", 500,0,50);  
+    TH1D *h1_ptdistribution     = new TH1D("h1_ptdistribution","", 500,0,maxPt);  
     h1_ptdistribution->Sumw2();
     TH1D *h1_ptdistributionReb  = new TH1D("h1_ptdistributionReb","", nBinsX, ptBinning);  
     h1_ptdistributionReb->Sumw2();
@@ -336,11 +346,11 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     TProfile* p1_fractionsSmearedReb[nResolHist];
     TSpline3* spFractions[nResolHist];
     for (Int_t i = 0; i < nResolHist; i++){
-        h1_ptdistSmeared[i]         = new TH1D(Form("h1_ptdistSmeared_%d",i),"", 500,0,50);  
+        h1_ptdistSmeared[i]         = new TH1D(Form("h1_ptdistSmeared_%d",i),"", 500,0,maxPt);  
         h1_ptdistSmeared[i]->Sumw2();
         h1_ptdistSmearedReb[i]      = new TH1D(Form("h1_ptdistSmearedReb_%d",i),"", nBinsX, ptBinning);  
         h1_ptdistSmearedReb[i]->Sumw2();
-        p1_fractionsSmeared[i]      = new TProfile(Form("p1_fractionsSmeared_%d",i),"", 500,0,50);  
+        p1_fractionsSmeared[i]      = new TProfile(Form("p1_fractionsSmeared_%d",i),"", 500,0,maxPt);  
         p1_fractionsSmeared[i]->Sumw2();
         p1_fractionsSmearedReb[i]   = new TProfile(Form("p1_fractionsSmearedReb_%d",i),"", nBinsX, ptBinning);  
         p1_fractionsSmearedReb[i]->Sumw2();
@@ -355,12 +365,12 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     h1_etadistribution->Sumw2();
     TH1D *h1_ptDaughter[10];
     for (Int_t i = 0; i < nDaughters; i++){
-        h1_ptDaughter[i]        = new TH1D(Form("h1_ptDaughter%d",i),"", 500,0,50);  
+        h1_ptDaughter[i]        = new TH1D(Form("h1_ptDaughter%d",i),"", 500,0,maxPt);  
     }
-    TH1D *h1_ptGammaDaughters   = new TH1D("h1_ptGammaDaughters","", 500,0,50);  
-    TH1D *h1_ptPiPlDaughters    = new TH1D("h1_ptPiPlDaughters","", 500,0,50);  
-    TH1D *h1_ptPiMiDaughters    = new TH1D("h1_ptPiMiDaughters","", 500,0,50);  
-    TH1D *h1_ptPiZeroDaughters  = new TH1D("h1_ptPiZeroDaughters","", 500,0,50);  
+    TH1D *h1_ptGammaDaughters   = new TH1D("h1_ptGammaDaughters","", 500,0,maxPt);  
+    TH1D *h1_ptPiPlDaughters    = new TH1D("h1_ptPiPlDaughters","", 500,0,maxPt);  
+    TH1D *h1_ptPiMiDaughters    = new TH1D("h1_ptPiMiDaughters","", 500,0,maxPt);  
+    TH1D *h1_ptPiZeroDaughters  = new TH1D("h1_ptPiZeroDaughters","", 500,0,maxPt);  
 
     TH1D* h1ResolProjection[5][1000];
     if (haveResol){
@@ -375,7 +385,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     //**************************** Event loop *********************************************************
     //*************************************************************************************************
     for(Int_t n=0; n<nEvts; n++){ // this is the important loop (nEvents)
-        if (n%10000000 == 0) 
+        if (n%500000 == 0) 
             cout << "generated " << (Double_t)n/1e6 << " Mio events" << endl;
 //         cout << "event: " << n << endl;
         Double_t ptcurrent      = ptDistribution->GetRandom();        
@@ -544,7 +554,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
             DrawAutoGammaMesonHistos(   histoRatioSmearedDivInput[j], 
                                         "", "#it{p}_{T} (GeV/#it{c})", "smeared/input", // (%)", 
                                         kFALSE, 10, 1e-1, kFALSE,
-                                        kTRUE, 0., 2, 
+                                        kTRUE, 0., 5., 
                                         kFALSE, 0., 10.);
             histoRatioSmearedDivInput[j]->GetYaxis()->SetTitleOffset(0.85);
             DrawGammaSetMarker(histoRatioSmearedDivInput[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
@@ -576,7 +586,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
             DrawAutoGammaMesonHistos(   histoRatioSmearedDivInputReb[j], 
                                         "", "#it{p}_{T} (GeV/#it{c})", "smeared/input", // (%)", 
                                         kFALSE, 10, 1e-1, kFALSE,
-                                        kTRUE, 0., 2, 
+                                        kTRUE, 0., 5, 
                                         kTRUE, 0., maxPt);
             histoRatioSmearedDivInputReb[j]->GetYaxis()->SetTitleOffset(0.85);
             DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
@@ -606,7 +616,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
                 h1_ptdistSmearedReweighted[k][j] = (TH1D*)h1_ptdistSmeared[j]->Clone(Form("h1_ptdistSmeared_%d",j));
                 h1_ptdistSmearedReweightedReb[k][j] = (TH1D*)h1_ptdistSmearedReb[j]->Clone(Form("h1_ptdistSmearedReb_%d",j));
                 for (Int_t i = 1; i < h1_ptdistSmearedReweighted[k][j]->GetNbinsX()+1; i++){
-                    if (h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) < 50){
+                    if (h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) < maxPt){
                         h1_ptdistSmearedReweighted[k][j]->SetBinContent(i, h1_ptdistSmearedReweighted[k][j]->GetBinContent(i)*(p1_fractionsSmeared[j]->GetBinContent(i)+scaleFactors[k][j])/
                                                                            h1_ptdistSmearedReweighted[k][j]->GetBinWidth(i));
                         h1_ptdistSmearedReweighted[k][j]->SetBinError(i, h1_ptdistSmearedReweighted[k][j]->GetBinError(i)*(p1_fractionsSmeared[j]->GetBinContent(i)+scaleFactors[k][j])/
@@ -617,7 +627,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
                     }
                 }
                 for (Int_t i = 1; i < h1_ptdistSmearedReweightedReb[k][j]->GetNbinsX()+1; i++){
-                    if (h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) < 50){
+                    if (h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) < maxPt){
                         h1_ptdistSmearedReweightedReb[k][j]->SetBinContent(i, h1_ptdistSmearedReweightedReb[k][j]->GetBinContent(i)*(p1_fractionsSmearedReb[j]->GetBinContent(i)+scaleFactors[k][j])/
                                                                             h1_ptdistSmearedReweightedReb[k][j]->GetBinWidth(i));
                         h1_ptdistSmearedReweightedReb[k][j]->SetBinError(i, h1_ptdistSmearedReweightedReb[k][j]->GetBinError(i)*(p1_fractionsSmearedReb[j]->GetBinContent(i)+scaleFactors[k][j])/
@@ -631,7 +641,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
         }
         
         for (Int_t i = 1; i < h1_ptdistributionReb->GetNbinsX()+1; i++){
-            if (h1_ptdistributionReb->GetBinCenter(i) > 10 && h1_ptdistributionReb->GetBinCenter(i) < 50){
+            if (h1_ptdistributionReb->GetBinCenter(i) > 10 && h1_ptdistributionReb->GetBinCenter(i) < maxPt){
                 h1_ptdistributionReb->SetBinContent(i, h1_ptdistributionReb->GetBinContent(i)/h1_ptdistributionReb->GetBinWidth(i));
                 h1_ptdistributionReb->SetBinError(i, h1_ptdistributionReb->GetBinError(i)/h1_ptdistributionReb->GetBinWidth(i));
             } else {
@@ -837,6 +847,9 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
         for (Int_t i = 0; i < nDaughters; i++){
             h1_ptDaughter[i]->Write();
         }     
+        for (Int_t j = 0; j < 3 ; j++ ){
+            if( h1_ptReweightedRecMCRebModFracRatioToStandard[j])h1_ptReweightedRecMCRebModFracRatioToStandard[j]->Write();
+        }
         h2_ptMothervsDaughter->Write();
         h2_ClusterDistance->Write();
         h2_OpenAngle->Write();

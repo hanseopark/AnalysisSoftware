@@ -422,19 +422,19 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
             ptbinning[i]             = ptbinningStandard[i];
         }            
     } else {
-        maxNBinsPt          = 21;
+        maxNBinsPt          = 23;
         nColumns            = 5;
         nRows               = 5;
-        Double_t ptbinningStandard[22]  = { 10., 11., 12., 13., 14.,
+        Double_t ptbinningStandard[24]  = { 10., 11., 12., 13., 14.,
                                             15., 16., 18., 20., 22., 
                                             24., 26., 28., 30., 35., 
                                             40., 45., 50 , 60., 70.,
-                                            80., 100.};
-        Int_t ptbinningRebStandard[21]  = { 10, 10, 10, 10, 10,
+                                            80., 100.,150.,200};
+        Int_t ptbinningRebStandard[23]  = { 10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
-                                            10};
+                                            10, 10, 10};
         for (Int_t i = 0; i < maxNBinsPt+1; i++){
             if (i < maxNBinsPt) 
                 ptbinningReb[i]      = ptbinningRebStandard[i];
@@ -563,7 +563,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     padEPGdPtVsPt2->Draw();
     
     padEPGdPtVsPt1->cd();
-    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,50.,1000,-50,50);
+    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,200.,1000,-50,50);
     SetStyleHistoTH2ForGraphs( histo2DMean, "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(),
                                mesonLatex.Data(),"%"),  0.04,0.05, 0.04,0.05, 1.1,1.1);
     if (mode == 0){
@@ -578,8 +578,11 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         histo2DMean->GetYaxis()->SetRangeUser(-8.5,6.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DMean->GetYaxis()->SetRangeUser(-38.5,17.5);
-        histo2DMean->GetXaxis()->SetRangeUser(0,50);        
+        histo2DMean->GetYaxis()->SetRangeUser(-33.5,29.5);
+        histo2DMean->GetXaxis()->SetRangeUser(9.5,200);        
+        padEPGdPtVsPt1->SetLogx();
+        padEPGdPtVsPt2->SetLogx();
+        histo2DMean->GetXaxis()->SetMoreLogLabels();
     }    
     histo2DMean->DrawCopy(); 
 
@@ -602,7 +605,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     padEPGdPtVsPt1->Update();
     padEPGdPtVsPt2->cd();
     
-    TH2F * histo2DSigma = new TH2F("histo2DSigma","histo2DSigma",5000,0.,50.,1000,-0.1,100);
+    TH2F * histo2DSigma = new TH2F("histo2DSigma","histo2DSigma",5000,0.,200.,1000,-0.1,100);
     SetStyleHistoTH2ForGraphs(histo2DSigma, Form("#it{p}^{%s}_{T,MC} (GeV/#it{c})",mesonLatex.Data()), Form(" #sigma #it{p}^{%s}_{T} (%s)",mesonLatex.Data(),"%"), 0.04,0.05, 0.04,0.05, 1.1,1.1);
     if (mode == 0){
       histo2DSigma->GetYaxis()->SetRangeUser(0,7.2);
@@ -616,8 +619,9 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
           histo2DSigma->GetYaxis()->SetRangeUser(0,17);
           histo2DSigma->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DSigma->GetYaxis()->SetRangeUser(0,45.5);
-        histo2DSigma->GetXaxis()->SetRangeUser(0,50);                
+        histo2DSigma->GetYaxis()->SetRangeUser(0,58.5);
+        histo2DSigma->GetXaxis()->SetRangeUser(9.5,200);                
+        histo2DSigma->GetXaxis()->SetMoreLogLabels();
     } 
     histo2DSigma->DrawCopy(); 
 
@@ -719,7 +723,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         
         padEPGdPtVsPt1->cd();
         histo2DMean->GetYaxis()->SetRangeUser(-38.5,17.5);
-        histo2DMean->GetXaxis()->SetRangeUser(0,50);        
+        histo2DMean->GetXaxis()->SetRangeUser(9.5,200);        
         histo2DMean->DrawCopy(); 
 
             DrawGammaSetMarker(Resolution_Meson_MeanMerged, 21, 1, kAzure, kAzure);  
@@ -741,8 +745,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
             
 //         padEPGdPtVsPt1->Update();
         padEPGdPtVsPt2->cd();
-        histo2DSigma->GetYaxis()->SetRangeUser(0,45.5);
-        histo2DSigma->GetXaxis()->SetRangeUser(0,50);                
+        histo2DSigma->GetYaxis()->SetRangeUser(0,65.5);
+        histo2DSigma->GetXaxis()->SetRangeUser(9.5,200);                
         histo2DSigma->DrawCopy(); 
 
             DrawGammaSetMarker(Resolution_Meson_SigmaMerged, 21, 1, kAzure, kAzure);  
