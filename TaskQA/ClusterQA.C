@@ -2132,7 +2132,7 @@ void ClusterQA(
                 PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), 42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells2D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kFALSE, kTRUE);
 
-                if (mode==5 || mode == 4 || mode == 3) canvas->SetRightMargin(rightMargin*3.);
+                if (mode==5 || mode == 4 || mode == 3 || mode == 15) canvas->SetRightMargin(rightMargin*3.);
                 else canvas->SetRightMargin(rightMargin);
                 PlotHotCells(cellQA,0,nCaloCells,fHistCellTimeVsCellID,
                             "N_{Cell fired} / N_{Events}",
