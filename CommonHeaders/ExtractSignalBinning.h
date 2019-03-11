@@ -188,7 +188,8 @@
         Double_t &scaleFac,
         Int_t triggerSet                    = -1,
         TString directPhotonRunningOption   = "",
-        TString centrality                  = ""
+        TString centrality                  = "",
+        Bool_t DoJetAnalysis                = kFALSE
     ) {
 
         // Heavy meson fix
@@ -333,8 +334,12 @@
                     return 5;
                 if ( mode == 2 )
                     return 9;
-                if ( mode == 4 )
-                    return 24;
+                if ( mode == 4 ){
+                    if(DoJetAnalysis)
+                        return 8;
+                    else
+                        return 24;
+                }
                 if ( mode == 12 )
                     return 12;
                 if ( mode == 13 )
@@ -835,7 +840,11 @@
                 if (mode == 3 )
                     return 4;
                 else if (mode == 4 )
-                    return 9;
+                    if(DoJetAnalysis){
+                        return 6;
+                    }else{
+                        return 9;
+                    }
                 else if (mode == 12 )
                     return 7;
                 else
@@ -1207,9 +1216,9 @@
         Int_t     mode,
         Int_t     specialTrigg  =-1,
         TString   centrality    = "",
-        TString   minECut       = ""
+        TString   minECut       = "",
+        Bool_t    DoJetAnalysis = kFALSE
     ){
-
         // Heavy meson fix
         if( mode>=100 ) mode -= 100;
 
@@ -1246,6 +1255,7 @@
                         startPtBin = 1;
                     } else if ( mode == 4){
                       if (specialTrigg == 2) startPtBin = 49;
+                      else if(DoJetAnalysis) startPtBin = 7;
                       else startPtBin = 6;
                     } else if ( mode == 10){
                         startPtBin = 27;
@@ -1591,6 +1601,7 @@
                       startPtBin = 1;
                   } else if ( mode == 4 ){
                     if (specialTrigg == 2) startPtBin = 16;
+                    else if(DoJetAnalysis) startPtBin = 3;
                     else startPtBin = 2;
                   } else if ( mode == 13 ){
                       startPtBin = 1;
@@ -1888,7 +1899,8 @@
         Int_t       mode            = 2,
         Int_t       SpecialTrigger  = -1,
         Bool_t      DCAcase         = kFALSE,
-        TString     centrality      = ""
+        TString     centrality      = "",
+        Bool_t      DoJetAnalysis   = kFALSE
     ){
         Int_t maxNBins      = 0;
         binningMax          = 0;
@@ -2021,10 +2033,17 @@
                     }
                   } else if ( mode == 4 ){
                     if(energy.Contains("2017")){
-                        maxNBins = 33;
-                        for(Int_t i = 0; i < maxNBins+1; i++){
+                        if(DoJetAnalysis){
+                          maxNBins = 25;
+                          for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsPi05TeV2017PtJets[i];
+                          }
+                        }else{
+                          maxNBins = 33;
+                          for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsPi05TeV2017PtCombination[i];
                         }
+                    }
                     }else{
                       if(SpecialTrigger == 1 || SpecialTrigger == 2 || SpecialTrigger == 3){
                           maxNBins = 50;
@@ -2844,9 +2863,16 @@
                         }
                 } else if ( mode == 4 ){
                   if(energy.Contains("2017")){
-                    maxNBins = 24;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEta5TeV2017PtCombination[i];
+                    if(DoJetAnalysis){
+                        maxNBins = 13;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                          binning[i] = fBinsEta5TeV2017PtJets[i];
+                        }
+                    }else{
+                        maxNBins = 24;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                          binning[i] = fBinsEta5TeV2017PtCombination[i];
+                        }
                     }
                   } else {
                     if(SpecialTrigger == 1 || SpecialTrigger == 2 || SpecialTrigger == 3){
@@ -3805,7 +3831,8 @@
         Bool_t isDCA = kFALSE,
         TString centDCA = "",
         TString periodDCA = "",
-        TString photonCutSelection = ""
+        TString photonCutSelection = "",
+        Bool_t DoJetAnalysis = kFALSE
     ) {
 
 
@@ -3827,7 +3854,7 @@
         Int_t maxPtBinAvail     = 0;
 
         // Initialize bin for single invariant mass plot
-        fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton, centrality);
+        fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton, centrality, DoJetAnalysis);
         cout << "Example pt bin: " <<  fExampleBin << endl;
 
         if (triggerSet == -1){
@@ -4025,8 +4052,8 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0 || energy.CompareTo("5TeVSpecial") == 0 ) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
-                    fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality,"", DoJetAnalysis);
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinTheo) {
                         cout << "**************************************************************************************************************************************" << endl;
                         cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4053,8 +4080,8 @@
                     }
 
                 } else {
-                  fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                  Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                  fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality,"", DoJetAnalysis);
+                  Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                   if (fNBinsPt > maxPtBinTheo) {
                       cout << "**************************************************************************************************************************************" << endl;
                       cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4093,7 +4120,11 @@
                             fNRebin[i] = fBinsPi05TeV2017PtCombinationRebin[i];
                         } else if ( modi == 4 ) {
                           if(energy.Contains("2017")){
-                            fNRebin[i] = fBinsPi05TeV2017PtCombinationRebin[i];
+                            if(DoJetAnalysis){
+                                fNRebin[i] = fBinsPi05TeV2017PtJetsRebin[i];
+                            }else{
+                                fNRebin[i] = fBinsPi05TeV2017PtCombinationRebin[i];
+                            }
                           } else {
                             if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3)
                               fNRebin[i] = fBinsPi05TeVEMCPtRebinTrigger1[i];
@@ -4172,7 +4203,7 @@
                     }
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinTheo) {
                         cout << "**************************************************************************************************************************************" << endl;
                         cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4416,7 +4447,7 @@
                     }
                 }  else {//13TeV, not directPhoton
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA);
+                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, DoJetAnalysis);
                     CheckBinSize(fNBinsPt,maxPtBinAvail,kTRUE);
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     //Rebinning, because not implemented in getBinning
@@ -4542,7 +4573,7 @@
                             fStartPtBin += 0;
                         }
                     }
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinTheo) {
                         cout << "**************************************************************************************************************************************" << endl;
                         cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4575,7 +4606,7 @@
             } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0|| energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 if (directPhoton.Contains("directPhoton") ){
                     fStartPtBin                 = GetStartBin(directPhoton, energy, modi, specialTrigg, centrality);
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Gamma", energy, modi, specialTrigg, isDCA, centrality );
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Gamma", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinAvail) {
                         cout << "**************************************************************************************************************************************" << endl;
                         cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4628,7 +4659,7 @@
                     }
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinAvail) {
                       cout << "**************************************************************************************************************************************" << endl;
                       cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4802,7 +4833,7 @@
                     fMaxYFracBGOverIntHist      = 20;
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg);
-                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                     if (fNBinsPt > maxPtBinAvail) {
                       cout << "**************************************************************************************************************************************" << endl;
                       cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -4990,7 +5021,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
                 fStartPtBin     = GetStartBin("Pi0", energy, modi, -1, centrality);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5197,8 +5228,8 @@
             //********************************** Eta for pp 5TeV*******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0 || energy.CompareTo("5TeVSpecial") == 0) {
-              fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
-              Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+              fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality,"", DoJetAnalysis);
+              Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
               if (fNBinsPt > maxPtBinTheo) {
                   cout << "**************************************************************************************************************************************" << endl;
                   cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5237,7 +5268,11 @@
                               fNRebin[i]  = fBinsEta5TeV2017PtCombinationRebin[i];
                             } else if ( modi == 4 ){
                               if(energy.Contains("2017")){
-                                fNRebin[i] = fBinsEta5TeV2017PtCombinationRebin[i];
+                                if(DoJetAnalysis){
+                                    fNRebin[i] = fBinsEta5TeV2017PtJetsRebin[i];
+                                }else{
+                                    fNRebin[i] = fBinsEta5TeV2017PtCombinationRebin[i];
+                                }
                               } else {
                                 if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                                   fNRebin[i] = fBinsEta5TeVEMCPtRebinTrigger1[i];
@@ -5264,6 +5299,8 @@
                             } else if ( modi == 4 ){
                               if (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                                 fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[i];
+                              }else if(DoJetAnalysis){
+                                fNRebin[i]  = fBinsEta5TeV2017PtJetsRebin[i];
                               }else{
                                 fNRebin[i]  = fBinsEta5TeV2017EMCPtRebin[i];
                               }
@@ -5292,7 +5329,7 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinTheo) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5468,7 +5505,7 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0 ) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinTheo) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5564,7 +5601,7 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinTheo) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5585,7 +5622,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5761,7 +5798,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("pPb_8TeV") == 0 || energy.CompareTo("pPb_8TeVRun2") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5968,7 +6005,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
                 fStartPtBin     = GetStartBin("Eta", energy, modi);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -6007,8 +6044,8 @@
             fNBinsPt           = numberOfBins;
             fBinsPt            = new Double_t[30];
             fNRebin            = new Int_t[29];
-            fStartPtBin        = GetStartBin( "EtaPrime", energy, modi, specialTrigg );
-            Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi, specialTrigg);
+            fStartPtBin        = GetStartBin( "EtaPrime", energy, modi, specialTrigg);
+            Int_t maxPtBinTheo = GetBinning( fBinsPt, maxPtBinAvail, "EtaPrime", energy, modi, specialTrigg, DoJetAnalysis);
             if (fNBinsPt > maxPtBinTheo) {
                 cout << "**************************************************************************************************************************************" << endl;
                 cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -6072,7 +6109,7 @@
 
             if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin                 = GetStartBin("Omega","7TeV",modi);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Omega", energy, modi);
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Omega", energy, modi, DoJetAnalysis);
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;

@@ -75,6 +75,8 @@ TString     nameIntBck[6]                                               = {"Minp
 TString     nameIntBckRatios[6]                                         = {"RatioMinpol2","RatioPluspol2","RatioMinexp","RatioPlusexp","RatioMinexp2","RatioPlusexp2"};
 TString     nameIntBckResult[3]                                         = {"pol2_normal","exp_normal","exp2_normal"};
 
+Bool_t      fDoJetAnalysis                                              = kFALSE;
+
 //****************************************************************************
 //******************************** Output files ******************************
 //****************************************************************************
@@ -222,7 +224,7 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D*, Int_t);                    
 void FitTrueInvMassInPtBins(TH1D * ,Double_t *, Int_t, Bool_t);                                             // Fits the true invariant mass histos with a gaussian plus exponential plus lin BG
 void FitTrueInvMassPureGaussianInPtBins(TH1D * , Int_t);                                                    // Fits the true invariant mass histos with a gaussian plus lin BG
 void FitCBSubtractedInvMassInPtBins(TH1D* ,Double_t * , Int_t ,Bool_t,TString, Bool_t );                    // Fits the invariant mass histos with a CB function
-void ProduceBckProperWeighting(TList*, TList*,Bool_t );                                                     // Create BG with proper weighting
+void ProduceBckProperWeighting(TList*, TList*, TList*, Bool_t);                                             // Create BG with proper weighting
 void ProduceBckWithoutWeighting(TH2D *);                                                                    // Create BG without proper weighting
 void IntegrateHistoInvMassStream(TH1D * , Double_t *);                                                      // Integrate invariant mass histogram with output to ifstream
 void IntegrateHistoInvMass(TH1D * , Double_t *);                                                            // Integrate invariant mass histogram
@@ -252,6 +254,10 @@ Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                    
 Double_t fitGaussianPileUp(Double_t *x, Double_t *par);
 Double_t fitGaussianPileUp2(Double_t *x, Double_t *par);
 Int_t GetHeavyMesonDigit(TString);
+void PlotJetPlots(TH1D*, TString, TString, TString, TString, TString, TString, Bool_t, Bool_t, Bool_t);
+void PlotJetPlots(TH1D*, TH1D*, TString, TString, TString, TString, TString, TString, Bool_t, Bool_t, Bool_t);
+void PlotJetPlots(TH1F*, TString, TString, TString, TString, TString, TString, Bool_t, Bool_t, Bool_t);
+void PlotJetPlots(TH2D*, TString, TString, TString, TString, TString, Bool_t);
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -285,6 +291,27 @@ TH2D*       fPi0ResponseMatrix                                          = NULL;
 TH2D*       fPi0ResponseMatrixRebin                                     = NULL;
 TH2D*       fHistoMotherZM                                              = NULL;
 TH2D*       fHistoBckZM                                                 = NULL;
+TH1D*       fHistJetPt                                                  = NULL;
+TH1F*       fHistJetEta                                                 = NULL;
+TH1F*       fHistJetPhi                                                 = NULL;
+TH1D*       fHistJetArea                                                = NULL;
+TH1D*       fHistNJetsEvents                                            = NULL;
+TH1D*       fHistNEventswithJets                                        = NULL;
+TH1D*       fHistRatioPtPi0Jet                                          = NULL;
+TH1D*       fHistDoubleCounting                                         = NULL;
+TH2D*       fHistGammaGammaPi0JetEvent                                  = NULL;
+TH2D*       fHistRPi0Jet                                                = NULL;
+TH2D*       fHistEtaPhiPi0Jet                                           = NULL;
+TH2D*       fHistEtaPhiPi0inJet                                         = NULL;
+TH1D*       fHistoDoubleCountTruePi0                                    = NULL;
+TH1D*       fHistoDoubleCountTrueEta                                    = NULL;
+TH2D*       fHistoJetUnfold                                             = NULL;
+TH2D*       fHistFragmFunct                                             = NULL;
+TH2D*       fHistFragmFunctChargedPart                                  = NULL;
+TH2D*       fHistoTruePi0FragmFunc                                      = NULL;
+TH2D*       fHistoTruePi0FragmFuncChargPart                             = NULL;
+TH2D*       fHistoTrueEtaFragmFunc                                      = NULL;
+TH2D*       fHistoTrueEtaFragmFuncChargPart                             = NULL;
 
 //****************************************************************************
 //************************** background histograms ***************************
@@ -451,6 +478,7 @@ Double_t*   fMesonResidualBGcon                                         = NULL;
 Double_t*   fMesonResidualBGconError                                    = NULL;
 Double_t*   fMesonChi2[4]                                               = {NULL, NULL, NULL, NULL};
 Double_t*   fSigToBckFitChi2[2]                                         = {NULL, NULL};
+
 
 TH1D*       fHistoMassMeson                                             = NULL;
 TH1D*       fHistoFWHMMeson                                             = NULL;
