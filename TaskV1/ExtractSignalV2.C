@@ -308,8 +308,9 @@ void ExtractSignalV2(
 
     //***************************** Initialization of variables according to meson type ******************************
 
+    TList *JetContainer = new TList();
     if(HistosGammaConversion != NULL){
-      TList *JetContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s Jet histograms",fCutSelectionRead.Data()));
+      JetContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s Jet histograms",fCutSelectionRead.Data()));
       if(JetContainer != NULL){
         fDoJetAnalysis = kTRUE;
       }
