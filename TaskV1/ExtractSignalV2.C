@@ -135,7 +135,7 @@ void ExtractSignalV2(
     fPrefix             = meson;
 
     fPeriodFlag         = optionPeriod;
-    fdirectphoton       = directphotonPlots;
+    fDirectPhoton       = directphotonPlots;
 
     TString textProcess = ReturnMesonString (fPrefix);
     if(textProcess.CompareTo("") == 0 ){
@@ -279,7 +279,7 @@ void ExtractSignalV2(
     gSystem->Exec("mkdir -p "+outputDirMon);
 
     cout<<"Pictures are saved as "<< Suffix.Data()<< endl;
-    fdate = ReturnDateString();
+    fDate = ReturnDateString();
 
 
     //****************************** Choice of Fitting procedure ******************************************************
@@ -1670,7 +1670,7 @@ void ExtractSignalV2(
     TString nameCanvas  = "MesonWithBckCanvas";
     TString namePad     = "MesonWithBckPad";
     cout << nameMeson.Data() << endl;
-    PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
+    PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
                         fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
 
     TString nameMesonSub    = "";
@@ -1684,7 +1684,7 @@ void ExtractSignalV2(
         namePadSub      = "MesonPadSubtracted";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
         nameMesonSub    = Form("%s_MesonSubtractedWithOther%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtractedWithOther";
@@ -1692,7 +1692,7 @@ void ExtractSignalV2(
         cout << nameMesonSub.Data() << endl;
 
         PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitSignalInvMassPtBin, fFitSignalWithOtherBGInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
-                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
 
         nameMesonSub    = Form("%s_MesonSubtractedWithOtherOnlyBGFits%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1701,7 +1701,7 @@ void ExtractSignalV2(
         cout << nameMesonSub.Data() << endl;
 
         PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitBckInvMassPtBin, fFitBckOtherInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
-                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
 
         if (iBckSwitch == 5){
@@ -1711,7 +1711,7 @@ void ExtractSignalV2(
             cout << nameMesonSub.Data() << endl;
 
             PlotWithManyFitSigToBckRatioInPtBins(   fHistoMappingRatioSBInvMassPtBin, fFitPHOSPol2PtBin, fFitPHOSAllOtherSigToBckFits, 1, labelsOtherFitsRatio, nameMesonSub,
-                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol2 SigToBG Fit");
         }
 
@@ -1719,7 +1719,7 @@ void ExtractSignalV2(
         nameCanvasSub   = "MesonCanvasSubtractedWithFits";
         namePadSub      = "MesonPadSubtractedWithFits";
         PlotWith2FitsSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, fFitBckInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
 
         nameMesonSub    = Form("%s_MesonSubtractedPureGaussianFit%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1727,7 +1727,7 @@ void ExtractSignalV2(
         namePadSub      = "MesonPadSubtractedPureGaussianFit";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalGaussianInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
 
         nameMesonSub    = Form("%s_MesonSubtractedLeft%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1735,7 +1735,7 @@ void ExtractSignalV2(
         namePadSub      = "MesonPadSubtractedLeft";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassLeftPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
 
         cout << "Example bin (" << meson << "): " << fExampleBin << endl;
@@ -1743,28 +1743,28 @@ void ExtractSignalV2(
         if(fModeHeavy<100) triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),     2);
         else               triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPositionHeavy(),2);
         PlotExampleInvMassBinsV2(
-            fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin], fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
+            fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin], fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fDate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
 
     } else {
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
         namePadSub      = "MesonPadSubtracted";
         cout << nameMesonSub.Data() << endl;
-        PlotWithBGFitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin, fHistoMappingRemainingBGInvMassPtBin, fHistoMappingSignalRemainingBGSubInvMassPtBin, fFitRemainingBGInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
+        PlotWithBGFitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin, fHistoMappingRemainingBGInvMassPtBin, fHistoMappingSignalRemainingBGSubInvMassPtBin, fFitRemainingBGInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
 
         nameMesonSub    = Form("%s_MesonSubtractedLeft%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
         namePadSub      = "MesonPadSubtracted";
         cout << nameMesonSub.Data() << endl;
         PlotWithBGFitSubtractedInvMassInPtBins(
-            fHistoMappingSignalInvMassLeftPtBin, fHistoMappingRemainingBGInvMassLeftPtBin, fHistoMappingSignalRemainingBGSubInvMassLeftPtBin, fFitRemainingBGInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
+            fHistoMappingSignalInvMassLeftPtBin, fHistoMappingRemainingBGInvMassLeftPtBin, fHistoMappingSignalRemainingBGSubInvMassLeftPtBin, fFitRemainingBGInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
 
         nameMesonSub    = Form("%s_MesonSubtractedRemaingBGSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
         namePadSub      = "MesonPadSubtracted";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalRemainingBGSubInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem,"MC validated");
 
         nameMesonSub    = Form("%s_MesonSubtractedRemaingBGSubtractedLeft%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1773,12 +1773,12 @@ void ExtractSignalV2(
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(
             fHistoMappingSignalRemainingBGSubInvMassLeftPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
             fCollisionSystem, "MC validated");
 
         PlotExampleInvMassBinsV2(
             fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalRemainingBGSubInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
-            fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+            fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fDate, fPrefix, fPrefix2,
             fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerSet, fExampleBinScaleFac, fMode);
     }
 
@@ -1786,7 +1786,7 @@ void ExtractSignalV2(
     nameCanvas      = "MesonWithBckCanvasLeft";
     namePad         = "MesonWithBckPadLeft";
     cout << nameMeson.Data() << endl;
-    PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassLeftPtBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
+    PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassLeftPtBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin,
                         fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
 
     if(fIsMC){
@@ -1795,7 +1795,7 @@ void ExtractSignalV2(
         TString namePadTrue     = "TrueMesonPadFitted";
         cout << nameMesonTrue.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueMesonInvMassPtBins, fFitTrueSignalInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue,
-                                            fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                            fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated weighted",kFALSE);
 
         nameMesonTrue           = Form("%s_TrueMesonReweightedFitted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1803,7 +1803,7 @@ void ExtractSignalV2(
         namePadTrue             = "TrueMesonPadReweightedFitted";
         cout << nameMesonTrue.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtReweightedBins, fHistoMappingTrueMesonInvMassPtReweightedBins, fFitTrueSignalInvMassPtReweightedBin, nameMesonTrue,
-                                            nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel,
+                                            nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel,
                                             fDetectionProcess, fCollisionSystem, "MC validated reweighted",kFALSE);
 
         nameMesonTrue           = Form("%s_TrueMesonUnweightedFitted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1811,7 +1811,7 @@ void ExtractSignalV2(
         namePadTrue             = "TrueMesonPadUnweightedFitted";
         cout << nameMesonTrue.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtUnweightedBins, fHistoMappingTrueMesonInvMassPtUnweightedBins, fFitTrueSignalInvMassPtUnweightedBin, nameMesonTrue,
-                                            nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel,
+                                            nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel,
                                             fDetectionProcess, fCollisionSystem, "MC validated unweighted",kFALSE);
 
         nameMesonTrue           = Form("%s_TrueMesonFittedPureGaussian%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1819,7 +1819,7 @@ void ExtractSignalV2(
         namePadTrue             = "TrueMesonPadFittedPureGaussian";
         cout << nameMesonTrue.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueMesonInvMassPtBins, fFitTrueSignalGaussianInvMassPtBin, nameMesonTrue, nameCanvasTrue,
-                                            namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel,
+                                            namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel,
                                             fDetectionProcess, fCollisionSystem, "MC validated weighted",kFALSE);
 
         if (meson.Contains("Pi0")){
@@ -1828,7 +1828,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonPadSec";
             cout << nameMesonTrue.Data() << endl;
             PlotInvMassSecondaryInPtBins( fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueSecMesonInvMassPtBins[3], fHistoMappingTrueSecMesonInvMassPtBins[1], nameMesonTrue, nameCanvasTrue,
-                                        namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                        namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                         fCollisionSystem);
         }
 
@@ -1838,7 +1838,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonPadDC";
             cout << nameMesonTrue.Data() << endl;
             PlotInvMassDoubleCountingInPtBins( fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueMesonDCInvMassPtBins, nameMesonTrue, nameCanvasTrue,
-                                        namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                        namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                         fCollisionSystem);
         }
 
@@ -1849,7 +1849,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonCaloPhotonPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonCaloPhotonInvMassPtBins, fHistoMappingTrueMesonCaloPhotonInvMassPtBins, fFitTrueSignalCaloPhotonInvMassPtBin, nameMesonTrue,
-                                                nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,
+                                                nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,
                                                 fDecayChannel, fDetectionProcess, fCollisionSystem, "validated #gamma#gamma",kFALSE);
 
             nameMesonTrue       = Form("%s_TrueMesonCaloConvPhoton%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1857,7 +1857,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonCaloConvPhotonPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, fFitTrueSignalCaloConvPhotonInvMassPtBin,
-                                                nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement,
+                                                nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement,
                                                 fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, "validated #gamma_{conv}#gamma_{conv}",kFALSE);
 
             nameMesonTrue       = Form("%s_TrueMesonCaloMergedCluster%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1865,7 +1865,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonCaloMergedClusterPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonCaloMergedClusterInvMassPtBins, fHistoMappingTrueMesonCaloMergedClusterInvMassPtBins,
-                                                fFitTrueSignalCaloMergedClusterInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn,
+                                                fFitTrueSignalCaloMergedClusterInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn,
                                                 fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, "validated #gamma's merged",kFALSE);
 
             nameMesonTrue       = Form("%s_TrueMesonCaloMergedClusterPartConv%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1873,7 +1873,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonCaloMergedClusterPartConvPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins, fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins,
-                                                fFitTrueSignalCaloMergedClusterPartConvInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn,
+                                                fFitTrueSignalCaloMergedClusterPartConvInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn,
                                                 fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, "val. #gamma's mer., part. conv",
                                                 kFALSE);
 
@@ -1881,7 +1881,7 @@ void ExtractSignalV2(
             nameMesonTrue       = Form("%s_TrueMesonDecomposedMerged%s", plotPrefix.Data(), plotSuffix.Data());
             cout << nameMesonTrue.Data() << endl;
             PlotTrueInvMassSplittedInMergedInPtBins(fHistoMappingTrueFullMesonInvMassPtBins, fHistoMappingTrueMesonCaloMergedClusterInvMassPtBins,
-                                                    fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix,
+                                                    fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix,
                                                     fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode);
 
         }
@@ -1892,7 +1892,7 @@ void ExtractSignalV2(
             namePadTrue         = "TrueMesonMixedCaloConvPhotonPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins, fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins,
-                                                fFitTrueSignalMixedCaloConvPhotonInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn,
+                                                fFitTrueSignalMixedCaloConvPhotonInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn,
                                                 fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, "validated #gamma#gamma_{conv}",
                                                 kFALSE);
 
@@ -1901,25 +1901,25 @@ void ExtractSignalV2(
             PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(
                 fHistoMappingTrueFullMesonInvMassPtBins, fHistoMappingTrueMesonCaloPhotonInvMassPtBins,  NULL,
                 fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins, nameMesonTrue,
-                nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement,
+                nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement,
                 fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode );
             TString triggerInt;
             if(fModeHeavy<100) triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),     2);
             else               triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPositionHeavy(),2);
             PlotExampleInvMassBinsMC(
-                fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin],  NULL, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig );
+                fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin],  NULL, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fDate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig );
 
 
         } else if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3) ) {
             nameMesonTrue       = Form("%s_TrueMesonDecomposedPhotonsAndElectron%s", plotPrefix.Data(), plotSuffix.Data());
             cout << nameMesonTrue.Data() << endl;
             PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(
-                fHistoMappingTrueFullMesonInvMassPtBins, fHistoMappingTrueMesonCaloPhotonInvMassPtBins, nullptr, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, NULL, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode );
+                fHistoMappingTrueFullMesonInvMassPtBins, fHistoMappingTrueMesonCaloPhotonInvMassPtBins, nullptr, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, NULL, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode );
             TString triggerInt;
             if(fModeHeavy<100) triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),     2);
             else               triggerInt = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPositionHeavy(),2);
             PlotExampleInvMassBinsMC(
-                fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin], nullptr, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], NULL, fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig );
+                fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin], nullptr, fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], NULL, fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fDate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig );
         }
 
         if( fEnableNormBckHistoComparisonToTrueBck ){
@@ -1929,7 +1929,7 @@ void ExtractSignalV2(
             cout << nameMeson.Data() << endl;
 
             PlotInvMassInPtBins(
-                fHistoMappingBackNormAndRemainingBGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, fHistoMappingTrueAllBckInvMassPtBins, fHistoMappingTrueGGBckInvMassPtBins, fHistoMappingTrueContBckInvMassPtBins, fHistoMappingTrueMesonContainedInvMassPtBins, fHistoMappingTrueAsymEClusInvMassPtBins, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
+                fHistoMappingBackNormAndRemainingBGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, fHistoMappingTrueAllBckInvMassPtBins, fHistoMappingTrueGGBckInvMassPtBins, fHistoMappingTrueContBckInvMassPtBins, fHistoMappingTrueMesonContainedInvMassPtBins, fHistoMappingTrueAsymEClusInvMassPtBins, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem );
         }
     }
 
@@ -3064,7 +3064,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
     cout << "meson in intialize function" <<  setPi0.Data() << endl;
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fModeHeavy, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection, fDoJetAnalysis);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fDirectPhoton, fModeHeavy, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection, fDoJetAnalysis);
 
     TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
     InitializeWindows(setPi0, fMode, trigger, triggerSet);
@@ -7163,182 +7163,181 @@ void PlotJetPlots(
 //****** Deleting all pointers generated during this analysis ****************
 //****************************************************************************
 void Delete(){
-    if (fBinsPt)                                                delete fBinsPt;
-    if (fPeakRange)                                             delete fPeakRange;
-    if (fIntFixedRange)                                         delete fIntFixedRange;
-    if (fFitRange)                                              delete fFitRange;
-    if (fBGFitRange)                                            delete fBGFitRange;
-    if (fBGFitRangeLeft)                                        delete fBGFitRangeLeft;
-    if (fMesonPlotRange)                                        delete fMesonPlotRange;
-    if (fMesonIntDeltaRange)                                    delete fMesonIntDeltaRange;
-    if (fMesonIntDeltaRangeWide)                                delete fMesonIntDeltaRangeWide;
-    if (fMesonIntDeltaRangeNarrow)                              delete fMesonIntDeltaRangeNarrow;
-    if (fMesonMassRange)                                        delete fMesonMassRange;
-    if (fMesonMassPlotRange)                                    delete fMesonMassPlotRange;
-    if (fMesonFitRange)                                         delete fMesonFitRange;
-    if (fMesonWidthRange)                                       delete fMesonWidthRange;
-    if (fMesonLambdaTailRange)                                  delete fMesonLambdaTailRange;
+    if (fBinsPt)                                                delete[] fBinsPt;
+    if (fPeakRange)                                             delete[] fPeakRange;
+    if (fIntFixedRange)                                         delete[] fIntFixedRange;
+    if (fFitRange)                                              delete[] fFitRange;
+    if (fBGFitRange)                                            delete[] fBGFitRange;
+    if (fBGFitRangeLeft)                                        delete[] fBGFitRangeLeft;
+    if (fMesonPlotRange)                                        delete[] fMesonPlotRange;
+    if (fMesonIntDeltaRange)                                    delete[] fMesonIntDeltaRange;
+    if (fMesonIntDeltaRangeWide)                                delete[] fMesonIntDeltaRangeWide;
+    if (fMesonIntDeltaRangeNarrow)                              delete[] fMesonIntDeltaRangeNarrow;
+    if (fMesonMassRange)                                        delete[] fMesonMassRange;
+    if (fMesonMassPlotRange)                                    delete[] fMesonMassPlotRange;
+    if (fMesonFitRange)                                         delete[] fMesonFitRange;
+    if (fMesonWidthRange)                                       delete[] fMesonWidthRange;
+    if (fMesonLambdaTailRange)                                  delete[] fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
 
     for (Int_t m = 0; m< 3; m++){
-        if (fMesonYieldsResBckOtherFunc[m])                     delete fMesonYieldsResBckOtherFunc[m];
-        if (fMesonYieldsResBckOtherFuncError[m])                delete fMesonYieldsResBckOtherFuncError[m];
+        if (fMesonYieldsResBckOtherFunc[m])                     delete[] fMesonYieldsResBckOtherFunc[m];
+        if (fMesonYieldsResBckOtherFuncError[m])                delete[] fMesonYieldsResBckOtherFuncError[m];
     }
 
     for (Int_t k = 0; k < 6; k++){
         // delete arrays for yields
-        if (fGGYields[k])                                       delete fGGYields[k];
-        if (fBckYields[k])                                      delete fBckYields[k];
-        if (fMesonYields[k])                                    delete fMesonYields[k];
-        if (fMesonYieldsFunc[k])                                delete fMesonYieldsFunc[k];
-        if (fMesonYieldsResidualBckFunc[k])                     delete fMesonYieldsResidualBckFunc[k];
-        if (fMesonYieldsCorResidualBckFunc[k])                  delete fMesonYieldsCorResidualBckFunc[k];
-        if (fMesonYieldsPerEvent[k])                            delete fMesonYieldsPerEvent[k];
+        if (fGGYields[k])                                       delete[] fGGYields[k];
+        if (fBckYields[k])                                      delete[] fBckYields[k];
+        if (fMesonYields[k])                                    delete[] fMesonYields[k];
+        if (fMesonYieldsFunc[k])                                delete[] fMesonYieldsFunc[k];
+        if (fMesonYieldsResidualBckFunc[k])                     delete[] fMesonYieldsResidualBckFunc[k];
+        if (fMesonYieldsCorResidualBckFunc[k])                  delete[] fMesonYieldsCorResidualBckFunc[k];
+        if (fMesonYieldsPerEvent[k])                            delete[] fMesonYieldsPerEvent[k];
 
         // delete arrays for errors
-        if (fGGYieldsError[k])                                  delete fGGYieldsError[k];
-        if (fBckYieldsError[k])                                 delete fBckYieldsError[k];
-        if (fMesonYieldsError[k])                               delete fMesonYieldsError[k];
-        if (fMesonYieldsFuncError[k])                           delete fMesonYieldsFuncError[k];
-        if (fMesonYieldsResidualBckFuncError[k])                delete fMesonYieldsResidualBckFuncError[k];
-        if (fMesonYieldsCorResidualBckFuncError[k])             delete fMesonYieldsCorResidualBckFuncError[k];
-        if (fMesonYieldsPerEventError[k])                       delete fMesonYieldsPerEventError[k];
+        if (fGGYieldsError[k])                                  delete[] fGGYieldsError[k];
+        if (fBckYieldsError[k])                                 delete[] fBckYieldsError[k];
+        if (fMesonYieldsError[k])                               delete[] fMesonYieldsError[k];
+        if (fMesonYieldsFuncError[k])                           delete[] fMesonYieldsFuncError[k];
+        if (fMesonYieldsResidualBckFuncError[k])                delete[] fMesonYieldsResidualBckFuncError[k];
+        if (fMesonYieldsCorResidualBckFuncError[k])             delete[] fMesonYieldsCorResidualBckFuncError[k];
+        if (fMesonYieldsPerEventError[k])                       delete[] fMesonYieldsPerEventError[k];
 
         // delete mass range array
-        if (fMesonCurIntRange[k])                               delete fMesonCurIntRange[k];
+        if (fMesonCurIntRange[k])                               delete[] fMesonCurIntRange[k];
 
     }
     for (Int_t k = 0; k < 3; k++){
         // delete mass window arrays
-        if (fMassWindowHigh[k])                                 delete fMassWindowHigh[k];
-        if (fMassWindowLow[k])                                  delete fMassWindowLow[k];
+        if (fMassWindowHigh[k])                                 delete[] fMassWindowHigh[k];
+        if (fMassWindowLow[k])                                  delete[] fMassWindowLow[k];
 
         // delete integration window arrays
-        if (fMesonTrueIntRange[k])                              delete fMesonTrueIntRange[k];
-        if (fMesonTrueIntReweightedRange[k])                    delete fMesonTrueIntReweightedRange[k];
-        if (fMesonTrueIntUnweightedRange[k])                    delete fMesonTrueIntUnweightedRange[k];
+        if (fMesonTrueIntRange[k])                              delete[] fMesonTrueIntRange[k];
+        if (fMesonTrueIntReweightedRange[k])                    delete[] fMesonTrueIntReweightedRange[k];
+        if (fMesonTrueIntUnweightedRange[k])                    delete[] fMesonTrueIntUnweightedRange[k];
 
         // delete true meson yield arrays
-        if (fMesonTrueYields[k])                                delete fMesonTrueYields[k];
-        if (fMesonTrueYieldsReweighted[k])                      delete fMesonTrueYieldsReweighted[k];
-        if (fMesonTrueYieldsUnweighted[k])                      delete fMesonTrueYieldsUnweighted[k];
+        if (fMesonTrueYields[k])                                delete[] fMesonTrueYields[k];
+        if (fMesonTrueYieldsReweighted[k])                      delete[] fMesonTrueYieldsReweighted[k];
+        if (fMesonTrueYieldsUnweighted[k])                      delete[] fMesonTrueYieldsUnweighted[k];
 
         // delete array for S/B and Significance
-        if (fMesonSBdefault[k])                                 delete fMesonSBdefault[k];
-        if (fMesonSigndefault[k])                               delete fMesonSigndefault[k];
-        if (fMesonSBdefaultError[k])                            delete fMesonSBdefaultError[k];
-        if (fMesonSigndefaultError[k])                          delete fMesonSigndefaultError[k];
+        if (fMesonSBdefault[k])                                 delete[] fMesonSBdefault[k];
+        if (fMesonSigndefault[k])                               delete[] fMesonSigndefault[k];
+        if (fMesonSBdefaultError[k])                            delete[] fMesonSBdefaultError[k];
+        if (fMesonSigndefaultError[k])                          delete[] fMesonSigndefaultError[k];
 
     }
-    if (fMesonTrueYieldsDC)                                     delete fMesonTrueYieldsDC;
-    if (fMesonTrueYieldFixedWindow)                             delete fMesonTrueYieldFixedWindow;
-    if (fMesonTrueYieldGammaConvGammaFixedWindow)               delete fMesonTrueYieldGammaConvGammaFixedWindow;
-    if (fMesonTrueYieldConvGammaConvGammaFixedWindow)           delete fMesonTrueYieldConvGammaConvGammaFixedWindow;
-    if (fMesonTrueYieldGammaFixedWindow)                        delete fMesonTrueYieldGammaFixedWindow;
-    if (fMesonTrueYieldErrorFixedWindow)                        delete fMesonTrueYieldErrorFixedWindow;
-    if (fMesonTrueYieldGammaErrorFixedWindow)                   delete fMesonTrueYieldGammaErrorFixedWindow;
-    if (fMesonTrueYieldGammaConvGammaErrorFixedWindow)          delete fMesonTrueYieldGammaConvGammaErrorFixedWindow;
-    if (fMesonTrueYieldConvGammaConvGammaErrorFixedWindow)      delete fMesonTrueYieldConvGammaConvGammaErrorFixedWindow;
-    if (fMesonMass)                                             delete fMesonMass;
-    if (fMesonLambdaTailpar)                                    delete fMesonLambdaTailpar;
-    if (fMesonLambdaTailparError)                               delete fMesonLambdaTailparError;
-    if (fMesonLambdaTailMCpar)                                  delete fMesonLambdaTailMCpar;
-    if (fMesonLambdaTailMCparError)                             delete fMesonLambdaTailMCparError;
-    if (fMesonSigmapar)                                         delete fMesonSigmapar;
-    if (fMesonSigmaparError)                                    delete fMesonSigmaparError;
-    if (fMesonTrueSigmapar)                                     delete fMesonTrueSigmapar;
-    if (fMesonTrueSigmaparError)                                delete fMesonTrueSigmaparError;
-    if (fMesonAmplitudepar)                                     delete fMesonAmplitudepar;
-    if (fMesonAmplitudeparError)                                delete fMesonAmplitudeparError;
-    if (fMesonResidualBGlin)                                    delete fMesonResidualBGlin;
-    if (fMesonResidualBGlinError)                               delete fMesonResidualBGlinError;
-    if (fMesonResidualBGcon)                                    delete fMesonResidualBGcon;
-    if (fMesonResidualBGconError)                               delete fMesonResidualBGconError;
+    if (fMesonTrueYieldsDC)                                     delete[] fMesonTrueYieldsDC;
+    if (fMesonTrueYieldFixedWindow)                             delete[] fMesonTrueYieldFixedWindow;
+    if (fMesonTrueYieldGammaConvGammaFixedWindow)               delete[] fMesonTrueYieldGammaConvGammaFixedWindow;
+    if (fMesonTrueYieldConvGammaConvGammaFixedWindow)           delete[] fMesonTrueYieldConvGammaConvGammaFixedWindow;
+    if (fMesonTrueYieldGammaFixedWindow)                        delete[] fMesonTrueYieldGammaFixedWindow;
+    if (fMesonTrueYieldErrorFixedWindow)                        delete[] fMesonTrueYieldErrorFixedWindow;
+    if (fMesonTrueYieldGammaErrorFixedWindow)                   delete[] fMesonTrueYieldGammaErrorFixedWindow;
+    if (fMesonTrueYieldGammaConvGammaErrorFixedWindow)          delete[] fMesonTrueYieldGammaConvGammaErrorFixedWindow;
+    if (fMesonTrueYieldConvGammaConvGammaErrorFixedWindow)      delete[] fMesonTrueYieldConvGammaConvGammaErrorFixedWindow;
+    if (fMesonMass)                                             delete[] fMesonMass;
+    if (fMesonLambdaTailpar)                                    delete[] fMesonLambdaTailpar;
+    if (fMesonLambdaTailparError)                               delete[] fMesonLambdaTailparError;
+    if (fMesonLambdaTailMCpar)                                  delete[] fMesonLambdaTailMCpar;
+    if (fMesonLambdaTailMCparError)                             delete[] fMesonLambdaTailMCparError;
+    if (fMesonSigmapar)                                         delete[] fMesonSigmapar;
+    if (fMesonSigmaparError)                                    delete[] fMesonSigmaparError;
+    if (fMesonTrueSigmapar)                                     delete[] fMesonTrueSigmapar;
+    if (fMesonTrueSigmaparError)                                delete[] fMesonTrueSigmaparError;
+    if (fMesonAmplitudepar)                                     delete[] fMesonAmplitudepar;
+    if (fMesonAmplitudeparError)                                delete[] fMesonAmplitudeparError;
+    if (fMesonResidualBGlin)                                    delete[] fMesonResidualBGlin;
+    if (fMesonResidualBGlinError)                               delete[] fMesonResidualBGlinError;
+    if (fMesonResidualBGcon)                                    delete[] fMesonResidualBGcon;
+    if (fMesonResidualBGconError)                               delete[] fMesonResidualBGconError;
     for (Int_t m = 0; m < 4; m++){
-        if (fMesonChi2[m])                                      delete fMesonChi2[m];
+        if (fMesonChi2[m])                                      delete[] fMesonChi2[m];
     }
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
-        if (fSigToBckFitChi2[m])                                delete fSigToBckFitChi2[m];
+        if (fSigToBckFitChi2[m])                                delete[] fSigToBckFitChi2[m];
     }
 
-    if (fMesonTrueSB)                                           delete fMesonTrueSB;
-    if (fMesonTrueSign)                                         delete fMesonTrueSign;
-    if (fMesonFWHM)                                             delete fMesonFWHM;
-    if (fMesonMassLeft)                                         delete fMesonMassLeft;
-    if (fMesonFWHMLeft)                                         delete fMesonFWHMLeft;
+    if (fMesonTrueSB)                                           delete[] fMesonTrueSB;
+    if (fMesonTrueSign)                                         delete[] fMesonTrueSign;
+    if (fMesonFWHM)                                             delete[] fMesonFWHM;
+    if (fMesonMassLeft)                                         delete[] fMesonMassLeft;
+    if (fMesonFWHMLeft)                                         delete[] fMesonFWHMLeft;
 
-    if (fMesonMassError)                                        delete fMesonMassError;
-    if (fMesonTrueSBError)                                      delete fMesonTrueSBError;
-    if (fMesonTrueSignError)                                    delete fMesonTrueSignError;
-    if (fMesonFWHMError)                                        delete fMesonFWHMError;
-    if (fMesonMassLeftError)                                    delete fMesonMassLeftError;
-    if (fMesonFWHMLeftError)                                    delete fMesonFWHMLeftError;
-    if (fHistoMappingTrueMesonInvMassPtBins)                    delete fHistoMappingTrueMesonInvMassPtBins;
-    if (fHistoMappingTrueMesonDCInvMassPtBins)                  delete fHistoMappingTrueMesonDCInvMassPtBins;
-    if (fHistoMappingTrueFullMesonInvMassPtBins)                delete fHistoMappingTrueFullMesonInvMassPtBins;
-    if (fHistoMappingTrueMesonInvMassPtReweightedBins)          delete fHistoMappingTrueMesonInvMassPtReweightedBins;
-    if (fHistoMappingTrueMesonInvMassPtUnweightedBins)          delete fHistoMappingTrueMesonInvMassPtUnweightedBins;
-    if (fHistoMappingTrueGGBckInvMassPtBins)                    delete fHistoMappingTrueGGBckInvMassPtBins;
-    if (fHistoMappingTrueContBckInvMassPtBins)                  delete fHistoMappingTrueContBckInvMassPtBins;
-    if (fHistoMappingTrueAllBckInvMassPtBins)                   delete fHistoMappingTrueAllBckInvMassPtBins;
-    if (fHistoMappingTrueMesonContainedInvMassPtBins)           delete fHistoMappingTrueMesonContainedInvMassPtBins;
-    if (fHistoMappingTrueAsymEClusInvMassPtBins)                delete fHistoMappingTrueAsymEClusInvMassPtBins;
-    if (fHistoMappingGGInvMassPtBin)                            delete fHistoMappingGGInvMassPtBin;
-    if (fHistoMappingBackNormAndRemainingBGInvMassPtBin)        delete fHistoMappingBackNormAndRemainingBGInvMassPtBin;
-    if (fHistoMappingBackInvMassPtBin)                          delete fHistoMappingBackInvMassPtBin;
-    if (fHistoMappingBackNormInvMassPtBin)                      delete fHistoMappingBackNormInvMassPtBin;
-    if (fHistoMappingSignalInvMassPtBin)                        delete fHistoMappingSignalInvMassPtBin;
-    if (fHistoMappingSignalRemainingBGSubInvMassPtBin)          delete fHistoMappingSignalRemainingBGSubInvMassPtBin;
-    if (fHistoMappingSignalRemainingBGSubInvMassLeftPtBin)      delete fHistoMappingSignalRemainingBGSubInvMassLeftPtBin;
-    if (fHistoMappingRemainingBGInvMassPtBin)                   delete fHistoMappingRemainingBGInvMassPtBin;
-    if (fHistoMappingRemainingBGInvMassLeftPtBin)               delete fHistoMappingRemainingBGInvMassLeftPtBin;
-    if (fHistoMappingRatioSBInvMassPtBin)                       delete fHistoMappingRatioSBInvMassPtBin;
-    if (fFitSignalInvMassPtBin)                                 delete fFitSignalInvMassPtBin;
-    if (fFitRemainingBGInvMassPtBin)                            delete fFitRemainingBGInvMassPtBin;
-    if (fFitRemainingBGInvMassLeftPtBin)                        delete fFitRemainingBGInvMassLeftPtBin;
-    if (fFitSignalPeakPosInvMassPtBin)                          delete fFitSignalPeakPosInvMassPtBin;
-    if (fFitBckInvMassPtBin)                                    delete fFitBckInvMassPtBin;
-    if (fFitPHOSPol1)                                           delete fFitPHOSPol1;
-    if (fFitPHOSPol2)                                           delete fFitPHOSPol2;
-    if (fFitPHOSPol2PtBin)                                      delete fFitPHOSPol2PtBin;
-    if (fHistoMappingBackNormInvMassLeftPtBin)                  delete fHistoMappingBackNormInvMassLeftPtBin;
-    if (fHistoMappingSignalInvMassLeftPtBin)                    delete fHistoMappingSignalInvMassLeftPtBin;
-    if (fFitInvMassLeftPtBin)                                   delete fFitInvMassLeftPtBin;
-    if (fFitSignalPeakPosInvMassLeftPtBin)                      delete fFitSignalPeakPosInvMassLeftPtBin;
-    if (fFitBckInvMassLeftPtBin)                                delete fFitBckInvMassLeftPtBin;
-    if (fHistoWeightsBGZbinVsMbin)                              delete fHistoWeightsBGZbinVsMbin;
-    if (fHistoFillPerEventBGZbinVsMbin)                         delete fHistoFillPerEventBGZbinVsMbin;
-    if (fHistoWeightsBGZbinVsPsibin)                            delete fHistoWeightsBGZbinVsPsibin;
-    if (fHistoFillPerEventBGZbinVsPsibin)                       delete fHistoFillPerEventBGZbinVsPsibin;
+    if (fMesonMassError)                                        delete[] fMesonMassError;
+    if (fMesonTrueSBError)                                      delete[] fMesonTrueSBError;
+    if (fMesonTrueSignError)                                    delete[] fMesonTrueSignError;
+    if (fMesonFWHMError)                                        delete[] fMesonFWHMError;
+    if (fMesonMassLeftError)                                    delete[] fMesonMassLeftError;
+    if (fMesonFWHMLeftError)                                    delete[] fMesonFWHMLeftError;
+    if (fHistoMappingTrueMesonInvMassPtBins)                    delete[] fHistoMappingTrueMesonInvMassPtBins;
+    if (fHistoMappingTrueMesonDCInvMassPtBins)                  delete[] fHistoMappingTrueMesonDCInvMassPtBins;
+    if (fHistoMappingTrueFullMesonInvMassPtBins)                delete[] fHistoMappingTrueFullMesonInvMassPtBins;
+    if (fHistoMappingTrueMesonInvMassPtReweightedBins)          delete[] fHistoMappingTrueMesonInvMassPtReweightedBins;
+    if (fHistoMappingTrueMesonInvMassPtUnweightedBins)          delete[] fHistoMappingTrueMesonInvMassPtUnweightedBins;
+    if (fHistoMappingTrueGGBckInvMassPtBins)                    delete[] fHistoMappingTrueGGBckInvMassPtBins;
+    if (fHistoMappingTrueContBckInvMassPtBins)                  delete[] fHistoMappingTrueContBckInvMassPtBins;
+    if (fHistoMappingTrueAllBckInvMassPtBins)                   delete[] fHistoMappingTrueAllBckInvMassPtBins;
+    if (fHistoMappingTrueMesonContainedInvMassPtBins)           delete[] fHistoMappingTrueMesonContainedInvMassPtBins;
+    if (fHistoMappingTrueAsymEClusInvMassPtBins)                delete[] fHistoMappingTrueAsymEClusInvMassPtBins;
+    if (fHistoMappingGGInvMassPtBin)                            delete[] fHistoMappingGGInvMassPtBin;
+    if (fHistoMappingBackNormAndRemainingBGInvMassPtBin)        delete[] fHistoMappingBackNormAndRemainingBGInvMassPtBin;
+    if (fHistoMappingBackInvMassPtBin)                          delete[] fHistoMappingBackInvMassPtBin;
+    if (fHistoMappingBackNormInvMassPtBin)                      delete[] fHistoMappingBackNormInvMassPtBin;
+    if (fHistoMappingSignalInvMassPtBin)                        delete[] fHistoMappingSignalInvMassPtBin;
+    if (fHistoMappingSignalRemainingBGSubInvMassPtBin)          delete[] fHistoMappingSignalRemainingBGSubInvMassPtBin;
+    if (fHistoMappingSignalRemainingBGSubInvMassLeftPtBin)      delete[] fHistoMappingSignalRemainingBGSubInvMassLeftPtBin;
+    if (fHistoMappingRemainingBGInvMassPtBin)                   delete[] fHistoMappingRemainingBGInvMassPtBin;
+    if (fHistoMappingRemainingBGInvMassLeftPtBin)               delete[] fHistoMappingRemainingBGInvMassLeftPtBin;
+    if (fHistoMappingRatioSBInvMassPtBin)                       delete[] fHistoMappingRatioSBInvMassPtBin;
+    if (fFitSignalInvMassPtBin)                                 delete[] fFitSignalInvMassPtBin;
+    if (fFitRemainingBGInvMassPtBin)                            delete[] fFitRemainingBGInvMassPtBin;
+    if (fFitRemainingBGInvMassLeftPtBin)                        delete[] fFitRemainingBGInvMassLeftPtBin;
+    if (fFitSignalPeakPosInvMassPtBin)                          delete[] fFitSignalPeakPosInvMassPtBin;
+    if (fFitBckInvMassPtBin)                                    delete[] fFitBckInvMassPtBin;
+    if (fFitPHOSPol1)                                           delete[] fFitPHOSPol1;
+    if (fFitPHOSPol2)                                           delete[] fFitPHOSPol2;
+    if (fFitPHOSPol2PtBin)                                      delete[] fFitPHOSPol2PtBin;
+    if (fHistoMappingBackNormInvMassLeftPtBin)                  delete[] fHistoMappingBackNormInvMassLeftPtBin;
+    if (fHistoMappingSignalInvMassLeftPtBin)                    delete[] fHistoMappingSignalInvMassLeftPtBin;
+    if (fFitInvMassLeftPtBin)                                   delete[] fFitInvMassLeftPtBin;
+    if (fFitSignalPeakPosInvMassLeftPtBin)                      delete[] fFitSignalPeakPosInvMassLeftPtBin;
+    if (fFitBckInvMassLeftPtBin)                                delete[] fFitBckInvMassLeftPtBin;
+    if (fHistoWeightsBGZbinVsMbin)                              delete[] fHistoWeightsBGZbinVsMbin;
+    if (fHistoFillPerEventBGZbinVsMbin)                         delete[] fHistoFillPerEventBGZbinVsMbin;
+    if (fHistoWeightsBGZbinVsPsibin)                            delete[] fHistoWeightsBGZbinVsPsibin;
+    if (fHistoFillPerEventBGZbinVsPsibin)                       delete[] fHistoFillPerEventBGZbinVsPsibin;
     for (Int_t m = 0; m < 3; m++){
-        if (fFitSignalWithOtherBGInvMassPtBin[m])               delete fFitSignalWithOtherBGInvMassPtBin[m];
-
-        if (fFitBckOtherInvMassPtBin[m])                        delete fFitBckOtherInvMassPtBin[m];
+        if (fFitSignalWithOtherBGInvMassPtBin[m])               delete[] fFitSignalWithOtherBGInvMassPtBin[m];
+        if (fFitBckOtherInvMassPtBin[m])                        delete[] fFitBckOtherInvMassPtBin[m];
     }
     for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
-        if (fFitPHOSAllOtherSigToBckFits[m])                    delete fFitPHOSAllOtherSigToBckFits[m];
+        if (fFitPHOSAllOtherSigToBckFits[m])                    delete[] fFitPHOSAllOtherSigToBckFits[m];
     }
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
-         if (fHistoChi2SigToBckFit[m])                          delete fHistoChi2SigToBckFit[m];
+        if (fHistoChi2SigToBckFit[m])                          delete fHistoChi2SigToBckFit[m];
     }
     // delete Gaussian fit histograms
-    if (fMesonMassGaussian)                                     delete fMesonMassGaussian;
-    if (fMesonMassGaussianError)                                delete fMesonMassGaussianError;
-    if (fMesonWidthGaussian)                                    delete fMesonWidthGaussian;
-    if (fMesonWidthGaussianError)                               delete fMesonWidthGaussianError;
-    if (fMesonTrueMassGaussian)                                 delete fMesonTrueMassGaussian;
-    if (fMesonTrueMassGaussianError)                            delete fMesonTrueMassGaussianError;
-    if (fMesonTrueWidthGaussian)                                delete fMesonTrueWidthGaussian;
-    if (fMesonTrueWidthGaussianError)                           delete fMesonTrueWidthGaussianError;
+    if (fMesonMassGaussian)                                     delete[] fMesonMassGaussian;
+    if (fMesonMassGaussianError)                                delete[] fMesonMassGaussianError;
+    if (fMesonWidthGaussian)                                    delete[] fMesonWidthGaussian;
+    if (fMesonWidthGaussianError)                               delete[] fMesonWidthGaussianError;
+    if (fMesonTrueMassGaussian)                                 delete[] fMesonTrueMassGaussian;
+    if (fMesonTrueMassGaussianError)                            delete[] fMesonTrueMassGaussianError;
+    if (fMesonTrueWidthGaussian)                                delete[] fMesonTrueWidthGaussian;
+    if (fMesonTrueWidthGaussianError)                           delete[] fMesonTrueWidthGaussianError;
     if (fHistoMassGaussianMeson)                                delete fHistoMassGaussianMeson;
     if (fHistoTrueMassGaussianMeson)                            delete fHistoTrueMassGaussianMeson;
     if (fHistoWidthGaussianMeson)                               delete fHistoWidthGaussianMeson;
     if (fHistoTrueWidthGaussianMeson)                           delete fHistoTrueWidthGaussianMeson;
-    if (fFitSignalGaussianInvMassPtBin)                         delete fFitSignalGaussianInvMassPtBin;
-    if (fFitTrueSignalGaussianInvMassPtBin)                     delete fFitTrueSignalGaussianInvMassPtBin;
+    if (fFitSignalGaussianInvMassPtBin)                         delete[] fFitSignalGaussianInvMassPtBin;
+    if (fFitTrueSignalGaussianInvMassPtBin)                     delete[] fFitTrueSignalGaussianInvMassPtBin;
 
     for (Int_t j = 0; j < 3; j++){
-        if (fFileToyMCInput[j] )                                   delete fFileToyMCInput[j];
+        if (fFileToyMCInput[j] )                                   delete[] fFileToyMCInput[j];
     }
     if (fFileCocktailInput)                                     delete fFileCocktailInput;
 

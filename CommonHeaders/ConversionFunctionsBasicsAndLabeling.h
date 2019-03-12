@@ -6,7 +6,141 @@
 #ifndef GAMMACONV_ConversionFunctionsBasics
 #define GAMMACONV_ConversionFunctionsBasics
 
+    #include <iostream>
+    #include "TString.h"
     #include "TObjString.h"
+
+    // ****************************************************************************************************************
+    //********************* Enums *************************************************************************************
+    // ****************************************************************************************************************
+    enum Mesons {
+        kPi0,
+        kEta,
+        kEtaPrime,
+        kOmega,
+        kCKaon,
+        kCPion,
+        kLambda,
+        kRho0,
+        kPhi,
+        kK0Star,
+        kProton
+    };
+    enum Modes {
+        // Standard gamma-gamma analysis modes
+        kModePCMPCM         = 0,
+        kModePCMDalitz      = 1,
+        kModePCMEMC         = 2,
+        kModePCMPHOS        = 3,
+        kModeEMCEMC         = 4,
+        kModePHOSPHOS       = 5,
+        kModeEMCDalitz      = 6,
+        kModePHOSDalitz     = 7,
+        kModePCMPCM_old     = 9,
+        kMode_mEMC          = 10,
+        kMode_mPHOS         = 11,
+        kModeDCalDCal       = 12,
+        kModePCMDCal        = 13,
+        kModePCMEDC         = 14,
+        kModeEDC            = 15,
+        kModeComb           = 20,
+        // Omega analysis
+        kModePCMPCM_om      = 40,
+        kModePCMEMC_om      = 41,
+        kModePCMPHOS_om     = 42,
+        kModePCMDCal_om     = 43,
+        kModeEMCEMC_om      = 44,
+        kModePHOSPHOS_om    = 45,
+        kModeDCalDCal_om    = 46,
+        kModePCMDalitz_om   = 47,
+        kModeEMCDalitz_om   = 48,
+        kModePHOSDalitz_om  = 49,
+        kModeDCalDalitz_om  = 50,
+        // Heavy meson analysis
+        kModePCMPCM_Heavy   = 100,
+        kModePCMEMC_Heavy   = 102,
+        kModePCMPHOS_Heavy  = 103,
+        kModeEMCEMC_Heavy   = 104,
+        kModePHOSPHOS_Heavy = 105,
+        kModePCMEDC_Heavy   = 114,
+        kModeEDC_Heavy      = 115
+    };
+
+    enum SpecialTriggers {
+        kSpecTrigINT7    = 10,
+        kSpecTrigL0      = 52,
+        kSpecTrigVHM     = 74,
+        kSpecTrigVHMSPD2 = 76,
+        kSpecTrigEG1     = 83,
+        kSpecTrigEG2     = 85,
+        kSpecTrigPHI7    = 62
+    };
+
+    // ****************************************************************************************************************
+    //********************* Enum functions ****************************************************************************
+    // ****************************************************************************************************************
+    // ! backward compatibility fix
+    Modes ReturnModeEnum( Int_t mode ) {
+        switch( mode ) {
+            // Standard gamma-gamma analysis modes
+            case 0   : return kModePCMPCM;
+            case 1   : return kModePCMDalitz;
+            case 2   : return kModePCMEMC;
+            case 3   : return kModePCMPHOS;
+            case 4   : return kModeEMCEMC;
+            case 5   : return kModePHOSPHOS;
+            case 6   : return kModeEMCDalitz;
+            case 7   : return kModePHOSDalitz;
+            case 9   : return kModePCMPCM_old;
+            case 10  : return kMode_mEMC;
+            case 11  : return kMode_mPHOS;
+            case 12  : return kModeDCalDCal;
+            case 13  : return kModePCMDCal;
+            case 14  : return kModePCMEDC;
+            case 15  : return kModeEDC;
+            case 20  : return kModeComb;
+            // Omega analysis
+            case 40  : return kModePCMPCM_om;
+            case 41  : return kModePCMEMC_om;
+            case 42  : return kModePCMPHOS_om;
+            case 43  : return kModePCMDCal_om;
+            case 44  : return kModeEMCEMC_om;
+            case 45  : return kModePHOSPHOS_om;
+            case 46  : return kModeDCalDCal_om;
+            case 47  : return kModePCMDalitz_om;
+            case 48  : return kModeEMCDalitz_om;
+            case 49  : return kModePHOSDalitz_om;
+            case 50  : return kModeDCalDalitz_om;
+            // Heavy meson analysis
+            case 100 : return kModePCMPCM_Heavy;
+            case 102 : return kModePCMEMC_Heavy;
+            case 103 : return kModePCMPHOS_Heavy;
+            case 104 : return kModeEMCEMC_Heavy;
+            case 105 : return kModePHOSPHOS_Heavy;
+            case 114 : return kModePCMEDC_Heavy;
+            case 115 : return kModeEDC_Heavy;
+            default :
+                std::cout << "ERROR in ReturnModeEnum: mode " << mode << " not defined as enum" << std::endl;
+                return kModePCMPCM;
+        }
+    }
+    Mesons ReturnMesonEnum( TString meson ) {
+        if (meson.EqualTo("Pi0"))      return kPi0;
+        if (meson.EqualTo("Eta"))      return kEta;
+        if (meson.EqualTo("EtaPrim"))  return kEtaPrime;
+        if (meson.EqualTo("EtaPrime")) return kEtaPrime;
+        if (meson.EqualTo("Omega"))    return kOmega;
+        if (meson.EqualTo("CKaon"))    return kCKaon;
+        if (meson.EqualTo("CPion"))    return kCPion;
+        if (meson.EqualTo("Lambda"))   return kLambda;
+        if (meson.EqualTo("Rho0"))     return kRho0;
+        if (meson.EqualTo("Phi"))      return kPhi;
+        if (meson.EqualTo("K0Star"))   return kK0Star;
+        if (meson.EqualTo("Proton"))   return kProton;
+        std::cout << "Warning: particle \"" << meson << "\" not defined" << std:: endl;
+        return kPi0;
+    }
+
 
     // ****************************************************************************************************************
     //********************* global Variables **************************************************************************
@@ -674,6 +808,28 @@
         }else{
             cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
             return 0;
+        }
+    }
+
+    //************************************************************************************
+    //************************ return latex writing of meson name ************************
+    //************************************************************************************
+    const char* ReturnMesonPlainString ( Mesons meson ){
+        switch(meson) {
+            case kPi0      : return "Pi0";
+            case kEta      : return "Eta";
+            case kEtaPrime : return "EtaPrime";
+            case kOmega    : return "Omega";
+            case kCKaon    : return "CKaon";
+            case kCPion    : return "CPion";
+            case kLambda   : return "Lambda";
+            case kRho0     : return "Rho0";
+            case kPhi      : return "Phi";
+            case kK0Star   : return "K0Star";
+            case kProton   : return "Proton";
+            default :
+                std::cout << "ERROR: meson enum " << meson << " not defined" << std::endl;
+                return "";
         }
     }
 

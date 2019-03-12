@@ -5,6 +5,7 @@
  *****************************************************************************************************************************/
 
 #include <Riostream.h>
+#include <iostream>
 #include <fstream>
 #include "TMath.h"
 #include <stdlib.h>
@@ -111,20 +112,21 @@ Int_t GetOrderedTrigger(TString triggerNameDummy){
 //***************************************************************************************************************
 //***************************** Main function *******************************************************************
 //***************************************************************************************************************
-void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime    = "triggerFileListEtaPrime.txt",
-                                                    Int_t   mode                    = 4,
-                                                    Int_t   numberOfTrigg           = 6,
-                                                    TString suffix                  = "eps",
-                                                    TString isMC                    = "",
-                                                    TString optionEnergy            = "",
-                                                    TString period                  = "",
-                                                    Bool_t  pileUpApplied           = kTRUE,
-                                                    Float_t maxPtGlobalEtaPrime     = 16.,
-                                                    Bool_t  averagedEtaPrime        = kFALSE,
-                                                    TString nameFileFitsShift       = "",
-                                                    Bool_t  hasClusterOutput        = kTRUE,
-                                                    TString fileInputCorrFactors    = ""
-                                                ){
+void  ProduceFinalResultsPatchedTriggersEtaPrime(
+    TString fileListNameEtaPrime    = "triggerFileListEtaPrime.txt",
+    Int_t   mode                    = 4,
+    Int_t   numberOfTrigg           = 6,
+    TString suffix                  = "eps",
+    TString isMC                    = "",
+    TString optionEnergy            = "",
+    TString period                  = "",
+    Bool_t  pileUpApplied           = kTRUE,
+    Float_t maxPtGlobalEtaPrime     = 16.,
+    Bool_t  averagedEtaPrime        = kFALSE,
+    TString nameFileFitsShift       = "",
+    Bool_t  hasClusterOutput        = kTRUE,
+    TString fileInputCorrFactors    = ""
+){
 
     //***************************************************************************************************************
     //************************************ Layouting preparations & general setup ***********************************
@@ -139,7 +141,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
 
     if (mode == 10) {
         cout << "This macro can't deal with this mode. Aborting..." << endl;
-        return;
+        std::terminate();
     }
 
     Int_t modeNormal    = mode;
@@ -165,6 +167,10 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
         maxPtGlobalCluster          = 50;
       }
     } else if (optionEnergy.CompareTo("13TeV")==0){
+        if(modeNormal==2 || modeNormal==4 || modeNormal==0){
+            maxPtGlobalCluster          = 100;
+        }
+    } else if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
         if(modeNormal==2 || modeNormal==4 || modeNormal==0){
             maxPtGlobalCluster          = 100;
         }
@@ -254,13 +260,35 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
     // number of triggers which are really used for the respective analysis
     Int_t nrOfTrigToBeCombEtaPrimeRed        = 0;
     while(!in.eof() && nrOfTrigToBeComb<numberOfTrigg ){
-        in >> cutNumber[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
-        >> trigSteps[nrOfTrigToBeComb][0]  >> trigSteps[nrOfTrigToBeComb][1]  >> trigSteps[nrOfTrigToBeComb][2] >> ptFromSpecEtaPrime[nrOfTrigToBeComb][0] >> ptFromSpecEtaPrime[nrOfTrigToBeComb][1]
-        >> sysFileEtaPrime[nrOfTrigToBeComb] >> cutNumberBaseEff[nrOfTrigToBeComb];
-        cout<< cutNumber[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
-        cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
+        in
+            >> cutNumber[nrOfTrigToBeComb]
+            >> minPt[nrOfTrigToBeComb]
+            >> maxPt[nrOfTrigToBeComb]
+            >> triggerName[nrOfTrigToBeComb]
+            >> trigSteps[nrOfTrigToBeComb][0]
+            >> trigSteps[nrOfTrigToBeComb][1]
+            >> trigSteps[nrOfTrigToBeComb][2]
+            >> ptFromSpecEtaPrime[nrOfTrigToBeComb][0]
+            >> ptFromSpecEtaPrime[nrOfTrigToBeComb][1]
+            >> sysFileEtaPrime[nrOfTrigToBeComb]
+            >> cutNumberBaseEff[nrOfTrigToBeComb];
+        std::cout
+            << cutNumber[nrOfTrigToBeComb]
+            << "\t"
+            << triggerName[nrOfTrigToBeComb]
+            << "\t transverse momentum range: \t"
+            << minPt[nrOfTrigToBeComb]
+            << " to "
+            << maxPt[nrOfTrigToBeComb]
+            << std::endl;
+        std::cout
+            << trigSteps[nrOfTrigToBeComb][0]
+            << "\t"
+            << trigSteps[nrOfTrigToBeComb][1]
+            << "\t"<< trigSteps[nrOfTrigToBeComb][2]
+            << std::endl;
         nrOfTrigToBeComb++;
-        cout << cutNumberBaseEff[nrOfTrigToBeComb] << endl;
+        std::cout << cutNumberBaseEff[nrOfTrigToBeComb] << std::endl;
     }
 
     for (Int_t i = 0; i < nrOfTrigToBeComb; i++){
@@ -498,7 +526,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
                 histoTriggerEffEtaPrime[i]                       = (TH1D*)histoEffiEtaPrimeTemp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
                 histoTriggerEffEtaPrime[i]->Divide(histoTriggerEffEtaPrime[i],histoEffiBaseEtaPrimeTemp,1.,1.,"B");
 
-//                //limit trigger efficiency to 1
+                // limit trigger efficiency to 1
                 if(optionEnergy.CompareTo("8TeV") == 0){
                   for(Int_t j = 1; j<histoTriggerEffEtaPrime[i]->GetNbinsX()+1; j++){
                     Double_t binC = histoTriggerEffEtaPrime[i]->GetBinContent(j);
@@ -1363,7 +1391,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
         canvasEffi->SaveAs(Form("%s/EtaPrime_EfficiencyW0TriggEff.%s",outputDir.Data(),suffix.Data()));
     }
 
-//     delete canvasEffi;
+    // delete canvasEffi;
 
     //***************************************************************************************************************
     //************************************Plotting acceptance EtaPrime *************************************************
@@ -1809,7 +1837,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
                 iPtBin++;
             }
             fileSysErrEtaPrime.close();
-         // read in detailed systematics
+            // read in detailed systematics
             string sysFileEtaPrimeDet = sysFileEtaPrime[i].Data();
 
             if(!replace(sysFileEtaPrimeDet, "Averaged", "AveragedSingle")){
@@ -1856,7 +1884,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
             sysAvailSingleEtaPrime[i]       = kFALSE;
         }
         cout << sysAvailEtaPrime[i] << "\t" << sysAvailSingleEtaPrime[i] << endl;
-//         continue;
+        // continue;
 
 
         // print out input spectrum from statistical histogram
@@ -1963,7 +1991,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
         }
 
         // Remove 0 points at beginning for graphs
-//         if (graphsCorrectedYieldShrunkEtaPrime[i])graphsCorrectedYieldShrunkEtaPrime[i]->Print();
+        // if (graphsCorrectedYieldShrunkEtaPrime[i])graphsCorrectedYieldShrunkEtaPrime[i]->Print();
         cout << "step 2" << endl;
         while (graphsCorrectedYieldShrunkEtaPrime[i]->GetY()[0] == 0) graphsCorrectedYieldShrunkEtaPrime[i]->RemovePoint(0);
         if (graphsCorrectedYieldShrunkEtaPrime[i]) graphsCorrectedYieldShrunkEtaPrime[i]->Print();
@@ -2346,7 +2374,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
 
 
             DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaPrimeSys, 24, 1.5, kGray+1 , kGray+1);
-//             graphRelErrorEtaPrimeSys->SetLineStyle(7);
+            // graphRelErrorEtaPrimeSys->SetLineStyle(7);
             graphRelErrorEtaPrimeSys->Draw("same,pze1");
             legendRelSysErr->AddEntry(graphRelErrorEtaPrimeSys,"average","p");
             legendRelSysErr->Draw();
@@ -2444,7 +2472,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
                 }
             }
         }
-//         return;
+        // return;
 
         // Calculation of averaged supporting plots with weights from spectra
         graphMassEtaPrimeDataWeighted                    = CalculateWeightedQuantity(    graphOrderedMassEtaPrimeData,
@@ -2792,7 +2820,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
             fileFitsOutput << "average rel mass diff: " << fitEtaPrimeRelMassDiff->GetParameter(0) << "+-"<< fitEtaPrimeRelMassDiff->GetParError(0) << endl;
         }
         DrawGammaLines(0., maxPtGlobalEtaPrime , 0., 0., 1, kGray+2, 7);
-//             legendMassEtaPrimeWeighted->Draw();
+            // legendMassEtaPrimeWeighted->Draw();
         labelEnergyMass->Draw();
         labelEtaPrimeMass->Draw();
         labelDetProcMass->Draw();
@@ -2953,7 +2981,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
         canvasAcc->Update();
         canvasAcc->SaveAs(Form("%s/EtaPrime_Acceptance_weighted.%s",outputDir.Data(),suffix.Data()));
     }
-//    delete canvasAcc;
+    // delete canvasAcc;
 
     //***************************************************************************************************************
     //************************************Plotting scaled invariant yield *****************************************
@@ -2961,7 +2989,7 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
     TCanvas* canvasCorrScaled = new TCanvas("canvasCorrScaled","",0,0,1000,1350);// gives the page size
     DrawGammaCanvasSettings( canvasCorrScaled, 0.15, 0.017, 0.015, 0.07);
     canvasCorrScaled->SetLogy();
-//     canvasCorrScaled->SetGridx();
+    // canvasCorrScaled->SetGridx();
     Double_t minCorrYield       = 2e-10;
     Double_t maxCorrYield       = 1e0;
     if (modeNormal == 0){
@@ -3012,8 +3040,8 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
     TF1* fitInvYieldEtaPrime = FitObject("tcm","fitInvYieldEtaPrime","EtaPrime",graphCorrectedYieldWeightedAverageEtaPrimeStat,minPtGlobalEtaPrime,maxPtGlobalEtaPrime,paramTCM,"QNRMEX0+");
 
     // Tsallis fit
-//     Double_t paramGraph[3]                  = {1000, 8., 0.13};
-//     TF1* fitInvYieldEtaPrime                     = FitObject("l","fitInvYieldEtaPrime","EtaPrime",graphCorrectedYieldWeightedAverageEtaPrimeStat,minPtGlobalEtaPrime,maxPtGlobalEtaPrime,paramGraph,"QNRME+");
+    // Double_t paramGraph[3]                  = {1000, 8., 0.13};
+    // TF1* fitInvYieldEtaPrime                     = FitObject("l","fitInvYieldEtaPrime","EtaPrime",graphCorrectedYieldWeightedAverageEtaPrimeStat,minPtGlobalEtaPrime,maxPtGlobalEtaPrime,paramGraph,"QNRME+");
 
     DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldWeightedAverageEtaPrimeSys, 24, 2, kGray+1 , kGray+1, 1, kTRUE);
     graphCorrectedYieldWeightedAverageEtaPrimeSys->Draw("p,E2,same");
@@ -3348,4 +3376,113 @@ void  ProduceFinalResultsPatchedTriggersEtaPrime(   TString fileListNameEtaPrime
 
     fileOutputForComparisonFullyCorrected->Write();
     fileOutputForComparisonFullyCorrected->Close();
+}
+
+
+
+//****************************************************************************
+//****** Main function for non-ROOT compilation ******************************
+//****************************************************************************
+/*
+    Tip: add the following functions to your bashrc.sh:
+        function compile () {
+            g++ "$1" -I$(root-config --incdir) $(root-config --libs --evelibs --glibs) -lMinuit -o "${1%.*}"
+        }
+        function alicompile () {
+            g++ "$1" -I$ALIEN_INCLUDE_DIR -L$ALIEN_LIBRARY -o "${1%.*}"
+        }
+    You can add the flag "-fsanitize=address -g" to debug and/or search for memory leaks.
+
+    Then compile and run the macro using:
+        compile <yourcode.C>
+        ./yourcode arg1 arg2 arg3 ...
+*/
+int main( int argc, char* argv[] )
+{
+    // Default arguments for ExtractSignal
+        TString fileListNameEtaPrime    = "triggerFileListEtaPrime.txt";
+        Int_t   mode                    = 4;
+        Int_t   numberOfTrigg           = 6;
+        TString suffix                  = "eps";
+        TString isMC                    = "";
+        TString optionEnergy            = "";
+        TString period                  = "";
+        Bool_t  pileUpApplied           = kTRUE;
+        Float_t maxPtGlobalEtaPrime     = 16.;
+        Bool_t  averagedEtaPrime        = kFALSE;
+        TString nameFileFitsShift       = "";
+        Bool_t  hasClusterOutput        = kTRUE;
+        TString fileInputCorrFactors    = "";
+
+    // Import main call arguments
+        TString import;
+        if(argc >  1) fileListNameEtaPrime = argv[1];
+        if(argc >  2) { // mode
+            istringstream sstr(argv[2]);
+            sstr >> mode;
+        }
+        if(argc >  3) { // numberOfTrigg
+            istringstream sstr(argv[3]);
+            sstr >> numberOfTrigg;
+        }
+        if(argc >  4) suffix       = argv[4];
+        if(argc >  5) isMC         = argv[5];
+        if(argc >  6) optionEnergy = argv[6];
+        if(argc >  7) period       = argv[7];
+        if(argc >  8) { // pileUpApplied
+            import = argv[8];
+            if( import.EqualTo("kTRUE")  || import.EqualTo("1") ) pileUpApplied = kTRUE;
+            if( import.EqualTo("kFALSE") || import.EqualTo("0") ) pileUpApplied = kFALSE;
+        }
+        if(argc >  9) { // maxPtGlobalEtaPrime
+            istringstream sstr(argv[9]);
+            sstr >> maxPtGlobalEtaPrime;
+        }
+        if(argc > 10) { // averagedEtaPrime
+            import = argv[10];
+            if( import.EqualTo("kTRUE")  || import.EqualTo("1") ) averagedEtaPrime = kTRUE;
+            if( import.EqualTo("kFALSE") || import.EqualTo("0") ) averagedEtaPrime = kFALSE;
+        }
+        if(argc > 11) nameFileFitsShift = argv[11];
+        if(argc > 12) { // hasClusterOutput
+            import = argv[12];
+            if( import.EqualTo("kTRUE")  || import.EqualTo("1") ) hasClusterOutput = kTRUE;
+            if( import.EqualTo("kFALSE") || import.EqualTo("0") ) hasClusterOutput = kFALSE;
+        }
+        if(argc > 13) fileInputCorrFactors = argv[13];
+
+    // Function call ExtractSignalV2
+        cout << "Executing \"ProduceFinalResultsPatchedTriggersEtaPrime\" with the following arguments:" << endl
+            << "  fileListNameEtaPrime: \"" << fileListNameEtaPrime << "\"" << endl
+            << "  mode:                 \"" << mode                 << "\"" << endl
+            << "  numberOfTrigg:        \"" << numberOfTrigg        << "\"" << endl
+            << "  suffix:               \"" << suffix               << "\"" << endl
+            << "  isMC:                 \"" << isMC                 << "\"" << endl
+            << "  optionEnergy:         \"" << optionEnergy         << "\"" << endl
+            << "  period:               \"" << period               << "\"" << endl
+            << "  pileUpApplied:        \"" << pileUpApplied        << "\"" << endl
+            << "  maxPtGlobalEtaPrime:  \"" << maxPtGlobalEtaPrime  << "\"" << endl
+            << "  averagedEtaPrime:     \"" << averagedEtaPrime     << "\"" << endl
+            << "  nameFileFitsShift:    \"" << nameFileFitsShift    << "\"" << endl
+            << "  hasClusterOutput:     \"" << hasClusterOutput     << "\"" << endl
+            << "  fileInputCorrFactors: \"" << fileInputCorrFactors << "\"" << endl
+        << endl;
+        ProduceFinalResultsPatchedTriggersEtaPrime(
+            fileListNameEtaPrime,
+            mode,
+            numberOfTrigg,
+            suffix,
+            isMC,
+            optionEnergy,
+            period,
+            pileUpApplied,
+            maxPtGlobalEtaPrime,
+            averagedEtaPrime,
+            nameFileFitsShift,
+            hasClusterOutput,
+            fileInputCorrFactors
+        );
+
+    // Main function return
+    return 0;
 }

@@ -6,7 +6,18 @@
 #ifndef GAMMACONV_PlottingGeneral
 #define GAMMACONV_PlottingGeneral
 
-using namespace std; // necessary for non-ROOT compilation
+    #include <TStyle.h>
+    #include <TGaxis.h>
+    #include <TCanvas.h>
+    #include <TLegend.h>
+    #include <TFrame.h>
+    #ifndef __CLING__
+        #include <Riostream.h>
+        #include <TLatex.h>
+    #endif
+    #include <TProfile.h>
+
+    using namespace std; // necessary for non-ROOT compilation
 
     /************************************************************************************************
     ************************************************************************************************
@@ -32,11 +43,6 @@ using namespace std; // necessary for non-ROOT compilation
     - DrawGammaLines
     */
 
-    #ifndef __CLING__
-        #include <Riostream.h>
-        #include <TLatex.h>
-    #endif
-    #include <TProfile.h>
     // extern TRandom *kgRandom;
     // extern TBenchmark *kgBenchmark;
     // extern TSystem *kgSystem;

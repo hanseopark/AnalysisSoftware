@@ -2023,28 +2023,44 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
 
         Double_t maxFWHM        = 0.030;
-        if (mode == 2 || mode == 13){
-          maxFWHM               = 0.015;
-          if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 10 )
-              maxFWHM           = 0.020;
-          if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 20 )
-              maxFWHM           = 0.030;
+        if (kIsEta){
+            maxFWHM         = 0.022;
+            switch (mode) {
+                case 4 :
+                case 12:
+                    if (optionEnergy.CompareTo("8TeV") == 0)
+                        maxFWHM = 0.05;
+                    else
+                        maxFWHM = 0.060;
+                    break;
+                case 2 :
+                case 13: maxFWHM = 0.060; break;
+                case 3 : maxFWHM = 0.030; break;
+            }
+        } else if(nameMeson.EqualTo("EtaPrime")){
+            switch(mode) {
+                case 0: maxFWHM = 110e-3; break;
+                case 2: maxFWHM =  30e-3; break;
+                case 3: maxFWHM =  16e-3; break;
+                case 4: maxFWHM =  30e-3; break;
+                case 5: maxFWHM =  24e-3; break;
+            }
+        } else {
+            switch (mode){
+                case 2:
+                case 13:
+                    maxFWHM               = 0.015;
+                    if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 10 )
+                        maxFWHM           = 0.020;
+                    if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 20 )
+                        maxFWHM           = 0.030;
+                    break;
+            }
         }
-        if (kIsEta)
-          maxFWHM               = 0.022;
-        if (kIsEta && (mode == 4 || mode == 12))
-          maxFWHM               = 0.060;
-        if (kIsEta && (mode == 2 || mode == 13))
-          maxFWHM               = 0.060;
-        if (kIsEta && mode == 3)
-          maxFWHM               = 0.030;
-
-        if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV") == 0) maxFWHM = 0.05;
 
         Double_t minFWHM        = -0.004;
         if (kIsEta) minFWHM     = 0.00;
         if (mode == 4 || mode == 12) minFWHM  = 0.00;
-        //if (mode == 2 && optionEnergy.CompareTo("8TeV") == 0) minFWHM = 0.003;
 
 
         histoFWHMMeson->Sumw2();

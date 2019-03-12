@@ -7,6 +7,7 @@
 
 #include <Riostream.h>
 #include <fstream>
+#include <vector>
 #include "TMath.h"
 #include <stdlib.h>
 #include <fstream>
@@ -103,6 +104,20 @@ Double_t FindSmallestEntryIn2D(TH2F* histo){
 }
 
 //**********************************************************************************
+//******************* return maximum for 2 D histo  ********************************
+//**********************************************************************************
+Double_t FindLargestEntryIn2D(TH2F* histo){
+    Double_t maximum = 1;
+    for (Int_t i = 1; i<histo->GetNbinsX(); i++){
+        for (Int_t j = 1; j<histo->GetNbinsY(); j++){
+            if (histo->GetBinContent(i,j) > maximum) {
+                maximum = histo->GetBinContent(i,j);
+            }
+        }
+    }
+    return maximum;
+}
+//**********************************************************************************
 //******************* return minimum for 1 D histo  ********************************
 //**********************************************************************************
 Double_t FindSmallestEntryIn1D(TH1D* histo){
@@ -130,6 +145,38 @@ Double_t FindLargestEntryIn1D(TH1D* histo){
     return maximum;
 }
 
+
+//**********************************************************************************
+//******************* return minimum for 1 D histo array ***************************
+//**********************************************************************************
+Double_t FindSmallestEntryIn1DArray(TH1D** histos, Int_t startBin, Int_t maxNbins){
+    if(!histos){cout << "WARNING: FindSmallestEntryIn1D, NULL pointer - returning 1... " << std::endl; return 1;}
+    Double_t minimum = 0;
+    for (Int_t bin = startBin; bin < maxNbins; bin++){
+        for (Int_t i = 1; i<histos[bin]->GetNbinsX(); i++){
+            if (histos[bin]->GetBinContent(i) < minimum && histos[bin]->GetBinContent(i) > 0){
+                minimum = histos[bin]->GetBinContent(i);
+            }
+        }
+    }
+    return minimum;
+}
+
+//**********************************************************************************
+//******************* return mmaximum for 1 D histo array ***************************
+//**********************************************************************************
+Double_t FindLargestEntryIn1DArray(TH1D** histos, Int_t startBin, Int_t maxNbins){
+    if(!histos){cout << "WARNING: FindSmallestEntryIn1D, NULL pointer - returning 1... " << std::endl; return 1;}
+    Double_t maximum = 0;
+    for (Int_t bin = startBin; bin < maxNbins; bin++){
+        for (Int_t i = 1; i<histos[bin]->GetNbinsX(); i++){
+            if (histos[bin]->GetBinContent(i) > maximum ){
+                maximum = histos[bin]->GetBinContent(i);
+            }
+        }
+    }
+    return maximum;
+}
 //**********************************************************************************
 //******************* Standardized plotting of 2D plots ****************************
 //**********************************************************************************

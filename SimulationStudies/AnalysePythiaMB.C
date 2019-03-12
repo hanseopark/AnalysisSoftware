@@ -172,7 +172,7 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
   Marker_t markerBins[12]		= {20, 21, 33, 34, 29, 24, 25, 27, 28, 30, 20, 21};
 
 
-  TString outputDir             ="./plots/";
+  TString outputDir             ="./MCGeneratorComparison/";
   TString suffix                = "eps";
 
   gSystem->Exec("mkdir -p "+outputDir);
@@ -317,15 +317,27 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
     canvasInputScaled->Update();
     canvasInputScaled->SaveAs(Form("%s/%s_MC_InputUnscaled_%s_%dMio.%s",outputDir.Data(),generator.Data(),tune.Data(),eventInMio,suffix.Data()));
 
+    // EtaPrime to Pi0 ratio
+    TH1D* fHPt_EtaPrimeMB = dynamic_cast<TH1D*>(fHPt_ParticleMB[2]->Clone("EtaPrimeToPi0Ratio"));
+    fHPt_EtaPrimeMB->Divide(fHPt_ParticleMB[0]);
+    fHPt_EtaPrimeMB->Draw("e1");
+
+    canvasInputScaled->Update();
+    canvasInputScaled->SaveAs(Form("%s/%s_MC_EtaPrimeToPi0_%s_%dMio.%s",outputDir.Data(),generator.Data(),tune.Data(),eventInMio,suffix.Data()));
+
+
     // write out
-//     gSystem->Exec("mkdir -p ../ExternalInput/Theory/Pythia/");
+    // gSystem->Exec("mkdir -p ../ExternalInput/Theory/Pythia/");
     TFile* fout = new TFile(Form("%s_%s_%s_%dMio.root",generator.Data(),tune.Data(),energy.Data(),eventInMio),"RECREATE");
     fHNEventsMB->Write();
     fHXSectionMB->Write();
     for (Int_t i = 0; i< 8; i++){
         fHPt_ParticleMB[i]->Write();
+        fHPt_ParticleMBUB[i]->Write();
         fHPt_ParticleMB_XSec[i]->Write();
     }
+    fHPt_EtaPrimeMB->Write();
+
     fout->Close();
 
 }

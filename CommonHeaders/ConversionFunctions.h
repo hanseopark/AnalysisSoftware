@@ -2,13 +2,15 @@
 #define GAMMACONV_ConversionFunctions
 
     #include <fstream>
+    #include <vector>
     #include "TFitResultPtr.h"
     #include "TObjString.h"
     #include "TString.h"
     #include "TRandom.h"
     #include "TKey.h"
-    #include <vector>
     #include "TSpline.h"
+    #include "TGraphErrors.h"
+    #include "TGraphAsymmErrors.h"
     #include "Math/WrappedTF1.h"
     #include "Math/BrentRootFinder.h"
     #include "TFitResult.h"
@@ -4803,6 +4805,7 @@
                 if (start.EqualTo(nominalMainDir)) return mainDir;
             }
         }
+        cout << "WARNING: failed to detect a main TList for mode " << mode <<", returning \"\"" << endl;
         return "";
     }
 

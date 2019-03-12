@@ -4,6 +4,13 @@
 #ifndef GAMMACONV_Fitting
 #define GAMMACONV_Fitting
 
+    #include <iostream>
+    #include <TString.h>
+    #include <TF1.h>
+    #include <TDatabasePDG.h>
+
+    using namespace std;
+
     /*****************************************************************/
     /*****************************************************************/
     /*****************************************************************/
