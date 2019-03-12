@@ -1072,6 +1072,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggRejectLin = 2000;
         if (mode == 10)
             maxTriggRejectLin = 3000;
+        if (mode == 4 && optionEnergy.CompareTo("5TeV2017") == 0)
+            maxTriggRejectLin = 4000;
 
         if( optionEnergy.CompareTo("8TeV")==0 ){
             if (mode == 2 || mode == 4 || mode == 10 )

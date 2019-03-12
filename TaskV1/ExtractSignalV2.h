@@ -872,6 +872,16 @@
                         fBGFitRange[1] = 0.34;
                     }
                 }
+                if ( fEnergyFlag.CompareTo("5TeV2017") == 0 ){
+                  if( trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0){
+                    fBGFitRange[0]              = 0.23;
+                    fBGFitRange[1]              = 0.3;
+                  }
+                }
+                if ( fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0 ){
+                  fBGFitRange[0]              = 0.24;
+                  fBGFitRange[1]              = 0.3;
+                }
             } else if ( mode == 5) {                                // PHOS
                 fBGFitRange[0]              = 0.19;
                 fBGFitRange[1]              = 0.3;

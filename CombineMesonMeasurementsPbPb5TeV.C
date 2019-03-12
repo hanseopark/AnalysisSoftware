@@ -56,13 +56,13 @@ extern TSystem*    gSystem;
 extern TMinuit*    gMinuit;
 
 //____________________________________________________________________________________________________________________________________________
-void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
-                                        TString fileNameEMCAL       = "/home/mike/1_PbPb_EMC/0_analysis/190226_EMC_new/pdf/PbPb_5.02TeV/2019_02_26/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
-                                        TString fileNamePHOS        = "/home/mike/git_afterburner/AnalysisSoftware/ExternalInputPbPb/20180426_Pi0_PbPb_5TeV_preliminaryQM2018_onlyPHOS.root",
-                                        TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190226_PCMEMC_new/pdf/PbPb_5.02TeV/2019_02_26/data_PCM-EMCALResultsFullCorrection_PbPb.root",
-                                        TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190226_PCMPHOS_new/pdf/PbPb_5.02TeV/2019_02_26/data_PCM-PHOSResultsFullCorrection_PbPb.root",
+void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190311_data_PCMResultsFullCorrection_PbPb.root",
+                                        TString fileNameEMCAL       = "/home/mike/1_PbPb_EMC/0_analysis/190311_EDC_new/pdf/PbPb_5.02TeV/2019_03_11/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
+                                        TString fileNamePHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190228_PHOS_PbPb_5TeV.root",
+                                        TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMEDC_new/pdf/PbPb_5.02TeV/2019_03_11/data_PCM-EMCALResultsFullCorrection_PbPb.root",
+                                        TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMPHOS_Systematics/pdf/PbPb_5.02TeV/2019_03_12/data_PCM-PHOSResultsFullCorrection_PbPb.root",
                                         TString suffix              = "pdf",
-                                        TString centralityString = "40-60%",
+                                        TString centralityString = "20-40%",
                                         TString fileInputCorrFactors= ""
                                     ){
 
@@ -96,11 +96,18 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
 
     TString dateForOutput                       = ReturnDateStringForOutput();
     cout << "date for output: " << dateForOutput << endl;
+    
+    TString CentNameShort = "";
+    if(centralityString.CompareTo("0-10%") == 0 ) CentNameShort  = "0_10";
+    if(centralityString.CompareTo("10-20%") == 0 ) CentNameShort = "10_20";
+    if(centralityString.CompareTo("20-40%") == 0 ) CentNameShort = "20_40";
+    if(centralityString.CompareTo("40-60%") == 0 ) CentNameShort = "40_60";
+    if(centralityString.CompareTo("60-80%") == 0 ) CentNameShort = "60_80";
 
     TString collisionSystemPbPb5TeV;
     collisionSystemPbPb5TeV.Form("PbPb, #sqrt{#it{s}_{NN}} = 5.02 TeV, %s", centralityString.Data());
 
-    TString outputDir                           = Form("%s/%s/CombineMesonMeasurements5TeVPbPb",suffix.Data(),dateForOutput.Data());
+    TString outputDir                           = Form("%s/%s/CombineMesonMeasurements5TeVPbPb/%s",suffix.Data(),dateForOutput.Data(),CentNameShort.Data());
     cout << "output directory: "<< outputDir.Data() << endl;
 
     gSystem->Exec("mkdir -p "+outputDir);
@@ -110,6 +117,9 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
     if(havePCMEMCAL)          gSystem->Exec(Form("cp %s %s/InputPCMEMCAL.root", fileNamePCMEMCAL.Data(), outputDir.Data()));
     if(havePCMPHOS)           gSystem->Exec(Form("cp %s %s/InputPCMPHOS.root", fileNamePCMPHOS.Data(), outputDir.Data()));
     
+    TFile *inputpp        = new TFile("/home/mike/2_pp_EMC/0_analysis/190202_pp_combination/CombineMesonMeasurements5TeV_V2_feb25/CombinedResultsPaperPP5TeV_2019_02_25.root");
+    TDirectoryFile* inputppDir = (TDirectoryFile*)inputpp->Get("Pi05TeV");
+    TF1* ppFit = (TF1*)inputppDir->Get("TsallisFitPi0");
 
     Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
     Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
@@ -160,11 +170,11 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
     
     cout << "loaded plotting styles" << endl;
     TFile* inputFile[5]                            =  {NULL,NULL,NULL,NULL,NULL};
-        inputFile[0]                                = new TFile(fileNamePCM.Data());
-        inputFile[1]                                = new TFile(fileNameEMCAL.Data());
-        inputFile[2]                                = new TFile(fileNamePHOS.Data());
-        inputFile[3]                                = new TFile(fileNamePCMEMCAL.Data());
-        inputFile[4]                                = new TFile(fileNamePCMPHOS.Data());
+    inputFile[0]                                = new TFile(fileNamePCM.Data());
+    inputFile[1]                                = new TFile(fileNameEMCAL.Data());
+    inputFile[2]                                = new TFile(fileNamePHOS.Data());
+    inputFile[3]                                = new TFile(fileNamePCMEMCAL.Data());
+    inputFile[4]                                = new TFile(fileNamePCMPHOS.Data());
 
     TDirectory* directoryPi0[5]                    =  {NULL,NULL,NULL,NULL,NULL};
     for(Int_t i=0;i<totalNSets;i++){
@@ -173,6 +183,10 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
           cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
           directoryPi0[i]                           = (TDirectory*)inputFile[i]->Get(Form("Pi0%sPbPb_5.02TeV_V0M",centralityString.Data()));
         }
+      }
+      if(inputFile[2] && i==2){
+        cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
+        directoryPi0[i]                           = (TDirectory*)inputFile[i]->Get(Form("Pi05TeV_%s_V0M",CentNameShort.Data()));
       }
     }
     
@@ -188,6 +202,8 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   TGraphAsymmErrors* graphPi0InvYieldStat[5]            = {NULL,NULL,NULL,NULL,NULL};
   TGraphAsymmErrors* graphPi0InvYieldSys[5]             = {NULL,NULL,NULL,NULL,NULL};
   
+  TGraphAsymmErrors* graphCombPi0Weights[5]             = {NULL,NULL,NULL,NULL,NULL};
+  
   Double_t rapidityMeas[5]                       = {1.6, 1.6, 1., 1.6, 1.6};
   
 // *******************************************************************************************************
@@ -197,6 +213,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   for (Int_t i = 0; i < totalNSets; i++){
     cout << "reading from " << nameMeasGlobal[i].Data() << " measurement..." << endl;
     if(directoryPi0[i]){
+      if(i!=2){
       cout << "loading pi0 inputs" << endl;
       // load mass/width/effi plots
       histoPi0Mass[i]                             = (TH1D*)directoryPi0[i]->Get("Pi0_Mass_data_INT7");
@@ -225,22 +242,23 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
       if(doOutput) graphPi0InvYieldStat[i]->Print();
       cout << nameMeasGlobal[i].Data() << " pi0 sys:" << graphPi0InvYieldSys[i] << endl;
       if(doOutput) graphPi0InvYieldSys[i]->Print();
-
+      }
+      if(i==2){
+        histoPi0AccTimesEff[2]                   = (TH1D*)directoryPi0[2]->Get("EffTimesAcc");
+        histoPi0Mass[2]                          = (TH1D*)directoryPi0[2]->Get("Pi0_Mass_data");
+        histoPi0FWHMMeV[2]                       = (TH1D*)directoryPi0[2]->Get("Pi0_Width_data");
+        histoPi0TrueMass[2]                      = (TH1D*)directoryPi0[2]->Get("Pi0_Mass_MC");
+        histoPi0TrueFWHMMeV[2]                   = (TH1D*)directoryPi0[2]->Get("Pi0_Width_MC");
+        if(histoPi0Mass[2]) histoPi0Mass[2]->Scale(1000.);
+        if(histoPi0FWHMMeV[2]) histoPi0FWHMMeV[2]->Scale(1000.);
+        if(histoPi0TrueMass[2]) histoPi0TrueMass[2]->Scale(1000.);
+        if(histoPi0TrueFWHMMeV[2]) histoPi0TrueFWHMMeV[2]->Scale(1000.);
+        
+        histoPi0InvYield[2]                      = (TH1D*)directoryPi0[2]->Get("CorrectedYieldPi0");
+        graphPi0InvYieldStat[2]                  = new TGraphAsymmErrors(histoPi0InvYield[2]);
+        graphPi0InvYieldSys[2]                   = (TGraphAsymmErrors*)directoryPi0[i]->Get("CorrectedYieldPi0Sys");
+      }
     }
-    //specific loading for PHOS
-    TString phosCentFileName = "";
-    if(centralityString.CompareTo("0-10%") == 0 ) phosCentFileName  = "0_10";
-    if(centralityString.CompareTo("10-20%") == 0 ) phosCentFileName = "10_20";
-    if(centralityString.CompareTo("20-40%") == 0 ) phosCentFileName = "20_40";
-    if(centralityString.CompareTo("40-60%") == 0 ) phosCentFileName = "40_60";
-    if(centralityString.CompareTo("60-80%") == 0 ) phosCentFileName = "60_80";
-    if(havePHOS){
-      histoPi0InvYield[2]                      = (TH1D*)inputFile[2]->Get(Form("h1invariantyield_stat_Cen%s",phosCentFileName.Data()));
-      graphPi0InvYieldStat[2]                  = new TGraphAsymmErrors((TH1D*)inputFile[2]->Get(Form("h1invariantyield_stat_Cen%s",phosCentFileName.Data())));
-      graphPi0InvYieldSys[2]                  = new TGraphAsymmErrors((TH1D*)inputFile[2]->Get(Form("h1invariantyield_syst_Cen%s",phosCentFileName.Data())));
-    }
-    
-
   }
   
   Double_t minPtPi0                               = 0.4;
@@ -256,14 +274,14 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
                                                           16., 20., 25., 30., 35.};
   const Int_t nBinsPi0 = 34;
   //                      {"PCM","EMCal","PHOS" ,"PCM-EMCal","PCM-PHOS"};
-  Double_t startpT[5]   = {0    ,1.4    ,0.4    ,1.0        ,0.8};
-  Double_t endpT[5]     = {35.  ,16.    ,30.    ,12.        ,12.};
-  if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 3.0; startpT[3] = 2.2;}
-  if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 2.0; startpT[3] = 2.2;}
+  Double_t startpT[5]   = {0.8  ,1.4    ,0.4    ,1.0        ,0.6};
+  Double_t endpT[5]     = {12.  ,20.    ,30.    ,20.        ,12.};
+  if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 6.0; startpT[3] = 2.2; endpT[2] = 35.;}
+  if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 2.0; startpT[3] = 2.2; endpT[2] = 35.;}
   if(centralityString.CompareTo("40-60%") == 0 ) {endpT[2] = 20.;}
-  if(centralityString.CompareTo("60-80%") == 0 ) {endpT[2] = 20.; endpT[4] = 10.;}
+  if(centralityString.CompareTo("60-80%") == 0 ) {endpT[2] = 20.;}
   
-  Int_t      offSetMethod[5] = {0,6,1,4,3};
+  Int_t      offSetMethod[5] = {3,6,1,4,2};
   if(centralityString.CompareTo("0-10%") == 0 )  {offSetMethod[1] = 14; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("10-20%") == 0 ) {offSetMethod[1] = 9; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("40-60%") == 0 ) {}
@@ -277,6 +295,8 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   TGraphAsymmErrors* graphCombPi0InvYieldSys   = NULL;
   TGraphAsymmErrors* graphCombPi0InvYieldStat_Norm  = NULL;
   TGraphAsymmErrors* graphCombPi0InvYieldSys_Norm   = NULL;
+  TGraphAsymmErrors* graphCombPi0RAAStat  = NULL;
+  TGraphAsymmErrors* graphCombPi0RAASys   = NULL;
   
   Double_t  pTPi0BinCenters[nBinsPi0];
   Double_t  pTPi0BinWidths[nBinsPi0];
@@ -287,6 +307,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   Double_t  y_Comb_Norm[nBinsPi0];
   Double_t  y_E_stat_Comb_Norm[nBinsPi0];
   Double_t  y_E_syst_Comb_Norm[nBinsPi0];
+  Double_t  y_Comb_Weights[5][nBinsPi0];
   
   Double_t temp_y[5] = {0,0,0,0,0};
   Double_t temp_y_E_stat[5] = {0,0,0,0,0};
@@ -303,7 +324,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   Double_t*  y_E_stat_Meas[5];
   Double_t*  y_E_syst_Meas[5];
   for (Int_t j = 0; j < totalNSets; j++){
-    if(directoryPi0[j] && graphPi0InvYieldStat[j] && j!=2){
+      if(directoryPi0[j] && graphPi0InvYieldStat[j]){
         cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
         n_Meas[j] = graphPi0InvYieldStat[j]->GetN();
         x_Meas[j] = graphPi0InvYieldStat[j]->GetX();
@@ -312,31 +333,31 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
         y_E_stat_Meas[j] = graphPi0InvYieldStat[j]->GetEYlow();
         y_E_syst_Meas[j] = graphPi0InvYieldSys[j] ->GetEYlow();
       }
-      if(havePHOS && j==2 ){
-        cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
-        n_Meas[j] = graphPi0InvYieldStat[j]->GetN();
-        x_Meas[j] = graphPi0InvYieldStat[j]->GetX();
-        x_Meas_syst[j] = graphPi0InvYieldSys[j]->GetX();
-        y_Meas[j] = graphPi0InvYieldStat[j]->GetY();
-        y_E_stat_Meas[j] = graphPi0InvYieldStat[j]->GetEYlow();
-        y_E_syst_Meas[j] = graphPi0InvYieldSys[j] ->GetEYhigh();
-      }
+//       if(havePHOS && j==2 ){
+//         cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
+//         n_Meas[j] = graphPi0InvYieldStat[j]->GetN();
+//         x_Meas[j] = graphPi0InvYieldStat[j]->GetX();
+//         x_Meas_syst[j] = graphPi0InvYieldSys[j]->GetX();
+//         y_Meas[j] = graphPi0InvYieldStat[j]->GetY();
+//         y_E_stat_Meas[j] = graphPi0InvYieldStat[j]->GetEYlow();
+//         y_E_syst_Meas[j] = graphPi0InvYieldSys[j] ->GetEYhigh();
+//       }
   }
   
   cout << "*******************************************" << endl;
   cout << "printing the arrays" << endl;
   cout << "*******************************************" << endl;
   for (Int_t j = 0; j < totalNSets; j++){
-    if(directoryPi0[j] && graphPi0InvYieldStat[j] && j!=2){
+    if(directoryPi0[j] && graphPi0InvYieldStat[j]){
       cout << nameMeasGlobal[j].Data() << "\t" << n_Meas[j] << endl;
       cout << "first x value: " << x_Meas[j][0] << endl;
       cout << "first x value with systematics: " << x_Meas_syst[j][0] << endl;
     }
-    if(havePHOS && j==2 ){
-      cout << nameMeasGlobal[j].Data() << "\t" << n_Meas[j] << endl;
-      cout << "first x value: " << x_Meas[j][0] << endl;
-      cout << "first x value with systematics: " << x_Meas_syst[j][0] << endl;
-    }
+//     if(havePHOS && j==2 ){
+//       cout << nameMeasGlobal[j].Data() << "\t" << n_Meas[j] << endl;
+//       cout << "first x value: " << x_Meas[j][0] << endl;
+//       cout << "first x value with systematics: " << x_Meas_syst[j][0] << endl;
+//     }
   }
 
   cout << "*******************************************" << endl;
@@ -373,18 +394,32 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
     temp_y_comb      = 0;
     temp_y_comb_E_tot = 0;
     for (Int_t j = 0; j < totalNSets; j++){
+      y_Comb_Weights[j][i] = 0;
       if(temp_y_E_stat[j]>0 && temp_y_E_syst[j]>0){
         temp_y_comb += ( temp_y[j] / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
         temp_y_comb_E_tot += ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+        y_Comb_Weights[j][i] = ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
       }
     }
     if(temp_y_comb_E_tot>0){
       y_Comb[i]         = temp_y_comb / temp_y_comb_E_tot ;
       y_Comb_Norm[i]    = 1 ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        if(pTPi0BinCenters[i]>startpT[j] && pTPi0BinCenters[i]<endpT[j]){
+          y_Comb_Weights[j][i] /= temp_y_comb_E_tot;
+        } else {
+          y_Comb_Weights[j][i] = 0.;
+        }
+      }
     } else {
       y_Comb[i]         = 1e-40;
       y_Comb_Norm[i]    = -10. ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        y_Comb_Weights[j][i] = 0. ;
+      }
     }
+    //go fully correlated -> if they are uncorrelated, take RMS
+    temp_Ny = 1.;
     cout << "y_Comb = \t " << y_Comb[i] << endl;
     EStat0 = 0; EStat1 = 0; EStat2 = 0; EStat3 = 0; EStat4 = 0;
     if(temp_y_E_stat[0]>0) EStat0 = pow(1./temp_y_E_stat[0],2);
@@ -393,11 +428,14 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
     if(temp_y_E_stat[3]>0) EStat3 = pow(1./temp_y_E_stat[3],2);
     if(temp_y_E_stat[4]>0) EStat4 = pow(1./temp_y_E_stat[4],2);
     y_E_stat_Comb[i]  = 1./sqrt(EStat0+EStat1+EStat2+EStat3+EStat4);
-    y_E_syst_Comb[i]  = sqrt((pow(temp_y_E_syst[0],2)+pow(temp_y_E_syst[1],2)+pow(temp_y_E_syst[2],2)+pow(temp_y_E_syst[3],2)+pow(temp_y_E_syst[4],2))/temp_Ny);
+    y_E_syst_Comb[i]  = sqrt(((pow(y_Comb_Weights[0][i]*temp_y_E_syst[0],2)+pow(y_Comb_Weights[1][i]*temp_y_E_syst[1],2)+pow(y_Comb_Weights[2][i]*temp_y_E_syst[2],2)+pow(y_Comb_Weights[3][i]*temp_y_E_syst[3],2)+pow(y_Comb_Weights[4][i]*temp_y_E_syst[4],2))/temp_Ny)/(pow(y_Comb_Weights[0][i],2)+pow(y_Comb_Weights[1][i],2)+pow(y_Comb_Weights[2][i],2)+pow(y_Comb_Weights[3][i],2)+pow(y_Comb_Weights[4][i],2)));
     y_E_stat_Comb_Norm[i]  = y_E_stat_Comb[i] / y_Comb[i];
     y_E_syst_Comb_Norm[i]  = y_E_syst_Comb[i] / y_Comb[i];
     cout << y_E_stat_Comb[i]  << "\t" << pow(temp_y_E_stat[0],2) << "\t" << pow(temp_y_E_stat[1],2) << "\t" << pow(temp_y_E_stat[2],2) << "\t" << pow(temp_y_E_stat[3],2) << "\t" << pow(temp_y_E_stat[4],2) << endl;
     cout << y_E_syst_Comb[i]  << "\t" << pow(temp_y_E_syst[0],2) << "\t" << pow(temp_y_E_syst[1],2) << "\t" << pow(temp_y_E_syst[2],2) << "\t" << pow(temp_y_E_syst[3],2) << "\t" << pow(temp_y_E_syst[4],2) << endl;
+    for (Int_t j = 0; j < totalNSets; j++){
+      if( y_Comb_Weights[j][i] == 0 ) y_Comb_Weights[j][i] = -10. ;
+    }
   }
   
   graphCombPi0InvYieldStat = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_Comb,0,0,y_E_stat_Comb,y_E_stat_Comb);
@@ -405,6 +443,10 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   
   graphCombPi0InvYieldStat_Norm = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_Comb_Norm,0,0,y_E_stat_Comb_Norm,y_E_stat_Comb_Norm);
   graphCombPi0InvYieldSys_Norm =  new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_Comb_Norm,pTPi0BinWidths,pTPi0BinWidths,y_E_syst_Comb_Norm,y_E_syst_Comb_Norm);
+  
+  for (Int_t j = 0; j < totalNSets; j++){
+    graphCombPi0Weights[j] = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_Comb_Weights[j],0,0,0,0);
+  }
   
   cout << "*******************************************" << endl;
   cout << "going to calculate the ratio of indiv measurements to the simple combination..." << endl;
@@ -441,6 +483,41 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
       graphPi0InvYieldStatToComb[j] = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_RatioToComb[j],0,0,y_RatioToCombTotError[j],y_RatioToCombTotError[j]);
     }
   }
+  
+  cout << "*******************************************" << endl;
+  cout << "going to calculate the Simple RAA..." << endl;
+  cout << "*******************************************" << endl;
+  
+  Double_t recalcBarn             = 1e12;
+  Double_t TAA = 1;
+  if(centralityString.CompareTo("0-10%") == 0 )  TAA = 23.07;
+  if(centralityString.CompareTo("10-20%") == 0 ) TAA = 14.27;
+  if(centralityString.CompareTo("20-40%") == 0 ) TAA = 6.872;
+  if(centralityString.CompareTo("40-60%") == 0 ) TAA = 2.046;
+  if(centralityString.CompareTo("60-80%") == 0 ) TAA = 0.4173;
+  
+  Double_t y_RAA[nBinsPi0];
+  Double_t y_RAA_error_stat[nBinsPi0];
+  Double_t y_RAA_error_syst[nBinsPi0];
+  for(Int_t i=0; i<nBinsPi0; i++){
+    for (Int_t j = 0; j < totalNSets; j++){
+      y_RAA[i] = -100;
+      y_RAA_error_stat[i] = 0;
+      y_RAA_error_syst[i] = 0;
+    }
+  }
+  for(Int_t i=0; i<nBinsPi0; i++){
+    cout << endl;
+    cout << "pT bin : " << pTPi0PbPb5TeV[i] << "-" << pTPi0PbPb5TeV[i+1] << "\t center :" << pTPi0BinCenters[i] << endl;
+    y_RAA[i] = (y_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
+    y_RAA_error_stat[i] = (y_E_stat_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
+    y_RAA_error_syst[i] = (y_E_syst_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
+    cout << y_RAA[i] << endl;
+  }
+  
+  graphCombPi0RAAStat = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_RAA,0,0,y_RAA_error_stat,y_RAA_error_stat);
+  graphCombPi0RAASys  = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_RAA,pTPi0BinWidths,pTPi0BinWidths,y_RAA_error_syst,y_RAA_error_syst);
+  
 
   // **********************************************************************************************************************
   // ******************************************* Mass and width for pi0            ****************************************
@@ -737,7 +814,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
   SetStyleHistoTH2ForGraphs( histo2DSimpleRatio, "#it{p}_{T} (GeV/#it{c})", "Ratio",
                           0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
   histo2DSimpleRatio->GetYaxis()->SetLabelOffset(0.001);
-  histo2DSimpleRatio->GetYaxis()->SetRangeUser(0.11, 1.89);
+  histo2DSimpleRatio->GetYaxis()->SetRangeUser(0.01, 1.99);
   histo2DSimpleRatio->GetXaxis()->SetNoExponent();
   histo2DSimpleRatio->GetXaxis()->SetMoreLogLabels(kTRUE);
   histo2DSimpleRatio->DrawCopy();
@@ -771,6 +848,80 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "",
 
   canvasSimpleRatio->Update();
   canvasSimpleRatio->Print(Form("%s/Pi0_SimpleRatio.%s",outputDir.Data(),suffix.Data()));
+  
+  // **********************************************************************************************************************
+  // ******************************** Plotting weights of combination                            **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleWeights       = new TCanvas("canvasSimpleWeights", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleWeights,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleWeights->SetLogx(1);
+
+  TH2F * histo2DSimpleWeights;
+  histo2DSimpleWeights                = new TH2F("histo2DSimpleWeights", "histo2DSimpleWeights",1000, minPtPi0, maxPtPi0, 1000, -10, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleWeights, "#it{p}_{T} (GeV/#it{c})", "Ratio",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleWeights->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleWeights->GetYaxis()->SetRangeUser(-1., 1.99);
+  histo2DSimpleWeights->GetXaxis()->SetNoExponent();
+  histo2DSimpleWeights->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleWeights->DrawCopy();
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryPi0[i]){
+      DrawGammaSetMarkerTGraphAsym(graphCombPi0Weights[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphCombPi0Weights[i]->Draw("pEsame");
+    }
+  }
+
+  TLegend* legendSimpleWeights         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphCombPi0Weights[i]){
+          legendSimpleWeights->AddEntry(graphCombPi0Weights[i],nameMeasGlobal[i].Data(),"p");
+      }
+  }
+  legendSimpleWeights->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleWeights->Update();
+  canvasSimpleWeights->Print(Form("%s/Pi0_SimpleWeights.%s",outputDir.Data(),suffix.Data()));
+  
+  // **********************************************************************************************************************
+  // ******************************** simple RAA                                                 **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleRAA       = new TCanvas("canvasSimpleRAA", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleRAA,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleRAA->SetLogx(1);
+
+  TH2F * histo2DSimpleRAA;
+  histo2DSimpleRAA                = new TH2F("histo2DSimpleRAA", "histo2DSimpleRAA",1000, minPtPi0, maxPtPi0, 1000, 0, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleRAA, "#it{p}_{T} (GeV/#it{c})", "R_{AA}",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleRAA->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleRAA->GetYaxis()->SetRangeUser(0.01, 1.19);
+  histo2DSimpleRAA->GetXaxis()->SetNoExponent();
+  histo2DSimpleRAA->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleRAA->DrawCopy();
+
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0RAASys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombPi0RAASys->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0RAAStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombPi0RAAStat->Draw("p,same,z");
+
+  TLegend* legendSimpleRAA         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  legendYieldPi0->AddEntry(graphCombPi0RAASys,"comb","fp");
+  legendSimpleRAA->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleRAA->Update();
+  canvasSimpleRAA->Print(Form("%s/Pi0_SimpleRAA.%s",outputDir.Data(),suffix.Data()));
 
    
 }

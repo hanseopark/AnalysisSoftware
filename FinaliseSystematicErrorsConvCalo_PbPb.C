@@ -97,6 +97,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatchingCalo", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
+    if(mode == 3) nameCutVariationSCCurrent[12] = "ClusterTrackMatching";
 
 //     0 - "YieldExtraction",
 //     1 - "dEdxE",
@@ -158,6 +159,10 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
+//                                         = { 0, 0, 0, 0, 0,
+//                                         0, 0, 0, 1, 0,
+//                                         0, 0, 0, 0, 1,
+//                                         1, 1, 1, 0 };
     Bool_t bsmoothMBEtaPCMPHOS[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
@@ -255,8 +260,8 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, CellTiming - 14, Trigger - 16, Efficiency - 17
-//         if ( i == 0 || i == 8 || i == 10 || i == 14 || i == 15 || i == 16 || i == 17 || (i==8 && mode==3) || (i==15 && mode==3) || (i!=18 && useMBSyst)){
-        if ( i != 18 ){
+        if ( i == 0 || i == 8 || i == 14 || i == 15 || i == 16 || i == 17 || (i!=18 && useMBSyst)){
+//         if ( i != 18 ){
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
@@ -357,6 +362,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
               Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 3.95761 + -1.07724*ptBins[k] + 8.87406e-02*ptBins[k]*ptBins[k];
+                        if(mode == 3) error = 1.03607;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -368,6 +374,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 8.51266e-01 + -1.70473e-01*ptBins[k] + 4.64281e-02*ptBins[k]*ptBins[k];
+                        if(mode == 3) error = 1.36726;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -379,6 +386,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 7.58013e-01;
+                        if(mode == 3) error = 7.36994e-02;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -390,6 +398,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 9.80233e-01;
+                        if(mode == 3) error = 5.13426e-01;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -402,6 +411,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 8.56494 + -2.42977*ptBins[k] + 2.27482e-01*ptBins[k]*ptBins[k];
                         if(ptBins[k]>4) error = 8.56494 + -2.42977*4 + 2.27482e-01*4*4;
+                        if(mode == 3) error = 1.54987;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -413,6 +423,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 1.72241;
+                        if(mode == 3) error = 9.11066e-01;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -424,6 +435,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 5.61092e-01;
+                        if(mode == 3) error = 1.52109;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -467,6 +479,10 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                       for (Int_t k = 0;k < nPtBins;k++){
                         error = 3.5/2.;
                         if (meson.Contains("Eta")) error *= 1.2 ;
+                        if (mode == 3){
+                              error = 6.05134 + -1.83321*ptBins[k] + 1.21437e-01*ptBins[k]*ptBins[k];
+                              if ( ptBins[k] > 4. ) error = 6.05134 + -1.83321*4 + 1.21437e-01*4*4;
+                        }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -480,6 +496,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                     Double_t error              = 1.5/2.;
                     if (meson.CompareTo("EtaToPi0") == 0 ) 
                         error                   = 0.5;
+                    if (mode == 3) error = 2.0;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -492,6 +509,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          =  4.97046;
                         if(meson.Contains("Eta")) error *= 1.2;
+                        if (mode == 3) error = 3.03672;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -499,11 +517,12 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                     }
             }
             // manual smoothing for cluster V0 matching errors - variation 12
-            if (nameCutVariationSC[i].CompareTo("ClusterTrackMatchingCalo")==0 ){
+            if (nameCutVariationSC[i].CompareTo("ClusterTrackMatchingCalo")==0 || nameCutVariationSC[i].CompareTo("ClusterTrackMatching")==0){
                Double_t error          = 0.;
                     for (Int_t k = 0; k < nPtBins; k++){
                         error          = 1.52944 + -4.22995e-01*ptBins[k] + 6.41679e-02*ptBins[k]*ptBins[k];
                         if(meson.Contains("Eta")) error *= 1.2;
+                        if (mode == 3) error = 3.04651;
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -522,6 +541,12 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.8;
                     if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.6;
                     if(meson.Contains("Eta")) error *= 1.2;
+                    if (mode == 3){
+//                       error = 1.06259e+01+-1.82800*ptBins[k]+0.1*ptBins[k]*ptBins[k];
+//                       if( ptBins[k] > 9. ) error = 1.06259e+01+-1.82800*9.+0.1*9.*9.;
+                      error = 4.57112 + -1.32271*ptBins[k] + 9.35700e-02*ptBins[k]*ptBins[k];
+                      if ( ptBins[k] > 4. ) error = 4.57112 + -1.32271*4 + 9.35700e-02*4*4;
+                    }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;

@@ -50,7 +50,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                             TString additionalNameOutput  = "",
                                             TString suffix                = "eps",
                                             Int_t mode                    = 2,
-                                            Bool_t useMBSyst                = kTRUE
+                                            Bool_t useMBSyst                = kFALSE
                                         ){
 
     // ***************************************************************************************************
@@ -96,7 +96,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
-
 //     0 - "YieldExtraction",
 //     1 - "dEdxE",
 //     2 - "dEdxPi",
@@ -131,7 +130,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation[0]     = "yield extraction #eta";
     }
-
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
@@ -378,6 +376,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             } else{
                                 error = -3.7686975 + 0.84062*ptBins[k];
                             }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.01540e-01;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -398,7 +399,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             } else{
                                 error = -3.7686975 + 0.84062*ptBins[k];
                             }
-
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.01540e-01*1.5;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -417,6 +420,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                error          = 1.27503;
                            } else{
                                error = -3.7686975 + 0.84062*ptBins[k];
+                           }
+                           if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.01540e-01;
                            }
                        }
                         errorsMean[i][k]        = error;
@@ -440,6 +446,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             } else{
                                 error = -4.859397 + 1.061386*ptBins[k];
                             }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 7.19932e-01;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -457,6 +466,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             } else{
                                 error = -4.859397 + 1.061386*ptBins[k];
                             }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 7.19932e-01*1.5;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -470,6 +482,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             error   = 1.2+(-0.012)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k]; // parametrisation
                         } else{
                             error = 3.89542;
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 7.19932e-01;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -494,6 +509,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                 error = 0.6875*ptBins[k] - 3.125;
                             }
                         }
+                        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 4.24881e-01;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = error*0.01;
@@ -516,6 +534,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                 error         = 1.51815;
                             } else{
                                 error = -2.5932375 + 0.68523125*ptBins[k];
+                            }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.73969e-01;
                             }
                         }
                         errorsMean[i][k]        = error;
@@ -540,6 +561,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                 } else{
                                     error = -2.5932375 + 0.68523125*ptBins[k];
                                 }
+                            }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.73969e-01*1.5;
                             }
                         }
                         errorsMean[i][k]        = error;
@@ -566,6 +590,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 //                                 error = -3.9607725 + 1.21149*ptBins[k];
                                 error = -3.9607725 + 1.1*ptBins[k];
                             }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.54987;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -587,6 +614,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             } else{
                                 error = -3.9607725 + 1.21149*ptBins[k];
                             }
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.54987*1.5;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -607,6 +637,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             }
                         } else {
                             error = 8.374e-02 + 3.744e-01*ptBins[k];
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 9.11066e-01;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -623,6 +656,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             }
                         } else{
                             error = 8.374e-02 + 3.744e-01*ptBins[k];
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 9.11066e-01*1.5;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -638,6 +674,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             }
                         } else{
                             error = 4.;
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 9.11066e-01;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -672,6 +711,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             }
                         } else{
                             error = 5.;
+                        }
+                        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.52109;
                         }
                     }
                     errorsMean[i][k]            = error;
@@ -747,6 +789,10 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             }
                         }
                     }
+                    if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 6.05134 + -1.83321*ptBins[k] + 1.21437e-01*ptBins[k]*ptBins[k];
+                              if ( ptBins[k] > 4. ) error = 6.05134 + -1.83321*4 + 1.21437e-01*4*4;
+                    }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
                     errorsMeanCorr[i][k]    = error;
@@ -772,6 +818,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             else{
                                 error          = 0.818182*ptBins[k] - 1.45454545;
                             }
+                        }
+                        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                          error = 2.0;
                         }
                     }
                     errorsMean[i][k]            = error;
@@ -804,6 +853,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                         }else{
                             error = 3.88174;
                         }
+                        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.83804;
+                        }
                     }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -824,6 +876,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                         } else{
 //                             if (ptBins[k] < 0.75) continue;
                             error = 0.490577038 + 0.679245*ptBins[k];
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.29929;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -839,8 +894,11 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                 //                              error   = 4+(-0.2)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k]+12/pow(2,ptBins[k]); // parametrisation 2.76TeV
                             }
                         } else{
-                            if (ptBins[k] < 0.75) continue;
+                            if (ptBins[k] < 0.75) error = 0;
                             error = 0.490577038 + 0.679245*ptBins[k];
+                            if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 1.29929;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -865,6 +923,10 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             error                   =  3.4012;
                         } else{
                             error = 5;
+                        }
+                        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+                              error = 4.57112 + -1.32271*ptBins[k] + 9.35700e-02*ptBins[k]*ptBins[k];
+                              if ( ptBins[k] > 4. ) error = 4.57112 + -1.32271*4 + 9.35700e-02*4*4;
                         }
                     }
                     errorsMean[i][k]            = error;
@@ -967,7 +1029,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             cout << error << endl;
                         }
                     }
-                    if(!additionalName.CompareTo("0-100%")==0) error += 2;
+                    if(!(additionalName.CompareTo("0-100%")==0)) error += 2;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -983,7 +1045,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             }
         }
         // Quadratic sum of errors except material error infront of EMCal & inner material
-        if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0){
+        if (!(nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0)){
             cout << "errors added quadratically" << endl;
             for (Int_t l = 0; l < nPtBins; l++){
                 errorsPosSummed[l]      = errorsPosSummed[l]+pow(errorsPos[i][l],2);
@@ -1153,7 +1215,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelCentrality->Draw();
 
         TLatex *labelTrig   = NULL;
-        if (additionalNameOutput.CompareTo("")==0){
+        if (energy.CompareTo("pPb_5.023TeVRun2")==0){
+          labelTrig= new TLatex(0.96,0.84,Form("MB LHC16qt"));
+        } else if (additionalNameOutput.CompareTo("")==0){
             labelTrig= new TLatex(0.96,0.84,Form("MB LHC13[b-c]"));
         } else if (additionalNameOutput.CompareTo("EMC7")==0){
             labelTrig= new TLatex(0.96,0.84,Form("EMC7 LHC13[d-e]"));
@@ -1281,7 +1345,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             pol1->Draw("same");
             pol0->Draw("same");
 
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d_%s.%s",additionalName2.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,nameCutVariationSCCurrent[cut].Data(),suffix.Data()));
     }
 
     // ***************************************************************************************************

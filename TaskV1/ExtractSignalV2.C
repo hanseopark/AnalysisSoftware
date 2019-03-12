@@ -4569,15 +4569,17 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTail            = 0.015;
                 fMesonLambdaTailRange[0]    = 0.015;
                 fMesonLambdaTailRange[1]    = 0.015;
+                fMesonFitRange[0] = 0.05;
+                fMesonFitRange[1] = 0.22;
             }
             if (fMode == 3) {
-                mesonAmplitudeMin = mesonAmplitude*98./100.;
-                mesonAmplitudeMax = mesonAmplitude*600./100.;
-                fMesonLambdaTail            = 0.007;
-                fMesonLambdaTailRange[0]    = 0.007;
-                fMesonLambdaTailRange[1]    = 0.007;
-                fMesonFitRange[0] = 0.08;
-                fMesonFitRange[1] = 0.17;
+                mesonAmplitudeMin = mesonAmplitude*90./100.;
+                mesonAmplitudeMax = mesonAmplitude*130./100.;
+                fMesonLambdaTail            = 0.0055;
+                fMesonLambdaTailRange[0]    = 0.0055;
+                fMesonLambdaTailRange[1]    = 0.0055;
+                fMesonFitRange[0] = 0.07;
+                fMesonFitRange[1] = 0.18;
             }
             if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
@@ -4585,6 +4587,14 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTail            = 0.015;
                 fMesonLambdaTailRange[0]    = 0.015;
                 fMesonLambdaTailRange[1]    = 0.015;
+                if(centralityString.CompareTo("0-10%") == 0){
+                    fMesonFitRange[0] = 0.05;
+                    fMesonFitRange[1] = 0.25;
+                    if(fBinsPt[ptBin] < 6.0 ) {
+                      fMesonFitRange[0] = 0.07;
+                      fMesonFitRange[1] = 0.25;
+                    }
+                }
             }
 
         } else {
@@ -4768,6 +4778,12 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       fMesonLambdaTailRange[0]    = 0.015;
                       fMesonLambdaTailRange[1]    = 0.015;
                     }
+                    TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+                    if(trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0){
+                      fMesonFitRange[0] = 0.03;
+                      fMesonFitRange[1] = 0.28;
+                      mesonAmplitudeMin = mesonAmplitude*90./100.;
+                    }
                 }else if(fDoJetAnalysis){
                     fMesonLambdaTailRange[0]        = 0.013;
                     fMesonLambdaTailRange[1]        = 0.03;
@@ -4855,8 +4871,13 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     // define complete fitting functions
     //--------------------------------------------------------------------------------------
     fFitReco= NULL;
-    fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
-
+    TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+    //for pp5TeV triggers, enable exponential tail also on right side of the peak for improving the fit quality
+    if( (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0) && fEnergyFlag.CompareTo("5TeV2017") == 0 && (trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0)){
+      fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp(-(x-[1])/[6])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    } else {
+      fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    }
     fFitGausExp =NULL;
     fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
@@ -4896,6 +4917,14 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
         } else if ( fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ){
             if (fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
+        } else if( fMode == 4 && fEnergyFlag.CompareTo("5TeV2017") == 0 ){
+          TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+          if(trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0){
+            fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*2.0);
+            fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.8,fMesonWidthRange[1]*2.);
+            fFitReco->SetParameter(6,0.015);
+            fFitReco->SetParLimits(6,0.010,0.030);
+          }
         }
     } else {
         if( fEnergyFlag.Contains("pPb") ){
