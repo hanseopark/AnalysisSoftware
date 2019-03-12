@@ -72,7 +72,6 @@ using namespace std;
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/AdjustHistRange.h"
 
-TRandom3 randy1;
 
 //**************************************************************************************************************************
 Double_t 	fFWHMFunc;
