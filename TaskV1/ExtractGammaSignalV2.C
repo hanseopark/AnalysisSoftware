@@ -1370,14 +1370,14 @@ void ExtractGammaSignalV2(      TString meson               = "",
         TString nameCanvas  = "MesonWithBckCanvas";
         TString namePad     = "MesonWithBckPad";
         cout << nameMeson.Data() << endl;
-        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassPtGconvBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
+        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassPtGconvBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
                             fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem, kTRUE);
 
         nameMeson       = Form("%s_GammaConvPt_MesonWithBckLeft%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvas      = "MesonWithBckCanvasLeft";
         namePad         = "MesonWithBckPadLeft";
         cout << nameMeson.Data() << endl;
-        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassLeftPtGconvBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
+        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassLeftPtGconvBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin,
                             fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, kTRUE);
 
         TString nameMesonSub    = Form("%s_GammaConvPt_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1385,7 +1385,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         TString namePadSub      = "MesonPadSubtracted";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassPtGConvBin, fHistoTrueFullMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                                fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                                 fCollisionSystem, "MC validated", kTRUE, "Fit", "mixed evt. subtr. #it{M}_{#gamma#gamma}", kTRUE);
 
 
@@ -1394,13 +1394,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
         namePadSub      = "MesonPadSubtractedLeft";
         cout << nameMesonSub.Data() << endl;
         PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassLeftPtGConvBin, fHistoTrueFullMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                                fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                                 fCollisionSystem, "MC validated", kTRUE, "Fit", "mixed evt. subtr. #it{M}_{#gamma#gamma}", kTRUE);
 
         cout << "Example bin: "<< fExampleBin << endl;
         TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
         PlotExampleInvMassBinsV2(   fHistoGGInvMassPtGConvBin[fExampleBin], fHistoSignalInvMassPtGConvBin[fExampleBin], fHistoBackNormInvMassPtGconvBin[fExampleBin],
-                                    fFitSignalInvMassPtBin[fExampleBin], fExampleBin, fOutputDir.Data(),fSuffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                    fFitSignalInvMassPtBin[fExampleBin], fExampleBin, fOutputDir.Data(),fSuffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fDate, fPrefix, fPrefix2,
                                     fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig, kTRUE );
 
         TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
@@ -1411,7 +1411,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             TString namePadTrue     = "TrueMesonPadFitted";
             cout << nameMesonTrue.Data() << endl;
             PlotWithFitSubtractedInvMassInPtBins(fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fFitTrueFullSignalInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue,
-                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                                fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                                 fCollisionSystem, "MC validated",kFALSE);
 
             nameMesonTrue           = Form("%s_GammaConvPt_TrueMesonPrimAndSecondary%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1419,7 +1419,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             namePadTrue             = "TrueMesonPadSec";
             cout << nameMesonTrue.Data() << endl;
             PlotInvMassSecondaryInPtBins(   fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fHistoTrueSecMesonInvMassPtBins[0], nameMesonTrue, nameCanvasTrue,
-                                            namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                            namePadTrue, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                             fCollisionSystem);
 
         }
@@ -2588,7 +2588,7 @@ void CalculateGammaCorrection(){
                                                                                                                                  fSecondaries[k].Data()));
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Divide(fHistoSecondaryGammaConvFromXPtOrBin[k],fHistoAllSecondaryGammaFromXPtOrBin[k],1,1,"B");
- 
+
             }
         }
         // ==========================================

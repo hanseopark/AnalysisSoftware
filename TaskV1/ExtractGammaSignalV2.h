@@ -9,9 +9,6 @@
     Bool_t      fUseCocktail                                            = 0;
     Bool_t      fUseDataDrivenPurity                                    = 0;
 
-    TString     fDate                                                   = "";
-    TString     fDirectPhoton                                           = "";
-
     TString     fOutputDir                                              = "";
     TString     fSuffix                                                 = "";
     TString     fMeson                                                  = "";

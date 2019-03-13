@@ -677,6 +677,7 @@ do
         DOETA=1
         DOETAPRIME=1
         DOPI0INETABINS=0
+        DOGAMMA=0
         echo "  Set options for EtaPrime mode (mode >100)"
         echo "    DOPI0=$DOPI0"
         echo "    DOETA=$DOETA"
@@ -899,6 +900,7 @@ do
         echo -e "--> Switching off eta, pi0 in eta binnings ...\n";
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
         echo -e "--> No special modifications have been done to the settings.\n"
+        DOGAMMA=0
     else
         echo "--> Command \"$answer\" not found. Please try again."
     fi

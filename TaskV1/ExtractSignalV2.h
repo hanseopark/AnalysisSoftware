@@ -1668,6 +1668,10 @@
         // Initialization for eta' meson
         //****************************************************************************************************
         } else if (setPi0.CompareTo("EtaPrime") == 0){
+
+            // set meson ID according to PDG
+            fMesonId                    = 331;
+
             switch(mode) {
                 case 0 : // PCM-PCM
                     fMesonWidthExpect = 0.05;

@@ -561,6 +561,7 @@ void ExtractSignalV2(
             //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         }
 
+        cout << "meson Id: " << fMesonId << endl;
         // Loading histograms for Eta
         if( fMesonId == 221){
             // Histograms without acceptance requirement
@@ -589,6 +590,7 @@ void ExtractSignalV2(
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
             fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
             fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
+            cout<<  ObjectNameMCEtaPrime.Data() << "\t" << fHistoMCMesonPt << "\t" <<  ObjectNameMCEtaPrimeWOWeights.Data() << "\t"<< fHistoMCMesonPtWOEvtWeights << endl;
         }
 
         // prepare histos for correct error calculation

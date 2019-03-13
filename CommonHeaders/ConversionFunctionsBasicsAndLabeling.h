@@ -249,6 +249,8 @@
     // pPb  5TeV
     // reference cent bins: https://twiki.cern.ch/twiki/bin/view/ALICE/PACentStudiesRun2 +
     // updated values for all but > 20% 10% cent bins from  https://alice-notes.web.cern.ch/system/files/notes/public/711/2018-09-04-ALICE_public_note.pdf
+    // updated values for all cents 13.03.2019 according to: https://alice-notes.web.cern.ch/system/files/notes/public/711/2019-03-11-ALICE_public_note.pdf
+
     Double_t xSection5023GeVINELpPb    = 67.6*1e-3;
     Double_t ncollpPb5023GeV           = 6.708;
     Double_t ncollErrpPb5023GeV        = 0.11;
@@ -264,19 +266,36 @@
 
     Double_t nCollpPb5TeVV0A60100           = 2.933;
     Double_t nCollpPbErr5TeVV0A60100        = 0.0612667663;
-                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t nCollpPb5TeVBaseCL110[10]      = { 14.475, 11.87, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
-    Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.7494346839, 0.626, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
-                                            // 0-5, 5-10
-    Double_t nCollpPb5TeVBaseCL15[2]        = { 15.51, 13.44};
-    Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.804, 0.695};
-                                            // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t nCollpPb5TeVBaseCL120[5]       = { 13.1725, 9.396, 6.169, 3.253, 1.6};
-    Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.6883448722, 0.474, 0.251, 0.112, 0.0373};
-    Double_t nCollpPb5TeVCL160100           = 2.4265;
+
+//   old values
+//                                             // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+//     Double_t nCollpPb5TeVBaseCL110[10]      = { 14.475, 11.87, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+//     Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.7494346839, 0.626, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+//                                             // 0-5, 5-10
+//     Double_t nCollpPb5TeVBaseCL15[2]        = { 15.51, 13.44};
+//     Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.804, 0.695};
+//                                             // 0-20, 20-40, 40-60, 60-80, 80-100
+//     Double_t nCollpPb5TeVBaseCL120[5]       = { 13.1725, 9.396, 6.169, 3.253, 1.6};
+//     Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.6883448722, 0.474, 0.251, 0.112, 0.0373};
+//     Double_t nCollpPb5TeVCL160100           = 2.4265;
+//     Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
+
+
+                                              // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t nCollpPb5TeVBaseCL110[10]      = { 14.01, 11.62, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.799687692, 0.607, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+    // 0-5, 5-10
+    Double_t nCollpPb5TeVBaseCL15[2]        = { 14.97, 13.05};
+    Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.856, 0.743};
+    // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t nCollpPb5TeVBaseCL120[5]       = { 12.815, 9.312, 6.273, 3.485, 1.744};
+    Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.700450597, 0.458, 0.28, 0.187, 0.0863};
+    Double_t nCollpPb5TeVCL160100           = 2.6145;
     Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
 
-                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+
+
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
     Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
     Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
                                             // 0-5, 5-10
