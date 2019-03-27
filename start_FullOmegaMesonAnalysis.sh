@@ -453,7 +453,7 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 8TeV (pp@8TeV), 7TeV (pp@7TeV), 13TeV (pp@7TeV, 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 8TeV (pp@8TeV), 7TeV (pp@7TeV), 13TeV (pp@13TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
