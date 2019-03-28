@@ -241,6 +241,37 @@ function CopyRunwiseAndMergeAccordingToRunlistMC()
     fi
 }
 
+function CopyRunwiseAndMergeAccordingToRunlistJJMC()
+{
+    if [ $2 == 1 ]; then
+        echo "downloading $1"
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbers$1.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                for pThard in {1..20}; do
+                    CopyFileIfNonExisitent $3/$pThard/$runNumber "$7/$1/$pThard/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/Stage_1/" kTRUE
+                done
+            done;
+            if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
+                cd $currentDir
+                rm $3/${10}*.root*
+                echo runlists/runNumbers$1.txt
+                firstrunNumber=`head -n1 runlists/runNumbers$1.txt`
+                echo $firstrunNumber
+                ls $3/$firstrunNumber/${10}\_*.root > file$1.txt
+
+                listsToMerge=`cat $9`
+                for runListName in $listsToMerge; do
+                    MergeAccordingToSpecificRunlist file$1.txt $3 $8 ${10} $runListName runlists/runNumbers$1_$runListName.txt "no"
+                done
+            fi
+        else
+            CopyFileIfNonExisitent $3 "/alice/cern.ch/user/a/alitrain/PWGGA/$6/$4/merge" $NSlashes "" kTRUE
+        fi
+    fi
+}
+
 function CopyRunwiseAndMergeAccordingToRunlistData()
 {
     if [ $2 == 1 ]; then
