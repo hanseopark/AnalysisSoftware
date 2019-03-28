@@ -671,7 +671,7 @@ void CorrectCaloNonLinearityV4(
             //*******************************************************************************
             Double_t minMax[2]={0.04,0.3};
             // special setting for PCM-EMC
-            if( mode == 2 || mode == 13 ){
+            if( mode == 2 || mode == 13 || mode == 14 ){
                 if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
                 } else if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
@@ -712,7 +712,7 @@ void CorrectCaloNonLinearityV4(
                 minMax[0]       = 0.03;
 
             // special setting for EMC
-            } else if( mode == 4 || mode == 12 ){
+          } else if( mode == 4 || mode == 12  || mode == 15){
                 minMax[1]       = 0.25;
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
@@ -778,7 +778,7 @@ void CorrectCaloNonLinearityV4(
     cout << "-----------------------------------------------------" << endl;
 
     histDataMCResults->Divide(histMCResults,histDataResults,1,1);
-    if(mode == 2 || mode == 3) histDataMCResults->Multiply(histDataMCResults,histDataMCResults,1.,1.,"B");
+    if(mode == 2 || mode == 3 || mode == 14) histDataMCResults->Multiply(histDataMCResults,histDataMCResults,1.,1.,"B");
     DrawGammaSetMarker(histDataMCResults, 24, 2, kBlack, kBlack);
 
     Double_t minPlotY = 0.93;
@@ -790,13 +790,13 @@ void CorrectCaloNonLinearityV4(
 
     Double_t minMass  = 0.89;
     Double_t maxMass  = 1.1;
-    if (mode == 4 || mode == 12){
+    if (mode == 4 || mode == 12 || mode == 15){
         minMass  = 0.87;
         maxMass  = 1.25;
-    } else if ((mode == 2 || mode == 13) && select.Contains("LHC16")){
+    } else if ((mode == 2 || mode == 13 || mode == 14) && select.Contains("LHC16")){
         minMass  = 0.89;
         maxMass  = 1.14;
-    } else if ((mode == 2 || mode == 13) && select.Contains("LHC11cd")){
+    } else if ((mode == 2 || mode == 13 || mode == 14) && select.Contains("LHC11cd")){
         minMass  = 0.89;
         maxMass  = 1.14;
     }
@@ -837,7 +837,7 @@ void CorrectCaloNonLinearityV4(
     TH1D* histDataResultsVsPDG =  (TH1D*)histDataResults->Clone("Mean mass data / mass PDG Pi0");
     histDataResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histDataResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
-    if(mode == 2 || mode == 3) {
+    if(mode == 2 || mode == 3 || mode == 14) {
       histDataResultsVsPDG->Multiply(histDataResultsVsPDG,histDataResultsVsPDG,1.,1.,"B");
       histDataResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)");
       histDataResultsVsPDG->SetYTitle("#LT M^{2}_{#pi^{0} (data)} #GT / M^{2}_{#pi^{0} (PDG)}");
@@ -847,7 +847,7 @@ void CorrectCaloNonLinearityV4(
     TH1D* histMCResultsVsPDG =  (TH1D*)histMCResults->Clone("Mean mass MC / mass PDG Pi0");
     histMCResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histMCResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
-    if(mode == 2 || mode == 3) {
+    if(mode == 2 || mode == 3 || mode == 14) {
       histMCResultsVsPDG->Multiply(histMCResultsVsPDG,histMCResultsVsPDG,1.,1.,"B");
       histMCResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)");
       histMCResultsVsPDG->SetYTitle("#LT M^{2}_{#pi^{0} (MC)} #GT / M^{2}_{#pi^{0} (PDG)}");
@@ -890,9 +890,9 @@ void CorrectCaloNonLinearityV4(
     }
     TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
-    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
+    if ( (mode == 2 || mode == 4 || mode == 12 || mode == 14 || mode == 15) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.1*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.1*fitMassDataVsPDGConst->GetParError(0));
-    } else if (mode == 2 || mode == 4 || mode == 12){
+    } else if (mode == 2 || mode == 4 || mode == 12 || mode == 14 || mode == 15){
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
     } else {
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
@@ -952,9 +952,9 @@ void CorrectCaloNonLinearityV4(
     }
     TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", FittingFunction ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
-    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
+    if ( (mode == 2 || mode == 4 || mode == 12 || mode == 14 || mode == 15) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) ){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
-    } else if (mode == 2 || mode == 4 || mode == 12){
+    } else if (mode == 2 || mode == 4 || mode == 12 || mode == 14 || mode == 15){
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
     // } else if (mode == 5){
     //     fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
@@ -1138,7 +1138,7 @@ void CorrectCaloNonLinearityV4(
 
     TH2F * histoDummyDataMCRatio;
     histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minPlotY, maxPlotY);
-    if(mode == 2 || mode == 3) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
+    if(mode == 2 || mode == 3 || mode == 14) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     else SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
     histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(-0.01);
@@ -1336,7 +1336,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     Double_t mesonAmplitudeMax;
 
     // special setting for PCM-EMC
-    if (mode == 2){
+    if (mode == 2 || mode == 14){
         if (ptcenter > 1.5)
             mesonAmplitudeMin = mesonAmplitude*95./100.;
         else
@@ -1348,7 +1348,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
         else
             mesonAmplitudeMin = mesonAmplitude*90./100.;
     // special setting for EMC
-    } else if (mode == 4 || mode == 12){
+    } else if (mode == 4 || mode == 12 || mode == 15){
         mesonAmplitudeMin = mesonAmplitude*20./100.;
         fitRangeMin = 0.08;
     // special setting for PHOS
@@ -1373,7 +1373,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     fFitReco->SetParameter(3, 0.012);
 
     fFitReco->SetParLimits(0, mesonAmplitudeMin, mesonAmplitudeMax);
-    if (mode == 4 || mode == 5 || mode == 12){
+    if (mode == 4 || mode == 5 || mode == 12 || mode == 15){
         fFitReco->SetParLimits(1, fMesonMassExpect*0.65, fMesonMassExpect*1.45);
     } else {
         fFitReco->SetParLimits(1, fMesonMassExpect*0.9, fMesonMassExpect*1.1);
