@@ -281,7 +281,7 @@
 //     Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
 
 
-                                              // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
     Double_t nCollpPb5TeVBaseCL110[10]      = { 14.01, 11.62, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
     Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.799687692, 0.607, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
     // 0-5, 5-10
@@ -291,18 +291,33 @@
     Double_t nCollpPb5TeVBaseCL120[5]       = { 12.815, 9.312, 6.273, 3.485, 1.744};
     Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.700450597, 0.458, 0.28, 0.187, 0.0863};
     Double_t nCollpPb5TeVCL160100           = 2.6145;
-    Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
+    Double_t nCollpPbErr5TeVCL160100        = 0.1348;
 
 
+    //   old values
+//     // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+//     Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+//     Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+//                                             // 0-5, 5-10
+//     Double_t nCollpPb5TeVBaseHybrid5[2]     = { 13.7, 12.7};
+//     Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
+//                                             // 0-20, 20-40, 40-60, 60-80, 80-100
+//     Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.89, 6.94, 4.12, 2.12};
+//     Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
+//     Double_t nCollpPb5TeVHybrid60100        = 3.12;
+//     Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;
+//
+//     Double_t tpPb5023GeV                    = 0.0983e3*(1/recalcBarn);
+//     Double_t tpPbErr5023GeV                 = 0.0017e3*(1/recalcBarn);
 
     // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 10.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
     Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
-                                            // 0-5, 5-10
-    Double_t nCollpPb5TeVBaseHybrid5[2]     = { 13.7, 12.7};
+    // 0-5, 5-10
+    Double_t nCollpPb5TeVBaseHybrid5[2]     = { 11.9, 11.3};
     Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
-                                            // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.89, 6.94, 4.12, 2.12};
+    // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.29, 6.87, 4.17, 2.03};
     Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
     Double_t nCollpPb5TeVHybrid60100        = 3.12;
     Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;

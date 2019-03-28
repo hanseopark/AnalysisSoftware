@@ -10,6 +10,10 @@ eps/
 */tmp/*
 *.rootmap
 DirectPhotonPlots/
+DownloadAndDataPrep/runlists/
+TaskQA/ExampleConfigurations/
+DownloadAndDataPrep/fileLHC*.txt
+TaskV1/ExampleConfigs/
 *.patch
 *.diff
 *.ods

@@ -391,7 +391,7 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
                 fLogRunRangeCleaned.open(name, ios::out);
 
             }
-            UInt_t iMaximumCellsInOnePlot=250;
+            UInt_t iMaximumCellsInOnePlot=150;
             Double_t dBufferForSizeCalculation1=1.0*uniqueCells.size();
             Double_t dBufferForSizeCalculation2=1.0*iMaximumCellsInOnePlot;
             dBufferForSizeCalculation1/=dBufferForSizeCalculation2;

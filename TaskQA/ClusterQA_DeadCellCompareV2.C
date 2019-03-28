@@ -231,6 +231,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
                 cout << Form("INFO, no Run Numbers could be found for %s!",mcSets[j].Data()) << "\n looked for list:" <<  fileRuns.Data() << endl;
             }
             TString logFileName         = Form("%s/%s/ClusterQA/%s/Runwise/ColdCellsRunwise-%s.log",mcCuts[j].Data(),fEnergyFlag.Data(),suffix.Data(),mcSets[j].Data());
+            cout << "dead cell file name: " << logFileName << endl;
             fLogRunwiseDeadCells.open(logFileName.Data(), ios::in);
             if(fLogRunwiseDeadCells.good()){
                 fLogRunwiseDeadCells.seekg(0L, ios::beg);
@@ -262,6 +263,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
         fLogOutput.open(Form("%s/%s.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         fLogOutputDetailed.open(Form("%s/%s-Detailed.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         fLogOutputRunwise.open(Form("%s/%s-Runwise.log",outputDir.Data(),dataSets[j].Data()),ios::out);
+
         for(Int_t i=0; i<nTrigger; i++){
             runs.clear();
             fileRuns                        = Form("%srunNumbers%s%s.txt", pathRunLists.Data(), dataSets[j].Data(), addLabelRunlist.Data() );
@@ -271,6 +273,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
 
             TString logFileName         = Form("%s/%s/ClusterQA/%s/Runwise/ColdCellsRunwise-%s.log", cuts[i].Data(), fEnergyFlag.Data(), suffix.Data(), dataSets[j].Data());
             fLogRunwiseDeadCells.open(logFileName.Data(), ios::in);
+            cout << "file name read: " << logFileName.Data() << endl;
             if(fLogRunwiseDeadCells.good()){
                 fLogRunwiseDeadCells.seekg(0L, ios::beg);
                 TString fVar;
@@ -315,9 +318,9 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
         }
 
         for(Int_t iCell=0;iCell<nCaloCells;iCell++){
-            selection_sort(vec[iCell].begin(), vec[iCell].end());
-            //if(vec[iCell].size()>0)cout << ", " << iCell << " - " << vec[iCell].size() << endl;
+            if(vec[iCell].size()>0)cout << ", " << iCell << " - " << vec[iCell].size() << endl;
             if(vec[iCell].size()>0){
+                selection_sort(vec[iCell].begin(), vec[iCell].end());
                 fLogOutputDetailed << "CellID:" << iCell+offSetBadChannel << ",cold/notFiredInRuns:";
                 for(Int_t j=0; j<(Int_t)vec[iCell].size(); j++){
                   fLogOutputDetailed << vec[iCell].at(j) << ",";

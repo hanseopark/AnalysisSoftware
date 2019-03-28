@@ -22,6 +22,8 @@ echo "**************************************************************************
 mkdir -p $location2/bad
 mkdir -p $location2/maybe
 mkdir -p $location2/ok
+basedir=`pwd`
+echo $basedir
 NCellsToBeLookedAt=`ls $location/Cell*.$suffix | wc -l`
 
 echo "*******************************************************************************************"
@@ -30,7 +32,7 @@ if [ $NCellsToBeLookedAt -gt 0 ]; then
 	echo "$NCellsToBeLookedAt cells to be investigated"
 else
 	echo "no $suffix's were found in $location/. Exiting ..."
-	exit 
+	exit
 fi
 
 echo "*******************************************************************************************"
@@ -61,9 +63,11 @@ echo "**************************************************************************
 echo "Now lets start classifying (use the 'd' key to toggle display or filename)............................................."
 sleep 5s
 cd ..
-feh -F --cycle-once --action1 "mv '%f' $location2/bad/%f" \
---action2  "mv -f '%f' $location2/maybe/%f" \
---action3  "mv -f '%f' $location2/ok/%f" \
+echo $location $basedir/$location2 $suffix
+pwd
+feh -F --cycle-once --action1 "mv -f '%F' $basedir/$location2/bad/%F " \
+--action2  "mv -f '%F' $basedir/$location2/maybe/%F" \
+--action3  "mv -f '%F' $basedir/$location2/ok/%F" \
 *.$suffix
 
 echo "*******************************************************************************************"
