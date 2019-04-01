@@ -65,6 +65,7 @@ using namespace std;
 
 
 #endif
+    #include <queue>
 
 #include "TExec.h"
 #include "../CommonHeaders/PlottingMeson.h"

@@ -2,6 +2,13 @@
 #define GAMMACONV_PlottingMeson
 
 #include "TLatex.h"
+#include "TF1.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TGraph.h"
+#include "TGraphErrors.h"
+#include "TGraphAsymmErrors.h"
+#include "TImage.h"
 
     //void StyleSettingsThesis();
     void StyleSettings();

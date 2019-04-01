@@ -11,6 +11,13 @@
     #include <TCanvas.h>
     #include <TLegend.h>
     #include <TFrame.h>
+    #include "TArrow.h"
+    #include "TMarker.h"
+    #include "TFile.h"
+    #include "TMinuit.h"
+    #include "TRandom.h"
+    #include "TRandom3.h"
+    #include "TSystem.h"
     #ifndef __CLING__
         #include <Riostream.h>
         #include <TLatex.h>
