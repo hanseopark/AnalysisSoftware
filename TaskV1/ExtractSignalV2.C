@@ -405,6 +405,18 @@ void ExtractSignalV2(
         //******************************************************************************************************
         //***** Abort processing due to missing cutnumber in files**********************************************
         //******************************************************************************************************
+        } else if (mode == 5) {
+            Int_t i = 0;
+            while (HistosGammaConversion == NULL && i < 10){
+              // replace reject extra signal cut
+              fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"1");
+              cout << fEventCutSelection.Data() << endl;
+              fEventCutSelectionRead    = fEventCutSelection;
+              fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+              cout << "testing cutnumber:" << fCutSelectionRead.Data() << endl;
+              HistosGammaConversion   = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+              i++;
+            }
         } else {
             cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
             return;
