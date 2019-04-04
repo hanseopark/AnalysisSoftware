@@ -44,7 +44,7 @@ function FindCorrectTrainDirectory()
           rm listGrid.txt
           for folderName in $folderNames; do
             testing=`echo $folderName  | cut -d "_" -f1`
-            echo $folderName " " $4 " " $testing;
+#             echo $folderName " " $4 " " $testing;
             if [[ $testing == $4 ]]; then
                 echo "$folderName" >> listGrid.txt
             fi
@@ -217,22 +217,23 @@ function CopyRunwiseAndMergeAccordingToRunlistMC()
     if [ $2 == 1 ]; then
         echo "downloading $1"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbers$1.txt`
+            runNumbers=`cat runlists/runNumbers$1${11}.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $3/$runNumber "$7/$1/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/Stage_1/" kTRUE
+#                 CopyFileIfNonExisitent $3/$runNumber "$7/$1/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/Stage_1/" kTRUE
+                CopyFileIfNonExisitent $3/$runNumber "$7/$1/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/" kTRUE
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
                 cd $currentDir
                 rm $3/${10}*.root*
-                echo runlists/runNumbers$1.txt
-                firstrunNumber=`head -n1 runlists/runNumbers$1.txt`
+                echo runlists/runNumbers$1${11}.txt
+                firstrunNumber=`head -n1 runlists/runNumbers$1${11}.txt`
                 echo $firstrunNumber
                 ls $3/$firstrunNumber/${10}\_*.root > file$1.txt
 
                 listsToMerge=`cat $9`
                 for runListName in $listsToMerge; do
-                    MergeAccordingToSpecificRunlist file$1.txt $3 $8 ${10} $runListName runlists/runNumbers$1_$runListName.txt "no"
+                    MergeAccordingToSpecificRunlist file$1.txt $3 $8 ${10} $runListName runlists/runNumbers$1${11}_$runListName.txt "no"
                 done
             fi
         else
@@ -340,6 +341,7 @@ function CopyFileIfNonExisitent()
                     BASEDIR=$PWD
                     cd $1/Stage1/$firstDir/
                     ls G*.root > $BASEDIR/locallog.txt
+                    ls H*.root >> $BASEDIR/locallog.txt
                     cd -
                     echo "********** log output 2 for merging***********"
                     cat $BASEDIR/locallog.txt
@@ -441,6 +443,7 @@ function CopyFileIfNonExisitentDiffList()
                     BASEDIR=$PWD
                     cd $1/$3/Stage1/$firstDir/
                     ls G*.root > $BASEDIR/locallog.txt
+                    ls H*.root >> $BASEDIR/locallog.txt
                     cd -
                     echo "********** log output 2 for merging***********"
                     cat $BASEDIR/locallog.txt

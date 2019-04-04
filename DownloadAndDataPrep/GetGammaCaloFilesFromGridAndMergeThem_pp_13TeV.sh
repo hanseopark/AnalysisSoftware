@@ -295,8 +295,9 @@ NSlashes3=`expr $NSlashes + 1`
 NSlashes4=`expr $NSlashes + 2`
 echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
-TRAINDIR=pp_13TeV_AOD_LHC17x # SECOND TRAIN RUN
-
+# TRAINDIR=pp_13TeV_AOD_LHC17x # SECOND TRAIN RUN
+# TRAINDIR=Legotrain-vAN-QA2019 # SECOND TRAIN RUN
+#
 # LHC16 data
 # LHC16Data="679"; #pass 1 SECOND TRAIN RUN
 # LHC16dData="child_1"; #pass 1
@@ -403,9 +404,9 @@ TRAINDIR=pp_13TeV_AOD_LHC17x # SECOND TRAIN RUN
 # LHC18a9_extra="child_9"
 # LHC18a1_extra="child_10"
 
-LHC17xJJMC="1393";
-LHC18f5_1="child_1"
-LHC18f5_2="child_2"
+# LHC17xJJMC="1393";
+# LHC18f5_1="child_1"
+# LHC18f5_2="child_2"
 
 # LHC18 MC
 # LHC18xMCPHY="1325"; #pass 1 FIRST TRAIN RUN
@@ -419,6 +420,38 @@ LHC18f5_2="child_2"
 # LHC18k1MC="child_8"
 # LHC18k2MC="child_9"
 # LHC18k3MC="child_10"
+
+TRAINDIR=Legotrain-QA20190403 # SECOND TRAIN RUN
+# LHC18 data
+# LHC18Data="753"; #pass 1 SECOND TRAIN RUN
+# LHC18bData="child_1";
+# LHC18dData="child_2";
+# LHC18eData="child_3";
+# LHC18fData="child_4";
+# LHC18gData="child_5";
+# LHC18hData="child_6";
+# LHC18iData="child_7";
+# LHC18jData="child_8";
+# LHC18kData="child_9";
+# LHC18lData="child_10";
+# LHC18mData="child_11";
+# LHC18nData="child_12";
+# LHC18oData="child_13";
+# LHC18pData="child_14";
+
+# LHC18 MC
+LHC18xMCPHY="1415"; #pass 1 FIRST TRAIN RUN
+# LHC18g4MC="child_1"
+# LHC18g5MC="child_2"
+# LHC18g6MC="child_3"
+# LHC18h2MC="child_4"
+# LHC18h4MC="child_5"
+# LHC18j1MC="child_6"
+# LHC18j4MC="child_7"
+# LHC18k1MC="child_8"
+LHC18k2MC="child_9"
+LHC18k3MC="child_10"
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -1073,9 +1106,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18h" $HAVELHC18h $OUTPUTDIR_LHC18h $LHC18hData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18i" $HAVELHC18i $OUTPUTDIR_LHC18i $LHC18iData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-#     CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-#     CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-#     CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
 #     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPC_2\nDPGTrackIncAccTPC_3\nDPGTrackIncAccTPC_4\nDPGTrackIncAccTPC_5\nDPGTrackIncAccTPC_6\nDPGTrackIncAccTPC_7\nDPGTrackAndCalo_2\nDPGTrackAndCalo_3\nDPGTrackAndCalo_4\nDPGTrackAndCalo_5\nDPGTrackAndCalo_6\nDPGTrackAndCalo_7" > runlistsToMerge.txt
     echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5\nDPGTrackIncAccTPCandEMC_6\nDPGTrackIncAccTPCandEMC_7" > runlistsToMerge.txt
     CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1_withTRDtracking" GammaCalo
