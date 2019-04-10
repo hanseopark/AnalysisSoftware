@@ -827,7 +827,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TH2F *histoDummyWeightEachROnflySecSubCock =  new TH2F("histoDummyWeightEachROnflySecSubCock","histoDummyWeightEachROnflySecSubCock",1000,-0.05,1.,1000,0.5,2.);
     SetStyleHistoTH2ForGraphs(histoDummyWeightEachROnflySecSubCock, "#it{p}_{T}^{Min} (GeV/c)","purity,w_i", 0.05,0.05, 0.05,0.05);
 
-    TLegend* legendWeightPtOnflySecSubCock= new TLegend(0.4,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
+    TLegend* legendWeightPtOnflySecSubCock= new TLegend(0.3,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
     legendWeightPtOnflySecSubCock->SetFillColor(0);
     legendWeightPtOnflySecSubCock->SetMargin(0.17);
     legendWeightPtOnflySecSubCock->SetLineColor(0);

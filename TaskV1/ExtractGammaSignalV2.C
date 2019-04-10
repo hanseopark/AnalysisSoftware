@@ -2944,7 +2944,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing5";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
       }else if( rBin.CompareTo("a") ==0){
         nIterationsShowBackground[0]                    = 7;
@@ -2954,7 +2954,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow,BackSmoothing3";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing5";                   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
       }else if( rBin.CompareTo("b") ==0){
         nIterationsShowBackground[0]                    = 8;
@@ -2964,7 +2964,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing5";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
       }else if( rBin.CompareTo("c") ==0){
         nIterationsShowBackground[0]                    = 7;
@@ -2974,7 +2974,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
+        optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing5";                   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";                   // standard
       }else {
         nIterationsShowBackground[0]                    = 9;

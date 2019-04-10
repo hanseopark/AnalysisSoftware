@@ -245,6 +245,8 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	TH2F* histoRecConvGamma_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Eta");
 	TH2F* histoRecConvGamma_Pt_Phi_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Phi");
 
+	TH2F* histoRecConvGammaMult_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt_Eta");
+
 	TH1D* histoRecConvGammaMult_Pt_OnFly   = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt");
 	TH1D* histoRecConvGammaMult_R_OnFly    = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_R");
 	TH1D* histoRecConvGammaMult_Phi_OnFly  = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Phi");
@@ -282,6 +284,10 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 
 	TH1D* histoRecConvGamma_Eta_OnFly 		= (TH1D*)histoRecConvGamma_Pt_Eta_OnFly->ProjectionY("histoRecConvGamma_Eta_OnFly");
 	TH1D* histoRecConvGamma_Phi_OnFly 		= (TH1D*)histoRecConvGamma_Pt_Phi_OnFly->ProjectionY("histoRecConvGamma_Phi_OnFly");
+
+	TH1D* histoRecConvGammaMult_Eta_OnFly   = (TH1D*)histoRecConvGammaMult_Pt_Eta_OnFly ->ProjectionY("histoRecConvGammaMult_Eta_OnFly");
+
+
 
 	//pt rebinning array
 	Float_t ptcalcbinning1[5] = {0.1,0.5 ,1 ,2 ,5};
@@ -345,6 +351,23 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	histoRatioRecConvGamma_Phi_OnFly->Sumw2();
 	histoRatioRecConvGamma_Phi_OnFly->Divide(histoRatioRecConvGamma_Phi_OnFly,histoConvGamma_Phi_OnFly,1.,1.,"B");
 
+	// calculating ratio of ONLY mult. reconstructed
+
+	TH1D* histoRatioRecConvGammaMultOnly_Eta_OnFly = (TH1D*)histoRecConvGammaMult_Eta_OnFly->Clone("histoRatioRecConvGammaMultOnly_Eta_OnFly");
+	histoRatioRecConvGammaMultOnly_Eta_OnFly->Sumw2();
+	histoRatioRecConvGammaMultOnly_Eta_OnFly->Divide(histoRatioRecConvGammaMultOnly_Eta_OnFly,histoConvGamma_Eta_OnFly,1.,1.,"B");
+
+	TH1D* histoRatioRecConvGammaMultOnly_R_OnFly = (TH1D*)histoRecConvGammaMult_R_OnFly->Clone("histoRatioRecConvGammaMultOnly_R_OnFly");
+	histoRatioRecConvGammaMultOnly_R_OnFly->Sumw2();
+	histoRatioRecConvGammaMultOnly_R_OnFly->Divide(histoRatioRecConvGammaMultOnly_R_OnFly,histoConvGamma_R_OnFly,1.,1.,"B");
+
+	TH1D* histoRatioRecConvGammaMultOnly_Pt_OnFly = (TH1D*)histoRecConvGammaMult_Pt_OnFly->Clone("histoRatioRecConvGammaMultOnly_Pt_OnFly");
+	histoRatioRecConvGammaMultOnly_Pt_OnFly->Sumw2();
+	histoRatioRecConvGammaMultOnly_Pt_OnFly->Divide(histoRatioRecConvGammaMultOnly_Pt_OnFly,histoConvGamma_Pt_OnFly,1.,1.,"B");
+
+
+
+
 	//calculating the tot number of photons = 1st photon counted + 2nd time the same photon has been counted
 	TH1D* histoTotalRecConvGamma_Pt_OnFly = (TH1D*)histoRecConvGamma_Pt_OnFly->Clone("histoRatioRecConvGamma_Pt_OnFly");
 	histoRecConvGamma_Pt_OnFly->Add(histoRecConvGammaMult_Pt_OnFly);
@@ -353,8 +376,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	TH1D* histoTotalRecConvGamma_Phi_OnFly = (TH1D*)histoRecConvGamma_Phi_OnFly->Clone("histoRatioRecConvGamma_Phi_OnFly");
 	histoTotalRecConvGamma_Phi_OnFly->Add(histoRecConvGammaMult_Phi_OnFly);
 
-
-
+        
 	//making ratio with the Mult histos = double counting ratio
 	TH1D* histoRecConvGammaMult_Pt_rebin_OnFly  = (TH1D*)histoRecConvGammaMult_Pt_OnFly->Clone(); //->Rebin(22,"recPt",ptbinning);
 	TH1D* histoTotalRecConvGamma_Pt_rebin_OnFly = (TH1D*)histoTotalRecConvGamma_Pt_OnFly->Clone(); //->Rebin(22,"totPt",ptbinning);
@@ -387,6 +409,8 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	TH2F* histoRecConvGamma_Pt_R_Offline 	= (TH2F*)HistosV0Finding_Offline->FindObject("RecMCconvGamma_Pt_R");
 	TH2F* histoRecConvGamma_Pt_Eta_Offline 	= (TH2F*)HistosV0Finding_Offline->FindObject("RecMCconvGamma_Pt_Eta");
 	TH2F* histoRecConvGamma_Pt_Phi_Offline 	= (TH2F*)HistosV0Finding_Offline->FindObject("RecMCconvGamma_Pt_Phi");
+
+	TH2F* histoRecConvGammaMult_Pt_Eta_Offline 	= (TH2F*)HistosV0Finding_Offline->FindObject("RecMCconvGammaMulti_Pt_Eta");
 
 	TH1D* histoRecConvGammaMult_Pt_Offline 	= (TH1D*)HistosV0Finding_Offline->FindObject("RecMCconvGammaMulti_Pt");
 	TH1D* histoRecConvGammaMult_R_Offline 	= (TH1D*)HistosV0Finding_Offline->FindObject("RecMCconvGammaMulti_R");
@@ -425,6 +449,10 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 
 	TH1D* histoRecConvGamma_Eta_Offline 		= (TH1D*)histoRecConvGamma_Pt_Eta_Offline->ProjectionY("histoRecConvGamma_Eta_Offline");
 	TH1D* histoRecConvGamma_Phi_Offline 		= (TH1D*)histoRecConvGamma_Pt_Phi_Offline->ProjectionY("histoRecConvGamma_Phi_Offline");
+
+	TH1D* histoRecConvGammaMult_Eta_Offline   = (TH1D*)histoRecConvGammaMult_Pt_Eta_Offline ->ProjectionY("histoRecConvGammaMult_Eta_Offline");
+
+
 
 // 	//pt rebinning array
 // 	Float_t ptcalcbinning1[5] = {0.1,0.5 ,1 ,2 ,5};
@@ -487,6 +515,24 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	TH1D* histoRatioRecConvGamma_Phi_Offline	= (TH1D*)histoRecConvGamma_Phi_Offline->Clone("histoRatioRecConvGamma_Phi_Offline");
 	histoRatioRecConvGamma_Phi_Offline->Sumw2();
 	histoRatioRecConvGamma_Phi_Offline->Divide(histoRatioRecConvGamma_Phi_Offline,histoConvGamma_Phi_Offline,1.,1.,"B");
+
+
+	// calculating ratio of ONLY mult. reconstructed
+
+	TH1D* histoRatioRecConvGammaMultOnly_Eta_Offline = (TH1D*)histoRecConvGammaMult_Eta_Offline->Clone("histoRatioRecConvGammaMultOnly_Eta_Offline");
+	histoRatioRecConvGammaMultOnly_Eta_Offline->Sumw2();
+	histoRatioRecConvGammaMultOnly_Eta_Offline->Divide(histoRatioRecConvGammaMultOnly_Eta_Offline,histoConvGamma_Eta_Offline,1.,1.,"B");
+
+	TH1D* histoRatioRecConvGammaMultOnly_R_Offline = (TH1D*)histoRecConvGammaMult_R_Offline->Clone("histoRatioRecConvGammaMultOnly_R_Offline");
+	histoRatioRecConvGammaMultOnly_R_Offline->Sumw2();
+	histoRatioRecConvGammaMultOnly_R_Offline->Divide(histoRatioRecConvGammaMultOnly_R_Offline,histoConvGamma_R_Offline,1.,1.,"B");
+
+	TH1D* histoRatioRecConvGammaMultOnly_Pt_Offline = (TH1D*)histoRecConvGammaMult_Pt_Offline->Clone("histoRatioRecConvGammaMultOnly_Pt_Offline");
+	histoRatioRecConvGammaMultOnly_Pt_Offline->Sumw2();
+	histoRatioRecConvGammaMultOnly_Pt_Offline->Divide(histoRatioRecConvGammaMultOnly_Pt_Offline,histoConvGamma_Pt_Offline,1.,1.,"B");
+
+
+
 
 	//calculating the tot number of photons = 1st photon counted + 2nd time the same photon has been counted
 	TH1D* histoTotalRecConvGamma_Pt_Offline 	= (TH1D*)histoRecConvGamma_Pt_Offline->Clone("histoRatioRecConvGamma_Pt_Offline");
@@ -584,7 +630,13 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
     SetStyleHistoTH2ForGraphs(histo2DDummy,"R (cm)","#epsilon = #frac{rec. #gamma}{true #gamma}",0.04,0.04, 0.04,0.04, 1.,1.);
     histo2DDummy->GetXaxis()->SetRangeUser(RRange[0],RRange[1]+5.);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.55);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,1.3);
     histo2DDummy->Draw("copy");
+    DrawGammaLines(145.,145.,0.0,0.55,1.,kGray,2);
+    DrawGammaLines(5.,5.,0.0,0.55,1.,kGray,2);
+
+     DrawGammaLines(145.,145.,0.0,1.3,1.,kGray,2);
+     DrawGammaLines(5.,5.,0.0,1.3,1.,kGray,2);
 
         DrawGammaSetMarker(histoRatioRecConvGamma_R_OnFly, 20, 1.5,colorOnFly,colorOnFly);
         histoRatioRecConvGamma_R_OnFly->Draw("same,l");
@@ -603,7 +655,10 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 
     // draw efficiency vs R, low pT
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.55);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,1.55);
     histo2DDummy->Draw("copy");
+    DrawGammaLines(145.,145.,0.0,1.,1.,kGray,2);
+    DrawGammaLines(5.,5.,0.0,1.,1.,kGray,2);
 
         DrawGammaSetMarker(histoRatioRecConvGamma_R_lowpT_OnFly, 20, 1.5,colorOnFly,colorOnFly);
         histoRatioRecConvGamma_R_lowpT_OnFly->Draw("same,l");
@@ -664,6 +719,7 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
     SetStyleHistoTH2ForGraphs(histo2DDummy,"#phi (rad)","#epsilon = #frac{rec. #gamma}{true #gamma}",0.04,0.04, 0.04,0.04, 1.,1.3);
     histo2DDummy->GetXaxis()->SetRangeUser(PhiRange[0],PhiRange[1]);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,1.4);
     histo2DDummy->Draw("copy");
 
         DrawGammaSetMarker(histoRatioRecConvGamma_Phi_OnFly, 20, 1.5,colorOnFly,colorOnFly);
@@ -687,7 +743,13 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
     SetStyleHistoTH2ForGraphs(histo2DDummy,"#eta","#epsilon = #frac{rec. #gamma}{true #gamma}",0.04,0.04, 0.04,0.04, 1.,1.3);
     histo2DDummy->GetXaxis()->SetRangeUser(EtaRange[0],EtaRange[1]);
     histo2DDummy->GetYaxis()->SetRangeUser(0.,.4);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.,1.);
     histo2DDummy->Draw("copy");
+    DrawGammaLines(0.8,0.8,0.0,1.,1.,kGray,2);
+    DrawGammaLines(-0.8,-0.8,0.0,1.,1.,kGray,2);
+
+    DrawGammaLines(0.9,0.9,0.0,1.,1.,kGray,3);
+    DrawGammaLines(-0.9,-0.9,0.0,1.,1.,kGray,3);
 
         DrawGammaSetMarker(histoRatioRecConvGamma_Eta_OnFly, 20, 1.5,colorOnFly,colorOnFly);
         histoRatioRecConvGamma_Eta_OnFly->Draw("same,l");
@@ -755,6 +817,12 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGammaMult_Pt_OnFly->Write();
         histoRatioRecConvGammaMult_R_OnFly->Write();
         histoRatioRecConvGammaMult_Phi_OnFly->Write();
+	histoRatioRecConvGammaMultOnly_Eta_OnFly->Write();
+	histoRatioRecConvGammaMultOnly_R_OnFly ->Write();
+	histoRatioRecConvGammaMultOnly_Pt_OnFly ->Write();
+
+
+
 
         histoConvGamma_Pt_Offline->Write();
         histoRecConvGamma_Pt_Offline->Write();
@@ -775,6 +843,9 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
         histoRatioRecConvGammaMult_Pt_Offline->Write();
         histoRatioRecConvGammaMult_R_Offline->Write();
         histoRatioRecConvGammaMult_Phi_Offline->Write();
+	histoRatioRecConvGammaMultOnly_Eta_Offline->Write();
+	histoRatioRecConvGammaMultOnly_R_Offline ->Write();
+	histoRatioRecConvGammaMultOnly_Pt_Offline ->Write();
 
 	output->Write();
 	output->Close();
