@@ -6829,10 +6829,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEtaToPi0/2), 0.95, 0.92, 32);
                     legendRelSysErr->SetNColumns(2);
                     for (Int_t i = 0; i < nMeasSetEtaToPi0; i++){
+                      if(graphRelSystEtaToPi0[availableMeasEtaToPi0[i]]){
                         DrawGammaSetMarkerTGraph(graphRelSystEtaToPi0[availableMeasEtaToPi0[i]], markerTriggWeighted[availableMeasEtaToPi0[i]], sizeTrigg[availableMeasEtaToPi0[i]],
                                                 colorTriggWeighted[availableMeasEtaToPi0[i]], colorTriggWeighted[availableMeasEtaToPi0[i]]);
                         graphRelSystEtaToPi0[availableMeasEtaToPi0[i]]->Draw("p,same,z");
                         legendRelSysErr->AddEntry(graphRelSystEtaToPi0[availableMeasEtaToPi0[i]],nameTriggerWeighted[availableMeasEtaToPi0[i]],"p");
+                      }
                     }
                     legendRelSysErr->Draw();
 
@@ -6874,10 +6876,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //                        cout << j << ": " << histoRelStatEtaToPi0[availableMeasEtaToPi0[i]]->GetBinContent(j) << endl;
         //                     }
                         } else {
+                          if(histoRelStatEtaToPi0[availableMeasEtaToPi0[i]]){
                             DrawGammaSetMarker(histoRelStatEtaToPi0[availableMeasEtaToPi0[i]],markerTriggWeighted[availableMeasEtaToPi0[i]], sizeTrigg[availableMeasEtaToPi0[i]],
                                                 colorTriggWeighted[availableMeasEtaToPi0[i]], colorTriggWeighted[availableMeasEtaToPi0[i]]);
                             histoRelStatEtaToPi0[availableMeasEtaToPi0[i]]->Draw("p,same,z");
                             legendRelStatErr->AddEntry(histoRelStatEtaToPi0[availableMeasEtaToPi0[i]],nameTriggerWeighted[availableMeasEtaToPi0[i]],"p");
+                          }
                         }
                     }
                     legendRelStatErr->Draw();

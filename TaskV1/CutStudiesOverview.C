@@ -375,6 +375,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             TString fMinEnergyCut                               = fClusterCutSelection(GetClusterMinEnergyCutPosition(fClusterCutSelection),1);
             cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
             cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut));
+            if(mode == 3 || mode == 5) cutStringsName[i]                                   = AnalyseMinEnergyCutPHOS(CutNumberToInteger(fMinEnergyCut));
         } else if (cutVariationName.Contains("ClusterTiming")){
             TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
@@ -1522,6 +1523,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if( optionEnergy.Contains("PbPb_5.02TeV") ){
                   minYRatio = 0.01;
                   maxYRatio = 1.99;
+                }
+                if(cutVariationName.Contains("Sphericity")){
+                  minYRatio = 0.51;
+                  maxYRatio = 1.49;
                 }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);

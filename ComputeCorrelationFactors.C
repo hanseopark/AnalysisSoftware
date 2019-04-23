@@ -290,7 +290,7 @@ void ComputeCorrelationFactors(
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.05;
     }else if(combMode.CompareTo("systems") == 0 ){
-        minCorrYaxis            = 0.35;
+        minCorrYaxis            = 0.01;
         if(mode >= 40 && mode <= 45){
           minCorrYaxis = 0.2;
           maxCorrYaxis = 0.82;

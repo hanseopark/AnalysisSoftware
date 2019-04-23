@@ -1089,8 +1089,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);
                         }
                     }
-                    // exception for PCM mode set K0L to 0
-                    if ( mode == 0 && j == 2){
+                    // exception for PCM and PCM-PHOS mode set K0L to 0
+                    if ( (mode == 0 || mode == 3) && j == 2){
                         haveSecUsed[j]                      = kFALSE;
                         for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);

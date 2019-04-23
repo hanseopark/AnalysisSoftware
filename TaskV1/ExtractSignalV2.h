@@ -952,6 +952,14 @@
                 fMesonIntDeltaRangeWide[1]  =  0.028;
                 fMesonIntDeltaRangeNarrow[0]= -0.015;
                 fMesonIntDeltaRangeNarrow[1]=  0.008;
+                if( fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0 ){
+                  fMesonIntDeltaRange[0]      = -0.030;
+                  fMesonIntDeltaRange[1]      =  0.025;
+                  fMesonIntDeltaRangeWide[0]  = -0.040;
+                  fMesonIntDeltaRangeWide[1]  =  0.035;
+                  fMesonIntDeltaRangeNarrow[0]= -0.020;
+                  fMesonIntDeltaRangeNarrow[1]=  0.015;
+                }
             } else if (mode == 4 || mode == 12 ) {                                  // EMC, DMC
                 fMesonIntDeltaRange[0]      = -0.05;
                 fMesonIntDeltaRange[1]      = 0.04;

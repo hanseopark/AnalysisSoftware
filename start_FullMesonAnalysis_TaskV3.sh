@@ -938,6 +938,7 @@ do
             fi
         elif [ $ENERGY = "5TeV2017" ] || [ $ENERGY = "5TeVSpecial" ]; then
             GiveBinning5TeV2017
+            AskForMinBiasEffiOnly
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
             fi
@@ -1222,7 +1223,11 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
 
                         echo -e "\n________________________"
                         echo -e "COMPARE MESON QUANTITIES\n"
-                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
+                        if [ $ISROOT6 -eq 0 ]; then
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
+                        else
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
+                        fi
                     fi
                 fi
                 if [ $DOETA -eq 1 ]; then

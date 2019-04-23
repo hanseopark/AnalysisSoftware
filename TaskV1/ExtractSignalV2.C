@@ -200,6 +200,11 @@ void ExtractSignalV2(
         if (fEventCutSelectionRead.BeginsWith("c")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("9")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("e")) fEventCutSelectionRead.Replace(0,1,"8");
+        if (fEventCutSelectionRead.BeginsWith("h") || 
+            fEventCutSelectionRead.BeginsWith("i") || 
+            fEventCutSelectionRead.BeginsWith("j") || 
+            fEventCutSelectionRead.BeginsWith("q") || 
+            fEventCutSelectionRead.BeginsWith("r")) fEventCutSelectionRead.Replace(0,1,"0");
 //         if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeVCent") == 0 ) && (mode == 2 || mode == 3 || mode == 4 ) ) fEventCutSelectionRead.Replace(3,1,"0");
         cout << fEventCutSelectionRead.Data() << endl;
         if (mode==0 || mode==100)
@@ -4592,8 +4597,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTail            = 0.0055;
                 fMesonLambdaTailRange[0]    = 0.0055;
                 fMesonLambdaTailRange[1]    = 0.0055;
-                fMesonFitRange[0] = 0.07;
-                fMesonFitRange[1] = 0.18;
+                fMesonFitRange[0] = 0.05;
+                fMesonFitRange[1] = 0.22;
             }
             if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
@@ -4625,6 +4630,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
             }
             if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
+                fMesonFitRange[0] = 0.42;
+                fMesonFitRange[1] = 0.68;
             }
             if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;

@@ -334,7 +334,7 @@
                     return 5;
                 if ( mode == 2 )
                     return 9;
-                if ( mode == 4 ){
+                if ( mode == 4  || mode == 5){
                     if(DoJetAnalysis)
                         return 8;
                     else
@@ -842,7 +842,7 @@
                     return 8;
                 if (mode == 3 )
                     return 4;
-                else if (mode == 4 )
+                else if (mode == 4 || mode == 5 )
                     if(DoJetAnalysis){
                         return 6;
                     }else{
@@ -1113,12 +1113,12 @@
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
                 if (mode == 2 || mode == 13){
-                    return 15;
+                    return 6;
                 }else if (mode == 3 || mode == 5 ){
                     scaleFac        = 10.;
-                    return 3;
+                    return 5;
                 }else if (mode == 4 || mode == 12 ){
-                    return 16;
+                    return 8;
                 } else if (mode == 0){
                     if(meson.CompareTo("Pi0EtaBinning") == 0){
                         scaleFac = 1;
@@ -1264,6 +1264,8 @@
                       else if (specialTrigg == 2) startPtBin = 24;
                       else if(DoJetAnalysis) startPtBin = 7;
                       else startPtBin = 6;
+                    } else if ( mode == 5){
+                      startPtBin = 1;
                     } else if ( mode == 10){
                         startPtBin = 27;
                     } else if ( mode == 12){
@@ -1503,9 +1505,9 @@
                       startPtBin = 10;
                     }
                 } else if ( mode == 3 || mode == 5){
-                    startPtBin      = 2;
+                    startPtBin      = 3;
                     if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
-                      startPtBin      = 2;
+                      startPtBin      = 3;
                     }
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin      = 6;
@@ -1610,6 +1612,8 @@
                     else if (specialTrigg == 2) startPtBin = 15;
                     else if(DoJetAnalysis) startPtBin = 3;
                     else startPtBin = 6;
+                  } else if ( mode == 5 ){
+                    startPtBin = 1;
                   } else if ( mode == 13 ){
                       startPtBin = 1;
                   } else if ( mode == 12 ){
@@ -1797,11 +1801,23 @@
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
                 if( mode == 2 || mode == 5){
-                  startPtBin = 2;
+                  if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
+                    startPtBin = 5;
+                  } else if (centrality.CompareTo("10-20%") == 0){
+                    startPtBin = 3;
+                  } else {
+                    startPtBin = 2;
+                  }
                 } else if( mode == 3 ){
-                  startPtBin = 1;
-                } else if( mode == 4 ){
                   startPtBin = 2;
+                } else if( mode == 4 ){
+                  if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
+                    startPtBin = 5;
+                  } else if (centrality.CompareTo("10-20%") == 0){
+                    startPtBin = 4;
+                  } else {
+                    startPtBin = 3;
+                  }
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
@@ -2042,7 +2058,7 @@
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi05TeV2017PtCombination[i];
                     }
-                  } else if ( mode == 4 ){
+                  } else if ( mode == 4  || mode == 5){
                     if(energy.Contains("2017")){
                         if(DoJetAnalysis){
                           maxNBins = 25;
@@ -2584,10 +2600,15 @@
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
-                } else if ( mode == 2 || mode == 3 || mode == 13  || mode == 5) {
+                } else if ( mode == 2 || mode == 13 ) {
                     maxNBins = 33;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
+                    }
+                } else if ( mode == 3 || mode == 5) {
+                    maxNBins = 33;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi0PbPb5TeVPCMPHOSPt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
                     maxNBins = 33;
@@ -2790,7 +2811,7 @@
                         for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsEta5TeV2017PtCombination[i];
                         }
-                } else if ( mode == 4 ){
+                } else if ( mode == 4 || mode == 5){
                   if(energy.Contains("2017")){
                     if(DoJetAnalysis){
                         maxNBins = 13;
@@ -3278,8 +3299,8 @@
                     }
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-                    maxNBins = 11;
-                    binningMax  = 11;
+                    maxNBins = 13;
+                    binningMax  = 13;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
                     }
@@ -4068,7 +4089,7 @@
                             fNRebin[i] = fBinsPi05TeVPCMEMCPtRebin[i];
                         } else if ( modi == 3 ) {
                             fNRebin[i] = fBinsPi05TeV2017PtCombinationRebin[i];
-                        } else if ( modi == 4 ) {
+                        } else if ( modi == 4 || modi == 5) {
                           if(energy.Contains("2017")){
                             if(DoJetAnalysis){
                                 fNRebin[i] = fBinsPi05TeV2017PtJetsRebin[i];
@@ -4996,9 +5017,12 @@
                             fBinsPt[i]  = fBinsPi0PbPb5TeVPtDCA[i];
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPtRebin[i];
                         }else{
-                          if (modi == 2 || modi == 3 || modi == 5){
+                          if (modi == 2){
                             fBinsPt[i]  = fBinsPi0PbPb5TeVPCMEMCPt[i];
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPCMEMCPtRebin[i];
+                          }else if (modi == 3 || modi == 5){
+                            fBinsPt[i]  = fBinsPi0PbPb5TeVPCMPHOSPt[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPCMPHOSPtRebin[i];
                           }else if (modi == 4){
                             fBinsPt[i]  = fBinsPi0PbPb5TeVEMCPt[i];
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVEMCPtRebin[i];
@@ -5259,7 +5283,7 @@
                                 fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
                             } else if( modi == 3 ){
                               fNRebin[i]  = fBinsEta5TeV2017PtCombinationRebin[i];
-                            } else if ( modi == 4 ){
+                            } else if ( modi == 4 || modi == 5){
                               if(energy.Contains("2017")){
                                 if(DoJetAnalysis){
                                     fNRebin[i] = fBinsEta5TeV2017PtJetsRebin[i];
@@ -5292,7 +5316,7 @@
                                 fNRebin[i] = fBinsPi0EtaBinning5TeVPCMEMCPtRebin[i];
                             } else if( modi == 13 && energy.Contains("2017")){
                                 fNRebin[i] = fBinsEta5TeV2017PCMDCalPtRebin[i];
-                            } else if ( modi == 4 ){
+                            } else if ( modi == 4 || modi == 5){
                               if (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                                 fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[i];
                               }else if(DoJetAnalysis){
@@ -6049,7 +6073,7 @@
             //********************************** Eta for PbPb 5.02TeV**************************************
             //*********************************************************************************************
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
-                fStartPtBin         = GetStartBin("Eta", energy, modi);
+                fStartPtBin         = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
                 Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;

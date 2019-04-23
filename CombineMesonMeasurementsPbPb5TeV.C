@@ -56,16 +56,16 @@ extern TSystem*    gSystem;
 extern TMinuit*    gMinuit;
 
 //____________________________________________________________________________________________________________________________________________
-void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190311_data_PCMResultsFullCorrection_PbPb.root",
+void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
+                                        TString fileNamePCM         = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/1_data_PCMResultsFullCorrection_PbPb_20190406.root",
                                         TString fileNameEMCAL       = "/home/mike/1_PbPb_EMC/0_analysis/190311_EDC_new/pdf/PbPb_5.02TeV/2019_03_11/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
                                         TString fileNamePHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190228_PHOS_PbPb_5TeV.root",
-                                        TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMEDC_new/pdf/PbPb_5.02TeV/2019_03_11/data_PCM-EMCALResultsFullCorrection_PbPb.root",
-                                        TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMPHOS_Systematics/pdf/PbPb_5.02TeV/2019_03_12/data_PCM-PHOSResultsFullCorrection_PbPb.root",
+                                        TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMEDC_new/pdf/PbPb_5.02TeV/2019_03_13/data_PCM-EMCALResultsFullCorrection_PbPb.root",
+                                        TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190318_PCMPHOS_new/pdf/PbPb_5.02TeV/2019_04_06/data_PCM-PHOSResultsFullCorrection_PbPb.root",
                                         TString suffix              = "pdf",
-                                        TString centralityString = "20-40%",
                                         TString fileInputCorrFactors= ""
                                     ){
-
+// /home/mike/1_PbPb_EMC/0_analysis/190311_PCMPHOS_Systematics/pdf/PbPb_5.02TeV/2019_03_12/data_PCM-PHOSResultsFullCorrection_PbPb.root
     TString date = ReturnDateString();
     cout << "date: " << date << endl;
     Bool_t doOutput                                 = kTRUE;
@@ -117,7 +117,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
     if(havePCMEMCAL)          gSystem->Exec(Form("cp %s %s/InputPCMEMCAL.root", fileNamePCMEMCAL.Data(), outputDir.Data()));
     if(havePCMPHOS)           gSystem->Exec(Form("cp %s %s/InputPCMPHOS.root", fileNamePCMPHOS.Data(), outputDir.Data()));
     
-    TFile *inputpp        = new TFile("/home/mike/2_pp_EMC/0_analysis/190202_pp_combination/CombineMesonMeasurements5TeV_V2_feb25/CombinedResultsPaperPP5TeV_2019_02_25.root");
+    TFile *inputpp        = new TFile("/home/mike/2_pp_EMC/0_analysis/190202_pp_combination/CombineMesonMeasurements5TeV_V2_april15/CombinedResultsPaperPP5TeV_2019_04_15.root");
     TDirectoryFile* inputppDir = (TDirectoryFile*)inputpp->Get("Pi05TeV");
     TF1* ppFit = (TF1*)inputppDir->Get("TsallisFitPi0");
 
@@ -253,6 +253,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
         if(histoPi0FWHMMeV[2]) histoPi0FWHMMeV[2]->Scale(1000.);
         if(histoPi0TrueMass[2]) histoPi0TrueMass[2]->Scale(1000.);
         if(histoPi0TrueFWHMMeV[2]) histoPi0TrueFWHMMeV[2]->Scale(1000.);
+        histoPi0AccTimesEff[2]->Scale(2*TMath::Pi()*rapidityMeas[i]);
         
         histoPi0InvYield[2]                      = (TH1D*)directoryPi0[2]->Get("CorrectedYieldPi0");
         graphPi0InvYieldStat[2]                  = new TGraphAsymmErrors(histoPi0InvYield[2]);
@@ -274,14 +275,14 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
                                                           16., 20., 25., 30., 35.};
   const Int_t nBinsPi0 = 34;
   //                      {"PCM","EMCal","PHOS" ,"PCM-EMCal","PCM-PHOS"};
-  Double_t startpT[5]   = {0.8  ,1.4    ,0.4    ,1.0        ,0.6};
+  Double_t startpT[5]   = {0.4  ,1.4    ,0.4    ,1.0        ,0.8};
   Double_t endpT[5]     = {12.  ,20.    ,30.    ,20.        ,12.};
   if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 6.0; startpT[3] = 2.2; endpT[2] = 35.;}
-  if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 2.0; startpT[3] = 2.2; endpT[2] = 35.;}
+  if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 4.0; startpT[3] = 2.2; endpT[2] = 35.;}
   if(centralityString.CompareTo("40-60%") == 0 ) {endpT[2] = 20.;}
   if(centralityString.CompareTo("60-80%") == 0 ) {endpT[2] = 20.;}
   
-  Int_t      offSetMethod[5] = {3,6,1,4,2};
+  Int_t      offSetMethod[5] = {1,6,1,4,3};
   if(centralityString.CompareTo("0-10%") == 0 )  {offSetMethod[1] = 14; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("10-20%") == 0 ) {offSetMethod[1] = 9; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("40-60%") == 0 ) {}
@@ -378,6 +379,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
         temp_y[j] = y_Meas[j][i];
         temp_y_E_stat[j] = y_E_stat_Meas[j][i];
         temp_y_E_syst[j] = y_E_syst_Meas[j][i-offSetMethod[j]];
+//         if(j==0) temp_y_E_syst[j] = temp_y[j] * 0.1;
         cout << temp_y[j] << endl;
         temp_Ny++;
       }
@@ -419,7 +421,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
       }
     }
     //go fully correlated -> if they are uncorrelated, take RMS
-    temp_Ny = 1.;
+//     temp_Ny = 1.;
     cout << "y_Comb = \t " << y_Comb[i] << endl;
     EStat0 = 0; EStat1 = 0; EStat2 = 0; EStat3 = 0; EStat4 = 0;
     if(temp_y_E_stat[0]>0) EStat0 = pow(1./temp_y_E_stat[0],2);
@@ -429,6 +431,10 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
     if(temp_y_E_stat[4]>0) EStat4 = pow(1./temp_y_E_stat[4],2);
     y_E_stat_Comb[i]  = 1./sqrt(EStat0+EStat1+EStat2+EStat3+EStat4);
     y_E_syst_Comb[i]  = sqrt(((pow(y_Comb_Weights[0][i]*temp_y_E_syst[0],2)+pow(y_Comb_Weights[1][i]*temp_y_E_syst[1],2)+pow(y_Comb_Weights[2][i]*temp_y_E_syst[2],2)+pow(y_Comb_Weights[3][i]*temp_y_E_syst[3],2)+pow(y_Comb_Weights[4][i]*temp_y_E_syst[4],2))/temp_Ny)/(pow(y_Comb_Weights[0][i],2)+pow(y_Comb_Weights[1][i],2)+pow(y_Comb_Weights[2][i],2)+pow(y_Comb_Weights[3][i],2)+pow(y_Comb_Weights[4][i],2)));
+    if(y_Comb[i] == 1e-40){
+      y_E_stat_Comb[i]  = 0;
+      y_E_syst_Comb[i]  = 0;
+    }
     y_E_stat_Comb_Norm[i]  = y_E_stat_Comb[i] / y_Comb[i];
     y_E_syst_Comb_Norm[i]  = y_E_syst_Comb[i] / y_Comb[i];
     cout << y_E_stat_Comb[i]  << "\t" << pow(temp_y_E_stat[0],2) << "\t" << pow(temp_y_E_stat[1],2) << "\t" << pow(temp_y_E_stat[2],2) << "\t" << pow(temp_y_E_stat[3],2) << "\t" << pow(temp_y_E_stat[4],2) << endl;
@@ -500,18 +506,16 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   Double_t y_RAA_error_stat[nBinsPi0];
   Double_t y_RAA_error_syst[nBinsPi0];
   for(Int_t i=0; i<nBinsPi0; i++){
-    for (Int_t j = 0; j < totalNSets; j++){
       y_RAA[i] = -100;
       y_RAA_error_stat[i] = 0;
       y_RAA_error_syst[i] = 0;
-    }
   }
   for(Int_t i=0; i<nBinsPi0; i++){
     cout << endl;
     cout << "pT bin : " << pTPi0PbPb5TeV[i] << "-" << pTPi0PbPb5TeV[i+1] << "\t center :" << pTPi0BinCenters[i] << endl;
     y_RAA[i] = (y_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
     y_RAA_error_stat[i] = (y_E_stat_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
-    y_RAA_error_syst[i] = (y_E_syst_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
+    y_RAA_error_syst[i] = 1.10 * (y_E_syst_Comb[i] * recalcBarn * 1e-3 ) / ( TAA * ppFit->Eval(pTPi0BinCenters[i]) );
     cout << y_RAA[i] << endl;
   }
   
@@ -560,7 +564,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, minPtPi0,maxPtPi0 ,1000., -30, 60);
   SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                             0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-  histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,39.5);//24.5);
+  histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,49.5);//24.5);
   histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
   histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
   histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -613,7 +617,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
                             textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
   histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
   histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
-  histo2DAllPi0Mass->GetYaxis()->SetRangeUser(121.1, 159.9);//125.1, 155.9);
+  histo2DAllPi0Mass->GetYaxis()->SetRangeUser(121.1, 179.9);//125.1, 155.9);
   histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
   histo2DAllPi0Mass->GetXaxis()->SetTickLength(0.05);
   histo2DAllPi0Mass->GetXaxis()->SetNoExponent();
@@ -677,7 +681,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   }
 
   canvasMassWidthPi0->Update();
-  canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
+  canvasMassWidthPi0->SaveAs(Form("%s/Pi0_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
                                                           
   // **********************************************************************************************************************
   // ******************************** Acceptance * Efficiency for pi0 single measurement **************************
@@ -720,7 +724,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
 
   canvasAcceptanceTimesEff->Update();
-  canvasAcceptanceTimesEff->Print(Form("%s/Pi0_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
+  canvasAcceptanceTimesEff->SaveAs(Form("%s/Pi0_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
   
   // **********************************************************************************************************************
   // ******************************** Yields for pi0 single measurement                ************************************
@@ -739,17 +743,11 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   histo2DYieldPi0->Draw("copy");
 
   for (Int_t i = 0; i < totalNSets; i++){
-    if(directoryPi0[i] && i!=2){
+    if(directoryPi0[i]){
       DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldStat[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
       graphPi0InvYieldStat[i]->Draw("pEsame");
       DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldSys[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
       graphPi0InvYieldSys[i]->Draw("E2same");
-    }
-    if(i==2 && havePHOS){
-      DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldStat[2], markerStyleDet[2] ,markerSizeDet[2]*0.75, colorDet[2], colorDet[2]);
-      graphPi0InvYieldStat[2]->Draw("pEsame");
-      DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldSys[2], markerStyleDet[2] ,markerSizeDet[2]*0.75, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
-      graphPi0InvYieldSys[2]->Draw("E2same");
     }
   }
 
@@ -779,19 +777,15 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   histo2DYieldPi0->Draw("copy");
 
   for (Int_t i = 0; i < totalNSets; i++){
-    if(directoryPi0[i] && i!=2){
+    if(directoryPi0[i]){
       graphPi0InvYieldStat[i]->Draw("pEsame");
       graphPi0InvYieldSys[i]->Draw("E2same");
-    }
-    if(i==2 && havePHOS){
-      graphPi0InvYieldStat[2]->Draw("pEsame");
-      graphPi0InvYieldSys[2]->Draw("E2same");
     }
   }
   DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldSys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
   graphCombPi0InvYieldSys->Draw("E2same");
   DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
-  graphCombPi0InvYieldStat->Draw("p,same,z");
+  graphCombPi0InvYieldStat->Draw("p,same");
 
   labelEnergyYieldPi0->Draw();
   labelDetSysYieldPi0->Draw();
@@ -820,19 +814,15 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   histo2DSimpleRatio->DrawCopy();
 
   for (Int_t i = 0; i < totalNSets; i++){
-    if(directoryPi0[i] && i!=2){
+    if(directoryPi0[i]){
       DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldStatToComb[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
       graphPi0InvYieldStatToComb[i]->Draw("pEsame");
-    }
-    if(i==2 && havePHOS){
-      DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldStatToComb[2], markerStyleDet[2] ,markerSizeDet[2]*0.75, colorDet[2], colorDet[2]);
-      graphPi0InvYieldStatToComb[2]->Draw("pEsame");
     }
   }
   DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldSys_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
   graphCombPi0InvYieldSys_Norm->Draw("E2same");
   DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldStat_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb);
-  graphCombPi0InvYieldStat_Norm->Draw("p,same,z");
+  graphCombPi0InvYieldStat_Norm->Draw("p,same");
 
   TLegend* legendSimpleRatio         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
   for (Int_t i = 0; i < totalNSets; i++){
@@ -847,7 +837,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
 
   canvasSimpleRatio->Update();
-  canvasSimpleRatio->Print(Form("%s/Pi0_SimpleRatio.%s",outputDir.Data(),suffix.Data()));
+  canvasSimpleRatio->SaveAs(Form("%s/Pi0_SimpleRatio.%s",outputDir.Data(),suffix.Data()));
   
   // **********************************************************************************************************************
   // ******************************** Plotting weights of combination                            **************************
@@ -887,7 +877,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
 
   canvasSimpleWeights->Update();
-  canvasSimpleWeights->Print(Form("%s/Pi0_SimpleWeights.%s",outputDir.Data(),suffix.Data()));
+  canvasSimpleWeights->SaveAs(Form("%s/Pi0_SimpleWeights.%s",outputDir.Data(),suffix.Data()));
   
   // **********************************************************************************************************************
   // ******************************** simple RAA                                                 **************************
@@ -921,7 +911,18 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mik
   drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
 
   canvasSimpleRAA->Update();
-  canvasSimpleRAA->Print(Form("%s/Pi0_SimpleRAA.%s",outputDir.Data(),suffix.Data()));
+  canvasSimpleRAA->SaveAs(Form("%s/Pi0_SimpleRAA.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** writing the file                                           **************************
+  // **********************************************************************************************************************
+
+  TFile *fileOutput = new TFile(Form("%s/%s/PbPb_5.02TeV_Combination.root",suffix.Data(),dateForOutput.Data()), "UPDATE" );
+  graphCombPi0InvYieldSys->Write(Form("%s_graphCombPi0InvYieldSys",CentNameShort.Data()));
+  graphCombPi0InvYieldStat->Write(Form("%s_graphCombPi0InvYieldStat",CentNameShort.Data()));
+  graphCombPi0RAASys->Write(Form("%s_graphCombPi0RAASys",CentNameShort.Data()));
+  graphCombPi0RAAStat->Write(Form("%s_graphCombPi0RAAStat",CentNameShort.Data()));
+  fileOutput->Close();
 
    
 }

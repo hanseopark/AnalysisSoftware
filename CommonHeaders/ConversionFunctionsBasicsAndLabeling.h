@@ -4194,6 +4194,10 @@
                 return "S_{T} > 0.5, N_{tracks}<20";
             case 25: // p: pp -> Sphericity > 0.5 + mult cut > 20
                 return "S_{T} > 0.5, N_{tracks}>20";
+            case 26: // q: pp -> Sphericity > 0.5
+                return "S_{T} < 0.3";
+            case 27: // r: pp -> Sphericity > 0.5
+                return "S_{T} > 0.7";
             default:
                 return "Sphericity cut not defined";
         }
@@ -4922,6 +4926,48 @@
 
         return Form("E_{clus} > %3.3f GeV/c", fMinEnergy);
     }
+
+    //************************************************************************************
+    //***************** Analyzes the min energy cut, return correct cut label ************
+    //************************************************************************************
+    TString AnalyseMinEnergyCutPHOS(Int_t minEnergyCut){
+        Double_t fMinEnergy = 0.;
+        switch(minEnergyCut){
+          case 0:
+            fMinEnergy=0.1;
+            break;
+          case 1:
+            fMinEnergy=0.3;
+            break;
+          case 2:
+            fMinEnergy=0.5;
+            break;
+          case 3:
+            fMinEnergy=0.6;
+            break;
+          case 4:
+            fMinEnergy=0.7;
+            break;
+          case 5:
+            fMinEnergy=0.8;
+            break;
+          case 6:
+            fMinEnergy=0.9;
+            break;
+          case 7:
+            fMinEnergy=0.2;
+            break;
+          case 8:
+            fMinEnergy=0.4;
+            break;
+          default:
+            fMinEnergy = 0;
+            break;
+          }
+          return Form("E_{clus} > %3.3f GeV/c", fMinEnergy);
+    }
+
+
 
     //************************************************************************************
     //***************** Analyzes the min energy cut, return correct cut label ************

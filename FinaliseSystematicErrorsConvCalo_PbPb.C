@@ -260,8 +260,8 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, CellTiming - 14, Trigger - 16, Efficiency - 17
-        if ( i == 0 || i == 8 || i == 14 || i == 15 || i == 16 || i == 17 || (i!=18 && useMBSyst)){
-//         if ( i != 18 ){
+//         if ( i == 0 || i == 8 || i == 14 || i == 15 || i == 16 || i == 17 || (i!=18 && useMBSyst)){
+        if ( i != 18 ){
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){

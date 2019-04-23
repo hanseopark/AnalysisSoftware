@@ -430,6 +430,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = 3.1;
                     if(meson.Contains("Eta")) error *= 1.2;
+                    if(meson.Contains("EtaToPi0")) error *= 0.5;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -444,6 +445,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                       error = 1.32874;
                       if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                       if(meson.Contains("Eta")) error *= 1.2;
+                      if(meson.Contains("EtaToPi0")) error *= 0.5;
                       errorsMean[i][k]        = error;
                       errorsMeanErr[i][k]     = 0.01*error;
                       errorsMeanCorr[i][k]    = error;
@@ -462,6 +464,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.8;
                     if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.6;
                     if(meson.Contains("Eta")) error *= 1.2;
+                    if(meson.Contains("EtaToPi0")) error *= 0.5;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -493,6 +496,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                     if(additionalName.CompareTo("20-40%") == 0 ) error *= 1.0;
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.9;
                     if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.8;
+                    if(meson.Contains("EtaToPi0")) error *= 0.5;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -725,7 +729,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if (meson.Contains("Eta")){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,50.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,80.);
         } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,40.);
         }
