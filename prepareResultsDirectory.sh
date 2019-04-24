@@ -94,6 +94,8 @@ fi
 if [ $1 = "mdanisch" ]; then
     mkdir -p TaskQA/ExampleConfigurations
     ln -sf $PHOTONCONVDIR/TaskQA/ExampleConfigurations/*LHC15o*.txt TaskQA/ExampleConfigurations/
+    ln -sf $PHOTONCONVDIR/0_configurationFile5TeVPbPbPCM*.txt ./
+    ln -sf $PHOTONCONVDIR/CompareCentralities*.txt ./
 fi
 
 if [ $1 = "fjonas" ]; then
@@ -165,14 +167,14 @@ elif [ "$2" = "pp5TeV" ]; then
     rm *LHC10*
 elif [ "$2" = "PbPb5TeV" ]; then
     rm *PP*
-    rm *pp*
+#   rm *pp* need function in PrepareChargedPionDataALICE_pp.C
     rm -r *pPb*
     rm *900G*
-    rm *2760*
+#    rm *2760*
     rm *7TeV*
     rm *8TeV*
     rm *13TeV*
-    rm *LHC11h*
+#    rm *LHC11h*
 elif [ "$2" = "pPb8TeV" ]; then
     rm *PP*
     rm *PbPb*
