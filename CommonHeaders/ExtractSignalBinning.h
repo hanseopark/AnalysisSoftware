@@ -1818,6 +1818,8 @@
                   } else {
                     startPtBin = 3;
                   }
+                } else if (mode == 0){
+                    startPtBin = 1;
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
@@ -3299,11 +3301,17 @@
                     }
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-                    maxNBins = 13;
-                    binningMax  = 13;
+                maxNBins = 13;
+                binningMax  = 13;
+                if(mode == 0){
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEtaPbPb5TeVPt[i];
+                    }
+                } else {
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
                     }
+                }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0 ){
                 binningMax  = 7;
                 maxNBins    = 7;
