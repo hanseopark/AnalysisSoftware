@@ -47,6 +47,7 @@
     void                RemoveScalingWithPt(TH1D* );
     void                RemoveScalingWithPtGraph(TGraphAsymmErrors* );
     void                ScaleWithPtGraph(TGraphAsymmErrors* );
+    void                ScaleWithPtGraph(TGraphErrors* );
     TGraph*             ScaleGraph (TGraph* , Double_t );
     TGraphAsymmErrors*  ScaleGraph (TGraphAsymmErrors* , Double_t );
     TGraphErrors*       ScaleGraph (TGraphErrors* , Double_t );
@@ -1124,6 +1125,20 @@
             yValue[i]           = yValue[i]/xValue[i];
             yErrorHigh[i]       = yErrorHigh[i]/xValue[i];
             yErrorLow[i]        = yErrorLow[i]/xValue[i];
+        }
+        return;
+    }
+    //**********************************************************************************************************
+    // Scales every bin with for TGraphAsymmErrors
+    //**********************************************************************************************************
+    void ScaleWithPtGraph(TGraphErrors* graph){
+        Double_t * xValue       = graph->GetX();
+        Double_t * yValue       = graph->GetY();
+        Double_t* yErrorHigh    = graph->GetEY();
+        Int_t nPoints           = graph->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+            yValue[i]           = yValue[i]/xValue[i];
+            yErrorHigh[i]       = yErrorHigh[i]/xValue[i];
         }
         return;
     }

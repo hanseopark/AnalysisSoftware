@@ -96,6 +96,8 @@ void ProduceExperimentalDataGraphsPP(){
 //
     TGraphAsymmErrors *tStat_7TeV_IsoPh_ALICE       = new TGraphAsymmErrors(9, pt, sigma, pterr, pterr, estatsigma, estatsigma);
     TGraphAsymmErrors *tSys_7TeV_IsoPh_ALICE        = new TGraphAsymmErrors(9, pt, sigma, pterr, pterr, esystlsigma, esystlsigma);
+//     ScaleWithPtGraph(tStat_7TeV_IsoPh_ALICE);
+//     ScaleWithPtGraph(tSys_7TeV_IsoPh_ALICE);
     TGraphAsymmErrors* tTot_7TeV_IsoPh_ALICE        = AddErrorsOfGraphsQuadratically(tStat_7TeV_IsoPh_ALICE, tSys_7TeV_IsoPh_ALICE);
     TGraphAsymmErrors *tTotxT_7TeV_IsoPh_ALICE      = xTScalePhoton(tTot_7TeV_IsoPh_ALICE, 7000);
 
@@ -129,27 +131,37 @@ void ProduceExperimentalDataGraphsPP(){
         sLy_CMS[i] = y_CMS[i]*sLOWy_CMS[i];
     }
     TGraphErrors *tE_DirPh_CMS          = new TGraphErrors(N_CMS, pT_CMS, y_CMS, 0, ey_CMS);
+//     ScaleWithPtGraph(tE_DirPh_CMS);
     TGraphAsymmErrors *tS_DirPh_CMS     = new TGraphAsymmErrors(N_CMS, pT_CMS, y_CMS, 0, 0, sLy_CMS, sUy_CMS);
-
+//     ScaleWithPtGraph(tS_DirPh_CMS);
     TGraphErrors *tExT_DirPh_CMS        = xTScalePhoton(tE_DirPh_CMS, E_CMS);
 
     //Phys.Rev.Lett. 106 (2011) 082001, 2011
     TString cms7TeVHEPDataFile        = "ExternalInput/OtherExperiments/CMS_7TeV_HEPData-ins922830-v1-Table_1.csv" ;
     TGraphAsymmErrors* tStat_7TeV_DirPh_CMS   = ParseHEPData(cms7TeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
     TGraphAsymmErrors* tSys_7TeV_DirPh_CMS    = ParseHEPData(cms7TeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+//     ScaleWithPtGraph(tStat_7TeV_DirPh_CMS);
+//     ScaleWithPtGraph(tSys_7TeV_DirPh_CMS);
     TGraphAsymmErrors* tTot_7TeV_DirPh_CMS    = AddErrorsOfGraphsQuadratically(tStat_7TeV_DirPh_CMS, tSys_7TeV_DirPh_CMS);
     TGraphAsymmErrors *tTotxT_7TeV_DirPh_CMS  = xTScalePhoton(tTot_7TeV_DirPh_CMS, E_CMS);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_7TeV_DirPh_CMS);
 
     //Phys.Lett. B710 (2012) 256-277, 2012
     TString cms2760GeVHEPDataFile        = "ExternalInput/OtherExperiments/CMS_2760GeV_HEPData-ins1084729-v1-Table_3.csv" ;
     TGraphAsymmErrors* tStat_2760GeV_DirPh_CMS   = ParseHEPData(cms2760GeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
     TGraphAsymmErrors* tSys_2760GeV_DirPh_CMS    = ParseHEPData(cms2760GeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+//     ScaleWithPtGraph(tStat_2760GeV_DirPh_CMS);
+//     ScaleWithPtGraph(tSys_2760GeV_DirPh_CMS);
     tStat_2760GeV_DirPh_CMS                      = ScaleGraph(tStat_2760GeV_DirPh_CMS, 1e-3);
     tSys_2760GeV_DirPh_CMS                       = ScaleGraph(tSys_2760GeV_DirPh_CMS, 1e-3);
+//     tStat_2760GeV_DirPh_CMS                      = ScaleGraph(tStat_2760GeV_DirPh_CMS, 1e-3/(2*1.45));
+//     tSys_2760GeV_DirPh_CMS                       = ScaleGraph(tSys_2760GeV_DirPh_CMS, 1e-3/(2*1.45));
     TGraphAsymmErrors* tTot_2760GeV_DirPh_CMS    = AddErrorsOfGraphsQuadratically(tStat_2760GeV_DirPh_CMS, tSys_2760GeV_DirPh_CMS);
+
 
     tTot_2760GeV_DirPh_CMS->Print();
     TGraphAsymmErrors *tTotxT_2760GeV_DirPh_CMS  = xTScalePhoton(tTot_2760GeV_DirPh_CMS, 2760.);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_2760GeV_DirPh_CMS);
     tTotxT_2760GeV_DirPh_CMS->Print();
     //==========================================================================================
     //                                         ATLAS
@@ -165,55 +177,114 @@ void ProduceExperimentalDataGraphsPP(){
     TGraphErrors *tE_DirPh_ATLAS    = new TGraphErrors(N_ATLAS, pT_ATLAS, y_ATLAS, 0, ey_ATLAS);
     TGraphErrors *tS_DirPh_ATLAS    = new TGraphErrors(N_ATLAS, pT_ATLAS, y_ATLAS, 0, sy_ATLAS);
     tE_DirPh_ATLAS                  = ScaleGraph(tE_DirPh_ATLAS, 0.001);
+//     ScaleWithPtGraph(tE_DirPh_ATLAS);
     tS_DirPh_ATLAS                  = ScaleGraph(tS_DirPh_ATLAS, 0.001);
-//     styleme(tE_DirPh_ATLAS, 22);
+//     ScaleWithPtGraph(tS_DirPh_ATLAS);
     TGraphErrors *tExT_DirPh_ATLAS  = xTScalePhoton(tE_DirPh_ATLAS, E_ATLAS);
+
+    TString atlas7TeVHEPDataFile0        = "ExternalInput/OtherExperiments/IsoGamma/ATLAS_7TeV_2011_HEPData-ins921594-v1-csv/Table1_mod.csv" ;
+    TGraphAsymmErrors* tStat_7TeV_DirPh_ATLAS0   = ParseHEPData(atlas7TeVHEPDataFile0, 10, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_7TeV_DirPh_ATLAS0    = ParseHEPData(atlas7TeVHEPDataFile0, 10, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_7TeV_DirPh_ATLAS0                      = ScaleGraph(tStat_7TeV_DirPh_ATLAS0, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tStat_7TeV_DirPh_ATLAS0);
+    tSys_7TeV_DirPh_ATLAS0                       = ScaleGraph(tSys_7TeV_DirPh_ATLAS0, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tSys_7TeV_DirPh_ATLAS0);
+    TGraphAsymmErrors* tTot_7TeV_DirPh_ATLAS0    = AddErrorsOfGraphsQuadratically(tStat_7TeV_DirPh_ATLAS0, tSys_7TeV_DirPh_ATLAS0);
+    TGraphAsymmErrors *tTotxT_7TeV_DirPh_ATLAS0  = xTScalePhoton(tTot_7TeV_DirPh_ATLAS0, 7000.);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_7TeV_DirPh_ATLAS0);
 
     // Phys.Rev. D83 (2011) 052005, 2011
     TString atlas7TeVHEPDataFile        = "ExternalInput/OtherExperiments/ATLAS_7TeV_HEPData-ins882463-v1-Table_1.csv" ;
     TGraphAsymmErrors* tStat_7TeV_DirPh_ATLAS   = ParseHEPData(atlas7TeVHEPDataFile, 10, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
     TGraphAsymmErrors* tSys_7TeV_DirPh_ATLAS    = ParseHEPData(atlas7TeVHEPDataFile, 10, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_7TeV_DirPh_ATLAS                      = ScaleGraph(tStat_7TeV_DirPh_ATLAS, 1/(2*0.6));
+//     ScaleWithPtGraph(tStat_7TeV_DirPh_ATLAS);
+    tSys_7TeV_DirPh_ATLAS                       = ScaleGraph(tSys_7TeV_DirPh_ATLAS, 1/(2*0.6));
+//     ScaleWithPtGraph(tSys_7TeV_DirPh_ATLAS);
     TGraphAsymmErrors* tTot_7TeV_DirPh_ATLAS    = AddErrorsOfGraphsQuadratically(tStat_7TeV_DirPh_ATLAS, tSys_7TeV_DirPh_ATLAS);
     TGraphAsymmErrors *tTotxT_7TeV_DirPh_ATLAS  = xTScalePhoton(tTot_7TeV_DirPh_ATLAS, E_ATLAS);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_7TeV_DirPh_ATLAS);
+
+    // Phys.Rev. D89 (2014) 052004, 2014
+    TString atlas7TeVHEPDataFile2        = "ExternalInput/OtherExperiments/IsoGamma/ATLAS_7TeV_HEPData-ins1263495-v1-csv/Table1.csv" ;
+    TGraphAsymmErrors* tStat_7TeV_DirPh_ATLAS2   = ParseHEPData(atlas7TeVHEPDataFile2, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_7TeV_DirPh_ATLAS2    = ParseHEPData(atlas7TeVHEPDataFile2, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_7TeV_DirPh_ATLAS2                      = ScaleGraph(tStat_7TeV_DirPh_ATLAS2, 0.001/(2*1.37));
+//     ScaleWithPtGraph(tStat_7TeV_DirPh_ATLAS2);
+    tSys_7TeV_DirPh_ATLAS2                       = ScaleGraph(tSys_7TeV_DirPh_ATLAS2, 0.001/(2*1.37));
+//     ScaleWithPtGraph(tSys_7TeV_DirPh_ATLAS2);
+    TGraphAsymmErrors* tTot_7TeV_DirPh_ATLAS2    = AddErrorsOfGraphsQuadratically(tStat_7TeV_DirPh_ATLAS2, tSys_7TeV_DirPh_ATLAS2);
+    TGraphAsymmErrors *tTotxT_7TeV_DirPh_ATLAS2  = xTScalePhoton(tTot_7TeV_DirPh_ATLAS2, 7000.);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_7TeV_DirPh_ATLAS2);
 
     //JHEP 1608 (2016) 005, 2016
-    TString atlas8TeVHEPDataFile        = "ExternalInput/OtherExperiments/ATLAS_8TeV_HEPData-ins1457605-v1-Table_1.csv" ;
+    TString atlas8TeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/ATLAS_8TeV_HEPData-ins1457605-v1-csv/Table1_eta06_mod.csv" ;
     TGraphAsymmErrors* tStat_8TeV_DirPh_ATLAS   = ParseHEPData(atlas8TeVHEPDataFile, 10, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
     TGraphAsymmErrors* tSys_8TeV_DirPh_ATLAS    = ParseHEPData(atlas8TeVHEPDataFile, 10, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
-    tStat_8TeV_DirPh_ATLAS                      = ScaleGraph(tStat_8TeV_DirPh_ATLAS, 0.001);
-    tSys_8TeV_DirPh_ATLAS                       = ScaleGraph(tSys_8TeV_DirPh_ATLAS, 0.001);
+    tStat_8TeV_DirPh_ATLAS                      = ScaleGraph(tStat_8TeV_DirPh_ATLAS, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tStat_8TeV_DirPh_ATLAS);
+    tSys_8TeV_DirPh_ATLAS                       = ScaleGraph(tSys_8TeV_DirPh_ATLAS, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tSys_8TeV_DirPh_ATLAS);
     TGraphAsymmErrors* tTot_8TeV_DirPh_ATLAS    = AddErrorsOfGraphsQuadratically(tStat_8TeV_DirPh_ATLAS, tSys_8TeV_DirPh_ATLAS);
     TGraphAsymmErrors *tTotxT_8TeV_DirPh_ATLAS  = xTScalePhoton(tTot_8TeV_DirPh_ATLAS, 8000.);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_8TeV_DirPh_ATLAS);
 
     // Phys.Lett. B770 (2017) 473-493
-//     TFile* fileatlas13TeV                       = new TFile("ExternalInput/OtherExperiments/ATLAS_13TeV_compilation_Hendrik.root");
-//     TGraphAsymmErrors* tTot_13TeV_DirPh_ATLAS   = (TGraphAsymmErrors*)fileatlas13TeV->Get("atlas2017_pt/atlas2017_pt_data_rap1");
+    TString atlas13TeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/atlas13TeV_HEPData_mod.csv" ;
+    TGraphAsymmErrors* tStat_13TeV_DirPh_ATLAS   = ParseHEPData(atlas13TeVHEPDataFile, 10, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_13TeV_DirPh_ATLAS    = ParseHEPData(atlas13TeVHEPDataFile, 10, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_13TeV_DirPh_ATLAS                      = ScaleGraph(tStat_13TeV_DirPh_ATLAS, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tStat_13TeV_DirPh_ATLAS);
+    tSys_13TeV_DirPh_ATLAS                       = ScaleGraph(tSys_13TeV_DirPh_ATLAS, 0.001/(2*0.6));
+//     ScaleWithPtGraph(tSys_13TeV_DirPh_ATLAS);
+    TGraphAsymmErrors* tTot_13TeV_DirPh_ATLAS    = AddErrorsOfGraphsQuadratically(tStat_13TeV_DirPh_ATLAS, tSys_13TeV_DirPh_ATLAS);
+    TGraphAsymmErrors *tTotxT_13TeV_DirPh_ATLAS  = xTScalePhoton(tTot_13TeV_DirPh_ATLAS, 13000.);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_13TeV_DirPh_ATLAS);
+
+//     // Phys.Lett. B770 (2017) 473-493
+// //     TFile* fileatlas13TeV                       = new TFile("ExternalInput/OtherExperiments/ATLAS_13TeV_compilation_Hendrik.root");
+// //     TGraphAsymmErrors* tTot_13TeV_DirPh_ATLAS   = (TGraphAsymmErrors*)fileatlas13TeV->Get("atlas2017_pt/atlas2017_pt_data_rap1");
+// //     tTot_13TeV_DirPh_ATLAS                      = ScaleGraph(tTot_13TeV_DirPh_ATLAS, 1e-3);
+// //     TGraphAsymmErrors *tTotxT_13TeV_DirPh_ATLAS = xTScalePhoton(tTot_13TeV_DirPh_ATLAS, 13000.);
+//
+//     TFile* fileatlas13TeVStat                   = new TFile("ExternalInput/OtherExperiments/xsections_incphoton_ATLAS_13TeV.root");
+//     TH1D* histStat_13TeV_DirPh_ATLAS            = (TH1D*)fileatlas13TeVStat->Get("hxsect_eta_0");
+//     TGraphAsymmErrors* tStat_13TeV_DirPh_ATLAS  = new TGraphAsymmErrors(histStat_13TeV_DirPh_ATLAS);
+//     RemoveZerosAtBeginningAndEndFromGraph(tStat_13TeV_DirPh_ATLAS);
+//     TFile* fileatlas13TeVSys                    = new TFile("ExternalInput/OtherExperiments/total_syst_incphoton_ATLAS_13TeV.root");
+//     TH1D* histRelSysDown_13TeV_DirPh_ATLAS      = (TH1D*)fileatlas13TeVSys->Get("histo_totalup_eta_0");
+//     TGraphAsymmErrors* tRelSysDown13TeVATLAS    = new TGraphAsymmErrors(histRelSysDown_13TeV_DirPh_ATLAS);
+//     RemoveZerosAtBeginningAndEndFromGraph(tRelSysDown13TeVATLAS);
+//     TH1D* histRelSysUp_13TeV_DirPh_ATLAS        = (TH1D*)fileatlas13TeVSys->Get("histo_totaldown_eta_0");
+//     TGraphAsymmErrors* tRelSysUp13TeVATLAS    = new TGraphAsymmErrors(histRelSysUp_13TeV_DirPh_ATLAS);
+//     RemoveZerosAtBeginningAndEndFromGraph(tRelSysUp13TeVATLAS);
+//     TGraphAsymmErrors* tSys_13TeV_DirPh_ATLAS   = (TGraphAsymmErrors*)tStat_13TeV_DirPh_ATLAS->Clone("tSys_13TeV_DirPh_ATLAS");
+//     for (Int_t i = 0; i< tSys_13TeV_DirPh_ATLAS->GetN(); i++){
+//         tSys_13TeV_DirPh_ATLAS->SetPointError(i, 0, 0, tRelSysDown13TeVATLAS->GetY()[i]*tSys_13TeV_DirPh_ATLAS->GetY()[i], tRelSysUp13TeVATLAS->GetY()[i]*tSys_13TeV_DirPh_ATLAS->GetY()[i] );
+//     }
+//
+//     TGraphAsymmErrors* tTot_13TeV_DirPh_ATLAS   = AddErrorsOfGraphsQuadratically(tStat_13TeV_DirPh_ATLAS, tSys_13TeV_DirPh_ATLAS);
 //     tTot_13TeV_DirPh_ATLAS                      = ScaleGraph(tTot_13TeV_DirPh_ATLAS, 1e-3);
 //     TGraphAsymmErrors *tTotxT_13TeV_DirPh_ATLAS = xTScalePhoton(tTot_13TeV_DirPh_ATLAS, 13000.);
-
-    TFile* fileatlas13TeVStat                   = new TFile("ExternalInput/OtherExperiments/xsections_incphoton_ATLAS_13TeV.root");
-    TH1D* histStat_13TeV_DirPh_ATLAS            = (TH1D*)fileatlas13TeVStat->Get("hxsect_eta_0");
-    TGraphAsymmErrors* tStat_13TeV_DirPh_ATLAS  = new TGraphAsymmErrors(histStat_13TeV_DirPh_ATLAS);
-    RemoveZerosAtBeginningAndEndFromGraph(tStat_13TeV_DirPh_ATLAS);
-    TFile* fileatlas13TeVSys                    = new TFile("ExternalInput/OtherExperiments/total_syst_incphoton_ATLAS_13TeV.root");
-    TH1D* histRelSysDown_13TeV_DirPh_ATLAS      = (TH1D*)fileatlas13TeVSys->Get("histo_totalup_eta_0");
-    TGraphAsymmErrors* tRelSysDown13TeVATLAS    = new TGraphAsymmErrors(histRelSysDown_13TeV_DirPh_ATLAS);
-    RemoveZerosAtBeginningAndEndFromGraph(tRelSysDown13TeVATLAS);
-    TH1D* histRelSysUp_13TeV_DirPh_ATLAS        = (TH1D*)fileatlas13TeVSys->Get("histo_totaldown_eta_0");
-    TGraphAsymmErrors* tRelSysUp13TeVATLAS    = new TGraphAsymmErrors(histRelSysUp_13TeV_DirPh_ATLAS);
-    RemoveZerosAtBeginningAndEndFromGraph(tRelSysUp13TeVATLAS);
-    TGraphAsymmErrors* tSys_13TeV_DirPh_ATLAS   = (TGraphAsymmErrors*)tStat_13TeV_DirPh_ATLAS->Clone("tSys_13TeV_DirPh_ATLAS");
-    for (Int_t i = 0; i< tSys_13TeV_DirPh_ATLAS->GetN(); i++){
-        tSys_13TeV_DirPh_ATLAS->SetPointError(i, tSys_13TeV_DirPh_ATLAS->GetEXlow()[i], tSys_13TeV_DirPh_ATLAS->GetEXhigh()[i], tRelSysDown13TeVATLAS->GetY()[i]*tSys_13TeV_DirPh_ATLAS->GetY()[i], tRelSysUp13TeVATLAS->GetY()[i]*tSys_13TeV_DirPh_ATLAS->GetY()[i] );
-    }
-
-    TGraphAsymmErrors* tTot_13TeV_DirPh_ATLAS   = AddErrorsOfGraphsQuadratically(tStat_13TeV_DirPh_ATLAS, tSys_13TeV_DirPh_ATLAS);
-    tTot_13TeV_DirPh_ATLAS                      = ScaleGraph(tTot_13TeV_DirPh_ATLAS, 1e-3);
-    TGraphAsymmErrors *tTotxT_13TeV_DirPh_ATLAS = xTScalePhoton(tTot_13TeV_DirPh_ATLAS, 13000.);
 
     //==========================================================================================
     //                                         D0
     //==========================================================================================
+    // Phys. Rev. Lett. 84 (2000) 2786
+    TString d01940GeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/D0_1940GeV_HEPData-ins698784-v1/Table1.csv";
+    TGraphAsymmErrors* tStat_1940GeV_DirPh_D0   = ParseHEPData(d01940GeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_1940GeV_DirPh_D0    = ParseHEPData(d01940GeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_1940GeV_DirPh_D0                      = ScaleGraph(tStat_1940GeV_DirPh_D0, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tStat_1940GeV_DirPh_D0);
+    tSys_1940GeV_DirPh_D0                       = ScaleGraph(tSys_1940GeV_DirPh_D0, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tSys_1940GeV_DirPh_D0);
+    TGraphAsymmErrors* tTot_1940GeV_DirPh_D0    = AddErrorsOfGraphsQuadratically(tStat_1940GeV_DirPh_D0, tSys_1940GeV_DirPh_D0);
+    cout << "D0" << endl;
+    tTot_1940GeV_DirPh_D0->Print();
+    TGraphAsymmErrors *tTotxT_1940GeV_DirPh_D0  = xTScalePhoton(tTot_1940GeV_DirPh_D0, 1940);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_1940GeV_DirPh_D0);
+
+
     // Phys.Rev.Lett. 77 (1996) 5011-5015, 1996
     const int N_D0 = 23;
     double pT_D0[N_D0] = { 10.5, 13.5, 16.5, 19.5, 22.5, 25.5, 28.5, 31.5, 37.4,
@@ -232,14 +303,45 @@ void ProduceExperimentalDataGraphsPP(){
 
     TGraphErrors *tE_DirPh_D0 = new TGraphErrors(N_D0, pT_D0, y_D0, 0, ey_D0);
     TGraphErrors *tS_DirPh_D0 = new TGraphErrors(N_D0, pT_D0, y_D0, 0, sy_D0);
+//     ScaleWithPtGraph(tE_DirPh_D0);
+//     ScaleWithPtGraph(tS_DirPh_D0);
     tE_DirPh_D0               = ScaleGraph(tE_DirPh_D0, 0.001*2*TMath::Pi());
     tS_DirPh_D0               = ScaleGraph(tS_DirPh_D0, 0.001*2*TMath::Pi());
     //     styleme(tE_DirPh_D0, 25);
     TGraphErrors *tExT_DirPh_D0  = xTScalePhoton(tE_DirPh_D0, E_D0);
 
+
+    // Phys. Rev. Lett. 87 (2001) 251805
+    TString d0630GeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/D0_630_1800GeV_HEPData-ins557816-v1/Table1.csv";
+    TGraphAsymmErrors* tStat_630GeV_DirPh_D0   = ParseHEPData(d0630GeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_630GeV_DirPh_D0    = ParseHEPData(d0630GeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE, kFALSE);
+    tStat_630GeV_DirPh_D0                      = ScaleGraph(tStat_630GeV_DirPh_D0, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tStat_630GeV_DirPh_D0);
+    tSys_630GeV_DirPh_D0                       = ScaleGraph(tSys_630GeV_DirPh_D0, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tSys_630GeV_DirPh_D0);
+    TGraphAsymmErrors* tTot_630GeV_DirPh_D0    = AddErrorsOfGraphsQuadratically(tStat_630GeV_DirPh_D0, tSys_630GeV_DirPh_D0);
+    cout << "D0" << endl;
+    tTot_630GeV_DirPh_D0->Print();
+    TGraphAsymmErrors *tTotxT_630GeV_DirPh_D0  = xTScalePhoton(tTot_630GeV_DirPh_D0, 630);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_630GeV_DirPh_D0);
+
     //==========================================================================================
     //                                         CDF
     //==========================================================================================
+
+    // Phys Rev. D80 (2009) 111106
+    TString cdf1940GeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/CDF_1940GeV_HEPData-ins834437-v1-csv/Table1.csv";
+    TGraphAsymmErrors* tStat_1940GeV_DirPh_CDF   = ParseHEPData(cdf1940GeVHEPDataFile, 6, 0, -1, -1, 1, 2, 3, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_1940GeV_DirPh_CDF    = ParseHEPData(cdf1940GeVHEPDataFile, 6, 0, -1, -1, 1, 4, 5, kFALSE, kTRUE, kFALSE);
+    tStat_1940GeV_DirPh_CDF                      = ScaleGraph(tStat_1940GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tStat_1940GeV_DirPh_CDF);
+    tSys_1940GeV_DirPh_CDF                       = ScaleGraph(tSys_1940GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tSys_1940GeV_DirPh_CDF);
+    TGraphAsymmErrors* tTot_1940GeV_DirPh_CDF    = AddErrorsOfGraphsQuadratically(tStat_1940GeV_DirPh_CDF, tSys_1940GeV_DirPh_CDF);
+    TGraphAsymmErrors *tTotxT_1940GeV_DirPh_CDF  = xTScalePhoton(tTot_1940GeV_DirPh_CDF, 1940);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_1940GeV_DirPh_CDF);
+
+
     // Phys.Rev.Lett. 73 (1994) 2662-2666, 1994
     const int N_CDF = 16;
     double pT_CDF[N_CDF] = { 12.3, 17.0, 19.0, 21.0, 23.0, 25.0, 27.0, 29.0, 31.0,
@@ -253,10 +355,37 @@ void ProduceExperimentalDataGraphsPP(){
     double E_CDF = 1800;
     TGraphErrors *tE_DirPh_CDF  = new TGraphErrors(N_CDF, pT_CDF, y_CDF, 0, ey_CDF);
     TGraphErrors *tS_DirPh_CDF  = new TGraphErrors(N_CDF, pT_CDF, y_CDF, 0, sy_CDF);
+//     ScaleWithPtGraph(tE_DirPh_CDF);
+//     ScaleWithPtGraph(tS_DirPh_CDF);
     tE_DirPh_CDF                = ScaleGraph(tE_DirPh_CDF, 0.001*2*TMath::Pi());
     tS_DirPh_CDF                = ScaleGraph(tS_DirPh_CDF, 0.001*2*TMath::Pi());
     //     styleme(tE_DirPh_CDF, 24);
     TGraphErrors *tExT_DirPh_CDF  = xTScalePhoton(tE_DirPh_CDF, E_CDF);
+
+
+    // Phys. Rev. D65 (2002) 112003
+    TString cdf1800GeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/CDF_630_1800GeV_HEPData-ins581379-v1/Table1.csv";
+    TGraphAsymmErrors* tStat_1800GeV_DirPh_CDF   = ParseHEPData(cdf1800GeVHEPDataFile, 6, 0, -1, -1, 1, 2, 3, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_1800GeV_DirPh_CDF    = ParseHEPData(cdf1800GeVHEPDataFile, 6, 0, -1, -1, 1, 4, 5, kFALSE, kTRUE, kFALSE);
+    tStat_1800GeV_DirPh_CDF                      = ScaleGraph(tStat_1800GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+//     ScaleWithPtGraph(tStat_1800GeV_DirPh_CDF);
+    tSys_1800GeV_DirPh_CDF                       = ScaleGraph(tSys_1800GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+//     ScaleWithPtGraph(tSys_1800GeV_DirPh_CDF);
+    TGraphAsymmErrors* tTot_1800GeV_DirPh_CDF    = AddErrorsOfGraphsQuadratically(tStat_1800GeV_DirPh_CDF, tSys_1800GeV_DirPh_CDF);
+    TGraphAsymmErrors *tTotxT_1800GeV_DirPh_CDF  = xTScalePhoton(tTot_1800GeV_DirPh_CDF, 1800);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_1800GeV_DirPh_CDF);
+
+    // Phys. Rev. D65 (2002) 112003
+    TString cdf630GeVHEPDataFile        = "ExternalInput/OtherExperiments/IsoGamma/CDF_630_1800GeV_HEPData-ins581379-v1/Table2.csv";
+    TGraphAsymmErrors* tStat_630GeV_DirPh_CDF   = ParseHEPData(cdf630GeVHEPDataFile, 6, 0, -1, -1, 1, 2, 3, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* tSys_630GeV_DirPh_CDF    = ParseHEPData(cdf630GeVHEPDataFile, 6, 0, -1, -1, 1, 4, 5, kFALSE, kTRUE, kFALSE);
+    tStat_630GeV_DirPh_CDF                      = ScaleGraph(tStat_630GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tStat_630GeV_DirPh_CDF);
+    tSys_630GeV_DirPh_CDF                       = ScaleGraph(tSys_630GeV_DirPh_CDF, 0.001*2*TMath::Pi());
+    //     ScaleWithPtGraph(tSys_630GeV_DirPh_CDF);
+    TGraphAsymmErrors* tTot_630GeV_DirPh_CDF    = AddErrorsOfGraphsQuadratically(tStat_630GeV_DirPh_CDF, tSys_630GeV_DirPh_CDF);
+    TGraphAsymmErrors *tTotxT_630GeV_DirPh_CDF  = xTScalePhoton(tTot_630GeV_DirPh_CDF, 630);
+    ProduceGraphAsymmWithoutXErrors( tTotxT_630GeV_DirPh_CDF);
 
 
     //==========================================================================================
@@ -277,11 +406,15 @@ void ProduceExperimentalDataGraphsPP(){
     TGraphErrors *tS_DirPh_UA1_0 = new TGraphErrors(N_UA1_0, pT_UA1_0, y_UA1_0, 0, sy_UA1_0);
     RemoveUpperLimits(tE_DirPh_UA1_0);
     RemoveUpperLimits(tS_DirPh_UA1_0);
+//     ScaleWithPtGraph(tE_DirPh_UA1_0);
+//     ScaleWithPtGraph(tS_DirPh_UA1_0);
     //     styleme(tE_DirPh_UA1_0, 27);
     TGraphErrors *tExT_DirPh_UA1_0  = xTScalePhoton(tE_DirPh_UA1_0, E_UA1_0);
+
     //==========================================================================================
     //                                         UA1_1
     //==========================================================================================
+    // Phys.Lett. B209 (1988) 385-396
     // CERN-EP-89-138
     const int N_UA1_1 = 6;
     double pT_UA1_1[N_UA1_1] = { 17.0, 19.0, 21.0, 25.0, 34.5, 46.0 };
@@ -293,12 +426,15 @@ void ProduceExperimentalDataGraphsPP(){
     TGraphErrors *tS_DirPh_UA1_1 = new TGraphErrors(N_UA1_1, pT_UA1_1, y_UA1_1, 0, sy_UA1_1);
     RemoveUpperLimits(tE_DirPh_UA1_1);
     RemoveUpperLimits(tS_DirPh_UA1_1);
+//     ScaleWithPtGraph(tE_DirPh_UA1_1);
+//     ScaleWithPtGraph(tS_DirPh_UA1_1);
     //     styleme(tE_DirPh_UA1_1, 28);
     TGraphErrors *tExT_DirPh_UA1_1   = xTScalePhoton(tE_DirPh_UA1_1, E_UA1_1);
     //==========================================================================================
     //                                         UA2
     //==========================================================================================
     // Phys.Lett. B263 (1991) 544-550
+    // ????: Phys.Lett. B288 (1992) 386-394
     const int N_UA2 = 13;
     double pT_UA2[N_UA2] = { 15.9, 17.9, 19.9, 21.9, 23.9, 25.9, 28.7, 33.5, 38.6,
     46.3, 54.1, 64.5, 82.3 };
@@ -313,6 +449,8 @@ void ProduceExperimentalDataGraphsPP(){
     TGraphErrors *tS_DirPh_UA2 = new TGraphErrors(N_UA2, pT_UA2, y_UA2, 0, sy_UA2);
     RemoveUpperLimits(tE_DirPh_UA2);
     RemoveUpperLimits(tS_DirPh_UA2);
+//     ScaleWithPtGraph(tE_DirPh_UA2);
+//     ScaleWithPtGraph(tS_DirPh_UA2);
     //     styleme(tE_DirPh_UA2, 26);
     TGraphErrors *tExT_DirPh_UA2 = xTScalePhoton(tE_DirPh_UA2, E_UA2);
 
@@ -332,10 +470,16 @@ void ProduceExperimentalDataGraphsPP(){
 //     styleme(tE_DirPh_PHENIX, 21);
     RemoveUpperLimits(tE_DirPh_PHENIX);
     RemoveUpperLimits(tS_DirPh_PHENIX);
+//     ScaleWithPtGraph(tE_DirPh_PHENIX);
+//     ScaleWithPtGraph(tS_DirPh_PHENIX);
     TGraphErrors *tExT_DirPh_PHENIX = xTScalePhoton(tE_DirPh_PHENIX, E_PHENIX);
+    // Phys. Rev. C 81, 034911 (2010)
+    // Phys. Rev. Lett. 98, 012002 (2007)
+
     //==========================================================================================
     //                                         R110
     //==========================================================================================
+    // Nucl. Phys B. 327, 541 (1989) - CMOR collab
     const int N_R110 = 7;
     double pT_R110[N_R110] = { 4.75, 5.25, 5.75, 6.25, 6.75, 7.5, 9.0 };
     double y_R110[N_R110] = { 2.25E-34, 1.41E-34, 6.56E-35, 3.94E-35, 1.96E-35, 7.21E-36, 1.37E-36 };
@@ -345,10 +489,12 @@ void ProduceExperimentalDataGraphsPP(){
     //==========================================================================================
     //                                         R806
     //==========================================================================================
+    // Z.Phys. C13 (1982) 277-289
 
     //==========================================================================================
     //                                         R807
     //==========================================================================================
+    // Sov. J. Nucl. Phys. 51, 836 (1990)
     const int N_R807 = 11;
     double pT_R807[N_R807] = { 4.75, 5.25, 5.73, 6.23, 6.74, 7.23, 7.72, 8.22, 8.74,
     9.44, 10.36 };
@@ -369,6 +515,7 @@ void ProduceExperimentalDataGraphsPP(){
     //==========================================================================================
     //                                         R108
     //==========================================================================================
+    // Phys.Lett. 94B (1980) 106-112
     const int N_R108 = 8;
     double pT_R108[N_R108] = { 5.4, 6.4, 7.4, 8.4, 9.4, 10.4, 11.4, 12.4 };
     double y_R108[N_R108] = { 1.3E-34, 1.5E-35, 4.3E-36, 1.9E-36, 5.3E-37, 4.5E-37, 2.4E-37, 1.1E-37 };
@@ -513,15 +660,22 @@ void ProduceExperimentalDataGraphsPP(){
 
     TFile fileTheoryGraphs("ExternalInput/OtherExperiments/DataCompilationFromOtherEnergiesPP.root","UPDATE");
         tE_DirPh_ATLAS->Write("ATLAS_tot_Gamma_7TeV", TObject::kOverwrite);
+        tTot_7TeV_DirPh_ATLAS0->Write("ATLAS_0_tot_Gamma_7TeV", TObject::kOverwrite);
         tTot_7TeV_DirPh_ATLAS->Write("ATLAS_1_tot_Gamma_7TeV", TObject::kOverwrite);
+        tTot_7TeV_DirPh_ATLAS2->Write("ATLAS_2_tot_Gamma_7TeV", TObject::kOverwrite);
         tTot_8TeV_DirPh_ATLAS->Write("ATLAS_tot_Gamma_8TeV", TObject::kOverwrite);
         tTot_13TeV_DirPh_ATLAS->Write("ATLAS_tot_Gamma_13TeV", TObject::kOverwrite);
         tTot_2760GeV_DirPh_CMS->Write("CMS_tot_Gamma_2.76TeV", TObject::kOverwrite);
         tTot_7TeV_IsoPh_ALICE->Write("ALICE_tot_Gamma_7TeV", TObject::kOverwrite);
         tE_DirPh_CMS->Write("CMS_tot_Gamma_7TeV", TObject::kOverwrite);
         tTot_7TeV_DirPh_CMS->Write("CMS_1_tot_Gamma_7TeV", TObject::kOverwrite);
-        tE_DirPh_CDF->Write("CDF_tot_Gamma_1.8TeV", TObject::kOverwrite);
-        tE_DirPh_D0->Write("D0_tot_Gamma_1.8TeV", TObject::kOverwrite);
+        tTot_1940GeV_DirPh_CDF->Write("CDF_tot_Gamma_1.94TeV", TObject::kOverwrite);
+        tE_DirPh_CDF->Write("CDF_0_tot_Gamma_1.8TeV", TObject::kOverwrite);
+        tTot_1800GeV_DirPh_CDF->Write("CDF_tot_Gamma_1.8TeV", TObject::kOverwrite);
+        tTot_630GeV_DirPh_CDF->Write("CDF_tot_Gamma_630GeV", TObject::kOverwrite);
+        tTot_1940GeV_DirPh_D0->Write("D0_tot_Gamma_1.94GeV", TObject::kOverwrite);
+        tE_DirPh_D0->Write("D0_0_tot_Gamma_1.8TeV", TObject::kOverwrite);
+        tTot_630GeV_DirPh_D0->Write("D0_tot_Gamma_630GeV", TObject::kOverwrite);
         tE_DirPh_UA1_0->Write("UA1_tot_Gamma_630GeV", TObject::kOverwrite);
         tE_DirPh_UA1_1->Write("UA1_tot_Gamma_546GeV", TObject::kOverwrite);
         tE_DirPh_UA2->Write("UA2_tot_Gamma_630GeV", TObject::kOverwrite);
@@ -537,21 +691,28 @@ void ProduceExperimentalDataGraphsPP(){
         tE_DirPh_UA6_1->Write("UA6_1_tot_Gamma_24.3GeV", TObject::kOverwrite);
 
         tExT_DirPh_ATLAS->Write("ATLAS_tot_Gamma_7TeV_xT", TObject::kOverwrite);
+        tTotxT_7TeV_DirPh_ATLAS0->Write("ATLAS_0_tot_Gamma_7TeV_xT", TObject::kOverwrite);
         tTotxT_7TeV_DirPh_ATLAS->Write("ATLAS_1_tot_Gamma_7TeV_xT", TObject::kOverwrite);
+        tTotxT_7TeV_DirPh_ATLAS2->Write("ATLAS_2_tot_Gamma_7TeV_xT", TObject::kOverwrite);
         tTotxT_8TeV_DirPh_ATLAS->Write("ATLAS_tot_Gamma_8TeV_xT", TObject::kOverwrite);
         tTotxT_13TeV_DirPh_ATLAS->Write("ATLAS_tot_Gamma_13TeV_xT", TObject::kOverwrite);
         tExT_DirPh_CMS->Write("CMS_tot_Gamma_7TeV_xT", TObject::kOverwrite);
         tTotxT_7TeV_IsoPh_ALICE->Write("ALICE_tot_Gamma_7TeV_xT", TObject::kOverwrite);
         tTotxT_7TeV_DirPh_CMS->Write("CMS_1_tot_Gamma_7TeV_xT", TObject::kOverwrite);
         tTotxT_2760GeV_DirPh_CMS->Write("CMS_tot_Gamma_2.76TeV_xT", TObject::kOverwrite);
-        tExT_DirPh_CDF->Write("CDF_tot_Gamma_1.8TeV_xT", TObject::kOverwrite);
-        tExT_DirPh_D0->Write("D0_tot_Gamma_1.8TeV_xT", TObject::kOverwrite);
+        tTotxT_1940GeV_DirPh_CDF->Write("CDF_tot_Gamma_1.94TeV_xT", TObject::kOverwrite);
+        tExT_DirPh_CDF->Write("CDF_0_tot_Gamma_1.8TeV_xT", TObject::kOverwrite);
+        tTotxT_1800GeV_DirPh_CDF->Write("CDF_tot_Gamma_1.8TeV_xT", TObject::kOverwrite);
+        tTotxT_630GeV_DirPh_CDF->Write("CDF_tot_Gamma_630GeV_xT", TObject::kOverwrite);
+        tTotxT_1940GeV_DirPh_D0->Write("D0_tot_Gamma_1.94TeV_xT", TObject::kOverwrite);
+        tExT_DirPh_D0->Write("D0_0_tot_Gamma_1.8TeV_xT", TObject::kOverwrite);
+        tTotxT_630GeV_DirPh_D0->Write("D0_tot_Gamma_630GeV_xT", TObject::kOverwrite);
         tExT_DirPh_UA1_0->Write("UA1_tot_Gamma_630GeV_xT", TObject::kOverwrite);
         tExT_DirPh_UA1_1->Write("UA1_tot_Gamma_546GeV_xT", TObject::kOverwrite);
         tExT_DirPh_UA2->Write("UA2_tot_Gamma_630GeV_xT", TObject::kOverwrite);
         tExT_DirPh_PHENIX->Write("PHENIX_tot_Gamma_200GeV_xT", TObject::kOverwrite);
         tExT_DirPh_R807->Write("R807_tot_Gamma_63GeV_xT", TObject::kOverwrite);
-        tExT_DirPh_R108->Write("R807_tot_Gamma_62.4GeV_xT", TObject::kOverwrite);
+        tExT_DirPh_R108->Write("R108_tot_Gamma_62.4GeV_xT", TObject::kOverwrite);
         tExT_DirPh_E706->Write("E706_tot_Gamma_38.8GeV_xT", TObject::kOverwrite);
         tExT_DirPh_E706_0->Write("E706_tot_Gamma_31.6GeV_xT", TObject::kOverwrite);
         tExT_DirPh_E704->Write("E704_tot_Gamma_19.4GeV_xT", TObject::kOverwrite);

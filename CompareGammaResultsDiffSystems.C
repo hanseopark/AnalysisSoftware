@@ -513,12 +513,12 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     const Int_t nOtherEnergies                            = 23;
     TString nameOtherExp[nOtherEnergies]            = { "ATLAS","ATLAS", "ALICE prel.", "ATLAS", "ATLAS", "CMS", "CMS",
                                                         "CMS", "CDF", "D0", "UA1", "UA2",
-                                                        "UA1", "PHENIX", "R807", "R807",
+                                                        "UA1", "PHENIX", "R807", "R108",
                                                         "E706", "E706", "NA24", "WA70",
                                                         "UA6", "UA6" , "E704" };
-    TString nameOtherExpRead[nOtherEnergies]       = { "ATLAS","ATLAS", "ALICE", "ATLAS_1", "ATLAS", "CMS_1", "CMS",
+    TString nameOtherExpRead[nOtherEnergies]       = { "ATLAS","ATLAS", "ALICE", "ATLAS_1", "ATLAS_2", "CMS_1", "CMS",
                                                         "CMS", "CDF", "D0", "UA1", "UA2",
-                                                        "UA1", "PHENIX", "R807", "R807",
+                                                        "UA1", "PHENIX", "R807", "R108",
                                                         "E706", "E706", "NA24", "WA70",
                                                         "UA6_0", "UA6_1", "E704" };
     TString nameOtherEnergyRead[nOtherEnergies]    = { "13TeV", "8TeV", "7TeV", "7TeV", "7TeV", "7TeV", "7TeV",
@@ -546,6 +546,12 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Double_t legendOtherExtY[nOtherEnergies]        = { 0.60, 0.55, 0.58, 0.52, 0.55, 0.46, 0.49,       0.50, 0.45, 0.42, 0.40, 0.37,
                                                         0.34, 0.37, 0.30, 0.27, 0.32,       0.29, 0.23, 0.20, 0.17, 0.14,
                                                         0.26 };
+    Double_t legendOtherExtXOnlyIso[nOtherEnergies] = { 0.68, 0.58, 0.34, 0.38, 0.42, 0.46, 0.50,       0.27, 0.33, 0.35, 0.40, 0.42,
+                                                        0.44, 0.47, 0.5, 0.52, 0.79,       0.81, 0.59, 0.61, 0.62, 0.63,
+                                                        0.83  };
+    Double_t legendOtherExtYOnlyIso[nOtherEnergies] = { 0.60, 0.70, 0.92, 0.89, 0.86, 0.83, 0.80,       0.70, 0.63, 0.60, 0.52, 0.49,
+                                                        0.46, 0.42, 0.36, 0.33, 0.42,       0.39, 0.23, 0.20, 0.17, 0.14,
+                                                        0.36 };
     //*************************************************************************************************************************************************
     //*************************************** Read in data ********************************************************************************************
     //*************************************************************************************************************************************************
@@ -743,6 +749,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     for (Int_t i = 0; i < nOtherEnergies; i++){
         cout << "trying to find: " << Form("%s_tot_Gamma_%s_xT",nameOtherExpRead[i].Data(), nameOtherEnergyRead[i].Data()) << endl;
         xTOtherExperiments[i]                               = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get(Form("%s_tot_Gamma_%s_xT",nameOtherExpRead[i].Data(), nameOtherEnergyRead[i].Data()));
+//         ProduceGraphAsymmWithoutXErrors(xTOtherExperiments[i]);
         xSectionOtherExperiments[i]                         = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get(Form("%s_tot_Gamma_%s",nameOtherExpRead[i].Data(), nameOtherEnergyRead[i].Data()));
     }
     TGraphAsymmErrors* graphRGammaLMEE7TeVStat              = (TGraphAsymmErrors*)fileOtherExperimentsPP->Get("RGamma_stat_LMEE_7TeV");
@@ -1777,7 +1784,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
             }
             if (graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb]){
                 ProduceGraphAsymmWithoutXErrors(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb]);
-                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb] , 1, 3, colorCombATLAS[centPb], colorCombATLAS[centPb], 1.8, kTRUE);
+                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb] , 1, 3, colorCombATLAS[centPb], colorCombATLAS[centPb], 1., kTRUE);
                 graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb]->Draw(">,same");
                 graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb]->Print();
                 PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaled[centPb], 0.1);
@@ -1977,7 +1984,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
             }
             if (graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb]){
                 ProduceGraphAsymmWithoutXErrors(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb]);
-                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb] , 1, 3, colorCombATLAS[centPb], colorCombATLAS[centPb], 1.8, kTRUE);
+                DrawGammaSetMarkerTGraphAsym(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb] , 1, 3, colorCombATLAS[centPb], colorCombATLAS[centPb], 1, kTRUE);
                 graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb]->Draw(">,same");
                 graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb]->Print();
                 PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphYieldDirGammaATLASPbPb2760GeVTotArNCollScaledXT[centPb], 0.005);
@@ -2417,6 +2424,51 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT.%s",outputDir.Data(),suffix.Data()));
         canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT.pdf",outputDir.Data()));
     }
+
+    canvasDirGamma2->cd();
+    TH1D* dummyXSecGamma_xTOnlyIso = new TH1D("dummyXSecGamma_xTOnlyIso", "dummyXSecGamma_xTOnlyIso", 5000, 0.0016, 1.9);
+    SetStyleHistoTH1ForGraphs( dummyXSecGamma_xTOnlyIso, "#it{x}_{T} = 2#it{p}_{T}/#sqrt{#it{s}}", "#sqrt{(#it{s}/GeV)}^{n} #frac{#it{E}d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3})",
+                               0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.7);
+    dummyXSecGamma_xTOnlyIso->GetYaxis()->SetRangeUser( 5e4,1.5e20);
+    dummyXSecGamma_xTOnlyIso->GetXaxis()->SetLabelOffset(-0.01);
+    dummyXSecGamma_xTOnlyIso->GetXaxis()->SetTickLength(0.025);
+    dummyXSecGamma_xTOnlyIso->GetYaxis()->SetTickLength(0.025);
+    dummyXSecGamma_xTOnlyIso->DrawCopy();
+
+    labelXTscaledGamma->Draw();
+    labelXTscaledGamma2->Draw();
+
+    labelXTscaledGammaN->Draw();
+
+    for (Int_t i = 0; i < nOtherEnergies; i++){
+        if (xTOtherExperiments[i]){
+            if ((i == 2) && (!enablePrelim))
+                continue;
+
+            DrawGammaSetMarkerTGraphAsym(xTOtherExperiments[i] , markerStyleOtherExp[i], markerSizeOtherExp[i], colorOtherExp[i], colorOtherExp[i], widthLinesBoxes);
+            xTOtherExperiments[i]->Draw("p,E1Z,same");
+
+            cout << Form("%s (%s)", nameOtherExp[i].Data(), nameOtherEnergy[i].Data() ) << endl;
+            //                 xTOtherExperiments[i]->Print();
+            TMarker* markerCurrent             = CreateMarkerFromGraph(xTOtherExperiments[i],legendOtherExtXOnlyIso[i]-0.012 ,legendOtherExtYOnlyIso[i],1);
+            markerCurrent->SetNDC(kTRUE);
+            markerCurrent->Draw("same,p");
+            //                 markerCurrent->Print();
+            TLatex *labelCurrent               = new TLatex(legendOtherExtXOnlyIso[i],legendOtherExtYOnlyIso[i],Form("%s (%s)", nameOtherExp[i].Data(), nameOtherEnergy[i].Data() ));
+            SetStyleTLatex( labelCurrent, textSizeLabelsPixelDirGam*0.5, 4, 1, 43, kTRUE, 12);
+            labelCurrent->Draw();
+        }
+    }
+
+    if (enablePrelim){
+        canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT_withPrelim_onlyIso.%s",outputDir.Data(),suffix.Data()));
+        canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT_withPrelim_onlyIso.pdf",outputDir.Data()));
+    } else {
+        canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT_onlyIso.%s",outputDir.Data(),suffix.Data()));
+        canvasDirGamma2->Print(Form("%s/DirGammaInvXSecSpectra_PP_xT_onlyIso.pdf",outputDir.Data()));
+    }
+
+
 
     dummyIncGamma->DrawCopy();
 

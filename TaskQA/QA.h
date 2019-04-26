@@ -189,8 +189,8 @@ public:
         fBckNormPi->Sumw2();
         fBckNormEta->Sumw2();
 
-        Double_t    rPi= fGammaGamma->Integral(fGammaGamma->GetXaxis()->FindBin(0.17),fGammaGamma->GetXaxis()->FindBin(0.3));
-        Double_t    bPi= fBck->Integral(fBck->GetXaxis()->FindBin(0.17),fBck->GetXaxis()->FindBin(0.3));
+        Double_t    rPi= fGammaGamma->Integral(fGammaGamma->GetXaxis()->FindBin(0.17),fGammaGamma->GetXaxis()->FindBin(0.29));
+        Double_t    bPi= fBck->Integral(fBck->GetXaxis()->FindBin(0.17),fBck->GetXaxis()->FindBin(0.29));
         Double_t    normPi = 1;
 
         Double_t    rEta= fGammaGamma->Integral(fGammaGamma->GetXaxis()->FindBin(0.58),fGammaGamma->GetXaxis()->FindBin(0.8));
@@ -239,7 +239,7 @@ public:
         } else {
             fSignalPi->Rebin(4);
         }
-        fSignalPi->GetXaxis()->SetRangeUser( 0.,0.3);
+        fSignalPi->GetXaxis()->SetRangeUser( 0.,0.29);
 
         Double_t mesonAmplitude =fSignalPi->GetMaximum();
         Double_t mesonAmplitudeMinPi  = mesonAmplitude*80./100.;
