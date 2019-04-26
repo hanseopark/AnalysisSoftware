@@ -3675,6 +3675,277 @@
 
     }
 
+    // ****************************************************************************************************************
+    // ********************** Calculation of RpA with Graphs in same binning ******************************************
+    // ****************************************************************************************************************
+    TGraphAsymmErrors* CalcRAAV2(  TGraphAsymmErrors* PPSpectrumStatErr,
+                                    TGraphAsymmErrors* PPSpectrumSystErr,
+                                    TGraphAsymmErrors* AASpectrumStatErr,
+                                    TGraphAsymmErrors* AASpectrumSystErr,
+                                    TGraphAsymmErrors** graphRAAStatErr,
+                                    TGraphAsymmErrors** graphRAASystErr,
+                                    Double_t tAA,
+                                    Double_t tAAErr,
+                                    vector<TString> nameSysTakeOut,
+                                    TString fileNameSysAA                  = "",
+                                    TString fileNameSysPP                   = "",
+                                    TString fileNameSysOut                  = ""
+    ){
+
+        Int_t nPoints                           = AASpectrumStatErr->GetN();
+
+        (*graphRAAStatErr)                     = new TGraphAsymmErrors( nPoints);
+        (*graphRAASystErr)                     = new TGraphAsymmErrors( nPoints);
+        TGraphAsymmErrors* graphRAACombErr     = new TGraphAsymmErrors( nPoints);
+
+        Double_t *xBins                         = AASpectrumStatErr->GetX();
+        Double_t *xErrlow                       = AASpectrumStatErr->GetEXlow();
+        Double_t *xErrhigh                      = AASpectrumStatErr->GetEXhigh();
+        Double_t *yAABins                      = AASpectrumStatErr->GetY();
+        Double_t *yPPBins                       = PPSpectrumStatErr->GetY();
+        Double_t *yAAStatErrlow                = AASpectrumStatErr->GetEYlow();
+        //Double_t *yAAStatErrhigh             = AASpectrumStatErr->GetEYlow();
+        Double_t *yAASystErrlow                = AASpectrumSystErr->GetEYlow();
+        Double_t *yAASystErrhigh               = AASpectrumSystErr->GetEYlow();
+        Double_t *yPPStatErrlow                 = PPSpectrumStatErr->GetEYlow();
+        //Double_t *yPPStatErrhigh = PPSpectrumStatErr->GetEYlow();
+        Double_t *yPPSystErrlow                 = PPSpectrumSystErr->GetEYlow();
+        Double_t *yPPSystErrhigh                = PPSpectrumSystErr->GetEYlow();
+        Double_t *RAA                          = new Double_t[nPoints];
+
+        Int_t nBinsSysPtAA                     = 0;
+        Int_t nSysAvailSingleAA                = 0;
+        Int_t nBinsSysPtPP                      = 0;
+        Int_t nSysAvailSinglePP                 = 0;
+        Bool_t haveDetailedSysAA               = kFALSE;
+        Bool_t haveDetailedSysPP                = kFALSE;
+        vector<Double_t>unCorrSys;
+        vector<Double_t>ptSysExternal;
+
+        if (fileNameSysAA.CompareTo("") != 0 && fileNameSysPP.CompareTo("") != 0){
+            cout << "fileNames correctly set" << endl;
+            cout << "AA: " << fileNameSysAA.Data() << endl;
+            cout << "pp: " << fileNameSysPP.Data() << endl;
+            ifstream fileSysErrDetailedAA;
+            fileSysErrDetailedAA.open(fileNameSysAA,ios_base::in);
+
+            // check if the file exists
+            if(fileSysErrDetailedAA.is_open()) {
+                haveDetailedSysAA      = kTRUE;
+            }
+            vector<TString>nameSysAA;
+            // possibly 100 pt bins
+            vector<Double_t>* ptSysSplitAA     = new vector<Double_t>[100];
+            vector<Bool_t>enableAASys;
+            // read detailed file AA
+            if (haveDetailedSysAA){
+                Int_t iPtBin                = 0;
+                Bool_t isFirstLine          = kTRUE;
+                string line;
+                Int_t nDiffErrContribAA    = 0;
+
+                while (getline(fileSysErrDetailedAA, line) && iPtBin < 100) {
+                    istringstream ss(line);
+                    TString temp        ="";
+                    if (isFirstLine){
+                        while(ss && nDiffErrContribAA < 100){
+                            ss >> temp;
+                            if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                nameSysAA.push_back(temp);
+                                nDiffErrContribAA++;
+                            }
+                        }
+                        nameSysAA.push_back("TotalError");
+                        nDiffErrContribAA++;
+                        isFirstLine             = kFALSE;
+                    } else {
+                        Int_t nRunning          = 0;
+                        while(ss && nRunning < nDiffErrContribAA){
+                            ss >> temp;
+                            ptSysSplitAA[iPtBin].push_back(temp.Atof());
+                            nRunning++;
+                        }
+                        iPtBin++;
+                    }
+                }
+                fileSysErrDetailedAA.close();
+
+                nBinsSysPtAA             = iPtBin;
+                nSysAvailSingleAA        = (Int_t)nameSysAA.size()-1;
+                cout <<  nSysAvailSingleAA << " individual errors:"<< endl;
+                for (Int_t k = 0; k < nSysAvailSingleAA+1; k++ ){
+                    cout << ((TString)nameSysAA.at(k)).Data() << "\t";
+                    Bool_t enabled      = kTRUE;
+                    for (Int_t m = 0; m < (Int_t)nameSysTakeOut.size() ; m++){
+                        if (((TString)nameSysAA.at(k)).CompareTo((TString)nameSysTakeOut.at(m)) == 0)
+                            enabled     = kFALSE;
+                    }
+                    if (((TString)nameSysAA.at(k)).CompareTo("TotalError") == 0 || ((TString)nameSysAA.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysAA.at(k)).CompareTo("pt") == 0 || ((TString)nameSysAA.at(k)).CompareTo("bin") == 0 )
+                        enabled     = kFALSE;
+
+                    enableAASys.push_back(enabled);
+                }
+                cout << endl;
+                for (Int_t k = 0; k < nSysAvailSingleAA+1; k++ ){
+                    cout << enableAASys.at(k) << "\t" ;
+                }
+                cout << endl;
+            }
+
+            // check if the file exists
+            ifstream fileSysErrDetailedPP;
+            fileSysErrDetailedPP.open(fileNameSysPP,ios_base::in);
+
+            if(fileSysErrDetailedPP.is_open()) {
+                haveDetailedSysPP       = kTRUE;
+            }
+            vector<TString>nameSysPP;
+            // possibly 100 pt bins
+            vector<Double_t>* ptSysSplitPP     = new vector<Double_t>[100];
+            vector<Bool_t>enablePPSys;
+            // read detailed file pp
+            if (haveDetailedSysPP){
+                cout << fileNameSysPP.Data() << endl;
+                Int_t iPtBin                = 0;
+                Bool_t isFirstLine          = kTRUE;
+                string line;
+                Int_t nDiffErrContribPP     = 0;
+
+                while (getline(fileSysErrDetailedPP, line) && iPtBin < 100) {
+                    istringstream ss(line);
+                    TString temp        ="";
+                    if (isFirstLine){
+                        while(ss && nDiffErrContribPP < 100){
+                            ss >> temp;
+                            if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                nameSysPP.push_back(temp);
+                                nDiffErrContribPP++;
+                            }
+                        }
+                        isFirstLine             = kFALSE;
+                    } else {
+                        Int_t nRunning          = 0;
+                        while(ss && nRunning < nDiffErrContribPP){
+                            ss >> temp;
+                            ptSysSplitPP[iPtBin].push_back(temp.Atof());
+                            nRunning++;
+                        }
+                        iPtBin++;
+                    }
+                }
+                fileSysErrDetailedPP.close();
+
+                nBinsSysPtPP             = iPtBin;
+                nSysAvailSinglePP        = (Int_t)nameSysPP.size()-1;
+                cout <<  nSysAvailSinglePP << " individual errors pp:"<< endl;
+                for (Int_t k = 0; k < nSysAvailSinglePP+1; k++ ){
+                    cout << ((TString)nameSysPP.at(k)).Data() << "\t";
+                    Bool_t enabled      = kTRUE;
+                    for (Int_t m = 0; m < (Int_t)nameSysTakeOut.size() ; m++){
+                        if (((TString)nameSysPP.at(k)).CompareTo((TString)nameSysTakeOut.at(m)) == 0)
+                            enabled     = kFALSE;
+                    }
+                    if (((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 || ((TString)nameSysPP.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("bin") == 0 || ((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorr") == 0 )
+                        enabled     = kFALSE;
+
+                    enablePPSys.push_back(enabled);
+                }
+                cout << endl;
+                for (Int_t k = 0; k < nSysAvailSinglePP+1; k++ ){
+                    cout << enablePPSys.at(k) << "\t" ;
+                }
+                cout << endl;
+            }
+
+            fstream SysErrDatAverOut;
+            cout << fileNameSysOut << endl;
+            SysErrDatAverOut.open(fileNameSysOut, ios::out);
+
+            if (haveDetailedSysAA && haveDetailedSysPP){
+                SysErrDatAverOut << nameSysAA.at(0) << "\t" ;
+                for (Int_t k = 1; k < nSysAvailSingleAA; k++){
+                    if (enableAASys.at(k)) {
+                        SysErrDatAverOut << nameSysAA.at(k) << "\t" ;
+                    }
+                }
+                for (Int_t k = 1; k < nSysAvailSinglePP; k++){
+                    if (enablePPSys.at(k)) {
+                        SysErrDatAverOut << nameSysPP.at(k) << "\t" ;
+                    }
+                }
+                SysErrDatAverOut << endl;
+
+                for (Int_t iPt = 0; iPt < nBinsSysPtAA; iPt++){
+                    Double_t uncorr     = 0;
+                    if ((Double_t)ptSysSplitAA[iPt].at(0) != (Double_t)ptSysSplitPP[iPt].at(0))
+                        cout << "BINNING external sources out of sync" << "\t" << (Double_t)ptSysSplitAA[iPt].at(0) << "\t"<< (Double_t)ptSysSplitPP[iPt].at(0) << endl;
+
+                    ptSysExternal.push_back((Double_t)ptSysSplitAA[iPt].at(0));
+                    SysErrDatAverOut << (Double_t)ptSysSplitAA[iPt].at(0) << "\t";
+                    for (Int_t k = 1; k < nSysAvailSingleAA; k++){
+                        if (enableAASys.at(k)) {
+                            uncorr          = uncorr + (Double_t)ptSysSplitAA[iPt].at(k)*(Double_t)ptSysSplitAA[iPt].at(k);
+                            SysErrDatAverOut << ptSysSplitAA[iPt].at(k) << "\t" ;
+                        }
+                    }
+                    for (Int_t k = 1; k < nSysAvailSinglePP; k++){
+                        if (enablePPSys.at(k)) {
+                            uncorr          = uncorr + (Double_t)ptSysSplitPP[iPt].at(k)*(Double_t)ptSysSplitPP[iPt].at(k);
+                            SysErrDatAverOut << ptSysSplitPP[iPt].at(k) << "\t" ;
+                        }
+                    }
+                    uncorr              = TMath::Sqrt(uncorr);
+                    unCorrSys.push_back(uncorr);
+                    SysErrDatAverOut << uncorr << endl;
+                }
+                cout << "made it here: " << __LINE__ << endl;
+                SysErrDatAverOut.close();
+            } else {
+                cout << "****************************************************************" << endl;
+                cout << "****************************************************************" << endl;
+                cout << "WARNING: at least one of the single error files wasn't available" << endl;
+                cout << "****************************************************************" << endl;
+                cout << "****************************************************************" << endl;
+            }
+        }
+
+        for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+            cout << "calculating point: "<< iPoint << "\t" << xBins[iPoint] << endl;
+            RAA[iPoint]            = yAABins[iPoint] / (tAA* yPPBins[iPoint]);
+
+            (*graphRAASystErr)->SetPoint( iPoint, xBins[iPoint], RAA[iPoint]);
+            (*graphRAAStatErr)->SetPoint( iPoint, xBins[iPoint], RAA[iPoint] );
+            graphRAACombErr->SetPoint( iPoint, xBins[iPoint], RAA[iPoint] );
+
+            Double_t errYStat       = TMath::Power( TMath::Power( yAAStatErrlow[iPoint]/yAABins[iPoint], 2. ) + TMath::Power( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RAA[iPoint];
+            Double_t errYSystlow    = TMath::Power( TMath::Power( yAASystErrlow[iPoint]/yAABins[iPoint], 2. ) + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RAA[iPoint];
+            Double_t errYSysthigh   = TMath::Power( TMath::Power( yAASystErrhigh[iPoint]/yAABins[iPoint],2. ) + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RAA[iPoint];
+            Double_t errYComblow    = TMath::Power( TMath::Power( yAAStatErrlow[iPoint]/yAABins[iPoint], 2. ) + TMath::Power( yAASystErrlow[iPoint]/yAABins[iPoint],2. )
+            + TMath::Power( yPPSystErrlow[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RAA[iPoint];
+            Double_t errYCombhigh   = TMath::Power( TMath::Power( yAAStatErrlow[iPoint]/yAABins[iPoint], 2. ) + TMath::Power( yAASystErrhigh[iPoint]/yAABins[iPoint],2. )
+            + TMath::Power( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RAA[iPoint];
+
+            if (haveDetailedSysAA && haveDetailedSysAA){
+                if (TMath::Abs((Double_t)ptSysExternal.at(iPoint) - xBins[iPoint]) < 0.0001){
+                    errYSystlow     = (Double_t)unCorrSys.at(iPoint)/100.*RAA[iPoint];
+                    errYSysthigh    = (Double_t)unCorrSys.at(iPoint)/100.*RAA[iPoint];
+                    errYComblow     = TMath::Power( TMath::Power( yAAStatErrlow[iPoint]/yAABins[iPoint], 2.) + TMath::Power( (Double_t)unCorrSys.at(iPoint)/100.,2.),   0.5) * RAA[iPoint];
+                    errYCombhigh    = TMath::Power( TMath::Power( yAAStatErrlow[iPoint]/yAABins[iPoint], 2.) + TMath::Power( (Double_t)unCorrSys.at(iPoint)/100.,2.) ,   0.5) * RAA[iPoint];
+
+                } else {
+                    cout << "BINNING of detailed syst incorrect!!" << endl<< endl<< endl;
+                }
+            }
+            (*graphRAAStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);
+            (*graphRAASystErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYSystlow,errYSysthigh);
+            graphRAACombErr->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYComblow,errYCombhigh);
+        }
+        cout << "finished RpA calc" << endl;
+
+        return graphRAACombErr;
+
+    }
+
 
     // ******************************************************************************************************************
     //****************************************** Integrate spectrum above a certain pt **********************************
