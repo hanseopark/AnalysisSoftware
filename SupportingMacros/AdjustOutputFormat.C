@@ -86,10 +86,10 @@ void AdjustOutputFormat(    TString energy          = "",
             TString nameSourcesRead[7]          = {"Ext", "Acc", "Con", "Bge", "Non", "ESc", "TOF"};
             TString nameSourcesWrite[7]         = {"SignalExtraction", "Acceptance", "Material", "BGEstimate", "NonLinearity", "EnergyScale", "TimeOfFlight"};
             for (Int_t i= 0; i<7; i++ ){
-                cout << "reading: " << Form("hSys%s",nameSourcesRead.Data()) << endl;
-                histoSysSources              = (TH1F*)fileInput1->Get(Form("hSys%s",nameSourcesRead.Data()));
-                histoSysSources->SetName(Form("histoSysSources_%s",nameSourcesWrite.Data()));
-                directoryWrite->Add(histoSysSources);
+                cout << "reading: " << Form("hSys%s",nameSourcesRead[i].Data()) << endl;
+                histoSysSources[i]              = (TH1F*)fileInput1->Get(Form("hSys%s",nameSourcesRead[i].Data()));
+                histoSysSources[i]->SetName(Form("histoSysSources_%s",nameSourcesWrite[i].Data()));
+                directoryWrite->Add(histoSysSources[i]);
             }
             TH1F* histoSysTot                   = (TH1F*)fileInput1->Get("hSystTotal");
             histoSysTot->SetName("histoSysSources_Total");
@@ -214,6 +214,92 @@ void AdjustOutputFormat(    TString energy          = "",
 
             fileOutputForComparisonFullyCorrected->Write();
             fileOutputForComparisonFullyCorrected->Close();
+
+        }
+
+        if (mode == 5 && energy.CompareTo("PbPb_5TeV")==0){
+
+            cout << "here" << endl;
+            TFile* fileInput1                         = new TFile(inputFileName1.Data());
+            TFile* fileOutput                         = new TFile(outputFileName,"RECREATE");
+
+            TString centrangePHOS[9]                  = {"0_10_V0M", "10_20_V0M", "20_40_V0M", "40_60_V0M", "60_80_V0M", "0_5_V0M", "0_90_V0M", "20_50_V0M", "30_50_V0M"};
+            TString centrangePCM[9]                   = {"0-10%","10-20%", "20-40%", "40-60%", "60-80%", "0-5%", "0-90%", "20-50%", "30-50%"};
+
+            for (Int_t i = 0; i < 9; i++){
+                cout << "adjusting cent bin: "  << i << "\t" << centrangePCM[i].Data() << endl;
+
+                TDirectoryFile*     directoryPi0    = NULL;
+                directoryPi0                        = (TDirectoryFile*)fileInput1->Get(Form("Pi05TeV_%s", centrangePHOS[i].Data()));
+                if (directoryPi0){
+                    TH1D* CorrectedYieldPi0              = (TH1D*)directoryPi0->Get("CorrectedYieldPi0");
+                    TGraphAsymmErrors* Pi0SystError      = (TGraphAsymmErrors*)directoryPi0->Get("CorrectedYieldPi0Sys");
+                    TH1D* EffAccPi0                      = (TH1D*)directoryPi0->Get("EffTimesAcc");
+                    TH1D* MassPi0                        = (TH1D*)directoryPi0->Get("Pi0_Mass_data");
+                    TH1D* TrueMassPi0                    = (TH1D*)directoryPi0->Get("Pi0_Mass_MC");
+                    TH1D* FWHMPi0MeV                     = (TH1D*)directoryPi0->Get("Pi0_Width_data");
+                    TH1D* TrueFWHMPi0MeV                 = (TH1D*)directoryPi0->Get("Pi0_Width_MC");
+
+                    TGraphAsymmErrors* graphYieldPi0            = new TGraphAsymmErrors(CorrectedYieldPi0);
+                    TGraphAsymmErrors* graphAccEffPi0           = new TGraphAsymmErrors(EffAccPi0);
+                    TGraphAsymmErrors* graphMassPi0             = new TGraphAsymmErrors(MassPi0);
+                    TGraphAsymmErrors* graphTrueMassPi0         = new TGraphAsymmErrors(TrueMassPi0);
+                    TGraphAsymmErrors* graphFWHMPi0MeV          = new TGraphAsymmErrors(FWHMPi0MeV);
+                    TGraphAsymmErrors* graphTrueFWHMPi0MeV      = new TGraphAsymmErrors(TrueFWHMPi0MeV);
+                    TString nameCentFolder              = Form("Pi0%sPbPb_5.02TeV_V0M",centrangePCM[i].Data() );
+                    fileOutput->mkdir(nameCentFolder.Data());
+                    TDirectoryFile* directoryPi0Output  = (TDirectoryFile*)fileOutput->Get(nameCentFolder.Data());
+                    fileOutput->cd(nameCentFolder.Data());
+
+                    if(CorrectedYieldPi0)       CorrectedYieldPi0->Write("CorrectedYieldPi0");
+                    if (graphYieldPi0) graphYieldPi0->Write("graphCorrectedYieldPi0");
+                    if(Pi0SystError)            Pi0SystError->Write("Pi0SystError");
+                    if(graphAccEffPi0)               graphAccEffPi0->Write("EffTimesAccPi0");
+                    if(graphMassPi0)                 graphMassPi0->Write("Pi0_Mass_data");
+                    if(graphTrueMassPi0)             graphTrueMassPi0->Write("Pi0_Mass_MC");
+                    if(graphFWHMPi0MeV)              graphFWHMPi0MeV->Write("Pi0_Width_data");
+                    if(graphTrueFWHMPi0MeV)          graphTrueFWHMPi0MeV->Write("Pi0_Width_MC");
+                }
+                TDirectoryFile*     directoryEta    = NULL;
+                directoryEta                        = (TDirectoryFile*)fileInput1->Get(Form("Eta5TeV_%s", centrangePHOS[i].Data()));
+                if (directoryEta){
+                    TH1D* CorrectedYieldEta              = (TH1D*)directoryEta->Get("CorrectedYieldEta");
+                    TGraphAsymmErrors* EtaSystError      = (TGraphAsymmErrors*)directoryEta->Get("CorrectedYieldEtaSys");
+                    TH1D* EffAccEta                      = (TH1D*)directoryEta->Get("EffTimesAcc");
+                    TH1D* MassEta                        = (TH1D*)directoryEta->Get("Eta_Mass_data");
+                    TH1D* TrueMassEta                    = (TH1D*)directoryEta->Get("Eta_Mass_MC");
+                    TH1D* FWHMEtaMeV                     = (TH1D*)directoryEta->Get("Eta_Width_data");
+                    TH1D* TrueFWHMEtaMeV                 = (TH1D*)directoryEta->Get("Eta_Width_MC");
+                    TH1D* EtaToPi0StatError              = (TH1D*)directoryEta->Get("EtaToPi0StatError");
+                    TGraphAsymmErrors* graphEtaToPi0StatError      = (TGraphAsymmErrors*)directoryEta->Get("graphEtaToPi0StatError");
+                    TGraphAsymmErrors* graphEtaToPi0SystError      = (TGraphAsymmErrors*)directoryEta->Get("graphEtaToPi0SystError");
+
+                    TGraphAsymmErrors* graphYieldEta            = new TGraphAsymmErrors(CorrectedYieldEta);
+                    TGraphAsymmErrors* graphAccEffEta           = new TGraphAsymmErrors(EffAccEta);
+                    TGraphAsymmErrors* graphMassEta             = new TGraphAsymmErrors(MassEta);
+                    TGraphAsymmErrors* graphTrueMassEta         = new TGraphAsymmErrors(TrueMassEta);
+                    TGraphAsymmErrors* graphFWHMEtaMeV          = new TGraphAsymmErrors(FWHMEtaMeV);
+                    TGraphAsymmErrors* graphTrueFWHMEtaMeV      = new TGraphAsymmErrors(TrueFWHMEtaMeV);
+                    TString nameCentFolder                      = Form("Eta%sPbPb_5.02TeV_V0M",centrangePCM[i].Data() );
+                    fileOutput->mkdir(nameCentFolder.Data());
+                    TDirectoryFile* directoryEtaOutput = (TDirectoryFile*)fileOutput->Get(nameCentFolder.Data());
+                    fileOutput->cd(nameCentFolder.Data());
+
+                    if(CorrectedYieldEta)  CorrectedYieldEta->Write("CorrectedYieldEta");
+                    if (graphYieldEta) graphYieldEta->Write("graphCorrectedYieldEta");
+                    if(EtaSystError)         EtaSystError->Write("EtaSystError");
+                    if(graphAccEffEta) graphAccEffEta->Write("EffTimesAccEta");
+                    if(graphMassEta) graphMassEta->Write("Eta_Mass_data");
+                    if(graphTrueMassEta) graphTrueMassEta->Write("Eta_Mass_MC");
+                    if(graphFWHMEtaMeV) graphFWHMEtaMeV->Write("Eta_Width_data");
+                    if(graphTrueFWHMEtaMeV) graphTrueFWHMEtaMeV->Write("Eta_Width_MC");
+                    if(EtaToPi0StatError) EtaToPi0StatError->Write("EtaToPi0StatError");
+                    if(graphEtaToPi0StatError) graphEtaToPi0StatError->Write("graphEtaToPi0StatError");
+                    if(graphEtaToPi0SystError) graphEtaToPi0SystError->Write("EtaToPi0SystError");
+                }
+            }
+            fileOutput->Write();
+            fileOutput->Close();
 
         }
     }

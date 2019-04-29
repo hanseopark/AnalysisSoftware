@@ -992,7 +992,7 @@
                                                                 TGraphErrors** graphRatioSys        = NULL
                                                               ){
 
-            cout << "Reading from Object A " << endl;
+        cout << "Reading from Object A " << endl;
         TString ClassNameA      = Obj_DummyAStat->ClassName();
         Int_t nBinsXA           = 0;
         if(ClassNameA.BeginsWith("TH1")){
@@ -1024,9 +1024,9 @@
         } else {
             nBinsComb           = nBinsXB;
         }
-    //     for (Int_t i = 0; i < nBinsXB; i++){
-    //         cout << binningXB[i] << "\t," ;
-    //     }
+        for (Int_t i = 0; i < nBinsXB; i++){
+            cout << binningXB[i] << "\t," ;
+        }
         Double_t binningCombined[nBinsComb];
         Int_t binningCombinedBinsToBeMergedA[nBinsComb];
         Int_t binningCombinedBinsToBeMergedB[nBinsComb];

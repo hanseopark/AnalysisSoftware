@@ -2629,8 +2629,13 @@
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0 ){
                 if (mode == 0 ){ // PCM
                     maxNBins = 29;
+                    if (DCAcase)
+                        maxNBins = 12;
                     for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsPi0PbPb5TeVPt[i];
+                        if (DCAcase)
+                            binning[i] = fBinsPi0PbPb5TeVPCMPtDCA[i];
+                        else
+                            binning[i] = fBinsPi0PbPb5TeVPCMPt[i];
                     }
                 } else if ( mode == 2 || mode == 13 ) {
                     maxNBins = 33;
@@ -2648,9 +2653,21 @@
                         binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
                     }
                 } else if (mode == 20){ //combined
-                    maxNBins = 28;
+                    maxNBins    = 34;
+                    binningMax  = 34;
+                    if (!centrality.CompareTo("20-40%") ){
+                        maxNBins    = 33;
+                        binningMax  = 33;
+                    } else if (!centrality.CompareTo("40-60%") ){
+                        maxNBins    = 32;
+                        binningMax  = 32;
+                    } else if (!centrality.CompareTo("60-80%") ){
+                        maxNBins    = 30;
+                        binningMax  = 30;
+                    }
+
                     for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsPi0PbPb5TeVPt[i];
+                        binning[i] = fBinsPi0PbPb5TeVCombPt[i];
                     }
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0 ){
@@ -3359,16 +3376,21 @@
                     }
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-                maxNBins = 9;
-                binningMax  = 9;
-                if(mode == 0){
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEtaPbPb5TeVPt[i];
-                    }
+                if (mode == 0){
+                    maxNBins    = 9;
+                    binningMax  = 9;
+                } else if (mode == 20 ){
+                    binningMax  = 11;
+                    maxNBins    = 11;
                 } else {
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
-                    }
+                    maxNBins    = 11;
+                    binningMax  = 11;
+                }
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    if (mode == 0)                                              binning[i] = fBinsEtaPbPb5TeVPCMPt[i];
+                    else if (mode == 2 || mode == 3 || mode == 4 || mode == 5)  binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
+                    else if (mode == 20)                                        binning[i] = fBinsEtaPbPb5TeVCombPt[i];
+                    else                                                        binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0 ){
                 binningMax  = 7;
@@ -5078,31 +5100,29 @@
                     }
                 } else{
                     fStartPtBin     = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    if (fNBinsPt > 12 && isDCA) {
-                        cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
-                        fNBinsPt        = 12;
+                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA);
+                    if (fNBinsPt > maxPtBinAvail) {
+                        cout << "**************************************************************************************************************************************" << endl;
+                        cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                        cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinAvail << " bins, this is not possible, it will be reduced to " << maxPtBinAvail << endl;
+                        cout << "**************************************************************************************************************************************" << endl;
+                        fNBinsPt    = maxPtBinAvail;
                     }
                     cout << "calling GetOptimumNColumnsAndRows " <<  fNBinsPt << " , " << fStartPtBin << endl;
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        if (isDCA){
-                            fBinsPt[i]  = fBinsPi0PbPb5TeVPtDCA[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPtRebin[i];
-                        }else{
-                          if (modi == 2){
-                            fBinsPt[i]  = fBinsPi0PbPb5TeVPCMEMCPt[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPCMEMCPtRebin[i];
-                          }else if (modi == 3 || modi == 5){
-                            fBinsPt[i]  = fBinsPi0PbPb5TeVPCMPHOSPt[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPCMPHOSPtRebin[i];
-                          }else if (modi == 4){
-                            fBinsPt[i]  = fBinsPi0PbPb5TeVEMCPt[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVEMCPtRebin[i];
-                          }else{
-                            fBinsPt[i]  = fBinsPi0PbPb5TeVPt[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5TeVPtRebin[i];
-                          }
+                        if (modi == 0){
+                            if (isDCA) fNRebin[i] = fBinsPi0PbPb5TeVPCMPtRebin[i];
+                            else fNRebin[i] = fBinsPi0PbPb5TeVPCMPtRebin[i];
+                        } else  if (modi == 2){
+                            fNRebin[i] = fBinsPi0PbPb5TeVPCMEMCPtRebin[i];
+                        } else if (modi == 3 || modi == 5){
+                            fNRebin[i] = fBinsPi0PbPb5TeVPCMPHOSPtRebin[i];
+                        } else if (modi == 4){
+                            fNRebin[i] = fBinsPi0PbPb5TeVEMCPtRebin[i];
+                        } else {
+                            fNRebin[i] = fBinsPi0PbPb5TeVPCMPtRebin[i];
                         }
                     }
                 }
@@ -6153,7 +6173,7 @@
             //********************************** Eta for PbPb 5.02TeV**************************************
             //*********************************************************************************************
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
-                fStartPtBin         = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
+                fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
                 Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
@@ -6164,18 +6184,15 @@
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                    if(modi == 2 || modi == 3){
-                        if (i < fNBinsPt+1){
+                    if (i < fNBinsPt+1){
+                        if(modi == 2 || modi == 3){
                           if (setPi0.CompareTo("Pi0EtaBinning") == 0) fNRebin[i] = fBinsPi0EtaBinningPbPb5TeVEMCPtRebin[i];
                           else fNRebin[i] = fBinsEtaPbPb5TeVEMCPtRebin[i];
-                        }
-                    }else if(modi == 4){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5TeVEMCPtRebin[i];
-                    }else{
-                        fBinsPt[i]         = fBinsEtaPbPb5TeVPt[i];
-                        if (i < fNBinsPt+1) {
+                        }else if(modi == 4){
+                            fNRebin[i] = fBinsEtaPbPb5TeVEMCPtRebin[i];
+                        }else{
                             if (setPi0.CompareTo("Pi0EtaBinning") == 0) fNRebin[i] = fBinsPi0EtaBinningPbPb5TeVPtRebin[i];
-                            else                                        fNRebin[i] = fBinsEtaPbPb5TeVPtRebin[i];
+                            else                                        fNRebin[i] = fBinsEtaPbPb5TeVPCMPtRebin[i];
                         }
                     }
                 }

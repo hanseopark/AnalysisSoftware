@@ -70,7 +70,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                             Bool_t isMC                     = kFALSE,
                                             TString bWCorrection            = "X",
                                             TString fileNameCorrFactors     = "",
-                                            TString fileNameInterpolation   = "",
+                                            TString fileNameReference   = "",
                                             TString pathConfigsRAAErr       = ""
                                         ){
 
@@ -102,8 +102,8 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     fstream  fileFitsOutput;
     fileFitsOutput.open(nameFinalResDat.Data(), ios::out);
 
-    TString fileNameTheory                      = "ExternalInputPbPb/Theory/TheoryCompilationPPb.root";
-    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedCharged/ChargedIdentifiedSpectraPbPb_2018_09_20.root";
+    TString fileNameTheory                      = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
+    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedCharged/ChargedPion_29_Apr_2019_PbPb5TeV.root";
 
     Int_t maxCent                               = 9;
     Int_t intRefMB                              = 1;
@@ -132,8 +132,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TString addCentString[9]                    = {"_V0M", "_V0M", "_V0M","_V0M","_V0M",               "_V0M", "_V0M", "_V0M", "_V0M"};
     Bool_t  enableCent[9]                       = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
     Bool_t  enableCentComb[9]                   = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
-    Bool_t  enableCentRAA[9]                    = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,  kFALSE, kFALSE, kFALSE, kFALSE};
-    Int_t ppRefInt[9]                           = { 0, 1, 1, 1, 1,  1, 1, 1, 1};
+    Bool_t  enableCentRAA[9]                    = { kTRUE, kFALSE, kFALSE, kFALSE, kFALSE,  kFALSE, kFALSE, kFALSE, kFALSE};
     TString nameCentEst                         =  "V0M";
     TString nameCentEstRatios                   =  "V0M";
 
@@ -156,7 +155,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     if (fileNamePCMPHOS.CompareTo("")!=0 )      gSystem->Exec(Form("cp %s %s/InputPCMPHOS.root", fileNamePCMPHOS.Data(), outputDirFile.Data()));
     if (fileNamePHOS.CompareTo("")!=0 )         gSystem->Exec(Form("cp %s %s/InputPHOS.root", fileNamePHOS.Data(), outputDirFile.Data()));
     if (fileNameEMCAL.CompareTo("")!=0 )        gSystem->Exec(Form("cp %s %s/InputEMCAL.root", fileNameEMCAL.Data(), outputDirFile.Data()));
-    if (fileNameInterpolation.CompareTo("")!=0 )gSystem->Exec(Form("cp %s %s/InputInterpolation.root", fileNameInterpolation.Data(), outputDirFile.Data()));
+    if (fileNameReference.CompareTo("")!=0 )    gSystem->Exec(Form("cp %s %s/InputReference.root", fileNameReference.Data(), outputDirFile.Data()));
     if (fileNameCorrFactors.CompareTo("")!=0 )  gSystem->Exec(Form("cp %s %s/InputCorrFactors.root", fileNameCorrFactors.Data(), outputDirFile.Data()));
     if (fileNameTheory.CompareTo("")!= 0)       gSystem->Exec(Form("cp %s %s/InputTheory.root", fileNameTheory.Data(), outputDirFile.Data()));
     if (pathConfigsRAAErr.CompareTo("")!=0 ){
@@ -236,7 +235,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         cout << markerStyleCent[cent] << "\t" << markerStyleCentMC[cent] << "\t"<<markerSizeCent[cent] << "\t" << markerSizeCentMC[cent] << endl;
         clog << cent << "\t" << centArrayOutput[cent]+addCentString[cent] << "\t"<< nCollPbPb[cent] << "\t" << nCollErrPbPb[cent] << "\t"<< tPbPb[cent] << "\t"<< tPbPbErr[cent] << endl;;
     }
-//     return;
+
     Double_t xSection5TeV                       = ReturnCorrectXSection("5TeV", 1);; // option is wrong fix when possible
     Double_t xSection5TeVErr                    = xSection5023GeVINELErr*1e-3;
 
@@ -504,16 +503,14 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                 } else {
                     nTotMeasPi0[cent]++;
                     // reading supporting figures
-                    if (meth != 1){
-                        graphPi0Mass[cent][meth]                             = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_data");
-                        if (graphPi0Mass[cent][meth]) graphPi0Mass[cent][meth]                             = ScaleGraph(graphPi0Mass[cent][meth], 1000.);
-                        graphPi0Width[cent][meth]                            = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_data");
-                        if (graphPi0Width[cent][meth]) graphPi0Width[cent][meth]                            = ScaleGraph(graphPi0Width[cent][meth], 1000.);
-                        graphPi0MassMC[cent][meth]                           = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_MC");
-                        if (graphPi0MassMC[cent][meth]) graphPi0MassMC[cent][meth]                           = ScaleGraph(graphPi0MassMC[cent][meth], 1000.);
-                        graphPi0WidthMC[cent][meth]                          = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_MC");
-                        if (graphPi0WidthMC[cent][meth]) graphPi0WidthMC[cent][meth]                          = ScaleGraph(graphPi0WidthMC[cent][meth], 1000.);
-                    }
+                    graphPi0Mass[cent][meth]                             = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_data");
+                    if (graphPi0Mass[cent][meth]) graphPi0Mass[cent][meth]                             = ScaleGraph(graphPi0Mass[cent][meth], 1000.);
+                    graphPi0Width[cent][meth]                            = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_data");
+                    if (graphPi0Width[cent][meth]) graphPi0Width[cent][meth]                            = ScaleGraph(graphPi0Width[cent][meth], 1000.);
+                    graphPi0MassMC[cent][meth]                           = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_MC");
+                    if (graphPi0MassMC[cent][meth]) graphPi0MassMC[cent][meth]                           = ScaleGraph(graphPi0MassMC[cent][meth], 1000.);
+                    graphPi0WidthMC[cent][meth]                          = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_MC");
+                    if (graphPi0WidthMC[cent][meth]) graphPi0WidthMC[cent][meth]                         = ScaleGraph(graphPi0WidthMC[cent][meth], 1000.);
                     graphPi0Acc[cent][meth]                              = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("AcceptancePi0");
                     graphPi0Eff[cent][meth]                              = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("EfficiencyPi0");
                     graphPi0EffTimesAcc[cent][meth]                      = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("EffTimesAccPi0");
@@ -551,13 +548,13 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                         graphPi0WidthMC[cent][meth]->RemovePoint(graphPi0WidthMC[cent][meth]->GetN()-1);
                         graphPi0EffTimesAcc[cent][meth]->RemovePoint(graphPi0EffTimesAcc[cent][meth]->GetN()-1);
                     }
-
                     // reading yields
                     graphPi0InvYieldStat[cent][meth]                     = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("graphCorrectedYieldPi0");
                     histoPi0InvYieldStat[cent][meth]                     = (TH1D*)directoryPi0[cent][meth]->Get("CorrectedYieldPi0");
                     cout << "Pi0 stat error" << endl;
                     graphPi0InvYieldStat[cent][meth]->Print();
                     graphPi0InvYieldSys[cent][meth]                      = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0SystError");
+                    cout << graphPi0InvYieldSys[cent][meth] << endl;
                     cout << "Pi0 sys error" << endl;
                     if (graphPi0InvYieldSys[cent][meth]) graphPi0InvYieldSys[cent][meth]->Print();
 
@@ -574,16 +571,14 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                 } else {
                     nTotMeasEta[cent]++;
                     // reading supporting figures
-                    if (meth != 1){
-                        graphEtaMass[cent][meth]                             = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Mass_data");
-                        if (graphEtaMass[cent][meth]) graphEtaMass[cent][meth]                             = ScaleGraph(graphEtaMass[cent][meth], 1000.);
-                        graphEtaWidth[cent][meth]                            = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Width_data");
-                        if (graphEtaWidth[cent][meth]) graphEtaWidth[cent][meth]                            = ScaleGraph(graphEtaWidth[cent][meth], 1000.);
-                        graphEtaMassMC[cent][meth]                           = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Mass_MC");
-                        if (graphEtaMassMC[cent][meth]) graphEtaMassMC[cent][meth]                           = ScaleGraph(graphEtaMassMC[cent][meth], 1000.);
-                        graphEtaWidthMC[cent][meth]                          = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Width_MC");
-                        if (graphEtaWidthMC[cent][meth]) graphEtaWidthMC[cent][meth]                          = ScaleGraph(graphEtaWidthMC[cent][meth], 1000.);
-                    }
+                    graphEtaMass[cent][meth]                             = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Mass_data");
+                    if (graphEtaMass[cent][meth]) graphEtaMass[cent][meth]                             = ScaleGraph(graphEtaMass[cent][meth], 1000.);
+                    graphEtaWidth[cent][meth]                            = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Width_data");
+                    if (graphEtaWidth[cent][meth]) graphEtaWidth[cent][meth]                            = ScaleGraph(graphEtaWidth[cent][meth], 1000.);
+                    graphEtaMassMC[cent][meth]                           = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Mass_MC");
+                    if (graphEtaMassMC[cent][meth]) graphEtaMassMC[cent][meth]                           = ScaleGraph(graphEtaMassMC[cent][meth], 1000.);
+                    graphEtaWidthMC[cent][meth]                          = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("Eta_Width_MC");
+                    if (graphEtaWidthMC[cent][meth]) graphEtaWidthMC[cent][meth]                          = ScaleGraph(graphEtaWidthMC[cent][meth], 1000.);
                     graphEtaAcc[cent][meth]                              = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("AcceptanceEta");
                     graphEtaEff[cent][meth]                              = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EfficiencyEta");
                     graphEtaEffTimesAcc[cent][meth]                      = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EffTimesAccEta");
@@ -707,194 +702,155 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // *******************************************************************************************************
     // ************************** Loading interpolated spectra ***********************************************
     // *******************************************************************************************************
-    TString addNamePP[2]                                    = {"", "Cent"};
-    TGraphAsymmErrors* statErrorCollectionPi0PP[2][11];
-    TGraphAsymmErrors* systErrorCollectionPi0PP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrCollectionPi0PP[2][11];
-    TGraphAsymmErrors* systErrorInterCollectionPi0PP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrInterCollectionPi0PP[2][11];
-    TGraphAsymmErrors* statErrorCollectionInvYieldPi0PP[2][11];
-    TGraphAsymmErrors* systErrorCollectionInvYieldPi0PP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrCollectionInvYieldPi0PP[2][11];
-    TGraphAsymmErrors* systErrorInterCollectionInvYieldPi0PP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrInterCollectionInvYieldPi0PP[2][11];
+    TGraphAsymmErrors* statErrorCollectionPi0PP[11];
+    TGraphAsymmErrors* systErrorCollectionPi0PP[11];
+    TGraphAsymmErrors* systErrorUnCorrCollectionPi0PP[11];
+    TGraphAsymmErrors* statErrorCollectionInvYieldPi0PP[11];
+    TGraphAsymmErrors* systErrorCollectionInvYieldPi0PP[11];
+    TGraphAsymmErrors* systErrorUnCorrCollectionInvYieldPi0PP[11];
 
-    TGraphAsymmErrors* statErrorCollectionEtaPP[2][11];
-    TGraphAsymmErrors* systErrorCollectionEtaPP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrCollectionEtaPP[2][11];
-    TGraphAsymmErrors* systErrorInterCollectionEtaPP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrInterCollectionEtaPP[2][11];
-    TGraphAsymmErrors* statErrorCollectionInvYieldEtaPP[2][11];
-    TGraphAsymmErrors* systErrorCollectionInvYieldEtaPP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrCollectionInvYieldEtaPP[2][11];
-    TGraphAsymmErrors* systErrorInterCollectionInvYieldEtaPP[2][11];
-    TGraphAsymmErrors* systErrorUnCorrInterCollectionInvYieldEtaPP[2][11];
-    TGraphAsymmErrors* graphRatioPi0IndCombFitStatPP[2][11];
-    TGraphAsymmErrors* graphRatioPi0IndCombFitSysPP[2][11];
-    TGraphAsymmErrors* graphRatioEtaIndCombFitStatPP[2][11];
-    TGraphAsymmErrors* graphRatioEtaIndCombFitSysPP[2][11];
-    TGraphAsymmErrors* graphPPCombPi0Stat[2]                = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombPi0UncorrSys[2]           = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombPi0FullSys[2]             = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombPi0InterSys[2]            = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombPi0Stat[2]        = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombPi0StatW0XErr[2]  = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombPi0Sys[2]         = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombEtaStat[2]                = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombEtaUncorrSys[2]           = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombEtaFullSys[2]             = {NULL, NULL};
-    TGraphAsymmErrors* graphPPCombEtaInterSys[2]            = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombEtaStat[2]        = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombEtaStatW0XErr[2]  = {NULL, NULL};
-    TGraphAsymmErrors* graphPPInvYieldCombEtaSys[2]         = {NULL, NULL};
-    TGraphAsymmErrors* graphRatioPi0CombToFitStatPP[2]      = {NULL, NULL};
-    TGraphAsymmErrors* graphRatioPi0CombToFitSysPP[2]       = {NULL, NULL};
-    TGraphAsymmErrors* graphRatioEtaCombToFitStatPP[2]      = {NULL, NULL};
-    TGraphAsymmErrors* graphRatioEtaCombToFitSysPP[2]       = {NULL, NULL};
-    TF1* fitPPTCMInvYieldPi0[2]                             = {NULL, NULL};
-    TF1* fitTCMInvXSetionPi0PP[2]                           = {NULL, NULL};
-    TF1* fitTsallisInvXSectionPi0PP[2]                      = {NULL, NULL};
-    TF1* fitPPTCMInvYieldEta[2]                             = {NULL, NULL};
-    TF1* fitTCMInvXSetionEtaPP[2]                           = {NULL, NULL};
-    TF1* fitTsallisInvXSectionEtaPP[2]                      = {NULL, NULL};
+    TGraphAsymmErrors* statErrorCollectionEtaPP[11];
+    TGraphAsymmErrors* systErrorCollectionEtaPP[11];
+    TGraphAsymmErrors* systErrorUnCorrCollectionEtaPP[11];
+    TGraphAsymmErrors* statErrorCollectionInvYieldEtaPP[11];
+    TGraphAsymmErrors* systErrorCollectionInvYieldEtaPP[11];
+    TGraphAsymmErrors* systErrorUnCorrCollectionInvYieldEtaPP[11];
+    TGraphAsymmErrors* graphRatioPi0IndCombFitStatPP[11];
+    TGraphAsymmErrors* graphRatioPi0IndCombFitSysPP[11];
+    TGraphAsymmErrors* graphRatioEtaIndCombFitStatPP[11];
+    TGraphAsymmErrors* graphRatioEtaIndCombFitSysPP[11];
+    TGraphAsymmErrors* graphPPCombPi0Stat                = NULL;
+    TGraphAsymmErrors* graphPPCombPi0UncorrSys           = NULL;
+    TGraphAsymmErrors* graphPPCombPi0FullSys             = NULL;
+    TGraphAsymmErrors* graphPPCombPi0InterSys            = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombPi0Stat        = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombPi0StatW0XErr  = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombPi0Sys         = NULL;
+    TGraphAsymmErrors* graphPPCombEtaStat                = NULL;
+    TGraphAsymmErrors* graphPPCombEtaUncorrSys           = NULL;
+    TGraphAsymmErrors* graphPPCombEtaFullSys             = NULL;
+    TGraphAsymmErrors* graphPPCombEtaInterSys            = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombEtaStat        = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombEtaStatW0XErr  = NULL;
+    TGraphAsymmErrors* graphPPInvYieldCombEtaSys         = NULL;
+    TGraphAsymmErrors* graphRatioPi0CombToFitStatPP      = NULL;
+    TGraphAsymmErrors* graphRatioPi0CombToFitSysPP       = NULL;
+    TGraphAsymmErrors* graphRatioEtaCombToFitStatPP      = NULL;
+    TGraphAsymmErrors* graphRatioEtaCombToFitSysPP       = NULL;
+    TF1* fitPPTCMInvYieldPi0                             = NULL;
+    TF1* fitTCMInvXSetionPi0PP                           = NULL;
+    TF1* fitTsallisInvXSectionPi0PP                      = NULL;
+    TF1* fitPPTCMInvYieldEta                             = NULL;
+    TF1* fitTCMInvXSetionEtaPP                           = NULL;
+    TF1* fitTsallisInvXSectionEtaPP                      = NULL;
 
 
-    Bool_t haveRefPPPi0[2][11]                              = { { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE },
-                                                                { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } };
-    Bool_t haveRefPPEta[2][11]                              = { { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE },
-                                                                { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } };
-    for (Int_t ppEst = 0; ppEst < 2; ppEst++){
-        for (Int_t meth = 0; meth< 11; meth++){
-            statErrorCollectionPi0PP[ppEst][meth]                   = NULL;
-            systErrorCollectionPi0PP[ppEst][meth]                   = NULL;
-            systErrorUnCorrCollectionPi0PP[ppEst][meth]             = NULL;
-            systErrorInterCollectionPi0PP[ppEst][meth]              = NULL;
-            systErrorUnCorrInterCollectionPi0PP[ppEst][meth]        = NULL;
-            statErrorCollectionInvYieldPi0PP[ppEst][meth]           = NULL;
-            systErrorCollectionInvYieldPi0PP[ppEst][meth]           = NULL;
-            systErrorUnCorrCollectionInvYieldPi0PP[ppEst][meth]     = NULL;
-            systErrorInterCollectionInvYieldPi0PP[ppEst][meth]      = NULL;
-            systErrorUnCorrInterCollectionInvYieldPi0PP[ppEst][meth]= NULL;
-            statErrorCollectionEtaPP[ppEst][meth]                   = NULL;
-            systErrorCollectionEtaPP[ppEst][meth]                   = NULL;
-            systErrorUnCorrCollectionEtaPP[ppEst][meth]             = NULL;
-            systErrorInterCollectionEtaPP[ppEst][meth]              = NULL;
-            systErrorUnCorrInterCollectionEtaPP[ppEst][meth]        = NULL;
-            statErrorCollectionInvYieldEtaPP[ppEst][meth]           = NULL;
-            systErrorCollectionInvYieldEtaPP[ppEst][meth]           = NULL;
-            systErrorUnCorrCollectionInvYieldEtaPP[ppEst][meth]     = NULL;
-            systErrorInterCollectionInvYieldEtaPP[ppEst][meth]      = NULL;
-            systErrorUnCorrInterCollectionInvYieldEtaPP[ppEst][meth]= NULL;
-            graphRatioPi0IndCombFitStatPP[ppEst][meth]              = NULL;
-            graphRatioPi0IndCombFitSysPP[ppEst][meth]               = NULL;
-            graphRatioEtaIndCombFitStatPP[ppEst][meth]              = NULL;
-            graphRatioEtaIndCombFitSysPP[ppEst][meth]               = NULL;
-        }
+    Bool_t haveRefPPPi0[11]                              = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } ;
+    Bool_t haveRefPPEta[11]                              = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } ;
+    for (Int_t meth = 0; meth< 11; meth++){
+        statErrorCollectionPi0PP[meth]                   = NULL;
+        systErrorCollectionPi0PP[meth]                   = NULL;
+        systErrorUnCorrCollectionPi0PP[meth]             = NULL;
+        statErrorCollectionInvYieldPi0PP[meth]           = NULL;
+        systErrorCollectionInvYieldPi0PP[meth]           = NULL;
+        systErrorUnCorrCollectionInvYieldPi0PP[meth]     = NULL;
+        statErrorCollectionEtaPP[meth]                   = NULL;
+        systErrorCollectionEtaPP[meth]                   = NULL;
+        systErrorUnCorrCollectionEtaPP[meth]             = NULL;
+        statErrorCollectionInvYieldEtaPP[meth]           = NULL;
+        systErrorCollectionInvYieldEtaPP[meth]           = NULL;
+        systErrorUnCorrCollectionInvYieldEtaPP[meth]     = NULL;
+        graphRatioPi0IndCombFitStatPP[meth]              = NULL;
+        graphRatioPi0IndCombFitSysPP[meth]               = NULL;
+        graphRatioEtaIndCombFitStatPP[meth]              = NULL;
+        graphRatioEtaIndCombFitSysPP[meth]               = NULL;
     }
 
-    TFile* fileInterpolation                        = new TFile(fileNameInterpolation.Data());
-    for (Int_t ppEst = 0; ppEst < 2; ppEst++){
-        for (Int_t meth = 0; meth< 11; meth++){
-            statErrorCollectionPi0PP[ppEst][meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErr%s_Pi0_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorCollectionPi0PP[ppEst][meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorUnCorrCollectionPi0PP[ppEst][meth]           = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorInterCollectionPi0PP[ppEst][meth]            = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            if (statErrorCollectionPi0PP[ppEst][meth] && systErrorCollectionPi0PP[ppEst][meth] && systErrorUnCorrCollectionPi0PP[ppEst][meth] && systErrorInterCollectionPi0PP[ppEst][meth]){
-                haveRefPPPi0[ppEst][meth]                         = kTRUE;
-                systErrorUnCorrInterCollectionPi0PP[ppEst][meth]  = (TGraphAsymmErrors*)systErrorInterCollectionPi0PP[ppEst][meth]->Clone(Form("graphPP%sPi0InterUncorrSyst%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrInterCollectionPi0PP[ppEst][meth]  = AddErrorsQuadraticallyTGraph(systErrorInterCollectionPi0PP[ppEst][meth], systErrorUnCorrCollectionPi0PP[ppEst][meth]);
+    TFile* fileReference                        = new TFile(fileNameReference.Data());
 
-                statErrorCollectionInvYieldPi0PP[ppEst][meth]           = (TGraphAsymmErrors*)statErrorCollectionPi0PP[ppEst][meth]->Clone(Form("graphInvYieldStatErr%s_Pi0_5.023TeV%s",
-                                                                                                                        nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorCollectionInvYieldPi0PP[ppEst][meth]           = (TGraphAsymmErrors*)systErrorCollectionPi0PP[ppEst][meth]->Clone(Form("graphInvYieldSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                        nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrCollectionInvYieldPi0PP[ppEst][meth]     = (TGraphAsymmErrors*)systErrorUnCorrCollectionPi0PP[ppEst][meth]->Clone(Form("graphInvYieldUnCorrSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                        nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorInterCollectionInvYieldPi0PP[ppEst][meth]      = (TGraphAsymmErrors*)systErrorInterCollectionPi0PP[ppEst][meth]->Clone(Form("graphInvYieldInterpolSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                        nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrInterCollectionInvYieldPi0PP[ppEst][meth]= (TGraphAsymmErrors*)systErrorUnCorrInterCollectionPi0PP[ppEst][meth]->Clone(Form("graphInvYieldInterpolSystErr%s_Pi0_5.023TeV%s",
-                                                                                                                        nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-
-                statErrorCollectionInvYieldPi0PP[ppEst][meth]           = ScaleGraph(statErrorCollectionInvYieldPi0PP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorCollectionInvYieldPi0PP[ppEst][meth]           = ScaleGraph(systErrorCollectionInvYieldPi0PP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorUnCorrCollectionInvYieldPi0PP[ppEst][meth]     = ScaleGraph(systErrorUnCorrCollectionInvYieldPi0PP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorInterCollectionInvYieldPi0PP[ppEst][meth]      = ScaleGraph(systErrorInterCollectionInvYieldPi0PP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorUnCorrInterCollectionInvYieldPi0PP[ppEst][meth]= ScaleGraph(systErrorUnCorrInterCollectionInvYieldPi0PP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-
-            }
-            if (haveRefPPPi0[ppEst][meth])
-                cout << "found pi0 pp reference for " << nameMeasGlobalLabel[meth].Data() << endl;
-
-
-
-            statErrorCollectionEtaPP[ppEst][meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErr%s_Eta_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorCollectionEtaPP[ppEst][meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErr%s_Eta_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorUnCorrCollectionEtaPP[ppEst][meth]           = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErr%s_Eta_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            systErrorInterCollectionEtaPP[ppEst][meth]            = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErr%s_Eta_5.023TeV%s",
-                                                                                                                    nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-            if (statErrorCollectionEtaPP[ppEst][meth] && systErrorCollectionEtaPP[ppEst][meth] && systErrorUnCorrCollectionEtaPP[ppEst][meth] && systErrorInterCollectionEtaPP[ppEst][meth]){
-                haveRefPPEta[ppEst][meth]                         = kTRUE;
-                systErrorUnCorrInterCollectionEtaPP[ppEst][meth]        = (TGraphAsymmErrors*)systErrorInterCollectionEtaPP[ppEst][meth]->Clone(Form("graphPP%sEtaInterUncorrSyst%s",
-                                                                                                                                               nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrInterCollectionEtaPP[ppEst][meth]        = AddErrorsQuadraticallyTGraph(systErrorInterCollectionEtaPP[ppEst][meth], systErrorUnCorrCollectionEtaPP[ppEst][meth]);
-
-                statErrorCollectionInvYieldEtaPP[ppEst][meth]           = (TGraphAsymmErrors*)statErrorCollectionEtaPP[ppEst][meth]->Clone(Form("graphInvYieldStatErr%s_Eta_5.023TeV%s",
-                                                                                                                            nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorCollectionInvYieldEtaPP[ppEst][meth]           = (TGraphAsymmErrors*)systErrorCollectionEtaPP[ppEst][meth]->Clone(Form("graphInvYieldSystErr%s_Eta_5.023TeV%s",
-                                                                                                                            nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrCollectionInvYieldEtaPP[ppEst][meth]     = (TGraphAsymmErrors*)systErrorUnCorrCollectionEtaPP[ppEst][meth]->Clone(Form("graphInvYieldUnCorrSystErr%s_Eta_5.023TeV%s",
-                                                                                                                            nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorInterCollectionInvYieldEtaPP[ppEst][meth]      = (TGraphAsymmErrors*)systErrorInterCollectionEtaPP[ppEst][meth]->Clone(Form("graphInvYieldInterpolSystErr%s_Eta_5.023TeV%s",
-                                                                                                                            nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-                systErrorUnCorrInterCollectionInvYieldEtaPP[ppEst][meth]= (TGraphAsymmErrors*)systErrorUnCorrInterCollectionEtaPP[ppEst][meth]->Clone(Form("graphInvYieldInterpolSystErr%s_Eta_5.023TeV%s",
-                                                                                                                            nameMeasGlobalLabel[meth].Data(), addNamePP[ppEst].Data()));
-
-                statErrorCollectionInvYieldEtaPP[ppEst][meth]           = ScaleGraph(statErrorCollectionInvYieldEtaPP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorCollectionInvYieldEtaPP[ppEst][meth]           = ScaleGraph(systErrorCollectionInvYieldEtaPP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorUnCorrCollectionInvYieldEtaPP[ppEst][meth]     = ScaleGraph(systErrorUnCorrCollectionInvYieldEtaPP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorInterCollectionInvYieldEtaPP[ppEst][meth]      = ScaleGraph(systErrorInterCollectionInvYieldEtaPP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-                systErrorUnCorrInterCollectionInvYieldEtaPP[ppEst][meth]= ScaleGraph(systErrorUnCorrInterCollectionInvYieldEtaPP[ppEst][meth],1/(xSection5TeV*recalcBarn));
-            }
-            if (haveRefPPEta[ppEst][meth])
-                cout << "found eta pp reference for " << nameMeasGlobalLabel[meth].Data() << endl;
+    for (Int_t meth = 0; meth< 11; meth++){
+        TString currMethodRead                          = nameMeasGlobalLabel[meth].Data();
+        TString currMethod                              = nameMeasGlobalLabel[meth].Data();
+        if (meth == 1){
+            currMethodRead                              = "Comb";
         }
+        statErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0%s5TeVStatErr",
+                                                                                                                currMethodRead.Data()));
+        systErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0%s5TeVSysErr",
+                                                                                                                currMethodRead.Data()));
+        systErrorUnCorrCollectionPi0PP[meth]           = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0%s5TeVSysErr",
+                                                                                                         currMethodRead.Data()));
 
-        graphPPCombPi0Stat[ppEst]                       = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombPi0UncorrSys[ppEst]                  = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombPi0FullSys[ppEst]                    = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombPi0InterSys[ppEst]                   = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
+        if (statErrorCollectionPi0PP[meth] && systErrorCollectionPi0PP[meth] && systErrorUnCorrCollectionPi0PP[meth] ){
+            haveRefPPPi0[meth]                              = kTRUE;
+            statErrorCollectionInvYieldPi0PP[meth]          = (TGraphAsymmErrors*)statErrorCollectionPi0PP[meth]->Clone(Form("graphInvYieldPi0%s5TeVStatErr",
+                                                                                                                    currMethod.Data()));
+            systErrorCollectionInvYieldPi0PP[meth]          = (TGraphAsymmErrors*)systErrorCollectionPi0PP[meth]->Clone(Form("graphInvYieldPi0%s5TeVSysErr",
+                                                                                                                    currMethod.Data()));
+            systErrorUnCorrCollectionInvYieldPi0PP[meth]    = (TGraphAsymmErrors*)systErrorUnCorrCollectionPi0PP[meth]->Clone(Form("graphInvYieldPi0%s5TeVUnCorrSysErr",
+                                                                                                                    currMethod.Data()));
 
-        graphPPInvYieldCombPi0Stat[ppEst]               = (TGraphAsymmErrors*)graphPPCombPi0Stat[ppEst]->Clone(Form("graphInvYieldStatErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPInvYieldCombPi0Sys[ppEst]                = (TGraphAsymmErrors*)graphPPCombPi0FullSys[ppEst]->Clone(Form("graphInvYieldSystErrComb_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPInvYieldCombPi0Stat[ppEst]               = ScaleGraph(graphPPCombPi0Stat[ppEst],1/(xSection5TeV*recalcBarn));
-        graphPPInvYieldCombPi0Sys[ppEst]                = ScaleGraph(graphPPInvYieldCombPi0Sys[ppEst],1/(xSection5TeV*recalcBarn));
-        graphPPInvYieldCombPi0StatW0XErr[ppEst]         = (TGraphAsymmErrors*)graphPPInvYieldCombPi0Stat[ppEst]->Clone(Form("graphInvYieldStatErrCombW0XErr_Pi0_5.023TeV%s", addNamePP[ppEst].Data()));
-        ProduceGraphAsymmWithoutXErrors(graphPPInvYieldCombPi0StatW0XErr[ppEst]);
+            statErrorCollectionInvYieldPi0PP[meth]          = ScaleGraph(statErrorCollectionInvYieldPi0PP[meth],1/(xSection5TeV*recalcBarn));
+            systErrorCollectionInvYieldPi0PP[meth]          = ScaleGraph(systErrorCollectionInvYieldPi0PP[meth],1/(xSection5TeV*recalcBarn));
+            systErrorUnCorrCollectionInvYieldPi0PP[meth]    = ScaleGraph(systErrorUnCorrCollectionInvYieldPi0PP[meth],1/(xSection5TeV*recalcBarn));
+
+        }
+        if (haveRefPPPi0[meth])
+            cout << "found pi0 pp reference for " << currMethod.Data() << endl;
 
 
-        graphPPCombEtaStat[ppEst]                       = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombEtaUncorrSys[ppEst]                  = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombEtaFullSys[ppEst]                    = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPCombEtaInterSys[ppEst]                   = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
 
-        graphPPInvYieldCombEtaStat[ppEst]               = (TGraphAsymmErrors*)graphPPCombEtaStat[ppEst]->Clone(Form("graphInvYieldStatErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPInvYieldCombEtaSys[ppEst]                = (TGraphAsymmErrors*)graphPPCombEtaFullSys[ppEst]->Clone(Form("graphInvYieldSystErrComb_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        graphPPInvYieldCombEtaStat[ppEst]               = ScaleGraph(graphPPCombEtaStat[ppEst],1/(xSection5TeV*recalcBarn));
-        graphPPInvYieldCombEtaSys[ppEst]                = ScaleGraph(graphPPInvYieldCombEtaSys[ppEst],1/(xSection5TeV*recalcBarn));
-        graphPPInvYieldCombEtaStatW0XErr[ppEst]         = (TGraphAsymmErrors*)graphPPInvYieldCombEtaStat[ppEst]->Clone(Form("graphInvYieldStatErrCombW0XErr_Eta_5.023TeV%s", addNamePP[ppEst].Data()));
-        ProduceGraphAsymmWithoutXErrors(graphPPInvYieldCombEtaStatW0XErr[ppEst]);
+        statErrorCollectionEtaPP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEta%s5TeVStatErr",
+                                                                                                                currMethodRead.Data()));
+        systErrorCollectionEtaPP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEta%s5TeVSysErr",
+                                                                                                                currMethodRead.Data()));
+        systErrorUnCorrCollectionEtaPP[meth]           = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEta%s5TeVSysErr",
+                                                                                                         currMethodRead.Data()));
+        if (statErrorCollectionEtaPP[meth] && systErrorCollectionEtaPP[meth] && systErrorUnCorrCollectionEtaPP[meth] ){
+            haveRefPPEta[meth]                         = kTRUE;
+            statErrorCollectionInvYieldEtaPP[meth]           = (TGraphAsymmErrors*)statErrorCollectionEtaPP[meth]->Clone(Form("graphInvYieldEta%s5TeVStatErr",
+                                                                                                                        currMethod.Data()));
+            systErrorCollectionInvYieldEtaPP[meth]           = (TGraphAsymmErrors*)systErrorCollectionEtaPP[meth]->Clone(Form("graphInvYieldEta%s5TeVSysErr",
+                                                                                                                        currMethod.Data()));
+            systErrorUnCorrCollectionInvYieldEtaPP[meth]     = (TGraphAsymmErrors*)systErrorUnCorrCollectionEtaPP[meth]->Clone(Form("graphInvYieldEta%s5TeVUnCorrSysErr",
+                                                                                                                        currMethod.Data()));
+
+            statErrorCollectionInvYieldEtaPP[meth]           = ScaleGraph(statErrorCollectionInvYieldEtaPP[meth],1/(xSection5TeV*recalcBarn));
+            systErrorCollectionInvYieldEtaPP[meth]           = ScaleGraph(systErrorCollectionInvYieldEtaPP[meth],1/(xSection5TeV*recalcBarn));
+            systErrorUnCorrCollectionInvYieldEtaPP[meth]     = ScaleGraph(systErrorUnCorrCollectionInvYieldEtaPP[meth],1/(xSection5TeV*recalcBarn));
+        }
+        if (haveRefPPEta[meth])
+            cout << "found eta pp reference for " << currMethod.Data() << endl;
     }
 
-//     TFile* fileOtherParticle                           = new TFile(fileNameOtherParticleInput.Data());
-//     TDirectory* directoryOtherPart[9]                  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    graphPPCombPi0Stat                       = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0Comb5TeVStatErr"));
+    graphPPCombPi0UncorrSys                  = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0Comb5TeVSysErr"));
+    graphPPCombPi0FullSys                    = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeV/graphInvCrossSectionPi0Comb5TeVSysErr"));
+
+    graphPPInvYieldCombPi0Stat               = (TGraphAsymmErrors*)graphPPCombPi0Stat->Clone(Form("graphInvYieldPi0Comb5TeVStatErr"));
+    graphPPInvYieldCombPi0Sys                = (TGraphAsymmErrors*)graphPPCombPi0FullSys->Clone(Form("graphInvYieldPi0Comb5TeVSysErr"));
+    graphPPInvYieldCombPi0Stat               = ScaleGraph(graphPPCombPi0Stat,1/(xSection5TeV*recalcBarn));
+    graphPPInvYieldCombPi0Sys                = ScaleGraph(graphPPInvYieldCombPi0Sys,1/(xSection5TeV*recalcBarn));
+    graphPPInvYieldCombPi0StatW0XErr         = (TGraphAsymmErrors*)graphPPInvYieldCombPi0Stat->Clone(Form("graphInvYieldPi0Comb5TeVStatErrW0XErr"));
+    ProduceGraphAsymmWithoutXErrors(graphPPInvYieldCombPi0StatW0XErr);
+
+
+    graphPPCombEtaStat                       = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEtaComb5TeVStatErr"));
+    graphPPCombEtaUncorrSys                  = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEtaComb5TeVSysErr"));
+    graphPPCombEtaFullSys                    = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeV/graphInvCrossSectionEtaComb5TeVSysErr"));
+
+    graphPPInvYieldCombEtaStat               = (TGraphAsymmErrors*)graphPPCombEtaStat->Clone(Form("graphInvYieldEtaComb5TeVStatErr"));
+    graphPPInvYieldCombEtaSys                = (TGraphAsymmErrors*)graphPPCombEtaFullSys->Clone(Form("graphInvYieldEtaComb5TeVSysErr"));
+    graphPPInvYieldCombEtaStat               = ScaleGraph(graphPPCombEtaStat,1/(xSection5TeV*recalcBarn));
+    graphPPInvYieldCombEtaSys                = ScaleGraph(graphPPInvYieldCombEtaSys,1/(xSection5TeV*recalcBarn));
+    graphPPInvYieldCombEtaStatW0XErr         = (TGraphAsymmErrors*)graphPPInvYieldCombEtaStat->Clone(Form("graphInvYieldEtaComb5TeVStatErrW0XErr"));
+    ProduceGraphAsymmWithoutXErrors(graphPPInvYieldCombEtaStatW0XErr);
+
+
+    TFile* fileOtherParticle                           = new TFile(fileNameOtherParticleInput.Data());
+    TDirectory* directoryOtherPart[9]                  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histChPiSpecStat[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histChPiSpecSyst[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAAStat[9]                = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAASys[9]                 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAATot[9]                 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -904,9 +860,15 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 //     TGraphAsymmErrors* graphChKToPiStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphChKToPiSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphChKToPiTot[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-//     for (Int_t cent = 0; cent < 17; cent++){
-//         directoryOtherPart[cent]                               = (TDirectory*)fileOtherParticle->Get(Form("PbPb5TeV_%s%s",centArray[cent].Data(), addCentString[cent].Data()));
-//         if (directoryOtherPart[cent]){
+    for (Int_t cent = 0; cent < maxCent; cent++){
+        TString folderNameOtherPart                     = Form("%sPbPb_5.02TeV",centArray[cent].Data());
+        directoryOtherPart[cent]                               = (TDirectory*)fileOtherParticle->Get(folderNameOtherPart.Data());
+        cout << "trying to find " << folderNameOtherPart.Data() << endl;
+        if (directoryOtherPart[cent]){
+            cout << "found it" << endl;
+            histChPiSpecStat[cent]                              = (TH1D*)directoryOtherPart[cent]->Get("histoChargedPionSpecStat");
+            histChPiSpecSyst[cent]                              = (TH1D*)directoryOtherPart[cent]->Get("histoChargedPionSpecSyst");
+            cout << histChPiSpecStat[cent] << "\t" << histChPiSpecSyst[cent] << endl;
 //             graphDRAAStat[cent]                                 = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbStatW0XErr");
 //             graphDRAASys[cent]                                  = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbSys");
 //             graphDRAATot[cent]                                  = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbTot");
@@ -916,8 +878,8 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 //             graphChKToPiStat[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubStatW0XErr");
 //             graphChKToPiSys[cent]                               = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubSys");
 //             graphChKToPiTot[cent]                               = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubTot");
-//         }
-//     }
+        }
+    }
 
     // *******************************************************************************************************
     // ******************************** Setup for pp plotting of reference ***********************************
@@ -1049,12 +1011,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         // *******************************************************************************************************
         // fitting spectrum with intial parameters
         // Two component model fit from Bylinkin
-        TF1* fitTCMDecomposedLPi0PP                             = FitObject("tcmlow",Form("twoCompModelPi0_DecL_PP%s", addNamePP[ppEst].Data()), "Pi0", NULL, 0.3, 2.);
-        TF1* fitTCMDecomposedHPi0PP                             = FitObject("tcmhigh",Form("twoCompModelPi0_DecH_PP%s", addNamePP[ppEst].Data()), "Pi0", NULL, 4, 50.);
-        fitTCMDecomposedLPi0PP->SetParameters(graphPPCombPi0Stat[ppEst]->GetY()[2],0.3);
-        graphPPCombPi0Stat[ppEst]->Fit(fitTCMDecomposedLPi0PP,"QNRMEX0+","",0.3,0.8);
-        graphPPCombPi0Stat[ppEst]->Fit(fitTCMDecomposedHPi0PP,"QNRMEX0+","",3, 20.);
-        fitTCMDecomposedHPi0PP->SetParameters(graphPPCombPi0Stat[ppEst]->GetY()[2],0.8, 2);
+        TF1* fitTCMDecomposedLPi0PP                             = FitObject("tcmlow",Form("twoCompModelPi0_DecL_PP"), "Pi0", NULL, 0.3, 2.);
+        TF1* fitTCMDecomposedHPi0PP                             = FitObject("tcmhigh",Form("twoCompModelPi0_DecH_PP"), "Pi0", NULL, 4, 50.);
+        fitTCMDecomposedLPi0PP->SetParameters(graphPPCombPi0Stat->GetY()[2],0.3);
+        graphPPCombPi0Stat->Fit(fitTCMDecomposedLPi0PP,"QNRMEX0+","",0.3,0.8);
+        graphPPCombPi0Stat->Fit(fitTCMDecomposedHPi0PP,"QNRMEX0+","",3, 20.);
+        fitTCMDecomposedHPi0PP->SetParameters(graphPPCombPi0Stat->GetY()[2],0.8, 2);
 
         cout << WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
         fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
@@ -1065,45 +1027,45 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                                                     fitTCMDecomposedHPi0PP->GetParameter(0),fitTCMDecomposedHPi0PP->GetParameter(1),fitTCMDecomposedHPi0PP->GetParameter(2)};
 
         //Two component model from Bylinkin
-        fitTCMInvXSetionPi0PP[ppEst]                            = FitObject("tcm",Form("fitTCMInvXSetionPi0PP5TeV%s",addNamePP[ppEst].Data()),"Pi0",graphPPCombPi0Stat[ppEst], 0.3, 20. ,paramTCMPi0NewPP,"QNRMEX0+","", kFALSE);
+        fitTCMInvXSetionPi0PP                            = FitObject("tcm",Form("fitTCMInvXSetionPi0PP5TeV"),"Pi0",graphPPCombPi0Stat, 0.3, 20. ,paramTCMPi0NewPP,"QNRMEX0+","", kFALSE);
         cout << "fitting pp pi0 spectra" << endl;
-        cout << WriteParameterToFile(fitTCMInvXSetionPi0PP[ppEst])<< endl;
-        fitTsallisInvXSectionPi0PP[ppEst]                       = FitObject("l",Form("fitTsallisInvXSectionPi0PP5TeV%s",addNamePP[ppEst].Data()),"Pi0",graphPPCombPi0Stat[ppEst], 0.3, 20. ,
+        cout << WriteParameterToFile(fitTCMInvXSetionPi0PP)<< endl;
+        fitTsallisInvXSectionPi0PP                       = FitObject("l",Form("fitTsallisInvXSectionPi0PP5TeV"),"Pi0",graphPPCombPi0Stat, 0.3, 20. ,
                                                                               NULL,"QNRMEX0+","", kFALSE);
         cout << "fitting pp pi0 spectra" << endl;
-        cout << WriteParameterToFile(fitTsallisInvXSectionPi0PP[ppEst])<< endl;
-        fileFitsOutput <<  WriteParameterToFile(fitTsallisInvXSectionPi0PP[ppEst])<< endl;
+        cout << WriteParameterToFile(fitTsallisInvXSectionPi0PP)<< endl;
+        fileFitsOutput <<  WriteParameterToFile(fitTsallisInvXSectionPi0PP)<< endl;
 
-        fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSetionPi0PP[ppEst])<< endl;
-        fitPPTCMInvYieldPi0[ppEst]                              = FitObject("tcm",Form("fitTCMInvYieldPi0PP5TeV%s",addNamePP[ppEst].Data()),"Pi0",NULL, 0.3, 20. ,NULL,"QNRMEX0+","", kFALSE);
+        fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSetionPi0PP)<< endl;
+        fitPPTCMInvYieldPi0                              = FitObject("tcm",Form("fitTCMInvYieldPi0PP5TeV"),"Pi0",NULL, 0.3, 20. ,NULL,"QNRMEX0+","", kFALSE);
         cout << "fitting pp pi0 spectra" << endl;
-        fitPPTCMInvYieldPi0[ppEst]->SetParameter(0,graphPPInvYieldCombPi0Stat[ppEst]->GetY()[2]);
-        fitPPTCMInvYieldPi0[ppEst]->SetParameter(1,fitTCMInvXSetionPi0PP[ppEst]->GetParameter(1));
-        fitPPTCMInvYieldPi0[ppEst]->SetParameter(2,graphPPInvYieldCombPi0Stat[ppEst]->GetY()[2]);
-        fitPPTCMInvYieldPi0[ppEst]->SetParameter(3,fitTCMInvXSetionPi0PP[ppEst]->GetParameter(3));
-        fitPPTCMInvYieldPi0[ppEst]->SetParameter(4,fitTCMInvXSetionPi0PP[ppEst]->GetParameter(4));
-        graphPPInvYieldCombPi0Stat[ppEst]->Fit(fitPPTCMInvYieldPi0[ppEst],"QNRMEX0+","", 0.3, 20.);
-        cout << WriteParameterToFile(fitPPTCMInvYieldPi0[ppEst])<< endl;
-        fileFitsOutput <<  WriteParameterToFile(fitPPTCMInvYieldPi0[ppEst])<< endl;
-        fitPPTCMInvYieldPi0[ppEst]->SetRange(0.3, 20.);
+        fitPPTCMInvYieldPi0->SetParameter(0,graphPPInvYieldCombPi0Stat->GetY()[2]);
+        fitPPTCMInvYieldPi0->SetParameter(1,fitTCMInvXSetionPi0PP->GetParameter(1));
+        fitPPTCMInvYieldPi0->SetParameter(2,graphPPInvYieldCombPi0Stat->GetY()[2]);
+        fitPPTCMInvYieldPi0->SetParameter(3,fitTCMInvXSetionPi0PP->GetParameter(3));
+        fitPPTCMInvYieldPi0->SetParameter(4,fitTCMInvXSetionPi0PP->GetParameter(4));
+        graphPPInvYieldCombPi0Stat->Fit(fitPPTCMInvYieldPi0,"QNRMEX0+","", 0.3, 20.);
+        cout << WriteParameterToFile(fitPPTCMInvYieldPi0)<< endl;
+        fileFitsOutput <<  WriteParameterToFile(fitPPTCMInvYieldPi0)<< endl;
+        fitPPTCMInvYieldPi0->SetRange(0.3, 20.);
 
         // *************************************************************************************************************
         // Shift graphs in Y direction as well if desired
         // *************************************************************************************************************
 
-        graphRatioPi0CombToFitStatPP[ppEst]                         = (TGraphAsymmErrors*)graphPPCombPi0Stat[ppEst]->Clone();
-        graphRatioPi0CombToFitStatPP[ppEst]                         = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitStatPP[ppEst], fitTCMInvXSetionPi0PP[ppEst]);
-        graphRatioPi0CombToFitSysPP[ppEst]                          = (TGraphAsymmErrors*)graphPPCombPi0FullSys[ppEst]->Clone();
-        graphRatioPi0CombToFitSysPP[ppEst]                          = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitSysPP[ppEst], fitTCMInvXSetionPi0PP[ppEst]);
+        graphRatioPi0CombToFitStatPP                         = (TGraphAsymmErrors*)graphPPCombPi0Stat->Clone();
+        graphRatioPi0CombToFitStatPP                         = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitStatPP, fitTCMInvXSetionPi0PP);
+        graphRatioPi0CombToFitSysPP                          = (TGraphAsymmErrors*)graphPPCombPi0FullSys->Clone();
+        graphRatioPi0CombToFitSysPP                          = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitSysPP, fitTCMInvXSetionPi0PP);
 
         for (Int_t meth = 0; meth< 11; meth++){
-            if (statErrorCollectionPi0PP[ppEst][meth]){
-                graphRatioPi0IndCombFitStatPP[ppEst][meth]                = (TGraphAsymmErrors*)statErrorCollectionPi0PP[ppEst][meth]->Clone(Form("RatioPi0%sToCombFitStatPP", nameMeasGlobalLabel[meth].Data()));
-                graphRatioPi0IndCombFitStatPP[ppEst][meth]                = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStatPP[ppEst][meth], fitTCMInvXSetionPi0PP[ppEst]);
+            if (statErrorCollectionPi0PP[meth]){
+                graphRatioPi0IndCombFitStatPP[meth]                = (TGraphAsymmErrors*)statErrorCollectionPi0PP[meth]->Clone(Form("RatioPi0%sToCombFitStatPP", nameMeasGlobalLabel[meth].Data()));
+                graphRatioPi0IndCombFitStatPP[meth]                = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStatPP[meth], fitTCMInvXSetionPi0PP);
             }
-            if (systErrorCollectionPi0PP[ppEst][meth]){
-                graphRatioPi0IndCombFitSysPP[ppEst][meth]                 = (TGraphAsymmErrors*)systErrorCollectionPi0PP[ppEst][meth]->Clone(Form("RatioPi0%sToCombFitSystPP", nameMeasGlobalLabel[meth].Data()));
-                graphRatioPi0IndCombFitSysPP[ppEst][meth]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[ppEst][meth], fitTCMInvXSetionPi0PP[ppEst]);
+            if (systErrorCollectionPi0PP[meth]){
+                graphRatioPi0IndCombFitSysPP[meth]                 = (TGraphAsymmErrors*)systErrorCollectionPi0PP[meth]->Clone(Form("RatioPi0%sToCombFitSystPP", nameMeasGlobalLabel[meth].Data()));
+                graphRatioPi0IndCombFitSysPP[meth]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[meth], fitTCMInvXSetionPi0PP);
             }
         }
 
@@ -1113,12 +1075,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         canvasRatioToCombFitPP->cd();
         histo2DPi0RatioToCombFitPP->Draw("copy");
 
-        ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombToFitStatPP[ppEst]);
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombToFitStatPP);
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitSysPP[ppEst], markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
-        graphRatioPi0CombToFitSysPP[ppEst]->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitStatPP[ppEst], markerStyleComb, markerSizeComb, colorComb , colorComb);
-        graphRatioPi0CombToFitStatPP[ppEst]->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitSysPP, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+        graphRatioPi0CombToFitSysPP->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitStatPP, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphRatioPi0CombToFitStatPP->Draw("p,same,z");
 
         DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1., 1.,1, kGray+2);
         DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1.1, 1.1,1, kGray, 7);
@@ -1128,7 +1090,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         labelRatioToFitALICEPP->Draw();
         labelRatioToFitPi0PP->Draw();
 
-        canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfCombToCombFit_PP5TeV%s.%s",outputDirSupportPaper.Data(), addNamePP[ppEst].Data(), suffix.Data()));
+        canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfCombToCombFit_PP5TeV.%s",outputDirSupportPaper.Data(), suffix.Data()));
 
         // **********************************************************************************************************************
         // *******************************************Plot Ratio of Individual meas to Fit ******************************************
@@ -1138,17 +1100,17 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         histo2DPi0RatioToCombFitPP->Draw("copy");
 
         for (Int_t meth = 10; meth > -1 ; meth--){
-            if (graphRatioPi0IndCombFitSysPP[ppEst][meth]){
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSysPP[ppEst][meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
-                graphRatioPi0IndCombFitSysPP[ppEst][meth]->Draw("E2same");
+            if (graphRatioPi0IndCombFitSysPP[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSysPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
+                graphRatioPi0IndCombFitSysPP[meth]->Draw("E2same");
             }
-            if (graphRatioPi0IndCombFitStatPP[ppEst][meth]){
-                ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStatPP[ppEst][meth]);
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStatPP[ppEst][meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth]);
-                graphRatioPi0IndCombFitStatPP[ppEst][meth]->Draw("p,same,z");
+            if (graphRatioPi0IndCombFitStatPP[meth]){
+                ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStatPP[meth]);
+                DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStatPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth]);
+                graphRatioPi0IndCombFitStatPP[meth]->Draw("p,same,z");
             }
         }
-        if (graphRatioPi0IndCombFitStatPP[ppEst][4])graphRatioPi0IndCombFitStatPP[ppEst][4]->Draw("p,same,z");
+        if (graphRatioPi0IndCombFitStatPP[4])graphRatioPi0IndCombFitStatPP[4]->Draw("p,same,z");
 
         DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1., 1.,1, kGray+2);
         DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1.1, 1.1,1, kGray, 7);
@@ -1175,54 +1137,54 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         textStatOnlyRatioPi0PP2->Draw();
         textSysOnlyRatioPi0PP2->Draw();
 
-        TMarker* markerPCMPi0OnlyRatioPi0PP             = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][0],columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[1],1);
+        TMarker* markerPCMPi0OnlyRatioPi0PP             = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[0],columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[1],1);
         markerPCMPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[1] ,rowsLegendOnlyPi0RatioPPAbs[1]);
-        TMarker* markerPHOSPi0OnlyRatioPi0PP            = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][1], columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[2],1);
+        TMarker* markerPHOSPi0OnlyRatioPi0PP            = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[1], columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[2],1);
         markerPHOSPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[1] ,rowsLegendOnlyPi0RatioPPAbs[2]);
-        TMarker* markerEMCALPi0OnlyRatioPi0PP           = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][2], columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[3],1);
+        TMarker* markerEMCALPi0OnlyRatioPi0PP           = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[2], columnsLegendOnlyPi0RatioPP[1] ,rowsLegendOnlyPi0RatioPP[3],1);
         markerEMCALPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[1] ,rowsLegendOnlyPi0RatioPPAbs[3]);
-        TMarker* markerPCMEMCALPi0OnlyRatioPi0PP        = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][4], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[1],1);
+        TMarker* markerPCMEMCALPi0OnlyRatioPi0PP        = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[4], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[1],1);
         markerPCMEMCALPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[4] ,rowsLegendOnlyPi0RatioPPAbs[1]);
-        TMarker* markerPCMPHOSPi0OnlyRatioPi0PP         = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][3], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[2],1);
+        TMarker* markerPCMPHOSPi0OnlyRatioPi0PP         = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[3], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[2],1);
         markerPCMPHOSPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[4] ,rowsLegendOnlyPi0RatioPPAbs[2]);
 
-        TBox* boxPCMPi0OnlyRatioPi0PP                 = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][0], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[1]- heightBoxPP,
+        TBox* boxPCMPi0OnlyRatioPi0PP                 = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[0], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[1]- heightBoxPP,
                                                                         columnsLegendOnlyPi0RatioPPAbs[2]+ 1.7*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[1]+ heightBoxPP);
         boxPCMPi0OnlyRatioPi0PP->Draw("l");
-        TBox* boxPHOSPi0OnlyRatioPi0PP                = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][1], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[2]- heightBoxPP,
+        TBox* boxPHOSPi0OnlyRatioPi0PP                = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[1], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[2]- heightBoxPP,
                                                                         columnsLegendOnlyPi0RatioPPAbs[2]+ 1.7*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[2]+ heightBoxPP);
         boxPHOSPi0OnlyRatioPi0PP->Draw("l");
-        TBox* boxEMCALPi0OnlyRatioPi0PP               = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][2], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[3]- heightBoxPP,
+        TBox* boxEMCALPi0OnlyRatioPi0PP               = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[2], columnsLegendOnlyPi0RatioPPAbs[2]-0.1*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[3]- heightBoxPP,
                                                                         columnsLegendOnlyPi0RatioPPAbs[2]+ 1.7*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[3]+ heightBoxPP);
         boxEMCALPi0OnlyRatioPi0PP->Draw("l");
-        TBox* boxPCMEMCALPi0OnlyRatioPi0PP            = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][4], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[1]- heightBoxPP,
+        TBox* boxPCMEMCALPi0OnlyRatioPi0PP            = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[4], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[1]- heightBoxPP,
                                                                         columnsLegendOnlyPi0RatioPPAbs[5]+ 17.2*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[1]+ heightBoxPP);
         boxPCMEMCALPi0OnlyRatioPi0PP->Draw("l");
-        TBox* boxPCMPHOSPi0OnlyRatioPi0PP             = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][3], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[2]- heightBoxPP,
+        TBox* boxPCMPHOSPi0OnlyRatioPi0PP             = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[3], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[2]- heightBoxPP,
                                                                         columnsLegendOnlyPi0RatioPPAbs[5]+ 17.2*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[2]+ heightBoxPP);
         boxPCMPHOSPi0OnlyRatioPi0PP->Draw("l");
 
-        if(graphRatioPi0IndCombFitSysPP[ppEst][5]) {
-            TMarker* markerDalitzPi0OnlyRatioPi0PP      = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][5], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[3],1);
+        if(graphRatioPi0IndCombFitSysPP[5]) {
+            TMarker* markerDalitzPi0OnlyRatioPi0PP      = CreateMarkerFromGraph(graphRatioPi0IndCombFitSysPP[5], columnsLegendOnlyPi0RatioPP[3] ,rowsLegendOnlyPi0RatioPP[3],1);
             markerDalitzPi0OnlyRatioPi0PP->DrawMarker(columnsLegendOnlyPi0RatioPPAbs[4] ,rowsLegendOnlyPi0RatioPPAbs[3]);
-            TBox* boxDalitzPi0OnlyRatioPi0PP             = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[ppEst][5], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[3]- heightBoxPP,
+            TBox* boxDalitzPi0OnlyRatioPi0PP             = CreateBoxFromGraph(graphRatioPi0IndCombFitSysPP[5], columnsLegendOnlyPi0RatioPPAbs[5]-0.5*lengthBoxPP , rowsLegendOnlyPi0RatioPPAbs[3]- heightBoxPP,
                                                                               columnsLegendOnlyPi0RatioPPAbs[5]+ 17.2*lengthBoxPP, rowsLegendOnlyPi0RatioPPAbs[3]+ heightBoxPP);
             boxDalitzPi0OnlyRatioPi0PP->Draw("l");
         }
 
-        canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit_PP5TeV%s.%s",outputDirSupportPaper.Data(), addNamePP[ppEst].Data(),suffix.Data()));
+        canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit_PP5TeV.%s",outputDirSupportPaper.Data(),suffix.Data()));
 
         // *******************************************************************************************************
         // ************************** Comparison of different pp interpolated eta spectra ************************
         // *******************************************************************************************************
         // fitting spectrum with intial parameters
         // Two component model fit from Bylinkin
-        TF1* fitTCMDecomposedLEtaPP                             = FitObject("tcmlow",Form("twoCompModelEta_DecL_PP%s", addNamePP[ppEst].Data()), "Eta", NULL, 0.3, 2.);
-        TF1* fitTCMDecomposedHEtaPP                             = FitObject("tcmhigh",Form("twoCompModelEta_DecH_PP%s", addNamePP[ppEst].Data()), "Eta", NULL, 4, 50.);
-        fitTCMDecomposedLEtaPP->SetParameters(graphPPCombEtaStat[ppEst]->GetY()[2],0.3);
-        graphPPCombEtaStat[ppEst]->Fit(fitTCMDecomposedLEtaPP,"QNRMEX0+","",0.3,0.8);
-        graphPPCombEtaStat[ppEst]->Fit(fitTCMDecomposedHEtaPP,"QNRMEX0+","",3, 20.);
-        fitTCMDecomposedHEtaPP->SetParameters(graphPPCombEtaStat[ppEst]->GetY()[2],0.8, 2);
+        TF1* fitTCMDecomposedLEtaPP                             = FitObject("tcmlow",Form("twoCompModelEta_DecL_PP"), "Eta", NULL, 0.3, 2.);
+        TF1* fitTCMDecomposedHEtaPP                             = FitObject("tcmhigh",Form("twoCompModelEta_DecH_PP"), "Eta", NULL, 4, 50.);
+        fitTCMDecomposedLEtaPP->SetParameters(graphPPCombEtaStat->GetY()[2],0.3);
+        graphPPCombEtaStat->Fit(fitTCMDecomposedLEtaPP,"QNRMEX0+","",0.3,0.8);
+        graphPPCombEtaStat->Fit(fitTCMDecomposedHEtaPP,"QNRMEX0+","",3, 20.);
+        fitTCMDecomposedHEtaPP->SetParameters(graphPPCombEtaStat->GetY()[2],0.8, 2);
 
         cout << WriteParameterToFile(fitTCMDecomposedLEtaPP)<< endl;
         fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedLEtaPP)<< endl;
@@ -1233,45 +1195,45 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                                                     fitTCMDecomposedHEtaPP->GetParameter(0),fitTCMDecomposedHEtaPP->GetParameter(1),fitTCMDecomposedHEtaPP->GetParameter(2)};
 
         //Two component model from Bylinkin
-        fitTCMInvXSetionEtaPP[ppEst]                            = FitObject("tcm",Form("fitTCMInvXSetionEtaPP5TeV%s",addNamePP[ppEst].Data()),"Eta",graphPPCombEtaStat[ppEst], 0.3, 20. ,paramTCMEtaNewPP,"QNRMEX0+","", kFALSE);
+        fitTCMInvXSetionEtaPP                            = FitObject("tcm",Form("fitTCMInvXSetionEtaPP5TeV"),"Eta",graphPPCombEtaStat, 0.3, 20. ,paramTCMEtaNewPP,"QNRMEX0+","", kFALSE);
         cout << "fitting pp eta spectra" << endl;
-        cout << WriteParameterToFile(fitTCMInvXSetionEtaPP[ppEst])<< endl;
-        fitTsallisInvXSectionEtaPP[ppEst]                       = FitObject("l",Form("fitTsallisInvXSectionEtaPP5TeV%s",addNamePP[ppEst].Data()),"Eta",graphPPCombEtaStat[ppEst], 0.3, 20. ,
+        cout << WriteParameterToFile(fitTCMInvXSetionEtaPP)<< endl;
+        fitTsallisInvXSectionEtaPP                       = FitObject("l",Form("fitTsallisInvXSectionEtaPP5TeV"),"Eta",graphPPCombEtaStat, 0.3, 20. ,
                                                                             NULL,"QNRMEX0+","", kFALSE);
         cout << "fitting pp eta spectra" << endl;
-        cout << WriteParameterToFile(fitTsallisInvXSectionEtaPP[ppEst])<< endl;
-        fileFitsOutput <<  WriteParameterToFile(fitTsallisInvXSectionEtaPP[ppEst])<< endl;
+        cout << WriteParameterToFile(fitTsallisInvXSectionEtaPP)<< endl;
+        fileFitsOutput <<  WriteParameterToFile(fitTsallisInvXSectionEtaPP)<< endl;
 
-        fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSetionEtaPP[ppEst])<< endl;
-        fitPPTCMInvYieldEta[ppEst]                              = FitObject("tcm",Form("fitTCMInvYieldEtaPP5TeV%s",addNamePP[ppEst].Data()),"Eta",NULL, 0.3, 20. ,NULL,"QNRMEX0+","", kFALSE);
+        fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSetionEtaPP)<< endl;
+        fitPPTCMInvYieldEta                              = FitObject("tcm",Form("fitTCMInvYieldEtaPP5TeV"),"Eta",NULL, 0.3, 20. ,NULL,"QNRMEX0+","", kFALSE);
         cout << "fitting pp eta spectra" << endl;
-        fitPPTCMInvYieldEta[ppEst]->SetParameter(0,graphPPInvYieldCombEtaStat[ppEst]->GetY()[2]);
-        fitPPTCMInvYieldEta[ppEst]->SetParameter(1,fitTCMInvXSetionEtaPP[ppEst]->GetParameter(1));
-        fitPPTCMInvYieldEta[ppEst]->SetParameter(2,graphPPInvYieldCombEtaStat[ppEst]->GetY()[2]);
-        fitPPTCMInvYieldEta[ppEst]->SetParameter(3,fitTCMInvXSetionEtaPP[ppEst]->GetParameter(3));
-        fitPPTCMInvYieldEta[ppEst]->SetParameter(4,fitTCMInvXSetionEtaPP[ppEst]->GetParameter(4));
-        graphPPInvYieldCombEtaStat[ppEst]->Fit(fitPPTCMInvYieldEta[ppEst],"QNRMEX0+","", 0.3, 20.);
-        cout << WriteParameterToFile(fitPPTCMInvYieldEta[ppEst])<< endl;
-        fileFitsOutput <<  WriteParameterToFile(fitPPTCMInvYieldEta[ppEst])<< endl;
-        fitPPTCMInvYieldEta[ppEst]->SetRange(0.3, 20.);
+        fitPPTCMInvYieldEta->SetParameter(0,graphPPInvYieldCombEtaStat->GetY()[2]);
+        fitPPTCMInvYieldEta->SetParameter(1,fitTCMInvXSetionEtaPP->GetParameter(1));
+        fitPPTCMInvYieldEta->SetParameter(2,graphPPInvYieldCombEtaStat->GetY()[2]);
+        fitPPTCMInvYieldEta->SetParameter(3,fitTCMInvXSetionEtaPP->GetParameter(3));
+        fitPPTCMInvYieldEta->SetParameter(4,fitTCMInvXSetionEtaPP->GetParameter(4));
+        graphPPInvYieldCombEtaStat->Fit(fitPPTCMInvYieldEta,"QNRMEX0+","", 0.3, 20.);
+        cout << WriteParameterToFile(fitPPTCMInvYieldEta)<< endl;
+        fileFitsOutput <<  WriteParameterToFile(fitPPTCMInvYieldEta)<< endl;
+        fitPPTCMInvYieldEta->SetRange(0.3, 20.);
 
         // *************************************************************************************************************
         // Shift graphs in Y direction as well if desired
         // *************************************************************************************************************
 
-        graphRatioEtaCombToFitStatPP[ppEst]                         = (TGraphAsymmErrors*)graphPPCombEtaStat[ppEst]->Clone();
-        graphRatioEtaCombToFitStatPP[ppEst]                         = CalculateGraphErrRatioToFit(graphRatioEtaCombToFitStatPP[ppEst], fitTCMInvXSetionEtaPP[ppEst]);
-        graphRatioEtaCombToFitSysPP[ppEst]                          = (TGraphAsymmErrors*)graphPPCombEtaFullSys[ppEst]->Clone();
-        graphRatioEtaCombToFitSysPP[ppEst]                          = CalculateGraphErrRatioToFit(graphRatioEtaCombToFitSysPP[ppEst], fitTCMInvXSetionEtaPP[ppEst]);
+        graphRatioEtaCombToFitStatPP                         = (TGraphAsymmErrors*)graphPPCombEtaStat->Clone();
+        graphRatioEtaCombToFitStatPP                         = CalculateGraphErrRatioToFit(graphRatioEtaCombToFitStatPP, fitTCMInvXSetionEtaPP);
+        graphRatioEtaCombToFitSysPP                          = (TGraphAsymmErrors*)graphPPCombEtaFullSys->Clone();
+        graphRatioEtaCombToFitSysPP                          = CalculateGraphErrRatioToFit(graphRatioEtaCombToFitSysPP, fitTCMInvXSetionEtaPP);
 
         for (Int_t meth = 0; meth< 11; meth++){
-            if (statErrorCollectionEtaPP[ppEst][meth]){
-                graphRatioEtaIndCombFitStatPP[ppEst][meth]                = (TGraphAsymmErrors*)statErrorCollectionEtaPP[ppEst][meth]->Clone(Form("RatioEta%sToCombFitStatPP", nameMeasGlobalLabel[meth].Data()));
-                graphRatioEtaIndCombFitStatPP[ppEst][meth]                = CalculateGraphErrRatioToFit(graphRatioEtaIndCombFitStatPP[ppEst][meth], fitTCMInvXSetionEtaPP[ppEst]);
+            if (statErrorCollectionEtaPP[meth]){
+                graphRatioEtaIndCombFitStatPP[meth]                = (TGraphAsymmErrors*)statErrorCollectionEtaPP[meth]->Clone(Form("RatioEta%sToCombFitStatPP", nameMeasGlobalLabel[meth].Data()));
+                graphRatioEtaIndCombFitStatPP[meth]                = CalculateGraphErrRatioToFit(graphRatioEtaIndCombFitStatPP[meth], fitTCMInvXSetionEtaPP);
             }
-            if (systErrorCollectionEtaPP[ppEst][meth]){
-                graphRatioEtaIndCombFitSysPP[ppEst][meth]                 = (TGraphAsymmErrors*)systErrorCollectionEtaPP[ppEst][meth]->Clone(Form("RatioEta%sToCombFitSystPP", nameMeasGlobalLabel[meth].Data()));
-                graphRatioEtaIndCombFitSysPP[ppEst][meth]                 = CalculateGraphErrRatioToFit(graphRatioEtaIndCombFitSysPP[ppEst][meth], fitTCMInvXSetionEtaPP[ppEst]);
+            if (systErrorCollectionEtaPP[meth]){
+                graphRatioEtaIndCombFitSysPP[meth]                 = (TGraphAsymmErrors*)systErrorCollectionEtaPP[meth]->Clone(Form("RatioEta%sToCombFitSystPP", nameMeasGlobalLabel[meth].Data()));
+                graphRatioEtaIndCombFitSysPP[meth]                 = CalculateGraphErrRatioToFit(graphRatioEtaIndCombFitSysPP[meth], fitTCMInvXSetionEtaPP);
             }
         }
 
@@ -1281,12 +1243,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         canvasRatioToCombFitPP->cd();
         histo2DEtaRatioToCombFitPP->Draw("copy");
 
-        ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombToFitStatPP[ppEst]);
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombToFitStatPP);
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombToFitSysPP[ppEst], markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
-        graphRatioEtaCombToFitSysPP[ppEst]->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombToFitStatPP[ppEst], markerStyleComb, markerSizeComb, colorComb , colorComb);
-        graphRatioEtaCombToFitStatPP[ppEst]->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombToFitSysPP, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+        graphRatioEtaCombToFitSysPP->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombToFitStatPP, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphRatioEtaCombToFitStatPP->Draw("p,same,z");
 
         DrawGammaLines(minPtEtaPlotting, maxPtEtaPlotting , 1., 1.,1, kGray+2);
         DrawGammaLines(minPtEtaPlotting, maxPtEtaPlotting , 1.1, 1.1,1, kGray, 7);
@@ -1296,7 +1258,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         labelRatioToFitALICEPP->Draw();
         labelRatioToFitEtaPP->Draw();
 
-        canvasRatioToCombFitPP->SaveAs(Form("%s/Eta_RatioOfCombToCombFit_PP5TeV%s.%s",outputDirSupportPaper.Data(), addNamePP[ppEst].Data(), suffix.Data()));
+        canvasRatioToCombFitPP->SaveAs(Form("%s/Eta_RatioOfCombToCombFit_PP5TeV.%s",outputDirSupportPaper.Data(), suffix.Data()));
 
         // **********************************************************************************************************************
         // *******************************************Plot Ratio of Individual meas to Fit ******************************************
@@ -1306,17 +1268,17 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         histo2DEtaRatioToCombFitPP->Draw("copy");
 
         for (Int_t meth = 10; meth > -1 ; meth--){
-            if (graphRatioEtaIndCombFitSysPP[ppEst][meth]){
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaIndCombFitSysPP[ppEst][meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
-                graphRatioEtaIndCombFitSysPP[ppEst][meth]->Draw("E2same");
+            if (graphRatioEtaIndCombFitSysPP[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphRatioEtaIndCombFitSysPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
+                graphRatioEtaIndCombFitSysPP[meth]->Draw("E2same");
             }
-            if (graphRatioEtaIndCombFitStatPP[ppEst][meth]){
-                ProduceGraphAsymmWithoutXErrors(graphRatioEtaIndCombFitStatPP[ppEst][meth]);
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaIndCombFitStatPP[ppEst][meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth]);
-                graphRatioEtaIndCombFitStatPP[ppEst][meth]->Draw("p,same,z");
+            if (graphRatioEtaIndCombFitStatPP[meth]){
+                ProduceGraphAsymmWithoutXErrors(graphRatioEtaIndCombFitStatPP[meth]);
+                DrawGammaSetMarkerTGraphAsym(graphRatioEtaIndCombFitStatPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth]);
+                graphRatioEtaIndCombFitStatPP[meth]->Draw("p,same,z");
             }
         }
-        if (graphRatioEtaIndCombFitStatPP[ppEst][4])graphRatioEtaIndCombFitStatPP[ppEst][4]->Draw("p,same,z");
+        if (graphRatioEtaIndCombFitStatPP[4])graphRatioEtaIndCombFitStatPP[4]->Draw("p,same,z");
 
         DrawGammaLines(minPtEtaPlotting, maxPtEtaPlotting , 1., 1.,1, kGray+2);
         DrawGammaLines(minPtEtaPlotting, maxPtEtaPlotting , 1.1, 1.1,1, kGray, 7);
@@ -1342,34 +1304,34 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         textStatOnlyRatioEtaPP2->Draw();
         textSysOnlyRatioEtaPP2->Draw();
 
-        TMarker* markerPCMEtaOnlyRatioEtaPP             = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][0],columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[1],1);
+        TMarker* markerPCMEtaOnlyRatioEtaPP             = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[0],columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[1],1);
         markerPCMEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[1]);
-        TMarker* markerPHOSEtaOnlyRatioEtaPP            = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][1], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[2],1);
+        TMarker* markerPHOSEtaOnlyRatioEtaPP            = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[2],1);
         markerPHOSEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[2]);
-        TMarker* markerEMCALEtaOnlyRatioEtaPP           = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][2], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[3],1);
+        TMarker* markerEMCALEtaOnlyRatioEtaPP           = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[2], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[3],1);
         markerEMCALEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[3]);
-        TMarker* markerPCMEMCALEtaOnlyRatioEtaPP        = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][4], columnsLegendOnlyEtaRatioPP[3] ,rowsLegendOnlyEtaRatioPP[1],1);
+        TMarker* markerPCMEMCALEtaOnlyRatioEtaPP        = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[4], columnsLegendOnlyEtaRatioPP[3] ,rowsLegendOnlyEtaRatioPP[1],1);
         markerPCMEMCALEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[4] ,rowsLegendOnlyEtaRatioPPAbs[1]);
-        TMarker* markerPCMPHOSEtaOnlyRatioEtaPP         = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][3], columnsLegendOnlyEtaRatioPP[3] ,rowsLegendOnlyEtaRatioPP[2],1);
+        TMarker* markerPCMPHOSEtaOnlyRatioEtaPP         = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[3], columnsLegendOnlyEtaRatioPP[3] ,rowsLegendOnlyEtaRatioPP[2],1);
         markerPCMPHOSEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[4] ,rowsLegendOnlyEtaRatioPPAbs[2]);
 
-        TBox* boxPCMEtaOnlyRatioEtaPP                 = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][0], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[1]- heightBoxPP,
+        TBox* boxPCMEtaOnlyRatioEtaPP                 = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[0], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[1]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[1]+ heightBoxPP);
         boxPCMEtaOnlyRatioEtaPP->Draw("l");
-        TBox* boxPHOSEtaOnlyRatioEtaPP                = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][1], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
+        TBox* boxPHOSEtaOnlyRatioEtaPP                = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[2]+ heightBoxPP);
         boxPHOSEtaOnlyRatioEtaPP->Draw("l");
-        TBox* boxEMCALEtaOnlyRatioEtaPP               = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][2], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[3]- heightBoxPP,
+        TBox* boxEMCALEtaOnlyRatioEtaPP               = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[2], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[3]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[3]+ heightBoxPP);
         boxEMCALEtaOnlyRatioEtaPP->Draw("l");
-        TBox* boxPCMEMCALEtaOnlyRatioEtaPP            = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][4], columnsLegendOnlyEtaRatioPPAbs[5]-0.5*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[1]- heightBoxPP,
+        TBox* boxPCMEMCALEtaOnlyRatioEtaPP            = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[4], columnsLegendOnlyEtaRatioPPAbs[5]-0.5*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[1]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[5]+ 17.*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[1]+ heightBoxPP);
         boxPCMEMCALEtaOnlyRatioEtaPP->Draw("l");
-        TBox* boxPCMPHOSEtaOnlyRatioEtaPP             = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[ppEst][3], columnsLegendOnlyEtaRatioPPAbs[5]-0.5*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
+        TBox* boxPCMPHOSEtaOnlyRatioEtaPP             = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[3], columnsLegendOnlyEtaRatioPPAbs[5]-0.5*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[5]+ 17.*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[2]+ heightBoxPP);
         boxPCMPHOSEtaOnlyRatioEtaPP->Draw("l");
 
-        canvasRatioToCombFitPP->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombFit_PP5TeV%s.%s",outputDirSupportPaper.Data(), addNamePP[ppEst].Data(), suffix.Data()));
+        canvasRatioToCombFitPP->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombFit_PP5TeV.%s",outputDirSupportPaper.Data(), suffix.Data()));
     }
 
     // *******************************************************************************************************
@@ -1408,44 +1370,44 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
     Int_t offSetsPi0[9][11]             = {
-                                            { 0,  5,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 0-10
-                                            { 0,  5,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 10-20
-                                            { 0,  5,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 20-40
-                                            { 0,  5,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 40-60
-                                            { 0,  5,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 60-80
+                                            { 0,  1,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 0-10
+                                            { 0,  1,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 10-20
+                                            { 0,  1,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 20-40
+                                            { 0,  1,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 40-60
+                                            { 0,  1,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 60-80
                                             { 0,  6,  0,  0,  0,  3,  0,  0,  0,  0,  0 },  // 0-5%
                                             { 0,  5,  1,  1,  1,  3,  0,  0,  0,  0,  0 },  // 5-10%
                                             { 0,  5,  1,  1,  1,  3,  0,  0,  0,  0,  0 },  // 0-20
                                             { 0,  5,  1,  1,  1,  3,  0,  0,  0,  0,  0 }   // 20-50
                                            };
     Int_t offSetsPi0Sys[9][11]          = {
-                                            { 1,  6,  14,  3,  10,  0,  0,  0,  0,  21, 0 },  // 0-10
-                                            { 1,  6,  9,  3,  10,  0,  0,  0,  0,  21, 0 },  // 10-20
-                                            { 1,  6,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 20-40
-                                            { 1,  6,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 40-60
-                                            { 1,  6,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 60-80
+                                            { 1,  1,  23,  3,  10,  0,  0,  0,  0,  21, 0 },  // 0-10
+                                            { 1,  1,  19,  3,  10,  0,  0,  0,  0,  21, 0 },  // 10-20
+                                            { 1,  1,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 20-40
+                                            { 1,  1,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 40-60
+                                            { 1,  1,  6,  3,  4,  0,  0,  0,  0,  21, 0 },  // 60-80
                                             { 1,  7,  9,  3,  6,  4,  0,  0,  0,  21, 0 },  // 0-5
                                             { 1,  6,  8,  2,  5,  0,  0,  0,  0,  21, 0 },  // 5-10
                                             { 1,  6,  8,  2,  5,  0,  0,  0,  0,  21, 0 },  // 0-20
                                             { 1,  6,  8,  2,  5,  0,  0,  0,  0,  21, 0 }   // 20-50
                                            };
     Int_t offSetPi0Shifting[9][11]      = {
-                                            { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 0-10
-                                            { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 10-20
-                                            { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 20-40
-                                            { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 40-60
-                                            { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 60-80
+                                            { 0,  0,  22,  2,  9,  0,  0,  0,  0,  21, 0 },  // 0-10
+                                            { 0,  0,  18,  2,  9,  0,  0,  0,  0,  21, 0 },  // 10-20
+                                            { 0,  0,  5,  2,  3,  0,  0,  0,  0,  21, 0 },  // 20-40
+                                            { 0,  0,  5,  2,  3,  0,  0,  0,  0,  21, 0 },  // 40-60
+                                            { 0,  0,  5,  2,  3,  0,  0,  0,  0,  21, 0 },  // 60-80
                                             { 0,  6,  8,  2,  5,  3,  0,  0,  0,  21, 0 },  // 0-5
                                             { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 5-10
                                             { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 },  // 0-20
                                             { 0,  5,  7,  1,  4,  0,  0,  0,  0,  21, 0 }   // 20-50
                                            };
     Int_t nComBinsPi0Shifting[9][11]    = {
-                                            { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 0-10
-                                            { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 10-20
-                                            { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 20-40
-                                            { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 40-60
-                                            { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 60-80
+                                            { 27, 33, 30, 27,  30, 0,  0,  0,  0,  0, 0 },  // 0-10
+                                            { 27, 33, 30, 27,  30, 0,  0,  0,  0,  0, 0 },  // 10-20
+                                            { 27, 32, 30, 26,  30, 0,  0,  0,  0,  0, 0 },  // 20-40
+                                            { 23, 31, 30, 26,  30, 0,  0,  0,  0,  0, 0 },  // 40-60
+                                            { 23, 31, 30, 26,  30, 0,  0,  0,  0,  0, 0 },  // 60-80
                                             { 29, 10, 17, 17,  29, 17,  0,  0,  0,  0, 0 },  // 0-5
                                             { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 5-10
                                             { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 0-20
@@ -1867,29 +1829,29 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             graphCombPi0InvYieldTot[cent]          = ApplyXshift(graphCombPi0InvYieldTot[cent], fitShiftingPi0);
 //             cout << "comb" << endl;
 //             graphCombPi0InvYieldStat[cent]->Print();
-            graphCombPi0InvYieldStat[cent]         = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot[cent],
-                                                                                graphCombPi0InvYieldStat[cent],
-                                                                                fitShiftingPi0,
-                                                                                0, graphCombPi0InvYieldStat[cent]->GetN());
-            graphCombPi0InvYieldSys[cent]          = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot[cent],
-                                                                                graphCombPi0InvYieldSys[cent],
-                                                                                fitShiftingPi0,
-                                                                                0, graphCombPi0InvYieldSys[cent]->GetN());
+            graphCombPi0InvYieldStat[cent]         = ApplyXshiftIndividualSpectra(  graphCombPi0InvYieldTot[cent],
+                                                                                    graphCombPi0InvYieldStat[cent],
+                                                                                    fitShiftingPi0,
+                                                                                    0, graphCombPi0InvYieldStat[cent]->GetN());
+            graphCombPi0InvYieldSys[cent]          = ApplyXshiftIndividualSpectra(  graphCombPi0InvYieldTot[cent],
+                                                                                    graphCombPi0InvYieldSys[cent],
+                                                                                    fitShiftingPi0,
+                                                                                    0, graphCombPi0InvYieldSys[cent]->GetN());
             for (Int_t meth = 0; meth< 11; meth++){
                 if (graphIndPi0InvYieldStat[cent][meth]){
                     cout << "shiting stat err of " << nameMeasGlobalLabel[meth].Data();
-                    graphIndPi0InvYieldStat[cent][meth]  = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot[cent],
-                                                                                graphIndPi0InvYieldStat[cent][meth],
-                                                                                fitShiftingPi0,
-                                                                                offSetPi0Shifting[cent][meth], nComBinsPi0Shifting[cent][meth]);
+                    graphIndPi0InvYieldStat[cent][meth]  = ApplyXshiftIndividualSpectra(    graphCombPi0InvYieldTot[cent],
+                                                                                            graphIndPi0InvYieldStat[cent][meth],
+                                                                                            fitShiftingPi0,
+                                                                                            offSetPi0Shifting[cent][meth], nComBinsPi0Shifting[cent][meth]);
 
                 }
                 if (graphIndPi0InvYieldSys[cent][meth]){
                     cout << "shiting sys err of " << nameMeasGlobalLabel[meth].Data();
-                    graphIndPi0InvYieldSys[cent][meth]   = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot[cent],
-                                                                                graphIndPi0InvYieldSys[cent][meth],
-                                                                                fitShiftingPi0,
-                                                                                offSetPi0Shifting[cent][meth], nComBinsPi0Shifting[cent][meth]);
+                    graphIndPi0InvYieldSys[cent][meth]   = ApplyXshiftIndividualSpectra(    graphCombPi0InvYieldTot[cent],
+                                                                                            graphIndPi0InvYieldSys[cent][meth],
+                                                                                            fitShiftingPi0,
+                                                                                            offSetPi0Shifting[cent][meth], nComBinsPi0Shifting[cent][meth]);
                 }
             }
 
@@ -1941,7 +1903,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             canvasDummy2->SetLogy();
             canvasDummy2->SetLogx();
             TH2F * histo2DDummy2;
-            histo2DDummy2               = new TH2F("histo2DDummy2","histo2DDummy2",1000,minPtPi0Plotting,maxPtPi0Plotting,1000,1e-9,10e1);
+            histo2DDummy2               = new TH2F("histo2DDummy2","histo2DDummy2",1000,minPtPi0Plotting,maxPtPi0Plotting,1000,1e-9,10e4);
             SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.032,0.04, 0.04,0.04, 1,1.55);
             histo2DDummy2->DrawCopy();
 
@@ -2262,50 +2224,50 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Eta
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
     Int_t offSetsEta[9][11]             = {
-                                            { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-10
-                                            { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 10-20
-                                            { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 20-40
-                                            { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 40-60
-                                            { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 60-80
+                                            { 0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-10
+                                            { 0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 10-20
+                                            { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 20-40
+                                            { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 40-60
+                                            { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 60-80
                                             { 0,  9,  0,  1,  0,  0,  0,  0,  0,  0,  0 },  // 0-5
                                             { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 5-10
                                             { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-20
                                             { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 }  // 20-50
-    };
+                                          };
     Int_t offSetsEtaSys[9][11]          = {
-                                            { 1,  10,  5,  2,  5,  0,  0,  0,  0,  0, 0 },  // 0-10
-                                            { 2,  10,  4,  2,  3,  0,  0,  0,  0,  0, 0 },  // 10-20
-                                            { 2,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 20-40
-                                            { 1,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 40-60
-                                            { 1,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 60-80
+                                            { 1,  4,  6,  2,  5,  0,  0,  0,  0,  0, 0 },  // 0-10
+                                            { 1,  4,  5,  2,  3,  0,  0,  0,  0,  0, 0 },  // 10-20
+                                            { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 20-40
+                                            { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 40-60
+                                            { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 60-80
                                             { 3,  12,  7,  5,  5,  0,  0,  0,  0,  0, 0 },  // 0-5
                                             { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 },  // 5-10
                                             { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 },  // 0-20
                                             { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 }  // 20-50
                                             };
     Int_t offSetEtaShifting[9][11]      = {
-                                            { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 0-10
-                                            { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 10-20
-                                            { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 20-40
-                                            { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 40-60
-                                            { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 60-80
+                                            { 0,  3,  5,  1,  4,  0,  0,  0,  0,  21, 0 },  // 0-10
+                                            { 0,  3,  4,  1,  2,  0,  0,  0,  0,  21, 0 },  // 10-20
+                                            { 0,  2,  2,  1,  1,  0,  0,  0,  0,  21, 0 },  // 20-40
+                                            { 0,  2,  2,  1,  1,  0,  0,  0,  0,  21, 0 },  // 40-60
+                                            { 0,  2,  2,  1,  1,  0,  0,  0,  0,  21, 0 },  // 60-80
                                             { 0,  0,  4,  2,  2,  0,  0,  0,  0,  0,  0 },  // 0-5
                                             { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 5-10
                                             { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 },  // 0-20
                                             { 0,  0,  3,  2,  2,  0,  0,  0,  0,  21, 0 }  // 20-50
                                             };
     Int_t nComBinsEtaShifting[9][11]    = {
-                                            { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 0-10
-                                            { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 10-20
-                                            { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 20-40
-                                            { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 40-60
-                                            { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 60-80
-                                            { 13, 0,  17, 11, 15,  0,  0,  0,  0,  0, 0 },  // 0-5
+                                            { 8, 10, 10, 6,  7, 0,  0,  0,  0,  0, 0 },  // 0-10
+                                            { 8, 10, 10, 6,  7, 0,  0,  0,  0,  0, 0 },  // 10-20
+                                            { 7, 10, 10, 6,  9, 0,  0,  0,  0,  0, 0 },  // 20-40
+                                            { 7, 9, 10, 6,  9, 0,  0,  0,  0,  0, 0 },  // 40-60
+                                            { 7, 9, 10, 6,  9, 0,  0,  0,  0,  0, 0 },  // 60-80
+                                            { 13, 0, 17, 11, 15,  0,  0,  0,  0,  0, 0 },  // 0-5
                                             { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 5-10
                                             { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 0-20
                                             { 9, 0, 10, 0,  7, 0,  0,  0,  0,  0, 0 },  // 20-50
                                            };
-    Double_t minPtEta[9]                = { 0.9, 0.9, 0.9, 0.9, 0.9,   0.7, 0.7, 0.7, 0.7};
+    Double_t minPtEta[9]                = { 0.8, 0.8, 0.8, 0.8, 0.8,   0.7, 0.7, 0.7, 0.7};
 
     TGraphAsymmErrors* statErrorRelCollectionEta[9][11];
     TGraphAsymmErrors* sysErrorRelCollectionEta[9][11];
@@ -3129,28 +3091,28 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for EtaToPi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
     Int_t offSetsEtaToPi0[9][11]           = {
-                                                { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-10
-                                                { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 10-20
-                                                { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 20-40
-                                                { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 40-60
-                                                { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 60-80
+                                                { 0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-10
+                                                { 0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 10-20
+                                                { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 20-40
+                                                { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 40-60
+                                                { 0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 60-80
                                                 { 0,  9,  0,  1,  0,  0,  0,  0,  0,  0,  0 },  // 0-5
                                                 { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 5-10
                                                 { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-20
                                                 { 0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0 }   // 20-50
                                               };
     Int_t offSetsEtaToPi0Sys[9][11]        = {
-                                                { 1,  10,  5,  2,  5,  0,  0,  0,  0,  0, 0  },  // 0-10
-                                                { 2,  10,  4,  2,  3,  0,  0,  0,  0,  0, 0 },  // 10-20
-                                                { 2,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 20-40
-                                                { 1,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 40-60
-                                                { 1,  10,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 60-80
+                                                { 1,  4,  6,  2,  5,  0,  0,  0,  0,  0, 0  },  // 0-10
+                                                { 1,  4,  5,  2,  3,  0,  0,  0,  0,  0, 0 },  // 10-20
+                                                { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 20-40
+                                                { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 40-60
+                                                { 1,  3,  3,  2,  2,  0,  0,  0,  0,  0, 0 },  // 60-80
                                                 { 3,  12,  7,  5,  5,  0,  0,  0,  0,  0, 0 },  // 0-5
                                                 { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 },  // 5-10
                                                 { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 },  // 0-20
                                                 { 3,  10,  6,  5,  5,  0,  0,  0,  0,  0, 0 }  // 20-50
                                               };
-    Double_t minPtEtaToPi0[9]              = { 0.9, 0.9, 0.9, 0.9, 0.9,   0.7, 0.7, 0.7, 0.7};
+    Double_t minPtEtaToPi0[9]              = { 0.8, 0.8, 0.8, 0.8, 0.8,   0.7, 0.7, 0.7, 0.7};
 
     TGraphAsymmErrors* statErrorRelCollectionEtaToPi0[9][11];
     TGraphAsymmErrors* sysErrorRelCollectionEtaToPi0[9][11];
@@ -3474,10 +3436,10 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             graphRAAIndCombPi0[cent][meth]                              = NULL;
             statErrorRelCollectionPi0RAA[cent][meth]                     = NULL;
             sysErrorRelCollectionPi0RAA[cent][meth]                      = NULL;
-            if (haveRefPPPi0[ppRefInt[cent]][meth]  ){ //&& !( i == 3 )
+            if (haveRefPPPi0[meth]  ){ //&& !( i == 3 )
                 if(bWCorrection.Contains("Y") ){
-                    TGraphAsymmErrors* tempPPStat               = (TGraphAsymmErrors*)statErrorCollectionPi0PP[ppRefInt[cent]][meth]->Clone("tempStat");
-                    TGraphAsymmErrors* tempPPSys                = (TGraphAsymmErrors*)systErrorUnCorrInterCollectionPi0PP[ppRefInt[cent]][meth]->Clone("tempSys");
+                    TGraphAsymmErrors* tempPPStat               = (TGraphAsymmErrors*)statErrorCollectionPi0PP[meth]->Clone("tempStat");
+                    TGraphAsymmErrors* tempPPSys                = (TGraphAsymmErrors*)systErrorUnCorrCollectionPi0PP[meth]->Clone("tempSys");
                     while (tempPPStat->GetX()[0] < graphIndPi0InvYieldStat_yShifted[cent][meth]->GetX()[0])
                         tempPPStat->RemovePoint(0);
                     while (tempPPSys->GetX()[0] < graphIndPi0InvYieldSys_yShifted[cent][meth]->GetX()[0])
@@ -3767,10 +3729,10 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             graphRAAIndCombEta[cent][meth]                              = NULL;
             statErrorRelCollectionEtaRAA[cent][meth]                     = NULL;
             sysErrorRelCollectionEtaRAA[cent][meth]                      = NULL;
-            if (haveRefPPEta[ppRefInt[ppRefInt[cent]]][meth]  ){ //&& !( i == 3 )
+            if (haveRefPPEta[meth]  ){ //&& !( i == 3 )
                 if(bWCorrection.Contains("Y") ){
-                    TGraphAsymmErrors* tempPPStat               = (TGraphAsymmErrors*)statErrorCollectionEtaPP[ppRefInt[cent]][meth]->Clone("tempStat");
-                    TGraphAsymmErrors* tempPPSys                = (TGraphAsymmErrors*)systErrorUnCorrInterCollectionEtaPP[ppRefInt[cent]][meth]->Clone("tempSys");
+                    TGraphAsymmErrors* tempPPStat               = (TGraphAsymmErrors*)statErrorCollectionEtaPP[meth]->Clone("tempStat");
+                    TGraphAsymmErrors* tempPPSys                = (TGraphAsymmErrors*)systErrorUnCorrCollectionEtaPP[meth]->Clone("tempSys");
                     while (tempPPStat->GetX()[0] < graphIndEtaInvYieldStat_yShifted[cent][meth]->GetX()[0])
                         tempPPStat->RemovePoint(0);
                     while (tempPPSys->GetX()[0] < graphIndEtaInvYieldSys_yShifted[cent][meth]->GetX()[0])
@@ -5288,14 +5250,14 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 //             legendXsectionPaper->AddEntry(fitTCMInvYieldPi0[cent],"TCM fit","l");
         }
 
-        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombPi0Sys[0], 20, markerSizeCent[0]*0.75, kBlack, kBlack, widthLinesBoxes, kTRUE);
-        graphPPInvYieldCombPi0Sys[0]->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombPi0StatW0XErr[0], 20, markerSizeCent[0]*0.75, kBlack, kBlack);
-        graphPPInvYieldCombPi0StatW0XErr[0]->Draw("p,same,z");
-        DrawGammaSetMarkerTF1( fitPPTCMInvYieldPi0[0], 7, 2, kGray+2);
-        fitPPTCMInvYieldPi0[0]->Draw("same");
-        legendXsectionPaper->AddEntry(graphPPInvYieldCombPi0Sys[0],collisionSystempp,"pf");
-        legendXsectionPaper->AddEntry(fitPPTCMInvYieldPi0[0],"TCM fits","l");
+        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombPi0Sys, 20, markerSizeCent[0]*0.75, kBlack, kBlack, widthLinesBoxes, kTRUE);
+        graphPPInvYieldCombPi0Sys->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombPi0StatW0XErr, 20, markerSizeCent[0]*0.75, kBlack, kBlack);
+        graphPPInvYieldCombPi0StatW0XErr->Draw("p,same,z");
+        DrawGammaSetMarkerTF1( fitPPTCMInvYieldPi0, 7, 2, kGray+2);
+        fitPPTCMInvYieldPi0->Draw("same");
+        legendXsectionPaper->AddEntry(graphPPInvYieldCombPi0Sys,collisionSystempp,"pf");
+        legendXsectionPaper->AddEntry(fitPPTCMInvYieldPi0,"TCM fits","l");
 
         TLatex *labelEnergyXSectionPaper= new TLatex(0.935, 0.91, collisionSystemPbPb.Data());
         SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
@@ -5419,14 +5381,14 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             legendXsectionPaperEta->AddEntry(graphCombEtaInvYieldSys[cent],centArray2[cent].Data(),"pf");
 //             legendXsectionPaperEta->AddEntry(fitTCMInvYieldEta[cent],"TCM fit","l");
         }
-        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombEtaSys[0], 20, markerSizeCent[0]*0.75, kBlack, kBlack, widthLinesBoxes, kTRUE);
-        graphPPInvYieldCombEtaSys[0]->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombEtaStatW0XErr[0], 20, markerSizeCent[0]*0.75, kBlack, kBlack);
-        graphPPInvYieldCombEtaStatW0XErr[0]->Draw("p,same,z");
-        DrawGammaSetMarkerTF1( fitPPTCMInvYieldEta[0], 7, 2, kGray+2);
-        fitPPTCMInvYieldEta[0]->Draw("same");
-        legendXsectionPaperEta->AddEntry(graphPPInvYieldCombEtaSys[0],collisionSystempp,"pf");
-        legendXsectionPaperEta->AddEntry(fitPPTCMInvYieldEta[0],"TCM fits","l");
+        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombEtaSys, 20, markerSizeCent[0]*0.75, kBlack, kBlack, widthLinesBoxes, kTRUE);
+        graphPPInvYieldCombEtaSys->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombEtaStatW0XErr, 20, markerSizeCent[0]*0.75, kBlack, kBlack);
+        graphPPInvYieldCombEtaStatW0XErr->Draw("p,same,z");
+        DrawGammaSetMarkerTF1( fitPPTCMInvYieldEta, 7, 2, kGray+2);
+        fitPPTCMInvYieldEta->Draw("same");
+        legendXsectionPaperEta->AddEntry(graphPPInvYieldCombEtaSys,collisionSystempp,"pf");
+        legendXsectionPaperEta->AddEntry(fitPPTCMInvYieldEta,"TCM fits","l");
 
         labelEnergyXSectionPaper->Draw();
         labelALICEXSectionPaper->Draw();
@@ -6298,6 +6260,171 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     }
 
 
+
+    cout << "starting charged pion Comparison" << endl;
+    TGraphErrors* graphChPiStatRebinnedPi0Comb[9]       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphErrors* graphChPiSystRebinnedPi0Comb[9]       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphErrors* graphCombPi0StatRebinnedChPi[9]       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphErrors* graphCombPi0SysRebinnedChPi[9]        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphErrors* graphRatioCombPi0ChPiComb[9]          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphErrors* graphRatioIndPi0ChPiComb[9][11];
+    TGraphErrors* graphChPiStatRebinnedPi0Ind[9][11];
+    TGraphErrors* graphChPiSystRebinnedPi0Ind[9][11];
+    TGraphErrors* graphIndPi0StatRebinnedChPi[9][11];
+    TGraphErrors* graphIndPi0SysRebinnedChPi[9][11];
+    for (Int_t cent = 0; cent < maxCent; cent++){
+        for (Int_t meth = 0; meth < 11; meth++){
+            graphRatioIndPi0ChPiComb[cent][meth]        = NULL;
+            graphChPiStatRebinnedPi0Ind[cent][meth]     = NULL;
+            graphChPiSystRebinnedPi0Ind[cent][meth]     = NULL;
+            graphIndPi0StatRebinnedChPi[cent][meth]     = NULL;
+            graphIndPi0SysRebinnedChPi[cent][meth]      = NULL;
+        }
+    }
+
+    for (Int_t cent = 0; cent < maxCent; cent++){
+        if (!enableCent[cent]) continue;
+        for (Int_t meth = 0; meth < 11; meth++){
+            if (graphIndPi0InvYieldStat[cent][meth] && graphIndPi0InvYieldSys[cent][meth])
+                graphRatioIndPi0ChPiComb[cent][meth]     = CalculateRatioBetweenSpectraWithDifferentBinning( graphIndPi0InvYieldStat[cent][meth], graphIndPi0InvYieldSys[cent][meth],
+                                                                                                        histChPiSpecStat[cent], histChPiSpecSyst[cent],
+                                                                                                        kTRUE,  kTRUE,
+                                                                                                        &graphIndPi0StatRebinnedChPi[cent][meth], &graphIndPi0SysRebinnedChPi[cent][meth],
+                                                                                                        &graphChPiStatRebinnedPi0Ind[cent][meth], &graphChPiSystRebinnedPi0Ind[cent][meth] )    ;
+        }
+
+        if (!enableCentComb[cent]) continue;
+        cout << "charged pion comp for: " << centArray[cent].Data() << endl;
+        cout << graphCombPi0InvYieldStat[cent] << "\t" << graphCombPi0InvYieldSys[cent] << "\t" << histChPiSpecStat[cent] << "\t" << histChPiSpecSyst[cent] << endl;
+        graphRatioCombPi0ChPiComb[cent]     = CalculateRatioBetweenSpectraWithDifferentBinning( graphCombPi0InvYieldStat[cent], graphCombPi0InvYieldSys[cent],
+                                                                                                histChPiSpecStat[cent], histChPiSpecSyst[cent],
+                                                                                                kTRUE,  kTRUE,
+                                                                                                &graphCombPi0StatRebinnedChPi[cent], &graphChPiSystRebinnedPi0Comb[cent],
+                                                                                                &graphChPiStatRebinnedPi0Comb[cent], &graphChPiSystRebinnedPi0Comb[cent] )    ;
+    }
+
+
+    TCanvas* canvasRatioChargedPion      = new TCanvas("canvasRatioChargedPion","",0,0,1250,2000);  // gives the page size
+    DrawGammaCanvasSettings( canvasRatioChargedPion,  0.13, 0.02, 0.03, 0.06);
+    canvasRatioChargedPion->cd();
+
+    TPad* padRatioChargedPion[5]             = {NULL, NULL, NULL, NULL, NULL};
+    Double_t textSizeLablesChPionRatio[5]    = {0};
+    Double_t textsizeFacXSecChPionRatio[5]   = {0};
+    marginXSec                              = relativeMarginsXXSec2[0]*1250;
+    for (Int_t i = 0; i < 5; i++){
+        padRatioChargedPion[i]               = new TPad(Form("padRatioGen%i",i), "", arrayBoundariesX1_XSec2[0], arrayBoundariesY1_XSec2[i+1], arrayBoundariesX1_XSec2[1], arrayBoundariesY1_XSec2[i],-1, -1, -2);
+        if (i == 0) DrawGammaPadSettings( padRatioChargedPion[i], relativeMarginsXXSec2[0], relativeMarginsXXSec2[2], relativeMarginsYXSec2[0], relativeMarginsYXSec2[1]);
+        else if (i == 4) DrawGammaPadSettings( padRatioChargedPion[i], relativeMarginsXXSec2[0], relativeMarginsXXSec2[2], relativeMarginsYXSec2[1], relativeMarginsYXSec2[2]);
+        else DrawGammaPadSettings( padRatioChargedPion[i], relativeMarginsXXSec2[0], relativeMarginsXXSec2[2], relativeMarginsYXSec2[1], relativeMarginsYXSec2[1]);
+        padRatioChargedPion[i]->Draw();
+
+        if (padRatioChargedPion[i]->XtoPixel(padRatioChargedPion[i]->GetX2()) < padRatioChargedPion[i]->YtoPixel(padRatioChargedPion[i]->GetY1())){
+            textSizeLablesChPionRatio[i]            = (Double_t)textSizeLabelsPixel/padRatioChargedPion[i]->XtoPixel(padRatioChargedPion[i]->GetX2()) ;
+            textsizeFacXSecChPionRatio[i]           = (Double_t)1./padRatioChargedPion[i]->XtoPixel(padRatioChargedPion[i]->GetX2()) ;
+        } else {
+            textSizeLablesChPionRatio[i]            = (Double_t)textSizeLabelsPixel/padRatioChargedPion[i]->YtoPixel(padRatioChargedPion[i]->GetY1());
+            textsizeFacXSecChPionRatio[i]           = (Double_t)1./padRatioChargedPion[i]->YtoPixel(padRatioChargedPion[i]->GetY1());
+        }
+    }
+
+
+    for (Int_t cent = 0; cent < 5; cent++ ){
+        padRatioChargedPion[cent]->cd();
+        padRatioChargedPion[cent]->SetLogx(1);
+
+        TH2F* ratio2DNPiToChPi               = new TH2F(Form ("ratio2DNPiToChPi%i",cent),Form ("ratio2DNPiToChPi%i",cent),1000,minPtPi0Plotting, maxPtPi0Plotting,1000,0.653,1.95);
+        SetStyleHistoTH2ForGraphs(ratio2DNPiToChPi, "#it{p}_{T} (GeV/#it{c})","#pi^{0}/#pi^{#pm}", 0.85*textSizeLablesChPionRatio[cent], textSizeLablesChPionRatio[cent],
+                                  0.85*textSizeLablesChPionRatio[cent],textSizeLablesChPionRatio[cent], 1,0.257/(textsizeFacXSecChPionRatio[cent]*marginXSec), 510, 508);
+        ratio2DNPiToChPi->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DNPiToChPi->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DNPiToChPi->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DNPiToChPi->GetXaxis()->SetLabelFont(42);
+        ratio2DNPiToChPi->GetYaxis()->SetLabelFont(42);
+        ratio2DNPiToChPi->GetYaxis()->SetLabelOffset(+0.01);
+        ratio2DNPiToChPi->GetXaxis()->SetTickLength(0.07);
+        ratio2DNPiToChPi->DrawCopy();
+
+        labelEnergyRatioPaper[cent]     = new TLatex(0.935, yPosLabel[cent],Form("%s %s", centArray2[cent].Data(), collisionSystemPbPb.Data()));
+        SetStyleTLatex( labelEnergyRatioPaper[cent], textSizeLablesChPionRatio[cent],4, 1, 42, kTRUE, 31);
+
+        if (graphRatioCombPi0ChPiComb[cent]){
+            DrawGammaSetMarkerTGraphErr(graphRatioCombPi0ChPiComb[cent], markerStyleCent[cent], markerSizeCent[cent]/2., colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE, 0);
+            graphRatioCombPi0ChPiComb[cent]->Draw("pE,same");
+        }
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting,1., 1.,1,kGray+1);
+        labelEnergyRatioPaper[cent]->Draw();
+        ratio2DNPiToChPi->DrawCopy("axis,same");
+        delete ratio2DNPiToChPi;
+    }
+    canvasRatioChargedPion->Print(Form("%s/NeutralToChargedPion.%s",outputDir.Data(),suffix.Data()));
+
+
+
+    for (Int_t cent = 0; cent < maxCent; cent++){
+        if (!enableCent[cent]) continue;
+        TCanvas* canvasRatioToChargedPi       = new TCanvas("canvasRatioToChargedPi","",200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasRatioToChargedPi, 0.08, 0.01, 0.01, 0.125);
+        canvasRatioToChargedPi->SetLogx();
+
+        Double_t textsizeLabelsPbPb      = 0;
+        if (canvasRatioToChargedPi->XtoPixel(canvasRatioToChargedPi->GetX2()) <canvasRatioToChargedPi->YtoPixel(canvasRatioToChargedPi->GetY1()) ){
+            textsizeLabelsPbPb           = (Double_t)textSizeLabelsPixel/canvasRatioToChargedPi->XtoPixel(canvasRatioToChargedPi->GetX2()) ;
+        } else {
+            textsizeLabelsPbPb           = (Double_t)textSizeLabelsPixel/canvasRatioToChargedPi->YtoPixel(canvasRatioToChargedPi->GetY1());
+        }
+        cout << textsizeLabelsPbPb << endl;
+
+        TH2F * histo2DPi0RatioToChargedPion;
+        histo2DPi0RatioToChargedPion               = new TH2F("histo2DPi0RatioToChargedPion","histo2DPi0RatioToChargedPion",1000,minPtPi0Plotting, maxPtPi0Plotting,1000,0.653,1.95    );
+        SetStyleHistoTH2ForGraphs(histo2DPi0RatioToChargedPion, "#it{p}_{T} (GeV/#it{c})","#pi^{0}/#pi^{#pm}", 0.85*textsizeLabelsPbPb, textsizeLabelsPbPb,
+                                0.85*textsizeLabelsPbPb,textsizeLabelsPbPb, 0.9, 0.65, 510, 505);
+        histo2DPi0RatioToChargedPion->GetXaxis()->SetMoreLogLabels();
+        histo2DPi0RatioToChargedPion->GetXaxis()->SetLabelOffset(-0.01);
+        histo2DPi0RatioToChargedPion->GetYaxis()->SetRangeUser(0.653,1.95);
+        histo2DPi0RatioToChargedPion->Draw("copy");
+
+        if (graphRatioCombPi0ChPiComb[cent]){
+            ProduceGraphErrWithoutXErrors(graphRatioCombPi0ChPiComb[cent]);
+            DrawGammaSetMarkerTGraphErr(graphRatioCombPi0ChPiComb[cent], markerStyleCent[cent], markerSizeCent[cent]/2., colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE, 0);
+            graphRatioCombPi0ChPiComb[cent]->Draw("pE,same");
+        }
+
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1., 1.,1, kGray+2);
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1.1, 1.1,1, kGray, 7);
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 0.9, 0.9,1, kGray, 7);
+
+        TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.92, Form("%s %s", centArray2[cent].Data(), collisionSystemPbPb.Data()));
+        SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelRatioToFitEnergy->Draw();
+
+        canvasRatioToChargedPi->SaveAs(Form("%s/CombNeutralToChargedPion_%s%s.%s",outputDirSupportPaper.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
+
+        // **********************************************************************************************************************
+        // *******************************************Plot Ratio of Individual meas to Fit ******************************************
+        // **********************************************************************************************************************
+
+        canvasRatioToChargedPi->cd();
+        histo2DPi0RatioToChargedPion->Draw("copy");
+
+        for (Int_t meth = 10; meth > -1 ; meth--){
+            if (graphRatioIndPi0ChPiComb[cent][meth]){
+                ProduceGraphErrWithoutXErrors(graphRatioIndPi0ChPiComb[cent][meth]);
+                DrawGammaSetMarkerTGraphErr(graphRatioIndPi0ChPiComb[cent][meth], markerStyleDet[meth] ,markerSizeDet[meth]*0.5, colorDet[meth], colorDet[meth]);
+                graphRatioIndPi0ChPiComb[cent][meth]->Draw("p,same,z");
+            }
+        }
+
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1., 1.,1, kGray+2);
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 1.1, 1.1,1, kGray, 7);
+        DrawGammaLines(minPtPi0Plotting, maxPtPi0Plotting , 0.9, 0.9,1, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        histo2DPi0RatioToChargedPion->Draw("same,axis");
+
+        canvasRatioToChargedPi->SaveAs(Form("%s/IndNeutralToChargedPion_%s%s.%s",outputDirSupportPaper.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(),
+                                        suffix.Data()));
+    }
     // **********************************************************************************************************************
     // ************************* Saving of final results ********************************************************************
     // **********************************************************************************************************************
