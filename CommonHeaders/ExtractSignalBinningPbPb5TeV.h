@@ -79,7 +79,7 @@
     // PCM
 
     Double_t fBinsEtaPbPb5TeVPCMPt[10]              = { 0.0, 0.8, 1.4, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0};
-    Int_t fBinsEtaPbPb5TeVPtPCMRebin[9]             = { 10, 4, 8, 8, 8, 8, 8, 16, 16};
+    Int_t fBinsEtaPbPb5TeVPCMPtRebin[9]             = { 10, 4, 8, 8, 8, 8, 8, 16, 16};
 
     Double_t fBinsEtaPbPb5TeVPCMPtDCA[4]            = { 0.0, 1.0, 3.0, 6.0};
 
