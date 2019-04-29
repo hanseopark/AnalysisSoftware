@@ -145,10 +145,51 @@
     // ****************************************************************************************************************
     //********************* global Variables **************************************************************************
     // ****************************************************************************************************************
+
+    // PbPb 5.02TeV N_coll and T_AA
+    //from https://cds.cern.ch/record/2636623/files/centrality%20determination%20note.pdf
+
+    Double_t nColl5TeV0010 = 1572;
+    Double_t nColl5TeV1020 = 973.4;
+    Double_t nColl5TeV0020 = 1273;
+    Double_t nColl5TeV2040 = 468.2;
+    Double_t nColl5TeV4060 = 138.5;
+    Double_t nColl5TeV6080 = 28.31;
+
+    Double_t nColl5TeVErr0010 = 17.4;
+    Double_t nColl5TeVErr1020 = 11.3;
+    Double_t nColl5TeVErr0020 = 14.1;
+    Double_t nColl5TeVErr2040 = 6.92;
+    Double_t nColl5TeVErr4060 = 2.7;
+    Double_t nColl5TeVErr6080 = 0.68;
+
+    Double_t tAA5TeV0010 = 23.26;
+    Double_t tAA5TeV1020 = 14.4;
+    Double_t tAA5TeV0020 = 18.83;
+    Double_t tAA5TeV2040 = 6.927;
+    Double_t tAA5TeV4060 = 2.049;
+    Double_t tAA5TeV6080 = 0.4188;
+
+    Double_t tAA5TeVErr0010 = 0.168;
+    Double_t tAA5TeVErr1020 = 0.126;
+    Double_t tAA5TeVErr0020 = 0.142;
+    Double_t tAA5TeVErr2040 = 0.0909;
+    Double_t tAA5TeVErr4060 = 0.0394;
+    Double_t tAA5TeVErr6080 = 0.0106;
+
+    // PbPb 2.76TeV N_coll and T_AA
+    // from https://arxiv.org/pdf/1301.4361.pdf
+
     Double_t ncoll0005      = 1684.4;
     Double_t ncoll0510      = 1316;
     Double_t ncoll0010      = 1500;
     Double_t ncoll1020      = 921.2;
+    Double_t ncoll2025      = 629.6;
+    Double_t ncoll2530      = 483.7;
+    Double_t ncoll2030      = (ncoll2025 + ncoll2530)/2;
+    Double_t ncoll3035      = 366.7;
+    Double_t ncoll3540      = 273.4;
+    Double_t ncoll3040      = (ncoll3035 + ncoll3540)/2;
     Double_t ncoll0020      = 1210.6;
     Double_t ncoll2040      = 438.4;
     Double_t ncoll2050      = 349.1;
@@ -168,6 +209,12 @@
     Double_t nCollErr0510   = 140;
     Double_t nCollErr0010   = 165;
     Double_t nCollErr1020   = 96;
+    Double_t nCollErr2025   = 62;
+    Double_t nCollErr2530   = 47;
+    Double_t nCollErr2030   = (nCollErr2025 + nCollErr2530)/2;
+    Double_t nCollErr3035   = 35;
+    Double_t nCollErr3540   = 26;
+    Double_t nCollErr3040   = (nCollErr3035 + nCollErr3540)/2;
     Double_t nCollErr0020   = 130.5;
     Double_t nCollErr2040   = 42.;
     Double_t nCollErr2050   = 51.;
@@ -1866,6 +1913,10 @@
                     return ncoll1020;
                 } else if (centralityCutNumber.CompareTo("13") == 0){ //10-30%
                     return ncoll1030;
+                } else if (centralityCutNumber.CompareTo("23") == 0){ //20-30%
+                    return ncoll2030;
+                } else if (centralityCutNumber.CompareTo("34") == 0){ //30-40%
+                    return ncoll3040;
                 } else if (centralityCutNumber.CompareTo("24") == 0){ //20-40%
                     return ncoll2040;
                 } else if (centralityCutNumber.CompareTo("25") == 0){ //20-50%
@@ -1908,6 +1959,24 @@
             return 1.;
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             return ncollpPb5023GeV;
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+            if (systemCutNumber.CompareTo("1") == 0 ){
+                if (centralityCutNumber.CompareTo("01") == 0){        // 0-10%
+                    return nColl5TeV0010;
+                } else if (centralityCutNumber.CompareTo("12") == 0){ // 10-20%
+                    return nColl5TeV1020;
+                } else if (centralityCutNumber.CompareTo("02") == 0){ // 00-20%
+                    return nColl5TeV0020;
+                } else if (centralityCutNumber.CompareTo("24") == 0){ // 20-40%
+                    return nColl5TeV2040;
+                } else if (centralityCutNumber.CompareTo("46") == 0){ // 40-60%
+                    return nColl5TeV4060;
+                } else if (centralityCutNumber.CompareTo("68") == 0){ // 60-80%
+                    return nColl5TeV6080;
+                } else
+                    cout << "ERROR: NColl values not implemented!" << endl;
+            } else
+                cout << "ERROR: NColl values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -1967,6 +2036,24 @@
             return 1.;
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             return ncollErrpPb5023GeV;
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+            if (systemCutNumber.CompareTo("1") == 0 ){
+                if (centralityCutNumber.CompareTo("01") == 0){        // 0-10%
+                    return nColl5TeVErr0010;
+                } else if (centralityCutNumber.CompareTo("12") == 0){ // 10-20%
+                    return nColl5TeVErr1020;
+                } else if (centralityCutNumber.CompareTo("02") == 0){ // 00-20%
+                    return nColl5TeVErr0020;
+                } else if (centralityCutNumber.CompareTo("24") == 0){ // 20-40%
+                    return nColl5TeVErr2040;
+                } else if (centralityCutNumber.CompareTo("46") == 0){ // 40-60%
+                    return nColl5TeVErr4060;
+                } else if (centralityCutNumber.CompareTo("68") == 0){ // 60-80%
+                    return nColl5TeVErr6080;
+                } else
+                    cout << "ERROR: NColl Err values not implemented!" << endl;
+            } else
+                cout << "ERROR: NColl Err values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2212,7 +2299,21 @@
             } else {
                 return ncollpPb5023GeV;
             }
-
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+                if (name.CompareTo("0010") == 0){                       // 0-10%
+                    return nColl5TeV0010;
+                } else if (name.CompareTo("1020") == 0){ // 10-20%
+                    return nColl5TeV1020;
+                } else if (name.CompareTo("0020") == 0){ // 00-20%
+                    return nColl5TeV0020;
+                } else if (name.CompareTo("2040") == 0){ // 20-40%
+                    return nColl5TeV2040;
+                } else if (name.CompareTo("4060") == 0){ // 40-60%
+                    return nColl5TeV4060;
+                } else if (name.CompareTo("6080") == 0){ // 60-80%
+                    return nColl5TeV6080;
+                } else
+                    cout << "ERROR: NColl values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2402,6 +2503,21 @@
             } else {
                 return ncollErrpPb5023GeV;
             }
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+            if (name.CompareTo("0010") == 0){                       // 0-10%
+                return nColl5TeVErr0010;
+            } else if (name.CompareTo("1020") == 0){ // 10-20%
+                return nColl5TeVErr1020;
+            } else if (name.CompareTo("0020") == 0){ // 00-20%
+                return nColl5TeVErr0020;
+            } else if (name.CompareTo("2040") == 0){ // 20-40%
+                return nColl5TeVErr2040;
+            } else if (name.CompareTo("4060") == 0){ // 40-60%
+                return nColl5TeVErr4060;
+            } else if (name.CompareTo("6080") == 0){ // 60-80%
+                return nColl5TeVErr6080;
+            } else
+                cout << "ERROR: NColl Err values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2653,6 +2769,21 @@
             } else {
                 return tpPb5023GeV;
             }
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+            if (name.CompareTo("0010") == 0){         // 0-10%
+                return tAA5TeV0010;
+            } else if (name.CompareTo("1020") == 0){  // 10-20%
+                return tAA5TeV1020;
+            } else if (name.CompareTo("0020") == 0){  // 0-20%
+                return tAA5TeV0020;
+            } else if (name.CompareTo("2040") == 0){  // 20-40%
+                return tAA5TeV2040;
+            } else if (name.CompareTo("4060") == 0){  // 40-60%
+                return tAA5TeV4060;
+            } else if (name.CompareTo("6080") == 0){  // 60-80%
+                return tAA5TeV6080;
+            } else
+                cout << "ERROR: TAA values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2799,8 +2930,21 @@
             } else {
                 return tpPbErr5023GeV;
             }
-
-
+        } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+            if (name.CompareTo("0010") == 0){         // 0-10%
+                return tAA5TeVErr0010;
+            } else if (name.CompareTo("1020") == 0){  // 10-20%
+                return tAA5TeVErr1020;
+            } else if (name.CompareTo("0020") == 0){  // 0-20%
+                return tAA5TeVErr0020;
+            } else if (name.CompareTo("2040") == 0){  // 20-40%
+                return tAA5TeVErr2040;
+            } else if (name.CompareTo("4060") == 0){  // 40-60%
+                return tAA5TeVErr4060;
+            } else if (name.CompareTo("6080") == 0){  // 60-80%
+                return tAA5TeVErr6080;
+            } else
+                cout << "ERROR: TAA Err values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -3653,9 +3797,35 @@
     //************************************************************************************
     //********* Analyzes the single leg pt cut, return correct cut label *****************
     //************************************************************************************
-    TString AnalyseSinglePtCut(Int_t singlePtCut){
+    TString AnalyseSinglePtCut(Int_t singlePtCut, Bool_t printGammaPt = kFALSE){
 
-        switch(singlePtCut){
+        if(printGammaPt){
+            switch(singlePtCut){
+            case 0: // 0.050 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.050, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 1:  // 0.100 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.100, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 2:  // 0.150 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.150, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 3:  // 0.200 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.200, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 4:  // 0.075 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.075, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 5:  // 0.125 GeV + min gamma pT cut of 20 MeV
+                return "p_{T}_{e^{#pm}} > 0.125, p_{T}_{#gamma} > 0.020 GeV/c";
+            case 6:  // 0.04 GeV  + min gamma pT cut of 10 MeV
+                return "p_{T}_{e^{#pm}} > 0.040, p_{T}_{#gamma} > 0.010 GeV/c";
+            case 7:  // 0.0 GeV  + min gamma pT cut of 0 MeV
+                return "p_{T}_{e^{#pm}} > 0.0, p_{T}_{#gamma} > 0.0 GeV/c";
+            case 8:  // 0.02 GeV + min gamma pT cut of 10 MeV
+                return "p_{T}_{e^{#pm}} > 0.020, p_{T}_{#gamma} > 0.010 GeV/c";
+            case 9: // 0.050 GeV + min gamma pT cut of 100 MeV
+                return "p_{T}_{e^{#pm}} > 0.050, p_{T}_{#gamma} > 0.100 GeV/c";
+            default:
+                return "p_{T} cut not defined";
+            }
+        }else{
+            switch(singlePtCut){
             case 0: // 0.050 GeV
                 return "p_{T}_{e^{#pm}} > 0.050 GeV/c";
             case 1:  // 0.100 GeV
@@ -3676,8 +3846,8 @@
                 return "p_{T}_{e^{#pm}} > 0.020 GeV/c";
             default:
                 return "p_{T}_{e^{#pm}} cut not defined";
+            }
         }
-
     }
 
     //************************************************************************************
