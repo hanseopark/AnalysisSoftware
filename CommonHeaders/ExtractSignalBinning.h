@@ -2598,7 +2598,7 @@
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0 ){
                 if (mode == 0 ){ // PCM
-                    maxNBins = 28;
+                    maxNBins = 29;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPt[i];
                     }
@@ -3301,8 +3301,8 @@
                     }
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-                maxNBins = 13;
-                binningMax  = 13;
+                maxNBins = 9;
+                binningMax  = 9;
                 if(mode == 0){
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPbPb5TeVPt[i];
