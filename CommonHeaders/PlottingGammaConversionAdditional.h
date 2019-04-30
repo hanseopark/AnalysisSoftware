@@ -3300,72 +3300,19 @@
             }
         }
         if (!energy.CompareTo("PbPb_5.02TeV")){
-            if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kRed+1;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kBlue+1;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kOrange+7;
-                } else if (!centrality.CompareTo("50-90%")){
+            if(!centrality.CompareTo("")){ // generator=periodname, centrality="" (for QA)
+                if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
+                    return kBlack;
+                } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC16h4") || !generator.CompareTo("LHC18e1")){
+                    return kGray+2;
+                } else if (generator.Contains("a")){
+                    return kRed;
+                } else if (generator.Contains("b")){
                     return kGreen+2;
-                } else if (!centrality.CompareTo("0-90%")){
-                    return kRed+2;
-                } else return kGray+2;
-            } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC18e1")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kGreen+1;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return kOrange+1;
-                } else return kBlue+1;
-            } else if (!generator.CompareTo("LHC16g1a") || !generator.CompareTo("LHC18e1a")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kGreen+1;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kOrange+1;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return kBlue-4;
-                } else return kMagenta+1;
-            } else if (!generator.CompareTo("LHC16g1b") || !generator.CompareTo("LHC18e1be")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kGreen+1;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kOrange+1;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return kRed-7;
-                } else return kRed+2;
-            } else if (!generator.CompareTo("LHC16g1c") || !generator.CompareTo("LHC18e1ce")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kOrange+1;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return kGreen+1;
-                } else return kCyan-3;
-            } else if (!generator.CompareTo("LHC16h4")){
-                if (!centrality.CompareTo("0-10%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kOrange+1;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return kGreen+1;
-                } else return kRed+2;
-
-
-
-            } else if (!generator.CompareTo("")){
+                } else if (generator.Contains("c")){
+                    return kBlue+3;
+                }
+            } else if (!generator.CompareTo("")){  // generator="" (data),  centrality defined (for combination)
                 if (!centrality.CompareTo("0-10%"))      return kRed+1;
                 else if (!centrality.CompareTo("0-20%")) return kRed+1;
                 else if (!centrality.CompareTo("0-40%")) return kMagenta+2;
@@ -3378,8 +3325,7 @@
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")) return kBlue+1;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")) return kCyan+2;
                 else if (!centrality.CompareTo("30-100%") )  return kViolet+2;
-
-            } else {
+            } else { // generator defined (MC) and centrality defined (for combination)
                 if (!centrality.CompareTo("0-10%"))          return kRed+3;
                 else if (!centrality.CompareTo("0-20%"))     return kRed+3;
                 else if (!centrality.CompareTo("0-40%"))     return kMagenta+4;
@@ -3392,9 +3338,9 @@
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%"))  return kBlue+3;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%"))   return kCyan+3;
                 else if (!centrality.CompareTo("30-100%") )  return kViolet-6;
-
             }
         }
+
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("LHC17n") || !generator.CompareTo("") ){
                 if (!centrality.CompareTo("0-20%")){
@@ -3716,59 +3662,21 @@
             }
         }
         if (!energy.CompareTo("PbPb_5.02TeV")){
-            if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
-                if (!centrality.CompareTo("0-10%")){
+
+            if (!centrality.CompareTo("")){  // generator=periodname, centrality="" (for QA)
+                if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
+                    return 20;
+                } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC16h4") || !generator.CompareTo("LHC18e1")){
                     return 24;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 30;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 27;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (generator.Contains("a")){
+                    return 25;
+                } else if (generator.Contains("b")){
                     return 28;
-                } else if (!centrality.CompareTo("0-90%")){
-                    return 24;
-                } else return 25;
-            } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC18e1")){
-                if (!centrality.CompareTo("0-10%")){
-                    return 25;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 24;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 30;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (generator.Contains("c")){
                     return 27;
-                } else return 28;
-            } else if (!generator.CompareTo("LHC16g1a") || !generator.CompareTo("LHC18e1a")){
-                if (!centrality.CompareTo("0-10%")){
-                    return 24;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 30;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 27;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return 25;
-                } else return 2;
-            } else if (!generator.CompareTo("LHC16g1b") || !generator.CompareTo("LHC18e1be")){
-                if (!centrality.CompareTo("0-10%")){
-                    return 30;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 27;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 25;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return 24;
-                } else return 3;
-            } else if (!generator.CompareTo("LHC16g1c") || !generator.CompareTo("LHC18e1ce")){
-                if (!centrality.CompareTo("0-10%")){
-                    return 27;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 25;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 24;
-                } else if (!centrality.CompareTo("50-90%")){
-                    return 30;
-                } else return 5;
-            } else if (!generator.CompareTo("")){
+                } else
+                    return 5;
+            } else if (!generator.CompareTo("")){ // generator="" (data),  centrality defined (for combination)
                 if (!centrality.CompareTo("0-10%"))         return 20;
                 else if (!centrality.CompareTo("0-20%"))  return 20;
                 else if (!centrality.CompareTo("0-40%"))  return 20;
@@ -3781,7 +3689,7 @@
                 else if (!centrality.CompareTo("30-100%") ) return 21;
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")) return 21;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") ) return 34;
-            } else {
+            } else { // generator defined (MC) and centrality defined (for combination)
                 if (!centrality.CompareTo("0-10%"))         return 24;
                 else if (!centrality.CompareTo("0-20%"))    return 24;
                 else if (!centrality.CompareTo("0-40%"))    return 24;
@@ -3796,7 +3704,6 @@
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") )
                     return 28;
             }
-
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("LHC17n") || !generator.CompareTo("")){
