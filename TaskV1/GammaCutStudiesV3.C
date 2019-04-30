@@ -457,7 +457,7 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
 //***********************************************************************************************************************************************
 //*********************************** CutVariation studies for photons- main routing ************************************************************
 //***********************************************************************************************************************************************
-void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TString cutVariationName ="",TString suffix = "eps", Int_t mode = 9){
+void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TString cutVariationName ="",TString suffix = "eps", Int_t mode = 9, Bool_t isMC = 0){
 
     //****************************************************************************************
     //*************************** Catch old versions *****************************************
@@ -473,7 +473,9 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         cout << "This macro can't yet deal with these modi" << endl;
         return;
     }
-
+    TString dataOrMC = "data";
+    if(isMC)
+        dataOrMC = "recMC";
     //*****************************************************************************************
     //*************************** Flag for processing *****************************************
     //*****************************************************************************************
@@ -597,6 +599,10 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         specialString[4]="polB";
         specialString[5]="mtScaleUp";
         specialString[6]="mtScaleDown";
+    }
+    if(!cutVariationName.CompareTo("MBW")){
+        specialString[0]="noweight";
+        specialString[1]="MBW";
     }
     if(!cutVariationName.CompareTo("7TeVPeriods")){
         specialString[0]="std";
@@ -850,13 +856,13 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("PileupDCA")||!cutVariationName.CompareTo("Test")){
+        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("MBW")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("PileupDCA")||!cutVariationName.CompareTo("Test")){
             cutStringsName[i]   = specialString[i].Data();
             folderName[i]       = Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{
             folderName[i]=cutSelection[i].Data();
         }
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root",folderName[i].Data(),energy.Data());
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_%s_GammaConvV1_InclusiveRatio.root",folderName[i].Data(),energy.Data(),dataOrMC.Data());
         fileCurrentFinal[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentFinal[i]->IsZombie()) haveOutputGammaToPi0=0;
 
@@ -960,7 +966,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             cout << "WARNING: I had to shrink the output to basics, the output of CalculateGammaToPi0 was missing" << endl;
         }
 
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root",folderName[i].Data(),energy.Data(),cutSelection[i].Data());
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_%s_GammaConvV1Correction_%s.root",folderName[i].Data(),energy.Data(),isMC ? "MC" : "data",cutSelection[i].Data());
         fileCurrentCorrection[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentCorrection[i]->IsZombie()){
             cout << "ERROR: you are missing even the basic files" << endl;
@@ -1058,36 +1064,36 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     }
 
     if (haveOutputGammaToPi0){
-        canvasPi0Spectrum->SaveAs(Form("%s/Pi0Spectra_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasPi0SpectrumRatio->SaveAs(Form("%s/Pi0SpectraRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-//         canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-//         canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasIncGammaToPi0Ratio->SaveAs(Form("%s/InclusiveRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasIncGammaToPi0RatioRatio->SaveAs(Form("%s/InclusiveRatiosRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasIncGammaToPi0RatioFit->SaveAs(Form("%s/InclusiveRatiosFit_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasIncGammaToPi0RatioFitRatio->SaveAs(Form("%s/InclusiveRatiosFitRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasDR->SaveAs(Form("%s/DoubleRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasDRRatio->SaveAs(Form("%s/DoubleRatiosRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasDRFit->SaveAs(Form("%s/DoubleRatiosFit_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-        canvasDRFitRatio->SaveAs(Form("%s/DoubleRatiosFitRatios_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
+        canvasPi0Spectrum->SaveAs(Form("%s/Pi0Spectra_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasPi0SpectrumRatio->SaveAs(Form("%s/Pi0SpectraRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+//         canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+//         canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasIncGammaToPi0Ratio->SaveAs(Form("%s/InclusiveRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasIncGammaToPi0RatioRatio->SaveAs(Form("%s/InclusiveRatiosRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasIncGammaToPi0RatioFit->SaveAs(Form("%s/InclusiveRatiosFit_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasIncGammaToPi0RatioFitRatio->SaveAs(Form("%s/InclusiveRatiosFitRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasDR->SaveAs(Form("%s/DoubleRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasDRRatio->SaveAs(Form("%s/DoubleRatiosRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasDRFit->SaveAs(Form("%s/DoubleRatiosFit_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+        canvasDRFitRatio->SaveAs(Form("%s/DoubleRatiosFitRatios_%s_%s.%s",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
     }
 
-    canvasGammaSpectrum->SaveAs(Form("%s/GammaSpectra_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaSpectrumRatio->SaveAs(Form("%s/GammaSpectraRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasRawGamma->SaveAs(Form("%s/GammaRaw_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasPurity->SaveAs(Form("%s/GammaPurity_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasPurityRatio->SaveAs(Form("%s/GammaPurityRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaEff->SaveAs(Form("%s/GammaEff_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaEffRatio->SaveAs(Form("%s/GammaEffRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaEffRecPt->SaveAs(Form("%s/GammaEffRecPt_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaEffRecPtRatio->SaveAs(Form("%s/GammaEffRatiosRecPt_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaResolCorr->SaveAs(Form("%s/GammaResolCorr_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaResolCorrRatio->SaveAs(Form("%s/GammaResolCorrRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    if (!(mode == 4 || mode == 5)) canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
-    canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(), suffix.Data()));
+    canvasGammaSpectrum->SaveAs(Form("%s/GammaSpectra_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaSpectrumRatio->SaveAs(Form("%s/GammaSpectraRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasRawGamma->SaveAs(Form("%s/GammaRaw_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasPurity->SaveAs(Form("%s/GammaPurity_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasPurityRatio->SaveAs(Form("%s/GammaPurityRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaEff->SaveAs(Form("%s/GammaEff_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaEffRatio->SaveAs(Form("%s/GammaEffRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaEffRecPt->SaveAs(Form("%s/GammaEffRecPt_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaEffRecPtRatio->SaveAs(Form("%s/GammaEffRatiosRecPt_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaResolCorr->SaveAs(Form("%s/GammaResolCorr_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaResolCorrRatio->SaveAs(Form("%s/GammaResolCorrRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    if (!(mode == 4 || mode == 5)) canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
+    canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s_%s.%s",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data(),dataOrMC.Data(), suffix.Data()));
 
     CalculateSystematicsGraphs( histoIncGamma, histoRawGamma, cutSelection, number, "Gamma", "Gamma", outputDir, outputFileDir, cutVariationName, sysOOBGammaDown, sysOOBGammaUp);
 

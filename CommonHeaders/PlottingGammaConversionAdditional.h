@@ -2852,20 +2852,22 @@
             }
         }
 
-        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || !energy.CompareTo("5TeV2017")){
+        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || energy.Contains("5TeV2017")){
             if (!generator.CompareTo("")){
                 return kOrange+1;
             } else if (!generator.CompareTo("LHC16h8a")) {
                 return kBlue;
             } else if (!generator.CompareTo("LHC16h8b")) {
                 return kRed;
+            } else if ( generator.Contains("Data")) {
+                return kGray+2;
             } else if (!generator.CompareTo("LHC16k5a")) {
                 return kBlue;
             } else if (!generator.CompareTo("LHC16k5b")) {
                 return kRed;
             } else if (!generator.CompareTo("LHC17e2")) {
                 return kGreen+2;
-            } else if (!generator.CompareTo("LHC18j3")) {
+            } else if (!generator.CompareTo("LHC18j3") || generator.Contains("Pythia8")) {
                 return kRed+2;
             } else if (!generator.CompareTo("LHC17p_fast")){
                 return kBlue+1;
@@ -3446,8 +3448,8 @@
                 return 30;
             }
         }
-        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || !energy.CompareTo("5TeV2017")){
-            if (!generator.CompareTo("")){
+        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || energy.Contains("5TeV2017")){
+            if (!generator.CompareTo("") || generator.Contains("Pythia8")){
                 return 34;
             } else if(generator.Contains("LHC16h8a")){
                 return 30;
@@ -3457,7 +3459,7 @@
                 return 30;
             } else if(generator.Contains("LHC16k5b")){
                 return 28;
-            } else if(generator.Contains("LHC17e2")){
+            } else if(generator.Contains("LHC17e2") || generator.Contains("Data")){
                 return 28;
             } else if(generator.Contains("LHC18j3")){
                 return 20;
@@ -3847,7 +3849,7 @@
             }
         }
 
-        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || !energy.CompareTo("5TeV2017")){
+        if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || energy.Contains("5TeV2017")){
             if (!generator.CompareTo("")){
                 return 2;
             } else {

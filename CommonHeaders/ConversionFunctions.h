@@ -78,7 +78,7 @@
     Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
     Int_t               GetBinning(TObject *, Double_t* );
     TString             GetDefaultMainTListName(Int_t);
-    TString             AutoDetectMainTList(Int_t);
+    TString             AutoDetectMainTList(Int_t, TFile* file, TString mesonName, TString cfSetting);
     TH1D*               GetUpperLimitsHisto(  TH1D*, TGraphAsymmErrors*, Double_t, Double_t, Int_t );
     Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
     void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*& ,Bool_t ,TString);
@@ -5068,7 +5068,7 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
-    TString AutoDetectMainTList(Int_t mode , TFile* file, TString mesonName = ""){
+    TString AutoDetectMainTList(Int_t mode , TFile* file, TString mesonName = "", TString cfSetting = ""){
         // Generate identifier string based on mode number
         TString nominalMainDir = GetDefaultMainTListName(mode);
         // Go through main directories in ROOT file and see which one complies with identifier
@@ -5088,7 +5088,16 @@
                 if(mesonId.CompareTo("2") == 0 && mesonName.CompareTo("EtaPrime") == 0) return mainDir;
             } else {
                 TString start   = ((TObjString*)arr->At(0))->GetString();
-                if (start.EqualTo(nominalMainDir)) return mainDir;
+                if(cfSetting.Length()){
+                    if(arr->GetEntriesFast()>2){
+                        TString cfstring   = ((TObjString*)arr->At(2))->GetString();
+                        if(mainDir.BeginsWith(nominalMainDir) && cfstring.CompareTo(cfSetting.Data())==0)
+                            return mainDir;
+                    }
+                }else{
+                    if (start.EqualTo(nominalMainDir))
+                        return mainDir;
+                }
             }
         }
         cout << "WARNING: failed to detect a main TList for mode " << mode <<", returning \"\"" << endl;

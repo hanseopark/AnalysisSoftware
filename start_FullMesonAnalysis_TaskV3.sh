@@ -28,6 +28,7 @@ MCFILE=1
 NAMECUTSTUDIES="none"
 PERIODNAME="No"
 USETHNSPARSE=0
+CORRFSETTING=""
 BINSPTGAMMA=0
 BINSPTPI0=0
 BINSPTETA=0
@@ -80,7 +81,7 @@ source start_FullMesonAnalysis_helperPbPb.sh
 
 function ExtractSignal()
 {
-    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$MODE\,$USETHNSPARSE\)
+    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$MODE\,$USETHNSPARSE\,-1\,\"$CORRFSETTING\"\)
 }
 
 # Compile directly with G++ incl fsanitize (prototype)
@@ -800,6 +801,9 @@ do
     elif [ $answer = "5TeVSpecial" ]; then
         ENERGY="5TeVSpecial";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "5TeV2017Ref1" ]; then
+        ENERGY="5TeV2017Ref1";
+        EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         ENERGY="7TeV";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
@@ -911,6 +915,22 @@ do
     if [ $MODE = 2 ] || [ $MODE = 3 ] || [ $MODE = 4 ] || [ $MODE = 5 ] || [ $MODE = 10 ] || [ $MODE = 11 ] || [ $MODE = 12 ] || [ $MODE = 13 ]; then
         USETHNSPARSE=0
         ADVMESONQA="AdvancedMesonQA"
+        #######################################################################################################
+        # Set Special variable to load desired folder from correction framework
+        #######################################################################################################
+        echo "Which correction framework setting do you want to run? Default(Tender/no special dir), S500A100, etc?";
+        read answer
+        if [ -n "$answer" ]; then
+            if [ $answer = "d" ] || [ $answer = "def" ] || [ $answer = "default" ] || [ $answer = "Default" ] || [ $answer = "tender" ] || [ $answer = "t" ]; then
+                echo -e "--> Default or Tender output chosen\n"
+                CORRFSETTING=""
+            else
+                echo "--> Setting \"$answer\" as output directory setting from correction framework."
+                CORRFSETTING="$answer"
+            fi
+        else
+            echo "--> Command \"$answer\" not defined. Please try again."
+        fi
     fi
 
     #######################################################################################################
@@ -936,7 +956,7 @@ do
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
             fi
-        elif [ $ENERGY = "5TeV2017" ] || [ $ENERGY = "5TeVSpecial" ]; then
+        elif [ $ENERGY = "5TeV2017" ] || [ $ENERGY = "5TeVSpecial" ] || [ $ENERGY = "5TeV2017Ref1" ]; then
             GiveBinning5TeV2017
             AskForMinBiasEffiOnly
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
@@ -1517,15 +1537,15 @@ echo ""
                 echo "CutSelection is $CUTSELECTION";
                 if [ $DOPI0 -eq 1 ]; then
                     if [ -f $DATAROOTFILE ]; then
-                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kFALSE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\)
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kFALSE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\,0\,-1\,\"$CORRFSETTING\"\)
                     fi
                     PI0DATARAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0_data_GammaMergedWithoutCorrection_*.root`
                     if [ $MCFILE -eq 1 ]; then
-                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\)
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\,0\,-1\,\"$CORRFSETTING\"\)
                         PI0MCRAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0_MC_GammaMergedWithoutCorrection_*$CUTSELECTION*.root`
                         PI0MCCORRFILE=`ls $CUTSELECTION/$ENERGY/Pi0_MC_GammaMergedCorrectionHistos_*$CUTSELECTION*.root`
                         if [ $MERGINGMC -eq 1 ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCROOTFILEGJ\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\,1\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCROOTFILEGJ\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,$MODE\,1\,-1\,\"$CORRFSETTING\"\)
                             PI0MCCORRFILEJJG=`ls $CUTSELECTION/$ENERGY/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
                             root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$CUTSELECTION\"\,\"Pi0\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0MCCORRFILE\"\,\"$CUTSELECTION/$ENERGY/Pi0_MC_GammaMergedCorrectionHistosJJ_$CUTSELECTION.root\"\,\"$PI0MCCORRFILEJJG\"\)
 
@@ -1539,15 +1559,15 @@ echo ""
 
                 if [ $DOETA -eq 1 ]; then
                     if [ -f $DATAROOTFILE ]; then
-                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kFALSE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\)
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kFALSE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\,0\,-1\,\"$CORRFSETTING\"\)
                     fi
                     ETADATARAWFILE=`ls $CUTSELECTION/$ENERGY/Eta_data_GammaMergedWithoutCorrection_*.root`
                     if [ $MCFILE -eq 1 ]; then
-                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\)
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\,0\,-1\,\"$CORRFSETTING\"\)
                         ETAMCRAWFILE=`ls $CUTSELECTION/$ENERGY/Eta_MC_GammaMergedWithoutCorrection_*$CUTSELECTION*.root`
                         ETAMCCORRFILE=`ls $CUTSELECTION/$ENERGY/Eta_MC_GammaMergedCorrectionHistos_*$CUTSELECTION*.root`
                         if [ $MERGINGMC -eq 1 ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCROOTFILEGJ\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\,1\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCROOTFILEGJ\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,kTRUE\,\"$ENERGY\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,$MODE\,1\,-1\,\"$CORRFSETTING\"\)
                         fi
                         root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$ETADATARAWFILE\"\,\"$ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Eta\"\,\"$SUFFIX\"\,\"$ENERGY\"\,$BINSPTETA\,$MODE\)
                     fi

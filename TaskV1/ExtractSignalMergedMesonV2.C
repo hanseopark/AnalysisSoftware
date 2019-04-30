@@ -63,7 +63,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                     Int_t   numberOfBins            = 30,
                                     Int_t   mode                    = 10,
                                     Bool_t  kJJGammaTriggMC         = 0,
-                                    Int_t   triggerSet              = -1
+                                    Int_t   triggerSet              = -1,
+                                    TString optionCorrFrameworkDir  = ""
                                 ) {
     gROOT->Reset();
 
@@ -106,6 +107,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     cout<<"Pictures are saved as "<< suffix.Data()<< endl;
     fdate                           = ReturnDateString();
+
+    fDoExtendedExamplePlots = kTRUE;
 
     //****************************** Specification of collision system ************************************************
     TString textProcess             = ReturnMesonString (fPrefix);
@@ -187,7 +190,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
     TFile* f                        = new TFile(file.Data());
-    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f);
+    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f,"",optionCorrFrameworkDir);
     if (autoDetectedMainDir.CompareTo("") == 0){
         cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
@@ -409,8 +412,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if (meson.Contains("Pi0")){
             fHistoTrueClustersPrimPi0PtM02                  = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusPrimMesonM02.Data());
             if (fHistoTrueClustersPrimPi0PtM02) fHistoTrueClustersPrimPi0PtM02->Sumw2();
-
-
             fHistoTrueClustersSecPi0PtM02[0]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0sM02.Data());
             fHistoTrueClustersSecPi0PtM02[1]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromLambdaM02.Data());
             fHistoTrueClustersSecPi0PtM02[2]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0lM02.Data());
@@ -432,6 +433,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
         fHistoMCMesonGGWithinAccepPt            = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonAcc.Data());
         fHistoMCMesonGGPt                       = (TH1D*)MCContainer->FindObject(fObjectNameMCMeson.Data());
+        fHistoMCMultipleMesonGGWithinAccepPt    = (TH1D*)MCContainer->FindObject(fObjectNameMCMultipleMesonAcc.Data());
+        fHistoMCMultipleMesonGGPt               = (TH1D*)MCContainer->FindObject(fObjectNameMCMultipleMeson.Data());
         fHistoMCMesonGGPtWOWeights              = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonWOWeights.Data());
         fHistoMCMesonDalitzWithinAccepPt        = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitzAcc.Data());
         fHistoMCMesonDalitzPt                   = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitz.Data());
@@ -441,9 +444,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoMCMesonWithinAccepPt              = (TH1D*)fHistoMCMesonGGWithinAccepPt->Clone("Meson_inAcc");
         fHistoMCMesonWithinAccepPt->Sumw2();
         fHistoMCMesonWithinAccepPt->Add(fHistoMCMesonDalitzWithinAccepPt);
+        if(fHistoMCMultipleMesonGGWithinAccepPt)fHistoMCMesonWithinAccepPt->Add(fHistoMCMultipleMesonGGWithinAccepPt,-1);
         fHistoMCMesonPt                         = (TH1D*)fHistoMCMesonGGPt->Clone("Meson_All");
         fHistoMCMesonPt->Sumw2();
         fHistoMCMesonPt->Add(fHistoMCMesonDalitzPt);
+        if(fHistoMCMultipleMesonGGPt)fHistoMCMesonPt->Add(fHistoMCMultipleMesonGGPt,-1);
         fHistoMCMesonPtWOWeights                = (TH1D*)fHistoMCMesonGGPtWOWeights->Clone("Meson_All_WOWeights");
         fHistoMCMesonPtWOWeights->Sumw2();
         fHistoMCMesonPtWOWeights->Add(fHistoMCMesonDalitzPtWOWeights);
@@ -2061,6 +2066,8 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     if (mesonType.Contains("Pi0")){
         fObjectNameMCMesonAcc                       = "MC_Pi0InAcc_Pt";
         fObjectNameMCMeson                          = "MC_Pi0_Pt";
+        // fObjectNameMCMultipleMesonAcc               = "MC_Pi0InAccMulipleSubtraction_Pt";
+        // fObjectNameMCMultipleMeson                  = "MC_Pi0MultipleSubtraction_Pt";
         fObjectNameMCMesonAccSecPi0                 = "MC_SecPi0InAcc_Pt_Source";
         fObjectNameMCMesonSecPi0                    = "MC_SecPi0_Pt_Source";
         fObjectNameMCMesonWOWeights                 = "MC_Pi0_WOWeights_Pt";
@@ -3265,41 +3272,43 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
                 if(fHistoMCSecPi0AcceptPt[j])   fHistoMCSecPi0AcceptPt[j]->Write();
             }
         }
-
-        TString titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[fExampleBin],fBinsPt[fExampleBin+1]);
-        if (fHistoM02PtBin[fExampleBin]){
-            fHistoM02PtBin[fExampleBin]->SetTitle(titleHistoSignal.Data());
-            fHistoM02PtBin[fExampleBin]->Write();
+        for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
+            if(!fDoExtendedExamplePlots && ii!=fExampleBin)
+                continue;
+            TString titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]);
+            if (fHistoM02PtBin[ii]){
+                fHistoM02PtBin[ii]->SetTitle(titleHistoSignal.Data());
+                fHistoM02PtBin[ii]->Write();
+            }
+            if (fHistoTrueClusMergedM02PtBin[ii])                  fHistoTrueClusMergedM02PtBin[ii]->Write();
+            if (fHistoTrueClusPi0M02PtBin[ii])                     fHistoTrueClusPi0M02PtBin[ii]->Write();
+            if (fHistoTrueClusPi0DCM02PtBin[ii])                   fHistoTrueClusPi0DCM02PtBin[ii]->Write();
+            if (fHistoTrueClusPi0GGM02PtBin[ii])                   fHistoTrueClusPi0GGM02PtBin[ii]->Write();
+            if (fHistoTrueClusPi0DalitzM02PtBin[ii])               fHistoTrueClusPi0DalitzM02PtBin[ii]->Write();
+            if (fHistoTrueClusEtaM02PtBin[ii])                     fHistoTrueClusEtaM02PtBin[ii]->Write();
+            if (fHistoTrueClusEtaDCM02PtBin[ii])                   fHistoTrueClusEtaDCM02PtBin[ii]->Write();
+            if (fHistoTrueClusEtaGGM02PtBin[ii])                   fHistoTrueClusEtaGGM02PtBin[ii]->Write();
+            if (fHistoTrueClusEtaDalitzM02PtBin[ii])               fHistoTrueClusEtaDalitzM02PtBin[ii]->Write();
+            if (fHistoTrueClusGammaM02PtBin[ii])                   fHistoTrueClusGammaM02PtBin[ii]->Write();
+            if (fHistoTrueClusElectronM02PtBin[ii])                fHistoTrueClusElectronM02PtBin[ii]->Write();
+            if (fHistoTrueClusBGM02PtBin[ii])                      fHistoTrueClusBGM02PtBin[ii]->Write();
+            if (fHistoTrueClusPartConvMergedM02PtBin[ii])          fHistoTrueClusPartConvMergedM02PtBin[ii]->Write();
+            if (fHistoTrueClusPartConvMergedFromPi0M02PtBin[ii])   fHistoTrueClusPartConvMergedFromPi0M02PtBin[ii]->Write();
+            if (fHistoTrueClusPartConvMergedFromEtaM02PtBin[ii])   fHistoTrueClusPartConvMergedFromEtaM02PtBin[ii]->Write();
+            if (fHistoTrueClusPureMergedM02PtBin[ii])              fHistoTrueClusPureMergedM02PtBin[ii]->Write();
+            if (fHistoTrueClusPureMergedFromPi0M02PtBin[ii])       fHistoTrueClusPureMergedFromPi0M02PtBin[ii]->Write();
+            if (fHistoTrueClusPureMergedFromEtaM02PtBin[ii])       fHistoTrueClusPureMergedFromEtaM02PtBin[ii]->Write();
+            if (fHistoTrueClusOneGammaM02PtBin[ii])                fHistoTrueClusOneGammaM02PtBin[ii]->Write();
+            if (fHistoTrueClusOneGammaFromPi0M02PtBin[ii])         fHistoTrueClusOneGammaFromPi0M02PtBin[ii]->Write();
+            if (fHistoTrueClusOneGammaFromEtaM02PtBin[ii])         fHistoTrueClusOneGammaFromEtaM02PtBin[ii]->Write();
+            if (fHistoTrueClusOneElectronM02PtBin[ii])             fHistoTrueClusOneElectronM02PtBin[ii]->Write();
+            if (fHistoTrueClusOneElectronFromPi0M02PtBin[ii])      fHistoTrueClusOneElectronFromPi0M02PtBin[ii]->Write();
+            if (fHistoTrueClusOneElectronFromEtaM02PtBin[ii])      fHistoTrueClusOneElectronFromEtaM02PtBin[ii]->Write();
+            if (fHistoTrueClusPrimPi0M02PtBin[ii])                 fHistoTrueClusPrimPi0M02PtBin[ii]->Write();
+            for (Int_t j = 0; j<4; j++){
+                if (fHistoTrueClusSecPi0M02PtBin[j][ii])           fHistoTrueClusSecPi0M02PtBin[j][ii]->Write();
+            }
         }
-        if (fHistoTrueClusMergedM02PtBin[fExampleBin])                  fHistoTrueClusMergedM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPi0M02PtBin[fExampleBin])                     fHistoTrueClusPi0M02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPi0DCM02PtBin[fExampleBin])                   fHistoTrueClusPi0DCM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPi0GGM02PtBin[fExampleBin])                   fHistoTrueClusPi0GGM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPi0DalitzM02PtBin[fExampleBin])               fHistoTrueClusPi0DalitzM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusEtaM02PtBin[fExampleBin])                     fHistoTrueClusEtaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusEtaDCM02PtBin[fExampleBin])                   fHistoTrueClusEtaDCM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusEtaGGM02PtBin[fExampleBin])                   fHistoTrueClusEtaGGM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusEtaDalitzM02PtBin[fExampleBin])               fHistoTrueClusEtaDalitzM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusGammaM02PtBin[fExampleBin])                   fHistoTrueClusGammaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusElectronM02PtBin[fExampleBin])                fHistoTrueClusElectronM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusBGM02PtBin[fExampleBin])                      fHistoTrueClusBGM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPartConvMergedM02PtBin[fExampleBin])          fHistoTrueClusPartConvMergedM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPartConvMergedFromPi0M02PtBin[fExampleBin])   fHistoTrueClusPartConvMergedFromPi0M02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPartConvMergedFromEtaM02PtBin[fExampleBin])   fHistoTrueClusPartConvMergedFromEtaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPureMergedM02PtBin[fExampleBin])              fHistoTrueClusPureMergedM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPureMergedFromPi0M02PtBin[fExampleBin])       fHistoTrueClusPureMergedFromPi0M02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPureMergedFromEtaM02PtBin[fExampleBin])       fHistoTrueClusPureMergedFromEtaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneGammaM02PtBin[fExampleBin])                fHistoTrueClusOneGammaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneGammaFromPi0M02PtBin[fExampleBin])         fHistoTrueClusOneGammaFromPi0M02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneGammaFromEtaM02PtBin[fExampleBin])         fHistoTrueClusOneGammaFromEtaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneElectronM02PtBin[fExampleBin])             fHistoTrueClusOneElectronM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneElectronFromPi0M02PtBin[fExampleBin])      fHistoTrueClusOneElectronFromPi0M02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusOneElectronFromEtaM02PtBin[fExampleBin])      fHistoTrueClusOneElectronFromEtaM02PtBin[fExampleBin]->Write();
-        if (fHistoTrueClusPrimPi0M02PtBin[fExampleBin])                 fHistoTrueClusPrimPi0M02PtBin[fExampleBin]->Write();
-        for (Int_t j = 0; j<4; j++){
-            if (fHistoTrueClusSecPi0M02PtBin[j][fExampleBin])           fHistoTrueClusSecPi0M02PtBin[j][fExampleBin]->Write();
-        }
-
     }
 
     fOutput2->Write();

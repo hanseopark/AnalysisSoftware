@@ -567,6 +567,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
             fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
         }
+        if(!fitBinShiftPi0 || optionEnergy.CompareTo("5TeV2017")==0){
+            fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("Pi05TeV/TsallisFitPi0");
+            fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("Pi05TeV/TwoComponentModelFitPi0");
+        }
+        if(!fitBinShiftEta || optionEnergy.CompareTo("5TeV2017")==0){
+            fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta5TeV/TsallisFitEta");
+            fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta5TeV/TwoComponentModelFitEta");
+        }
         if( optionEnergy.CompareTo("pPb_5.023TeV")==0){
             fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
             fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
@@ -858,7 +866,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             isV0AND         = 1;
         }
     }
-    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0 || optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVLowB") == 0){
+    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.Contains("5TeV2017") || optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVLowB") == 0){
         isV0AND             = 1;
     }
     Double_t xSection       = ReturnCorrectXSection( optionEnergy, isV0AND);

@@ -228,6 +228,35 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoMCEtaPtRebinned->Rebin(nBinsX,"fHistoMCEtaPtRebinned2",ptBinning);
     fHistoMCEtaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCEtaPtRebinned2");
 
+    // ----------- read gamma -----------------------------------
+    cout << "reading gamma" << endl;
+    TH1D* fHistoMCAllGammaPt           = (TH1D*)MCContainer->FindObject("MC_AllGamma_Pt");
+    TH1D* fHistoMCDecGammaPt           = (TH1D*)MCContainer->FindObject("MC_DecayGamma_Pt");
+    TH1D* fHistoMCDirGammaPt           = (TH1D*)fHistoMCAllGammaPt->Clone("MC_Pi0_DirGamma_Pt");
+    if(fHistoMCDirGammaPt)
+        fHistoMCDirGammaPt->Sumw2();
+
+    if (fHistoMCDecGammaPt){
+        fHistoMCDirGammaPt->Add(fHistoMCDecGammaPt,-1);
+    }
+    TH1D* fHistoMCAllGammaPtRebinned         = NULL;
+    if(fHistoMCAllGammaPt){
+    TH1D* fHistoMCAllGammaPtRebinned         = (TH1D*)fHistoMCAllGammaPt->Clone("fHistoMCAllGammaPtRebinned");
+        fHistoMCAllGammaPtRebinned->Rebin(nBinsX,"fHistoMCAllGammaPtRebinned2",ptBinning);
+        fHistoMCAllGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCAllGammaPtRebinned2");
+    }
+    TH1D* fHistoMCDecGammaPtRebinned         = NULL;
+    if(fHistoMCDecGammaPt){
+    TH1D* fHistoMCDecGammaPtRebinned         = (TH1D*)fHistoMCDecGammaPt->Clone("fHistoMCDecGammaPtRebinned");
+        fHistoMCDecGammaPtRebinned->Rebin(nBinsX,"fHistoMCDecGammaPtRebinned2",ptBinning);
+        fHistoMCDecGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDecGammaPtRebinned2");
+    }
+    TH1D* fHistoMCDirGammaPtRebinned         = NULL;
+    if(fHistoMCDirGammaPt){
+    TH1D* fHistoMCDirGammaPtRebinned         = (TH1D*)fHistoMCDirGammaPt->Clone("fHistoMCDirGammaPtRebinned");
+        fHistoMCDirGammaPtRebinned->Rebin(nBinsX,"fHistoMCDirGammaPtRebinned2",ptBinning);
+        fHistoMCDirGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDirGammaPtRebinned2");
+    }
     // ------------ read 2D primary particle histo vs pt --------
     TH2D* fHistoPrimPartYSource         = NULL;
     TH1D* fHistoMCPiNegY                = NULL;
@@ -382,6 +411,12 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     ScaleMCYield(fHistoMCPi0PtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCEtaPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCEtaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCAllGammaPt)          ScaleMCYield(fHistoMCAllGammaPt,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCAllGammaPtRebinned)  ScaleMCYield(fHistoMCAllGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCDecGammaPt)          ScaleMCYield(fHistoMCDecGammaPt,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCDecGammaPtRebinned)  ScaleMCYield(fHistoMCDecGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCDirGammaPt)          ScaleMCYield(fHistoMCDirGammaPt,  deltaRapid,  scaling,  nEvtMC );
+    if(fHistoMCDirGammaPtRebinned)  ScaleMCYield(fHistoMCDirGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiNegPt,  deltaRapid,  scaling,  nEvtMC );
@@ -406,6 +441,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TH1D* fHistoRatioMCKDivPi           = NULL;
     TH1D* fHistoRatioMCK0sDivPi0        = NULL;
     TH1D* fHistoRatioMCEtaDivPi0        = NULL;
+    TH1D* fHistoRatioMCAllGammaDivPi0        = NULL;
+    TH1D* fHistoRatioMCDecGammaDivPi0        = NULL;
+    TH1D* fHistoRatioMCDirGammaDivPi0        = NULL;
     TCanvas *canvasRatio = new TCanvas("canvasRatio","canvasRatio",1000,800);
     DrawGammaCanvasSettings( canvasRatio, 0.11, 0.02, 0.02, 0.08);
     canvasRatio->cd();
@@ -415,6 +453,60 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TLatex *labelGeneratorRatio     = new TLatex(0.15,0.12,Form("%s",fGeneratorName.Data()));
     SetStyleTLatex( labelGeneratorRatio, 0.04,4);
     cout << __LINE__  << endl;
+    // build ratio gamma/pi^0
+    /*
+    if (fHistoMCAllGammaPt && fHistoMCDecGammaPt && fHistoMCDirGammaPt){
+        fHistoRatioMCAllGammaDivPi0 = (TH1D*)fHistoMCAllGammaPtRebinned->Clone("fHistoRatioMCAllGammaDivPi0");
+        fHistoRatioMCAllGammaDivPi0->Divide(fHistoRatioMCAllGammaDivPi0,fHistoMCPi0PtRebinned);
+
+        fHistoRatioMCDecGammaDivPi0 = (TH1D*)fHistoMCDecGammaPtRebinned->Clone("fHistoRatioMCDecGammaDivPi0");
+        fHistoRatioMCDecGammaDivPi0->Divide(fHistoRatioMCDecGammaDivPi0,fHistoMCPi0PtRebinned);
+
+        fHistoRatioMCDirGammaDivPi0 = (TH1D*)fHistoMCDirGammaPtRebinned->Clone("fHistoRatioMCDirGammaDivPi0");
+        fHistoRatioMCDirGammaDivPi0->Divide(fHistoRatioMCDirGammaDivPi0,fHistoMCPi0PtRebinned);
+
+        Double_t maxPtForFit    = 5;
+        Double_t minPtForFit    = 15;
+        TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",minPtForFit,maxPtForFit);
+        fHistoRatioMCAllGammaDivPi0->Fit(etaToPi0ConstMC,"QRME0","",minPtForFit,maxPtForFit);
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "high pt gamma/pi0 - MC: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        TLegend* legendRatioK0ToK = GetAndSetLegend2(0.15, 0.8, 0.42, 0.95, 32,1);
+
+        DrawAutoGammaMesonHistos(   fHistoRatioMCAllGammaDivPi0,
+                            "", "#it{p}_{T} (GeV/#it{c})", "#gamma/ #pi^{0}",
+                            kFALSE, 10, 1e-10, kFALSE,
+                            kTRUE, 0., 1.1,
+                            kTRUE, minPt, maxPt);
+        fHistoRatioMCAllGammaDivPi0->GetYaxis()->SetTitleOffset(1.2);
+        DrawGammaSetMarker(fHistoRatioMCAllGammaDivPi0, 20, 1.5, kAzure-6, kAzure-6);
+        fHistoRatioMCAllGammaDivPi0->DrawClone("pe");
+            legendRatioK0ToK->AddEntry(fHistoRatioMCAllGammaDivPi0,"all #gamma","p");
+
+        DrawGammaSetMarker(fHistoRatioMCDecGammaDivPi0, 21, 1.5, kOrange-6, kOrange-6);
+        fHistoRatioMCDecGammaDivPi0->DrawClone("pe,same");
+            legendRatioK0ToK->AddEntry(fHistoRatioMCDecGammaDivPi0,"decay #gamma","p");
+
+        DrawGammaSetMarker(fHistoRatioMCDirGammaDivPi0, 29, 1.5, kViolet-6, kViolet-6);
+        fHistoRatioMCDirGammaDivPi0->DrawClone("pe,same");
+            legendRatioK0ToK->AddEntry(fHistoRatioMCDirGammaDivPi0,"direct #gamma","p");
+
+        etaToPi0ConstMC->SetLineColor(kAzure-6);
+        etaToPi0ConstMC->SetLineStyle(7);
+        etaToPi0ConstMC->Draw("same");
+
+//         DrawGammaLines(0., 20,1, 1,0.1, kGray+2, 7);
+        labelEnergyRatio->Draw();
+        labelGeneratorRatio->Draw();
+        legendRatioK0ToK->Draw();
+
+        canvasRatio->SaveAs(Form("%s/GammaToPi0_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
+    }*/
     // build ratio eta/pi^0
     if (fHistoMCPi0Pt && fHistoMCEtaPt){
         fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivPi0");
@@ -902,6 +994,15 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         if (fHistoMCPi0PtRebinned)                  fHistoMCPi0PtRebinned->Write("MC_Pi0_Pt_Rebinned",TObject::kOverwrite);
         if (fHistoMCEtaPt)                          fHistoMCEtaPt->Write("MC_Eta_Pt",TObject::kOverwrite);
         if (fHistoMCEtaPtRebinned)                  fHistoMCEtaPtRebinned->Write("MC_Eta_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoMCAllGammaPt)                     fHistoMCAllGammaPt->Write("MC_AllGamma_Pt",TObject::kOverwrite);
+        if (fHistoMCAllGammaPtRebinned)             fHistoMCAllGammaPtRebinned->Write("MC_AllGamma_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoMCDecGammaPt)                     fHistoMCDecGammaPt->Write("MC_DecGamma_Pt",TObject::kOverwrite);
+        if (fHistoMCDecGammaPtRebinned)             fHistoMCDecGammaPtRebinned->Write("MC_DecGamma_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoMCDirGammaPt)                     fHistoMCDirGammaPt->Write("MC_DirGamma_Pt",TObject::kOverwrite);
+        if (fHistoMCDirGammaPtRebinned)             fHistoMCDirGammaPtRebinned->Write("MC_DirGamma_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoRatioMCAllGammaDivPi0)            fHistoRatioMCAllGammaDivPi0->Write("MC_Ratio_AllGamma_Pi0_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoRatioMCDecGammaDivPi0)            fHistoRatioMCDecGammaDivPi0->Write("MC_Ratio_DecGamma_Pi0_Pt_Rebinned",TObject::kOverwrite);
+        if (fHistoRatioMCDirGammaDivPi0)            fHistoRatioMCDirGammaDivPi0->Write("MC_Ratio_DirGamma_Pi0_Pt_Rebinned",TObject::kOverwrite);
         if (fHistoMCPiPt)                           fHistoMCPiPt->Write("MC_PiCh_All_Pt",TObject::kOverwrite);
         if (fHistoMCPiNegPt)                        fHistoMCPiNegPt->Write("MC_NegPi_Pt",TObject::kOverwrite);
         if (fHistoMCPiPosPt)                        fHistoMCPiPosPt->Write("MC_PosPi_Pt",TObject::kOverwrite);

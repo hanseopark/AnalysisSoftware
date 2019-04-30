@@ -35,6 +35,7 @@
     TString     fClusterMergedCutSelection                                  = "";
     TString     fMesonCutSelection                                          = "";
     TString     fAdditionalName                                             = "";
+    Bool_t      fDoExtendedExamplePlots                                     = kFALSE;
 
     Int_t       fIsMC                                                       = 0;
     Int_t       fIsMCGammaTrig                                              = 0;
@@ -64,7 +65,9 @@
     //************************* MC object names **********************************
     //****************************************************************************
     TString     fObjectNameMCMesonAcc                                       = "";
+    TString     fObjectNameMCMultipleMesonAcc                               = "";
     TString     fObjectNameMCMeson                                          = "";
+    TString     fObjectNameMCMultipleMeson                                  = "";
     TString     fObjectNameMCMesonAccSecPi0                                 = "";
     TString     fObjectNameMCMesonSecPi0                                    = "";
     TString     fObjectNameMCMesonWOWeights                                 = "";
@@ -151,7 +154,6 @@
     Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
     Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
     void CreateRatioHistos();                                                                                   // creates ratio histos for MC inputs
-
     //****************************************************************************
     //************************** input histograms ********************************
     //****************************************************************************
@@ -424,6 +426,7 @@
     //****************************************************************************
     TH1D*       fHistoMCMesonPt                                             = NULL;
     TH1D*       fHistoMCMesonGGPt                                           = NULL;
+    TH1D*       fHistoMCMultipleMesonGGPt                                   = NULL;
     TH1D*       fHistoMCMesonDalitzPt                                       = NULL;
     TH1D*       fHistoMCMesonPtRebin                                        = NULL;
     TH1D*       fHistoMCMesonPtWOWeights                                    = NULL;
@@ -431,6 +434,7 @@
     TH1D*       fHistoMCMesonDalitzPtWOWeights                              = NULL;
     TH1D*       fHistoMCMesonWithinAccepPt                                  = NULL;
     TH1D*       fHistoMCMesonGGWithinAccepPt                                = NULL;
+    TH1D*       fHistoMCMultipleMesonGGWithinAccepPt                        = NULL;
     TH1D*       fHistoMCMesonDalitzWithinAccepPt                            = NULL;
     TH1D*       fHistoMCMesonWithinAccepPtRebin                             = NULL;
 
@@ -439,6 +443,8 @@
     //****************************************************************************
     TH2F*       fHistoTrueClustersSecPi0PtM02[4]                            = { NULL, NULL, NULL, NULL };
     TH1D**      fHistoTrueClusSecPi0M02PtBin[4]                             = { NULL, NULL, NULL, NULL};    
+    TH1D*       fHistoTrueClusSecPi0M02Pt[4]                                = { NULL, NULL, NULL, NULL};    
+    TH1D*       fHistoTrueClusSecPi0M02PtOrBin[4]                           = { NULL, NULL, NULL, NULL};    
 
     Double_t*   fMesonM02TrueSecPi0Yields[4]                                = { NULL, NULL, NULL, NULL};    
     Double_t*   fMesonM02TrueSecPi0YieldsError[4]                           = { NULL, NULL, NULL, NULL};    

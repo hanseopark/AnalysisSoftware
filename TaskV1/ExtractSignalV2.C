@@ -68,7 +68,8 @@ void ExtractSignalV2(
     Bool_t addSig                   = kFALSE,
     Int_t mode                      = 9,
     Bool_t UseTHnSparse             = kTRUE,
-    Int_t triggerSet                = -1
+    Int_t triggerSet                = -1,
+    TString optionCorrFrameworkDir  = ""
 ) {
     gROOT->Reset();
 
@@ -102,7 +103,7 @@ void ExtractSignalV2(
     //******************************************************************************************************
     TFile* f = new TFile(file.Data());
     TString autoDetectedMainDir;
-    if(mode<100) autoDetectedMainDir = AutoDetectMainTList(mode,f);
+    if(mode<100) autoDetectedMainDir = AutoDetectMainTList(mode,f,"",optionCorrFrameworkDir);
     else         autoDetectedMainDir = AutoDetectMainTList(mode,f,meson); // heavy meson analysis
     if (autoDetectedMainDir.CompareTo("") == 0){
         cout << "ERROR: trying to read file, which is incompatible with mode selected (mode " << mode << ")" << endl;;
@@ -373,9 +374,9 @@ void ExtractSignalV2(
             fMesonCutSelectionRead          = fMesonCutSelection;
             fClusterCutSelectionRead        = fClusterCutSelection;
             // Alternative time cuts for EMC
-            TString mostProbableTimeCuts[10]= {"5", "6", "0", "1", "2", "3", "4", "7", "8", "9"};
+            TString mostProbableTimeCuts[11]= {"5", "6", "0", "1", "2", "3", "4", "7", "8", "9", "a"};
             Int_t i = 0;
-            while (HistosGammaConversion == NULL && i < 10){
+            while (HistosGammaConversion == NULL && i < 11){
                 // replace time cut
                 fClusterCutSelection.Replace(GetClusterTimingCutPosition(fClusterCutSelectionRead),1,mostProbableTimeCuts[i].Data());
                 fClusterCutSelectionRead= fClusterCutSelection;
@@ -388,7 +389,7 @@ void ExtractSignalV2(
                 i++;
             }
             i = 0;
-            while (HistosGammaConversion == NULL && i < 10){
+            while (HistosGammaConversion == NULL && i < 11){
                 // replace time cut
                 fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"1");
                 cout << fEventCutSelection.Data() << endl;
@@ -4760,7 +4761,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                         fMesonWidthRange[0]         = 0.001;
                         fMesonWidthRange[1]         = 0.009;
                     }
-                } else  if ( !fEnergyFlag.CompareTo("5TeV2017")){
+                } else  if ( fEnergyFlag.Contains("5TeV2017")){
                     if ((ptBin < 3)){
                         mesonAmplitudeMin = mesonAmplitude*60./100.;
                         mesonAmplitudeMax = mesonAmplitude*105./100.;
@@ -4832,7 +4833,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
                     mesonAmplitudeMax = mesonAmplitude*115./100.;
                     if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
-                } else if ( !fEnergyFlag.CompareTo("5TeV2017") ){
+                } else if ( fEnergyFlag.Contains("5TeV2017") ){
                     mesonAmplitudeMin = mesonAmplitude*80./100.;
                     mesonAmplitudeMax = mesonAmplitude*120./100.;
                 } else {

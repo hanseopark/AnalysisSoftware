@@ -4137,6 +4137,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // TFile *filepPb8TeVPythia8_onlyJJ = new TFile("ExternalInputpPb/Theory/pythia8_8160GeV_pPb_nCTEQ15.root"); // uses only JJ processes
         TFile *filepPb8TeVPythia8        = new TFile("ExternalInputpPb/Theory/pythia8_8160GeV_pPb_EPPS16.root"); // uses MB, JJ, GJ processes
         TFile *filepPb8TeVPythia8_onlyJJ = new TFile("ExternalInputpPb/Theory/pythia8_8160GeV_pPb_EPPS16.root"); // uses only JJ processes
+        TGraphAsymmErrors* graphpppPb8TeVPythia8_pi0      =  new TGraphAsymmErrors((TH1D*)filepPb8TeVPythia8->Get("h_pi0_etaEMCal")); //gae_222_photons_etaEMCal
+        TGraphAsymmErrors* graphpppPb8TeVPythia8_decay      =  new TGraphAsymmErrors((TH1D*)filepPb8TeVPythia8->Get("h_decay_photons_etaEMCal")); //gae_222_photons_etaEMCal
+        // TGraphAsymmErrors* graphpppPb8TeVPythia8_direct      =  new TGraphAsymmErrors((TH1D*)filepPb8TeVPythia8->Get("h_direct_photons_etaEMCal")); //gae_222_photons_etaEMCal
         TGraphAsymmErrors* graphpppPb8TeVPythia8_prompt      =  new TGraphAsymmErrors((TH1D*)filepPb8TeVPythia8->Get("h_222_photons_etaEMCal")); //gae_222_photons_etaEMCal
         TGraphAsymmErrors* graphpppPb8TeVPythia8_frag_onlyJJ =  new TGraphAsymmErrors((TH1D*)filepPb8TeVPythia8_onlyJJ->Get("h_shower_photons_etaEMCal")); //gae_shower_photons_etaEMCal
         // adding tgraphs to get direct = frag + prompt
@@ -4158,12 +4161,40 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             printf("Skipping the generation of 8 TeV direct photon plot, because numbers of data points of prompt and frag graph do not match...\n");
             delete graphpppPb8TeVPythia8_direct;
         }
+        // adding tgraphs to get all = frag + prompt + decay
+        TGraphAsymmErrors* graphpppPb8TeVPythia8_all = 0x0;
+        if(graphpppPb8TeVPythia8_prompt->GetN() == graphpppPb8TeVPythia8_frag_onlyJJ->GetN()){ // make sure both graphs are compatible for adding
+            Int_t nPoints_temp = graphpppPb8TeVPythia8_prompt->GetN();
+            Double_t xVal_prompt[500];
+            Double_t yVal_prompt[500];
+            Double_t xVal_frag[500];
+            Double_t yVal_frag[500];
+            Double_t xVal_dec[500];
+            Double_t yVal_dec[500];
+            Double_t yVal_all[500];
+            for(Int_t i=0; i < nPoints_temp; i++){
+                graphpppPb8TeVPythia8_prompt->GetPoint(i,xVal_prompt[i],yVal_prompt[i]);
+                graphpppPb8TeVPythia8_frag_onlyJJ->GetPoint(i,xVal_frag[i],yVal_frag[i]);
+                graphpppPb8TeVPythia8_decay->GetPoint(i,xVal_dec[i],yVal_dec[i]);
+                yVal_all[i] = yVal_prompt[i] + yVal_frag[i] + yVal_dec[i];
+            }
+            graphpppPb8TeVPythia8_all = new TGraphAsymmErrors(nPoints_temp, xVal_prompt, yVal_all);
+        } else {
+            printf("Skipping the generation of 8 TeV direct photon plot, because numbers of data points of prompt and frag graph do not match...\n");
+            delete graphpppPb8TeVPythia8_all;
+        }
 
 
         // fitting prompt/frag ratio from pythia8
         graphpppPb8TeVPythia8_prompt->RemovePoint(0);
         graphpppPb8TeVPythia8_frag_onlyJJ->RemovePoint(0);
         graphpppPb8TeVPythia8_direct->RemovePoint(0);
+        graphpppPb8TeVPythia8_decay->RemovePoint(0);
+        graphpppPb8TeVPythia8_pi0->RemovePoint(0);
+        graphpppPb8TeVPythia8_all->RemovePoint(0);
+        TGraphAsymmErrors* graphRatioPythia8AllGammaDivPi0pPb8TeV    = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_all, graphpppPb8TeVPythia8_pi0);
+        TGraphAsymmErrors* graphRatioPythia8DecayGammaDivPi0pPb8TeV    = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_decay, graphpppPb8TeVPythia8_pi0);
+        TGraphAsymmErrors* graphRatioPythia8DirectGammaDivPi0pPb8TeV    = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_direct, graphpppPb8TeVPythia8_pi0);
         TGraphAsymmErrors* graphRatioPythia8FragGammaDivTotpPb8TeV    = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_frag_onlyJJ, graphpppPb8TeVPythia8_direct);
         TGraphAsymmErrors* graphRatioPythia8PromptGammaDivTotpPb8TeV  = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_prompt, graphpppPb8TeVPythia8_direct);
         TGraphAsymmErrors* graphRatioPythia8PromptGammaDivFragpPb8TeV = CalculateAsymGraphRatioToGraph(graphpppPb8TeVPythia8_prompt, graphpppPb8TeVPythia8_frag_onlyJJ);
@@ -4232,10 +4263,58 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         canvasRatioDirGammaCalcpPb8TeV->SaveAs(Form("%s/GammaPythiaCalc_Separation_PPB8TeV.%s",outputDir.Data(),suffix.Data()));
         delete histo2DRatioGammaCalcpPb8TeV;
-        delete labelRatioGammaCalcpPb8TeV;
         delete labelRatioGammapPb8TeV;
         delete legendRatioGammaCalcpPb8TeV;
         delete canvasRatioDirGammaCalcpPb8TeV;
+        // -----------------------------------------------------------------------------------------------------------------------
+        // -----------------------------               plotting photon to pi0 ratios       ---------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------
+
+        TCanvas* canvasRatioGammaPi0CalcpPb8TeV   = new TCanvas("canvasRatioGammaPi0CalcpPb8TeV","",200,10,900,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasRatioGammaPi0CalcpPb8TeV, 0.11, 0.01, 0.01, 0.09);
+        // canvasRatioGammaPi0CalcpPb8TeV->SetLogx();
+
+        TH2F * histo2DRatioGammaPi0CalcpPb8TeV;
+        histo2DRatioGammaPi0CalcpPb8TeV           = new TH2F("histo2DRatioGammaPi0CalcpPb8TeV","histo2DRatioGammaPi0CalcpPb8TeV",11000,0,200.,1000,0.,1.09);
+        SetStyleHistoTH2ForGraphs(histo2DRatioGammaPi0CalcpPb8TeV, "#it{p}_{T} (GeV/#it{c})","#gamma_{dir,prompt,frag} ratio",0.035,0.04, 0.035,0.04, 1.,1.2,510,505);
+        histo2DRatioGammaPi0CalcpPb8TeV->GetXaxis()->SetMoreLogLabels();
+        histo2DRatioGammaPi0CalcpPb8TeV->GetXaxis()->SetNoExponent();
+        histo2DRatioGammaPi0CalcpPb8TeV->Draw("copy");
+
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioPythia8AllGammaDivPi0pPb8TeV, 0, 0, kOrange+2,  kOrange+2, 1, kTRUE,  kOrange+2);
+            graphRatioPythia8AllGammaDivPi0pPb8TeV->Draw("3,same");
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioPythia8DecayGammaDivPi0pPb8TeV, 0, 0, colorFrag, colorFrag, 1, kTRUE, colorFrag);
+            graphRatioPythia8DecayGammaDivPi0pPb8TeV->Draw("3,same");
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioPythia8DirectGammaDivPi0pPb8TeV, 0, 0, colorPrompt, colorPrompt, 1, kTRUE, colorPrompt);
+            // graphRatioPythia8PromptGammaDivTotpPb8TeV->SetFillStyle(3001);
+            graphRatioPythia8DirectGammaDivPi0pPb8TeV->Draw("3,same,l");
+
+            // DrawGammaSetMarkerTF1(fitPromptDivFragGammapPb8TeV_Pythia8,3,2,kGray+1);
+            // fitPromptDivFragGammapPb8TeV_Pythia8->Draw("same");
+            DrawGammaLines(0.23, 100. , 1., 1.,0.1, kGray+2);
+
+            legendRatioGammaCalcpPb8TeV       = GetAndSetLegend2(0.15, 0.17, 0.3, 0.17+(0.035*3*1.35), 32);
+            legendRatioGammaCalcpPb8TeV->AddEntry(graphRatioPythia8AllGammaDivPi0pPb8TeV,"#gamma_{inc}/#pi^{0}");
+            legendRatioGammaCalcpPb8TeV->AddEntry(graphRatioPythia8DecayGammaDivPi0pPb8TeV,"#gamma_{dec}/#pi^{0}");
+            legendRatioGammaCalcpPb8TeV->AddEntry(graphRatioPythia8DirectGammaDivPi0pPb8TeV,"#gamma_{dir}/#pi^{0}");
+            // legendRatioGammaCalcpPb8TeV->AddEntry(fitPromptDivFragGammapPb8TeV_Pythia8,"fit");
+            legendRatioGammaCalcpPb8TeV->Draw();
+
+            labelRatioGammaCalcpPb8TeV->Draw();
+            TLatex *labelRatioGammaPi0pPb8TeV      = new TLatex(0.15,0.89,"#gamma_{dir,prompt,frag}");
+            SetStyleTLatex( labelRatioGammaPi0pPb8TeV, 0.85*32,4);
+            labelRatioGammaPi0pPb8TeV->SetTextFont(43);
+            labelRatioGammaPi0pPb8TeV->Draw();
+
+        canvasRatioGammaPi0CalcpPb8TeV->SaveAs(Form("%s/GammaToPi0PythiaCalc_PPB8TeV.%s",outputDir.Data(),suffix.Data()));
+        delete histo2DRatioGammaPi0CalcpPb8TeV;
+        delete labelRatioGammaCalcpPb8TeV;
+        delete labelRatioGammaPi0pPb8TeV;
+        delete legendRatioGammaCalcpPb8TeV;
+        delete canvasRatioGammaPi0CalcpPb8TeV;
 
 
         //******************************************************************************************************************
@@ -4470,6 +4549,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphRatioPythia8PromptGammaDivFragpPb8TeV->Write("graphPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
                 fitPromptDivFragGammapPb8TeV_Pythia8->Write("ratioFitPromptPhotonDivFragPhotonPythia8_pPb8TeV", TObject::kOverwrite);
 
+                graphRatioPythia8AllGammaDivPi0pPb8TeV->Write("graphRatioPythia8AllGammaDivPi0pPb8TeV", TObject::kOverwrite);
+                graphRatioPythia8DecayGammaDivPi0pPb8TeV->Write("graphRatioPythia8DecayGammaDivPi0pPb8TeV", TObject::kOverwrite);
+                graphRatioPythia8DirectGammaDivPi0pPb8TeV->Write("graphRatioPythia8DirectGammaDivPi0pPb8TeV", TObject::kOverwrite);
 
                 cout << __LINE__ << endl;
                 fileTheoryGraphsPPb->Close();

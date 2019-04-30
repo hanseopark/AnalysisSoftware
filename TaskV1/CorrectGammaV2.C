@@ -2139,7 +2139,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoMCrecGammaCorr_Pt                                      = (TH1D*)unfold_SpectrumMCrec.Hreco();
         histoMCrecGammaCorr_Pt                                      = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDCaloGammaPt,kTRUE);
 
-        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        // Correct inclusive photon spectrum with reco efficiency (versus MC pt)
         CorrectGammaUnfoldResol(    histoGammaCorrUnfoldReso_Pt,
                                     histoGammaPrimaryRecoEff_MCPt,
                                     deltaEtaCalo,

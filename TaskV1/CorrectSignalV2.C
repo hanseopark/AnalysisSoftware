@@ -1464,7 +1464,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t maxFracBG  = 8;
     if (optionEnergy.CompareTo("2.76TeV") == 0)
         maxFracBG       = 20;
-    if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0)
+    if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.Contains("5TeV2017"))
         maxFracBG       = 40;
     if (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVRBins") == 0)
         maxFracBG       = 80;
@@ -2404,7 +2404,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
             (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
             optionEnergy.CompareTo("2.76TeV") == 0     ||
-            optionEnergy.CompareTo("5TeV2017") == 0    ||
+            optionEnergy.Contains("5TeV2017")    ||
             optionEnergy.CompareTo("5TeVSpecial") == 0    ||
             optionEnergy.CompareTo("13TeV") == 0       ||
             optionEnergy.CompareTo("13TeVRBins") == 0 ||

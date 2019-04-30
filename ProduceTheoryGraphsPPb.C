@@ -1316,6 +1316,34 @@ void ProduceTheoryGraphsPPb(){
     TH1D* histoEtaToKCHEPOSJJpPb8TeV       = (TH1D*)fileEPOSJJpPb8TeV->Get("pPb_8TeV/MCEtaToKCh");
     TH1D* histoPi0ToPiCHEPOSJJpPb8TeV      = (TH1D*)fileEPOSJJpPb8TeV->Get("pPb_8TeV/MCPi0ToPiCh");
 
+    TFile* fileDPMJETpPb8TeV               = new TFile("ExternalInputpPb/Theory/MCInputCompilationLHC18f3bc_pPb8TeV_4.root");
+    TH1D* histoPi0DPMJETpPb8TeV            = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_Pi0_Pt");
+    TH1D* histoPi0DPMJETpPb8TeVReb         = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_Pi0_Pt_Rebinned");
+    TH1D* histoPiChDPMJETpPb8TeV           = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_PiCh_All_Pt");
+    TH1D* histoKChDPMJETpPb8TeV            = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_KCh_All_Pt");
+    TH1D* histoEtaDPMJETpPb8TeV            = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_Eta_Pt");
+    TH1D* histoEtaDPMJETpPb8TeVReb         = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MC_Eta_Pt_Rebinned");
+    TH1D* histoEtaToPi0DPMJETpPb8TeV       = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MCEtaToPi0");
+    TH1D* histoEtaToKCHDPMJETpPb8TeV       = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MCEtaToKCh");
+    TH1D* histoPi0ToPiCHDPMJETpPb8TeV      = (TH1D*)fileDPMJETpPb8TeV->Get("pPb_8TeV/MCPi0ToPiCh");
+
+    //**************************************************************************************************
+    //********************** Pythia8 EPPS16 spectra ***********************************************
+    //**************************************************************************************************
+    TFile* filePythia8EPPS16               = new TFile("ExternalInputpPb/Theory/pythia8_8160GeV_pPb_EPPS16.root");
+    TH1D* histoPi0Pythia8EPPS16pPb8TeV            = (TH1D*)filePythia8EPPS16->Get("h_invXsec_pi0primary_etaEMCal");
+    histoPi0Pythia8EPPS16pPb8TeV->Scale(1/(2.1*1e12));
+    TH1D* histoEtaPythia8EPPS16pPb8TeV            = (TH1D*)filePythia8EPPS16->Get("h_invXsec_eta_etaEMCal");
+    histoEtaPythia8EPPS16pPb8TeV->Scale(1/(2.1*1e12));
+
+    //**************************************************************************************************
+    //********************** Pythia8 EPPS16 spectra ***********************************************
+    //**************************************************************************************************
+    TFile* filePythia8nCTEQ15               = new TFile("ExternalInputpPb/Theory/pythia8_8160GeV_pPb_nCTEQ15.root");
+    TH1D* histoPi0Pythia8nCTEQ15pPb8TeV            = (TH1D*)filePythia8nCTEQ15->Get("h_invXsec_pi0primary_etaEMCal");
+    histoPi0Pythia8nCTEQ15pPb8TeV->Scale(1/(2.1*1e12));
+    TH1D* histoEtaPythia8nCTEQ15pPb8TeV            = (TH1D*)filePythia8nCTEQ15->Get("h_invXsec_eta_etaEMCal");
+    histoEtaPythia8nCTEQ15pPb8TeV->Scale(1/(2.1*1e12));
 
     //**********************************************************************************************************************
     //******************************** Electron cross section from weak Bosons *********************************************
@@ -1561,6 +1589,20 @@ void ProduceTheoryGraphsPPb(){
             histoEtaToPi0EPOSJJpPb8TeV->Write("histoEtaToPi0EPOSJJpPb8TeV", TObject::kOverwrite);
             histoEtaToKCHEPOSJJpPb8TeV->Write("histoEtaToKChEPOSJJpPb8TeV", TObject::kOverwrite);
             histoPi0ToPiCHEPOSJJpPb8TeV->Write("histoPi0ToPiChEPOSJJpPb8TeV", TObject::kOverwrite);
+            histoPi0DPMJETpPb8TeV->Write("histoPi0SpecDPMJETpPb8TeV", TObject::kOverwrite);
+            histoEtaDPMJETpPb8TeV->Write("histoEtaSpecDPMJETpPb8TeV", TObject::kOverwrite);
+            histoPiChDPMJETpPb8TeV->Write("histoPiChSpecDPMJETpPb8TeV", TObject::kOverwrite);
+            histoKChDPMJETpPb8TeV->Write("histoKChSpecDPMJETpPb8TeV", TObject::kOverwrite);
+            histoPi0DPMJETpPb8TeVReb->Write("histoPi0SpecDPMJETpPb8TeV_Reb", TObject::kOverwrite);
+            histoEtaDPMJETpPb8TeVReb->Write("histoEtaSpecDPMJETpPb8TeV_Reb", TObject::kOverwrite);
+            histoEtaToPi0DPMJETpPb8TeV->Write("histoEtaToPi0DPMJETpPb8TeV", TObject::kOverwrite);
+            histoEtaToKCHDPMJETpPb8TeV->Write("histoEtaToKChDPMJETpPb8TeV", TObject::kOverwrite);
+            histoPi0ToPiCHDPMJETpPb8TeV->Write("histoPi0ToPiChDPMJETpPb8TeV", TObject::kOverwrite);
+
+            histoPi0Pythia8EPPS16pPb8TeV->Write("histoPi0Pythia8EPPS16pPb8TeV", TObject::kOverwrite);
+            histoEtaPythia8EPPS16pPb8TeV->Write("histoEtaPythia8EPPS16pPb8TeV", TObject::kOverwrite);
+            histoPi0Pythia8nCTEQ15pPb8TeV->Write("histoPi0Pythia8nCTEQ15pPb8TeV", TObject::kOverwrite);
+            histoEtaPythia8nCTEQ15pPb8TeV->Write("histoEtaPythia8nCTEQ15pPb8TeV", TObject::kOverwrite);
     fileTheoryGraphsPPb.Close();
 
 }
