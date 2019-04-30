@@ -96,7 +96,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     TString fileNameTheoryPythia8_4C            = "ExternalInput/Theory/Pythia/PYTHIA8_4CTune_8TeV_Pi0_Eta.root";
     TString fileNameTheoryPi0DSS14              = "ExternalInput/Theory/pp8TeV_DSS14.root";
     TString fileNameEtaToPi07TeV                = "ExternalInput/EtaPi0Ratio7000GeV.root";
-    TString fileNameEtaToPi02760GeV             = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_07_05_FrediV2Clusterizer.root";
+    TString fileNameEtaToPi02760GeV             = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
 
     TString fileNamePHOSMB                      = "ExternalInput/PHOS/8TeV/data_PHOS-MBResultsFullCorrection_PP_NoBinShifting.root";
     TString fileNamePHOSPHOS                    = "ExternalInput/PHOS/8TeV/data_PHOS-PHOSResultsFullCorrection_PP_NoBinShifting.root";
