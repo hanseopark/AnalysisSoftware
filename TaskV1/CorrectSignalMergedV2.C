@@ -727,7 +727,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D *histoTrueSecFracMeson_Or[4]           = { NULL, NULL, NULL, NULL };
     TF1* fitSecFrac[4]                          = { NULL, NULL, NULL, NULL };
     for (Int_t j = 0; j < 4; j++){
-        fitSecFrac[j]                           = new TF1(Form("fitSecFracFrom%s",nameSecMeson[j].Data()),"[0]/pow(x,[1])+[2]+[3]*x");
+        fitSecFrac[j]                           = new TF1(Form("fitSecFracFrom%s",nameSecMeson[j].Data()),"[0]/TMath::Power(x,[1])+[2]+[3]*x");
         fitSecFrac[j]->SetParLimits(2,0,10);
         fitSecFrac[j]->SetParLimits(3,0,1e-2);
     }    

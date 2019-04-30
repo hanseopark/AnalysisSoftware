@@ -358,6 +358,7 @@ void ExtractSignalV2(
     const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
+
     //******************************************************************************************************
     //***************************** Get Main folder for cut ************************************************
     //******************************************************************************************************
