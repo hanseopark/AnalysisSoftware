@@ -52,6 +52,7 @@
             cout << "\n\n\n\n\n**************************************************************************************************" << endl;
             cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
             cout << "**************************************************************************************************\n\n\n\n\n" << endl;
+            clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
             return -10;
         }
         TH1D* histo = (TH1D*)fileCorrFactors->Get(Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()));
@@ -59,7 +60,8 @@
             cout << "\n**************************************************************************************************" << endl;
             cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
             cout << "**************************************************************************************************\n" << endl;
-            return -10;
+            clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
+            return 0;
         }
         cout << "pT: " << pT  << ", correlation factor for " << meson.Data() << " " << lookup.Data() << ": " << histo->GetBinContent(histo->FindBin(pT)) << " (from GetCorrFactorFromFile)" << endl;
         return histo->GetBinContent(histo->FindBin(pT));
@@ -87,8 +89,8 @@
         Double_t xSectionCombSysErr[120];
 
         if (kRemoveFirstPHOSPoint){
-        graphStatErrPHOS->RemovePoint(0);
-        graphSystPHOSClone->RemovePoint(0);
+            graphStatErrPHOS->RemovePoint(0);
+            graphSystPHOSClone->RemovePoint(0);
         }
 
 
@@ -1773,6 +1775,17 @@
                 corrFracPCMEMC_PCMEMC_PHOS[0]          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCMEMC-PHOS");
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCMEMC-EMC");
                 corrFracPCMEMC_PCMEMC_PCMDal[0]        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCMDalitz-PCMEMC");
+            } else if ( energy.CompareTo("PbPb_5.02TeV") == 0 && ( mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("EtaToPi0") == 0 || mesonType.CompareTo("Eta") == 0 )){
+                corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMEMC", folderName);
+                corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCM-PCMEMC", folderName);
+                corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-EMC", folderName);
+                corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCMEMC-EMC", folderName);
+                corrFracPCMEMC_PCMEMC_PCMPHOS[0]       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-PCMPHOS", folderName);
+                corrFracPCMPHOS_PCMEMC_PCMPHOS[0]      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCMEMC-PCMPHOS", folderName);
+                corrFracPCM_PCM_PCMPHOS[0]             = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMPHOS", folderName);
+                corrFracPCMPHOS_PCM_PCMPHOS[0]         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCM-PCMPHOS", folderName);
+                corrFracPHOS_PCMPHOS_PHOS[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PHOS_PCMPHOS-PHOS", folderName);
+                corrFracPCMPHOS_PCMPHOS_PHOS[0]        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCMPHOS-PHOS", folderName);
             }
 
             // currently arbitrary numbers
