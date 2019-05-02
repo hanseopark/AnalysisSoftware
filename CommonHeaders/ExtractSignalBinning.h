@@ -481,12 +481,16 @@
                     return 5;
                 } else if ( mode == 1 ){
                     return 5;
-                } else if ( mode == 2 || mode == 13 ){
+                } else if ( mode == 2 || mode == 4 || mode == 13 || mode == 14 || mode == 15 ){
                     switch (trigger){
                         case 83:
-                            return 20;
+                            return 10;
+                        case 85:
+                            return 10;
+                        case 8:
+                            return 10;
                         default:
-                            return 5;
+                            return 10;
                     }
                 } else if ( mode == 3 ) {//PCM-PHOS
                     return 10;
@@ -951,9 +955,13 @@
                 } else if (mode == 2){
                     switch (trigger){
                         case 83:
-                            return 20;
+                            return 10;
+                        case 85:
+                            return 10;
+                        case 8:
+                            return 10;
                         default:
-                            return 7;
+                            return 10;
                     }
                 } else if(mode == 40 || mode == 60){
                     scaleFac        = 4.;
@@ -1338,11 +1346,11 @@
                     if (specialTrigg == 1)  startPtBin = 7;
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
+                } else if ( mode == 2 || mode == 13 || mode == 14 ){
                     startPtBin     = 3;
                 } else if ( mode == 3){ //PCM-PHOS
                     startPtBin     = 10;
-                } else if ( mode == 4 || mode == 12 ){
+                } else if ( mode == 4 || mode == 12 || mode == 15){
                     startPtBin     = 1;
                 } else if ( mode == 5){ //PHOS-PHOS
                     startPtBin     = 3;
@@ -1683,13 +1691,13 @@
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0){
                 if( mode==0){ //PCM-PCM
                     startPtBin = 1;}
-                else if( mode==2 || mode==13 )
-                    if(specialTrigg == 2 )                        startPtBin = 11;
+                else if( mode==2 || mode==13  || mode==14)
+                    if(specialTrigg == 2 )                        startPtBin = 1;
                     else if( specialTrigg==4 || specialTrigg==5 ) startPtBin = 3;
                     else                                          startPtBin = 1;
                 else if( mode==3  ) { //PCM-PHOS
                     startPtBin = 1;}
-                else if( mode==4 || mode==12 ) startPtBin = 1;
+                else if( mode==4 || mode==12 || mode == 15) startPtBin = 1;
                 else if( mode==5  ) { //PHOS-PHOS
                     startPtBin = 1;}
                 else if( mode==40 ) startPtBin = 2;
@@ -2258,11 +2266,11 @@
 
                     case 2:
                         switch(SpecialTrigger) {
-                            case 0:
+                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning ); break;
                             case 4:
-                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 123 ); break;
-                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG1Pt, binning, 117 ); break;
-                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG2Pt, binning, 112 ); break;
+                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning ); break;
+                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG1Pt, binning); break;
+                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG2Pt, binning); break;
                         }
                         break;
                     case 3: //PCM-PHOS
@@ -2276,7 +2284,7 @@
                         break;
                     case 4:
                         switch(SpecialTrigger) {
-                            case 0:
+                            case 0:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
                             case 4:
                             case 5:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
                             case 1:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEMC7Pt, binning ); break;
@@ -2995,12 +3003,12 @@
                         }
                         break;
                     case 2:
-                    case 13:
+                    // case 13:
                         switch(SpecialTrigger) {
-                            case 0:
+                            case 0:  maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning); break;
                             case 4:
-                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning, 38 ); break;
-                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG2Pt, binning, 78 ); break;
+                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning); break;
+                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG2Pt, binning ); break;
                             case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG1Pt, binning ); break;
                             default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning ); break;
                         }
@@ -3010,6 +3018,15 @@
                         cout<<"; Used Binning: "<<"fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
                         maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMPHOSTrigINT7Pt, binning ); break;
                     case 4:
+                        switch(SpecialTrigger) {
+                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
+                            case 4:
+                            case 5:
+                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2Pt, binning ); break;
+                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1Pt, binning ); break;
+                            default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning ); break;
+                        }
+                        break;
                     case 12:
                         switch(SpecialTrigger) {
                             case 0:
@@ -3704,14 +3721,13 @@
             if( modi!=0 && modeHeavy<100 ) {
                 fNBinsClusterPt            = fNBinsCluster13TeVPt; // 335
                 for(Int_t i=0; i<=fNBinsCluster13TeVPt; i++ ){
-                    if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
-                    else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
-                    else if(i<225) fBinsCluster13TeVPt[i]      = 3.+0.1*(i-55);
-                    else if(i<265) fBinsCluster13TeVPt[i]      = 20.+0.25*(i-225);
-                    else if(i<305) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-265);
-                    else if(i<325) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-305);
-                    else if(i<335) fBinsCluster13TeVPt[i]      = 70.+2.5*(i-325);
-                    else fBinsCluster13TeVPt[i]                = 100;
+                  if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
+                  else if(i<197) fBinsCluster13TeVPt[i]      = 0.3+0.1*(i-1);
+                  else if(i<237) fBinsCluster13TeVPt[i]      = 20.+0.25*(i-197);
+                  else if(i<277) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-237);
+                  else if(i<297) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-277);
+                  else if(i<307) fBinsCluster13TeVPt[i]      = 70.+2.5*(i-297);
+                  else fBinsCluster13TeVPt[i]                = 100;
                 }
                 for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                     fBinsClusterPt[iPt] = fBinsCluster13TeVPt[iPt];
@@ -3801,6 +3817,8 @@
             else if( trigger.EqualTo("52") ) triggerSetTemp = 1; // L0 EMC7 3GeV
             else if( trigger.EqualTo("83") ) triggerSetTemp = 2; // EG1 8GeV
             else if( trigger.EqualTo("85") ) triggerSetTemp = 3; // EG2 4GeV
+            else if( trigger.EqualTo("8d") ) triggerSetTemp = 2; // EG1 8GeV
+            else if( trigger.EqualTo("8e") ) triggerSetTemp = 3; // EG2 4GeV
             else if( trigger.EqualTo("74") ) triggerSetTemp = 4; // VHM
             else if( trigger.EqualTo("76") ) triggerSetTemp = 5; // VHM+SPD2
             else if( trigger.EqualTo("62") ) triggerSetTemp = 6; // PHOS VZERO 4GeV
@@ -5615,7 +5633,7 @@
                             break;
                         case 2:
                             switch(specialTrigg) {
-                                case 0:
+                                case 0: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                                 case 4:
                                 case 5: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG1PtRebin, fNRebin); break;
