@@ -132,7 +132,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TString addCentString[9]                    = {"_V0M", "_V0M", "_V0M","_V0M","_V0M",               "_V0M", "_V0M", "_V0M", "_V0M"};
     Bool_t  enableCent[9]                       = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
     Bool_t  enableCentComb[9]                   = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
-    Bool_t  enableCentRAA[9]                    = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,  kFALSE, kFALSE, kFALSE, kFALSE};
+    Bool_t  enableCentRAA[9]                    = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
     TString nameCentEst                         =  "V0M";
     TString nameCentEstRatios                   =  "V0M";
 
@@ -230,13 +230,13 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         markerSizeCentMC[cent]                  = GetDefaultMarkerSize("PbPb_5.02TeV", "HIJING", centArray[cent])*2;
         nCollPbPb[cent]                         = GetNCollFromName(centArrayOutput[cent], "PbPb_5.02TeV");
         nCollErrPbPb[cent]                      = GetNCollErrFromName(centArrayOutput[cent], "PbPb_5.02TeV");
-        tPbPb[cent]                             = GetTAAFromName(centArrayOutput[cent], "PbPb_5.02TeV");
-        tPbPbErr[cent]                          = GetTAAErrFromName(centArrayOutput[cent], "PbPb_5.02TeV");
+        tPbPb[cent]                             = GetTAAFromName(centArrayOutput[cent], "PbPb_5.02TeV")*1e3*(1/recalcBarn);
+        tPbPbErr[cent]                          = GetTAAErrFromName(centArrayOutput[cent], "PbPb_5.02TeV")*1e3*(1/recalcBarn);
         cout << markerStyleCent[cent] << "\t" << markerStyleCentMC[cent] << "\t"<<markerSizeCent[cent] << "\t" << markerSizeCentMC[cent] << endl;
         clog << cent << "\t" << centArrayOutput[cent]+addCentString[cent] << "\t"<< nCollPbPb[cent] << "\t" << nCollErrPbPb[cent] << "\t"<< tPbPb[cent] << "\t"<< tPbPbErr[cent] << endl;;
     }
 
-    Double_t xSection5TeV                       = ReturnCorrectXSection("5TeV", 1);; // option is wrong fix when possible
+    Double_t xSection5TeV                       = ReturnCorrectXSection("5TeV", 1);
     Double_t xSection5TeVErr                    = xSection5023GeVINELErr*1e-3;
 
     Color_t  colorCGC                           = kGreen+2;
@@ -777,9 +777,6 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     for (Int_t meth = 0; meth< 11; meth++){
         TString currMethodRead                          = nameMeasGlobalLabel[meth].Data();
         TString currMethod                              = nameMeasGlobalLabel[meth].Data();
-        if (meth == 1){
-            currMethodRead                              = "Comb";
-        }
         statErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeVPbPbRef/graphInvCrossSectionPi0%s5TeVStatErr_yShifted",
                                                                                                                 currMethodRead.Data()));
         systErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeVPbPbRef/graphInvCrossSectionPi0%s5TeVSysErr_yShifted",
@@ -804,7 +801,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             cout << "found pi0 pp reference for " << currMethod.Data() << endl;
 
 
-
+        if (meth == 1){
+            currMethodRead                              = "Comb";
+        }
         statErrorCollectionEtaPP[meth]                  = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVStatErr_yShifted",
                                                                                                                 currMethodRead.Data()));
         systErrorCollectionEtaPP[meth]                  = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVSysErr_yShifted",
@@ -6713,13 +6712,8 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             TBox* boxErrorNormRAAPi0          = CreateBoxConv(colorCentBox[cent], 0.24, 1.-(nCollErrPbPb[cent]/nCollPbPb[cent]), 0.25, 1.+(nCollErrPbPb[cent]/nCollPbPb[cent]));
             TBox* boxErrorNormRAAEta          = CreateBoxConv(colorCentBox[cent], 0.45, 1.-(nCollErrPbPb[cent]/nCollPbPb[cent]), 0.46, 1.+(nCollErrPbPb[cent]/nCollPbPb[cent]));
 
-            if (!centArray[cent].CompareTo("0-100%")){
-                histo2DRAA->GetYaxis()->SetTitle("#it{R}_{pA}");
-                histo2DRAAEta->GetYaxis()->SetTitle("#it{R}_{pA}");
-            } else {
-                histo2DRAA->GetYaxis()->SetTitle("#it{Q}_{pA}");
-                histo2DRAAEta->GetYaxis()->SetTitle("#it{Q}_{pA}");
-            }
+            histo2DRAA->GetYaxis()->SetTitle("#it{R}_{AA}");
+            histo2DRAAEta->GetYaxis()->SetTitle("#it{R}_{AA}");
             canvasRAA->cd();
             histo2DRAA->DrawCopy();
             boxErrorNormRAAPi0->Draw();

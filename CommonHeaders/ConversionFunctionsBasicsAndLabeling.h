@@ -145,108 +145,112 @@
     // ****************************************************************************************************************
     //********************* global Variables **************************************************************************
     // ****************************************************************************************************************
+    // PbPb 2.76TeV N_coll and T_AA
+    // from https://arxiv.org/pdf/1301.4361.pdf
+    // old values used for PbPb publications
+    //                                             // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    //     Double_t nCollPbPb2760GeVV0M5[20]       = {1684.4,  1316,   0,      0,      629.6,  483.7,  366.7,  273.4,  0,      0,
+    //                                                 0,      0,      0,      0,      0,      0,      0,      0,      0,      0 };
+    //     Double_t nCollPbPb2760GeVErrV0M5[20]    = { 190,    140,    0,      0,      62,     47,     35,     26,     0,      0,
+    //                                                 0,      0,      0,      0,      0,      0,      0,      0,      0,      0 };
+    //     Double_t nCollPbPb2760GeVV0M10[10]      = {1500, 921.2, (nCollPbPb2760GeVV0M5[4]+nCollPbPb2760GeVV0M5[5])/2, (nCollPbPb2760GeVV0M5[6]+nCollPbPb2760GeVV0M5[7])/2, 171.25,
+    //                                                 84.28, 37.855, 15.575, 6.293, 0  };
+    //     Double_t nCollPbPb2760GeVErrV0M10[10]   = { 165, 96, (nCollPbPb2760GeVErrV0M5[4]+nCollPbPb2760GeVΕρρV0M5[5])/2, (nCollPbPb2760GeVErrV0M5[6]+nCollPbPb2760GeVErrV0M5[7])/2, 16,
+    //                                                 6.95, 2.85, 1.035, 0.325, 0  };
+    //     Double_t nCollPbPb2760GeVV0M20[5]       = {1210.6, 438.4, 127.7, 26.71, 0};
+    //     Double_t nCollPbPb2760GeVErrV0M20[5]    = {130.5, 42., 11, 2, 0};
+    //
+    //     Double_t nCollPbPb2760GeV2050           = 349.1;
+    //     Double_t nCollPbPb2760GeVErr2050        = 51.;
+    //     Double_t nCollPbPb2760GeV4080           = 77.205;
+    //     Double_t nCollPbPb2760GeVErr4080        = 6.216;
+    //     Double_t nCollPbPb2760GeV0040           = 740.;
+    //     Double_t nCollPbPb2760GeV7590           = 8.219;
+    //     Double_t nCollPbPb2760GeVErr7590        = 0.473;
+    //     Double_t nCollPbPb2760GeV1030           = 11.6*64;
+    //     Double_t nCollPbPb2760GeV30100          = 1.45*64;
+    //
+    //
+    //     Double_t tAAPbPb2760GeVV0M5[20]         = { 26.32,  20.56,   0,      0,      0,      0,      0,      0,      0,      0,
+    //                                                 0,      0,      0,      0,      0,      0,      0,      0,      0,      0 };
+    //     Double_t tAAPbPb2760GeVErrV0M5[20]      = { 0.84224,    0.65792,    0,      0,      62,     47,     35,     26,     0,      0,
+    //                                                 0,      0,      0,      0,      0,      0,      0,      0,      0,      0 };
+    //     Double_t tAAPbPb2760GeVV0M10[10]        = { 23.44, 14.39, 0, 0, 0,   0, 0, 0, 0, 0  };
+    //     Double_t tAAPbPb2760GeVErrV0M10[10]     = { 0.75008, 0.44609, 0, 0, 0,   0, 0, 0, 0, 0  };
+    //     Double_t tAAPbPb2760GeVV0M20[10]        = { 18.915, 6.85, 1.996, 0.4174, 0};
+    //     Double_t tAAPbPb2760GeVErrV0M20[10]     = { 0.5958225, 0.22605, 0.097804, 0.026296, 0};
+    //
+    //     Double_t tAAPbPb2760GeV2050             = 5.46;
+    //     Double_t tAAPbPb2760GeVErr2050          = 0.195;
+
+    // from https://cds.cern.ch/record/2636623/files/centrality%20determination%20note.pdf
+    // updated 03.05.2019
+                                            // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    Double_t nCollPbPb2760GeVV0M5[20]       = { 1619,   1269,   1004,   791.1,  622.3,  485,    370.7,  279.4,  204.7,  148.4,
+                                            // 50-55,   55-60,  60-65,  65-70,  70-75,  75-80,  80-85,  85-90,  90-95,  95-100
+                                                104.4,  71.98,  48.15,  31.32,  19.69,  12.18,  7.244,  4.075,  2.173,  1.224 };
+    Double_t nCollPbPb2760GeVErrV0M5[20]    = { 31,     27,     24,     19,     16,     14,     10,     9.2,    6.5,    5.7,
+                                                4.2,    3.8,    2.9,    1.9,    0.97,   0.81,   0.48,   0.16,   0.11,   0.082 };
+    Double_t nCollPbPb2760GeVV0M10[10]      = {1444, 897.7, 553.7, 325, 176.6,      88.21, 39.74, 15.96, 5.657, 1.709};
+    Double_t nCollPbPb2760GeVErrV0M10[10]   = { 28, 21, 14, 9.7, 6,                 4, 2.4, 0.93, 0.31, 0.099};
+    Double_t nCollPbPb2760GeVV0M20[5]       = {1171, 439.3, 132.4, 27.84, 3.682};
+    Double_t nCollPbPb2760GeVErrV0M20[5]    = {24, 12, 4.9, 1.6, 0.16};
+
+    // not updated
+    Double_t nCollPbPb2760GeV2050           = 349.1;
+    Double_t nCollPbPb2760GeVErr2050        = 51.;
+    Double_t nCollPbPb2760GeV4080           = 77.205;
+    Double_t nCollPbPb2760GeVErr4080        = 6.216;
+    Double_t nCollPbPb2760GeV0040           = 740.;
+    Double_t nCollPbPb2760GeV7590           = 8.219;
+    Double_t nCollPbPb2760GeVErr7590        = 0.473;
+    Double_t nCollPbPb2760GeV1030           = 11.6*64;
+    Double_t nCollPbPb2760GeV30100          = 1.45*64;
+
+
+    Double_t tAAPbPb2760GeVV0M5[20]         = { 26.2,  20.53,   16.25,  12.8,   10.07,  7.848,  5.998,  4.521,  3.313,  2.401,
+                                                1.69,  1.165,   0.7792, 0.5067, 0.3186, 0.1972, 0.1172, 0.06594, 0.03517, 0.01981 };
+
+    Double_t tAAPbPb2760GeVErrV0M5[20]      = { 0.27,  0.23,    0.23,   0.18,   0.16,   0.19,   0.15,   0.14,   0.088,  0.082,
+                                                0.06,  0.056,   0.045,  0.031,  0.016,  0.013,  0.0078, 0.0028, 0.002,  0.0014 };
+    Double_t tAAPbPb2760GeVV0M10[10]        = { 23.37, 14.53, 8.96, 5.259, 2.857,           1.427, 0.6431, 0.2582, 0.09153, 0.02765 };
+    Double_t tAAPbPb2760GeVErrV0M10[10]     = { 0.2, 0.2, 0.17, 0.14, 0.084,                0.058, 0.038, 0.015, 0.0051, 0.0018  };
+    Double_t tAAPbPb2760GeVV0M20[10]        = { 18.95, 7.109, 2.143, 0.4505, 0.05959};
+    Double_t tAAPbPb2760GeVErrV0M20[10]     = { 0.19, 0.15, 0.07, 0.026, 0.0028};
+
+    // not updated
+    Double_t tAAPbPb2760GeV2050             = 5.46;
+    Double_t tAAPbPb2760GeVErr2050          = 0.195;
+
 
     // PbPb 5.02TeV N_coll and T_AA
     //from https://cds.cern.ch/record/2636623/files/centrality%20determination%20note.pdf
 
-    Double_t nColl5TeV0010 = 1572;
-    Double_t nColl5TeV1020 = 973.4;
-    Double_t nColl5TeV0020 = 1273;
-    Double_t nColl5TeV2040 = 468.2;
-    Double_t nColl5TeV4060 = 138.5;
-    Double_t nColl5TeV6080 = 28.31;
+    // NColl values for 10% V0M slices
+    Double_t nCollPbPb5TeVV0M10[10]     = {1572, 973.4, 592.7, 343.8, 185.7,    91.41, 40.5, 16.12, 5.667, 1.708};
+    Double_t nCollPbPb5TeVErrV0M10[10]  = {17.4, 11.3, 8.21, 5.76, 3.33,        2.11, 1.03, 0.341, 0.1, 0.0474};
+    // NColl values for 20% V0M slices
+    Double_t nCollPbPb5TeVV0M20[5]      = {1273, 468.2, 138.5, 28.31, 3.691};
+    Double_t nCollPbPb5TeVErrV0M20[5]   = {14.1, 6.92, 2.7, 0.68, 0.0761};
+                                        // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    Double_t nCollPbPb5TeVV0M5[20]      = { 1763,   1382,   1090,   857.3,  668.8,  516.6,  393,    294.6,  216.1,  155.2,
+                                        // 50-55,   55-60,  60-65,  65-70,  70-75,  75-80,  80-85,  85-90,  90-95,  95-100
+                                            108.6,  74.14,  49.18,  31.81,  20,     12.23,  7.198,  4.104,  2.172,  1.228 };
+    Double_t nCollPbPb5TeVErrV0M5[20]   = { 19.4,   15.7,   12.3,   10.5,   9.21,   7.32,   6.51,   5.12,   3.83,   2.91,
+                                            2.61,   1.74,   1.37,   0.763,  0.502,  0.253,  0.236,  0.0635, 0.0844, 0.0416 };
 
-    Double_t nColl5TeVErr0010 = 17.4;
-    Double_t nColl5TeVErr1020 = 11.3;
-    Double_t nColl5TeVErr0020 = 14.1;
-    Double_t nColl5TeVErr2040 = 6.92;
-    Double_t nColl5TeVErr4060 = 2.7;
-    Double_t nColl5TeVErr6080 = 0.68;
-
-    Double_t tAA5TeV0010 = 23.26;
-    Double_t tAA5TeV1020 = 14.4;
-    Double_t tAA5TeV0020 = 18.83;
-    Double_t tAA5TeV2040 = 6.927;
-    Double_t tAA5TeV4060 = 2.049;
-    Double_t tAA5TeV6080 = 0.4188;
-
-    Double_t tAA5TeVErr0010 = 0.168;
-    Double_t tAA5TeVErr1020 = 0.126;
-    Double_t tAA5TeVErr0020 = 0.142;
-    Double_t tAA5TeVErr2040 = 0.0909;
-    Double_t tAA5TeVErr4060 = 0.0394;
-    Double_t tAA5TeVErr6080 = 0.0106;
-
-    // PbPb 2.76TeV N_coll and T_AA
-    // from https://arxiv.org/pdf/1301.4361.pdf
-
-    Double_t ncoll0005      = 1684.4;
-    Double_t ncoll0510      = 1316;
-    Double_t ncoll0010      = 1500;
-    Double_t ncoll1020      = 921.2;
-    Double_t ncoll2025      = 629.6;
-    Double_t ncoll2530      = 483.7;
-    Double_t ncoll2030      = (ncoll2025 + ncoll2530)/2;
-    Double_t ncoll3035      = 366.7;
-    Double_t ncoll3540      = 273.4;
-    Double_t ncoll3040      = (ncoll3035 + ncoll3540)/2;
-    Double_t ncoll0020      = 1210.6;
-    Double_t ncoll2040      = 438.4;
-    Double_t ncoll2050      = 349.1;
-    Double_t ncoll4060      = 127.7;
-    Double_t ncoll4050      = 171.25;
-    Double_t ncoll5060      = 84.28;
-    Double_t ncoll6080      = 26.71;
-    Double_t ncoll4080      = 77.205;
-    Double_t ncoll6070      = 37.855;
-    Double_t ncoll7080      = 15.575;
-    Double_t ncoll8090      = 6.293;
-    Double_t ncoll7590      = 8.219;
-    Double_t ncoll1030      = 11.6*64;
-    Double_t ncoll30100     = 1.45*64;
-
-    Double_t nCollErr0005   = 190;
-    Double_t nCollErr0510   = 140;
-    Double_t nCollErr0010   = 165;
-    Double_t nCollErr1020   = 96;
-    Double_t nCollErr2025   = 62;
-    Double_t nCollErr2530   = 47;
-    Double_t nCollErr2030   = (nCollErr2025 + nCollErr2530)/2;
-    Double_t nCollErr3035   = 35;
-    Double_t nCollErr3540   = 26;
-    Double_t nCollErr3040   = (nCollErr3035 + nCollErr3540)/2;
-    Double_t nCollErr0020   = 130.5;
-    Double_t nCollErr2040   = 42.;
-    Double_t nCollErr2050   = 51.;
-    Double_t nCollErr4060   = 11;
-    Double_t nCollErr4080   = 6.216;
-    Double_t nCollErr4050   = 16;
-    Double_t nCollErr5060   = 6.95;
-    Double_t nCollErr6080   = 2;
-    Double_t nCollErr6070   = 2.85;
-    Double_t nCollErr7080   = 1.035;
-    Double_t nCollErr8090   = 0.325;
-    Double_t nCollErr7590   = 0.473;
-
-    Double_t tAA0005        = 26.32;
-    Double_t tAA0510        = 20.56;
-    Double_t tAA0010        = 23.44;
-    Double_t tAA1020        = 14.39;
-    Double_t tAA0020        = 18.915;
-    Double_t tAA2040        = 6.85;
-    Double_t tAA2050        = 5.46;
-    Double_t tAA4060        = 1.996;
-    Double_t tAA6080        = 0.4174;
-
-    Double_t tAAErr0005     = 0.84224;
-    Double_t tAAErr0510     = 0.65792;
-    Double_t tAAErr0010     = 0.75008;
-    Double_t tAAErr1020     = 0.44609;
-    Double_t tAAErr0020     = 0.5958225;
-    Double_t tAAErr2040     = 0.22605;
-    Double_t tAAErr2050     = 0.195;
-    Double_t tAAErr4060     = 0.097804;
-    Double_t tAAErr6080     = 0.026296;
+    // TAA values for 10% V0M slices
+    Double_t tAAPbPb5TeVV0M10[10]       = {23.26, 14.4, 8.767, 5.086, 2.747,    1.352, 0.5992, 0.2385, 0.08383, 0.02527};
+    Double_t tAAPbPb5TeVErrV0M10[10]    = {0.168, 0.126, 0.101, 0.0814, 0.0486, 0.0309, 0.0158, 0.00552, 0.00178, 0.000777};
+    // TAA values for 20% V0M slices
+    Double_t tAAPbPb5TeVV0M20[5]        = {18.83, 6.927, 2.049, 0.4188, 0.0546};
+    Double_t tAAPbPb5TeVErrV0M20[5]     = {0.142, 0.0909, 0.0394, 0.0106, 0.00133};
+                                        // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    Double_t tAAPbPb5TeVV0M5[20]        = { 26.08,   20.44,   16.12,   12.68,  9.894,  7.641,  5.814,    4.358,  3.197,  2.296,
+                                        // 50-55,   55-60,  60-65,  65-70,  70-75,  75-80,  80-85,  85-90,  90-95,  95-100
+                                            1.607,  1.097,  0.7275,  0.4706,  0.2959,  0.1808,  0.1065,  0.06071,  0.03213,  0.01816 };
+    Double_t tAAPbPb5TeVErrV0M5[20]     = { 0.176,  0.166,  0.135,   0.118,   0.11,    0.0942,  0.0917,  0.073,   0.0554,  0.0427,
+                                            0.0378, 0.026,  0.0207, 0.012,   0.0079,  0.0041,  0.0037,  0.00126, 0.00132,  0.000673};
 
     // ******************************************************************************************
     // ************************ Set correct xSection for pp & pPb *******************************
@@ -295,118 +299,127 @@
 
     // pPb  5TeV
     // reference cent bins: https://twiki.cern.ch/twiki/bin/view/ALICE/PACentStudiesRun2 +
-    // updated values for all but > 20% 10% cent bins from  https://alice-notes.web.cern.ch/system/files/notes/public/711/2018-09-04-ALICE_public_note.pdf
-    // updated values for all cents 13.03.2019 according to: https://alice-notes.web.cern.ch/system/files/notes/public/711/2019-03-11-ALICE_public_note.pdf
+    // updated values for all cents 03.05.2019 according to: https://cds.cern.ch/record/2636623/files/centrality%20determination%20note.pdf
 
     Double_t xSection5023GeVINELpPb    = 67.6*1e-3;
     Double_t ncollpPb5023GeV           = 6.708;
     Double_t ncollErrpPb5023GeV        = 0.11;
+
+    //   old values
+    //                                                 // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    //     Double_t nCollpPb5TeVBaseV0A10[10]      = { 13.285, 11.18, 10.5, 8.95, 7.38, 5.83, 4.42, 3.2, 2.23, 1.5};
+    //     Double_t nCollpPbErr5TeVBaseV0A10[10]   = { 0.7178612504, 0.612, 3.9, 3.87, 3.72, 3.4, 2.94, 2.29, 1.59, 0.909};
+    //     // 0-5, 5-10
+    //     Double_t nCollpPb5TeVBaseV0A5[2]        = { 14.1, 12.47};
+    //     Double_t nCollpPbErr5TeVBaseV0A5[2]     = { 0.747, 0.687};
+    //     // 0-20, 20-40, 40-60, 60-80, 80-100
+    //     Double_t nCollpPb5TeVBaseV0A20[5]       = { 12.2325, 9.089, 6.42, 3.884, 1.982};
+    //     Double_t nCollpPbErr5TeVBaseV0A20[5]    = { 0.6653017029, 0.472, 0.272, 0.0974, 0.0331};
+    //
+    //     Double_t nCollpPb5TeVV0A60100           = 2.933;
+    //     Double_t nCollpPbErr5TeVV0A60100        = 0.0612667663;
+    //                                             // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    //     Double_t nCollpPb5TeVBaseCL110[10]      = { 14.475, 11.87, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    //     Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.7494346839, 0.626, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+    //                                             // 0-5, 5-10
+    //     Double_t nCollpPb5TeVBaseCL15[2]        = { 15.51, 13.44};
+    //     Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.804, 0.695};
+    //                                             // 0-20, 20-40, 40-60, 60-80, 80-100
+    //     Double_t nCollpPb5TeVBaseCL120[5]       = { 13.1725, 9.396, 6.169, 3.253, 1.6};
+    //     Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.6883448722, 0.474, 0.251, 0.112, 0.0373};
+    //     Double_t nCollpPb5TeVCL160100           = 2.4265;
+    //     Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
+    //     // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    //     Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
+    //     Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+    //                                             // 0-5, 5-10
+    //     Double_t nCollpPb5TeVBaseHybrid5[2]     = { 13.7, 12.7};
+    //     Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
+    //                                             // 0-20, 20-40, 40-60, 60-80, 80-100
+    //     Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.89, 6.94, 4.12, 2.12};
+    //     Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
+    //     Double_t nCollpPb5TeVHybrid60100        = 3.12;
+    //     Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;
+    //
+    //     Double_t tpPb5023GeV                    = 0.0983e3*(1/recalcBarn);
+    //     Double_t tpPbErr5023GeV                 = 0.0017e3*(1/recalcBarn);
+
                                             // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t nCollpPb5TeVBaseV0A10[10]      = { 13.285, 11.18, 10.5, 8.95, 7.38, 5.83, 4.42, 3.2, 2.23, 1.5};
-    Double_t nCollpPbErr5TeVBaseV0A10[10]   = { 0.7178612504, 0.612, 3.9, 3.87, 3.72, 3.4, 2.94, 2.29, 1.59, 0.909};
+    Double_t nCollpPb5TeVBaseV0A10[10]      = { 13.29, 11.18, 9.759, 8.451, 7.075, 5.755, 4.437, 3.306, 2.365, 1.571};
+    Double_t nCollpPbErr5TeVBaseV0A10[10]   = { 0.712, 0.612, 0.542, 0.391, 0.333, 0.222, 0.186, 0.0731, 0.0628, 0.0287};
                                             // 0-5, 5-10
     Double_t nCollpPb5TeVBaseV0A5[2]        = { 14.1, 12.47};
     Double_t nCollpPbErr5TeVBaseV0A5[2]     = { 0.747, 0.687};
                                             // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t nCollpPb5TeVBaseV0A20[5]       = { 12.2325, 9.089, 6.42, 3.884, 1.982};
-    Double_t nCollpPbErr5TeVBaseV0A20[5]    = { 0.6653017029, 0.472, 0.272, 0.0974, 0.0331};
+    Double_t nCollpPb5TeVBaseV0A20[5]       = { 12.23, 9.089, 6.42, 3.884, 1.982};
+    Double_t nCollpPbErr5TeVBaseV0A20[5]    = { 0.673, 0.472, 0.272, 0.0974, 0.0331};
 
-    Double_t nCollpPb5TeVV0A60100           = 2.933;
-    Double_t nCollpPbErr5TeVV0A60100        = 0.0612667663;
-
-//   old values
-//                                             // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-//     Double_t nCollpPb5TeVBaseCL110[10]      = { 14.475, 11.87, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
-//     Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.7494346839, 0.626, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
-//                                             // 0-5, 5-10
-//     Double_t nCollpPb5TeVBaseCL15[2]        = { 15.51, 13.44};
-//     Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.804, 0.695};
-//                                             // 0-20, 20-40, 40-60, 60-80, 80-100
-//     Double_t nCollpPb5TeVBaseCL120[5]       = { 13.1725, 9.396, 6.169, 3.253, 1.6};
-//     Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.6883448722, 0.474, 0.251, 0.112, 0.0373};
-//     Double_t nCollpPb5TeVCL160100           = 2.4265;
-//     Double_t nCollpPbErr5TeVCL160100        = 0.0700557935;
-
+    Double_t nCollpPb5TeVV0A60100           = 2.93;
+    Double_t nCollpPbErr5TeVV0A60100        = 0.1;
 
     // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t nCollpPb5TeVBaseCL110[10]      = { 14.01, 11.62, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
-    Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.799687692, 0.607, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+    Double_t nCollpPb5TeVBaseCL110[10]      = { 14.01, 11.62, 10.03, 8.54, 6.998, 5.476, 4.077, 2.914, 2.077, 1.441};
+    Double_t nCollpPbErr5TeVBaseCL110[10]   = { 0.773, 0.607, 0.529, 0.42, 0.324, 0.241, 0.249, 0.208, 0.157, 0.105};
     // 0-5, 5-10
     Double_t nCollpPb5TeVBaseCL15[2]        = { 14.97, 13.05};
     Double_t nCollpPbErr5TeVBaseCL15[2]     = { 0.856, 0.743};
     // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t nCollpPb5TeVBaseCL120[5]       = { 12.815, 9.312, 6.273, 3.485, 1.744};
-    Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.700450597, 0.458, 0.28, 0.187, 0.0863};
-    Double_t nCollpPb5TeVCL160100           = 2.6145;
-    Double_t nCollpPbErr5TeVCL160100        = 0.1348;
+    Double_t nCollpPb5TeVBaseCL120[5]       = { 12.85, 9.312, 6.273, 3.485, 1.744};
+    Double_t nCollpPbErr5TeVBaseCL120[5]    = { 0.678, 0.458, 0.28, 0.187, 0.0863};
+    Double_t nCollpPb5TeVCL160100           = 2.624;
+    Double_t nCollpPbErr5TeVCL160100        = 0.128;
 
-
-    //   old values
-//     // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-//     Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 11.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
-//     Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
-//                                             // 0-5, 5-10
-//     Double_t nCollpPb5TeVBaseHybrid5[2]     = { 13.7, 12.7};
-//     Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
-//                                             // 0-20, 20-40, 40-60, 60-80, 80-100
-//     Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.89, 6.94, 4.12, 2.12};
-//     Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
-//     Double_t nCollpPb5TeVHybrid60100        = 3.12;
-//     Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;
-//
-//     Double_t tpPb5023GeV                    = 0.0983e3*(1/recalcBarn);
-//     Double_t tpPbErr5023GeV                 = 0.0017e3*(1/recalcBarn);
-
-    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t nCollpPb5TeVBaseHybrid10[10]   = { 13.2, 10.7, 10.8, 9.03, 7.32, 5.67, 4.14, 2.93, 2.08, 1.45};
-    Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 1.04095, 0.4446, 3.53, 3.52, 3.38, 3.09, 2.62, 1.99, 1.4, 0.83};
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100 taking Ncoll mult
+    Double_t nCollpPb5TeVBaseHybrid10[10]   = { 11.6, 10.7, 9.82, 8.76, 7.57, 6.17, 4.8, 3.55, 2.09, 1.58};
+    Double_t nCollpPbErr5TeVBaseHybrid10[10]= { 0.8236, 0.4387, 0.1964, 0.15768, 0.3028, 0.38254, 0.36, 0.2556, 0.11495, 0.05688};
     // 0-5, 5-10
     Double_t nCollpPb5TeVBaseHybrid5[2]     = { 11.9, 11.3};
-    Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.2056, 0.8763};
+    Double_t nCollpPbErr5TeVBaseHybrid5[2]  = { 1.0234, 0.6215};
     // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t nCollpPb5TeVBaseHybrid20[5]    = { 12.45, 9.29, 6.87, 4.17, 2.03};
-    Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.7252125, 0.23736, 0.34006, 0.29664, 0.07844};
-    Double_t nCollpPb5TeVHybrid60100        = 3.12;
-    Double_t nCollpPbErr5TeVHybrid60100     = 0.17004;
+    Double_t nCollpPb5TeVBaseHybrid20[5]    = { 11.1, 9.29, 6.87, 4.17, 2.03};
+    Double_t nCollpPbErr5TeVBaseHybrid20[5] = { 0.6216, 0.22296, 0.35037, 0.29607, 0.06699};
+    Double_t nCollpPb5TeVHybrid60100        = 3.1;
+    Double_t nCollpPbErr5TeVHybrid60100     = 0.1674;
 
     Double_t tpPb5023GeV                    = 0.0983e3*(1/recalcBarn);
     Double_t tpPbErr5023GeV                 = 0.0017e3*(1/recalcBarn);
 
                                             // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t tpPb5TeVBaseV0A10[10]          = { 0.1965, 0.1654, 0.145, 0.123, 0.102, 0.0805, 0.061, 0.0441, 0.0308, 0.0208};
-    Double_t tpPbErr5TeVBaseV0A10[10]       = { 0.0095919553, 0.00813, 0.0538, 0.0534, 0.0513, 0.0469, 0.0405, 0.0315, 0.0219, 0.0125};
+    Double_t tpPb5TeVBaseV0A10[10]          = { 0.1965, 0.1654, 0.1444, 0.125, 0.1047, 0.08513, 0.06564, 0.04891, 0.03499, 0.02324};
+    Double_t tpPbErr5TeVBaseV0A10[10]       = { 0.0095, 0.00813, 0.00715, 0.00508, 0.00441, 0.0029, 0.00258, 0.00105, 0.000889, 0.00038};
                                             // 0-5, 5-10
     Double_t tpPb5TeVBaseV0A5[2]            = { 0.2085, 0.1845};
     Double_t tpPbErr5TeVBaseV0A5[2]         = { 0.00997, 0.00919};
                                             // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t tpPb5TeVBaseV0A20[5]           = { 0.18095, 0.1345, 0.09496, 0.05745, 0.02932};
-    Double_t tpPbErr5TeVBaseV0A20[5]        = { 0.0088636176, 0.00624, 0.00357, 0.00127, 0.000468};
-    Double_t tpPb5TeVBaseV0A60100           = 0.043385;
-    Double_t tpPbErr5TeVBaseV0A60100        = 0.0008257897;
-                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t tpPb5TeVBaseCL110[10]          = { 0.21415, 0.1757, 0.148, 0.125, 0.101, 0.0782, 0.0571, 0.0404, 0.0287, 0.020};
-    Double_t tpPbErr5TeVBaseCL110[10]       = { 0.0099578005, 0.00825, 0.0487, 0.0485, 0.0466, 0.0426, 0.0361, 0.0275, 0.0193, 0.0114};
-                                            // 0-5, 5-10
-    Double_t tpPb5TeVBaseCL15[2]            = { 0.2294, 0.1989};
-    Double_t tpPbErr5TeVBaseCL15[2]         = { 0.0107, 0.00922};
-                                            // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t tpPb5TeVBaseCL120[5]           = { 0.194925, 0.139, 0.09125, 0.04812, 0.02367};
-    Double_t tpPbErr5TeVBaseCL120[5]        = { 0.0091009923, 0.00623, 0.00327, 0.00151, 0.000552};
-    Double_t tpPb5TeVBaseCL160100           = 0.035895;
-    Double_t tpPbErr5TeVBaseCL160100        = 0.000981738;
+    Double_t tpPb5TeVBaseV0A20[5]           = { 0.181, 0.1345, 0.09496, 0.05745, 0.02932};
+    Double_t tpPbErr5TeVBaseV0A20[5]        = { 0.00898, 0.00624, 0.00357, 0.00127, 0.000468};
+    Double_t tpPb5TeVBaseV0A60100           = 0.04334;
+    Double_t tpPbErr5TeVBaseV0A60100        = 0.00138;
 
-                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
-    Double_t tpPb5TeVBaseHybrid10[10]       = { 0.1952662722, 0.1730769231, 0.148, 0.125, 0.101, 0.0782, 0.0571, 0.0404, 0.0287, 0.020};
-    Double_t tpPbErr5TeVBaseHybrid10[10]    = { 0.0153284024, 0.0065769231, 0.0487, 0.0485, 0.0466, 0.0426, 0.0361, 0.0275, 0.0193, 0.0114};
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t tpPb5TeVBaseCL110[10]          = { 0.2073, 0.1719, 0.1483, 0.1263, 0.1035, 0.081, 0.06031, 0.04311, 0.03073, 0.02132};
+    Double_t tpPbErr5TeVBaseCL110[10]       = { 0.0106, 0.00815, 0.00707, 0.00551, 0.00426, 0.00329, 0.00353, 0.00291, 0.00224, 0.00154};
                                             // 0-5, 5-10
-    Double_t tpPb5TeVBaseHybrid5[2]         = { 0.2026627219, 0.1878698225};
-    Double_t tpPbErr5TeVBaseHybrid5[2]      = { 0.0178343195, 0.0129630178};
+    Double_t tpPb5TeVBaseCL15[2]            = { 0.2214, 0.193};
+    Double_t tpPbErr5TeVBaseCL15[2]         = { 0.0118, 0.0102};
                                             // 0-20, 20-40, 40-60, 60-80, 80-100
-    Double_t tpPb5TeVBaseHybrid20[5]        = { 0.1841715976, 0.1463017751, 0.1026627219, 0.0609467456, 0.0313609467};
-    Double_t tpPbErr5TeVBaseHybrid20[5]     = { 0.0107279956, 0.0035112426, 0.0050304734, 0.0043881657, 0.001160355};
-    Double_t tpPb5TeVBaseHybrid60100        = 0.0461538462;
-    Double_t tpPbErr5TeVBaseHybrid60100     = 0.0025153846;
+    Double_t tpPb5TeVBaseCL120[5]           = { 0.1901, 0.1377, 0.0928, 0.05156, 0.02579};
+    Double_t tpPbErr5TeVBaseCL120[5]        = { 0.00913, 0.00599, 0.0037, 0.00255, 0.00116};
+    Double_t tpPb5TeVBaseCL160100           = 0.03881;
+    Double_t tpPbErr5TeVBaseCL160100        = 0.00181;
 
+
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100 taking TAA mult
+    Double_t tpPb5TeVBaseHybrid10[10]       = { 0.172, 0.158, 0.145, 0.13, 0.112, 0.0913, 0.071, 0.0525, 0.0309, 0.0234};
+    Double_t tpPbErr5TeVBaseHybrid10[10]    = { 0.012212, 0.006478, 0.003045, 0.00247, 0.004592, 0.0056606, 0.005325, 0.00378, 0.0016995, 0.0008424};
+                                            // 0-5, 5-10
+    Double_t tpPb5TeVBaseHybrid5[2]         = { 0.176, 0.167};
+    Double_t tpPbErr5TeVBaseHybrid5[2]      = { 0.015136, 0.009352};
+                                            // 0-20, 20-40, 40-60, 60-80, 80-100
+    Double_t tpPb5TeVBaseHybrid20[5]        = { 0.164, 0.137, 0.102, 0.0617, 0.03};
+    Double_t tpPbErr5TeVBaseHybrid20[5]     = { 0.009348, 0.003288, 0.005202, 0.0043807, 0.00102};
+    Double_t tpPb5TeVBaseHybrid60100        = 0.0459;
+    Double_t tpPbErr5TeVBaseHybrid60100     = 0.0024786;
 
     // basic function to convert cutNumber to integere
     Int_t CutNumberToInteger(TString cutNumber){
@@ -1903,78 +1916,79 @@
                                 ){
         TString systemCutNumber     = cutNumber(GetEventSystemCutPosition(),1);
         TString centralityCutNumber = cutNumber(GetEventCentralityMinCutPosition(),2);
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
+        TString toTest              = "";
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
+            return ncollpPb5023GeV;
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
             if (systemCutNumber.CompareTo("1") == 0 || systemCutNumber.CompareTo("2") == 0 || systemCutNumber.CompareTo("5") == 0){
-                if (centralityCutNumber.CompareTo("02") == 0){ //0-20%
-                    return ncoll0020;
-                } else if (centralityCutNumber.CompareTo("01") == 0){ //0-10%
-                    return ncoll0010;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ //10-20%
-                    return ncoll1020;
-                } else if (centralityCutNumber.CompareTo("13") == 0){ //10-30%
-                    return ncoll1030;
-                } else if (centralityCutNumber.CompareTo("23") == 0){ //20-30%
-                    return ncoll2030;
-                } else if (centralityCutNumber.CompareTo("34") == 0){ //30-40%
-                    return ncoll3040;
-                } else if (centralityCutNumber.CompareTo("24") == 0){ //20-40%
-                    return ncoll2040;
+                // find correct NColl err for 10% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (i == 9)
+                        toTest          = Form("%d%d",i,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb2760GeVV0M10[i];
+                }
+                // find correct NColl err for 20% slices
+                for (Int_t i = 0; i < 5; i++){
+                    toTest          = Form("%d%d",i*2,(i+1)*2);
+                    if (i == 5)
+                        toTest          = Form("%d%d",i*2,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb2760GeVV0M20[i];
+                }
+
+                if (centralityCutNumber.CompareTo("13") == 0){ //10-30%
+                    return nCollPbPb2760GeV1030;
                 } else if (centralityCutNumber.CompareTo("25") == 0){ //20-50%
-                    return ncoll2050;
-                } else if (centralityCutNumber.CompareTo("46") == 0){ //40-60%
-                    return ncoll4060;
+                    return nCollPbPb2760GeV2050;
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
-                    return ncoll4080;
-                } else if (centralityCutNumber.CompareTo("45") == 0){ //40-50%
-                    return ncoll4050;
-                } else if (centralityCutNumber.CompareTo("56") == 0){ //50-60%
-                    return ncoll5060;
-                } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
-                    return ncoll6080;
-                } else if (centralityCutNumber.CompareTo("67") == 0){ //60-70%
-                    return ncoll6070;
-                } else if (centralityCutNumber.CompareTo("78") == 0){ //70-80%
-                    return ncoll7080;
-                } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
-                    return ncoll8090;
+                    return nCollPbPb2760GeV4080;
                 } else if (centralityCutNumber.CompareTo("30") == 0){ //10-30%
-                    return ncoll30100;
-                } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
-                    return 77.1;
+                    return nCollPbPb2760GeV30100;
                 } else if (centralityCutNumber.CompareTo("04") == 0){ //0-40%
-                    return 740.;
+                    return nCollPbPb2760GeV0040;
                 }
             } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
-                if (centralityCutNumber.CompareTo("01") == 0){ //0-5%
-                    return ncoll0005;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ //0-5%
-                    return ncoll0510;
+                // find correct NColl err for 5% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb2760GeVV0M5[i];
                 }
             } else if (systemCutNumber.CompareTo("4") == 0 || systemCutNumber.CompareTo("7") == 0){
                 if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
-                    return ncoll7590;
+                    return nCollPbPb2760GeV7590;
                 }
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
-            return ncollpPb5023GeV;
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-            if (systemCutNumber.CompareTo("1") == 0 ){
-                if (centralityCutNumber.CompareTo("01") == 0){        // 0-10%
-                    return nColl5TeV0010;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ // 10-20%
-                    return nColl5TeV1020;
-                } else if (centralityCutNumber.CompareTo("02") == 0){ // 00-20%
-                    return nColl5TeV0020;
-                } else if (centralityCutNumber.CompareTo("24") == 0){ // 20-40%
-                    return nColl5TeV2040;
-                } else if (centralityCutNumber.CompareTo("46") == 0){ // 40-60%
-                    return nColl5TeV4060;
-                } else if (centralityCutNumber.CompareTo("68") == 0){ // 60-80%
-                    return nColl5TeV6080;
-                } else
-                    cout << "ERROR: NColl values not implemented!" << endl;
+            if (systemCutNumber.CompareTo("1") == 0 || systemCutNumber.CompareTo("5") == 0){
+                // find correct NColl for 10% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (i == 9)
+                        toTest          = Form("%d%d",i,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb5TeVV0M10[i];
+                }
+                // find correct NColl for 20% slices
+                for (Int_t i = 0; i < 5; i++){
+                    toTest          = Form("%d%d",i*2,(i+1)*2);
+                    if (i == 5)
+                        toTest          = Form("%d%d",i*2,0);
+                    return nCollPbPb5TeVV0M20[i];
+                }
+                cout << "ERROR: NColl values not implemented!" << endl;
+            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
+                // find correct NColl err for 5% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb5TeVV0M5[i];
+                }
+
             } else
                 cout << "ERROR: NColl values not implemented!" << endl;
         } else {
@@ -1992,66 +2006,73 @@
 
         TString systemCutNumber     = cutNumber(GetEventSystemCutPosition(),1);
         TString centralityCutNumber = cutNumber(GetEventCentralityMinCutPosition(),2);
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
+        TString toTest              = "";
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
+            return ncollErrpPb5023GeV;
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
             if (systemCutNumber.CompareTo("1") == 0 || systemCutNumber.CompareTo("2") == 0 || systemCutNumber.CompareTo("5") == 0){
-                if (centralityCutNumber.CompareTo("02") == 0){ //0-20%
-                    return nCollErr0020;
-                } else if (centralityCutNumber.CompareTo("01") == 0){ //0-10%
-                    return nCollErr0010;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ //10-20%
-                    return nCollErr1020;
-                } else if (centralityCutNumber.CompareTo("24") == 0){ //20-40%
-                    return nCollErr2040;
-                } else if (centralityCutNumber.CompareTo("25") == 0){ //20-40%
-                    return nCollErr2050;
-                } else if (centralityCutNumber.CompareTo("46") == 0){ //40-60%
-                    return nCollErr4060;
+                // find correct NColl err for 10% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (i == 9)
+                        toTest          = Form("%d%d",i,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb2760GeVErrV0M10[i];
+                }
+                // find correct NColl err for 20% slices
+                for (Int_t i = 0; i < 5; i++){
+                    toTest          = Form("%d%d",i*2,(i+1)*2);
+                    if (i == 5)
+                        toTest          = Form("%d%d",i*2,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb2760GeVErrV0M20[i];
+                }
+                if (centralityCutNumber.CompareTo("25") == 0){ //20-40%
+                    return nCollPbPb2760GeVErr2050;
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
-                    return nCollErr4080;
-                } else if (centralityCutNumber.CompareTo("45") == 0){ //40-50%
-                    return nCollErr4050;
-                } else if (centralityCutNumber.CompareTo("56") == 0){ //50-60%
-                    return nCollErr5060;
-                } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
-                    return nCollErr6080;
-                } else if (centralityCutNumber.CompareTo("67") == 0){ //60-70%
-                    return nCollErr6070;
-                } else if (centralityCutNumber.CompareTo("78") == 0){ //70-80%
-                    return nCollErr7080;
-                } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
-                    return nCollErr8090;
+                    return nCollPbPb2760GeVErr4080;
                 }
             } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
-                if (centralityCutNumber.CompareTo("01") == 0){ //0-5%
-                    return nCollErr0005;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ //0-5%
-                    return nCollErr0510;
+                for (Int_t i = 0; i < 10; i++){
+                    if (centralityCutNumber.CompareTo(Form("%d%d",i,i+1)) == 0)
+                        return nCollPbPb2760GeVV0M5[i];
                 }
             } else if (systemCutNumber.CompareTo("4") == 0 || systemCutNumber.CompareTo("7") == 0){
                 if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
-                    return nCollErr7590;
+                    return nCollPbPb2760GeVErr7590;
                 }
             }
+            cout << "ERROR: NColl Err values not implemented!" << endl;
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
-            return ncollErrpPb5023GeV;
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-            if (systemCutNumber.CompareTo("1") == 0 ){
-                if (centralityCutNumber.CompareTo("01") == 0){        // 0-10%
-                    return nColl5TeVErr0010;
-                } else if (centralityCutNumber.CompareTo("12") == 0){ // 10-20%
-                    return nColl5TeVErr1020;
-                } else if (centralityCutNumber.CompareTo("02") == 0){ // 00-20%
-                    return nColl5TeVErr0020;
-                } else if (centralityCutNumber.CompareTo("24") == 0){ // 20-40%
-                    return nColl5TeVErr2040;
-                } else if (centralityCutNumber.CompareTo("46") == 0){ // 40-60%
-                    return nColl5TeVErr4060;
-                } else if (centralityCutNumber.CompareTo("68") == 0){ // 60-80%
-                    return nColl5TeVErr6080;
-                } else
-                    cout << "ERROR: NColl Err values not implemented!" << endl;
+            if (systemCutNumber.CompareTo("1") == 0 || systemCutNumber.CompareTo("5") == 0 ){
+                // find correct NColl err for 10% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (i == 9)
+                        toTest          = Form("%d%d",i,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb5TeVErrV0M10[i];
+                }
+                // find correct NColl err for 20% slices
+                for (Int_t i = 0; i < 5; i++){
+                    toTest          = Form("%d%d",i*2,(i+1)*2);
+                    if (i == 5)
+                        toTest          = Form("%d%d",i*2,0);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb5TeVErrV0M20[i];
+                }
+                cout << "ERROR: NColl Err values not implemented!" << endl;
+
+            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
+                // find correct NColl err for 5% slices
+                for (Int_t i = 0; i < 10; i++){
+                    toTest          = Form("%d%d",i,i+1);
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                        return nCollPbPb5TeVErrV0M5[i];
+                }
+                cout << "ERROR: NColl Err values not implemented!" << endl;
             } else
                 cout << "ERROR: NColl Err values not implemented!" << endl;
         } else {
@@ -2067,45 +2088,8 @@
     Double_t GetNCollFromName ( TString name,
                                 TString energy  = "PbPb_2.76TeV"
                             ){
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
-            if (name.CompareTo("0020") == 0){ //0-20%
-                return ncoll0020;
-            } else if (name.CompareTo("0005") == 0){ //0-5%
-                return ncoll0005;
-            } else if (name.CompareTo("0510") == 0){ //0-5%
-                return ncoll0510;
-            } else if (name.CompareTo("0010") == 0){ //0-10%
-                return ncoll0010;
-            } else if (name.CompareTo("1020") == 0){ //10-20%
-                return ncoll1020;
-            } else if (name.CompareTo("1030") == 0){ //10-30%
-                return ncoll1030;
-            } else if (name.CompareTo("2040") == 0){ //20-40%
-                return ncoll2040;
-            } else if (name.CompareTo("2050") == 0){ //20-50%
-                return ncoll2050;
-            } else if (name.CompareTo("4060") == 0){ //40-60%
-                return ncoll4060;
-            } else if (name.CompareTo("4080") == 0){ //40-80%
-                return ncoll4080;
-            } else if (name.CompareTo("4050") == 0){ //40-50%
-                return ncoll4050;
-            } else if (name.CompareTo("5060") == 0){ //40-60%
-                return ncoll5060;
-            } else if (name.CompareTo("6080") == 0){ //60-80%
-                return ncoll6080;
-            } else if (name.CompareTo("6070") == 0){ //60-80%
-                return ncoll6070;
-            } else if (name.CompareTo("7080") == 0){ //60-80%
-                return ncoll7080;
-            } else if (name.CompareTo("8090") == 0){ //60-80%
-                return ncoll8090;
-            } else if (name.CompareTo("7590") == 0){ //60-80%
-                return ncoll7590;
-            } else if (name.CompareTo("30100") == 0){ //30-100%
-                return ncoll30100;
-            }
-        } else if (energy.CompareTo("pAu_0.2TeV") == 0){
+        TString toTest          = "";
+        if (energy.CompareTo("pAu_0.2TeV") == 0){
             if (name.CompareTo("0005") == 0){ //0-5%
                 return 9.59;
             } else if (name.CompareTo("00100") == 0){ //0-100%
@@ -2114,15 +2098,61 @@
         } else if (energy.CompareTo("dAu_0.2TeV") == 0){
             if (name.CompareTo("00100") == 0) //0-100%
                 return 7.59;
-        } else if (energy.CompareTo("PbPb_2.76TeV_ATLAS") == 0){
-            if (name.CompareTo("0010") == 0){ //0-10%
-                return 1500.6;
-            } else if (name.CompareTo("1020") == 0){ //10-20%
-                return 923.3;
-            } else if (name.CompareTo("0010") == 0){ //20-40%
-                return 440.6;
-            } else if (name.CompareTo("0010") == 0){ //40-80%
-                return 77.8;
+        } else if ( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ||
+                    energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
+            for (Int_t i = 0; i < 2; i++){
+                toTest          = Form("%02d%02d_V0A",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseV0A5[i];
+                toTest          = Form("%02d%02d_CL1",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseCL15[i];
+                toTest          = Form("%02d%02d_ZNA",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseHybrid5[i];
+            }
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d_V0A",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseV0A20[i];
+                toTest          = Form("%02d%d_CL1",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseCL120[i];
+                toTest          = Form("%02d%d_ZNA",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseHybrid20[i];
+            }
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d_V0A",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseV0A10[i];
+                toTest          = Form("%02d%d_CL1",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseCL110[i];
+                toTest          = Form("%02d%d_ZNA",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPb5TeVBaseHybrid10[i];
+            }
+
+            if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return nCollpPb5TeVV0A60100;
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return nCollpPb5TeVCL160100;
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return nCollpPb5TeVHybrid60100;
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return ncollpPb5023GeV;
+            } else {
+                return ncollpPb5023GeV;
+            }
+        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
+            //Centrality dNch/dη Ncoll Npart
+            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
+            // MB       51.7±3.6    51.8±5.6    34.6±1.2
+            if (name.CompareTo("0040") == 0){ //0-40%
+                return 108.2;
+            } else if (name.CompareTo("0094") == 0){ //0-94%
+                return 51.8;
             }
         } else if (energy.CompareTo("AuAu_0.2TeV") == 0){
             double dNdeta200AuAu[4]     = {5.1902e+02,  2.2543e+02,  8.5475e+01,  1.6362e+01};
@@ -2160,15 +2190,6 @@
             } else if (name.CompareTo("0080") == 0){ //0-80%
                 return 292;
             }
-        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
-            //Centrality dNch/dη Ncoll Npart
-            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
-            // MB       51.7±3.6    51.8±5.6    34.6±1.2
-            if (name.CompareTo("0040") == 0){ //0-40%
-                return 108.2;
-            } else if (name.CompareTo("0094") == 0){ //0-94%
-                return 51.8;
-            }
         } else if (energy.CompareTo("AuAu_62.4GeV") == 0){
             double dNdeta62AuAu[3]  = {3.412e+02, 1.518e+02, 1.315e+02};
             double edNdeta62AuAu[3] = {2.932e+01, 1.269e+01, 1.115e+01};
@@ -2185,135 +2206,66 @@
             return 192;
         } else if (energy.CompareTo("PbPb_17.2GeV") == 0){
             return 660;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
-            if (name.CompareTo("0020_V0A") == 0){ //0-20%
-                return nCollpPb5TeVBaseV0A20[0];
-            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
-                return nCollpPb5TeVBaseV0A5[0];
-            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
-                return nCollpPb5TeVBaseV0A5[1];
-            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
-                return nCollpPb5TeVBaseV0A10[0];
-            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
-                return nCollpPb5TeVBaseV0A10[1];
-            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
-                return nCollpPb5TeVBaseV0A10[2];
-            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
-                return nCollpPb5TeVBaseV0A10[3];
-            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
-                return nCollpPb5TeVBaseV0A10[4];
-            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
-                return nCollpPb5TeVBaseV0A10[5];
-            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
-                return nCollpPb5TeVBaseV0A10[6];
-            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
-                return nCollpPb5TeVBaseV0A10[7];
-            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
-                return nCollpPb5TeVBaseV0A10[8];
-            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
-                return nCollpPb5TeVBaseV0A10[9];
-            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
-                return nCollpPb5TeVBaseV0A20[1];
-            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
-                return nCollpPb5TeVBaseV0A20[2];
-            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
-                return nCollpPb5TeVBaseV0A20[3];
-            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
-                return nCollpPb5TeVBaseV0A20[4];
-            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
-                return nCollpPb5TeVV0A60100;
-            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
-                return nCollpPb5TeVBaseCL120[0];
-            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
-                return nCollpPb5TeVBaseCL15[0];
-            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
-                return nCollpPb5TeVBaseCL15[1];
-            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
-                return nCollpPb5TeVBaseCL110[0];
-            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
-                return nCollpPb5TeVBaseCL110[1];
-            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
-                return nCollpPb5TeVBaseCL110[2];
-            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
-                return nCollpPb5TeVBaseCL110[3];
-            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
-                return nCollpPb5TeVBaseCL110[4];
-            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
-                return nCollpPb5TeVBaseCL110[5];
-            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
-                return nCollpPb5TeVBaseCL110[6];
-            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
-                return nCollpPb5TeVBaseCL110[7];
-            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
-                return nCollpPb5TeVBaseCL110[8];
-            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
-                return nCollpPb5TeVBaseCL110[9];
-            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
-                return nCollpPb5TeVBaseCL120[1];
-            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
-                return nCollpPb5TeVBaseCL120[2];
-            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
-                return nCollpPb5TeVBaseCL120[3];
-            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
-                return nCollpPb5TeVBaseCL120[4];
-            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
-                return nCollpPb5TeVCL160100;
-            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
-                return nCollpPb5TeVBaseHybrid20[0];
-            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
-                return nCollpPb5TeVBaseHybrid5[0];
-            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
-                return nCollpPb5TeVBaseHybrid5[1];
-            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
-                return nCollpPb5TeVBaseHybrid10[0];
-            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
-                return nCollpPb5TeVBaseHybrid10[1];
-            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
-                return nCollpPb5TeVBaseHybrid10[2];
-            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
-                return nCollpPb5TeVBaseHybrid10[3];
-            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
-                return nCollpPb5TeVBaseHybrid10[4];
-            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
-                return nCollpPb5TeVBaseHybrid10[5];
-            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
-                return nCollpPb5TeVBaseHybrid10[6];
-            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
-                return nCollpPb5TeVBaseHybrid10[7];
-            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
-                return nCollpPb5TeVBaseHybrid10[8];
-            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
-                return nCollpPb5TeVBaseHybrid10[9];
-            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
-                return nCollpPb5TeVBaseHybrid20[1];
-            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
-                return nCollpPb5TeVBaseHybrid20[2];
-            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
-                return nCollpPb5TeVBaseHybrid20[3];
-            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
-                return nCollpPb5TeVBaseHybrid20[4];
-            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
-                return nCollpPb5TeVHybrid60100;
-            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
-                return ncollpPb5023GeV;
-            } else {
-                return ncollpPb5023GeV;
+        } else if (energy.CompareTo("PbPb_2.76TeV_ATLAS") == 0){
+            if (name.CompareTo("0010") == 0){ //0-10%
+                return 1500.6;
+            } else if (name.CompareTo("1020") == 0){ //10-20%
+                return 923.3;
+            } else if (name.CompareTo("0010") == 0){ //20-40%
+                return 440.6;
+            } else if (name.CompareTo("0010") == 0){ //40-80%
+                return 77.8;
+            }
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
+            // find correct NColl err for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVV0M5[i];
+            }
+            // find correct NColl err for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVV0M10[i];
+            }
+            // find correct NColl err for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVV0M20[i];
+            }
+            if (name.CompareTo("1030") == 0){ //10-30%
+                return nCollPbPb2760GeV1030;
+            } else if (name.CompareTo("2050") == 0){ //20-50%
+                return nCollPbPb2760GeV2050;
+            } else if (name.CompareTo("4080") == 0){ //40-80%
+                return nCollPbPb2760GeV4080;
+            } else if (name.CompareTo("7590") == 0){ //60-80%
+                return nCollPbPb2760GeV7590;
+            } else if (name.CompareTo("30100") == 0){ //30-100%
+                return nCollPbPb2760GeV30100;
             }
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-                if (name.CompareTo("0010") == 0){                       // 0-10%
-                    return nColl5TeV0010;
-                } else if (name.CompareTo("1020") == 0){ // 10-20%
-                    return nColl5TeV1020;
-                } else if (name.CompareTo("0020") == 0){ // 00-20%
-                    return nColl5TeV0020;
-                } else if (name.CompareTo("2040") == 0){ // 20-40%
-                    return nColl5TeV2040;
-                } else if (name.CompareTo("4060") == 0){ // 40-60%
-                    return nColl5TeV4060;
-                } else if (name.CompareTo("6080") == 0){ // 60-80%
-                    return nColl5TeV6080;
-                } else
-                    cout << "ERROR: NColl values not implemented!" << endl;
+            // find correct NColl for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVV0M5[i];
+            }
+            // find correct NColl for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVV0M10[i];
+            }
+            // find correct NColl for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVV0M20[i];
+            }
+            cout << "ERROR: NColl values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2326,40 +2278,64 @@
     Double_t GetNCollErrFromName (  TString name,
                                     TString energy  = "PbPb_2.76TeV"
                                 ){
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
-            if (name.CompareTo("0020") == 0){ //0-20%
-                return nCollErr0020;
-            } else if (name.CompareTo("0005") == 0){ //0-5%
-                return nCollErr0005;
-            } else if (name.CompareTo("0510") == 0){ //0-5%
-                return nCollErr0510;
-            } else if (name.CompareTo("0010") == 0){ //0-10%
-                return nCollErr0010;
-            } else if (name.CompareTo("1020") == 0){ //10-20%
-                return nCollErr1020;
-            } else if (name.CompareTo("2040") == 0){ //20-40%
-                return nCollErr2040;
-            } else if (name.CompareTo("2050") == 0){ //20-40%
-                return nCollErr2050;
-            } else if (name.CompareTo("4060") == 0){ //40-60%
-                return nCollErr4060;
-            } else if (name.CompareTo("4080") == 0){ //40-80%
-                return nCollErr4080;
-            } else if (name.CompareTo("4050") == 0){ //40-50%
-                return nCollErr4050;
-            } else if (name.CompareTo("5060") == 0){ //50-60%
-                return nCollErr5060;
-            } else if (name.CompareTo("6080") == 0){ //60-80%
-                return nCollErr6080;
-            } else if (name.CompareTo("6070") == 0){ //60-70%
-                return nCollErr6070;
-            } else if (name.CompareTo("7080") == 0){ //70-80%
-                return nCollErr7080;
-            } else if (name.CompareTo("8090") == 0){ //80-90%
-                return nCollErr8090;
-            } else if (name.CompareTo("7590") == 0){ //75-90%
-                return nCollErr7590;
+        TString toTest      = "";
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ||
+            energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
+            for (Int_t i = 0; i < 2; i++){
+                toTest          = Form("%02d%02d_V0A",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseV0A5[i];
+                toTest          = Form("%02d%02d_CL1",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseCL15[i];
+                toTest          = Form("%02d%02d_ZNA",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseHybrid5[i];
             }
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d_V0A",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseV0A20[i];
+                toTest          = Form("%02d%d_CL1",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseCL120[i];
+                toTest          = Form("%02d%d_ZNA",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseHybrid20[i];
+            }
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d_V0A",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseV0A10[i];
+                toTest          = Form("%02d%d_CL1",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseCL110[i];
+                toTest          = Form("%02d%d_ZNA",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollpPbErr5TeVBaseHybrid10[i];
+            }
+
+            if (name.CompareTo("60100_V0A") == 0){ //60-100%
+                return nCollpPbErr5TeVV0A60100;
+            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
+                return nCollpPbErr5TeVCL160100;
+            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
+                return nCollpPbErr5TeVHybrid60100;
+            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return ncollErrpPb5023GeV;
+            } else {
+                return ncollErrpPb5023GeV;
+            }
+        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
+            //Centrality dNch/dη Ncoll Npart
+            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
+            // MB       51.7±3.6    51.8±5.6    34.6±1.2
+            if (name.CompareTo("0040") == 0){ //0-40%
+                return 12.0;
+            } else if (name.CompareTo("0094") == 0){ //0-94%
+                return 5.6;
+            }
+
         } else if (energy.CompareTo("AuAu_0.2TeV") == 0){
             //             0%–20% 770.6 ± 79.9 277.5 ± 6.5 735.2 ± 14.6 239 ± 25 ± 7
             //             20%–40% 282.4 ± 28.4 135.6 ± 7.0 333.2 ± 10.7 260 ± 33 ± 8
@@ -2377,147 +2353,57 @@
             } else if (name.CompareTo("0092") == 0){ //40-60%
                 return 26.7;
             }
-        } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
-            //Centrality dNch/dη Ncoll Npart
-            // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
-            // MB       51.7±3.6    51.8±5.6    34.6±1.2
-            if (name.CompareTo("0040") == 0){ //0-40%
-                return 12.0;
-            } else if (name.CompareTo("0094") == 0){ //0-94%
-                return 5.6;
-            }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
 
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
-            if (name.CompareTo("0020_V0A") == 0){ //0-20%
-                return nCollpPbErr5TeVBaseV0A20[0];
-            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseV0A5[0];
-            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseV0A5[1];
-            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
-                return nCollpPbErr5TeVBaseV0A10[0];
-            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
-                return nCollpPbErr5TeVBaseV0A10[1];
-            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
-                return nCollpPbErr5TeVBaseV0A10[2];
-            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
-                return nCollpPbErr5TeVBaseV0A10[3];
-            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
-                return nCollpPbErr5TeVBaseV0A10[4];
-            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
-                return nCollpPbErr5TeVBaseV0A10[5];
-            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
-                return nCollpPbErr5TeVBaseV0A10[6];
-            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
-                return nCollpPbErr5TeVBaseV0A10[7];
-            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
-                return nCollpPbErr5TeVBaseV0A10[8];
-            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
-                return nCollpPbErr5TeVBaseV0A10[9];
-            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
-                return nCollpPbErr5TeVBaseV0A20[1];
-            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
-                return nCollpPbErr5TeVBaseV0A20[2];
-            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseV0A20[3];
-            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseV0A20[4];
-            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
-                return nCollpPbErr5TeVV0A60100;
-            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
-                return nCollpPbErr5TeVBaseCL120[0];
-            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseCL15[0];
-            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseCL15[1];
-            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
-                return nCollpPbErr5TeVBaseCL110[0];
-            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
-                return nCollpPbErr5TeVBaseCL110[1];
-            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
-                return nCollpPbErr5TeVBaseCL110[2];
-            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
-                return nCollpPbErr5TeVBaseCL110[3];
-            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
-                return nCollpPbErr5TeVBaseCL110[4];
-            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
-                return nCollpPbErr5TeVBaseCL110[5];
-            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
-                return nCollpPbErr5TeVBaseCL110[6];
-            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
-                return nCollpPbErr5TeVBaseCL110[7];
-            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
-                return nCollpPbErr5TeVBaseCL110[8];
-            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
-                return nCollpPbErr5TeVBaseCL110[9];
-            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
-                return nCollpPbErr5TeVBaseCL120[1];
-            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
-                return nCollpPbErr5TeVBaseCL120[2];
-            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseCL120[3];
-            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseCL120[4];
-            } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
-                return nCollpPbErr5TeVCL160100;
-            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
-                return nCollpPbErr5TeVBaseHybrid20[0];
-            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseHybrid5[0];
-            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
-                return nCollpPbErr5TeVBaseHybrid5[1];
-            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
-                return nCollpPbErr5TeVBaseHybrid10[0];
-            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
-                return nCollpPbErr5TeVBaseHybrid10[1];
-            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
-                return nCollpPbErr5TeVBaseHybrid10[2];
-            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
-                return nCollpPbErr5TeVBaseHybrid10[3];
-            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
-                return nCollpPbErr5TeVBaseHybrid10[4];
-            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
-                return nCollpPbErr5TeVBaseHybrid10[5];
-            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
-                return nCollpPbErr5TeVBaseHybrid10[6];
-            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
-                return nCollpPbErr5TeVBaseHybrid10[7];
-            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
-                return nCollpPbErr5TeVBaseHybrid10[8];
-            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
-                return nCollpPbErr5TeVBaseHybrid10[9];
-            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
-                return nCollpPbErr5TeVBaseHybrid20[1];
-            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
-                return nCollpPbErr5TeVBaseHybrid20[2];
-            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseHybrid20[3];
-            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
-                return nCollpPbErr5TeVBaseHybrid20[4];
-            } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
-                return nCollpPbErr5TeVHybrid60100;
-            } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
-                return ncollErrpPb5023GeV;
-            } else {
-                return ncollErrpPb5023GeV;
+            // find correct NColl err for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVErrV0M5[i];
             }
+            // find correct NColl err for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVErrV0M10[i];
+            }
+            // find correct NColl err for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb2760GeVErrV0M20[i];
+            }
+
+            if (name.CompareTo("2050") == 0){ //20-40%
+                return nCollPbPb2760GeVErr2050;
+            } else if (name.CompareTo("4080") == 0){ //40-80%
+                return nCollPbPb2760GeVErr4080;
+            } else if (name.CompareTo("7590") == 0){ //75-90%
+                return nCollPbPb2760GeVErr7590;
+            }
+
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-            if (name.CompareTo("0010") == 0){                       // 0-10%
-                return nColl5TeVErr0010;
-            } else if (name.CompareTo("1020") == 0){ // 10-20%
-                return nColl5TeVErr1020;
-            } else if (name.CompareTo("0020") == 0){ // 00-20%
-                return nColl5TeVErr0020;
-            } else if (name.CompareTo("2040") == 0){ // 20-40%
-                return nColl5TeVErr2040;
-            } else if (name.CompareTo("4060") == 0){ // 40-60%
-                return nColl5TeVErr4060;
-            } else if (name.CompareTo("6080") == 0){ // 60-80%
-                return nColl5TeVErr6080;
-            } else
-                cout << "ERROR: NColl Err values not implemented!" << endl;
+            // find correct NColl for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVErrV0M5[i];
+            }
+            // find correct NColl err for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVErrV0M10[i];
+            }
+            // find correct NColl err for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVErrV0M20[i];
+            }
+            cout << "ERROR: NColl Err values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2635,133 +2521,47 @@
     Double_t GetTAAFromName (   TString name,
                                 TString energy  = "PbPb_2.76TeV"
                             ){
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
-            if (name.CompareTo("0020") == 0){ //0-20%
-                return tAA0020;
-            } else if (name.CompareTo("0005") == 0){ //0-5%
-                return tAA0005;
-            } else if (name.CompareTo("0510") == 0){ //0-5%
-                return tAA0510;
-            } else if (name.CompareTo("0010") == 0){ //0-10%
-                return tAA0010;
-            } else if (name.CompareTo("1020") == 0){ //10-20%
-                return tAA1020;
-            } else if (name.CompareTo("2040") == 0){ //20-40%
-                return tAA2040;
-            } else if (name.CompareTo("4060") == 0){ //40-60%
-                return tAA4060;
-            } else if (name.CompareTo("6080") == 0){ //60-80%
-                return tAA6080;
+        TString toTest          = "";
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
+
+            for (Int_t i = 0; i < 2; i++){
+                toTest          = Form("%02d%02d_V0A",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseV0A5[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%02d_CL1",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseCL15[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%02d_ZNA",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseHybrid5[i]*1e3*(1/recalcBarn);
             }
-        } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
-            return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
-            if (name.CompareTo("0020_V0A") == 0){ //0-20%
-                return tpPb5TeVBaseV0A20[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
-                return tpPb5TeVBaseV0A5[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
-                return tpPb5TeVBaseV0A5[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
-                return tpPb5TeVBaseV0A10[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
-                return tpPb5TeVBaseV0A10[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
-                return tpPb5TeVBaseV0A10[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
-                return tpPb5TeVBaseV0A10[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
-                return tpPb5TeVBaseV0A10[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
-                return tpPb5TeVBaseV0A10[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
-                return tpPb5TeVBaseV0A10[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
-                return tpPb5TeVBaseV0A10[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
-                return tpPb5TeVBaseV0A10[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
-                return tpPb5TeVBaseV0A10[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
-                return tpPb5TeVBaseV0A20[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
-                return tpPb5TeVBaseV0A20[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
-                return tpPb5TeVBaseV0A20[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
-                return tpPb5TeVBaseV0A20[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d_V0A",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseV0A20[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_CL1",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseCL120[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_ZNA",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseHybrid20[i]*1e3*(1/recalcBarn);
+            }
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d_V0A",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseV0A10[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_CL1",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseCL110[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_ZNA",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPb5TeVBaseHybrid10[i]*1e3*(1/recalcBarn);
+            }
+
+            if (name.CompareTo("60100_V0A") == 0){ //60-100%
                 return tpPb5TeVBaseV0A60100*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
-                return tpPb5TeVBaseCL120[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
-                return tpPb5TeVBaseCL15[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
-                return tpPb5TeVBaseCL15[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
-                return tpPb5TeVBaseCL110[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
-                return tpPb5TeVBaseCL110[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
-                return tpPb5TeVBaseCL110[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
-                return tpPb5TeVBaseCL110[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
-                return tpPb5TeVBaseCL110[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
-                return tpPb5TeVBaseCL110[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
-                return tpPb5TeVBaseCL110[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
-                return tpPb5TeVBaseCL110[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
-                return tpPb5TeVBaseCL110[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
-                return tpPb5TeVBaseCL110[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
-                return tpPb5TeVBaseCL120[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
-                return tpPb5TeVBaseCL120[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
-                return tpPb5TeVBaseCL120[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
-                return tpPb5TeVBaseCL120[4]*1e3*(1/recalcBarn);
             } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
                 return tpPb5TeVBaseCL160100*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
-                return tpPb5TeVBaseHybrid20[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
-                return tpPb5TeVBaseHybrid5[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
-                return tpPb5TeVBaseHybrid5[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
-                return tpPb5TeVBaseHybrid10[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
-                return tpPb5TeVBaseHybrid10[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
-                return tpPb5TeVBaseHybrid10[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
-                return tpPb5TeVBaseHybrid10[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
-                return tpPb5TeVBaseHybrid10[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
-                return tpPb5TeVBaseHybrid10[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
-                return tpPb5TeVBaseHybrid10[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
-                return tpPb5TeVBaseHybrid10[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
-                return tpPb5TeVBaseHybrid10[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
-                return tpPb5TeVBaseHybrid10[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
-                return tpPb5TeVBaseHybrid20[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
-                return tpPb5TeVBaseHybrid20[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
-                return tpPb5TeVBaseHybrid20[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
-                return tpPb5TeVBaseHybrid20[4]*1e3*(1/recalcBarn);
             } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
                 return tpPb5TeVBaseHybrid60100*1e3*(1/recalcBarn);
             } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
@@ -2769,21 +2569,48 @@
             } else {
                 return tpPb5023GeV;
             }
+        } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
+            return 1.;
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
+            // find correct TAA for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVV0M5[i];
+            }
+            // find correct TAA for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVV0M10[i];
+            }
+            // find correct TAA for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVV0M20[i];
+            }
+            if (name.CompareTo("2050") == 0)        //20-50%
+                return tAAPbPb2760GeVErr2050;
+            cout << "ERROR: TAA values not implemented!" << endl;
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-            if (name.CompareTo("0010") == 0){         // 0-10%
-                return tAA5TeV0010;
-            } else if (name.CompareTo("1020") == 0){  // 10-20%
-                return tAA5TeV1020;
-            } else if (name.CompareTo("0020") == 0){  // 0-20%
-                return tAA5TeV0020;
-            } else if (name.CompareTo("2040") == 0){  // 20-40%
-                return tAA5TeV2040;
-            } else if (name.CompareTo("4060") == 0){  // 40-60%
-                return tAA5TeV4060;
-            } else if (name.CompareTo("6080") == 0){  // 60-80%
-                return tAA5TeV6080;
-            } else
-                cout << "ERROR: TAA values not implemented!" << endl;
+            // find correct TAA for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb5TeVV0M5[i];
+            }
+            // find correct TAA for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                if (name.CompareTo(Form("%02d%d",i*10,(i+1)*10)) == 0)
+                    return tAAPbPb5TeVV0M10[i];
+            }
+            // find correct TAA for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                if (name.CompareTo(Form("%02d%d",i*20,(i+1)*20)) == 0)
+                    return tAAPbPb5TeVV0M20[i];
+            }
+            cout << "ERROR: TAA values not implemented!" << endl;
         } else {
             return 1.;
         }
@@ -2796,133 +2623,45 @@
     Double_t GetTAAErrFromName (TString name,
                                 TString energy  = "PbPb_2.76TeV"
                                 ){
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
-            if (name.CompareTo("0020") == 0){ //0-20%
-                return tAAErr0020;
-            } else if (name.CompareTo("0005") == 0){ //0-5%
-                return tAAErr0005;
-            } else if (name.CompareTo("0510") == 0){ //5-10%
-                return tAAErr0510;
-            } else if (name.CompareTo("0010") == 0){ //0-10%
-                return tAAErr0010;
-            } else if (name.CompareTo("1020") == 0){ //10-20%
-                return tAAErr1020;
-            } else if (name.CompareTo("2040") == 0){ //20-40%
-                return tAAErr2040;
-            } else if (name.CompareTo("4060") == 0){ //40-60%
-                return tAAErr4060;
-            } else if (name.CompareTo("6080") == 0){ //60-80%
-                return tAAErr6080;
+        TString toTest  = "";
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
+            for (Int_t i = 0; i < 2; i++){
+                toTest          = Form("%02d%02d_V0A",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseV0A5[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%02d_CL1",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseCL15[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%02d_ZNA",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseHybrid5[i]*1e3*(1/recalcBarn);
             }
-        } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
-            return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
-            if (name.CompareTo("0020_V0A") == 0){ //0-20%
-                return tpPbErr5TeVBaseV0A20[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_V0A") == 0){ //0-5%
-                return tpPbErr5TeVBaseV0A5[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_V0A") == 0){ //0-5%
-                return tpPbErr5TeVBaseV0A5[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_V0A") == 0){ //0-10%
-                return tpPbErr5TeVBaseV0A10[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_V0A") == 0){ //10-20%
-                return tpPbErr5TeVBaseV0A10[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_V0A") == 0){ //20-30%
-                return tpPbErr5TeVBaseV0A10[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_V0A") == 0){ //30-40%
-                return tpPbErr5TeVBaseV0A10[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_V0A") == 0){ //40-50%
-                return tpPbErr5TeVBaseV0A10[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_V0A") == 0){ //50-60%
-                return tpPbErr5TeVBaseV0A10[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_V0A") == 0){ //60-70%
-                return tpPbErr5TeVBaseV0A10[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_V0A") == 0){ //70-80%
-                return tpPbErr5TeVBaseV0A10[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_V0A") == 0){ //80-90%
-                return tpPbErr5TeVBaseV0A10[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_V0A") == 0){ //90-100%
-                return tpPbErr5TeVBaseV0A10[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_V0A") == 0){ //20-40%
-                return tpPbErr5TeVBaseV0A20[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_V0A") == 0){ //40-60%
-                return tpPbErr5TeVBaseV0A20[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_V0A") == 0){ //60-80%
-                return tpPbErr5TeVBaseV0A20[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_V0A") == 0){ //60-80%
-                return tpPbErr5TeVBaseV0A20[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("60100_V0A") == 0){ //60-100%
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d_V0A",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseV0A20[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_CL1",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseCL120[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_ZNA",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseHybrid20[i]*1e3*(1/recalcBarn);
+            }
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d_V0A",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseV0A10[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_CL1",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseCL110[i]*1e3*(1/recalcBarn);
+                toTest          = Form("%02d%d_ZNA",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tpPbErr5TeVBaseHybrid10[i]*1e3*(1/recalcBarn);
+            }
+            if (name.CompareTo("60100_V0A") == 0){ //60-100%
                 return tpPbErr5TeVBaseV0A60100*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0020_CL1") == 0){ //0-20%
-                return tpPbErr5TeVBaseCL120[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_CL1") == 0){ //0-5%
-                return tpPbErr5TeVBaseCL15[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_CL1") == 0){ //0-5%
-                return tpPbErr5TeVBaseCL15[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_CL1") == 0){ //0-10%
-                return tpPbErr5TeVBaseCL110[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_CL1") == 0){ //10-20%
-                return tpPbErr5TeVBaseCL110[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_CL1") == 0){ //20-30%
-                return tpPbErr5TeVBaseCL110[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_CL1") == 0){ //30-40%
-                return tpPbErr5TeVBaseCL110[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_CL1") == 0){ //40-50%
-                return tpPbErr5TeVBaseCL110[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_CL1") == 0){ //50-60%
-                return tpPbErr5TeVBaseCL110[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_CL1") == 0){ //60-70%
-                return tpPbErr5TeVBaseCL110[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_CL1") == 0){ //70-80%
-                return tpPbErr5TeVBaseCL110[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_CL1") == 0){ //80-90%
-                return tpPbErr5TeVBaseCL110[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_CL1") == 0){ //90-100%
-                return tpPbErr5TeVBaseCL110[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_CL1") == 0){ //20-40%
-                return tpPbErr5TeVBaseCL120[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_CL1") == 0){ //40-60%
-                return tpPbErr5TeVBaseCL120[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_CL1") == 0){ //60-80%
-                return tpPbErr5TeVBaseCL120[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_CL1") == 0){ //60-80%
-                return tpPbErr5TeVBaseCL120[4]*1e3*(1/recalcBarn);
             } else if (name.CompareTo("60100_CL1") == 0){ //60-100%
                 return tpPbErr5TeVBaseCL160100*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0020_ZNA") == 0){ //0-20%
-                return tpPbErr5TeVBaseHybrid20[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0005_ZNA") == 0){ //0-5%
-                return tpPbErr5TeVBaseHybrid5[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0510_ZNA") == 0){ //0-5%
-                return tpPbErr5TeVBaseHybrid5[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("0010_ZNA") == 0){ //0-10%
-                return tpPbErr5TeVBaseHybrid10[0]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("1020_ZNA") == 0){ //10-20%
-                return tpPbErr5TeVBaseHybrid10[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2030_ZNA") == 0){ //20-30%
-                return tpPbErr5TeVBaseHybrid10[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("3040_ZNA") == 0){ //30-40%
-                return tpPbErr5TeVBaseHybrid10[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4050_ZNA") == 0){ //40-50%
-                return tpPbErr5TeVBaseHybrid10[4]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("5060_ZNA") == 0){ //50-60%
-                return tpPbErr5TeVBaseHybrid10[5]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6070_ZNA") == 0){ //60-70%
-                return tpPbErr5TeVBaseHybrid10[6]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("7080_ZNA") == 0){ //70-80%
-                return tpPbErr5TeVBaseHybrid10[7]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("8090_ZNA") == 0){ //80-90%
-                return tpPbErr5TeVBaseHybrid10[8]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("90100_ZNA") == 0){ //90-100%
-                return tpPbErr5TeVBaseHybrid10[9]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("2040_ZNA") == 0){ //20-40%
-                return tpPbErr5TeVBaseHybrid20[1]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("4060_ZNA") == 0){ //40-60%
-                return tpPbErr5TeVBaseHybrid20[2]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("6080_ZNA") == 0){ //60-80%
-                return tpPbErr5TeVBaseHybrid20[3]*1e3*(1/recalcBarn);
-            } else if (name.CompareTo("80100_ZNA") == 0){ //60-80%
-                return tpPbErr5TeVBaseHybrid20[4]*1e3*(1/recalcBarn);
             } else if (name.CompareTo("60100_ZNA") == 0){ //60-100%
                 return tpPbErr5TeVBaseHybrid60100*1e3*(1/recalcBarn);
             } else if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
@@ -2930,21 +2669,48 @@
             } else {
                 return tpPbErr5023GeV;
             }
+        } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
+            return 1.;
+        } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
+            // find correct TAA for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVErrV0M5[i];
+            }
+            // find correct TAA for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                toTest          = Form("%02d%d",i*10,(i+1)*10);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVErrV0M10[i];
+            }
+            // find correct TAA for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                toTest          = Form("%02d%d",i*20,(i+1)*20);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb2760GeVErrV0M20[i];
+            }
+            if (name.CompareTo("2050") == 0) //20-50%
+                return tAAPbPb2760GeVErr2050;
+            cout << "ERROR: TAA values not implemented!" << endl;
         } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
-            if (name.CompareTo("0010") == 0){         // 0-10%
-                return tAA5TeVErr0010;
-            } else if (name.CompareTo("1020") == 0){  // 10-20%
-                return tAA5TeVErr1020;
-            } else if (name.CompareTo("0020") == 0){  // 0-20%
-                return tAA5TeVErr0020;
-            } else if (name.CompareTo("2040") == 0){  // 20-40%
-                return tAA5TeVErr2040;
-            } else if (name.CompareTo("4060") == 0){  // 40-60%
-                return tAA5TeVErr4060;
-            } else if (name.CompareTo("6080") == 0){  // 60-80%
-                return tAA5TeVErr6080;
-            } else
-                cout << "ERROR: TAA Err values not implemented!" << endl;
+            // find correct TAA for 5% slices
+            for (Int_t i = 0; i < 20; i++){
+                toTest          = Form("%02d%02d",i*5,(i+1)*5);
+                if (name.CompareTo(toTest.Data()) == 0)
+                    return tAAPbPb5TeVErrV0M5[i];
+            }
+            // find correct TAA err for 10% slices
+            for (Int_t i = 0; i < 10; i++){
+                if (name.CompareTo(Form("%02d%d",i*10,(i+1)*10)) == 0)
+                    return tAAPbPb5TeVErrV0M10[i];
+            }
+            // find correct TAA err for 20% slices
+            for (Int_t i = 0; i < 5; i++){
+                if (name.CompareTo(Form("%02d%d",i*20,(i+1)*20)) == 0)
+                    return tAAPbPb5TeVErrV0M20[i];
+            }
+            cout << "ERROR: TAA Err values not implemented!" << endl;
         } else {
             return 1.;
         }
