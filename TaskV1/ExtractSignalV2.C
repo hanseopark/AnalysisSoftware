@@ -2231,7 +2231,7 @@ void ExtractSignalV2(
     canvasSigma->SetTicky();
 
     DrawGammaSetMarker(fHistoSigma, 20, 1., kBlack, kBlack);
-if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
         DrawAutoGammaMesonHistos(   fHistoSigma,
                                     "", "p_{T} (GeV/c)","#sigma (GeV/c^{2})",
                                     kFALSE, 3.,0., kFALSE,

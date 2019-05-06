@@ -2266,11 +2266,12 @@
 
                     case 2:
                         switch(SpecialTrigger) {
-                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning ); break;
+                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 101 ); break;
+                            case 1:
+                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG1Pt, binning, 117 ); break;
+                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG2Pt, binning, 112 ); break;
                             case 4:
-                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning ); break;
-                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG1Pt, binning); break;
-                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigEG2Pt, binning); break;
+                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 101 ); break;
                         }
                         break;
                     case 3: //PCM-PHOS
@@ -3020,16 +3021,16 @@
                         }
                         break;
                     case 2:
-                    // case 13:
                         switch(SpecialTrigger) {
-                            case 0:  maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning); break;
+                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning, 39 ); break;
+                            case 1:
+                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG1Pt, binning, 84 ); break;
+                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG2Pt, binning, 81 ); break;
                             case 4:
-                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning); break;
-                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG2Pt, binning ); break;
-                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigEG1Pt, binning ); break;
-                            default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning ); break;
+                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning, 39 ); break;
                         }
                         break;
+                    // case 13:
                     case 3: //PCM-PHOS
                         cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode;
                         cout<<"; Used Binning: "<<"fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
@@ -3741,7 +3742,7 @@
 
         } else if( energy.EqualTo("13TeV") || energy.EqualTo("13TeVLowB") ) {
             if( modi!=0 && modeHeavy<100 ) {
-                fNBinsClusterPt            = fNBinsCluster13TeVPt; // 335
+                fNBinsClusterPt            = fNBinsCluster13TeVPt; // 307
                 for(Int_t i=0; i<=fNBinsCluster13TeVPt; i++ ){
                   if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
                   else if(i<197) fBinsCluster13TeVPt[i]      = 0.3+0.1*(i-1);
@@ -5654,10 +5655,10 @@
                         case 2:
                             switch(specialTrigg) {
                                 case 0: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
-                                case 4:
-                                case 5: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG1PtRebin, fNRebin); break;
                                 case 3: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG2PtRebin, fNRebin); break;
+                                case 4:
+                                case 5: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                             }
                             break;
                         case 3:
