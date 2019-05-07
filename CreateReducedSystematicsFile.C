@@ -62,20 +62,27 @@ void CreateReducedSystematicsFile(  TString inputfileName               = "",
 
 
     vector<TString> sysTaken;
+    vector<Double_t> fractionTaken;
     ifstream fileSysNames(fileNameWithErrorsToBeUsed.Data());
     string ll;
     while (getline(fileSysNames,ll)){
         istringstream lll(ll);
         TString temp        = "";
-        lll >> temp;
+        TString temp2       = "";
+        lll >> temp >> temp2;
+        Double_t fraction    = 1;
+        if (temp2.CompareTo("") != 0){
+            fraction        = (Double_t)temp2.Atof();
+        }
         sysTaken.push_back(temp);
+        fractionTaken.push_back(fraction);
         if( temp.IsNull()  )
             break;
-        cout << temp.Data() << endl;
+        cout << temp.Data() << "\t"<< temp2.Data()<< "\t" << fraction << endl;
     }
 
     vector<TString> ptSys[nBinsPt+1];
-    vector<Bool_t> isTaken;
+    vector<Double_t> isTaken;
     ifstream fileInput(inputfileName.Data());
     Int_t iPt = 0;
     string line;
@@ -99,13 +106,13 @@ void CreateReducedSystematicsFile(  TString inputfileName               = "",
                 ptSys[iPt].push_back(temp);
                 cout << temp.Data() << ", ";
 
-                Bool_t valid    = kFALSE;
+                Double_t valid    = 0.;
                 if (iESource == 0){
                     valid   = kTRUE;
                 } else {
                     for (Int_t so = 0; so < (Int_t)sysTaken.size(); so++){
                         if (temp.CompareTo(sysTaken.at(so)) == 0)
-                            valid   = kTRUE;
+                            valid   = fractionTaken.at(so);
                     }
                 }
                 isTaken.push_back(valid);
@@ -116,7 +123,7 @@ void CreateReducedSystematicsFile(  TString inputfileName               = "",
         if(iPt == 0){
             ptSys[iPt++].push_back("TotalError");
             cout << "TotalError";
-            isTaken.push_back(kFALSE);
+            isTaken.push_back(0.);
             iESource++;
         } else if(!tempBin.IsNull() )
             iPt++;
@@ -141,12 +148,13 @@ void CreateReducedSystematicsFile(  TString inputfileName               = "",
         if (cPt != 0) fCorr2 << ptSys[cPt].at(0) << "\t";
         Double_t sysErrTot  = 0;
         for (Int_t source = 1; source< (Int_t)ptSys[cPt].size(); source++){
-            if (isTaken.at(source)){
+            if (isTaken.at(source) > 0.){
+                cout << source << "\t" << "needs to be multiplied with: " << isTaken.at(source) << endl;
                 if (cPt == 0)
                     fCorr << ptSys[cPt].at(source)<< appendToSysName.Data() << "\t";
                 else
-                    fCorr << ptSys[cPt].at(source) << "\t";
-                sysErrTot   = sysErrTot+ ((TString)ptSys[cPt].at(source)).Atof()*((TString)ptSys[cPt].at(source)).Atof();
+                    fCorr << isTaken.at(source)*((TString)ptSys[cPt].at(source)).Atof() << "\t";
+                sysErrTot   = sysErrTot+ isTaken.at(source)*isTaken.at(source)*((TString)ptSys[cPt].at(source)).Atof()*((TString)ptSys[cPt].at(source)).Atof();
             }
         }
         if (addUncName.CompareTo("")){

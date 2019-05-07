@@ -134,7 +134,6 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     Bool_t  enableCentComb[9]                   = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
     Bool_t  enableCentRAA[9]                    = { kTRUE, kTRUE, kTRUE, kTRUE, kTRUE,   kFALSE, kFALSE, kFALSE, kFALSE};
     TString nameCentEst                         =  "V0M";
-    TString nameCentEstRatios                   =  "V0M";
 
     TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
@@ -5140,7 +5139,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             fitTCMInvYieldPi0[0]->Draw("same");
         }
 
-        TLatex *labelEnergyYieldPaper= new TLatex(0.935, 0.92, Form("%s %s", nameCentEst.Data(), collisionSystemPbPb.Data()));
+        TLatex *labelEnergyYieldPaper= new TLatex(0.935, 0.92, Form("%s",  collisionSystemPbPb.Data()));
         SetStyleTLatex( labelEnergyYieldPaper, 0.035, 4, 1, 42, kTRUE, 31);
         labelEnergyYieldPaper->Draw();
         TLatex *labelALICEYieldPaper= new TLatex(0.935,0.882,textALICE.Data());
@@ -5340,7 +5339,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         fitTCMInvYieldEta[0]->Draw("same");
     }
 
-//     TLatex *labelEnergyYieldPaper= new TLatex(0.935, 0.92, Form("%s %s", nameCentEst.Data(), collisionSystemPbPb.Data()));
+//     TLatex *labelEnergyYieldPaper= new TLatex(0.935, 0.92, Form("%s",  collisionSystemPbPb.Data()));
     SetStyleTLatex( labelEnergyYieldPaper, 0.035, 4, 1, 42, kTRUE, 31);
     labelEnergyYieldPaper->Draw();
 //     TLatex *labelALICEYieldPaper= new TLatex(0.935,0.882,textALICE.Data());
@@ -6549,7 +6548,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         }
 
         // plotting labels
-        labelEnergyEtaToPi0->SetText(0.13, 0.92,Form("%s %s", nameCentEst.Data(), collisionSystemPbPb.Data()));
+        labelEnergyEtaToPi0->SetText(0.13, 0.92,Form("%s",  collisionSystemPbPb.Data()));
         labelEnergyEtaToPi0->Draw();
         labelALICEEtaToPi0->Draw();
         legendEtaToPi0Comb->Draw();
@@ -6630,11 +6629,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TCanvas* canvasRAA = new TCanvas("canvasRAA","",200,10,1200,1100);  // gives the page size
     DrawGammaCanvasSettings( canvasRAA,  0.085, 0.01, 0.015, 0.08);
     canvasRAA->SetLogx();
-    TH2F * histo2DRAA  = new TH2F("histo2DRAA","histo2DRAA",1000,minPtPi0Plotting,maxPtPi0Plotting,1000,0.0,1.95);
+    TH2F * histo2DRAA  = new TH2F("histo2DRAA","histo2DRAA",1000,minPtPi0Plotting,maxPtPi0Plotting,1000,0.0,1.41);
     SetStyleHistoTH2ForGraphs(histo2DRAA, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.035,0.04, 0.035,0.04, 0.8,1., 512, 505);
     histo2DRAA->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRAA->DrawCopy();
-    TH2F * histo2DRAAEta  = new TH2F("histo2DRAAEta","histo2DRAAEta",1000,minPtEtaPlotting,maxPtEtaPlotting,1000,0.0,1.75);
+    TH2F * histo2DRAAEta  = new TH2F("histo2DRAAEta","histo2DRAAEta",1000,minPtEtaPlotting,maxPtEtaPlotting,1000,0.0,1.41);
     SetStyleHistoTH2ForGraphs(histo2DRAAEta, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.035,0.04, 0.035,0.04, 0.8,1., 512, 505);
     histo2DRAAEta->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRAAEta->DrawCopy();
@@ -6650,7 +6649,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
     canvasRAA->cd();
     histo2DRAA->Draw("copy");
-    TLegend* legendPi0RAAPaper    = GetAndSetLegend2(0.35, 0.10, 0.95, 0.10+0.04*1.25*(nCurrEst+1)/3, textSizeLabelsPixel, 3, "", 43, 0.25);
+    TLegend* legendPi0RAAPaper    = GetAndSetLegend2(0.95-0.4, 0.95-0.04*1.25*(nCurrEst+1)/2, 0.95, 0.95, textSizeLabelsPixel, 2, "", 43, 0.25);
         Int_t plot= 0;
         for (Int_t cent= 0; cent < maxCent; cent++ ){
             if (!enableCentComb[cent] || !enableCentRAA[cent] ) continue;
@@ -6669,7 +6668,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         }
 
         labelALICERAA->Draw();
-        labelEnergyRAA->SetText(0.12, 0.95-0.04*1,Form("%s %s", nameCentEstRatios.Data(), collisionSystemPbPb.Data()));
+        labelEnergyRAA->SetText(0.12, 0.95-0.04*1,Form("%s", collisionSystemPbPb.Data()));
         labelEnergyRAA->Draw();
         labelPi0RAA->Draw();
         legendPi0RAAPaper->Draw();
@@ -6678,7 +6677,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
     canvasRAA->cd();
     histo2DRAAEta->Draw("copy");
-    TLegend* legendEtaRAAPaper    = GetAndSetLegend2(0.3, 0.10, 0.9, 0.10+0.04*1.25*(nCurrEst+1)/3, textSizeLabelsPixel, 3, "", 43, 0.25);
+    TLegend* legendEtaRAAPaper    = GetAndSetLegend2(0.95-0.4, 0.95-0.04*1.25*(nCurrEst+1)/2, 0.95, 0.95, textSizeLabelsPixel, 2, "", 43, 0.25);
 
         plot= 0;
         for (Int_t cent= 0; cent < maxCent; cent++ ){
