@@ -4,7 +4,7 @@
 
 # Version: V3
 echo  -e "\e[1;36m+++++++++++++++++++++++++++++++++++++\e[21;39m"
-echo "DownScript.sh Version: V3"
+echo "DownScript.sh Version: V3.2"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -14,11 +14,11 @@ echo "DownScript.sh Version: V3"
 
 # Use: bash DownScript.sh [TrainPage] [Trainnumber] -[OPTIONS]
 
-# actually all input is also asked interactive in case you forget something
+# actually all inputs are also asked interactive in case you forget something
 
 # 	|-> TrainPage (e.g. GA_pp_AOD)
-# 	|-> TrainNumber (e.g +768)
-#                            YOU CAN SELECT multiple trains at once e.g. "+768 +775"
+# 	|-> TrainNumber (e.g 768)
+#                            YOU CAN SELECT multiple trains at once e.g. "768 775"
 
 #####################################
 
@@ -49,6 +49,9 @@ then
 	UserName="Adrian Mechler";
 	pathtocert="~/.globus"
 	alienUserName="amechler"
+	key="key.pem"
+	cacert="ca.pem"
+	clientca="client.pem"
 else
 	echo
 	echo -e "This feature is not supported for user:$thisuser."
@@ -103,7 +106,7 @@ function GetWebpage()
 if [ "$(( $(date +"%s") - $(stat -c "%Y" $1) ))" -gt "86400" ]
 then
 	echo -e "\e[1;33m|-> \e[21;39mFile $1 exists. \e[1;33m|-> \e[21;39mbut is older then 1 day! download new one from alien:/$1"
-	cmd="curl -s '${Webpage}' --key $certpath/key.pem --cacert $certpath/ca.pem --cert $certpath/client.pem &> $1"
+	cmd="curl -s '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
 	if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 	then 
 		echo $cmd 
@@ -115,7 +118,7 @@ else
 fi
 else
 	echo -e "\e[1;33m|-> \e[21;39mDownloading ${Webpage}"
-	cmd="curl -s '${Webpage}' --key $certpath/key.pem --cacert $certpath/ca.pem --cert $certpath/client.pem &> $1"
+	cmd="curl -s '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
 	if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 	then 
 		echo $cmd 
@@ -124,6 +127,12 @@ else
 	touch "$1";
 fi
 }
+# if this is not working try
+# openssl pkcs12 -in new.p12 -out newcert.pem
+# openssl pkcs12 -in new.p12 -out $cacert -cacerts -nokeys
+# openssl pkcs12 -in new.p12 -out $clientca -clcerts -nokeys
+# openssl pkcs12 -in new.p12 -out $key -nocerts
+
 
 # Fuction to check if file is there and download it if not
 function GetFile()
@@ -299,7 +308,7 @@ then
 elif [[ $MergeTrains = 1 ]]
 then
 	echo -e "\e[1;33m|-> \e[21;39m TrainNumber set: $TrainNumber"
-	MergeTrainsOutname=$TrainPage-$TrainNumber
+	MergeTrainsOutname=$OutName
 fi
 echo -e "\e[1;33m|-> \e[21;39m TrainPage = $TrainPage"
 echo -e "\e[1;33m|-> \e[21;39m Search = $Search"
@@ -431,7 +440,7 @@ then
 			GlobalVariablesPath="$OUTPUTDIR/.$child/$GlobalVariablesFile"
 			if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 			then 
-				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" /dev/null &> /dev/null
+				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" /dev/null 
 			else 
 				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" /dev/null &> /dev/null
 			fi
@@ -443,6 +452,12 @@ then
 			#####################################
 			#####################################
 
+
+			if [[ `wc -l $TrainPageHTML` < 1 ]]
+			then
+				echo -e "\e[1;31mError\e[21;39m $TrainPageHTML not found! aborting" | tee -a $ErrorLog
+				continue
+			fi
 
 			# parse html to get infos
 			for line in `cat $TrainPageHTML`
@@ -700,9 +715,9 @@ then
 				filename=${filenametmp#*/*/}
 				echo  -e "\t\t\e[1;36m|-> \e[21;39m $filename" 
 				outFile=$singletrainDir/$RunlistName/$filename
-				alreadyMerged=$singletrainDir/$RunlistName/.${filename%%.root}.merged
-				logFile=$singletrainDir/$RunlistName/${filename%%.root}.log
-				mergedFile=$MergeTrainsOutname/$filename
+				alreadyMerged=$MergeTrainsOutname/$RunlistName/.$TrainNumber-${filename%%.root}.merged
+				logFile=$MergeTrainsOutname/$RunlistName/$TrainNumber-${filename%%.root}.log
+				mergedFile=$MergeTrainsOutname/$RunlistName/$filename
 				if [[ -f $alreadyMerged ]]
 				then
 					echo -e "\t\t\e[1;33m|-> \e[21;39m$outFile already merged" 
