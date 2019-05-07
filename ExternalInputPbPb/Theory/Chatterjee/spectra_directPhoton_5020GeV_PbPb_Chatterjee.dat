@@ -1,8 +1,6 @@
- LHC@5.02A TeV 0_20 % centrality bin
+# LHC@5.02A TeV 0_20 % centrality bin
 #####################################
-
-
-       p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)     Direct(GeV^-2)
+#    p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)     Direct(GeV^-2)
    0.50000000            -----       0.6731E+01              -----
    0.75000000            -----       0.2341E+01              -----
    1.00000000            -----       0.9521E+00              -----
@@ -29,8 +27,7 @@
 
  LHC@5.02A TeV  20_40 % centrality bin
 #####################################
-
-       p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)     Direct(GeV^-2)
+#    p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)     Direct(GeV^-2)
    0.50000000            -----       0.2910E+01                ----- 
    0.75000000            -----       0.1006E+01                ----- 
    1.00000000            -----       0.4063E+00                ----- 
@@ -56,9 +53,7 @@
 
 LHC@5.02A TeV   40_60 % centrality bin
 #####################################
-
-
-       p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)    Direct(GeV^-2)
+#    p_T(GeV)     Prompt(GeV^-2)       Thermal(GeV^-2)    Direct(GeV^-2)
    0.50000000            -----       0.1084E+01              -----
    0.75000000            -----       0.3650E+00              -----
    1.00000000            -----       0.1430E+00              -----
@@ -84,7 +79,7 @@ LHC@5.02A TeV   40_60 % centrality bin
 LHC@5.02A TeV   0_10 % centrality bin
 #####################################
 
- p_T(GeV)                   Prompt(GeV^-2)               Thermal(GeV^-2)                Direct(GeV^-2)
+# p_T(GeV)                   Prompt(GeV^-2)               Thermal(GeV^-2)                Direct(GeV^-2)
   0.50000000000000000                ----              7.9539999999999997                ----
   0.75000000000000000                ----              2.7719999999999998                ----
    1.0000000000000000                ----              1.1299999999999999                ----
@@ -125,7 +120,7 @@ LHC@5.02A TeV   0_10 % centrality bin
 LHC@5.02A TeV   10_20 % centrality bin
 #####################################
 
- p_T(GeV)                    Prompt(GeV^-2)               Thermal(GeV^-2)                Direct(GeV^-2)
+# p_T(GeV)                    Prompt(GeV^-2)               Thermal(GeV^-2)                Direct(GeV^-2)
   0.50000000000000000              ----                5.3499999999999996             ----
   0.75000000000000000              ----                1.8650000000000000             ----
    1.0000000000000000              ----                0.76010000000000000            ----

@@ -90,7 +90,451 @@ TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
 	return returnGraph;
 }
 
-void ProduceTheoryGraphsPbPb(TString specifier = ""){
+void readFilePaquet(  TString fileName, TString particle, TFile &outputfile, Bool_t verbose){
+
+    cout << "INFO: You have chosen the following input file:  " << fileName.Data() << endl;
+    ifstream inputDataFile;
+    inputDataFile.open(fileName,ios_base::in);
+    if (!inputDataFile) {
+        cout << "ERROR: file " << fileName.Data() << " not found!" << endl;
+        return;
+    }
+
+    Int_t nPoints = -1;
+    Double_t arrayPT[100];
+    Double_t arrayYield0005[100], arrayYield0510[100], arrayYield1020[100], arrayYield2030[100],
+        arrayYield3040[100], arrayYield4050[100], arrayYield5060[100];
+
+    // read settings from file
+    for( TString tempLine; tempLine.ReadLine(inputDataFile, kTRUE); ) {
+        // check if line should be considered
+        if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
+            continue;
+        }
+        if(verbose) cout << tempLine.Data() << endl;
+        nPoints++;
+
+        // Separate the string according to tabulators
+        TObjArray *tempArr  = tempLine.Tokenize(" ");
+        if(tempArr->GetEntries()<1){
+            cout << "nothing to be done" << endl;
+            delete tempArr;
+            continue;
+        }
+
+        // Put them to the correct variables
+        arrayPT[nPoints]        = (Double_t)atof(((TString)((TObjString*)tempArr->At(0))->GetString()).Data());
+        arrayYield0005[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+        arrayYield0510[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(2))->GetString()).Data());
+        arrayYield1020[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(3))->GetString()).Data());
+        arrayYield2030[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(4))->GetString()).Data());
+        arrayYield3040[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(5))->GetString()).Data());
+        arrayYield4050[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(6))->GetString()).Data());
+        arrayYield5060[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(7))->GetString()).Data());
+
+        if(verbose) { cout << arrayPT[nPoints]
+                           << " " << arrayYield0005[nPoints]
+                           << " " << arrayYield0510[nPoints]
+                           << " " << arrayYield1020[nPoints]
+                           << " " << arrayYield2030[nPoints]
+                           << " " << arrayYield3040[nPoints]
+                           << " " << arrayYield4050[nPoints]
+                           << " " << arrayYield5060[nPoints]
+                           << endl; }
+
+        delete tempArr;
+    }
+
+    if(nPoints == -1) {
+      cout << "ERROR: did not find any valid data in file" << endl;
+      return;
+    }
+
+    outputfile.cd();
+    TGraph graphYield0005(nPoints,arrayPT,arrayYield0005);
+    graphYield0005.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield0005.GetXaxis()->SetTitle("pT in GeV");
+    graphYield0005.Write(Form("5TeV %s yield Paquet 0-5%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield0510(nPoints,arrayPT,arrayYield0510);
+    graphYield0510.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield0510.GetXaxis()->SetTitle("pT in GeV");
+    graphYield0510.Write(Form("5TeV %s yield Paquet 5-10%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield1020(nPoints,arrayPT,arrayYield1020);
+    graphYield1020.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield1020.GetXaxis()->SetTitle("pT in GeV");
+    graphYield1020.Write(Form("5TeV %s yield Paquet 10-20%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield2030(nPoints,arrayPT,arrayYield2030);
+    graphYield2030.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield2030.GetXaxis()->SetTitle("pT in GeV");
+    graphYield2030.Write(Form("5TeV %s yield Paquet 20-30%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield3040(nPoints,arrayPT,arrayYield3040);
+    graphYield3040.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield3040.GetXaxis()->SetTitle("pT in GeV");
+    graphYield3040.Write(Form("5TeV %s yield Paquet 30-40%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield4050(nPoints,arrayPT,arrayYield4050);
+    graphYield4050.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield4050.GetXaxis()->SetTitle("pT in GeV");
+    graphYield4050.Write(Form("5TeV %s yield Paquet 40-50%%",particle.Data()), TObject::kOverwrite);
+    TGraph graphYield5060(nPoints,arrayPT,arrayYield5060);
+    graphYield5060.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T) at midrapidity");
+    graphYield5060.GetXaxis()->SetTitle("pT in GeV");
+    graphYield5060.Write(Form("5TeV %s yield Paquet 50-60%%",particle.Data()), TObject::kOverwrite);
+
+    return;
+
+}
+
+
+void readFileBegun(TString fileName, TString option, TFile &outputfile, Bool_t verbose){
+
+    cout << "INFO: You have chosen the following input file:  " << fileName.Data() << endl;
+    ifstream inputDataFile;
+    inputDataFile.open(fileName,ios_base::in);
+    if (!inputDataFile) {
+        cout << "ERROR: file " << fileName.Data() << " not found!" << endl;
+        return;
+    }
+
+    Int_t nPoints = -1;
+    Double_t arrayPT[100];
+    Double_t arrayPi0Yield0010[100], arrayPi0Yield1020[100], arrayPi0Yield2040[100],
+        arrayPi0Yield4060[100], arrayPi0Yield6080[100];
+    Double_t arrayEtaYield0010[100], arrayEtaYield1020[100], arrayEtaYield2040[100],
+        arrayEtaYield4060[100], arrayEtaYield6080[100];
+
+    // read settings from file
+    for( TString tempLine; tempLine.ReadLine(inputDataFile, kTRUE); ) {
+        if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
+            continue;
+        }
+        if(verbose) cout << tempLine.Data() << endl;
+        nPoints++;
+
+        // Separate the string according to tabulators
+        TObjArray *tempArr  = tempLine.Tokenize(" ");
+        if(tempArr->GetEntries()<1){
+            cout << "nothing to be done" << endl;
+            delete tempArr;
+            continue;
+        }
+
+        // Put them to the correct variables
+        arrayPT[nPoints]           = (Double_t)atof(((TString)((TObjString*)tempArr->At(0))->GetString()).Data());
+        arrayEtaYield0010[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+        arrayEtaYield1020[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(2))->GetString()).Data());
+        arrayEtaYield2040[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(3))->GetString()).Data());
+        arrayEtaYield4060[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(4))->GetString()).Data());
+        arrayEtaYield6080[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(5))->GetString()).Data());
+        arrayPi0Yield0010[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(6))->GetString()).Data());
+        arrayPi0Yield1020[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(7))->GetString()).Data());
+        arrayPi0Yield2040[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(8))->GetString()).Data());
+        arrayPi0Yield4060[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(9))->GetString()).Data());
+        arrayPi0Yield6080[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(10))->GetString()).Data());
+
+        if(verbose) { cout << arrayPT[nPoints]
+                           << " " << arrayEtaYield0010[nPoints]
+                           << " " << arrayEtaYield1020[nPoints]
+                           << " " << arrayEtaYield2040[nPoints]
+                           << " " << arrayEtaYield4060[nPoints]
+                           << " " << arrayEtaYield6080[nPoints]
+                           << " " << arrayPi0Yield0010[nPoints]
+                           << " " << arrayPi0Yield1020[nPoints]
+                           << " " << arrayPi0Yield2040[nPoints]
+                           << " " << arrayPi0Yield4060[nPoints]
+                           << " " << arrayPi0Yield6080[nPoints]
+                           << endl; }
+        delete tempArr;
+    } // end of loop over lines in input file
+
+    if(nPoints == -1) {
+      cout << "ERROR: did not find any valid data in file" << endl;
+      return;
+    }
+
+    // write graphs to file
+    outputfile.cd();
+    TGraph graphPi0Yield0010(nPoints,arrayPT,arrayPi0Yield0010);
+    graphPi0Yield0010.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphPi0Yield0010.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0Yield0010.Write(Form("5TeV Pi0 yield %s SHM 0-10%%", option.Data()), TObject::kOverwrite);
+    TGraph graphPi0Yield1020(nPoints,arrayPT,arrayPi0Yield1020);
+    graphPi0Yield1020.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphPi0Yield1020.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0Yield1020.Write(Form("5TeV Pi0 yield %s SHM 10-20%%",option.Data()), TObject::kOverwrite);
+    TGraph graphPi0Yield2040(nPoints,arrayPT,arrayPi0Yield2040);
+    graphPi0Yield2040.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphPi0Yield2040.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0Yield2040.Write(Form("5TeV Pi0 yield %s SHM 20-40%%",option.Data()), TObject::kOverwrite);
+    TGraph graphPi0Yield4060(nPoints,arrayPT,arrayPi0Yield4060);
+    graphPi0Yield4060.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphPi0Yield4060.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0Yield4060.Write(Form("5TeV Pi0 yield %s SHM 40-60%%",option.Data()), TObject::kOverwrite);
+    TGraph graphPi0Yield6080(nPoints,arrayPT,arrayPi0Yield6080);
+    graphPi0Yield6080.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphPi0Yield6080.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0Yield6080.Write(Form("5TeV Pi0 yield %s SHM 60-80%%",option.Data()), TObject::kOverwrite);
+    TGraph graphEtaYield0010(nPoints,arrayPT,arrayEtaYield0010);
+    graphEtaYield0010.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphEtaYield0010.GetXaxis()->SetTitle("pT in GeV");
+    graphEtaYield0010.Write(Form("5TeV Eta yield %s SHM 0-10%%",option.Data()), TObject::kOverwrite);
+    TGraph graphEtaYield1020(nPoints,arrayPT,arrayEtaYield1020);
+    graphEtaYield1020.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphEtaYield1020.GetXaxis()->SetTitle("pT in GeV");
+    graphEtaYield1020.Write(Form("5TeV Eta yield %s SHM 10-20%%",option.Data()), TObject::kOverwrite);
+    TGraph graphEtaYield2040(nPoints,arrayPT,arrayEtaYield2040);
+    graphEtaYield2040.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphEtaYield2040.GetXaxis()->SetTitle("pT in GeV");
+    graphEtaYield2040.Write(Form("5TeV Eta yield %s SHM 20-40%%",option.Data()), TObject::kOverwrite);
+    TGraph graphEtaYield4060(nPoints,arrayPT,arrayEtaYield4060);
+    graphEtaYield4060.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphEtaYield4060.GetXaxis()->SetTitle("pT in GeV");
+    graphEtaYield4060.Write(Form("5TeV Eta yield %s SHM 40-60%%",option.Data()), TObject::kOverwrite);
+    TGraph graphEtaYield6080(nPoints,arrayPT,arrayEtaYield6080);
+    graphEtaYield6080.GetYaxis()->SetTitle("dN/(2#pi dy p_T dp_T)");
+    graphEtaYield6080.GetXaxis()->SetTitle("pT in GeV");
+    graphEtaYield6080.Write(Form("5TeV Eta yield %s SHM 60-80%%",option.Data()), TObject::kOverwrite);
+
+    return;
+
+}
+
+void readFileDjordjevic(TString fileName, TString option, TFile &outputfile, Bool_t verbose){
+
+    cout << "INFO: You have chosen the following input file:  " << fileName.Data() << endl;
+    ifstream inputDataFile;
+    inputDataFile.open(fileName,ios_base::in);
+    if (!inputDataFile) {
+        cout << "ERROR: file " << fileName.Data() << " not found!" << endl;
+        return;
+    }
+
+    Int_t nPoints = -1;
+    Double_t arrayPT[100], arrayPTErr[100];
+    Double_t arrayPi0RAAMin[100], arrayPi0RAAMax[100], arrayPi0RAAAvg[100], arrayPi0RAAErr[100];
+
+    // read settings from file
+    for( TString tempLine; tempLine.ReadLine(inputDataFile, kTRUE); ) {
+        if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
+            continue;
+        }
+        if(verbose) cout << tempLine.Data() << endl;
+        nPoints++;
+
+        // Separate the string according to tabulators
+        TObjArray *tempArr  = tempLine.Tokenize("\t");
+        if(tempArr->GetEntries()<1){
+            cout << "nothing to be done" << endl;
+            delete tempArr;
+            continue;
+        }
+
+        // Put them to the correct variables
+        arrayPT[nPoints]        = (Double_t)atof(((TString)((TObjString*)tempArr->At(0))->GetString()).Data());
+        arrayPTErr[nPoints]     = 0;
+        arrayPi0RAAMin[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+        arrayPi0RAAMax[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(2))->GetString()).Data());
+        arrayPi0RAAAvg[nPoints] = (arrayPi0RAAMin[nPoints] + arrayPi0RAAMax[nPoints] ) / 2.0;
+        arrayPi0RAAErr[nPoints] = (arrayPi0RAAMax[nPoints] - arrayPi0RAAMin[nPoints] ) / 2.0;
+
+       if(verbose) { cout << arrayPT[nPoints]
+                          << "\t" << arrayPi0RAAMin[nPoints]
+                          << "\t" << arrayPi0RAAMax[nPoints]
+                          << "\t" << arrayPi0RAAAvg[nPoints]
+                          << "\t" << arrayPi0RAAErr[nPoints]
+                          << endl; }
+        delete tempArr;
+
+    } // end of loop over lines in input file
+
+    if(nPoints == -1) {
+      cout << "ERROR: did not find any valid data in file" << endl;
+      return;
+    }
+
+    // write graphs to file
+    outputfile.cd();
+    TGraphErrors graphPi0RAA(nPoints,arrayPT,arrayPi0RAAAvg,arrayPTErr,arrayPi0RAAErr);
+    graphPi0RAA.GetYaxis()->SetTitle("R_{AA}");
+    graphPi0RAA.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0RAA.Write(Form("5TeV Pi0 RAA Djordjevic %s", option.Data()), TObject::kOverwrite);
+
+}
+
+void readFileVitev(TString fileNameMin, TString fileNameMax, TString option, TFile &outputfile, Bool_t verbose){
+
+    cout << "INFO: You have chosen the following input file:  " << fileNameMin.Data() << endl;
+    ifstream inputDataFileMin;
+    ifstream inputDataFileMax;
+    inputDataFileMin.open(fileNameMin,ios_base::in);
+    inputDataFileMax.open(fileNameMax,ios_base::in);
+    if (!inputDataFileMin) {
+        cout << "ERROR: file " << fileNameMin.Data() << " not found!" << endl;
+        return;
+    }
+    if (!inputDataFileMax) {
+        cout << "ERROR: file " << fileNameMax.Data() << " not found!" << endl;
+        return;
+    }
+
+    Int_t nPoints = -1;
+    Int_t lMax = 350;
+    Double_t arrayPT[400], arrayPTErr[100];
+    Double_t arrayPi0RAAMin[400], arrayPi0RAAMax[400], arrayPi0RAAAvg[400], arrayPi0RAAErr[400];
+
+    // read settings from file
+    for( TString tempLine; tempLine.ReadLine(inputDataFileMin, kTRUE); ) {
+        if(nPoints < lMax){
+            if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
+                continue;
+            }
+            if(verbose) cout << tempLine.Data() << endl;
+            nPoints++;
+
+            // Separate the string according to tabulators
+            TObjArray *tempArr  = tempLine.Tokenize(" ");
+            if(tempArr->GetEntries()<1){
+                cout << "nothing to be done" << endl;
+                delete tempArr;
+                continue;
+            }
+
+            // Put them to the correct variables
+            arrayPT[nPoints]        = (Double_t)atof(((TString)((TObjString*)tempArr->At(0))->GetString()).Data());
+            arrayPTErr[nPoints]     = 0;
+            arrayPi0RAAMin[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+
+            if(verbose) { cout << arrayPT[nPoints]
+                               << "\t" << arrayPi0RAAMin[nPoints]
+                               << endl; }
+            delete tempArr;
+        }
+    } // end of loop over lines in input file
+
+    if(nPoints == -1) {
+      cout << "ERROR: did not find any valid data in file" << endl;
+      return;
+    }
+
+    cout << "INFO: You have chosen the following input file:  " << fileNameMax.Data() << endl;
+    nPoints=-1;
+    // read settings from file
+    for( TString tempLine; tempLine.ReadLine(inputDataFileMax, kTRUE); ) {
+        if(nPoints < lMax){
+            if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
+                continue;
+            }
+            if(verbose) cout << tempLine.Data() << endl;
+            nPoints++;
+
+            // Separate the string according to tabulators
+            TObjArray *tempArr  = tempLine.Tokenize(" ");
+            if(tempArr->GetEntries()<1){
+                cout << "nothing to be done" << endl;
+                delete tempArr;
+                continue;
+            }
+
+            // Put them to the correct variables
+            arrayPT[nPoints]        = (Double_t)atof(((TString)((TObjString*)tempArr->At(0))->GetString()).Data());
+            arrayPi0RAAMax[nPoints] = (Double_t)atof(((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+
+            if(verbose) { cout << arrayPT[nPoints]
+                               << "\t" << arrayPi0RAAMax[nPoints]
+                               << endl; }
+            delete tempArr;
+        }
+    } // end of loop over lines in input file
+
+    if(nPoints == -1) {
+      cout << "ERROR: did not find any valid data in file" << endl;
+      return;
+    }
+
+    for(nPoints=0; nPoints<lMax; nPoints++){
+        arrayPi0RAAAvg[nPoints] = (arrayPi0RAAMin[nPoints] + arrayPi0RAAMax[nPoints] ) / 2.0;
+        arrayPi0RAAErr[nPoints] = (arrayPi0RAAMax[nPoints] - arrayPi0RAAMin[nPoints] ) / 2.0;
+
+        if(verbose) { cout << endl << arrayPT[nPoints]
+                           << "\t" << arrayPi0RAAAvg[nPoints]
+                           << "\t" << arrayPi0RAAErr[nPoints]
+                           << endl; }
+    }
+
+    // write graphs to file
+    outputfile.cd();
+    TGraphErrors graphPi0RAA(nPoints,arrayPT,arrayPi0RAAAvg,arrayPTErr,arrayPi0RAAErr);
+    graphPi0RAA.GetYaxis()->SetTitle("R_{AA}");
+    graphPi0RAA.GetXaxis()->SetTitle("pT in GeV");
+    graphPi0RAA.Write(Form("5TeV Pi0 RAA Vitev %s", option.Data()), TObject::kOverwrite);
+
+}
+
+
+void ProduceTheoryGraphsPbPb(TString specifier = "", TString energy = ""){
+
+    if(energy.CompareTo("PbPb_5.02TeV")==0){
+
+        TString outputFileName = Form("ExternalInputPbPb/Theory/TheoryCompilationPbPb%s.root",specifier.Data());
+        TFile fileTheoryGraphsPbPb(outputFileName,"UPDATE");
+        cout << "INFO: You have chosen the following output file: " << outputFileName.Data() << endl;
+
+        // Paquet Pi0 and Eta spectra at midrapidity
+        TString filePaquetPi0 = "ExternalInputPbPb/Theory/McGill_5TeV/spectra_pi0_5020GeV_PbPb_Paquet.dat";
+        TString filePaquetEta = "ExternalInputPbPb/Theory/McGill_5TeV/spectra_etas_5020GeV_PbPb_Paquet.dat";
+        readFilePaquet(filePaquetPi0,"Pi0", fileTheoryGraphsPbPb, kFALSE);
+        readFilePaquet(filePaquetEta,"Eta", fileTheoryGraphsPbPb, kFALSE);
+
+        // Begun Pi0 and Eta spectra
+        TString fileBegunEQ  = "ExternalInputPbPb/Theory/CracowModel_5TeV/Begun_EQ.txt";
+        TString fileBegunNEQ = "ExternalInputPbPb/Theory/CracowModel_5TeV/Begun_NEQ.txt";
+        readFileBegun(fileBegunEQ, "EQ", fileTheoryGraphsPbPb, kFALSE);
+        readFileBegun(fileBegunNEQ, "NEQ", fileTheoryGraphsPbPb, kFALSE);
+
+        // Djordjevic Pi0 RAA  (one file per cent class and model)
+        TString fileDjordjevicBjorken0010 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_Bjorken_010.txt";
+        TString fileDjordjevicBjorken1020 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_Bjorken_1020.txt";
+        TString fileDjordjevicBjorken2040 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_Bjorken_2040.txt";
+        TString fileDjordjevicBjorken4060 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_Bjorken_4060.txt";
+        TString fileDjordjevicBjorken6080 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_Bjorken_6080.txt";
+        TString fileDjordjevicConstTemp0010 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_ConstTemp_010.txt";
+        TString fileDjordjevicConstTemp1020 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_ConstTemp_1020.txt";
+        TString fileDjordjevicConstTemp2040 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_ConstTemp_2040.txt";
+        TString fileDjordjevicConstTemp4060 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_ConstTemp_4060.txt";
+        TString fileDjordjevicConstTemp6080 = "ExternalInputPbPb/Theory/Djordjevic_5TeV/PionRaa_5TeV_ConstTemp_6080.txt";
+        readFileDjordjevic(fileDjordjevicBjorken0010, "Bjorken 0-10%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicBjorken1020, "Bjorken 10-20%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicBjorken2040, "Bjorken 20-40%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicBjorken4060, "Bjorken 40-60%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicBjorken6080, "Bjorken 60-80%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicConstTemp0010, "Const Temp 0-10%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicConstTemp1020, "Const Temp 10-20%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicConstTemp2040, "Const Temp 20-40%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicConstTemp4060, "Const Temp 40-60%", fileTheoryGraphsPbPb, kFALSE);
+        readFileDjordjevic(fileDjordjevicConstTemp6080, "Const Temp 60-80%", fileTheoryGraphsPbPb, kFALSE);
+
+        // Vitev Pi0 RAA  (two files, min and max, per cent class)
+        TString fileVitevMin0010 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_010_cron1.5_eloss0.5100GeVpi.g2.1";
+        TString fileVitevMin2040 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_2040_cron1.5_eloss0.5100GeVpi.g2.1";
+        TString fileVitevMin4060 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_4060_cron1.5_eloss0.5100GeVpi.g2.1";
+        TString fileVitevMax0010 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_010_cron1.5_eloss0.5100GeVpi.g1.9";
+        TString fileVitevMax2040 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_2040_cron1.5_eloss0.5100GeVpi.g1.9";
+        TString fileVitevMax4060 = "ExternalInputPbPb/Theory/Vitev_5TeV/R-N.aa_4060_cron1.5_eloss0.5100GeVpi.g1.9";
+        readFileVitev(fileVitevMin0010, fileVitevMax0010, "0-10%", fileTheoryGraphsPbPb, kFALSE);
+        readFileVitev(fileVitevMin2040, fileVitevMax2040, "20-40%", fileTheoryGraphsPbPb, kFALSE);
+        readFileVitev(fileVitevMin4060, fileVitevMax4060, "40-60%", fileTheoryGraphsPbPb, kFALSE);
+
+    } else if(energy.CompareTo("PbPb_2.76TeV")==0){
+
+    // Begun
+    // Cracow
+    // Djordjevic
+    // Jet quenching
+    // Xiao-Fang
+    // Vitev
+    // Horowitz
+    // EPOS
+    // Nemchick
+    // pQCD pp
 
 	StyleSettingsThesis();
 	SetPlotStyle();
@@ -1984,5 +2428,5 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		graphNLOCalcDSS07InvYieldEta2760GeV->Write("graphNLOCalcDSS07InvYieldEta2760GeV");
 
     fileTheoryGraphsPbPb->Close();
-
+ }
 }
