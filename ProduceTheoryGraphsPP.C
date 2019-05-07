@@ -1084,6 +1084,15 @@ void ProduceTheoryGraphsPP(){
     histoPi0ToChPionRatioPythia8Monash5TeVLego->Sumw2();
     histoPi0ToChPionRatioPythia8Monash5TeVLego->Divide(histoPi0ToChPionRatioPythia8Monash5TeVLego,histoChPionPythia8MonashInvSec5TeVLego);
 
+    //For neutral mesons in jets
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCM only inputs
+    TFile* file5TeVJets                        = new TFile("ExternalInput/Theory/MCInputCompilationLHC17pq_pp5020GeV_0.root");
+    TH1D* histoPi05TeVJets                      = (TH1D*)file5TeVJets->Get("MC_Pi0_Pt");
+    TH1D* histoPi05TeVJetsReb                   = (TH1D*)file5TeVJets->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoEta5TeVJets                      = (TH1D*)file5TeVJets->Get("MC_Eta_Pt");
+    TH1D* histoEta5TeVJetsReb                   = (TH1D*)file5TeVJets->Get("MC_Eta_Pt_Rebinned");
+    TH1D* histoEtaToPi05TeVJets                 = (TH1D*)file5TeVJets->Get("MCEtaToPi0");
+
     //**********************************************************************************************************************
     //***************************** Pythia calculations 7TeV ************************************************************
     //**********************************************************************************************************************
@@ -1460,6 +1469,12 @@ void ProduceTheoryGraphsPP(){
         histoEtaToPi0RatioPythia8Monash5TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego5TeV", TObject::kOverwrite);
         histoChPionPythia8MonashInvSec5TeVLego->Write("histoInvSecPythia8Monash2013LegoChPion5TeV", TObject::kOverwrite);
         histoPi0ToChPionRatioPythia8Monash5TeVLego->Write("histoPi0ToChPionRatioPythia8Monash5TeVLego", TObject::kOverwrite);
+
+        histoPi05TeVJets->Write("histoPi0insideJet_5TeV", TObject::kOverwrite);
+        histoEta5TeVJets->Write("histoEtainsideJet_5TeV", TObject::kOverwrite);
+        histoPi05TeVJetsReb->Write("histoPi0insideJet_5TeV_Reb", TObject::kOverwrite);
+        histoEta5TeVJetsReb->Write("histoEtainsideJet_5TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi05TeVJets->Write("histoEtaToPi0insideJet_5TeV", TObject::kOverwrite);
 
         //***********************************************************************
         // write  calculations for 7TeV
