@@ -142,6 +142,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                                     "PCM-Dal", "PHOS-Dal", "EMC-Dal", "EMChigh", "mEMC",
                                                     "PCMOtherDataset"};
     TString  nameConfigFileRAAErr[9]            = { "", "", "", "", "",  "", "", "", ""};
+
+    TString nameTheory[3]                       = {"Paquet", "SHM-EQ", "SHM-NEQ"};
+    TString nameTheoryRead[3]                   = {"Paquet", "SHM_EQ", "SHM_NEQ"};
+    TString nameTheoryRAA[3]                    = {"Djordjevic", "Djordjevic T_{cont}", "Vitev"};
+    TString nameTheoryRAARead[3]                = {"DjordjevicBjorken", "DjordjevicConstTemp", "Vitev"};
     // **********************************************************************************************
     // ********************** Copy inputs into 1 directory for bookeeping ***************************
     // **********************************************************************************************
@@ -642,62 +647,99 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // *******************************************************************************************************
     // ************************** Loading theory spectra *****************************************************
     // *******************************************************************************************************
-    TFile* fileTheory                                  = new TFile(fileNameTheory.Data());
-    TDirectory* directoryTheory[9]                     = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetPi0[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEta[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEtaToPi0[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetPi0ToPiCh[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEtaToKCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCPi0[9]                           = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEta[9]                           = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEtaToPi0[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCPi0ToPiCh[9]                     = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEtaToKCh[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGPi0[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEta[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEtaToPi0[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGPi0ToPiCh[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEtaToKCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TFile* fileTheory                                   = new TFile(fileNameTheory.Data());
+    TH1F* histoDPMJetPi0[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoDPMJetEta[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoDPMJetEtaToPi0[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoDPMJetPi0ToPiCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoDPMJetEtaToKCh[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoEPOSLHCPi0[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoEPOSLHCEta[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoEPOSLHCEtaToPi0[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoEPOSLHCPi0ToPiCh[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoEPOSLHCEtaToKCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoHIJINGPi0[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoHIJINGEta[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoHIJINGEtaToPi0[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoHIJINGPi0ToPiCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F* histoHIJINGEtaToKCh[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraph* graphTheoryPi0[3][9]                        = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TGraph* graphTheoryEta[3][9]                        = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TGraph* graphTheoryEtaToPi0[3][9]                   = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TGraphErrors* graphTheoryRAAPi0[3][9]                     = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TGraphErrors* graphTheoryRAAEta[3][9]               = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+
+    TDirectory* directoryTheoryPi0                      = (TDirectory*)fileTheory->Get("Pi0_PbPb_5.02TeV");
+    TDirectory* directoryTheoryEta                      = (TDirectory*)fileTheory->Get("Eta_PbPb_5.02TeV");
+    if (!directoryTheoryPi0 && !directoryTheoryEta){
+        cout << "ATTENTION: no theory curves available!" << endl;
+    }
 
     for (Int_t cent = 0; cent < maxCent; cent ++){
         if (!enableCent[cent] || cent > maxCent) continue;
         cout << "**********************************************************************" << endl;
         cout << "Reading in cent " << centArray[cent].Data() << endl;
         cout << "**********************************************************************" << endl;
-        TString currentCent     =  centArray[cent].Data();
-        TString addTheo         = "";
-        if (centArray[cent].CompareTo("0-100%") == 0) currentCent = "";
-        directoryTheory[cent]                               = (TDirectory*)fileTheory->Get(Form("%sPbPb_5.02TeV",currentCent.Data()));
-        if (directoryTheory[cent]){
-            if (centArray[cent].CompareTo("0-100%") == 0){
-                histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_MCGen");
-                histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_MCGen");
-                histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet_MCGen");
-                histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet_MCGen");
-                histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_MCGen");
-                histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_MCGen");
-                histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC_MCGen");
-                histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC_MCGen");
-                histoHIJINGPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecHIJING_MCGen");
-                histoHIJINGEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecHIJING_MCGen");
-                histoHIJINGEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0HIJING_MCGen");
-                histoHIJINGPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChHIJING_MCGen");
-                histoHIJINGEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChHIJING");
-            } else {
-                histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_Reb");
-                histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_Reb");
-                histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet");
-                histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet");
-                histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_Reb");
-                histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_Reb");
-                histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC");
-                histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC");
+        TString currentCent                             =  centArrayOutput[cent].Data();
+        for (Int_t theo = 0; theo < 3; theo++){
+            graphTheoryPi0[theo][cent]                          = (TGraph*)fileTheory->Get(Form("Pi0_PbPb_5.02TeV/Spectra_%s_%s", nameTheoryRead[theo].Data(), currentCent.Data()));
+            graphTheoryEta[theo][cent]                          = (TGraph*)fileTheory->Get(Form("Eta_PbPb_5.02TeV/Spectra_%s_%s", nameTheoryRead[theo].Data(), currentCent.Data()));
+            graphTheoryEtaToPi0[theo][cent]                     = (TGraph*)fileTheory->Get(Form("Eta_PbPb_5.02TeV/EtaToPi0_%s_%s", nameTheoryRead[theo].Data(), currentCent.Data()));
+            if (graphTheoryPi0[theo][cent] || graphTheoryEta[theo][cent] || graphTheoryEtaToPi0[theo][cent]){
+                cout << "Found input for theory " << nameTheoryRead[theo].Data() << " for centrality " << centArray[cent].Data() << endl;
+                if (graphTheoryPi0[theo][cent]) cout << "pi0 available \t" ;
+                if (graphTheoryEta[theo][cent]) cout << "eta available \t" ;
+                if (graphTheoryEtaToPi0[theo][cent]) cout << "eta/pi0 available \t" ;
+                cout << endl;
             }
-            histoDPMJetEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChDPMJet");
-            histoEPOSLHCEtaToKCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChEPOSLHC");
+            graphTheoryRAAPi0[theo][cent]                       = (TGraphErrors*)fileTheory->Get(Form("Pi0_PbPb_5.02TeV/RAA_%s_%s", nameTheoryRAARead[theo].Data(), currentCent.Data()));
+            graphTheoryRAAEta[theo][cent]                       = (TGraphErrors*)fileTheory->Get(Form("Eta_PbPb_5.02TeV/RAA_%s_%s", nameTheoryRAARead[theo].Data(), currentCent.Data()));
+            if (graphTheoryRAAPi0[theo][cent] || graphTheoryRAAEta[theo][cent]){
+                cout << "Found input for RAA theory " << nameTheoryRAARead[theo].Data() << " for centrality " << centArray[cent].Data() << endl;
+                if (graphTheoryRAAPi0[theo][cent]) cout << "pi0 available \t" ;
+                if (graphTheoryRAAEta[theo][cent]) cout << "eta available \t" ;
+                cout << endl;
+            }
         }
+
+//         if (centArray[cent].CompareTo("0-100%") == 0){
+//             histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_MCGen");
+//             histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_MCGen");
+//             histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet_MCGen");
+//             histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet_MCGen");
+//             histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_MCGen");
+//             histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_MCGen");
+//             histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC_MCGen");
+//             histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC_MCGen");
+//             histoHIJINGPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecHIJING_MCGen");
+//             histoHIJINGEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecHIJING_MCGen");
+//             histoHIJINGEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0HIJING_MCGen");
+//             histoHIJINGPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChHIJING_MCGen");
+//             histoHIJINGEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChHIJING");
+//         } else {
+//             histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_Reb");
+//             histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_Reb");
+//             histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet");
+//             histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet");
+//             histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_Reb");
+//             histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_Reb");
+//             histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC");
+//             histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC");
+//         }
+//         histoDPMJetEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChDPMJet");
+//         histoEPOSLHCEtaToKCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChEPOSLHC");
     }
+
     // *******************************************************************************************************
     // ************************** Loading interpolated spectra ***********************************************
     // *******************************************************************************************************

@@ -30,6 +30,7 @@
     TH1D*               DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy);
     TH1D*               CorrectHistoToBinCenter (TH1D*);
     TGraphErrors* 	    CalculateGraphRatioToGraph(TGraphErrors*, TGraphErrors*);
+    TGraph*             CalculateGraphRatioToGraph(TGraph*, TGraph*);
     TGraphAsymmErrors*  CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB);
     TGraphErrors*       CalculateGraphErrRatioToFit (TGraphErrors* , TF1* );
     TGraphAsymmErrors*  CalculateGraphErrRatioToFit (TGraphAsymmErrors* , TF1* );
@@ -623,6 +624,32 @@
             }
         }
         TGraphAsymmErrors* returnGraph      = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+        return returnGraph;
+    }
+
+    //**********************************************************************************************************
+    // Calculates the ratio of two asymmerror graphs
+    //**********************************************************************************************************
+    TGraph* CalculateGraphRatioToGraph(TGraph* graphA, TGraph* graphB){
+
+        TGraph* graphACopy              = (TGraph*)graphA->Clone("GraphCopy");
+        Double_t* xValue                = graphACopy->GetX();
+        Double_t* yValue                = graphACopy->GetY();
+
+        Int_t nPoints                   = graphACopy->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+            if (TMath::Abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
+                if (graphB->GetY()[i] != 0){
+                    yValue[i]                   = yValue[i]/graphB->GetY()[i];
+                } else {
+                    yValue[i]                   = 0;
+                }
+            } else {
+                cout << "ERROR: graphs don't have same binning in bin " << i << " with x1 = " << xValue[i] << " and x2 = " << graphB->GetX()[i] << endl;
+                return NULL;
+            }
+        }
+        TGraph* returnGraph      = new TGraph(nPoints,xValue,yValue);
         return returnGraph;
     }
 
