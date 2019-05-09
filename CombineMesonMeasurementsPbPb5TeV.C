@@ -56,16 +56,17 @@ extern TSystem*    gSystem;
 extern TMinuit*    gMinuit;
 
 //____________________________________________________________________________________________________________________________________________
-void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
-                                        TString fileNamePCM         = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/1_data_PCMResultsFullCorrection_PbPb_20190406.root",
-                                        TString fileNameEMCAL       = "/home/mike/1_PbPb_EMC/0_analysis/190311_EDC_new/pdf/PbPb_5.02TeV/2019_03_11/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
-                                        TString fileNamePHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190228_PHOS_PbPb_5TeV.root",
-                                        TString fileNamePCMEMCAL    = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMEDC_new/pdf/PbPb_5.02TeV/2019_03_13/data_PCM-EMCALResultsFullCorrection_PbPb.root",
-                                        TString fileNamePCMPHOS        = "/home/mike/1_PbPb_EMC/0_analysis/190318_PCMPHOS_new/pdf/PbPb_5.02TeV/2019_04_06/data_PCM-PHOSResultsFullCorrection_PbPb.root",
-                                        TString suffix              = "pdf",
-                                        TString fileInputCorrFactors= ""
+void CombineMesonMeasurementsPbPb5TeV(  TString centralityString        = "20-40%",
+                                        TString fileNamePCM             = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/data_PCMResultsFullCorrection_PbPb_EtaOldBinning.root",
+                                        TString fileNameEMCAL           = "/home/mike/1_PbPb_EMC/0_analysis/190311_EDC_new/pdf/PbPb_5.02TeV/2019_04_18/data_EMCAL-EMCALResultsFullCorrection_PbPb.root",
+                                        TString fileNamePHOS            = "/home/mike/1_PbPb_EMC/0_analysis/190227_PbPb_firstcombination/20190228_PHOS_PbPb_5TeV.root",
+                                        TString fileNamePCMEMCAL        = "/home/mike/1_PbPb_EMC/0_analysis/190311_PCMEDC_new/pdf/PbPb_5.02TeV/2019_04_25/data_PCM-EMCALResultsFullCorrection_PbPb.root",
+                                        TString fileNamePCMPHOS         = "/home/mike/1_PbPb_EMC/0_analysis/190318_PCMPHOS_new/pdf/PbPb_5.02TeV/2019_04_25/data_PCM-PHOSResultsFullCorrection_PbPb.root",
+                                        TString suffix                  = "pdf",
+                                        TString fileInputCorrFactors    = "",
+                                        Bool_t  enableEta               = kTRUE
                                     ){
-// /home/mike/1_PbPb_EMC/0_analysis/190311_PCMPHOS_Systematics/pdf/PbPb_5.02TeV/2019_03_12/data_PCM-PHOSResultsFullCorrection_PbPb.root
+
     TString date = ReturnDateString();
     cout << "date: " << date << endl;
     Bool_t doOutput                                 = kTRUE;
@@ -96,7 +97,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
 
     TString dateForOutput                       = ReturnDateStringForOutput();
     cout << "date for output: " << dateForOutput << endl;
-    
+
     TString CentNameShort = "";
     if(centralityString.CompareTo("0-10%") == 0 ) CentNameShort  = "0_10";
     if(centralityString.CompareTo("10-20%") == 0 ) CentNameShort = "10_20";
@@ -119,7 +120,9 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
     
     TFile *inputpp        = new TFile("/home/mike/2_pp_EMC/0_analysis/190202_pp_combination/CombineMesonMeasurements5TeV_V2_april15/CombinedResultsPaperPP5TeV_2019_04_15.root");
     TDirectoryFile* inputppDir = (TDirectoryFile*)inputpp->Get("Pi05TeV");
+    TDirectoryFile* inputppDirEta = (TDirectoryFile*)inputpp->Get("Eta5TeV");
     TF1* ppFit = (TF1*)inputppDir->Get("TsallisFitPi0");
+    TF1* ppFitEta = (TF1*)inputppDirEta->Get("TsallisFitEta");
 
     Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
     Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
@@ -190,6 +193,20 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
       }
     }
     
+    TDirectory* directoryEta[5]                    =  {NULL,NULL,NULL,NULL,NULL};
+    for(Int_t i=0;i<totalNSets;i++){
+      if(inputFile[i] && i!=2){
+        if(!inputFile[i]->IsZombie()){
+          cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
+          directoryEta[i]                           = (TDirectory*)inputFile[i]->Get(Form("Eta%sPbPb_5.02TeV_V0M",centralityString.Data()));
+        }
+      }
+      if(inputFile[2] && i==2){
+        cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
+        directoryEta[i]                           = (TDirectory*)inputFile[i]->Get(Form("Eta5TeV_%s_V0M",CentNameShort.Data()));
+      }
+    }
+
   cout << __LINE__<<endl;
   TH1D* histoPi0Mass[5]                                 = {NULL,NULL,NULL,NULL,NULL};
   TH1D* histoPi0FWHMMeV[5]                              = {NULL,NULL,NULL,NULL,NULL};
@@ -201,11 +218,20 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
   TH1D* histoPi0InvYield[5]                             = {NULL,NULL,NULL,NULL,NULL};
   TGraphAsymmErrors* graphPi0InvYieldStat[5]            = {NULL,NULL,NULL,NULL,NULL};
   TGraphAsymmErrors* graphPi0InvYieldSys[5]             = {NULL,NULL,NULL,NULL,NULL};
-  
   TGraphAsymmErrors* graphCombPi0Weights[5]             = {NULL,NULL,NULL,NULL,NULL};
-  
+
+  TH1D* histoEtaInvYield[5]                             = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaInvYieldStat[5]            = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaInvYieldSys[5]             = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphCombEtaWeights[5]             = {NULL,NULL,NULL,NULL,NULL};
+
+  TH1D* histoEtaToPi0[5]                             = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaToPi0Stat[5]            = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaToPi0Sys[5]             = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphCombEtaToPi0Weights[5]     = {NULL,NULL,NULL,NULL,NULL};
+
   Double_t rapidityMeas[5]                       = {1.6, 1.6, 1., 1.6, 1.6};
-  
+
 // *******************************************************************************************************
 // ************************** read input files ***********************************************************
 // *******************************************************************************************************
@@ -238,6 +264,16 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
       graphPi0InvYieldStat[i]                  = new TGraphAsymmErrors(histoPi0InvYield[i]);
       graphPi0InvYieldSys[i]                   = (TGraphAsymmErrors*)directoryPi0[i]->Get("Pi0SystError");
       
+      if(enableEta){
+        histoEtaInvYield[i]                      = (TH1D*)directoryEta[i]->Get("CorrectedYieldEta");
+        graphEtaInvYieldStat[i]                  = new TGraphAsymmErrors(histoEtaInvYield[i]);
+        graphEtaInvYieldSys[i]                   = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaSystError");
+
+        histoEtaToPi0[i]                      = (TH1D*)directoryEta[i]->Get("EtaToPi0StatError");
+        graphEtaToPi0Stat[i]                  = new TGraphAsymmErrors(histoEtaToPi0[i]);
+        graphEtaToPi0Sys[i]                   = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0SystError");
+      }
+
       cout << nameMeasGlobal[i].Data() << " pi0 stat:" << graphPi0InvYieldStat[i] << endl;
       if(doOutput) graphPi0InvYieldStat[i]->Print();
       cout << nameMeasGlobal[i].Data() << " pi0 sys:" << graphPi0InvYieldSys[i] << endl;
@@ -258,6 +294,20 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
         histoPi0InvYield[2]                      = (TH1D*)directoryPi0[2]->Get("CorrectedYieldPi0");
         graphPi0InvYieldStat[2]                  = new TGraphAsymmErrors(histoPi0InvYield[2]);
         graphPi0InvYieldSys[2]                   = (TGraphAsymmErrors*)directoryPi0[i]->Get("CorrectedYieldPi0Sys");
+
+        if(enableEta){
+          histoEtaInvYield[i]                      = (TH1D*)directoryEta[i]->Get("CorrectedYieldEta");
+          graphEtaInvYieldStat[i]                  = new TGraphAsymmErrors(histoEtaInvYield[i]);
+          graphEtaInvYieldSys[i]                   = (TGraphAsymmErrors*)directoryEta[i]->Get("CorrectedYieldEtaSys");
+
+          histoEtaToPi0[i]                      = (TH1D*)directoryEta[i]->Get("EtaToPi0StatError");
+          graphEtaToPi0Stat[i]                  = new TGraphAsymmErrors(histoEtaToPi0[i]);
+          graphEtaToPi0Sys[i]                   = (TGraphAsymmErrors*)directoryEta[i]->Get("graphEtaToPi0SystError");
+        }
+        cout << nameMeasGlobal[i].Data() << " pi0 stat:" << graphPi0InvYieldStat[i] << endl;
+        if(doOutput) graphPi0InvYieldStat[i]->Print();
+        cout << nameMeasGlobal[i].Data() << " pi0 sys:" << graphPi0InvYieldSys[i] << endl;
+        if(doOutput) graphPi0InvYieldSys[i]->Print();
       }
     }
   }
@@ -269,28 +319,62 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
   Double_t minYieldPi0                            = 10e-10;
   Double_t maxYieldPi0                            = 10e2;
   
+  Double_t minPtEta                               = 0.4;
+  Double_t maxPtEta                               = 30.0; //75
+  Double_t delaPtEta                              = maxPtPi0 - minPtPi0;
+  Double_t prodPtEta                              = maxPtPi0 * minPtPi0;
+  Double_t minYieldEta                            = 10e-10;
+  Double_t maxYieldEta                            = 10e2;
+
   Double_t pTPi0PbPb5TeV[35]                =  {  0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                           2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                           4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 9.0, 10., 12., 14.,
                                                           16., 20., 25., 30., 35.};
+
+  Double_t pTEtaPbPb5TeV[14]              = { 0.4, 0.8, 1.4, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0, 30.0};
+
   const Int_t nBinsPi0 = 34;
+  const Int_t nBinsEta = 13;
   //                      {"PCM","EMCal","PHOS" ,"PCM-EMCal","PCM-PHOS"};
+  //offsets Pi0
   Double_t startpT[5]   = {0.4  ,1.4    ,0.4    ,1.0        ,0.8};
   Double_t endpT[5]     = {12.  ,20.    ,30.    ,20.        ,12.};
   if(centralityString.CompareTo("0-10%") == 0 )  {startpT[1] = 6.0; startpT[3] = 2.2; endpT[2] = 35.;}
   if(centralityString.CompareTo("10-20%") == 0 ) {startpT[1] = 4.0; startpT[3] = 2.2; endpT[2] = 35.;}
   if(centralityString.CompareTo("40-60%") == 0 ) {endpT[2] = 20.;}
   if(centralityString.CompareTo("60-80%") == 0 ) {endpT[2] = 20.;}
-  
+
   Int_t      offSetMethod[5] = {1,6,1,4,3};
   if(centralityString.CompareTo("0-10%") == 0 )  {offSetMethod[1] = 14; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("10-20%") == 0 ) {offSetMethod[1] = 9; offSetMethod[3] = 10;}
   if(centralityString.CompareTo("40-60%") == 0 ) {}
   if(centralityString.CompareTo("60-80%") == 0 ) {}
-                                                          
+
+  //offsets Eta
+  Double_t startpTEta[5]   = {1.4  ,2.0    ,2.0    ,1.4        ,1.4};
+  Double_t endpTEta[5]     = {10.  ,20.    ,20.    ,16.        ,8.};
+  if(centralityString.CompareTo("0-10%") == 0 )  { startpTEta[0] = 0.8; startpTEta[1] = 4.0; startpTEta[2] = 3.0; startpTEta[3] = 4.0; endpTEta[3] = 10.0;  endpTEta[4] = 6.0;}
+  if(centralityString.CompareTo("10-20%") == 0 ) { startpTEta[1] = 3.0; startpTEta[2] = 3.0; startpTEta[3] = 2.0; endpTEta[3] = 10.0;}
+  if(centralityString.CompareTo("40-60%") == 0 ) { startpTEta[0] = 0.8; endpTEta[2] = 16.0;  }
+  if(centralityString.CompareTo("60-80%") == 0 ) { startpTEta[0] = 0.8; endpTEta[0] = 8.0; endpTEta[2] = 12.0;  endpTEta[4] = 6.0;}
+  Int_t    offSetMethodEta[5] = {1,3,3,2,2};
+  Int_t    offSetStatPHOS = 3;
+  if(centralityString.CompareTo("0-10%") == 0 || centralityString.CompareTo("10-20%") == 0)  { offSetStatPHOS = 4; offSetMethodEta[2] = 4;}
+  if(centralityString.CompareTo("0-10%") == 0 )  {offSetMethodEta[1] = 5; offSetMethodEta[3] = 5;}
+  if(centralityString.CompareTo("10-20%") == 0 ) {offSetMethodEta[1] = 4; offSetMethodEta[3] = 3;}
+  if(centralityString.CompareTo("40-60%") == 0 ) {}
+  if(centralityString.CompareTo("60-80%") == 0 ) {}
+
   // **********************************************************************************************************************
   // ******************************************* Calculate simple combination      ****************************************
   // **********************************************************************************************************************
+  cout << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*****************  Pi0  *******************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << endl;
 
   TGraphAsymmErrors* graphCombPi0InvYieldStat  = NULL;
   TGraphAsymmErrors* graphCombPi0InvYieldSys   = NULL;
@@ -334,15 +418,6 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
         y_E_stat_Meas[j] = graphPi0InvYieldStat[j]->GetEYlow();
         y_E_syst_Meas[j] = graphPi0InvYieldSys[j] ->GetEYlow();
       }
-//       if(havePHOS && j==2 ){
-//         cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
-//         n_Meas[j] = graphPi0InvYieldStat[j]->GetN();
-//         x_Meas[j] = graphPi0InvYieldStat[j]->GetX();
-//         x_Meas_syst[j] = graphPi0InvYieldSys[j]->GetX();
-//         y_Meas[j] = graphPi0InvYieldStat[j]->GetY();
-//         y_E_stat_Meas[j] = graphPi0InvYieldStat[j]->GetEYlow();
-//         y_E_syst_Meas[j] = graphPi0InvYieldSys[j] ->GetEYhigh();
-//       }
   }
   
   cout << "*******************************************" << endl;
@@ -361,6 +436,12 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
 //     }
   }
 
+  cout << "*******************************************" << endl;
+  cout << "PHOS syst" << endl;
+  cout << "*******************************************" << endl;
+  for(Int_t i=0; i<n_Meas[2]; i++){
+    cout << y_E_syst_Meas[2][i]/y_Meas[2][i] << endl;
+  }
   cout << "*******************************************" << endl;
   cout << "starting to calculate a simple combination of measurements" << endl;
   cout << "*******************************************" << endl;
@@ -522,6 +603,376 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
   graphCombPi0RAAStat = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_RAA,0,0,y_RAA_error_stat,y_RAA_error_stat);
   graphCombPi0RAASys  = new TGraphAsymmErrors(nBinsPi0,pTPi0BinCenters,y_RAA,pTPi0BinWidths,pTPi0BinWidths,y_RAA_error_syst,y_RAA_error_syst);
   
+  // **********************************************************************************************************************
+  // ******************************************* Calculate simple combination      ****************************************
+  // **********************************************************************************************************************
+  cout << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*****************  Eta  *******************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << endl;
+
+  TGraphAsymmErrors* graphCombEtaInvYieldStat  = NULL;
+  TGraphAsymmErrors* graphCombEtaInvYieldSys   = NULL;
+  TGraphAsymmErrors* graphCombEtaInvYieldStat_Norm  = NULL;
+  TGraphAsymmErrors* graphCombEtaInvYieldSys_Norm   = NULL;
+  TGraphAsymmErrors* graphCombEtaRAAStat  = NULL;
+  TGraphAsymmErrors* graphCombEtaRAASys   = NULL;
+
+  Double_t  pTEtaBinCenters[nBinsEta];
+  Double_t  pTEtaBinWidths[nBinsEta];
+  Double_t  y_CombEta[nBinsEta];
+  Double_t  y_E_stat_CombEta[nBinsEta];
+  Double_t  y_E_syst_CombEta[nBinsEta];
+
+  Double_t  y_Comb_NormEta[nBinsEta];
+  Double_t  y_E_stat_Comb_NormEta[nBinsEta];
+  Double_t  y_E_syst_Comb_NormEta[nBinsEta];
+  Double_t  y_Comb_WeightsEta[5][nBinsEta];
+
+  for (Int_t j = 0; j < totalNSets; j++){
+      if(directoryEta[j] && graphEtaInvYieldStat[j]){
+        cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
+        n_Meas[j] = graphEtaInvYieldStat[j]->GetN();
+        x_Meas[j] = graphEtaInvYieldStat[j]->GetX();
+        x_Meas_syst[j] = graphEtaInvYieldSys[j]->GetX();
+        y_Meas[j] = graphEtaInvYieldStat[j]->GetY();
+        y_E_stat_Meas[j] = graphEtaInvYieldStat[j]->GetEYlow();
+        y_E_syst_Meas[j] = graphEtaInvYieldSys[j] ->GetEYlow();
+      }
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "printing the arrays" << endl;
+  cout << "*******************************************" << endl;
+  for (Int_t j = 0; j < totalNSets; j++){
+    if(directoryEta[j] && graphEtaInvYieldStat[j]){
+      cout << nameMeasGlobal[j].Data() << "\t" << n_Meas[j] << endl;
+      cout << "first x value: " << x_Meas[j][0] << endl;
+      cout << "first x value with systematics: " << x_Meas_syst[j][0] << endl;
+    }
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "starting to calculate a simple combination of measurements" << endl;
+  cout << "*******************************************" << endl;
+  for(Int_t i=0; i<nBinsEta; i++){
+    pTEtaBinCenters[i] = ( pTEtaPbPb5TeV[i] + pTEtaPbPb5TeV[i+1] ) / 2. ;
+    pTEtaBinWidths[i] = ( pTEtaPbPb5TeV[i+1] - pTEtaPbPb5TeV[i] ) / 2. ;
+    cout << endl;
+    cout << "pT bin : " << pTEtaPbPb5TeV[i] << "-" << pTEtaPbPb5TeV[i+1] << "\t center :" << pTEtaBinCenters[i] << endl;
+    temp_Ny = 0;
+    for (Int_t j = 0; j < totalNSets; j++){
+      temp_y[j] = 0;
+      temp_y_E_stat[j] = 0;
+      temp_y_E_syst[j] = 0;
+      if(directoryEta[j] && graphEtaInvYieldStat[j] && j!=2 && (pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        temp_y[j] = y_Meas[j][i];
+        temp_y_E_stat[j] = y_E_stat_Meas[j][i];
+        temp_y_E_syst[j] = y_E_syst_Meas[j][i-offSetMethodEta[j]];
+        if(j==0) temp_y_E_syst[j] = temp_y[j] * 0.2;
+        cout << temp_y[j] << endl;
+        temp_Ny++;
+      }
+      if(havePHOS && j==2 && (pTEtaBinCenters[i]>startpTEta[2] && pTEtaBinCenters[i]<endpTEta[2]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        temp_y[j] = y_Meas[j][i-offSetStatPHOS];
+        temp_y_E_stat[j] = y_E_stat_Meas[j][i-offSetStatPHOS];
+        temp_y_E_syst[j] = y_E_syst_Meas[j][i-offSetMethodEta[j]];
+        cout << temp_y[j] << endl;
+        temp_Ny++;
+      }
+    }
+    cout << "This pt bin has " << temp_Ny << " points to average " << endl;
+    temp_y_comb      = 0;
+    temp_y_comb_E_tot = 0;
+    for (Int_t j = 0; j < totalNSets; j++){
+      y_Comb_WeightsEta[j][i] = 0;
+      if(temp_y_E_stat[j]>0 && temp_y_E_syst[j]>0){
+        temp_y_comb += ( temp_y[j] / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+        temp_y_comb_E_tot += ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+        y_Comb_WeightsEta[j][i] = ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+      }
+    }
+    if(temp_y_comb_E_tot>0){
+      y_CombEta[i]         = temp_y_comb / temp_y_comb_E_tot ;
+      y_Comb_NormEta[i]    = 1 ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        if(pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]){
+          y_Comb_WeightsEta[j][i] /= temp_y_comb_E_tot;
+        } else {
+          y_Comb_WeightsEta[j][i] = 0.;
+        }
+      }
+    } else {
+      y_CombEta[i]         = 1e-40;
+      y_Comb_NormEta[i]    = -10. ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        y_Comb_WeightsEta[j][i] = 0. ;
+      }
+    }
+    //go fully correlated -> if they are uncorrelated, take RMS
+//     temp_Ny = 1.;
+    cout << "y_CombEta = \t " << y_CombEta[i] << endl;
+    EStat0 = 0; EStat1 = 0; EStat2 = 0; EStat3 = 0; EStat4 = 0;
+    if(temp_y_E_stat[0]>0) EStat0 = pow(1./temp_y_E_stat[0],2);
+    if(temp_y_E_stat[1]>0) EStat1 = pow(1./temp_y_E_stat[1],2);
+    if(temp_y_E_stat[2]>0) EStat2 = pow(1./temp_y_E_stat[2],2);
+    if(temp_y_E_stat[3]>0) EStat3 = pow(1./temp_y_E_stat[3],2);
+    if(temp_y_E_stat[4]>0) EStat4 = pow(1./temp_y_E_stat[4],2);
+    y_E_stat_CombEta[i]  = 1./sqrt(EStat0+EStat1+EStat2+EStat3+EStat4);
+    y_E_syst_CombEta[i]  = sqrt(((pow(y_Comb_WeightsEta[0][i]*temp_y_E_syst[0],2)+pow(y_Comb_WeightsEta[1][i]*temp_y_E_syst[1],2)+pow(y_Comb_WeightsEta[2][i]*temp_y_E_syst[2],2)+pow(y_Comb_WeightsEta[3][i]*temp_y_E_syst[3],2)+pow(y_Comb_WeightsEta[4][i]*temp_y_E_syst[4],2))/temp_Ny)/(pow(y_Comb_WeightsEta[0][i],2)+pow(y_Comb_WeightsEta[1][i],2)+pow(y_Comb_WeightsEta[2][i],2)+pow(y_Comb_WeightsEta[3][i],2)+pow(y_Comb_WeightsEta[4][i],2)));
+    if(y_CombEta[i] == 1e-40){
+      y_E_stat_CombEta[i]  = 0;
+      y_E_syst_CombEta[i]  = 0;
+    }
+    y_E_stat_Comb_NormEta[i]  = y_E_stat_CombEta[i] / y_CombEta[i];
+    y_E_syst_Comb_NormEta[i]  = y_E_syst_CombEta[i] / y_CombEta[i];
+    cout << y_E_stat_CombEta[i]  << "\t" << pow(temp_y_E_stat[0],2) << "\t" << pow(temp_y_E_stat[1],2) << "\t" << pow(temp_y_E_stat[2],2) << "\t" << pow(temp_y_E_stat[3],2) << "\t" << pow(temp_y_E_stat[4],2) << endl;
+    cout << y_E_syst_CombEta[i]  << "\t" << pow(temp_y_E_syst[0],2) << "\t" << pow(temp_y_E_syst[1],2) << "\t" << pow(temp_y_E_syst[2],2) << "\t" << pow(temp_y_E_syst[3],2) << "\t" << pow(temp_y_E_syst[4],2) << endl;
+    for (Int_t j = 0; j < totalNSets; j++){
+      if( y_Comb_WeightsEta[j][i] == 0 ) y_Comb_WeightsEta[j][i] = -10. ;
+    }
+  }
+
+  graphCombEtaInvYieldStat = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_CombEta,0,0,y_E_stat_CombEta,y_E_stat_CombEta);
+  graphCombEtaInvYieldSys =  new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_CombEta,pTEtaBinWidths,pTEtaBinWidths,y_E_syst_CombEta,y_E_syst_CombEta);
+
+  graphCombEtaInvYieldStat_Norm = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_NormEta,0,0,y_E_stat_Comb_NormEta,y_E_stat_Comb_NormEta);
+  graphCombEtaInvYieldSys_Norm =  new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_NormEta,pTEtaBinWidths,pTEtaBinWidths,y_E_syst_Comb_NormEta,y_E_syst_Comb_NormEta);
+
+  for (Int_t j = 0; j < totalNSets; j++){
+    graphCombEtaWeights[j] = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_WeightsEta[j],0,0,0,0);
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "going to calculate the ratio of indiv measurements to the simple combination..." << endl;
+  cout << "*******************************************" << endl;
+  Double_t  y_RatioToCombEta[5][nBinsEta];
+  Double_t  y_RatioToCombTotErrorEta[5][nBinsEta];
+  for(Int_t i=0; i<nBinsEta; i++){
+    for (Int_t j = 0; j < totalNSets; j++){
+      y_RatioToCombEta[j][i] = -100;
+    }
+  }
+  for(Int_t i=0; i<nBinsEta; i++){
+    cout << endl;
+    cout << "pT bin : " << pTEtaPbPb5TeV[i] << "-" << pTEtaPbPb5TeV[i+1] << "\t center :" << pTEtaBinCenters[i] << endl;
+    for (Int_t j = 0; j < totalNSets; j++){
+      if(directoryEta[j] && graphEtaInvYieldStat[j] && j!=2 && (pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        y_RatioToCombEta[j][i] = y_Meas[j][i]/y_CombEta[i];
+        y_RatioToCombTotErrorEta[j][i] = sqrt(pow(y_E_stat_Meas[j][i],2)+pow(y_E_syst_Meas[j][i-offSetMethodEta[j]],2)) / y_CombEta[i];
+        cout << y_RatioToCombEta[j][i] << endl;
+      }
+      if(havePHOS && j==2 && (pTEtaBinCenters[i]>startpTEta[2] && pTEtaBinCenters[i]<endpTEta[2]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        y_RatioToCombEta[j][i] = y_Meas[j][i-offSetStatPHOS]/y_CombEta[i];
+        y_RatioToCombTotErrorEta[j][i] = sqrt(pow(y_E_stat_Meas[j][i-offSetStatPHOS],2)+pow(y_E_syst_Meas[j][i-offSetMethodEta[j]],2)) / y_CombEta[i];
+        cout << y_RatioToCombEta[j][i] << endl;
+      }
+    }
+  }
+  TGraphAsymmErrors* graphEtaInvYieldStatToComb[5]      = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaInvYieldSysToComb[5]       = {NULL,NULL,NULL,NULL,NULL};
+  for (Int_t j = 0; j < totalNSets; j++){
+    if(directoryEta[j] || ( j==2 && havePHOS ) ){
+      graphEtaInvYieldStatToComb[j] = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_RatioToCombEta[j],0,0,y_RatioToCombTotErrorEta[j],y_RatioToCombTotErrorEta[j]);
+    }
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "going to calculate the Simple RAA..." << endl;
+  cout << "*******************************************" << endl;
+
+  Double_t y_RAAEta[nBinsEta];
+  Double_t y_RAA_error_statEta[nBinsEta];
+  Double_t y_RAA_error_systEta[nBinsEta];
+  for(Int_t i=0; i<nBinsEta; i++){
+      y_RAAEta[i] = -100;
+      y_RAA_error_statEta[i] = 0;
+      y_RAA_error_systEta[i] = 0;
+  }
+  for(Int_t i=0; i<nBinsEta; i++){
+    cout << endl;
+    cout << "pT bin : " << pTEtaPbPb5TeV[i] << "-" << pTEtaPbPb5TeV[i+1] << "\t center :" << pTEtaBinCenters[i] << endl;
+    y_RAAEta[i] = (y_CombEta[i] * recalcBarn * 1e-3 ) / ( TAA * ppFitEta->Eval(pTEtaBinCenters[i]) );
+    y_RAA_error_statEta[i] = (y_E_stat_CombEta[i] * recalcBarn * 1e-3 ) / ( TAA * ppFitEta->Eval(pTEtaBinCenters[i]) );
+    y_RAA_error_systEta[i] = 1.10 * (y_E_syst_CombEta[i] * recalcBarn * 1e-3 ) / ( TAA * ppFitEta->Eval(pTEtaBinCenters[i]) );
+    cout << y_RAAEta[i] << endl;
+  }
+
+  graphCombEtaRAAStat = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_RAAEta,0,0,y_RAA_error_statEta,y_RAA_error_statEta);
+  graphCombEtaRAASys  = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_RAAEta,pTEtaBinWidths,pTEtaBinWidths,y_RAA_error_systEta,y_RAA_error_systEta);
+
+  // **********************************************************************************************************************
+  // ******************************************* Calculate simple combination      ****************************************
+  // **********************************************************************************************************************
+  cout << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*****************  EtaToPi0  *******************" << endl;
+  cout << "*******************************************" << endl;
+  cout << "*******************************************" << endl;
+  cout << endl;
+
+  TGraphAsymmErrors* graphCombEtaToPi0Stat  = NULL;
+  TGraphAsymmErrors* graphCombEtaToPi0Sys   = NULL;
+  TGraphAsymmErrors* graphCombEtaToPi0Stat_Norm  = NULL;
+  TGraphAsymmErrors* graphCombEtaToPi0Sys_Norm   = NULL;
+
+  for (Int_t j = 0; j < totalNSets; j++){
+      if(directoryEta[j] && graphEtaToPi0Stat[j]){
+        cout << nameMeasGlobal[j].Data() << "\t\t getting values" << endl;
+        n_Meas[j] = graphEtaToPi0Stat[j]->GetN();
+        x_Meas[j] = graphEtaToPi0Stat[j]->GetX();
+        x_Meas_syst[j] = graphEtaToPi0Sys[j]->GetX();
+        y_Meas[j] = graphEtaToPi0Stat[j]->GetY();
+        y_E_stat_Meas[j] = graphEtaToPi0Stat[j]->GetEYlow();
+        y_E_syst_Meas[j] = graphEtaToPi0Sys[j] ->GetEYlow();
+      }
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "printing the arrays" << endl;
+  cout << "*******************************************" << endl;
+  for (Int_t j = 0; j < totalNSets; j++){
+    if(directoryEta[j] && graphEtaToPi0Stat[j]){
+      cout << nameMeasGlobal[j].Data() << "\t" << n_Meas[j] << endl;
+      cout << "first x value: " << x_Meas[j][0] << endl;
+      cout << "first x value with systematics: " << x_Meas_syst[j][0] << endl;
+    }
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "starting to calculate a simple combination of measurements" << endl;
+  cout << "*******************************************" << endl;
+  for(Int_t i=0; i<nBinsEta; i++){
+    pTEtaBinCenters[i] = ( pTEtaPbPb5TeV[i] + pTEtaPbPb5TeV[i+1] ) / 2. ;
+    pTEtaBinWidths[i] = ( pTEtaPbPb5TeV[i+1] - pTEtaPbPb5TeV[i] ) / 2. ;
+    cout << endl;
+    cout << "pT bin : " << pTEtaPbPb5TeV[i] << "-" << pTEtaPbPb5TeV[i+1] << "\t center :" << pTEtaBinCenters[i] << endl;
+    temp_Ny = 0;
+    for (Int_t j = 0; j < totalNSets; j++){
+      temp_y[j] = 0;
+      temp_y_E_stat[j] = 0;
+      temp_y_E_syst[j] = 0;
+      if(directoryEta[j] && graphEtaToPi0Stat[j] && j!=2 && (pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        temp_y[j] = y_Meas[j][i];
+        temp_y_E_stat[j] = y_E_stat_Meas[j][i];
+        temp_y_E_syst[j] = y_E_syst_Meas[j][i-offSetMethodEta[j]];
+        if(j==0) temp_y_E_syst[j] = temp_y[j] * 0.2;
+        cout << temp_y[j] << endl;
+        temp_Ny++;
+      }
+      if(havePHOS && j==2 && (pTEtaBinCenters[i]>startpTEta[2] && pTEtaBinCenters[i]<endpTEta[2]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        temp_y[j] = y_Meas[j][i-offSetStatPHOS];
+        temp_y_E_stat[j] = y_E_stat_Meas[j][i-offSetStatPHOS];
+        temp_y_E_syst[j] = y_E_syst_Meas[j][i-offSetMethodEta[j]];
+        cout << temp_y[j] << endl;
+        temp_Ny++;
+      }
+    }
+    cout << "This pt bin has " << temp_Ny << " points to average " << endl;
+    temp_y_comb      = 0;
+    temp_y_comb_E_tot = 0;
+    for (Int_t j = 0; j < totalNSets; j++){
+      y_Comb_WeightsEta[j][i] = 0;
+      if(temp_y_E_stat[j]>0 && temp_y_E_syst[j]>0){
+        temp_y_comb += ( temp_y[j] / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+        temp_y_comb_E_tot += ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+        y_Comb_WeightsEta[j][i] = ( 1 / (pow(temp_y_E_stat[j],2) + pow(temp_y_E_syst[j],2) ) );
+      }
+    }
+    if(temp_y_comb_E_tot>0){
+      y_CombEta[i]         = temp_y_comb / temp_y_comb_E_tot ;
+      y_Comb_NormEta[i]    = 1 ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        if(pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]){
+          y_Comb_WeightsEta[j][i] /= temp_y_comb_E_tot;
+        } else {
+          y_Comb_WeightsEta[j][i] = 0.;
+        }
+      }
+    } else {
+      y_CombEta[i]         = 1e-40;
+      y_Comb_NormEta[i]    = -10. ;
+      for (Int_t j = 0; j < totalNSets; j++){
+        y_Comb_WeightsEta[j][i] = 0. ;
+      }
+    }
+    //go fully correlated -> if they are uncorrelated, take RMS
+//     temp_Ny = 1.;
+    cout << "y_CombEta = \t " << y_CombEta[i] << endl;
+    EStat0 = 0; EStat1 = 0; EStat2 = 0; EStat3 = 0; EStat4 = 0;
+    if(temp_y_E_stat[0]>0) EStat0 = pow(1./temp_y_E_stat[0],2);
+    if(temp_y_E_stat[1]>0) EStat1 = pow(1./temp_y_E_stat[1],2);
+    if(temp_y_E_stat[2]>0) EStat2 = pow(1./temp_y_E_stat[2],2);
+    if(temp_y_E_stat[3]>0) EStat3 = pow(1./temp_y_E_stat[3],2);
+    if(temp_y_E_stat[4]>0) EStat4 = pow(1./temp_y_E_stat[4],2);
+    y_E_stat_CombEta[i]  = 1./sqrt(EStat0+EStat1+EStat2+EStat3+EStat4);
+    y_E_syst_CombEta[i]  = sqrt(((pow(y_Comb_WeightsEta[0][i]*temp_y_E_syst[0],2)+pow(y_Comb_WeightsEta[1][i]*temp_y_E_syst[1],2)+pow(y_Comb_WeightsEta[2][i]*temp_y_E_syst[2],2)+pow(y_Comb_WeightsEta[3][i]*temp_y_E_syst[3],2)+pow(y_Comb_WeightsEta[4][i]*temp_y_E_syst[4],2))/temp_Ny)/(pow(y_Comb_WeightsEta[0][i],2)+pow(y_Comb_WeightsEta[1][i],2)+pow(y_Comb_WeightsEta[2][i],2)+pow(y_Comb_WeightsEta[3][i],2)+pow(y_Comb_WeightsEta[4][i],2)));
+    if(y_CombEta[i] == 1e-40){
+      y_E_stat_CombEta[i]  = 0;
+      y_E_syst_CombEta[i]  = 0;
+    }
+    y_E_stat_Comb_NormEta[i]  = y_E_stat_CombEta[i] / y_CombEta[i];
+    y_E_syst_Comb_NormEta[i]  = y_E_syst_CombEta[i] / y_CombEta[i];
+    cout << y_E_stat_CombEta[i]  << "\t" << pow(temp_y_E_stat[0],2) << "\t" << pow(temp_y_E_stat[1],2) << "\t" << pow(temp_y_E_stat[2],2) << "\t" << pow(temp_y_E_stat[3],2) << "\t" << pow(temp_y_E_stat[4],2) << endl;
+    cout << y_E_syst_CombEta[i]  << "\t" << pow(temp_y_E_syst[0],2) << "\t" << pow(temp_y_E_syst[1],2) << "\t" << pow(temp_y_E_syst[2],2) << "\t" << pow(temp_y_E_syst[3],2) << "\t" << pow(temp_y_E_syst[4],2) << endl;
+    for (Int_t j = 0; j < totalNSets; j++){
+      if( y_Comb_WeightsEta[j][i] == 0 ) y_Comb_WeightsEta[j][i] = -10. ;
+    }
+  }
+
+  graphCombEtaToPi0Stat = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_CombEta,0,0,y_E_stat_CombEta,y_E_stat_CombEta);
+  graphCombEtaToPi0Sys =  new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_CombEta,pTEtaBinWidths,pTEtaBinWidths,y_E_syst_CombEta,y_E_syst_CombEta);
+
+  graphCombEtaToPi0Stat_Norm = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_NormEta,0,0,y_E_stat_Comb_NormEta,y_E_stat_Comb_NormEta);
+  graphCombEtaToPi0Sys_Norm =  new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_NormEta,pTEtaBinWidths,pTEtaBinWidths,y_E_syst_Comb_NormEta,y_E_syst_Comb_NormEta);
+
+  for (Int_t j = 0; j < totalNSets; j++){
+    graphCombEtaToPi0Weights[j] = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_Comb_WeightsEta[j],0,0,0,0);
+  }
+
+  cout << "*******************************************" << endl;
+  cout << "going to calculate the ratio of indiv measurements to the simple combination..." << endl;
+  cout << "*******************************************" << endl;
+  for(Int_t i=0; i<nBinsEta; i++){
+    for (Int_t j = 0; j < totalNSets; j++){
+      y_RatioToCombEta[j][i] = -100;
+    }
+  }
+  for(Int_t i=0; i<nBinsEta; i++){
+    cout << endl;
+    cout << "pT bin : " << pTEtaPbPb5TeV[i] << "-" << pTEtaPbPb5TeV[i+1] << "\t center :" << pTEtaBinCenters[i] << endl;
+    for (Int_t j = 0; j < totalNSets; j++){
+      if(directoryEta[j] && graphEtaToPi0Stat[j] && j!=2 && (pTEtaBinCenters[i]>startpTEta[j] && pTEtaBinCenters[i]<endpTEta[j]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        y_RatioToCombEta[j][i] = y_Meas[j][i]/y_CombEta[i];
+        y_RatioToCombTotErrorEta[j][i] = sqrt(pow(y_E_stat_Meas[j][i],2)+pow(y_E_syst_Meas[j][i-offSetMethodEta[j]],2)) / y_CombEta[i];
+        cout << y_RatioToCombEta[j][i] << endl;
+      }
+      if(havePHOS && j==2 && (pTEtaBinCenters[i]>startpTEta[2] && pTEtaBinCenters[i]<endpTEta[2]) ){
+        cout << nameMeasGlobal[j].Data() << "\t\t";
+        y_RatioToCombEta[j][i] = y_Meas[j][i-offSetStatPHOS]/y_CombEta[i];
+        y_RatioToCombTotErrorEta[j][i] = sqrt(pow(y_E_stat_Meas[j][i-offSetStatPHOS],2)+pow(y_E_syst_Meas[j][i-offSetMethodEta[j]],2)) / y_CombEta[i];
+        cout << y_RatioToCombEta[j][i] << endl;
+      }
+    }
+  }
+  TGraphAsymmErrors* graphEtaToPi0StatToComb[5]      = {NULL,NULL,NULL,NULL,NULL};
+  TGraphAsymmErrors* graphEtaToPi0SysToComb[5]       = {NULL,NULL,NULL,NULL,NULL};
+  for (Int_t j = 0; j < totalNSets; j++){
+    if(directoryEta[j] || ( j==2 && havePHOS ) ){
+      graphEtaToPi0StatToComb[j] = new TGraphAsymmErrors(nBinsEta,pTEtaBinCenters,y_RatioToCombEta[j],0,0,y_RatioToCombTotErrorEta[j],y_RatioToCombTotErrorEta[j]);
+    }
+  }
 
   // **********************************************************************************************************************
   // ******************************************* Mass and width for pi0            ****************************************
@@ -849,7 +1300,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
 
   TH2F * histo2DSimpleWeights;
   histo2DSimpleWeights                = new TH2F("histo2DSimpleWeights", "histo2DSimpleWeights",1000, minPtPi0, maxPtPi0, 1000, -10, 10 );
-  SetStyleHistoTH2ForGraphs( histo2DSimpleWeights, "#it{p}_{T} (GeV/#it{c})", "Ratio",
+  SetStyleHistoTH2ForGraphs( histo2DSimpleWeights, "#it{p}_{T} (GeV/#it{c})", "Weight",
                           0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
   histo2DSimpleWeights->GetYaxis()->SetLabelOffset(0.001);
   histo2DSimpleWeights->GetYaxis()->SetRangeUser(-1., 1.99);
@@ -903,8 +1354,8 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
   graphCombPi0RAAStat->Draw("p,same,z");
 
   TLegend* legendSimpleRAA         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
-  legendYieldPi0->AddEntry(graphCombPi0RAASys,"comb","fp");
-  legendSimpleRAA->Draw();
+  legendSimpleRAA->AddEntry(graphCombPi0RAASys,"comb","fp");
+//   legendSimpleRAA->Draw();
 
   drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
   drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
@@ -912,6 +1363,351 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
 
   canvasSimpleRAA->Update();
   canvasSimpleRAA->SaveAs(Form("%s/Pi0_SimpleRAA.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** Yields for Eta single measurement                ************************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasYieldEta  = new TCanvas("canvasYieldEta","",200,10,1350,1350*1.15);  // gives the page size
+  DrawGammaCanvasSettings( canvasYieldEta, 0.14, 0.02, 0.02, 0.09);
+  canvasYieldEta->SetLogx();
+  canvasYieldEta->SetLogy();
+
+  TH2F * histo2DYieldEta;
+  histo2DYieldEta          = new TH2F("histo2DYieldEta","histo2DYieldEta",11000,minPtEta,maxPtEta,10000,minYieldEta,maxYieldEta);
+  SetStyleHistoTH2ForGraphs(histo2DYieldEta, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
+  histo2DYieldEta->GetXaxis()->SetMoreLogLabels();
+  histo2DYieldEta->GetXaxis()->SetNoExponent(kTRUE);
+  histo2DYieldEta->Draw("copy");
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphEtaInvYieldStat[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphEtaInvYieldStat[i]->Draw("pEsame");
+      DrawGammaSetMarkerTGraphAsym(graphEtaInvYieldSys[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
+      graphEtaInvYieldSys[i]->Draw("E2same");
+    }
+  }
+
+  TLatex *labelEnergyYieldEta      = new TLatex(0.44,0.92,collisionSystemPbPb5TeV.Data());
+  SetStyleTLatex( labelEnergyYieldEta, 0.035,4);
+  labelEnergyYieldEta->Draw();
+  TLatex *labelDetSysYieldEta      = new TLatex(0.64,0.88,"#eta #rightarrow #gamma#gamma");
+  SetStyleTLatex( labelDetSysYieldEta, 0.035,4);
+  labelDetSysYieldEta->Draw();
+
+  TLegend* legendYieldEta          = new TLegend(0.62,0.62,0.9,0.86);
+  legendYieldEta->SetFillColor(0);
+  legendYieldEta->SetLineColor(0);
+  legendYieldEta->SetTextFont(42);
+  legendYieldEta->SetTextSize(0.035);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphEtaInvYieldSys[i]){
+          legendYieldEta->AddEntry(graphEtaInvYieldSys[i],nameMeasGlobal[i].Data(),"fp");
+      }
+  }
+
+  legendYieldEta->Draw();
+
+  canvasYieldEta->SaveAs(Form("%s/Eta_InvYieldCompAllSystems.%s",outputDir.Data(),suffix.Data()));
+
+  canvasYieldEta->cd();
+  histo2DYieldEta->Draw("copy");
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      graphEtaInvYieldStat[i]->Draw("pEsame");
+      graphEtaInvYieldSys[i]->Draw("E2same");
+    }
+  }
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldSys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombEtaInvYieldSys->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombEtaInvYieldStat->Draw("p,same");
+
+  labelEnergyYieldEta->Draw();
+  labelDetSysYieldEta->Draw();
+
+  legendYieldEta->AddEntry(graphCombEtaInvYieldSys,"comb","fp");
+  legendYieldEta->Draw();
+
+  canvasYieldEta->SaveAs(Form("%s/Eta_InvYieldCompAllSystems_Comb.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** simple ratios to simple combination                        **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleRatioEta       = new TCanvas("canvasSimpleRatioEta", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleRatioEta,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleRatioEta->SetLogx(1);
+
+  TH2F * histo2DSimpleRatioEta;
+  histo2DSimpleRatioEta                = new TH2F("histo2DSimpleRatioEta", "histo2DSimpleRatioEta",1000, minPtEta, maxPtEta, 1000, -10, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleRatioEta, "#it{p}_{T} (GeV/#it{c})", "Ratio",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleRatioEta->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleRatioEta->GetYaxis()->SetRangeUser(-0.99, 2.99);
+  histo2DSimpleRatioEta->GetXaxis()->SetNoExponent();
+  histo2DSimpleRatioEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleRatioEta->DrawCopy();
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphEtaInvYieldStatToComb[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphEtaInvYieldStatToComb[i]->Draw("pEsame");
+    }
+  }
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldSys_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombEtaInvYieldSys_Norm->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldStat_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombEtaInvYieldStat_Norm->Draw("p,same");
+
+  TLegend* legendSimpleRatioEta         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphEtaInvYieldStatToComb[i]){
+          legendSimpleRatioEta->AddEntry(graphEtaInvYieldStatToComb[i],nameMeasGlobal[i].Data(),"p");
+      }
+  }
+  legendSimpleRatioEta->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#eta #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleRatioEta->Update();
+  canvasSimpleRatioEta->SaveAs(Form("%s/Eta_SimpleRatio.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** Plotting weights of combination                            **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleWeightsEta       = new TCanvas("canvasSimpleWeightsEta", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleWeightsEta,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleWeightsEta->SetLogx(1);
+
+  TH2F * histo2DSimpleWeightsEta;
+  histo2DSimpleWeightsEta                = new TH2F("histo2DSimpleWeightsEta", "histo2DSimpleWeightsEta",1000, minPtPi0, maxPtPi0, 1000, -10, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleWeightsEta, "#it{p}_{T} (GeV/#it{c})", "Weight",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleWeightsEta->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleWeightsEta->GetYaxis()->SetRangeUser(-1., 1.99);
+  histo2DSimpleWeightsEta->GetXaxis()->SetNoExponent();
+  histo2DSimpleWeightsEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleWeightsEta->DrawCopy();
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphCombEtaWeights[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphCombEtaWeights[i]->Draw("pEsame");
+    }
+  }
+
+  TLegend* legendSimpleWeightsEta         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphCombEtaWeights[i]){
+          legendSimpleWeightsEta->AddEntry(graphCombEtaWeights[i],nameMeasGlobal[i].Data(),"p");
+      }
+  }
+  legendSimpleWeightsEta->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#eta #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleWeightsEta->Update();
+  canvasSimpleWeightsEta->SaveAs(Form("%s/Eta_SimpleWeights.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** simple RAA                                                 **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleRAAEta       = new TCanvas("canvasSimpleRAAEta", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleRAAEta,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleRAAEta->SetLogx(1);
+
+  TH2F * histo2DSimpleRAAEta;
+  histo2DSimpleRAAEta                = new TH2F("histo2DSimpleRAAEta", "histo2DSimpleRAAEta",1000, minPtEta, maxPtEta, 1000, 0, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleRAAEta, "#it{p}_{T} (GeV/#it{c})", "R_{AA}",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleRAAEta->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleRAAEta->GetYaxis()->SetRangeUser(0.01, 1.19);
+  histo2DSimpleRAAEta->GetXaxis()->SetNoExponent();
+  histo2DSimpleRAAEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleRAAEta->DrawCopy();
+
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaRAASys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombEtaRAASys->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaRAAStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombEtaRAAStat->Draw("p,same,z");
+
+  TLegend* legendSimpleRAAEta         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  legendSimpleRAAEta->AddEntry(graphCombEtaRAASys,"comb","fp");
+//   legendSimpleRAAEta->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#eta #rightarrow #gamma#gamma",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleRAAEta->Update();
+  canvasSimpleRAAEta->SaveAs(Form("%s/Eta_SimpleRAA.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** Yields for EtaToPi0 single measurement           ************************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasEtaToPi0  = new TCanvas("canvasEtaToPi0","",200,10,1350,1350);  // gives the page size
+  DrawGammaCanvasSettings( canvasEtaToPi0, 0.14, 0.02, 0.02, 0.09);
+  canvasEtaToPi0->SetLogx();
+//   canvasEtaToPi0->SetLogy();
+
+  TH2F * histo2DEtaToPi0;
+  histo2DEtaToPi0          = new TH2F("histo2DEtaToPi0","histo2DEtaToPi0",11000,minPtEta,maxPtEta,1000,0.01,1.14);
+  SetStyleHistoTH2ForGraphs(histo2DEtaToPi0, "#it{p}_{T} (GeV/#it{c})","#eta / #pi^{0}",0.035,0.04, 0.035,0.04, 0.9,1.45);
+  histo2DEtaToPi0->GetXaxis()->SetMoreLogLabels();
+  histo2DEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
+  histo2DEtaToPi0->Draw("copy");
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphEtaToPi0Stat[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphEtaToPi0Stat[i]->Draw("pEsame");
+      DrawGammaSetMarkerTGraphAsym(graphEtaToPi0Sys[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
+      graphEtaToPi0Sys[i]->Draw("E2same");
+    }
+  }
+
+  TLatex *labelEnergyEtaToPi0      = new TLatex(0.44,0.92,collisionSystemPbPb5TeV.Data());
+  SetStyleTLatex( labelEnergyEtaToPi0, 0.035,4);
+  labelEnergyEtaToPi0->Draw();
+  TLatex *labelDetSysEtaToPi0      = new TLatex(0.64,0.88,"#eta / #pi^{0}");
+  SetStyleTLatex( labelDetSysEtaToPi0, 0.035,4);
+//   labelDetSysEtaToPi0->Draw();
+
+  TLegend* legendEtaToPi0          = new TLegend(0.22,0.67,0.5,0.91);
+  legendEtaToPi0->SetFillColor(0);
+  legendEtaToPi0->SetLineColor(0);
+  legendEtaToPi0->SetTextFont(42);
+  legendEtaToPi0->SetTextSize(0.035);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphEtaToPi0Sys[i]){
+          legendEtaToPi0->AddEntry(graphEtaToPi0Sys[i],nameMeasGlobal[i].Data(),"fp");
+      }
+  }
+
+  legendEtaToPi0->Draw();
+
+  canvasEtaToPi0->SaveAs(Form("%s/EtaToPi0_CompAllSystems.%s",outputDir.Data(),suffix.Data()));
+
+  canvasEtaToPi0->cd();
+  histo2DEtaToPi0->Draw("copy");
+
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombEtaToPi0Sys->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Stat, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombEtaToPi0Stat->Draw("p,same");
+
+  labelEnergyEtaToPi0->Draw();
+//   labelDetSysEtaToPi0->Draw();
+
+  canvasEtaToPi0->SaveAs(Form("%s/EtaToPi0_OnlyComb.%s",outputDir.Data(),suffix.Data()));
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      graphEtaToPi0Stat[i]->Draw("pEsame");
+      graphEtaToPi0Sys[i]->Draw("E2same");
+    }
+  }
+  graphCombEtaToPi0Sys->Draw("E2same");
+  graphCombEtaToPi0Stat->Draw("p,same");
+
+  legendEtaToPi0->AddEntry(graphCombEtaToPi0Sys,"comb","fp");
+  legendEtaToPi0->Draw();
+
+  canvasEtaToPi0->SaveAs(Form("%s/EtaToPi0_CompAllSystems_Comb.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** simple ratios to simple combination                        **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleRatioEtaToPi0       = new TCanvas("canvasSimpleRatioEtaToPi0", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleRatioEtaToPi0,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleRatioEtaToPi0->SetLogx(1);
+
+  TH2F * histo2DSimpleRatioEtaToPi0;
+  histo2DSimpleRatioEtaToPi0                = new TH2F("histo2DSimpleRatioEtaToPi0", "histo2DSimpleRatioEtaToPi0",1000, minPtEta, maxPtEta, 1000, -10, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleRatioEtaToPi0, "#it{p}_{T} (GeV/#it{c})", "Ratio",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleRatioEtaToPi0->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleRatioEtaToPi0->GetYaxis()->SetRangeUser(-0.99, 2.99);
+  histo2DSimpleRatioEtaToPi0->GetXaxis()->SetNoExponent();
+  histo2DSimpleRatioEtaToPi0->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleRatioEtaToPi0->DrawCopy();
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphEtaToPi0StatToComb[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphEtaToPi0StatToComb[i]->Draw("pEsame");
+    }
+  }
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+  graphCombEtaToPi0Sys_Norm->Draw("E2same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Stat_Norm, markerStyleComb, markerSizeComb, colorComb , colorComb);
+  graphCombEtaToPi0Stat_Norm->Draw("p,same");
+
+  TLegend* legendSimpleRatioEtaToPi0         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphEtaToPi0StatToComb[i]){
+          legendSimpleRatioEtaToPi0->AddEntry(graphEtaToPi0StatToComb[i],nameMeasGlobal[i].Data(),"p");
+      }
+  }
+  legendSimpleRatioEtaToPi0->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#eta / #pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleRatioEtaToPi0->Update();
+  canvasSimpleRatioEtaToPi0->SaveAs(Form("%s/EtaToPi0_SimpleRatio.%s",outputDir.Data(),suffix.Data()));
+
+  // **********************************************************************************************************************
+  // ******************************** Plotting weights of combination                            **************************
+  // **********************************************************************************************************************
+
+  TCanvas* canvasSimpleWeightsEtaToPi0       = new TCanvas("canvasSimpleWeightsEtaToPi0", "", 200, 10, 1200, 1100);  // gives the page size
+  DrawGammaCanvasSettings( canvasSimpleWeightsEtaToPi0,  0.1, 0.01, 0.015, 0.095);
+  canvasSimpleWeightsEtaToPi0->SetLogx(1);
+
+  TH2F * histo2DSimpleWeightsEtaToPi0;
+  histo2DSimpleWeightsEtaToPi0                = new TH2F("histo2DSimpleWeightsEtaToPi0", "histo2DSimpleWeightsEtaToPi0",1000, minPtPi0, maxPtPi0, 1000, -10, 10 );
+  SetStyleHistoTH2ForGraphs( histo2DSimpleWeightsEtaToPi0, "#it{p}_{T} (GeV/#it{c})", "Weight",
+                          0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
+  histo2DSimpleWeightsEtaToPi0->GetYaxis()->SetLabelOffset(0.001);
+  histo2DSimpleWeightsEtaToPi0->GetYaxis()->SetRangeUser(-1., 1.99);
+  histo2DSimpleWeightsEtaToPi0->GetXaxis()->SetNoExponent();
+  histo2DSimpleWeightsEtaToPi0->GetXaxis()->SetMoreLogLabels(kTRUE);
+  histo2DSimpleWeightsEtaToPi0->DrawCopy();
+
+  for (Int_t i = 0; i < totalNSets; i++){
+    if(directoryEta[i]){
+      DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Weights[i], markerStyleDet[i] ,markerSizeDet[i]*0.75, colorDet[i], colorDet[i]);
+      graphCombEtaToPi0Weights[i]->Draw("pEsame");
+    }
+  }
+
+  TLegend* legendSimpleWeightsEtaToPi0         = GetAndSetLegend2(0.15, 0.13, 0.43, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+  for (Int_t i = 0; i < totalNSets; i++){
+      if(graphCombEtaToPi0Weights[i]){
+          legendSimpleWeightsEtaToPi0->AddEntry(graphCombEtaToPi0Weights[i],nameMeasGlobal[i].Data(),"p");
+      }
+  }
+  legendSimpleWeightsEtaToPi0->Draw();
+
+  drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+  drawLatexAdd(collisionSystemPbPb5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+  drawLatexAdd("#eta / #pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+  canvasSimpleWeightsEtaToPi0->Update();
+  canvasSimpleWeightsEtaToPi0->SaveAs(Form("%s/EtaToPi0_SimpleWeights.%s",outputDir.Data(),suffix.Data()));
 
   // **********************************************************************************************************************
   // ******************************** writing the file                                           **************************
@@ -922,6 +1718,12 @@ void CombineMesonMeasurementsPbPb5TeV(  TString centralityString = "20-40%",
   graphCombPi0InvYieldStat->Write(Form("%s_graphCombPi0InvYieldStat",CentNameShort.Data()));
   graphCombPi0RAASys->Write(Form("%s_graphCombPi0RAASys",CentNameShort.Data()));
   graphCombPi0RAAStat->Write(Form("%s_graphCombPi0RAAStat",CentNameShort.Data()));
+  graphCombEtaInvYieldSys->Write(Form("%s_graphCombEtaInvYieldSys",CentNameShort.Data()));
+  graphCombEtaInvYieldStat->Write(Form("%s_graphCombEtaInvYieldStat",CentNameShort.Data()));
+  graphCombEtaRAASys->Write(Form("%s_graphCombEtaRAASys",CentNameShort.Data()));
+  graphCombEtaRAAStat->Write(Form("%s_graphCombEtaRAAStat",CentNameShort.Data()));
+  graphCombEtaToPi0Sys->Write(Form("%s_graphCombEtaToPi0Sys",CentNameShort.Data()));
+  graphCombEtaToPi0Stat->Write(Form("%s_graphCombEtaToPi0Stat",CentNameShort.Data()));
   fileOutput->Close();
 
    
