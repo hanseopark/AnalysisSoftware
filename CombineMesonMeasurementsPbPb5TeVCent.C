@@ -145,8 +145,10 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
     TString nameTheory[3]                       = {"Paquet", "SHM-EQ", "SHM-NEQ"};
     TString nameTheoryRead[3]                   = {"Paquet", "SHM_EQ", "SHM_NEQ"};
-    TString nameTheoryRAA[3]                    = {"Djordjevic", "Djordjevic T_{cont}", "Vitev"};
+    TString nameTheoryRAA[3]                    = {"Djordjevic Bj.", "Djordjevic #it{T}_{const}", "Vitev"};
     TString nameTheoryRAARead[3]                = {"DjordjevicBjorken", "DjordjevicConstTemp", "Vitev"};
+    TString nameGenerator[3]                    = {"DPMJet", "EPOS-LHC", "HIJING"};
+    TString nameGeneratorRead[3]                = {"DPMJet", "EPOSLHC", "HIJING"};
     // **********************************************************************************************
     // ********************** Copy inputs into 1 directory for bookeeping ***************************
     // **********************************************************************************************
@@ -243,31 +245,15 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     Double_t xSection5TeV                       = ReturnCorrectXSection("5TeV", 1);
     Double_t xSection5TeVErr                    = xSection5023GeVINELErr*1e-3;
 
-    Color_t  colorCGC                           = kGreen+2;
-    Color_t  colorDSS                           = kAzure+2;
-    Color_t  colorDSSBand                       = kAzure-9;
-    Color_t  colorDSSnPDF                       = kOrange+4;
-    Color_t  colorDSSnPDFBand                   = kOrange+5;
-    Color_t  colorDSSnPDFEPPS                   = kViolet+3;
-    Color_t  colorDSSnPDFEPPSBand               = kViolet-8;
-    Color_t  colorEPOS3                         = kGreen-2;
-    Color_t  colorMcGill                        = kRed-6;
-    Color_t  colorDPMJet                        = kBlue+2;
-    Color_t  colorHIJING                        = kBlue-7;
-    Style_t  styleLineDPMJet                    = 7;
-    Style_t  styleLineHIJING                    = 8;
-    Style_t  styleLineEPOS3                     = 1;
-    Style_t  styleMarkerDSS                     = 24;
-    Style_t  styleMarkerNLOMuOne                = 27;
-    Style_t  styleMarkerNLOMuTwo                = 30;
-    Style_t  styleLineCGC                       = 2;
-    Style_t  styleLineDSS                       = 5;
-    Style_t  styleLineDSSnPDF                   = 8;
-    Style_t  styleLineDSSnPDFEPPS               = 6;
-    Style_t  styleLineNLOMuOne                  = 7;
-    Style_t  styleLineNLOMuTwo                  = 4;
-    Size_t   sizeMarkerNLO                      = 1;
-    Width_t  widthLineNLO                       = 2.;
+    // *********************************************************************************************
+    // *** Setting color and style scheme for theory calcs *****************************************
+    // *********************************************************************************************
+    Color_t colorTheory[6]                      = {kGray+1, kAzure+2, kOrange+4, kViolet-8, kRed-6, kGreen-5};
+    Style_t styleLineTheory[6]                  = {2, 4, 6, 7, 8, 9};
+    Style_t styleFillTheory[6]                  = {0, 0, 0, 3244, 3275, 3353};
+
+    Color_t  colorGenerator[3]                  = {kGreen-2, kBlue+2, kBlue-7};
+    Style_t  styleLineGenerator[3]              = {7, 8, 1};
 
     //***********************************************************************************************
     //************************** Definition of final pt binning (has to be set manually) ************
@@ -648,36 +634,15 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     // ************************** Loading theory spectra *****************************************************
     // *******************************************************************************************************
     TFile* fileTheory                                   = new TFile(fileNameTheory.Data());
-    TH1F* histoDPMJetPi0[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEta[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEtaToPi0[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetPi0ToPiCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoDPMJetEtaToKCh[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCPi0[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEta[9]                            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEtaToPi0[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCPi0ToPiCh[9]                      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoEPOSLHCEtaToKCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGPi0[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEta[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEtaToPi0[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGPi0ToPiCh[9]                       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1F* histoHIJINGEtaToKCh[9]                        = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TGraph* graphTheoryPi0[3][9]                        = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
-    TGraph* graphTheoryEta[3][9]                        = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
-    TGraph* graphTheoryEtaToPi0[3][9]                   = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
-    TGraphErrors* graphTheoryRAAPi0[3][9]                     = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
-    TGraphErrors* graphTheoryRAAEta[3][9]               = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TH1F* histoGeneratorPi0[3][9]                       = { { NULL } };
+    TH1F* histoGeneratorEta[3][9]                       = { { NULL } };
+    TH1F* histoGeneratorEtaToPi0[3][9]                  = { { NULL } };
+    TGraph* graphTheoryPi0[3][9]                        = { { NULL } };
+    TGraph* graphTheoryEta[3][9]                        = { { NULL } };
+    TGraph* graphTheoryEtaScaled[3][9]                  = { { NULL } };
+    TGraph* graphTheoryEtaToPi0[3][9]                   = { { NULL } };
+    TGraphErrors* graphTheoryRAAPi0[3][9]               = { { NULL } };
+    TGraphErrors* graphTheoryRAAEta[3][9]               = { { NULL } };
 
     TDirectory* directoryTheoryPi0                      = (TDirectory*)fileTheory->Get("Pi0_PbPb_5.02TeV");
     TDirectory* directoryTheoryEta                      = (TDirectory*)fileTheory->Get("Eta_PbPb_5.02TeV");
@@ -712,32 +677,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             }
         }
 
-//         if (centArray[cent].CompareTo("0-100%") == 0){
-//             histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_MCGen");
-//             histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_MCGen");
-//             histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet_MCGen");
-//             histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet_MCGen");
-//             histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_MCGen");
-//             histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_MCGen");
-//             histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC_MCGen");
-//             histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC_MCGen");
-//             histoHIJINGPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecHIJING_MCGen");
-//             histoHIJINGEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecHIJING_MCGen");
-//             histoHIJINGEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0HIJING_MCGen");
-//             histoHIJINGPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChHIJING_MCGen");
-//             histoHIJINGEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChHIJING");
-//         } else {
-//             histoDPMJetPi0[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecDPMJet_Reb");
-//             histoDPMJetEta[cent]                                = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecDPMJet_Reb");
-//             histoDPMJetEtaToPi0[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0DPMJet");
-//             histoDPMJetPi0ToPiCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChDPMJet");
-//             histoEPOSLHCPi0[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoPi0SpecEPOSLHC_Reb");
-//             histoEPOSLHCEta[cent]                               = (TH1F*) directoryTheory[cent]->Get("histoEtaSpecEPOSLHC_Reb");
-//             histoEPOSLHCEtaToPi0[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToPi0EPOSLHC");
-//             histoEPOSLHCPi0ToPiCh[cent]                         = (TH1F*) directoryTheory[cent]->Get("histoPi0ToPiChEPOSLHC");
-//         }
-//         histoDPMJetEtaToKCh[cent]                           = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChDPMJet");
-//         histoEPOSLHCEtaToKCh[cent]                          = (TH1F*) directoryTheory[cent]->Get("histoEtaToKChEPOSLHC");
+        for (Int_t gene = 0; gene < 3; gene++){
+            histoGeneratorPi0[gene][cent]                       = (TH1F*) fileTheory->Get(Form("Pi0_PbPb_5.02TeV/Spectra_%s_MCGen_%s", nameGeneratorRead[gene].Data(), currentCent.Data()));
+            histoGeneratorEta[gene][cent]                       = (TH1F*) fileTheory->Get(Form("Eta_PbPb_5.02TeV/Spectra_%s_MCGen_%s", nameGeneratorRead[gene].Data(), currentCent.Data()));
+            histoGeneratorEtaToPi0[gene][cent]                  = (TH1F*) fileTheory->Get(Form("Eta_PbPb_5.02TeV/EtaToPi0_%s_MCGen_%s", nameGeneratorRead[gene].Data(), currentCent.Data()));
+        }
     }
 
     // *******************************************************************************************************
@@ -1552,10 +1496,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TGraphAsymmErrors* graphRatioPi0CombCombFitStat[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioPi0CombCombFitSys[9]          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioPi0CombCombFitStatWOXErr[9]   = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioPi0DPMJetToFit[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioPi0HIJINGToFit[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioPi0EPOSLHCToFit[9]                         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-
+    TH1D* histoRatioPi0GeneratorToFit[3][9]                    = {  { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
     TGraphAsymmErrors* graphCombIndepMethodsPi0InvYieldStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphCombIndepMethodsPi0InvYieldSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphCombIndepMethodsPi0InvYieldTot[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -2219,20 +2162,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         // *************************************************************************************************************
         // Calculate ratios to combined fit
         // *************************************************************************************************************
-        if (histoDPMJetPi0[cent]){
-            histoRatioPi0DPMJetToFit[cent]                     = (TH1D*) histoDPMJetPi0[cent]->Clone(Form("histoRatioPi0DPMJetToFit%s",centArray[cent].Data()));
-            histoRatioPi0DPMJetToFit[cent]                     = CalculateHistoRatioToFit (histoRatioPi0DPMJetToFit[cent], fitTCMInvYieldPi0[cent]);
-            histoRatioPi0DPMJetToFit[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent], xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-        }
-        if (histoHIJINGPi0[cent]){
-            histoRatioPi0HIJINGToFit[cent]                     = (TH1D*) histoHIJINGPi0[cent]->Clone(Form("histoRatioPi0HIJINGToFit%s",centArray[cent].Data() ));
-            histoRatioPi0HIJINGToFit[cent]                     = CalculateHistoRatioToFit (histoRatioPi0HIJINGToFit[cent], fitTCMInvYieldPi0[cent]);
-            histoRatioPi0HIJINGToFit[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent], xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-        }
-        if (histoEPOSLHCPi0[cent]){
-            histoRatioPi0EPOSLHCToFit[cent]                    = (TH1D*) histoEPOSLHCPi0[cent]->Clone(Form("histoRatioPi0EPOSLHCToFit%s",centArray[cent].Data() ));
-            histoRatioPi0EPOSLHCToFit[cent]                    = CalculateHistoRatioToFit (histoRatioPi0EPOSLHCToFit[cent], fitTCMInvYieldPi0[cent]);
-            histoRatioPi0EPOSLHCToFit[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent], xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
+        for (Int_t gene = 0; gene< 3; gene++){
+            if (histoGeneratorPi0[gene][cent]){
+                histoRatioPi0GeneratorToFit[gene][cent]                     = (TH1D*) histoGeneratorPi0[gene][cent]->Clone(Form("histoRatioPi0%sToFit%s",nameGeneratorRead[gene].Data(), centArray[cent].Data()));
+                histoRatioPi0GeneratorToFit[gene][cent]                     = CalculateHistoRatioToFit (histoRatioPi0GeneratorToFit[gene][cent], fitTCMInvYieldPi0[cent]);
+                histoRatioPi0GeneratorToFit[gene][cent]->GetXaxis()->SetRangeUser(minPtPi0[cent], xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
+            }
         }
 
         graphRatioPi0CombCombFitTot[cent]                       = (TGraphAsymmErrors*)graphCombPi0InvYieldTot[cent]->Clone();
@@ -2590,9 +2525,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TGraphAsymmErrors* graphRatioEtaCombCombFitStat[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioEtaCombCombFitStatWOXErr[9]   = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioEtaCombCombFitSys[9]          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioEtaDPMJetToFit[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioEtaHIJINGToFit[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histoRatioEtaEPOSLHCToFit[9]                         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoRatioEtaGeneratorToFit[3][9]                    = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                   { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                   { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
 
     TGraphAsymmErrors* graphCombIndepMethodsEtaInvYieldStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphCombIndepMethodsEtaInvYieldSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -3245,20 +3180,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         // *************************************************************************************************************
         // Calculate ratios to combined fit
         // *************************************************************************************************************
-        if (histoDPMJetEta[cent]){
-            histoRatioEtaDPMJetToFit[cent]                     = (TH1D*) histoDPMJetEta[cent]->Clone(Form("histoRatioEtaDPMJetToFit%s",centArray[cent].Data() ));
-            histoRatioEtaDPMJetToFit[cent]                     = CalculateHistoRatioToFit (histoRatioEtaDPMJetToFit[cent], fitTCMInvYieldEta[cent]);
-            histoRatioEtaDPMJetToFit[cent]->GetXaxis()->SetRangeUser(minPtEta[cent], xPtLimitsEta[cent][maxNBinsEta[cent]]);
-        }
-        if (histoHIJINGEta[cent]){
-            histoRatioEtaHIJINGToFit[cent]                     = (TH1D*) histoHIJINGEta[cent]->Clone(Form("histoRatioEtaHIJINGToFit%s",centArray[cent].Data()));
-            histoRatioEtaHIJINGToFit[cent]                     = CalculateHistoRatioToFit (histoRatioEtaHIJINGToFit[cent], fitTCMInvYieldEta[cent]);
-            histoRatioEtaHIJINGToFit[cent]->GetXaxis()->SetRangeUser(minPtEta[cent], xPtLimitsEta[cent][maxNBinsEta[cent]]);
-        }
-        if (histoEPOSLHCEta[cent]){
-            histoRatioEtaEPOSLHCToFit[cent]                    = (TH1D*) histoEPOSLHCEta[cent]->Clone(Form("histoRatioEtaEPOSLHCToFit%s",centArray[cent].Data() ));
-            histoRatioEtaEPOSLHCToFit[cent]                    = CalculateHistoRatioToFit (histoRatioEtaEPOSLHCToFit[cent], fitTCMInvYieldEta[cent]);
-            histoRatioEtaEPOSLHCToFit[cent]->GetXaxis()->SetRangeUser(minPtEta[cent], xPtLimitsEta[cent][maxNBinsEta[cent]]);
+        for (Int_t gene = 0; gene < 3; gene++){
+            if (histoGeneratorEta[gene][cent]){
+                histoRatioEtaGeneratorToFit[gene][cent]                     = (TH1D*) histoGeneratorEta[gene][cent]->Clone(Form("histoRatioEta%sToFit%s", nameGeneratorRead[gene].Data(), centArray[cent].Data() ));
+                histoRatioEtaGeneratorToFit[gene][cent]                     = CalculateHistoRatioToFit (histoRatioEtaGeneratorToFit[gene][cent], fitTCMInvYieldEta[cent]);
+                histoRatioEtaGeneratorToFit[gene][cent]->GetXaxis()->SetRangeUser(minPtEta[cent], xPtLimitsEta[cent][maxNBinsEta[cent]]);
+            }
         }
 
         graphRatioEtaCombCombFitTot[cent]                       = (TGraphAsymmErrors*)graphCombEtaInvYieldTot[cent]->Clone();
@@ -5111,10 +5038,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
         canvasInvYieldPi0->SaveAs(Form("%s/Pi0_InvYieldCompAllSystems_Comb_%s%s.%s",outputDirSupportPaper.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(),  suffix.Data()));
 
-        Int_t nLinesLegendTheo              = 3;
-        if (centArray[cent].BeginsWith("0-100%"))
-            nLinesLegendTheo                = 4;
-
+        Int_t nLinesLegendTheo              = 4;
         TLegend* legendXSectionPi0Theo      = GetAndSetLegend2(0.20, 0.12,0.40,0.12+(0.035*nLinesLegendTheo), 0.035, 1, "", 42, 0);
 
 
@@ -5129,23 +5053,20 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                 graphCombPi0InvYieldStat[cent]->Draw("p,same,z");
             }
 
-            if (histoDPMJetPi0[cent]){
-                SetStyleHisto(histoDPMJetPi0[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-                histoDPMJetPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoDPMJetPi0[cent]->Draw("same,hist,l");
-                legendXSectionPi0Theo->AddEntry(histoDPMJetPi0[cent],"DPMJet","l");
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoGeneratorPi0[gene][cent]){
+                    SetStyleHisto(histoGeneratorPi0[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                    histoGeneratorPi0[gene][cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
+                    histoGeneratorPi0[gene][cent]->Draw("same,hist,l");
+                    legendXSectionPi0Theo->AddEntry(histoGeneratorPi0[gene][cent],nameGenerator[gene].Data(),"l");
+                }
             }
-            if (histoHIJINGPi0[cent]){
-                SetStyleHisto(histoHIJINGPi0[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-                histoHIJINGPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoHIJINGPi0[cent]->Draw("same,hist,l");
-                legendXSectionPi0Theo->AddEntry(histoHIJINGPi0[cent],"HIJING","l");
-            }
-            if (histoEPOSLHCPi0[cent]){
-                SetStyleHisto(histoEPOSLHCPi0[cent], widthCommonFit*1.5,  styleLineEPOS3, colorEPOS3 );
-                histoEPOSLHCPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoEPOSLHCPi0[cent]->Draw("same,hist,l");
-                legendXSectionPi0Theo->AddEntry(histoEPOSLHCPi0[cent],"EPOS-LHC","l");
+            for (Int_t theo = 0; theo < 3; theo++){
+                if (graphTheoryPi0[theo][cent]){
+                    DrawGammaNLOTGraph(graphTheoryPi0[theo][cent], widthCommonFit*1.5, styleLineTheory[theo], colorTheory[theo] );
+                    graphTheoryPi0[theo][cent]->Draw("same,c");
+                    legendXSectionPi0Theo->AddEntry(graphTheoryPi0[theo][cent],nameTheory[theo].Data(),"l");
+                }
             }
 
             labelEnergyXSectionPi0->Draw();
@@ -5312,9 +5233,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         canvasInvYieldEta->SaveAs(Form("%s/Eta_InvYieldCompAllSystems_Comb_%s%s.%s",outputDirSupportPaper.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(),
                                        suffix.Data()));
 
-        Int_t nLinesLegendTheo              = 3;
-        if (centArray[cent].BeginsWith("0-100%"))
-            nLinesLegendTheo                = 4;
+        Int_t nLinesLegendTheo              = 4;
 
         TLegend* legendXSectionEtaTheo      = GetAndSetLegend2(0.20, 0.12,0.40,0.12+(0.035*nLinesLegendTheo), 0.035, 1, "", 42, 0);
 
@@ -5329,23 +5248,21 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                 graphCombEtaInvYieldStat[cent]->Draw("p,same,z");
             }
 
-            if (histoDPMJetEta[cent]){
-                SetStyleHisto(histoDPMJetEta[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-                histoDPMJetEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-                histoDPMJetEta[cent]->Draw("same,hist,l");
-                legendXSectionEtaTheo->AddEntry(histoDPMJetEta[cent],"DPMJet","l");
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoGeneratorEta[gene][cent]){
+                    SetStyleHisto(histoGeneratorEta[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                    histoGeneratorEta[gene][cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
+                    histoGeneratorEta[gene][cent]->Draw("same,hist,l");
+                    legendXSectionEtaTheo->AddEntry(histoGeneratorEta[gene][cent],nameGenerator[gene].Data(),"l");
+                }
             }
-            if (histoHIJINGEta[cent]){
-                SetStyleHisto(histoHIJINGEta[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-                histoHIJINGEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-                histoHIJINGEta[cent]->Draw("same,hist,l");
-                legendXSectionEtaTheo->AddEntry(histoHIJINGEta[cent],"HIJING","l");
-            }
-            if (histoEPOSLHCEta[cent]){
-                SetStyleHisto(histoEPOSLHCEta[cent], widthCommonFit*1.5,  styleLineEPOS3, colorEPOS3 );
-                histoEPOSLHCEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-                histoEPOSLHCEta[cent]->Draw("same,hist,l");
-                legendXSectionEtaTheo->AddEntry(histoEPOSLHCEta[cent],"EPOS-LHC","l");
+
+            for (Int_t theo = 0; theo < 3; theo++){
+                if (graphTheoryEta[theo][cent]){
+                    DrawGammaNLOTGraph(graphTheoryEta[theo][cent], widthCommonFit*1.5, styleLineTheory[theo], colorTheory[theo] );
+                    graphTheoryEta[theo][cent]->Draw("same,c");
+                    legendXSectionEtaTheo->AddEntry(graphTheoryEta[theo][cent],nameTheory[theo].Data(),"l");
+                }
             }
 
             labelEnergyXSectionEta->Draw();
@@ -5468,45 +5385,45 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         }
 
         Int_t nTheory = 0;
-        if (histoDPMJetPi0[cent]){
-            SetStyleHisto(histoDPMJetPi0[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-            histoDPMJetPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-            histoDPMJetPi0[cent]->Draw("same,hist,l");
 
-            histoDPMJetEta[cent]->Scale(0.01);
-            SetStyleHisto(histoDPMJetEta[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-            histoDPMJetEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-            histoDPMJetEta[cent]->Draw("same,hist,l");
-            nTheory++;
+        for (Int_t gene = 0; gene < 3; gene++){
+            if (histoGeneratorPi0[gene][cent]){
+                SetStyleHisto(histoGeneratorPi0[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                histoGeneratorPi0[gene][cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
+                histoGeneratorPi0[gene][cent]->Draw("same,hist,l");
+                nTheory++;
+            }
+            if (histoGeneratorEta[gene][cent]){
+                histoGeneratorEta[gene][cent]->Scale(0.01);
+                SetStyleHisto(histoGeneratorEta[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                histoGeneratorEta[gene][cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
+                histoGeneratorEta[gene][cent]->Draw("same,hist,l");
+            }
         }
-        if (histoHIJINGPi0[cent]){
-            SetStyleHisto(histoHIJINGPi0[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-            histoHIJINGPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-            histoHIJINGPi0[cent]->Draw("same,hist,l");
-            histoHIJINGEta[cent]->Scale(0.01);
-            SetStyleHisto(histoHIJINGEta[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-            histoHIJINGEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-            histoHIJINGEta[cent]->Draw("same,hist,l");
-            nTheory++;
-        }
-        if (histoEPOSLHCPi0[cent]){
-            SetStyleHisto(histoEPOSLHCPi0[cent], widthCommonFit*1.5,  styleLineEPOS3, colorEPOS3 );
-            histoEPOSLHCPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-            histoEPOSLHCPi0[cent]->Draw("same,hist,l");
-            histoEPOSLHCEta[cent]->Scale(0.01);
-            SetStyleHisto(histoEPOSLHCEta[cent], widthCommonFit*1.5,  styleLineEPOS3, colorEPOS3 );
-            histoEPOSLHCEta[cent]->GetXaxis()->SetRangeUser(minPtEta[cent],xPtLimitsEta[cent][maxNBinsEta[cent]]);
-            histoEPOSLHCEta[cent]->Draw("same,hist,l");
-//
-            nTheory++;
+
+        for (Int_t theo = 0; theo < 3; theo++){
+            if (graphTheoryPi0[theo][cent]){
+                DrawGammaNLOTGraph(graphTheoryPi0[theo][cent], widthCommonFit*1.5, styleLineTheory[theo], colorTheory[theo] );
+                graphTheoryPi0[theo][cent]->Draw("same,c");
+                nTheory++;
+            }
+            if (graphTheoryEta[theo][cent]){
+                graphTheoryEtaScaled[theo][cent] = ScaleGraph(graphTheoryEta[theo][cent], 0.01);
+                DrawGammaNLOTGraph(graphTheoryEtaScaled[theo][cent], widthCommonFit*1.5, styleLineTheory[theo], colorTheory[theo] );
+                graphTheoryEtaScaled[theo][cent]->Draw("same,c");
+            }
+
         }
 
         TLegend* legendXSectionPi0Eta      = GetAndSetLegend2(0.20, 0.12,0.40,0.12+(0.035*(2+nTheory)), 0.035, 1, "", 42, 0);
             if (graphCombPi0InvYieldSys[cent]) legendXSectionPi0Eta->AddEntry(graphCombPi0InvYieldSys[cent],"#pi^{0}","fp");
             if (graphCombEtaInvYieldSys[cent]) legendXSectionPi0Eta->AddEntry(graphCombEtaInvYieldSys[cent],"#eta #times 10^{-2}","fp");
-            if (histoDPMJetPi0[cent]) legendXSectionPi0Eta->AddEntry(histoDPMJetPi0[cent],"DPMJet","l");
-            if (histoHIJINGPi0[cent]) legendXSectionPi0Eta->AddEntry(histoHIJINGPi0[cent],"HIJING","l");
-            if (histoEPOSLHCPi0[cent]) legendXSectionPi0Eta->AddEntry(histoEPOSLHCPi0[cent],"EPOS-LHC","l");
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoGeneratorPi0[gene][cent]) legendXSectionPi0Eta->AddEntry(histoGeneratorPi0[gene][cent],nameGenerator[gene].Data(),"l");
+            }
+            for (Int_t theo = 0; theo < 3; theo++){
+                if (graphTheoryPi0[theo][cent]) legendXSectionPi0Eta->AddEntry(graphTheoryPi0[theo][cent],nameTheory[theo].Data(),"l");
+            }
         legendXSectionPi0Eta->Draw();
         labelEnergyXSectionPi0->SetText(0.94,0.92,Form("%s %s", centArray2[cent].Data(), collisionSystemPbPb.Data()));
         labelEnergyXSectionPi0->Draw();
@@ -5514,9 +5431,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
         canvasInvYieldPi0->SaveAs(Form("%s/Pi0AndEta_InvYield_CombWithTheory_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
 
-        if (histoHIJINGEta[cent])histoHIJINGEta[cent]->Scale(100);
-        if (histoEPOSLHCEta[cent])histoEPOSLHCEta[cent]->Scale(100);
-        if (histoDPMJetEta[cent])histoDPMJetEta[cent]->Scale(100);
+        for (Int_t gene = 0; gene < 3; gene++){
+            if (histoGeneratorEta[gene][cent])histoGeneratorEta[gene][cent]->Scale(100);
+        }
     }
 
 
@@ -6154,9 +6071,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     SetStyleTLatex( labelDetSysRatioPaperEta, textSizeLablesGenerators[0],4, 1, 42, kTRUE, 11);
 
     TLegend* legendTheoRatio = GetAndSetLegend2(0.18, yPosLabel[0]-0.03-(1*textSizeLablesGenerators[0]), 0.84, yPosLabel[0]-0.03, textSizeLabelsPixel, 3, "", 43, 0.22);
-    legendTheoRatio->AddEntry(histoDPMJetPi0[0], "DPMJet", "l");
-    legendTheoRatio->AddEntry(histoEPOSLHCPi0[0], "EPOS-LHC", "l");
-    legendTheoRatio->AddEntry(histoHIJINGPi0[0], "HIJING", "l");
+    for (Int_t gene = 0; gene < 3; gene++){
+        if (histoGeneratorPi0[gene][0]) legendTheoRatio->AddEntry(histoGeneratorPi0[gene][0], nameGenerator[gene].Data(), "l");
+    }
 
 
     for (Int_t cent = 0; cent < 5; cent++ ){
@@ -6180,17 +6097,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             boxErrorNormRatioPi0->Draw();
             if (cent == 0) legendTheoRatio->Draw();
 
-            if (histoRatioPi0EPOSLHCToFit[cent]){
-                SetStyleHisto(histoRatioPi0EPOSLHCToFit[cent], widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );
-                histoRatioPi0EPOSLHCToFit[cent]->Draw("same,hist,l");
-            }
-            if (histoRatioPi0HIJINGToFit[cent]){
-                SetStyleHisto(histoRatioPi0HIJINGToFit[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-                histoRatioPi0HIJINGToFit[cent]->Draw("same,hist,l");
-            }
-            if (histoRatioPi0DPMJetToFit[cent]){
-                SetStyleHisto(histoRatioPi0DPMJetToFit[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-                histoRatioPi0DPMJetToFit[cent]->Draw("same,hist,l");
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoRatioPi0GeneratorToFit[gene][cent]){
+                    SetStyleHisto(histoRatioPi0GeneratorToFit[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                    histoRatioPi0GeneratorToFit[gene][cent]->Draw("same,hist,l");
+                }
             }
             if (graphRatioPi0CombCombFitStatWOXErr[cent]){
                 DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr[cent], markerStyleCent[cent], markerSizeCent[cent], colorCent[cent], colorCent[cent], widthLinesBoxes, kFALSE);
@@ -6228,17 +6139,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         boxErrorNormRatioEta->Draw();
         if (cent == 0) legendTheoRatio->Draw();
 
-        if (histoRatioEtaEPOSLHCToFit[cent]){
-            SetStyleHisto(histoRatioEtaEPOSLHCToFit[cent], widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );
-            histoRatioEtaEPOSLHCToFit[cent]->Draw("same,hist,l");
-        }
-        if (histoRatioEtaHIJINGToFit[cent]){
-            SetStyleHisto(histoRatioEtaHIJINGToFit[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-            histoRatioEtaHIJINGToFit[cent]->Draw("same,hist,l");
-        }
-        if (histoRatioEtaDPMJetToFit[cent]){
-            SetStyleHisto(histoRatioEtaDPMJetToFit[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-            histoRatioEtaDPMJetToFit[cent]->Draw("same,hist,l");
+        for (Int_t gene = 0; gene < 3; gene++){
+            if (histoRatioEtaGeneratorToFit[gene][cent]){
+                SetStyleHisto(histoRatioEtaGeneratorToFit[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                histoRatioEtaGeneratorToFit[gene][cent]->Draw("same,hist,l");
+            }
         }
         if (graphRatioEtaCombCombFitStatWOXErr[cent]){
             DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr[cent], markerStyleCentMC[cent], markerSizeCentMC[cent], colorCent[cent], colorCent[cent], widthLinesBoxes, kFALSE);
@@ -6262,22 +6167,13 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
     TF1* etaToPi0ConstData[9];
     TF1* etaToPi0ConstDataStat[9];
-    TF1* etaToPi0ConstMC[9];
-    TF1* etaToPi0ConstMC2[9];
-    TF1* etaToPi0ConstMC3[9];
+    TF1* etaToPi0ConstMC[3][9];
     for (Int_t cent = 0; cent < maxCent; cent++){
         if (!enableCentComb[cent]) continue;
         etaToPi0ConstData[cent]         = new TF1(Form("etaToPi0ConstData_%d",cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
         etaToPi0ConstDataStat[cent]     = new TF1(Form("etaToPi0ConstDataStat_%d",cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        etaToPi0ConstMC[cent]           = new TF1(Form("etaToPi0ConstMCStat_%d",cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        etaToPi0ConstMC2[cent]          = new TF1(Form("etaToPi0ConstMC2_%d",cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        etaToPi0ConstMC3[cent]          = new TF1(Form("etaToPi0ConstMC3_%d",cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-
         if (graphCombEtaToPi0StatWOXErr[cent])  graphCombEtaToPi0StatWOXErr[cent]->Fit(etaToPi0ConstDataStat[cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
         if (graphCombEtaToPi0Tot[cent])  graphCombEtaToPi0Tot[cent]->Fit(etaToPi0ConstData[cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        if (histoDPMJetEtaToPi0[cent])  histoDPMJetEtaToPi0[cent]->Fit(etaToPi0ConstMC[cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        if (histoHIJINGEtaToPi0[cent])  histoHIJINGEtaToPi0[cent]->Fit(etaToPi0ConstMC2[cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
-        if (histoEPOSLHCEtaToPi0[cent])  histoEPOSLHCEtaToPi0[cent]->Fit(etaToPi0ConstMC3[cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
 
         cout << "***********************************************************************************************************" << endl;
         cout << "***********************************************************************************************************" << endl;
@@ -6285,26 +6181,26 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         cout << centArray[cent].Data() << "\t" << addCentString[cent].Data()  << endl;
         cout << "high pt eta/pi0 - data, stat: " << etaToPi0ConstDataStat[cent]->GetParameter(0) << "+-"<< etaToPi0ConstDataStat[cent]->GetParError(0) << endl;
         cout << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData[cent]->GetParameter(0) << "+-"<< etaToPi0ConstData[cent]->GetParError(0) << endl;
-        if(histoDPMJetEtaToPi0[cent]) cout << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC[cent]->GetParError(0) << endl;
-        if(histoHIJINGEtaToPi0[cent]) cout << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC2[cent]->GetParError(0) << endl;
-        if(histoEPOSLHCEtaToPi0[cent]) cout << "high pt eta/pi0 - EPOS-LHC: " << etaToPi0ConstMC3[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC3[cent]->GetParError(0) << endl;
-        cout << "***********************************************************************************************************" << endl;
-        cout << "***********************************************************************************************************" << endl;
-        cout << "***********************************************************************************************************" << endl;
-
         fileFitsOutput << "***********************************************************************************************************" << endl;
         fileFitsOutput << "***********************************************************************************************************" << endl;
         fileFitsOutput << "***********************************************************************************************************" << endl;
         fileFitsOutput << centArray[cent].Data() << "\t" << addCentString[cent].Data() << endl;
         fileFitsOutput << "high pt eta/pi0 - data, stat: " << etaToPi0ConstDataStat[cent]->GetParameter(0) << "+-"<< etaToPi0ConstDataStat[cent]->GetParError(0) << endl;
         fileFitsOutput << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData[cent]->GetParameter(0) << "+-"<< etaToPi0ConstData[cent]->GetParError(0) << endl;
-        if(histoDPMJetEtaToPi0[cent]) fileFitsOutput << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC[cent]->GetParError(0) << endl;
-        if(histoHIJINGEtaToPi0[cent]) fileFitsOutput << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC2[cent]->GetParError(0) << endl;
-        if(histoEPOSLHCEtaToPi0[cent]) fileFitsOutput << "high pt eta/pi0 - EPOS-LHC: " << etaToPi0ConstMC3[cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC3[cent]->GetParError(0) << endl;
-        fileFitsOutput << "***********************************************************************************************************" << endl;
-        fileFitsOutput << "***********************************************************************************************************" << endl;
-        fileFitsOutput << "***********************************************************************************************************" << endl;
 
+        for (Int_t gene = 0; gene < 3; gene++){
+            etaToPi0ConstMC[gene][cent]        = new TF1(Form("etaToPi0ConstMCStat%s_%d",nameGeneratorRead[gene].Data(), cent),"[0]",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
+            if (histoGeneratorEtaToPi0[gene][cent])  histoGeneratorEtaToPi0[gene][cent]->Fit(etaToPi0ConstMC[gene][cent],"QRME0","",4,xPtLimitsEtaToPi0[cent][maxNBinsEtaToPi0[cent]]);
+            if(histoGeneratorEtaToPi0[gene][cent]) cout << "high pt eta/pi0 - "<< nameGeneratorRead[gene].Data() << ": " << etaToPi0ConstMC[gene][cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC[gene][cent]->GetParError(0) << endl;
+            if(histoGeneratorEtaToPi0[gene][cent]) fileFitsOutput << "high pt eta/pi0 - "<< nameGeneratorRead[gene].Data() << ": " << etaToPi0ConstMC[gene][cent]->GetParameter(0) << "+-"<< etaToPi0ConstMC[gene][cent]->GetParError(0) << endl;
+
+        }
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        fileFitsOutput << "***********************************************************************************************************" << endl;
+        fileFitsOutput << "***********************************************************************************************************" << endl;
+        fileFitsOutput << "***********************************************************************************************************" << endl;
     }
 
     // ***************************************************************************************************************
@@ -6449,23 +6345,21 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 //             graphMcGillEtaToPi0->Draw("3,same");
 
             Int_t nTheory = 0;
-            if (histoDPMJetEtaToPi0[cent]){
-                SetStyleHisto(histoDPMJetEtaToPi0[cent], widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
-                histoDPMJetEtaToPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoDPMJetEtaToPi0[cent]->Draw("same,hist,l");
-                nTheory++;
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoGeneratorEtaToPi0[gene][cent]){
+                    SetStyleHisto(histoGeneratorEtaToPi0[gene][cent], widthCommonFit*1.5, styleLineGenerator[gene], colorGenerator[gene] );
+                    histoGeneratorEtaToPi0[gene][cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
+                    histoGeneratorEtaToPi0[gene][cent]->Draw("same,hist,l");
+                    nTheory++;
+                }
             }
-            if (histoHIJINGEtaToPi0[cent]){
-                SetStyleHisto(histoHIJINGEtaToPi0[cent], widthCommonFit*1.5, styleLineHIJING, colorHIJING );
-                histoHIJINGEtaToPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoHIJINGEtaToPi0[cent]->Draw("same,hist,l");
-                nTheory++;
-            }
-            if (histoEPOSLHCEtaToPi0[cent]){
-                SetStyleHisto(histoEPOSLHCEtaToPi0[cent], widthCommonFit*1.5,  styleLineEPOS3, colorEPOS3 );
-                histoEPOSLHCEtaToPi0[cent]->GetXaxis()->SetRangeUser(minPtPi0[cent],xPtLimitsPi0[cent][maxNBinsPi0[cent]]);
-                histoEPOSLHCEtaToPi0[cent]->Draw("same,hist,l");
-                nTheory++;
+
+            for (Int_t theo = 0; theo < 3; theo++){
+                if (graphTheoryEtaToPi0[theo][cent]){
+                    DrawGammaNLOTGraph(graphTheoryEtaToPi0[theo][cent], widthCommonFit*1.5, styleLineTheory[theo], colorTheory[theo] );
+                    graphTheoryEtaToPi0[theo][cent]->Draw("same,c");
+                    nTheory++;
+                }
             }
 
             SetStyleHisto(eta2pi0MtScaledTCM, widthCommonFit*1.5, 1, kRed+2);
@@ -6491,12 +6385,12 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
 
             TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.68, 0.15+(textsizeLabelsEtaToPi0*nTheory*0.9), 0.88, 0.15, textSizeLabelsPixel*0.85, 1, "", 43, 0.26);
-//             legendEtaToPi0Theory->AddEntry((TObject*)0,"","");
-            if (histoDPMJetEtaToPi0[cent])legendEtaToPi0Theory->AddEntry(histoDPMJetEtaToPi0[cent],"DPMJet","l");
-            if (histoEPOSLHCEtaToPi0[cent])legendEtaToPi0Theory->AddEntry(histoEPOSLHCEtaToPi0[cent],"EPOS-LHC","l");
-            if (histoHIJINGEtaToPi0[cent])legendEtaToPi0Theory->AddEntry(histoHIJINGEtaToPi0[cent],"HIJING","l");
-//             legendEtaToPi0Theory->AddEntry(graphMcGillEtaToPi0,"iEBE-VISHNU","f");
-    //         legendEtaToPi0Theory->AddEntry(graphMcGillEtaToPi0,"Shen #it{et al.}","f");
+            for (Int_t gene = 0; gene < 3; gene++){
+                if (histoGeneratorEtaToPi0[gene][cent])legendEtaToPi0Theory->AddEntry(histoGeneratorEtaToPi0[gene][cent],nameGenerator[gene].Data(),"l");
+            }
+            for (Int_t theo = 0; theo < 3; theo++){
+                if (graphTheoryEtaToPi0[theo][cent])legendEtaToPi0Theory->AddEntry(graphTheoryEtaToPi0[theo][cent],nameTheory[theo].Data(),"l");
+            }
             legendEtaToPi0Theory->Draw();
 
         histo2DEtatoPi0combo->Draw("axis,same");
@@ -6745,6 +6639,15 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         legendEtaRAAPaper->Draw();
     canvasRAA->SaveAs(Form("%s/Eta_RAA_AllCent_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
 
+    TCanvas* canvasRAA2 = new TCanvas("canvasRAA2","",200,10,1200,1100);  // gives the page size
+    DrawGammaCanvasSettings( canvasRAA2,  0.085, 0.01, 0.015, 0.08);
+    canvasRAA2->SetLogx();
+    canvasRAA2->SetLogy();
+    TH2F * histo2DRAALogY  = new TH2F("histo2DRAALogY","histo2DRAALogY",1000,minPtPi0Plotting,maxPtPi0Plotting,1000,0.01,10);
+    SetStyleHistoTH2ForGraphs(histo2DRAALogY, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.035,0.04, 0.035,0.04, 0.8,1., 512, 505);
+    histo2DRAALogY->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DRAALogY->GetYaxis()->SetRangeUser(0.05,3.5);
+    histo2DRAALogY->DrawCopy();
 
     if (bWCorrection.Contains("Y")){
         for (Int_t cent = 0; cent < maxCent; cent++){
@@ -6752,9 +6655,54 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
             TBox* boxErrorNormRAAPi0          = CreateBoxConv(colorCentBox[cent], 0.24, 1.-(nCollErrPbPb[cent]/nCollPbPb[cent]), 0.25, 1.+(nCollErrPbPb[cent]/nCollPbPb[cent]));
             TBox* boxErrorNormRAAEta          = CreateBoxConv(colorCentBox[cent], 0.45, 1.-(nCollErrPbPb[cent]/nCollPbPb[cent]), 0.46, 1.+(nCollErrPbPb[cent]/nCollPbPb[cent]));
+            TLegend* legendRAATheo2     = GetAndSetLegend2(0.12, 0.12, 0.95 , 0.12+0.04*1.25, textSizeLabelsPixel*0.85,3,"",43,0.3);
 
             histo2DRAA->GetYaxis()->SetTitle("#it{R}_{AA}");
             histo2DRAAEta->GetYaxis()->SetTitle("#it{R}_{AA}");
+            canvasRAA2->cd();
+            histo2DRAALogY->DrawCopy();
+                boxErrorNormRAAPi0->Draw();
+
+                Int_t nTheoryRAA = 0;
+                for (Int_t theo = 0; theo < 3; theo++){
+                    if (graphTheoryRAAPi0[theo][cent]){
+                        TGraphErrors* dummy = (TGraphErrors*)graphTheoryRAAPi0[theo][cent]->Clone("dummyForPlotting");
+                        DrawGammaSetMarkerTGraphErr(dummy, 1, 0, colorTheory[theo+3] ,colorTheory[theo+3],1);
+                        dummy->SetFillStyle(0);
+                        dummy->SetFillColor(colorTheory[theo+3]);
+                        DrawGammaSetMarkerTGraphErr(graphTheoryRAAPi0[theo][cent], 1, 0, colorTheory[theo+3] ,colorTheory[theo+3],1);
+                        graphTheoryRAAPi0[theo][cent]->SetFillColor(colorTheory[theo+3]);
+                        graphTheoryRAAPi0[theo][cent]->SetFillStyle(styleFillTheory[theo+3]);
+                        graphTheoryRAAPi0[theo][cent]->Draw("3 same");
+                        dummy->Draw("3 same");
+                        legendRAATheo2->AddEntry(graphTheoryRAAPi0[theo][cent],nameTheoryRAA[theo].Data(),"pf");
+                        nTheoryRAA++;
+                    }
+                }
+                if (graphRAACombSystPi0[cent]){
+                    DrawGammaSetMarkerTGraphAsym(graphRAACombSystPi0[cent], markerStyleCent[cent], markerSizeCent[cent]*0.5, colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE);
+                    graphRAACombSystPi0[cent]->Draw("E2same");
+                }
+                DrawGammaLines(minPtPi0Plotting,maxPtPi0Plotting , 1, 1 ,1, kGray, 7);
+
+                if (graphRAACombStatPi0WOXErr[cent]){
+                    DrawGammaSetMarkerTGraphAsym(graphRAACombStatPi0WOXErr[cent], markerStyleCent[cent], markerSizeCent[cent]*0.5, colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE);
+                    graphRAACombStatPi0WOXErr[cent]->Draw("p,same,z");
+                }
+
+                labelEnergyRAA->SetText(0.12, 0.95-0.04*1,Form("%s %s", centArray3[cent].Data(), collisionSystemPbPb.Data()));
+                labelEnergyRAA->Draw();
+                labelALICERAA->Draw();
+
+                TLegend* legendRAATheo1     = GetAndSetLegend2(0.12, 0.95-0.04*1.25*3, 0.32 , 0.95-0.04*1.25*2, textSizeLabelsPixel*0.85,1,"",43,0.3);
+                legendRAATheo1->AddEntry(graphRAACombSystPi0[cent],"#pi^{0}","pf");
+                legendRAATheo1->Draw();
+                legendRAATheo2->Draw();
+
+            histo2DRAALogY->Draw("same,axis");
+            canvasRAA2->Print(Form("%s/Pi0WithTheory_RAA_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
+
+
             canvasRAA->cd();
             histo2DRAA->DrawCopy();
             boxErrorNormRAAPi0->Draw();
