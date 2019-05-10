@@ -216,6 +216,58 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     ConvertYieldHisto(histoChargedPionSpecStat8090, kTRUE, kTRUE, kFALSE, kFALSE);
     ConvertYieldHisto(histoChargedPionSpecSyst8090, kTRUE, kTRUE, kFALSE, kFALSE);
 
+    //Kaon over pion ratio
+    TList* listSummedKaonPionStat = (TList*)filePbPb5TeV->Get("Summed_Kaon_Over_Summed_Pion");
+    TList* listSummedKaonPionSyst = (TList*)filePbPb5TeV->Get("Summed_Kaon_Over_Summed_Pion_Sys");
+    TH1D*   histoKaonPionSpecStat0005  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_0.00to5.00");   histoKaonPionSpecStat0005->Sumw2();
+    TH1D*   histoKaonPionSpecSyst0005  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_0.00to5.00");   histoKaonPionSpecSyst0005->Sumw2();
+    TH1D*   histoKaonPionSpecStat0510  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_5.00to10.00");  histoKaonPionSpecStat0510->Sumw2();
+    TH1D*   histoKaonPionSpecSyst0510  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_5.00to10.00");  histoKaonPionSpecSyst0510->Sumw2();
+    TH1D*   histoKaonPionSpecStat1020  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_10.00to20.00"); histoKaonPionSpecStat1020->Sumw2();
+    TH1D*   histoKaonPionSpecSyst1020  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_10.00to20.00"); histoKaonPionSpecSyst1020->Sumw2();
+    TH1D*   histoKaonPionSpecStat2030  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_20.00to30.00"); histoKaonPionSpecStat2030->Sumw2();
+    TH1D*   histoKaonPionSpecSyst2030  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_20.00to30.00"); histoKaonPionSpecSyst2030->Sumw2();
+    TH1D*   histoKaonPionSpecStat3040  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_30.00to40.00"); histoKaonPionSpecStat3040->Sumw2();
+    TH1D*   histoKaonPionSpecSyst3040  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_30.00to40.00"); histoKaonPionSpecSyst3040->Sumw2();
+    TH1D*   histoKaonPionSpecStat4050  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_40.00to50.00"); histoKaonPionSpecStat4050->Sumw2();
+    TH1D*   histoKaonPionSpecSyst4050  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_40.00to50.00"); histoKaonPionSpecSyst4050->Sumw2();
+    TH1D*   histoKaonPionSpecStat5060  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_50.00to60.00"); histoKaonPionSpecStat5060->Sumw2();
+    TH1D*   histoKaonPionSpecSyst5060  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_50.00to60.00"); histoKaonPionSpecSyst5060->Sumw2();
+    TH1D*   histoKaonPionSpecStat6070  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_60.00to70.00"); histoKaonPionSpecStat6070->Sumw2();
+    TH1D*   histoKaonPionSpecSyst6070  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_60.00to70.00"); histoKaonPionSpecSyst6070->Sumw2();
+    TH1D*   histoKaonPionSpecStat7080  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_70.00to80.00"); histoKaonPionSpecStat7080->Sumw2();
+    TH1D*   histoKaonPionSpecSyst7080  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_70.00to80.00"); histoKaonPionSpecSyst7080->Sumw2();
+    TH1D*   histoKaonPionSpecStat8090  = (TH1D*)listSummedKaonPionStat->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_80.00to90.00"); histoKaonPionSpecStat8090->Sumw2();
+    TH1D*   histoKaonPionSpecSyst8090  = (TH1D*)listSummedKaonPionSyst->FindObject("hSpectraRatioSummedKaon_over_SummedPion_PbPb_Combined_80.00to90.00"); histoKaonPionSpecSyst8090->Sumw2();
+
+    TH1D* histoKaonPionSpecStat0010 = (TH1D*)histoKaonPionSpecStat0005->Clone("histoKaonPionSpecStat0010");
+    TH1D* histoKaonPionSpecSyst0010 = (TH1D*)histoKaonPionSpecSyst0005->Clone("histoKaonPionSpecSyst0010");
+    histoKaonPionSpecStat0010->Add(histoKaonPionSpecStat0510);
+    histoKaonPionSpecSyst0010->Add(histoKaonPionSpecSyst0510);
+    histoKaonPionSpecStat0010->Scale(0.5);
+    histoKaonPionSpecSyst0010->Scale(0.5);
+
+    TH1D* histoKaonPionSpecStat2040 = (TH1D*)histoKaonPionSpecStat2030->Clone("histoKaonPionSpecStat2040");
+    TH1D* histoKaonPionSpecSyst2040 = (TH1D*)histoKaonPionSpecSyst2030->Clone("histoKaonPionSpecSyst2040");
+    histoKaonPionSpecStat2040->Add(histoKaonPionSpecStat3040);
+    histoKaonPionSpecSyst2040->Add(histoKaonPionSpecSyst3040);
+    histoKaonPionSpecStat2040->Scale(0.5);
+    histoKaonPionSpecSyst2040->Scale(0.5);
+
+    TH1D* histoKaonPionSpecStat4060 = (TH1D*)histoKaonPionSpecStat4050->Clone("histoKaonPionSpecStat4060");
+    TH1D* histoKaonPionSpecSyst4060 = (TH1D*)histoKaonPionSpecSyst4050->Clone("histoKaonPionSpecSyst4060");
+    histoKaonPionSpecStat4060->Add(histoKaonPionSpecStat5060);
+    histoKaonPionSpecSyst4060->Add(histoKaonPionSpecSyst5060);
+    histoKaonPionSpecStat4060->Scale(0.5);
+    histoKaonPionSpecSyst4060->Scale(0.5);
+
+    TH1D* histoKaonPionSpecStat6080 = (TH1D*)histoKaonPionSpecStat6070->Clone("histoKaonPionSpecStat6080");
+    TH1D* histoKaonPionSpecSyst6080 = (TH1D*)histoKaonPionSpecSyst6070->Clone("histoKaonPionSpecSyst6080");
+    histoKaonPionSpecStat6080->Add(histoKaonPionSpecStat7080);
+    histoKaonPionSpecSyst6080->Add(histoKaonPionSpecSyst7080);
+    histoKaonPionSpecStat6080->Scale(0.5);
+    histoKaonPionSpecSyst6080->Scale(0.5);
+
     TString outputFileName = Form("ChargedPion_%s_PbPb5TeV.root",cStamp1);
     TFile* fileOutput = new TFile(outputFileName,"RECREATE");
 
@@ -225,6 +277,8 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     fileOutput->cd(nameCentFolder_0_10.Data());
     if(histoChargedPionSpecStat0010)  histoChargedPionSpecStat0010->Write("histoChargedPionSpecStat");
     if(histoChargedPionSpecSyst0010)  histoChargedPionSpecSyst0010->Write("histoChargedPionSpecSyst");
+    if(histoKaonPionSpecStat0010)     histoKaonPionSpecStat0010->Write("histoKaonPionSpecStat");
+    if(histoKaonPionSpecSyst0010)     histoKaonPionSpecSyst0010->Write("histoKaonPionSpecSyst");
 
     TString nameCentFolder_10_20 = "10-20%PbPb_5.02TeV";
     fileOutput->mkdir(nameCentFolder_10_20.Data());
@@ -232,6 +286,8 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     fileOutput->cd(nameCentFolder_10_20.Data());
     if(histoChargedPionSpecStat1020)  histoChargedPionSpecStat1020->Write("histoChargedPionSpecStat");
     if(histoChargedPionSpecSyst1020)  histoChargedPionSpecSyst1020->Write("histoChargedPionSpecSyst");
+    if(histoKaonPionSpecStat1020)     histoKaonPionSpecStat1020->Write("histoKaonPionSpecStat");
+    if(histoKaonPionSpecSyst1020)     histoKaonPionSpecSyst1020->Write("histoKaonPionSpecSyst");
 
     TString nameCentFolder_20_40 = "20-40%PbPb_5.02TeV";
     fileOutput->mkdir(nameCentFolder_20_40.Data());
@@ -239,6 +295,8 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     fileOutput->cd(nameCentFolder_20_40.Data());
     if(histoChargedPionSpecStat2040)  histoChargedPionSpecStat2040->Write("histoChargedPionSpecStat");
     if(histoChargedPionSpecSyst2040)  histoChargedPionSpecSyst2040->Write("histoChargedPionSpecSyst");
+    if(histoKaonPionSpecStat2040)     histoKaonPionSpecStat2040->Write("histoKaonPionSpecStat");
+    if(histoKaonPionSpecSyst2040)     histoKaonPionSpecSyst2040->Write("histoKaonPionSpecSyst");
 
     TString nameCentFolder_40_60 = "40-60%PbPb_5.02TeV";
     fileOutput->mkdir(nameCentFolder_40_60.Data());
@@ -246,6 +304,8 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     fileOutput->cd(nameCentFolder_40_60.Data());
     if(histoChargedPionSpecStat4060)  histoChargedPionSpecStat4060->Write("histoChargedPionSpecStat");
     if(histoChargedPionSpecSyst4060)  histoChargedPionSpecSyst4060->Write("histoChargedPionSpecSyst");
+    if(histoKaonPionSpecStat4060)     histoKaonPionSpecStat4060->Write("histoKaonPionSpecStat");
+    if(histoKaonPionSpecSyst4060)     histoKaonPionSpecSyst4060->Write("histoKaonPionSpecSyst");
 
     TString nameCentFolder_60_80 = "60-80%PbPb_5.02TeV";
     fileOutput->mkdir(nameCentFolder_60_80.Data());
@@ -253,6 +313,8 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     fileOutput->cd(nameCentFolder_60_80.Data());
     if(histoChargedPionSpecStat6080)  histoChargedPionSpecStat6080->Write("histoChargedPionSpecStat");
     if(histoChargedPionSpecSyst6080)  histoChargedPionSpecSyst6080->Write("histoChargedPionSpecSyst");
+    if(histoKaonPionSpecStat6080)     histoKaonPionSpecStat6080->Write("histoKaonPionSpecStat");
+    if(histoKaonPionSpecSyst6080)     histoKaonPionSpecSyst6080->Write("histoKaonPionSpecSyst");
 
     fileOutput->Write();
     fileOutput->Close();
