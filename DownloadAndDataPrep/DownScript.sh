@@ -189,6 +189,7 @@ OptRunlistNamefile=OptRunlistNames.txt
 OptAllRunlists=0
 UseMerge=0
 Userunwise=0
+SetOutName=""
 Usechildsareperiods=0
 re='^[0-9]+$'
 
@@ -225,7 +226,7 @@ do
 		fi
 	elif [[ $setting = "-Name_"* ]]
 	then
-		OutName=${setting#*-Name_}
+		SetOutName=${setting#*-Name_}
 	elif [[ $setting = "?_"* ]]
 	then
 		Searchtmp=${setting#*\?_}
@@ -295,12 +296,14 @@ fi
 
 ##################
 # Print Settings
-if [[ $OutName = "" ]]
+OutName=.$TrainPage-$TrainNumber
+if [[ $SetOutName = "" ]]
 then
-	OutName=$TrainPage-$TrainNumber
-	echo -e "\e[1;33m|-> \e[21;39m OutName not set! using TrainNumber: OutName = $OutName"
-else
+	# SetOutName=$OutName
+	# echo -e "\e[1;33m|-> \e[21;39m OutName not set! using TrainNumber: OutName = $OutName"
 	echo -e "\e[1;33m|-> \e[21;39m OutName = $OutName"
+else
+	echo -e "\e[1;33m|-> \e[21;39m OutName = $SetOutName"
 fi
 if [[ $MergeTrains = 0 ]]
 then
@@ -308,7 +311,7 @@ then
 elif [[ $MergeTrains = 1 ]]
 then
 	echo -e "\e[1;33m|-> \e[21;39m TrainNumber set: $TrainNumber"
-	MergeTrainsOutname=$OutName
+	MergeTrainsOutname=$SetOutName
 fi
 echo -e "\e[1;33m|-> \e[21;39m TrainPage = $TrainPage"
 echo -e "\e[1;33m|-> \e[21;39m Search = $Search"
@@ -348,10 +351,7 @@ then
 	do
 		echo;echo;echo;echo;
 		echo  -e "\e[1;36m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\e[21;39m" 
-		if [[ $OutName = "" ]] || [[ $MergeTrains = 1 ]]
-		then
-			OutName=$TrainPage-$TrainNumber
-		fi
+		OutName=.$TrainPage-$TrainNumber
 		echo -e "\e[1;36m |-> \e[21;39m OutName = $OutName\e[1;36m | \e[21;39mTrainNumber = $TrainNumber\e[1;36m | \e[21;39mTrainPage = $TrainPage\e[1;36m | \e[21;39mSearch = $Search\e[1;36m | \e[21;39mRunlistName = $OptRunlistName\e[1;36m | \e[21;39mUsechildsareperiods = $Usechildsareperiods\e[1;36m | \e[21;39mUseMerge = $UseMerge"
 		echo  -e "\e[1;36m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\e[21;39m" 
 		echo;echo;
@@ -686,7 +686,17 @@ then
 		echo;echo;echo;echo;
 
 	done
+
 fi
+
+
+if [[ $NTrainFile = 1 ]] #&& [[ ! $TrainNumber = *"+"* ]]
+then
+	cmd="ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName"
+	echo $cmd
+	eval $cmd
+fi
+
 
 if [[ $MergeTrains = 1 ]]
 then
