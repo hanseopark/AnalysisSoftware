@@ -1,5 +1,99 @@
 #! /bin/bash
 
+
+thisuser=`echo ${USER}`
+if [[ $thisuser = "adrian" || $thisuser = "amechler" ]] 
+then
+    echo -e "y" > sayyes.txt
+
+    #######################################################
+    ######################   Daten   ######################
+    #######################################################
+
+    # ### LHC16Data="679"; #pass 1 SECOND TRAIN RUN
+    # bash DownScript.sh 679 -Name_LHC16Data GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### LHC17Data="635"; #pass 1 SECOND TRAIN RUN
+    # bash DownScript.sh 635 -Name_LHC17Data GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### LHC18Data="705"; #pass 1 SECOND TRAIN RUN
+    # bash DownScript.sh 705 -Name_LHC18Data_old GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### LHC18Data="753"; #pass 1 SECOND TRAIN RUN
+    # bash DownScript.sh 753 -Name_LHC18Data GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### Daten LHC16Data="774"
+    bash DownScript.sh 773 -Name_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### Daten LHC17Data="774"
+    bash DownScript.sh 774 -Name_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### merging 16 + 17
+    bash DownScript.sh 773 774 -Name_Data_pp13TeV_16_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -noDown < sayyes.txt #-runwise 
+
+    ### Daten LHC16Data_triggered="775"
+    bash DownScript.sh 775 -Name_Skim_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger < sayyes.txt #-runwise
+
+    ### Daten LHC17Data_triggered="776"
+    bash DownScript.sh 776 -Name_Skim_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger < sayyes.txt #-runwise
+
+    ### merging 16 + 17 triggered
+    bash DownScript.sh 775 776 -Name_Skim_Data_pp13TeV_16_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -noDown < sayyes.txt #-runwise
+
+
+    #######################################################
+    ######################   Daten   ######################
+    #######################################################
+
+
+    # ### PYT8_13TeV_anchLHC16_AOD209   LHC16xMCPHY="1276"; #pass 1
+    # bash DownScript.sh 1276 -Name_LHC16xMCPHY GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### PYT8_13TeV_anchLHC16_AOD209_extra   LHC16xMCPHY_extra="1273"; #pass 1
+    # bash DownScript.sh 1273 -Name_LHC16xMCPHY_extra GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### PYT8_13TeV_anchLHC17_AOD209_extra   LHC17xMCPHY_extra="1408";
+    # bash DownScript.sh 1408 -Name_LHC17xMCPHY_extra GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### PYT8_13TeV_anchLHC17_AOD209  LHC17xJJMC="1393";
+    # bash DownScript.sh 1393 -Name_LHC17xJJMC GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### PYT8_13TeV_anchLHC17_AOD209  LHC18xMCPHY="1325"; #pass 1 FIRST TRAIN RUN
+    # bash DownScript.sh 1325 -Name_LHC18xMCPHY GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    # ### PYT8_13TeV_anchLHC17_AOD209  LHC18xMCPHY="1415"; #pass 1 FIRST TRAIN RUN
+    # bash DownScript.sh 1415 -Name_LHC18xMCPHY GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+
+    ### PYT8_13TeV_anchLHC16_AOD209
+    bash DownScript.sh 1470 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### PYT8_13TeV_anchLHC16_AOD209_extra
+    bash DownScript.sh 1471 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### PYT8_13TeV_anchLHC16_AOD209_extra2
+    bash DownScript.sh 1472 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### PYT8_13TeV_anchLHC17_AOD209_extra
+    bash DownScript.sh 1473 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+
+    ### PYT8_13TeV_anchLHC17_AOD209
+    bash DownScript.sh 1474 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise 
+    
+    ### merging 16 MCs
+    bash DownScript.sh 1470 1471 1472 -Name_MC_pp13TeV_16 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -noDown < sayyes.txt 
+
+    ### merging 17 MC
+    bash DownScript.sh 1473 1474 -Name_MC_pp13TeV_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -noDown < sayyes.txt 
+
+    ### merging 16 + 17 MCs
+    bash DownScript.sh 1470 1471 1472 1473 1474 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -noDown < sayyes.txt #-runwise 
+
+    rm sayyes.txt
+    exit
+fi
+
+
 # copies files from grid
 # creates directory
 # changes internal structure
@@ -746,7 +840,7 @@ LHC17d18MC=$tempDir
 OUTPUTDIR_LHC17d18=$tempPath
 echo "17d18 anchored to 16p: $HAVELHC17d18 $LHC17d18MC $OUTPUTDIR_LHC17d18"
 
-######### 16 extra MCs
+####### 16 extra MCs
 
 FindCorrectTrainDirectory $LHC17f6MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
 HAVELHC17f6_extra=$tempBool
@@ -815,7 +909,7 @@ OUTPUTDIR_LHC17d18_extra=$tempPath
 echo "17d18_extra anchored to 16p: $HAVELHC17d18_extra $LHC17d18MC_extra $OUTPUTDIR_LHC17d18_extra"
 
 
-############ 16 extra2 MCs
+######### 16 extra2 MCs
 
 
 FindCorrectTrainDirectory $LHC17f6MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
@@ -875,7 +969,7 @@ echo "17d18_extra2 anchored to 16p: $HAVELHC17d18_extra2 $LHC17d18MC_extra2 $OUT
 
 
 
-############# 17 MCs
+########## 17 MCs
 
 FindCorrectTrainDirectory $LHC18d3 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
 HAVELHC18d3=$tempBool
@@ -932,7 +1026,7 @@ OUTPUTDIR_LHC18a1=$tempPath
 echo "LHC18a1 anchored to 17r: $HAVELHC18a1 $LHC18a1MC $OUTPUTDIR_LHC18a1"
 
 
-##### extra MCs
+#### extra MCs
 
 FindCorrectTrainDirectory $LHC18d3_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
 HAVELHC18d3_extra=$tempBool
