@@ -474,7 +474,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
     }
     // The trigger rejection factor has to be given externally
-    Double_t triggerRejection                       = ReturnTriggerRejectionFactor(optionEnergy, trigger.Atoi());
+    Double_t triggerRejection                       = ReturnTriggerRejectionFactor(optionEnergy, trigger.Atoi(), trigger);
     cout << "trigger rejection factor set to: " << triggerRejection << endl;
     if (triggerRejection != 1.)
         scaleFactorMeasXSecForExternalInput                   = scaleFactorMeasXSecForExternalInput*triggerRejection;

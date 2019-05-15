@@ -1371,7 +1371,7 @@ void EventQA_Runwise(
                             vecEtaSignal[i].push_back(tempEta);
 
                             vecPi0Fit[i].push_back(new TF1(*fitter.GetFitPi0()));
-                            vecEtaFit[i].push_back(new TF1(*fitter.GetFitEta()));
+//                             vecEtaFit[i].push_back(new TF1(*fitter.GetFitEta()));
                         }
                     }else{
                         cout << "INFO: nEvents<10, skipping mass fits...!" << endl;

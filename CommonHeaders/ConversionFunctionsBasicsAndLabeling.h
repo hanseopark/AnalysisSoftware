@@ -5609,6 +5609,13 @@
             } else if (trigger == 83){  // EG1
                 triggerRejec    = 7217;
             }
+        } else  if (energy.CompareTo("5TeV2017") == 0){
+            cout << "Trigger used: " << strTrigger.Data() << endl;
+            if (!strTrigger.CompareTo("a1")){  // EMC7
+                triggerRejec    = 2464;
+            } else if (!strTrigger.CompareTo("a2")){  // EG2
+                triggerRejec    = 909;
+            }
         } else  if (energy.CompareTo("8TeV") == 0){
             cout << "Trigger used: " << trigger << endl;
             if (trigger == 52){  // EMC7

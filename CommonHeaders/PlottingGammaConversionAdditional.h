@@ -3303,8 +3303,22 @@
             if(!centrality.CompareTo("")){ // generator=periodname, centrality="" (for QA)
                 if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
                     return kBlack;
+                } else if (!generator.CompareTo("LHC18q") || !generator.CompareTo("LHC18r")){
+                    return kBlack;
                 } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC16h4") || !generator.CompareTo("LHC18e1")){
                     return kGray+2;
+                } else if (generator.Contains("LHC18l8")){ //"LHC18l8a4", "LHC18l8b2", "LHC18l8b2_cent2mb", "LHC18l8c2", "LHC18l8c2_mb2cent"
+                  if (!generator.CompareTo("LHC18l8a4")){
+                    return kGray+2;
+                  } else if (!generator.CompareTo("LHC18l8b2")){
+                    return kRed+2;
+                  } else if (!generator.CompareTo("LHC18l8b2_cent2mb")){
+                    return kGreen+2;
+                  } else if (!generator.CompareTo("LHC18l8c2")){
+                    return kBlue+3;
+                  } else if (!generator.CompareTo("LHC18l8c2_mb2cent")){
+                    return kMagenta+2;
+                  }
                 } else if (generator.Contains("a")){
                     return kRed;
                 } else if (generator.Contains("b")){
@@ -3666,8 +3680,24 @@
             if (!centrality.CompareTo("")){  // generator=periodname, centrality="" (for QA)
                 if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
                     return 20;
+                } else if (!generator.CompareTo("LHC18q")){
+                    return 20;
+                } else if (!generator.CompareTo("LHC18r")){
+                    return 21;
                 } else if (!generator.CompareTo("LHC16g1") || !generator.CompareTo("LHC16h4") || !generator.CompareTo("LHC18e1")){
                     return 24;
+                } else if (generator.Contains("LHC18l8")){ //"LHC18l8a4", "LHC18l8b2", "LHC18l8b2_cent2mb", "LHC18l8c2", "LHC18l8c2_mb2cent"
+                  if (!generator.CompareTo("LHC18l8a4")){
+                    return 24;
+                  } else if (!generator.CompareTo("LHC18l8b2")){
+                    return 25;
+                  } else if (!generator.CompareTo("LHC18l8b2_cent2mb")){
+                    return 27;
+                  } else if (!generator.CompareTo("LHC18l8c2")){
+                    return 28;
+                  } else if (!generator.CompareTo("LHC18l8c2_mb2cent")){
+                    return 30;
+                  }
                 } else if (generator.Contains("a")){
                     return 25;
                 } else if (generator.Contains("b")){
