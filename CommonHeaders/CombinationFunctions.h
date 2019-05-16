@@ -2512,6 +2512,7 @@
                 corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EGA_INT7-EGA");
                 corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EMC7_EMC7-EGA");
                 corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EGA_EMC7-EGA");
+            }
 
             // correlation factors for INT1 triggers
             Double_t cvINT1_INT7              = 0.;
