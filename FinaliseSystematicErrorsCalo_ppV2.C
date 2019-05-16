@@ -640,7 +640,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
                         error   = 0.95;
                     } else if (additionalNameOutput.CompareTo("EG2")==0){
-                        error   = 0;
+                        error   = 0.95;
                     } else if (additionalNameOutput.CompareTo("EG1")==0){
                         error   = 0.95;
                     }    
@@ -668,8 +668,10 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                         error   = TMath::Sqrt(4.755*4.755+2*2);
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
                         error   = TMath::Sqrt(4.208*4.208+2*2);
+                        if(energy.CompareTo("5TeV2017") == 0) error = 5.722;
                     } else if (additionalNameOutput.CompareTo("EG2")==0){
                         error   = TMath::Sqrt(7.37*7.37+2*2);
+                        if(energy.CompareTo("5TeV2017") == 0) error = 2.676;
                     } else if (additionalNameOutput.CompareTo("EG1")==0){
                         error   = TMath::Sqrt(10.59*10.59+2*2);
                     }    
