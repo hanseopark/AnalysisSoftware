@@ -1187,7 +1187,7 @@
             return "Xe-Xe, #sqrt{#it{s}_{_{NN}}} = 5.44 TeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+        } else if( fEnergyFlagOpt.Contains("pPb_8TeV")) {
             return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 8 TeV";
         } else {
             cout << "No correct collision system specification, has been given" << endl;
@@ -1219,7 +1219,7 @@
             return 5444;
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 )  {
             return 5023;
-        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_8.16TeVCent") == 0 )  {
+        } else if( fEnergyFlagOpt.Contains("pPb_8TeV") )  {
             return 8160;
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
@@ -1251,7 +1251,7 @@
             return  "XeXe5440GeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 ) {
             return  "pPb5TeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+        } else if( fEnergyFlagOpt.Contains("pPb_8TeV") ) {
             return  "pPb8TeV";
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
@@ -1283,7 +1283,7 @@
             return  "5440GeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 ||  fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return  "5TeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+        } else if( fEnergyFlagOpt.Contains("pPb_8TeV")) {
             return  "pPb8TeV";
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
@@ -1819,6 +1819,8 @@
             case 6:
                 return 5.59;
             case 7:
+                return 5.7;
+            case 9:
                 return 5.7;
             default:
                 return 0;
@@ -5623,7 +5625,7 @@
             } else if (trigger == 81){  // EGA
                 triggerRejec    = 15075;
             }
-        }else  if (energy.CompareTo("pPb_8TeV") == 0){
+        }else  if (energy.Contains("pPb_8TeV") ){
         cout << "Trigger used: " << trigger << endl;
             if (!strTrigger.CompareTo("8e")){  // EG2
                 triggerRejec    = 276;

@@ -840,6 +840,9 @@ do
     elif [ $answer = "pPb_8TeV" ] || [ $answer = "pPb_8" ] || [ $answer = "pPb8" ];  then
         ENERGY="pPb_8TeV";
         EXTINPUTFILE="";
+    elif [ $answer = "pPb_8TeVComb" ];  then
+        ENERGY="pPb_8TeVComb";
+        EXTINPUTFILE="";
     fi
     echo -e "--> The collision system has been selected to be $ENERGY.\n"
 
@@ -982,7 +985,7 @@ do
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
             fi
-        elif [ $ENERGY = "pPb_8TeV" ]  ; then
+        elif [ $ENERGY = "pPb_8TeV" ]  || [ $ENERGY = "pPb_8TeVComb" ] ; then
             GiveBinningpPb8
             AskForMinBiasEffiOnly
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then

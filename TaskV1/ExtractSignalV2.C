@@ -4679,7 +4679,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     }
                 }
             } else if (fMode == 4 || fMode == 12) {   // EMC, DMC
-                if( fEnergyFlag.CompareTo("pPb_8TeV") == 0 ){
+                if( fEnergyFlag.Contains("pPb_8TeV") ){
                     mesonAmplitudeMin = mesonAmplitude*90./100.;
                     mesonAmplitudeMax = mesonAmplitude*400./100.;
                     TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);

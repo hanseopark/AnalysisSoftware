@@ -3180,7 +3180,7 @@
                 }
             }
         }
-        if (!energy.CompareTo("pPb_8TeV") ){
+        if (energy.Contains("pPb_8TeV") ){
             if (!kBox){
                 if (!generator.CompareTo("")){
                     return kViolet+2;
@@ -3600,7 +3600,7 @@
               }
             }
         }
-        if (!energy.CompareTo("pPb_8TeV") ){
+        if (energy.Contains("pPb_8TeV") ){
             if (!generator.CompareTo("")){
                 return 33;
             } else if (generator.Contains("LHC16r")){

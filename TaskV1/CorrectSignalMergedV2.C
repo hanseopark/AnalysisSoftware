@@ -360,7 +360,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoExternalInputSecPi0[j]                     = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
             if (histoExternalInputSecPi0[j]){
                 foundCocktailInput                          = kTRUE;
-                // histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
+                histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
                 cout << "Using the cocktail input for secondary correction of " << nameSecMeson[j] << endl;
                 if (j==0) strExternalInputName              = "Cocktail";
             }
@@ -634,7 +634,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyGammaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyGammaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
             histoMesonPurityPtOnlyGammaCorr->Add(histoRatioAdditionalGammaCorrM02,-1);
-        } else if (optionEnergy.CompareTo("pPb_8TeV") == 0 && fitPromptdivFragTheo_pPb8TeV) {
+        } else if (optionEnergy.Contains("pPb_8TeV") && fitPromptdivFragTheo_pPb8TeV) {
             cout << "found theo scaling fac" <<  endl;
             cout << "adjusting gamma contribution according theory predictions" <<  endl;
             histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo_pPb8TeV);
@@ -663,7 +663,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyEtaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyEtaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalEtaCorrM02,-1);
             histoMesonPurityPtOnlyEtaCorr->Add(histoRatioAdditionalEtaCorrM02,-1);
-        } else if (optionEnergy.CompareTo("pPb_8TeV") == 0 && nameMeson.CompareTo("Pi0") == 0 ){
+        } else if (optionEnergy.Contains("pPb_8TeV") && nameMeson.CompareTo("Pi0") == 0 ){
             cout << "adjusting eta contribution according data/MC comparison for eta/pi0" <<  endl;
             TH1D* histoRatioAdditionalEtaCorrM02    = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
             histoRatioAdditionalEtaCorrM02->Scale(0.483/0.524-1.); // this factor is first the measured eta/pi0 in data and the eta/pi0 from the Pythia8 MB MC (0.524). in the JJ at high pt it would be (0.414)
@@ -693,7 +693,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyElecCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyElecCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalElecCorrM02,-1);
             histoMesonPurityPtOnlyElecCorr->Add(histoRatioAdditionalElecCorrM02,-1);
-        }else if(optionEnergy.CompareTo("pPb_8TeV") == 0 && splineRatioElecFromWeakBoson_pPb8TeV){
+        }else if(optionEnergy.Contains("pPb_8TeV") && splineRatioElecFromWeakBoson_pPb8TeV){
             cout << "adjusting electron contribution according to Powheg (e from W/Z) vs Pythia electrons" <<  endl;
             TH1D* histoRatioAdditionalElecCorrM02  = (TH1D*)fileCorrections->Get("RatioTrueYieldElectronM02");
             for(Int_t i = 1; i <= histoRatioAdditionalElecCorrM02->GetNbinsX(); i++){
@@ -841,7 +841,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                         histoSecEffiPt[j]               = (TH1D*)histoSecEffiPt[0]->Clone(Form("TrueMesonEffiSecFrom%sPt",nameSecMeson[j].Data()));
                         modifiedSecEff[j]               = kTRUE;
                 } else if ( j == 2 ){
-                    if(!optionEnergy.CompareTo("pPb_8TeV")){
+                    if(optionEnergy.Contains("pPb_8TeV")){
                         fitSecFracExtInput[j] = new TF1(Form("fitSecFracExtInput%s",nameSecMeson[j].Data()),"[0]");
                         fitSecFracExtInput[j]->SetRange(minPtMesonSec,maxPtMeson);
                         // histoRatioSecEffDivTrueEff[j]->Fit(fitSecFracExtInput[j],"QNRME+","",minPtMesonSec,maxPtMeson);

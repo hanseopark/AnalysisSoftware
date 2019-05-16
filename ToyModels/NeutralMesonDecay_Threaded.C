@@ -227,7 +227,16 @@ void NeutralMesonDecay_Threaded(
             ptDistribution[tt]->SetParameter(4,2.9785817202);
             ptDistribution[tt]->SetRange(minPt,maxPt);
          }
-
+      } else if (energy.CompareTo("8TeV") == 0){
+         for (Int_t tt = 0; tt < 10; tt++){ // one entry per thread for safety
+            ptDistribution[tt]      = FitObject("tcm",Form("ptDistribution%d",tt),"Pi0",NULL,10,200.);
+            ptDistribution[tt]->SetParameter(0,709.7622755997);
+            ptDistribution[tt]->SetParameter(1,0.0022980359);
+            ptDistribution[tt]->SetParameter(2,0.0758656254);
+            ptDistribution[tt]->SetParameter(3,0.8831101616);
+            ptDistribution[tt]->SetParameter(4,3.0568183147);
+            ptDistribution[tt]->SetRange(minPt,maxPt);
+         }
       } else {
          cout << "ERROR: undefined energy for pi0" << endl;
          return;

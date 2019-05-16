@@ -897,7 +897,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 200;
         } else if (mode == 10 && !optionEnergy.CompareTo("8TeV")){
             maxTriggReject = 49000;
-        } else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV")){
+        } else if (mode == 10 && optionEnergy.Contains("pPb_8TeV")){
             maxTriggReject = 9000;
         }else if (optionEnergy.CompareTo("13TeV") == 0){
             maxTriggReject = 4200;
@@ -1105,7 +1105,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if( optionEnergy.CompareTo("13TeV")==0 ){
             if (mode == 2 || mode == 4 || mode == 10 )
                 maxTriggRejectLin = 1005;
-        } else if( optionEnergy.CompareTo("pPb_8TeV")==0 ){
+        } else if( optionEnergy.Contains("pPb_8TeV") ){
             if (mode == 2 || mode == 4 || mode == 10 )
                 maxTriggRejectLin = 4005;
         }
@@ -1523,7 +1523,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     } else if (mode == 10){
         maxEffiPi0      = 20e-1;
         minEffiPi0      = 1e-2;
-        if(optionEnergy.CompareTo("pPb_8TeV")==0){
+        if(optionEnergy.Contains("pPb_8TeV")){
             minEffiPi0  = 0.1;
             maxEffiPi0  = 4;
         }
