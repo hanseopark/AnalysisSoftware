@@ -103,7 +103,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     fileFitsOutput.open(nameFinalResDat.Data(), ios::out);
 
     TString fileNameTheory                      = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
-    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedCharged/ChargedPion_29_Apr_2019_PbPb5TeV.root";
+    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedCharged/ChargedPion_10_May_2019_PbPb5TeV.root";
 
     Int_t maxCent                               = 9;
     Int_t intRefMB                              = 1;
@@ -167,7 +167,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     if (pathConfigsRAAErr.CompareTo("")!=0 ){
         for (Int_t cent = 0; cent < maxCent; cent++){
             if (!enableCentRAA[cent]) continue;
-            nameConfigFileRAAErr[cent]               = Form("%s/configFileRAA_%s%s.txt", pathConfigsRAAErr.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data());
+            nameConfigFileRAAErr[cent]               = Form("%s/configFileRAA_%s.txt", pathConfigsRAAErr.Data(), centArrayOutput[cent].Data());
             gSystem->Exec(Form("cp %s %s/configFileRAA_%s%s.txt", nameConfigFileRAAErr[cent].Data(), outputDirFile.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data()));
             cout << "copied: " << nameConfigFileRAAErr[cent].Data() << " if available" << endl;
         }
@@ -450,7 +450,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                     TString currentString = "";
                     inPbConfig >> currentString;
                     Int_t counter = 0;
-                    while (currentString.CompareTo("STOP") != 0 && counter < 20 ){
+                    while (currentString.CompareTo("STOP") != 0 && counter < 40 ){
                         ptSysRemNames[cent][nReadSys].push_back(currentString);
                         counter++;
                         inPbConfig >> currentString;
@@ -766,7 +766,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                                                                                                 currMethodRead.Data()));
         systErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeVPbPbRef/graphInvCrossSectionPi0%s5TeVSysErr_yShifted",
                                                                                                                 currMethodRead.Data()));
-        systErrorUnCorrCollectionPi0PP[meth]           = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeVPbPbRef/graphInvCrossSectionPi0%s5TeVSysErr_yShifted",
+        systErrorUnCorrCollectionPi0PP[meth]           = (TGraphAsymmErrors*)fileReference->Get(Form("Pi05TeVPbPbRef/graphInvCrossSectionPi0%s5TeVReducedSysErr_yShifted",
                                                                                                          currMethodRead.Data()));
         if (statErrorCollectionPi0PP[meth] && systErrorCollectionPi0PP[meth] && systErrorUnCorrCollectionPi0PP[meth] ){
             haveRefPPPi0[meth]                              = kTRUE;
@@ -785,15 +785,14 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         if (haveRefPPPi0[meth])
             cout << "found pi0 pp reference for " << currMethod.Data() << endl;
 
-
-        if (meth == 1){
-            currMethodRead                              = "Comb";
-        }
+//         if (meth == 1){
+//             currMethodRead                              = "Comb";
+//         }
         statErrorCollectionEtaPP[meth]                  = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVStatErr_yShifted",
                                                                                                                 currMethodRead.Data()));
         systErrorCollectionEtaPP[meth]                  = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVSysErr_yShifted",
                                                                                                                 currMethodRead.Data()));
-        systErrorUnCorrCollectionEtaPP[meth]            = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVSysErr_yShifted",
+        systErrorUnCorrCollectionEtaPP[meth]            = (TGraphAsymmErrors*)fileReference->Get(Form("Eta5TeVPbPbRef/graphInvCrossSectionEta%s5TeVReducedSysErr_yShifted",
                                                                                                          currMethodRead.Data()));
         if (statErrorCollectionEtaPP[meth] && systErrorCollectionEtaPP[meth] && systErrorUnCorrCollectionEtaPP[meth] ){
             haveRefPPEta[meth]                          = kTRUE;
@@ -846,20 +845,22 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     TDirectory* directoryOtherPart[9]                  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D* histChPiSpecStat[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D* histChPiSpecSyst[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histChKPiStat[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histChKPiSyst[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecStatErr[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecSystErr[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelStatErr[9]      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelSystErr[9]      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelTotErr[9]       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-//     TGraphAsymmErrors* graphDRAAStat[9]                = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphChKToPiStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphChKToPiSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphChKToPiTot[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    //     TGraphAsymmErrors* graphDRAAStat[9]                = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAASys[9]                 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAATot[9]                 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphChHadRAAStat[9]            = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphChHadRAASys[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphChHadRAATot[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-//     TGraphAsymmErrors* graphChKToPiStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-//     TGraphAsymmErrors* graphChKToPiSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-//     TGraphAsymmErrors* graphChKToPiTot[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     for (Int_t cent = 0; cent < maxCent; cent++){
         TString folderNameOtherPart                     = Form("%sPbPb_5.02TeV",centArray[cent].Data());
         directoryOtherPart[cent]                               = (TDirectory*)fileOtherParticle->Get(folderNameOtherPart.Data());
@@ -877,16 +878,21 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                 graphChPiSpecRelSystErr[cent]                       = CalculateRelErrUpAsymmGraph( graphChPiSpecSystErr[cent], Form("relativeSysErrorPiCh_%s",centArray[cent].Data()));
                 graphChPiSpecRelTotErr[cent]                        = CalculateRelErrUpAsymmGraph( graphChPiSpecRelTotErr[cent], Form("relativeTotErrorPiCh_%s",centArray[cent].Data()));
             }
+            histChKPiStat[cent]                                 = (TH1D*)directoryOtherPart[cent]->Get("histoKaonPionSpecStat");
+            histChKPiSyst[cent]                                 = (TH1D*)directoryOtherPart[cent]->Get("histoKaonPionSpecSyst");
+            cout << histChKPiStat[cent] << "\t" << histChKPiSyst[cent] << endl;
+            if (histChKPiStat[cent] && histChKPiSyst[cent]){
+                graphChKToPiStat[cent]                              = new TGraphAsymmErrors(histChKPiStat[cent]);
+                graphChKToPiSys[cent]                               = new TGraphAsymmErrors(histChKPiSyst[cent]);
+                graphChKToPiTot[cent]                               = AddErrorsOfGraphsQuadratically(graphChKToPiStat[cent],graphChKToPiSys[cent]);
 
+            }
 //             graphDRAAStat[cent]                                 = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbStatW0XErr");
 //             graphDRAASys[cent]                                  = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbSys");
 //             graphDRAATot[cent]                                  = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbTot");
 //             graphChHadRAAStat[cent]                             = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("ChargedHadQPbPbStatW0XErr");
 //             graphChHadRAASys[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("ChargedHadQPbPbSys");
 //             graphChHadRAATot[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("ChargedHadQPbPbTot");
-//             graphChKToPiStat[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubStatW0XErr");
-//             graphChKToPiSys[cent]                               = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubSys");
-//             graphChKToPiTot[cent]                               = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedKaonToPionPubTot");
         }
     }
 
@@ -1316,8 +1322,10 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
         TMarker* markerPCMEtaOnlyRatioEtaPP             = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[0],columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[1],1);
         markerPCMEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[1]);
-        TMarker* markerPHOSEtaOnlyRatioEtaPP            = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[2],1);
-        markerPHOSEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[2]);
+        if (graphRatioEtaIndCombFitSysPP[1]){
+            TMarker* markerPHOSEtaOnlyRatioEtaPP            = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[2],1);
+            markerPHOSEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[2]);
+        }
         TMarker* markerEMCALEtaOnlyRatioEtaPP           = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[2], columnsLegendOnlyEtaRatioPP[1] ,rowsLegendOnlyEtaRatioPP[3],1);
         markerEMCALEtaOnlyRatioEtaPP->DrawMarker(columnsLegendOnlyEtaRatioPPAbs[1] ,rowsLegendOnlyEtaRatioPPAbs[3]);
         TMarker* markerPCMEMCALEtaOnlyRatioEtaPP        = CreateMarkerFromGraph(graphRatioEtaIndCombFitSysPP[4], columnsLegendOnlyEtaRatioPP[3] ,rowsLegendOnlyEtaRatioPP[1],1);
@@ -1328,9 +1336,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         TBox* boxPCMEtaOnlyRatioEtaPP                 = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[0], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[1]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[1]+ heightBoxPP);
         boxPCMEtaOnlyRatioEtaPP->Draw("l");
-        TBox* boxPHOSEtaOnlyRatioEtaPP                = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
+        if (graphRatioEtaIndCombFitSysPP[1]){
+            TBox* boxPHOSEtaOnlyRatioEtaPP                = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[1], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[2]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[2]+ heightBoxPP);
-        boxPHOSEtaOnlyRatioEtaPP->Draw("l");
+            boxPHOSEtaOnlyRatioEtaPP->Draw("l");
+        }
         TBox* boxEMCALEtaOnlyRatioEtaPP               = CreateBoxFromGraph(graphRatioEtaIndCombFitSysPP[2], columnsLegendOnlyEtaRatioPPAbs[2]-0.1*lengthBoxPPEta , rowsLegendOnlyEtaRatioPPAbs[3]- heightBoxPP,
                                                                             columnsLegendOnlyEtaRatioPPAbs[2]+ 1.7*lengthBoxPPEta, rowsLegendOnlyEtaRatioPPAbs[3]+ heightBoxPP);
         boxEMCALEtaOnlyRatioEtaPP->Draw("l");
@@ -6429,33 +6439,29 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         canvasEtatoPi0combo->Update();
         canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WithPP_Paper_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
 
+        if (graphChKToPiTot[cent]){
+            histo2DParticleRatios->Draw("copy");
 
+                graphCombEtaToPi0Sys[cent]->Draw("E2same");
+                graphCombEtaToPi0StatWOXErr[cent]->Draw("p,same,z");
 
-//         if (graphChKToPiTot[cent]){
-//             histo2DParticleRatios->Draw("copy");
-//
-//                 graphCombEtaToPi0Sys[cent]->Draw("E2same");
-//                 graphCombEtaToPi0StatWOXErr[cent]->Draw("p,same,z");
-//
-// //                 DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys[cent], markerStyleCent[cent], markerSizeCent[cent], colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE);
-// //                 graphCombEtaToPi0Sys[cent]->Draw("E2same");
-//                 DrawGammaSetMarkerTGraphAsym(graphChKToPiTot[cent], 25, markerSizeCent[cent]*0.5, kGray+1, kGray+1);
-//                 graphChKToPiTot[cent]->Draw("p,same,z");
-//
-//                 // plotting labels
-//                 labelEnergyEtaToPi0->Draw();
-//                 labelALICEEtaToPi0->Draw();
-//
-//                 TLegend* legendParticleRatios = GetAndSetLegend2(0.13, 0.905-(3*textsizeLabelsEtaToPi0*1.05), 0.53, 0.905-(1*textsizeLabelsEtaToPi0), textSizeLabelsPixel*0.85, 1, "", 43, 0.14);
-//                 legendParticleRatios->AddEntry(graphCombEtaToPi0Sys[cent], "#eta/#pi^{0}","fp");
-//                 legendParticleRatios->AddEntry(graphChKToPiTot[cent], "K^{#pm}/#pi^{#pm}","ep");
-//                 legendParticleRatios->Draw();
-//
-//             canvasEtatoPi0combo->Update();
-//             canvasEtatoPi0combo->SaveAs(Form("%s/ParticleRatios_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
-//             delete legendParticleRatios;
-//
-//         }
+                DrawGammaSetMarkerTGraphAsym(graphChKToPiTot[cent], 25, markerSizeCent[cent]*0.5, kGray+1, kGray+1);
+                graphChKToPiTot[cent]->Draw("p,same,z");
+
+                // plotting labels
+                labelEnergyEtaToPi0->Draw();
+                labelALICEEtaToPi0->Draw();
+
+                TLegend* legendParticleRatios = GetAndSetLegend2(0.13, 0.905-(3*textsizeLabelsEtaToPi0*1.05), 0.53, 0.905-(1*textsizeLabelsEtaToPi0), textSizeLabelsPixel*0.85, 1, "", 43, 0.14);
+                legendParticleRatios->AddEntry(graphCombEtaToPi0Sys[cent], "#eta/#pi^{0}","fp");
+                legendParticleRatios->AddEntry(graphChKToPiTot[cent], "K^{#pm}/#pi^{#pm}","ep");
+                legendParticleRatios->Draw();
+
+            canvasEtatoPi0combo->Update();
+            canvasEtatoPi0combo->SaveAs(Form("%s/ParticleRatios_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
+            delete legendParticleRatios;
+
+        }
 
         delete legendEtaToPi0TheoryHighpt;
         delete dummyHighPt;
@@ -6464,7 +6470,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         delete legendEtaToPi0;
         delete legendEtaToPi0Theory;
     }
-    Bool_t haveCharged  = kFALSE;
+    Bool_t haveCharged  = kTRUE;
 
     histo2DEtatoPi0combo->Draw("copy");
     TLegend* legendEtaToPi0Comb = GetAndSetLegend2(0.13, 0.91-(1*textsizeLabelsEtaToPi0*1.)-0.01, 0.6, 0.91-(nCurrEst*textsizeLabelsEtaToPi0*1.01)-0.01, textSizeLabelsPixel,1, "", 43, 0.125);
@@ -6524,39 +6530,36 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WithPP_Paper_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
 
-//     if (haveCharged){
-//
-//         histo2DParticleRatios->Draw("copy");
-//
-//         TLegend* legendParticleRatios = GetAndSetLegend2(0.13, 0.905-(3*textsizeLabelsEtaToPi0*1.05), 0.63, 0.905-(1*textsizeLabelsEtaToPi0), textSizeLabelsPixel*0.85, 2, "", 43, 0.2);
-//         for (Int_t cent = 0; cent < maxCent; cent++){
-//             if (!(centArray[cent].CompareTo("0-20%") == 0 ||centArray[cent].CompareTo("60-100%") == 0 )) continue;
-//             if (!enableCentComb[cent] ) continue;
-//             legendParticleRatios->AddEntry(graphCombEtaToPi0Sys[cent], "#eta/#pi^{0} "+centArray[cent],"fp");
-//
-//             graphCombEtaToPi0Sys[cent]->Draw("E2same");
-//             graphCombEtaToPi0StatWOXErr[cent]->Draw("p,same,z");
-//         }
-//         for (Int_t cent = 0; cent < maxCent; cent++){
-//             if (! (centArray[cent].CompareTo("0-20%") == 0 ||centArray[cent].CompareTo("60-100%") == 0 )) continue;
-//             if (!enableCentComb[cent] ) continue;
-//             DrawGammaSetMarkerTGraphAsym(graphChKToPiTot[cent], 25, markerSizeCent[cent]*0.5, colorCentBox[cent], colorCentBox[cent]);
-//             graphChKToPiTot[cent]->Draw("p,same,z");
-//             legendParticleRatios->AddEntry(graphChKToPiTot[cent], "K^{#pm}/#pi^{#pm} "+centArray[cent],"ep");
-//
-//         //                 DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys[cent], markerStyleCent[cent], markerSizeCent[cent], colorCent[cent], colorCent[cent], widthLinesBoxes, kTRUE);
-//         //                 graphCombEtaToPi0Sys[cent]->Draw("E2same");
-//         }
-//         legendParticleRatios->Draw();
-//         // plotting labels
-//         labelEnergyEtaToPi0->Draw();
-//         labelALICEEtaToPi0->Draw();
-//
-//
-//         canvasEtatoPi0combo->Update();
-//         canvasEtatoPi0combo->SaveAs(Form("%s/ParticleRatios_CentAndPeri_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
-//         delete legendParticleRatios;
-//     }
+    if (haveCharged){
+
+        histo2DParticleRatios->Draw("copy");
+
+        TLegend* legendParticleRatios = GetAndSetLegend2(0.13, 0.905-(3*textsizeLabelsEtaToPi0*1.05), 0.63, 0.905-(1*textsizeLabelsEtaToPi0), textSizeLabelsPixel*0.85, 2, "", 43, 0.2);
+        for (Int_t cent = 0; cent < maxCent; cent++){
+            if (!(centArray[cent].CompareTo("0-10%") == 0 || centArray[cent].CompareTo("60-80%") == 0 )) continue;
+            if (!enableCentComb[cent] ) continue;
+            legendParticleRatios->AddEntry(graphCombEtaToPi0Sys[cent], "#eta/#pi^{0} "+centArray[cent],"fp");
+
+            graphCombEtaToPi0Sys[cent]->Draw("E2same");
+            graphCombEtaToPi0StatWOXErr[cent]->Draw("p,same,z");
+        }
+        for (Int_t cent = 0; cent < maxCent; cent++){
+            if (! (centArray[cent].CompareTo("0-10%") == 0 ||centArray[cent].CompareTo("60-80%") == 0 )) continue;
+            if (!enableCentComb[cent] ) continue;
+            DrawGammaSetMarkerTGraphAsym(graphChKToPiTot[cent], 25, markerSizeCent[cent]*0.5, colorCentBox[cent], colorCentBox[cent]);
+            graphChKToPiTot[cent]->Draw("p,same,z");
+            legendParticleRatios->AddEntry(graphChKToPiTot[cent], "K^{#pm}/#pi^{#pm} "+centArray[cent],"ep");
+        }
+        legendParticleRatios->Draw();
+        // plotting labels
+        labelEnergyEtaToPi0->Draw();
+        labelALICEEtaToPi0->Draw();
+
+
+        canvasEtatoPi0combo->Update();
+        canvasEtatoPi0combo->SaveAs(Form("%s/ParticleRatios_CentAndPeri_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
+        delete legendParticleRatios;
+    }
 
     //*****************************************************************************************************************
     // Plotting RAA s for different mesons
@@ -6822,7 +6825,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             labelALICERAA->Draw();
             labelPi0RAA->Draw();
 
-            TLegend* legendRAAInd     = GetAndSetLegend2(0.45, 0.13, 0.95 , 0.13+0.04*3, textSizeLabelsPixel*0.85,2, "", 43, 0.2);
+            TLegend* legendRAAInd     = GetAndSetLegend2(0.75, 0.93-0.04*5, 0.95 , 0.93, textSizeLabelsPixel*0.85,1, "", 43, 0.2);
             for (Int_t meth = 0; meth< 11; meth++){
                 if (graphRAAIndSystPi0[cent][meth])legendRAAInd->AddEntry(graphRAAIndSystPi0[cent][meth],nameMeasGlobalLabel[meth].Data(),"pf");
             }
@@ -6856,8 +6859,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             labelALICERAA->Draw();
             labelEtaRAA->Draw();
 
-            TLegend* legendRAAIndEta     = GetAndSetLegend2(0.45, 0.13, 0.95 , 0.13+0.04*3, textSizeLabelsPixel*0.85,2, "", 43, 0.2);
+            TLegend* legendRAAIndEta     = GetAndSetLegend2(0.75, 0.93-0.04*5, 0.93 , 0.95, textSizeLabelsPixel*0.85,1, "", 43, 0.2);
             for (Int_t meth = 0; meth< 11; meth++){
+                if (meth == 0||meth == 2)  legendRAAIndEta->AddEntry((TObject*)0, "", "");
                 if (graphRAAIndSystEta[cent][meth])legendRAAIndEta->AddEntry(graphRAAIndSystEta[cent][meth],nameMeasGlobalLabel[meth].Data(),"pf");
             }
             legendRAAIndEta->Draw();

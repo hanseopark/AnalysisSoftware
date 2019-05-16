@@ -286,7 +286,7 @@ void ComputeCorrelationFactors(
         maxCorrYaxis            = 1.5;
         canvasWeights->SetLogy();
     } else if(  combMode.CompareTo("systems") == 0 && (energy.Contains("pPb_5.023TeV")  || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&
-                ( meson.Contains("RGamma") ||  meson.Contains("IncGammaToPi0") && isStatCorr ) ){
+                (( meson.Contains("RGamma") ||  meson.Contains("IncGammaToPi0")) && isStatCorr ) ){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.05;
     }else if(combMode.CompareTo("systems") == 0 ){
