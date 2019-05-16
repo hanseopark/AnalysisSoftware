@@ -2513,32 +2513,6 @@
                 corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EMC7_EMC7-EGA");
                 corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EGA_EMC7-EGA");
 
-            // Definition of correlations coefficients between triggered spectra for pi0 in 5TeV EMC-EMC
-            } else if (mode == 4 && energy.CompareTo("5TeV2017") == 0 && meson.CompareTo("Pi0") == 0){
-                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "INT7_INT7-EMC7");
-                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "INT7_INT7-EG2");
-                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "EMC7_INT7-EMC7");
-                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "EMC7_EMC7-EG2");
-                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "EG2_INT7-EG2");
-                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0", "EG2_EMC7-EG2");
-            // Definition of correlations coefficients between triggered spectra for eta in 8TeV EMC-EMC
-            } else if (mode == 4 && energy.CompareTo("5TeV2017") == 0 && meson.CompareTo("Eta") == 0){
-                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "INT7_INT7-EMC7");
-                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "INT7_INT7-EG2");
-                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "EMC7_INT7-EMC7");
-                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "EMC7_EMC7-EG2");
-                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "EG2_INT7-EG2");
-                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Eta", "EG2_EMC7-EG2");
-            // Definition of correlations coefficients between triggered spectra for eta/pi0 in 8TeV EMC-EMC
-            } else if (mode == 4 && energy.CompareTo("5TeV2017") == 0 && meson.CompareTo("EtaToPi0") == 0){
-                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "INT7_INT7-EMC7");
-                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "INT7_INT7-EG2");
-                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "EMC7_INT7-EMC7");
-                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "EMC7_EMC7-EG2");
-                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "EG2_INT7-EG2");
-                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "EtaToPi0", "EG2_EMC7-EG2");
-            }
-
             // correlation factors for INT1 triggers
             Double_t cvINT1_INT7              = 0.;
             if (yValue[0]>0 && yValue[1]>0 ){
