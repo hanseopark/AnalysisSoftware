@@ -843,17 +843,13 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
     TFile* fileOtherParticle                           = new TFile(fileNameOtherParticleInput.Data());
     TDirectory* directoryOtherPart[9]                  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histChPiSpecStat[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histChPiSpecSyst[9]                          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histChKPiStat[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D* histChKPiSyst[9]                             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecStatErr[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecSystErr[9]         = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelStatErr[9]      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelSystErr[9]      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChPiSpecRelTotErr[9]       = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChKToPiStat[9]             = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* graphChKToPiSys[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphChKToPiSyst[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphChKToPiTot[9]              = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     //     TGraphAsymmErrors* graphDRAAStat[9]                = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 //     TGraphAsymmErrors* graphDRAASys[9]                 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -867,25 +863,18 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         cout << "trying to find " << folderNameOtherPart.Data() << endl;
         if (directoryOtherPart[cent]){
             cout << "found it" << endl;
-            histChPiSpecStat[cent]                              = (TH1D*)directoryOtherPart[cent]->Get("histoChargedPionSpecStat");
-            histChPiSpecSyst[cent]                              = (TH1D*)directoryOtherPart[cent]->Get("histoChargedPionSpecSyst");
-            cout << histChPiSpecStat[cent] << "\t" << histChPiSpecSyst[cent] << endl;
-            if (histChPiSpecStat[cent] && histChPiSpecSyst[cent]){
-                graphChPiSpecSystErr[cent]                          = new TGraphAsymmErrors(histChPiSpecSyst[cent]);
-                graphChPiSpecStatErr[cent]                          = new TGraphAsymmErrors(histChPiSpecStat[cent]);
+            graphChPiSpecStatErr[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedPionSpecStat");
+            graphChPiSpecSystErr[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphChargedPionSpecSyst");
+            if (graphChPiSpecStatErr[cent] && graphChPiSpecSystErr[cent]){
                 graphChPiSpecRelTotErr[cent]                        = AddErrorsOfGraphsQuadratically(graphChPiSpecStatErr[cent],graphChPiSpecSystErr[cent]);
                 graphChPiSpecRelStatErr[cent]                       = CalculateRelErrUpAsymmGraph( graphChPiSpecStatErr[cent], Form("relativeStatErrorPiCh_%s",centArray[cent].Data()));
                 graphChPiSpecRelSystErr[cent]                       = CalculateRelErrUpAsymmGraph( graphChPiSpecSystErr[cent], Form("relativeSysErrorPiCh_%s",centArray[cent].Data()));
                 graphChPiSpecRelTotErr[cent]                        = CalculateRelErrUpAsymmGraph( graphChPiSpecRelTotErr[cent], Form("relativeTotErrorPiCh_%s",centArray[cent].Data()));
             }
-            histChKPiStat[cent]                                 = (TH1D*)directoryOtherPart[cent]->Get("histoKaonPionSpecStat");
-            histChKPiSyst[cent]                                 = (TH1D*)directoryOtherPart[cent]->Get("histoKaonPionSpecSyst");
-            cout << histChKPiStat[cent] << "\t" << histChKPiSyst[cent] << endl;
-            if (histChKPiStat[cent] && histChKPiSyst[cent]){
-                graphChKToPiStat[cent]                              = new TGraphAsymmErrors(histChKPiStat[cent]);
-                graphChKToPiSys[cent]                               = new TGraphAsymmErrors(histChKPiSyst[cent]);
-                graphChKToPiTot[cent]                               = AddErrorsOfGraphsQuadratically(graphChKToPiStat[cent],graphChKToPiSys[cent]);
-
+            graphChKToPiStat[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphKaonPionRatioStat");
+            graphChKToPiSyst[cent]                              = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("graphKaonPionRatioSyst");
+            if (graphChKToPiStat[cent] && graphChKToPiSyst[cent]){
+                graphChKToPiTot[cent]                               = AddErrorsOfGraphsQuadratically(graphChKToPiStat[cent],graphChKToPiSyst[cent]);
             }
 //             graphDRAAStat[cent]                                 = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbStatW0XErr");
 //             graphDRAASys[cent]                                  = (TGraphAsymmErrors*)directoryOtherPart[cent]->Get("DMesonQPbPbSys");
@@ -1915,7 +1904,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
         canvasRelTotErr->SaveAs(Form("%s/Pi0_Reldecomp_%s%s.%s",outputDirSupportComb.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
 
-        if (histChPiSpecStat[cent] && histChPiSpecSyst[cent]){
+        if (graphChPiSpecStatErr[cent] && graphChPiSpecSystErr[cent]){
             histo2DRelTotErrPi0->GetYaxis()->SetTitle("Err (%)");
             histo2DRelTotErrPi0->Draw("copy");
                 DrawGammaSetMarkerTGraphAsym(graphChPiSpecRelTotErr[cent], markerStyleComb, markerSizeComb, kBlue+1 , kBlue+1);
@@ -6900,7 +6889,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         for (Int_t meth = 0; meth < 11; meth++){
             if (graphIndPi0InvYieldStat[cent][meth] && graphIndPi0InvYieldSys[cent][meth])
                 graphRatioIndPi0ChPiComb[cent][meth]     = CalculateRatioBetweenSpectraWithDifferentBinning( graphIndPi0InvYieldStat[cent][meth], graphIndPi0InvYieldSys[cent][meth],
-                                                                                                        histChPiSpecStat[cent], histChPiSpecSyst[cent],
+                                                                                                        graphChPiSpecStatErr[cent], graphChPiSpecSystErr[cent],
                                                                                                         kTRUE,  kTRUE,
                                                                                                         &graphIndPi0StatRebinnedChPi[cent][meth], &graphIndPi0SysRebinnedChPi[cent][meth],
                                                                                                         &graphChPiStatRebinnedPi0Ind[cent][meth], &graphChPiSystRebinnedPi0Ind[cent][meth] )    ;
@@ -6908,9 +6897,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
 
         if (!enableCentComb[cent]) continue;
         cout << "charged pion comp for: " << centArray[cent].Data() << endl;
-        cout << graphCombPi0InvYieldStat[cent] << "\t" << graphCombPi0InvYieldSys[cent] << "\t" << histChPiSpecStat[cent] << "\t" << histChPiSpecSyst[cent] << endl;
+        cout << graphCombPi0InvYieldStat[cent] << "\t" << graphCombPi0InvYieldSys[cent] << "\t" << graphChPiSpecStatErr[cent] << "\t" << graphChPiSpecSystErr[cent] << endl;
         graphRatioCombPi0ChPiComb[cent]     = CalculateRatioBetweenSpectraWithDifferentBinning( graphCombPi0InvYieldStat[cent], graphCombPi0InvYieldSys[cent],
-                                                                                                histChPiSpecStat[cent], histChPiSpecSyst[cent],
+                                                                                                graphChPiSpecStatErr[cent], graphChPiSpecSystErr[cent],
                                                                                                 kTRUE,  kTRUE,
                                                                                                 &graphCombPi0StatRebinnedChPi[cent], &graphChPiSystRebinnedPi0Comb[cent],
                                                                                                 &graphChPiStatRebinnedPi0Comb[cent], &graphChPiSystRebinnedPi0Comb[cent] )    ;

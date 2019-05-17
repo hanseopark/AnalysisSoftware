@@ -80,6 +80,7 @@ TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool
     return input;
 }
 
+//________________________________________________________________________________________________________________________
 TH1D* CombineDiffCentsYields  (TH1D* hist1, TH1D* hist2, TString name, Bool_t isSys){
     if (hist1 && hist2){
         TH1D* histOut = (TH1D*)hist1->Clone(name.Data());
@@ -110,9 +111,10 @@ TH1D* CombineDiffCentsYields  (TH1D* hist1, TH1D* hist2, TString name, Bool_t is
     }
 }
 
-TGraphErrors* ConvertHistoToGraphAndRemoveZeros(TH1D* hist, TString name){
+//________________________________________________________________________________________________________________________
+TGraphAsymmErrors* ConvertHistoToGraphAndRemoveZeros(TH1D* hist, TString name){
     if (hist){
-        TGraphErrors* graphOut = new TGraphErrors(hist);
+        TGraphAsymmErrors* graphOut = new TGraphAsymmErrors(hist);
         graphOut->SetName(name.Data());
         while (graphOut->GetY()[0] < 0 || graphOut->GetY()[0] == 0 )
             graphOut->RemovePoint(0);
@@ -127,6 +129,7 @@ TGraphErrors* ConvertHistoToGraphAndRemoveZeros(TH1D* hist, TString name){
     }
 }
 
+//________________________________________________________________________________________________________________________
 void RemoveZerosFromGraph(TGraph* graph){
     if (graph){
         while (graph->GetY()[0] < 0 || graph->GetY()[0] == 0 )
@@ -136,18 +139,25 @@ void RemoveZerosFromGraph(TGraph* graph){
     }
 }
 
-void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
+//________________________________________________________________________________________________________________________
+// Main function
+//________________________________________________________________________________________________________________________
+void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
 
     TString dateForOutput                       = ReturnDateStringForOutput();
 
+
+    // *******************************************************************************************************************************************
+    // *************************************   Reading inputs for Pb-Pb 2.76 TeV   ***************************************************************
+    // *******************************************************************************************************************************************
     if (energy.CompareTo("PbPb_2.76TeV") == 0){
 
-        TString centName[15]            = { "0005", "0510", "1020", "2040", "4060", "6080", "2030", "3040", "4050", "3050",
-                                            "5080", "0010", "0020", "6070", "7080"};
-        TString centNameOutput[15]      = { "0-5%", "5-10%", "10-20%", "20-40%", "40-60%", "60-80%", "20-30%", "30-40%", "40-50%", "30-50%",
-                                            "50-80%", "0-10%", "0-20%", "60-70%", "70-80%"};
-        TString centNameReadChId[15]    = {"0_5", "5_10", "10_20", "20_40", "40_60", "60_80", "20_30", "30_40", "40_50", "30_50",
-                                            "50_80", "0_10", "0_20", "60_70", "70_80" };
+        TString centName[16]            = { "0005", "0510", "1020", "2040", "4060", "6080", "2030", "3040", "4050", "3050",
+                                            "5080", "0010", "0020", "6070", "7080", "2050"};
+        TString centNameOutput[16]      = { "0-5%", "5-10%", "10-20%", "20-40%", "40-60%", "60-80%", "20-30%", "30-40%", "40-50%", "30-50%",
+                                            "50-80%", "0-10%", "0-20%", "60-70%", "70-80%", "20-50%"};
+        TString centNameReadChId[16]    = {"0_5", "5_10", "10_20", "20_40", "40_60", "60_80", "20_30", "30_40", "40_50", "30_50",
+                                            "50_80", "0_10", "0_20", "60_70", "70_80", "20_50" };
         Int_t tobeMerged[2][2]          = {{0,1}, {11,2}};
 
         //*********************************** Final pi, K, p - PbPb 2.76TeV spectra ***************************************************************
@@ -155,26 +165,26 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
         TFile* fileChargedIdentifiedSpectraFinal    = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb276.fullpT.INEL.20140329.root");
         TFile* fileChargedIdentifiedSpectraAndRAAAdd= new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/PionsSpectraAndRAAForDMesonAnalysis24062014.root");
         TFile* fileChargedIdentifiedRatiosFinal     = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb276.fullpT.RATIOS.20140329.root");
-        TH1D* histoChargedPionSpecStat[15]           = {NULL};
-        TH1D* histoChargedPionSpecSyst[15]           = {NULL};
-        TH1D* histoChargedKaonSpecStat[15]           = {NULL};
-        TH1D* histoChargedKaonSpecSyst[15]           = {NULL};
-        TH1D* histoChargedProtonSpecStat[15]         = {NULL};
-        TH1D* histoChargedProtonSpecSyst[15]         = {NULL};
-        TH1D* histoKaonPionRatioStat[15]             = {NULL};
-        TH1D* histoKaonPionRatioSyst[15]             = {NULL};
-        TH1D* histoProtonPionRatioStat[15]           = {NULL};
-        TH1D* histoProtonPionRatioSyst[15]           = {NULL};
-        TGraphErrors* graphChargedPionSpecStat[15]   = {NULL};
-        TGraphErrors* graphChargedPionSpecSyst[15]   = {NULL};
-        TGraphErrors* graphChargedKaonSpecStat[15]   = {NULL};
-        TGraphErrors* graphChargedKaonSpecSyst[15]   = {NULL};
-        TGraphErrors* graphChargedProtonSpecStat[15] = {NULL};
-        TGraphErrors* graphChargedProtonSpecSyst[15] = {NULL};
-        TGraphErrors* graphKaonPionRatioStat[15]     = {NULL};
-        TGraphErrors* graphKaonPionRatioSyst[15]     = {NULL};
-        TGraphErrors* graphProtonPionRatioStat[15]   = {NULL};
-        TGraphErrors* graphProtonPionRatioSyst[15]   = {NULL};
+        TH1D* histoChargedPionSpecStat[16]           = {NULL};
+        TH1D* histoChargedPionSpecSyst[16]           = {NULL};
+        TH1D* histoChargedKaonSpecStat[16]           = {NULL};
+        TH1D* histoChargedKaonSpecSyst[16]           = {NULL};
+        TH1D* histoChargedProtonSpecStat[16]         = {NULL};
+        TH1D* histoChargedProtonSpecSyst[16]         = {NULL};
+        TH1D* histoKaonPionRatioStat[16]             = {NULL};
+        TH1D* histoKaonPionRatioSyst[16]             = {NULL};
+        TH1D* histoProtonPionRatioStat[16]           = {NULL};
+        TH1D* histoProtonPionRatioSyst[16]           = {NULL};
+        TGraphAsymmErrors* graphChargedPionSpecStat[16]   = {NULL};
+        TGraphAsymmErrors* graphChargedPionSpecSyst[16]   = {NULL};
+        TGraphAsymmErrors* graphChargedKaonSpecStat[16]   = {NULL};
+        TGraphAsymmErrors* graphChargedKaonSpecSyst[16]   = {NULL};
+        TGraphAsymmErrors* graphChargedProtonSpecStat[16] = {NULL};
+        TGraphAsymmErrors* graphChargedProtonSpecSyst[16] = {NULL};
+        TGraphAsymmErrors* graphKaonPionRatioStat[16]     = {NULL};
+        TGraphAsymmErrors* graphKaonPionRatioSyst[16]     = {NULL};
+        TGraphAsymmErrors* graphProtonPionRatioStat[16]   = {NULL};
+        TGraphAsymmErrors* graphProtonPionRatioSyst[16]   = {NULL};
 
         for (Int_t cent = 0; cent < 6; cent++){
             // read pi+ + pi- spectrum
@@ -292,14 +302,14 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
 
         //*********************************** Final K0s, Lambda - PbPb 2.76TeV spectra ***************************************************************
         TFile* fileK0sFinalPbPb = new TFile("ExternalInputPbPb/NeutralKaon/k0s_lambda_final_spectra_12112013.root");
-        TH1D* histoNeutralKaonSpecStat[15]       = {NULL};
-        TH1D* histoNeutralKaonSpecSyst[15]       = {NULL};
-        TH1D* histoNeutralLambdaSpecStat[15]     = {NULL};
-        TH1D* histoNeutralLambdaSpecSyst[15]     = {NULL};
-        TGraphErrors* graphNeutralKaonSpecStat[15]       = {NULL};
-        TGraphErrors* graphNeutralKaonSpecSyst[15]       = {NULL};
-        TGraphErrors* graphNeutralLambdaSpecStat[15]     = {NULL};
-        TGraphErrors* graphNeutralLambdaSpecSyst[15]     = {NULL};
+        TH1D* histoNeutralKaonSpecStat[16]       = {NULL};
+        TH1D* histoNeutralKaonSpecSyst[16]       = {NULL};
+        TH1D* histoNeutralLambdaSpecStat[16]     = {NULL};
+        TH1D* histoNeutralLambdaSpecSyst[16]     = {NULL};
+        TGraphAsymmErrors* graphNeutralKaonSpecStat[16]       = {NULL};
+        TGraphAsymmErrors* graphNeutralKaonSpecSyst[16]       = {NULL};
+        TGraphAsymmErrors* graphNeutralLambdaSpecStat[16]     = {NULL};
+        TGraphAsymmErrors* graphNeutralLambdaSpecSyst[16]     = {NULL};
 
         for (Int_t cent = 0; cent < 6; cent++){
             // read K0s spectrum
@@ -339,9 +349,9 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
                                                                                Form("histoNeutralKaonSpecStat%s",centName[centb+11].Data()) , kFALSE);
             histoNeutralKaonSpecSyst[centb+11]      = CombineDiffCentsYields  ( histoNeutralKaonSpecSyst[tobeMerged[centb][0]], histoNeutralKaonSpecSyst[tobeMerged[centb][1]],
                                                                                Form("histoNeutralKaonSpecSyst%s",centName[centb+11].Data()) , kTRUE);
-            histoNeutralLambdaSpecStat[centb+11]      = CombineDiffCentsYields  ( histoNeutralLambdaSpecStat[tobeMerged[centb][0]], histoNeutralLambdaSpecStat[tobeMerged[centb][1]],
+            histoNeutralLambdaSpecStat[centb+11]    = CombineDiffCentsYields  ( histoNeutralLambdaSpecStat[tobeMerged[centb][0]], histoNeutralLambdaSpecStat[tobeMerged[centb][1]],
                                                                                  Form("histoNeutralLambdaSpecStat%s",centName[centb+11].Data()) , kFALSE);
-            histoNeutralLambdaSpecSyst[centb+11]      = CombineDiffCentsYields  ( histoNeutralLambdaSpecSyst[tobeMerged[centb][0]], histoNeutralLambdaSpecSyst[tobeMerged[centb][1]],
+            histoNeutralLambdaSpecSyst[centb+11]    = CombineDiffCentsYields  ( histoNeutralLambdaSpecSyst[tobeMerged[centb][0]], histoNeutralLambdaSpecSyst[tobeMerged[centb][1]],
                                                                                  Form("histoNeutralLambdaSpecSyst%s",centName[centb+11].Data()) , kTRUE);
         }
 
@@ -351,18 +361,18 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
         TFile* fileChargedPionRAAFinal2014      = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Pion_08052014.root");
         TFile* fileChargedKaonRAAFinal2014      = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Kaon_08052014.root");
         TFile* fileChargedProtonRAAFinal2014    = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Proton_08052014.root");
-        TH1D* histoChargedPionRAAStat[15]        = {NULL};
-        TH1D* histoChargedPionRAASyst[15]        = {NULL};
-        TH1D* histoChargedKaonRAAStat[15]        = {NULL};
-        TH1D* histoChargedKaonRAASyst[15]        = {NULL};
-        TH1D* histoChargedProtonRAAStat[15]      = {NULL};
-        TH1D* histoChargedProtonRAASyst[15]      = {NULL};
-        TGraphErrors* graphChargedPionRAAStat[15]       = {NULL};
-        TGraphErrors* graphChargedPionRAASyst[15]       = {NULL};
-        TGraphErrors* graphChargedKaonRAAStat[15]       = {NULL};
-        TGraphErrors* graphChargedKaonRAASyst[15]       = {NULL};
-        TGraphErrors* graphChargedProtonRAAStat[15]     = {NULL};
-        TGraphErrors* graphChargedProtonRAASyst[15]     = {NULL};
+        TH1D* histoChargedPionRAAStat[16]        = {NULL};
+        TH1D* histoChargedPionRAASyst[16]        = {NULL};
+        TH1D* histoChargedKaonRAAStat[16]        = {NULL};
+        TH1D* histoChargedKaonRAASyst[16]        = {NULL};
+        TH1D* histoChargedProtonRAAStat[16]      = {NULL};
+        TH1D* histoChargedProtonRAASyst[16]      = {NULL};
+        TGraphAsymmErrors* graphChargedPionRAAStat[16]       = {NULL};
+        TGraphAsymmErrors* graphChargedPionRAASyst[16]       = {NULL};
+        TGraphAsymmErrors* graphChargedKaonRAAStat[16]       = {NULL};
+        TGraphAsymmErrors* graphChargedKaonRAASyst[16]       = {NULL};
+        TGraphAsymmErrors* graphChargedProtonRAAStat[16]     = {NULL};
+        TGraphAsymmErrors* graphChargedProtonRAASyst[16]     = {NULL};
 
         for (Int_t cent = 0; cent < 6; cent++){
             // read charged pion RAA
@@ -382,7 +392,7 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
         }
 
         // convert histos also to graph and remove 0s
-        for (Int_t cent = 0; cent < 15; cent++){
+        for (Int_t cent = 0; cent < 16; cent++){
             graphChargedPionSpecStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedPionSpecStat[cent],Form("graphChargedPionSpecStat%s",centName[cent].Data()) );
             graphChargedPionSpecSyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedPionSpecSyst[cent],Form("graphChargedPionSpecSyst%s",centName[cent].Data()) );
             graphChargedKaonSpecStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedKaonSpecStat[cent],Form("graphChargedKaonSpecStat%s",centName[cent].Data()) );
@@ -407,33 +417,77 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             graphChargedProtonRAASyst[cent]        = ConvertHistoToGraphAndRemoveZeros(histoChargedProtonRAASyst[cent],Form("graphChargedProtonRAASyst%s",centName[cent].Data()) );
         }
 
-
-
         //*********************************** Final ch hadron - PbPb 2.76TeV RAA & spectra **********************************************************
         // Documentation: ???
         TFile* fileChargedSpectraAndRAAFinal            = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb_RAA_sigma_2760GeV_20120809.root");
-        TGraphErrors* graphChargedHadronSpecStat[15]    = {NULL};
-        TGraphErrors* graphChargedHadronSpecSyst[15]    = {NULL};
-        TGraphErrors* graphChargedHadronRAAStat[15]     = {NULL};
-        TGraphErrors* graphChargedHadronRAASyst[15]     = {NULL};
+        TGraphAsymmErrors* graphChargedHadronSpecStat[16]    = {NULL};
+        TGraphAsymmErrors* graphChargedHadronSpecSyst[16]    = {NULL};
+        TGraphAsymmErrors* graphChargedHadronRAAStat[16]     = {NULL};
+        TGraphAsymmErrors* graphChargedHadronRAASyst[16]     = {NULL};
 
-        for (Int_t cent = 0; cent < 15; cent++){
-            graphChargedHadronSpecStat[cent]        = (TGraphErrors*)fileChargedSpectraAndRAAFinal->Get(Form("pt_c%s_stat",centNameReadChId[cent].Data() ));
-            graphChargedHadronSpecSyst[cent]        = (TGraphErrors*)fileChargedSpectraAndRAAFinal->Get(Form("pt_c%s_syst",centNameReadChId[cent].Data() ));
-            graphChargedHadronRAAStat[cent]         = (TGraphErrors*)fileChargedSpectraAndRAAFinal->Get(Form("raa_c%s_stat",centNameReadChId[cent].Data() ));
-            graphChargedHadronRAASyst[cent]         = (TGraphErrors*)fileChargedSpectraAndRAAFinal->Get(Form("raa_c%s_syst",centNameReadChId[cent].Data() ));
+        for (Int_t cent = 0; cent < 16; cent++){
+            graphChargedHadronSpecStat[cent]        = (TGraphAsymmErrors*)fileChargedSpectraAndRAAFinal->Get(Form("pt_c%s_stat",centNameReadChId[cent].Data() ));
+            graphChargedHadronSpecSyst[cent]        = (TGraphAsymmErrors*)fileChargedSpectraAndRAAFinal->Get(Form("pt_c%s_syst",centNameReadChId[cent].Data() ));
+            graphChargedHadronRAAStat[cent]         = (TGraphAsymmErrors*)fileChargedSpectraAndRAAFinal->Get(Form("raa_c%s_stat",centNameReadChId[cent].Data() ));
+            graphChargedHadronRAASyst[cent]         = (TGraphAsymmErrors*)fileChargedSpectraAndRAAFinal->Get(Form("raa_c%s_syst",centNameReadChId[cent].Data() ));
             RemoveZerosFromGraph(graphChargedHadronSpecStat[cent]);
             RemoveZerosFromGraph(graphChargedHadronSpecSyst[cent]);
             RemoveZerosFromGraph(graphChargedHadronRAAStat[cent]);
             RemoveZerosFromGraph(graphChargedHadronRAASyst[cent]);
         }
 
+        //*********************************** Final neutral pions amd eta - PbPb 2.76TeV RAA & spectra ****************************************************
+        // Eur. Phys. J. C 74 (2014) 3108  pi0 - 0-5, 5-10, 10-20, 20-40, 40-60, 60-80
+        // Phys. Rev. C 98, 044901 (2018) pi0 & eta - 0-10, 20-50
+        //*****************************************************************************************************************************************
+        TFile* fileNeutralPionsSpectraAndRAA_10h        = new TFile("ExternalInputPbPb/NeutralMesons_PbPb_2.76TeV/CombinedResultsPbPb_ShiftedX_PaperRAA_13_Aug_2014_Pub2014.root");
+        TFile* fileNeutralMesonsSpectraAndRAA_11h       = new TFile("ExternalInputPbPb/NeutralMesons_PbPb_2.76TeV/CombinedResultsPaperPbPb2760GeV_2018_09_24.root");
+        TGraphAsymmErrors* graphNeutralPionSpecStat[16] = {NULL};
+        TGraphAsymmErrors* graphNeutralPionSpecSyst[16] = {NULL};
+        TGraphAsymmErrors* graphNeutralEtaSpecStat[16]  = {NULL};
+        TGraphAsymmErrors* graphNeutralEtaSpecSyst[16]  = {NULL};
+        TGraphAsymmErrors* graphNeutralPionRAAStat[16]  = {NULL};
+        TGraphAsymmErrors* graphNeutralPionRAASyst[16]  = {NULL};
+        TGraphAsymmErrors* graphNeutralEtaRAAStat[16]   = {NULL};
+        TGraphAsymmErrors* graphNeutralEtaRAASyst[16]   = {NULL};
+        TGraphAsymmErrors* graphEtaPi0RatioStat[16]     = {NULL};
+        TGraphAsymmErrors* graphEtaPi0RatioSyst[16]     = {NULL};
+
+        for (Int_t cent = 0; cent < 6; cent++){
+            graphNeutralPionSpecStat[cent]      = (TGraphAsymmErrors*)fileNeutralPionsSpectraAndRAA_10h->Get(Form( "InvYieldPbPbStatErr_%s",centName[cent].Data() ));
+            graphNeutralPionSpecSyst[cent]      = (TGraphAsymmErrors*)fileNeutralPionsSpectraAndRAA_10h->Get(Form( "InvYieldPbPbSysErr_%s",centName[cent].Data() ));
+            graphNeutralPionRAAStat[cent]       = (TGraphAsymmErrors*)fileNeutralPionsSpectraAndRAA_10h->Get(Form( "graphRAAStatErr_%s",centName[cent].Data() ));
+            graphNeutralPionRAASyst[cent]       = (TGraphAsymmErrors*)fileNeutralPionsSpectraAndRAA_10h->Get(Form( "graphRAASysErr_%s",centName[cent].Data() ));
+        }
+
+        for (Int_t centb = 0; centb < 5; centb++){
+            graphNeutralPionSpecStat[centb+11]  = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form("Pi0_PbPb_2.76TeV/graphInvYieldPi0CombPbPb2760GeVStatErr_%s",
+                                                                                                                   centName[centb+11].Data() ));
+            graphNeutralPionSpecSyst[centb+11]  = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Pi0_PbPb_2.76TeV/graphInvYieldPi0CombPbPb2760GeVSysErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralPionRAAStat[centb+11]   = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Pi0_PbPb_2.76TeV/graphRAAPi0CombPbPb2760GeVStatErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralPionRAASyst[centb+11]   = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Pi0_PbPb_2.76TeV/graphRAAPi0CombPbPb2760GeVSysErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralEtaSpecStat[centb+11]   = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphInvYieldEtaCombPbPb2760GeVStatErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralEtaSpecSyst[centb+11]   = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphInvYieldEtaCombPbPb2760GeVSysErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralEtaRAAStat[centb+11]    = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphRAAEtaCombPbPb2760GeVStatErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphNeutralEtaRAASyst[centb+11]    = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphRAAEtaCombPbPb2760GeVSysErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphEtaPi0RatioStat[centb+11]      = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphEtaToPi0RatioCombPbPb2760GeVStatErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+            graphEtaPi0RatioSyst[centb+11]      = (TGraphAsymmErrors*)fileNeutralMesonsSpectraAndRAA_11h->Get(Form( "Eta_PbPb_2.76TeV/graphEtaToPi0RatioCombPbPb2760GeVSysErr_%s",
+                                                                                                                    centName[centb+11].Data() ));
+        }
         //--------------------- Write Files--------------------------------------------------------------
 
         TString outputFileName = Form("ExternalInputPbPb/IdentifiedParticleCollection_ALICE_%s.root",dateForOutput.Data());
         TFile* fileOutput = new TFile(outputFileName,"UPDATE");
 
-        for (Int_t cent = 0; cent < 15; cent++){
+        for (Int_t cent = 0; cent < 16; cent++){
             TString directoryName       = Form("%sPbPb_2.76TeV", centNameOutput[cent].Data());
             TDirectoryFile* directory   = (TDirectoryFile*)fileOutput->Get(directoryName.Data());
             if (!directory)
@@ -486,10 +540,24 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             if(graphChargedHadronRAAStat[cent])  graphChargedHadronRAAStat[cent]->Write("graphChargedHadronRAAStat", TObject::kOverwrite);
             if(graphChargedHadronRAASyst[cent])  graphChargedHadronRAASyst[cent]->Write("graphChargedHadronRAASyst", TObject::kOverwrite);
 
+            if(graphNeutralPionSpecStat[cent])  graphNeutralPionSpecStat[cent]->Write("graphNeutralPionSpecStat", TObject::kOverwrite);
+            if(graphNeutralPionSpecSyst[cent])  graphNeutralPionSpecSyst[cent]->Write("graphNeutralPionSpecSyst", TObject::kOverwrite);
+            if(graphNeutralPionRAAStat[cent])  graphNeutralPionRAAStat[cent]->Write("graphNeutralPionRAAStat", TObject::kOverwrite);
+            if(graphNeutralPionRAASyst[cent])  graphNeutralPionRAASyst[cent]->Write("graphNeutralPionRAASyst", TObject::kOverwrite);
+            if(graphNeutralEtaSpecStat[cent])  graphNeutralEtaSpecStat[cent]->Write("graphNeutralEtaSpecStat", TObject::kOverwrite);
+            if(graphNeutralEtaSpecSyst[cent])  graphNeutralEtaSpecSyst[cent]->Write("graphNeutralEtaSpecSyst", TObject::kOverwrite);
+            if(graphNeutralEtaRAAStat[cent])  graphNeutralEtaRAAStat[cent]->Write("graphNeutralEtaRAAStat", TObject::kOverwrite);
+            if(graphNeutralEtaRAASyst[cent])  graphNeutralEtaRAASyst[cent]->Write("graphNeutralEtaRAASyst", TObject::kOverwrite);
+            if(graphEtaPi0RatioStat[cent])  graphEtaPi0RatioStat[cent]->Write("graphEtaPi0RatioStat", TObject::kOverwrite);
+            if(graphEtaPi0RatioSyst[cent])  graphEtaPi0RatioSyst[cent]->Write("graphEtaPi0RatioSyst", TObject::kOverwrite);
+
         }
 
         fileOutput->Write();
         fileOutput->Close();
+    // *******************************************************************************************************************************************
+    // *************************************   Reading inputs for Pb-Pb 5.02 TeV   ***************************************************************
+    // *******************************************************************************************************************************************
     } else if(energy.CompareTo("PbPb_5.02TeV") == 0){
 
         TString centName[15]            = {"0005", "0510", "1020", "2030", "3040", "4050", "5060", "6070", "7080", "8090", "0010", "2040", "4060", "6080", "0020"};
@@ -520,16 +588,16 @@ void PrepareChargedPionDataALICE_PbPb(TString energy = "PbPb_5.02TeV"){
         TH1D* histoKaonPionRatioSyst[15]        = {NULL};
         TH1D* histoProtonPionRatioStat[15]      = {NULL};
         TH1D* histoProtonPionRatioSyst[15]      = {NULL};
-        TGraphErrors* graphChargedPionSpecStat[15]      = {NULL};
-        TGraphErrors* graphChargedPionSpecSyst[15]      = {NULL};
-        TGraphErrors* graphChargedKaonSpecStat[15]      = {NULL};
-        TGraphErrors* graphChargedKaonSpecSyst[15]      = {NULL};
-        TGraphErrors* graphChargedProtonSpecStat[15]    = {NULL};
-        TGraphErrors* graphChargedProtonSpecSyst[15]    = {NULL};
-        TGraphErrors* graphKaonPionRatioStat[15]        = {NULL};
-        TGraphErrors* graphKaonPionRatioSyst[15]        = {NULL};
-        TGraphErrors* graphProtonPionRatioStat[15]      = {NULL};
-        TGraphErrors* graphProtonPionRatioSyst[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedPionSpecStat[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedPionSpecSyst[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedKaonSpecStat[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedKaonSpecSyst[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedProtonSpecStat[15]    = {NULL};
+        TGraphAsymmErrors* graphChargedProtonSpecSyst[15]    = {NULL};
+        TGraphAsymmErrors* graphKaonPionRatioStat[15]        = {NULL};
+        TGraphAsymmErrors* graphKaonPionRatioSyst[15]        = {NULL};
+        TGraphAsymmErrors* graphProtonPionRatioStat[15]      = {NULL};
+        TGraphAsymmErrors* graphProtonPionRatioSyst[15]      = {NULL};
 
         for (Int_t cent = 0; cent < 10; cent++){
             // read pi+ + pi- spectrum
