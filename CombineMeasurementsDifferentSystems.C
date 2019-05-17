@@ -35,7 +35,7 @@
 #include "TPostScript.h"
 #include "TGraphErrors.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "Math/WrappedTF1.h"
@@ -55,45 +55,45 @@ extern TMinuit*     gMinuit;
 //*********************************************************************************************************************************
 //**************************************** Main function for combination macro ****************************************************
 //*********************************************************************************************************************************
-void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   = "", 
-                                                TString fileNameCombGammaPbPb   = "", 
-                                                TString fileNameCombMesonpPb    = "", 
-                                                TString suffix                  = "eps"){  
+void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   = "",
+                                                TString fileNameCombGammaPbPb   = "",
+                                                TString fileNameCombMesonpPb    = "",
+                                                TString suffix                  = "eps"){
 
     //******************************** general style settings ***********************************************
-    gROOT->Reset(); 
+    gROOT->Reset();
     gROOT->SetStyle("Plain");
 
-    StyleSettingsThesis();  
+    StyleSettingsThesis();
     SetPlotStyle();
 
     //******************************** label declaration ****************************************************
-    TString collisionSystemPbPb0010         = "0-10% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";        
-    TString collisionSystemPbPb0020         = "0-20% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";        
-    TString collisionSystempPb              = "p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";        
+    TString collisionSystemPbPb0010         = "0-10% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystemPbPb0020         = "0-20% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystempPb              = "p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     TString dateForOutput                   = ReturnDateStringForOutput();
     TString date                            = ReturnDateString();
-    
+
     //******************************** set common colors/markers ********************************************
-    Color_t colorComb0010PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-10%", kFALSE ); 
-    Color_t colorComb0010PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-10%", kTRUE ); 
-    Color_t colorComb0005PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-5%", kFALSE ); 
-    Color_t colorChPi0005PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "MC", "0-5%", kFALSE ); 
-    Color_t colorComb0005PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-5%", kTRUE ); 
+    Color_t colorComb0010PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-10%", kFALSE );
+    Color_t colorComb0010PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-10%", kTRUE );
+    Color_t colorComb0005PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-5%", kFALSE );
+    Color_t colorChPi0005PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "MC", "0-5%", kFALSE );
+    Color_t colorComb0005PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "0-5%", kTRUE );
     Color_t colorComb0020PbPb               = GetColorDefaultColor( "PbPb_2.76TeV", "", "10-20%", kFALSE );
-    Color_t colorComb0020PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "10-20%", kTRUE ); 
-    Style_t markerStyleComb0010PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "0-10%" ); 
-    Style_t markerStyleComb0005PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "0-5%" ); 
-    Style_t markerStyleChPi0005PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "MC", "0-5%" ); 
-    Style_t markerStyleCombGamma0020PbPb    = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "5-10%" ); 
-    Size_t markerSizeComb0010PbPb           = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "0-10%" ); 
-    Size_t markerSizeComb0005PbPb           = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "0-5%" ); 
-    Size_t markerSizeCombGamma0020PbPb      = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "5-10%" ); 
-    Color_t colorCombpPb                    = GetColorDefaultColor( "pPb_5.023TeV", "", "", kFALSE ); 
-    Color_t colorCombpPbBox                 = GetColorDefaultColor( "pPb_5.023TeV", "", "", kTRUE ); 
-    Style_t markerStyleCombpPb              = GetDefaultMarkerStyle( "pPb_5.023TeV", "", "" ); 
-    Size_t markerSizeCombpPb                = GetDefaultMarkerSize( "pPb_5.023TeV", "", "" )*1.5; 
-    
+    Color_t colorComb0020PbPbBox            = GetColorDefaultColor( "PbPb_2.76TeV", "", "10-20%", kTRUE );
+    Style_t markerStyleComb0010PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "0-10%" );
+    Style_t markerStyleComb0005PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "0-5%" );
+    Style_t markerStyleChPi0005PbPb         = GetDefaultMarkerStyle( "PbPb_2.76TeV", "MC", "0-5%" );
+    Style_t markerStyleCombGamma0020PbPb    = GetDefaultMarkerStyle( "PbPb_2.76TeV", "", "5-10%" );
+    Size_t markerSizeComb0010PbPb           = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "0-10%" );
+    Size_t markerSizeComb0005PbPb           = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "0-5%" );
+    Size_t markerSizeCombGamma0020PbPb      = GetDefaultMarkerSize( "PbPb_2.76TeV", "", "5-10%" );
+    Color_t colorCombpPb                    = GetColorDefaultColor( "pPb_5.023TeV", "", "", kFALSE );
+    Color_t colorCombpPbBox                 = GetColorDefaultColor( "pPb_5.023TeV", "", "", kTRUE );
+    Style_t markerStyleCombpPb              = GetDefaultMarkerStyle( "pPb_5.023TeV", "", "" );
+    Size_t markerSizeCombpPb                = GetDefaultMarkerSize( "pPb_5.023TeV", "", "" )*1.5;
+
     Style_t markerStylePHENIX200GeV         = 25 ;
     Style_t markerStylePHENIX62GeV          = 27 ;
     Style_t markerStylePHENIX39GeV          = 24 ;
@@ -110,7 +110,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     Width_t widthLinesBoxes                 = 2.3;
     if (suffix.CompareTo("eps")==0)
         widthLinesBoxes                     = 1.4;
-    
+
     //********************************** xSections and errors ***************************************
     Double_t xSection2760GeVpp              = 55.416*1e-3;
     Double_t xSection2760GeVErrpp           = 3.9;
@@ -119,8 +119,8 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     Double_t commonCentralityErr0010        = 0.25;
     Double_t nCollErr0010                   = GetNCollErrFromName("0010");
     Double_t nCollErr0020                   = GetNCollErrFromName("0020");
-    Double_t nColl0010                      = GetNCollFromName("0010");    
-    Double_t nColl0020                      = GetNCollFromName("0020");    
+    Double_t nColl0010                      = GetNCollFromName("0010");
+    Double_t nColl0020                      = GetNCollFromName("0020");
     Double_t normErr0010                    = nCollErr0010/nColl0010;//pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr0010/tAA0010),2)+pow((commonCentralityErr0010/100),2),0.5);
     Double_t normErr0020                    = nCollErr0020/nColl0020;
     Double_t normErrpPb                     = TMath::Sqrt(pow(0.031,2)+pow(0.036,2)+pow(0.036,2));//pPb normalization,TpPb and pp normalization errors
@@ -128,8 +128,8 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //******************************** Declaration of files *****************************************
     TString fileNameDataOtherEnergyInput    = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPb.root";
     TString fileNameTheoryInput             = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
-    TString fileNameChargedPiRAA            = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
-    
+    TString fileNameChargedPiRAA            = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Pion_08052014.root";
+
     TString outputDir                       = Form("%s/%s/CombineMeasurementsDifferentSystems",suffix.Data(),dateForOutput.Data());
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputCombMesonPbPb.root", fileNameCombMesonPbPb.Data(), outputDir.Data()));
@@ -147,15 +147,15 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     TGraphAsymmErrors* graphPi0RAAPbPbSysComb0005       = (TGraphAsymmErrors*)fileFinalResultsMesonPbPb->Get("graphRAASysErr_0005");
     TGraphAsymmErrors* graphPi0RAAPbPbStatComb0005WX    = (TGraphAsymmErrors*)graphPi0RAAPbPbStatComb0005->Clone("graphRAAStatErr_0005_wXErr");
     ProduceGraphAsymmWithoutXErrors(graphPi0RAAPbPbStatComb0005WX);
-    
+
     //******************************** Read PbPb gamma file *****************************************
     TFile* fileFinalResultsGammaPbPb        = new TFile(fileNameCombGammaPbPb);
-    TDirectory* dirGamma0020PbPb            = (TDirectory*)fileFinalResultsGammaPbPb->Get("Gamma_PbPb_2.76TeV_0-20%"); 
+    TDirectory* dirGamma0020PbPb            = (TDirectory*)fileFinalResultsGammaPbPb->Get("Gamma_PbPb_2.76TeV_0-20%");
     TGraphAsymmErrors* graphGammaRAAPbPbStatComb0020    = (TGraphAsymmErrors*)dirGamma0020PbPb->Get("RAA_comb_StatErr");
     TGraphAsymmErrors* graphGammaRAAPbPbSysComb0020     = (TGraphAsymmErrors*)dirGamma0020PbPb->Get("RAA_comb_SysErr");
     TGraphAsymmErrors* graphGammaRAAPbPbStatComb0020WX  = (TGraphAsymmErrors*)graphGammaRAAPbPbStatComb0020->Clone("RAA_comb_StatErr_wXErr");
     ProduceGraphAsymmWithoutXErrors(graphGammaRAAPbPbStatComb0020WX);
-        
+
     //******************************** Read pPb meson file ******************************************
     TFile* fileFinalResultsMesonpPb         = new TFile(fileNameCombMesonpPb);
     TGraphAsymmErrors* graphPi0RpApPbStatComb   = (TGraphAsymmErrors*)fileFinalResultsMesonpPb->Get("CombinedPi0RpPbStatErr");
@@ -164,7 +164,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     graphPi0RpApPbStatComb->RemovePoint(25);
     TGraphAsymmErrors* graphPi0RpApPbStatCombWX = (TGraphAsymmErrors*)graphPi0RpApPbStatComb->Clone("CombinedPi0RpPbStatErrr_wXErr");
     ProduceGraphAsymmWithoutXErrors(graphPi0RpApPbStatCombWX);
-    
+
     //******************************** Read other energy file ******************************************
     TFile* fileDataOtherEnergies            = new TFile(fileNameDataOtherEnergyInput);
     TGraphErrors* graphWA98_17_3GeVRAA_0013 = (TGraphErrors*)fileDataOtherEnergies->Get("graphWA98RAA_0013");
@@ -188,8 +188,8 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     graphChargedPiRAASys0005->RemovePoint(0);;
     TGraphAsymmErrors* graphChargedPiRAAStat0005WX  = (TGraphAsymmErrors*)graphChargedPiRAAStat0005->Clone("RAAPion_Stat_0_5_wXErr");
     ProduceGraphAsymmWithoutXErrors(graphChargedPiRAAStat0005WX);
-    
-    
+
+
     //**************************************************************************************************
     //******************************** Plotting RAA with other energies ********************************
     //**************************************************************************************************
@@ -225,10 +225,10 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     DrawGammaSetMarkerTGraphErr(graphPHENIX39GeVRAA_0010, markerStylePHENIX39GeV,markerSizePHENIX39GeV, kBlack , kBlack);
     DrawGammaSetMarkerTGraphErr(graphWA98_17_3GeVRAA_0013, markerStyleWA98,markerSizeWA98, kGray+2 , kGray+2);
 
-    graphPHENIX200GeVRAA_0010->Draw("p,same,e1");   
-    graphPHENIX39GeVRAA_0010->Draw("p,same,e1");    
-    graphPHENIX62GeVRAA_0010->Draw("p,same,e1");    
-    graphWA98_17_3GeVRAA_0013->Draw("p,same,e1");   
+    graphPHENIX200GeVRAA_0010->Draw("p,same,e1");
+    graphPHENIX39GeVRAA_0010->Draw("p,same,e1");
+    graphPHENIX62GeVRAA_0010->Draw("p,same,e1");
+    graphWA98_17_3GeVRAA_0013->Draw("p,same,e1");
 
 
     histo2DRAAAll3Up->Draw("axis,same");
@@ -271,7 +271,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //******************************** Plotting RAA 0-5% with control probes ***************************
     //**************************************************************************************************
     canvasRAA_Comp->SetLogy(1);
-    
+
     TH1F * histo2DRAAAllUp             = new TH1F("histo2DRAAAllUp","histo2DRAAAllUp",1000,0.,21.5);
     SetStyleHistoTH1ForGraphs(histo2DRAAAllUp, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.85*textsizeLabelsRAA,textsizeLabelsRAA,0.85*textsizeLabelsRAA,textsizeLabelsRAA, 0.95,1., 512, 505); //#frac{#frac{1
     histo2DRAAAllUp->GetYaxis()->SetLabelOffset(0.005);
@@ -287,7 +287,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     graphPi0RpApPbSysComb->Draw("E2same");
     DrawGammaSetMarkerTGraphAsym(graphPi0RpApPbStatCombWX, markerStyleCombpPb,markerSizeCombpPb, colorCombpPb , colorCombpPb);
     graphPi0RpApPbStatCombWX->Draw("p,same,e1,z");
-    
+
     DrawGammaSetMarkerTGraphAsym(graphGammaRAAPbPbSysComb0020, markerStyleCombGamma0020PbPb,markerSizeCombGamma0020PbPb, colorComb0020PbPb , colorComb0020PbPb, widthLinesBoxes, kTRUE, 0);
     graphGammaRAAPbPbSysComb0020->Draw("E2same");
     DrawGammaSetMarkerTGraphAsym(graphGammaRAAPbPbStatComb0020WX, markerStyleCombGamma0020PbPb,markerSizeCombGamma0020PbPb, colorComb0020PbPb , colorComb0020PbPb);
@@ -311,7 +311,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     legendRAASinglePpPb->Draw();
 
     boxErrorNorm0010_Single->Draw();
-    
+
     TBox* boxErrorNorm0020_Single   = CreateBoxConv(colorComb0020PbPbBox, 0.55, 1.-normErr0020 , 0.85, 1.+normErr0020);
     boxErrorNorm0020_Single->Draw();
     TBox* boxErrorNormpPb_Single    = CreateBoxConv(colorCombpPbBox, 20.4, 1.-normErrpPb , 20.7, 1.+normErrpPb);
@@ -324,7 +324,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     SetStyleTLatex( labelALICEPrelim, 0.85*textsizeLabelsRAA,4);
     labelALICEPrelim->Draw();
     histo2DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes.%s",outputDir.Data(),suffix.Data()));
 
@@ -333,7 +333,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //**************************************************************************************************
     canvasRAA_Comp->SetLogy(1);
     histo2DRAAAllUp->DrawCopy("");
-    
+
     graphPi0RAAPbPbSysComb0005->Draw("E2same");
     graphPi0RAAPbPbStatComb0005WX->Draw("p,same,e1,z");
     graphPi0RpApPbSysComb->Draw("E2same");
@@ -348,8 +348,8 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     DrawGammaSetMarkerTGraphAsym(gWHDG_Raa_0005, 1,2, colorWHDG0005, colorWHDG0005,0.8);
     gWHDG_Raa_0005->SetFillStyle(fillStyleWHDG);
     gWHDG_Raa_0005->SetFillColor(colorWHDG0005);
-    gWHDG_Raa_0005->Draw("3 same");    
-    
+    gWHDG_Raa_0005->Draw("3 same");
+
 
     labelRAAALICEPbPb->Draw();
     legendRAASinglePbPb->Draw();
@@ -357,7 +357,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     labelRAAALICEpPb->Draw();
     legendRAASinglePpPb->Draw();
 
-    boxErrorNorm0010_Single->Draw();    
+    boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
 
@@ -366,11 +366,11 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     TLegend* legendRAAPi0TheoryPbPb     = GetAndSetLegend2(0.62, 0.13, 0.62+0.3, 0.13+0.04,0.75*textsizeLabelsRAA, 2, "", 42, 0.45);
     legendRAAPi0TheoryPbPb->AddEntry(Vitev_Bas_Raa_0005,"GLV","f");
     legendRAAPi0TheoryPbPb->AddEntry(gWHDG_Raa_0005,"WHDG","f");
-    legendRAAPi0TheoryPbPb->Draw();    
+    legendRAAPi0TheoryPbPb->Draw();
 
     labelALICEPrelim->Draw();
     histo2DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes_Theory.%s",outputDir.Data(),suffix.Data()));
 
@@ -378,7 +378,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //************************** Plotting RAA 0-5% with control probes, pi+-, theory *******************
     //**************************************************************************************************
     canvasRAA_Comp->SetLogy(1);
-    
+
     histo2DRAAAllUp->DrawCopy("");
 
     graphPi0RAAPbPbSysComb0005->Draw("E2same");
@@ -388,20 +388,20 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     graphChargedPiRAASys0005->Draw("E2same");
     DrawGammaSetMarkerTGraphAsym(graphChargedPiRAAStat0005WX, markerStyleChPi0005PbPb,markerSizeComb0005PbPb, colorChPi0005PbPb , colorChPi0005PbPb);
     graphChargedPiRAAStat0005WX->Draw("p,same,e1,z");
-    
+
     graphPi0RpApPbSysComb->Draw("E2same");
     graphPi0RpApPbStatCombWX->Draw("p,same,e1,z");
-    
+
     graphGammaRAAPbPbSysComb0020->Draw("E2same");
     graphGammaRAAPbPbStatComb0020WX->Draw("p,same,e1,z");
 
     Vitev_Bas_Raa_0005->Draw("3 same");
-    gWHDG_Raa_0005->Draw("3 same");    
-    
+    gWHDG_Raa_0005->Draw("3 same");
+
     boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
-    
+
     TLatex *labelRAAALICEPbPb2      = new TLatex(0.52,0.92,"Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV ");
     SetStyleTLatex( labelRAAALICEPbPb2, 0.85*textsizeLabelsRAA,4);
     labelRAAALICEPbPb2->Draw();
@@ -425,19 +425,19 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     TLatex *labelALICEPrelim2 = new TLatex(0.13,0.135,"ALICE preliminary");
     SetStyleTLatex( labelALICEPrelim2, 0.85*textsizeLabelsRAA,4);
     labelALICEPrelim2->Draw();
-    
-    boxErrorNorm0010_Single->Draw();    
+
+    boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
 
     DrawGammaLines(0., 21.5 , 1, 1 ,1,kGray+1);
 
-    legendRAAPi0TheoryPbPb->Draw();    
+    legendRAAPi0TheoryPbPb->Draw();
     histo2DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes_Theory_ChargedPi.%s",outputDir.Data(),suffix.Data()));
-    
+
     //**************************************************************************************************
     //******************************** Plotting RAA 0-5% with control probes ***************************
     //**************************************************************************************************
@@ -445,7 +445,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
 
     TH1F * histo1DRAAAllUp             = new TH1F("histo1DRAAAllUp","histo1DRAAAllUp",1000,0.,21.5);
     SetStyleHistoTH1ForGraphs(histo1DRAAAllUp, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.85*textsizeLabelsRAA,textsizeLabelsRAA,0.85*textsizeLabelsRAA,textsizeLabelsRAA, 0.95,1., 512, 505); //#frac{#frac{1
-    histo1DRAAAllUp->GetYaxis()->SetLabelOffset(0.005);    
+    histo1DRAAAllUp->GetYaxis()->SetLabelOffset(0.005);
     histo1DRAAAllUp->GetYaxis()->SetRangeUser(0.0,2.49);
     histo1DRAAAllUp->DrawCopy("");
 
@@ -456,7 +456,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     graphPi0RpApPbStatCombWX->Draw("p,same,e1,z");
 
     while(graphGammaRAAPbPbSysComb0020->GetX()[0] < 5) graphGammaRAAPbPbSysComb0020->RemovePoint(0);
-    while(graphGammaRAAPbPbStatComb0020WX->GetX()[0] < 5) graphGammaRAAPbPbStatComb0020WX->RemovePoint(0);    
+    while(graphGammaRAAPbPbStatComb0020WX->GetX()[0] < 5) graphGammaRAAPbPbStatComb0020WX->RemovePoint(0);
     graphGammaRAAPbPbSysComb0020->Draw("E2same");
     graphGammaRAAPbPbStatComb0020WX->Draw("p,same,e1,z");
 
@@ -467,7 +467,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     labelRAAALICEpPb->Draw();
     legendRAASinglePpPb->Draw();
 
-    boxErrorNorm0010_Single->Draw();    
+    boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
 
@@ -475,7 +475,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     labelALICEPrelim->Draw();
 
     histo1DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes_GammaCut.%s",outputDir.Data(),suffix.Data()));
 
@@ -483,7 +483,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //******************************** Plotting RAA 0-5% with control probes gamma cut *****************
     //**************************************************************************************************
     canvasRAA_Comp->SetLogy(0);
-    
+
     histo1DRAAAllUp->DrawCopy("");
 
     graphPi0RAAPbPbSysComb0005->Draw("E2same");
@@ -491,13 +491,13 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
 
     graphPi0RpApPbSysComb->Draw("E2same");
     graphPi0RpApPbStatCombWX->Draw("p,same,e1,z");
-    
+
     graphGammaRAAPbPbSysComb0020->Draw("E2same");
     graphGammaRAAPbPbStatComb0020WX->Draw("p,same,e1,z");
 
     Vitev_Bas_Raa_0005->Draw("3 same");
-    gWHDG_Raa_0005->Draw("3 same");    
-    
+    gWHDG_Raa_0005->Draw("3 same");
+
     labelRAAALICEPbPb->Draw();
     legendRAASinglePbPb->Draw();
 
@@ -508,7 +508,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     legendRAASinglePpPb3->AddEntry(graphPi0RpApPbSysComb,"0-100% #pi^{0} ALICE","pf");
     legendRAASinglePpPb3->Draw();
 
-    boxErrorNorm0010_Single->Draw();    
+    boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
 
@@ -517,11 +517,11 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     TLegend* legendRAAPi0TheoryPbPb2 = GetAndSetLegend2(0.52, 0.74-1*0.04, 0.52+0.32, 0.74,0.75*textsizeLabelsRAA, 2, "", 42, 0.45 );
     legendRAAPi0TheoryPbPb2->AddEntry(Vitev_Bas_Raa_0005,"GLV","f");
     legendRAAPi0TheoryPbPb2->AddEntry(gWHDG_Raa_0005,"WHDG","f");
-    legendRAAPi0TheoryPbPb2->Draw();    
+    legendRAAPi0TheoryPbPb2->Draw();
 
     labelALICEPrelim->Draw();
     histo1DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes_Theory_GammaCut.%s",outputDir.Data(),suffix.Data()));
 
@@ -529,7 +529,7 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     //************************** Plotting RAA 0-5% with control probes, pi+-, theory *******************
     //**************************************************************************************************
     canvasRAA_Comp->SetLogy(0);
-    
+
     histo1DRAAAllUp->DrawCopy("");
 
     graphPi0RAAPbPbSysComb0005->Draw("E2same");
@@ -537,20 +537,20 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
 
     graphChargedPiRAASys0005->Draw("E2same");
     graphChargedPiRAAStat0005WX->Draw("p,same,e1,z");
-    
+
     graphPi0RpApPbSysComb->Draw("E2same");
     graphPi0RpApPbStatCombWX->Draw("p,same,e1,z");
-    
+
     graphGammaRAAPbPbSysComb0020->Draw("E2same");
     graphGammaRAAPbPbStatComb0020WX->Draw("p,same,e1,z");
 
     Vitev_Bas_Raa_0005->Draw("3 same");
-    gWHDG_Raa_0005->Draw("3 same");    
-    
+    gWHDG_Raa_0005->Draw("3 same");
+
     boxErrorNorm0010_Single->Draw();
     boxErrorNorm0020_Single->Draw();
     boxErrorNormpPb_Single->Draw();
-    
+
     labelRAAALICEPbPb2->Draw();
     legendRAASinglePbPb2->Draw();
 
@@ -560,17 +560,17 @@ void CombineMeasurementsDifferentSystems(       TString fileNameCombMesonPbPb   
     DrawGammaLines(0., 21.5 , 1, 1 ,1,kGray+1);
 
     labelALICEPrelim->Draw();
-    
+
     TLegend* legendRAAPi0TheoryPbPb3    = GetAndSetLegend2(0.52, 0.66-1*0.04, 0.52+0.32, 0.66,0.75*textsizeLabelsRAA, 2, "", 42, 0.45 );
     legendRAAPi0TheoryPbPb3->AddEntry(Vitev_Bas_Raa_0005,"GLV","f");
     legendRAAPi0TheoryPbPb3->AddEntry(gWHDG_Raa_0005,"WHDG","f");
-    legendRAAPi0TheoryPbPb3->Draw();    
+    legendRAAPi0TheoryPbPb3->Draw();
 
     histo1DRAAAllUp->Draw("axis,same");
-    
+
     canvasRAA_Comp->Update();
     canvasRAA_Comp->Print(Form("%s/RAA0005_WithControlProbes_Theory_ChargedPi_GammaCut.%s",outputDir.Data(),suffix.Data()));
-    
-    return;    
+
+    return;
 }
-    
+

@@ -103,7 +103,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     fileFitsOutput.open(nameFinalResDat.Data(), ios::out);
 
     TString fileNameTheory                      = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
-    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedCharged/ChargedPion_10_May_2019_PbPb5TeV.root";
+    TString fileNameOtherParticleInput          = "ExternalInputPbPb/IdentifiedParticleCollection_ALICE_2019_05_17.root";
 
     Int_t maxCent                               = 9;
     Int_t intRefMB                              = 1;

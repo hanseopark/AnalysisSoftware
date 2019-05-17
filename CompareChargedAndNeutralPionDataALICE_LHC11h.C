@@ -100,9 +100,9 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	TString dateForOutput 				= ReturnDateStringForOutput();
 	TString outputDir 					= Form("%s/%s/ComparisonNeutralAndChargedPions",suffix.Data(),dateForOutput.Data());
 
-    TString fileNameCharged5TeVPbPb 	= "ExternalInputPbPb/IdentifiedCharged/Spectra_PbPbLHC15o_Combined_Histograms.root";
-	TString fileNameChargedPionPbPb 	= "ExternalInputPbPb/IdentifiedCharged/ChargedPionSpectraPbPb_4_Apr_2014.root";
-	TString fileNameChargedPionPbPbFullPt = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.INEL.20140329.root";
+    TString fileNameCharged5TeVPbPb 	= "ExternalInputPbPb/IdentifiedCharged_5.02TeV/Spectra_PbPbLHC15o_Combined_Histograms.root";
+	TString fileNameChargedPionPbPb 	= "ExternalInputPbPb/IdentifiedCharged_2.76TeV/ChargedPionSpectraPbPb_4_Apr_2014.root";
+	TString fileNameChargedPionPbPbFullPt = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb276.fullpT.INEL.20140329.root";
 	TString fileNameChargedPionPP 		= "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_4_Apr_2014.root";
 
     TString fileNameEMCalPion7TeVPP 	= "ExternalInput/EMCAL/7TeV/pi0Spectrum2011EMCALAddedSignalsEffic_7TeV_150323_evi_11cd.root";
@@ -165,7 +165,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
     histoChargedKaonSpec5TeVSyst4050 = ConvertYieldHisto(histoChargedKaonSpec5TeVSyst4050);
 
 
-    TFile *fileInvYieldsChargedSpectra5TeV = new TFile("ExternalInputPbPb/IdentifiedCharged/InvYield_PbPbLHC15o_Combined_Histograms.root","RECREATE");
+    TFile *fileInvYieldsChargedSpectra5TeV = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/InvYield_PbPbLHC15o_Combined_Histograms.root","RECREATE");
         histoChargedPionSpec5TeVStat0005->Write("InvYield_SummedPion_PbPb_Stat_0005");
         histoChargedPionSpec5TeVStat0510->Write("InvYield_SummedPion_PbPb_Stat_0510");
         histoChargedPionSpec5TeVStat2030->Write("InvYield_SummedPion_PbPb_Stat_2030");

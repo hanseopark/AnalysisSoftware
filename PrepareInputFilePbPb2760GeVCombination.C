@@ -54,10 +54,10 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 //     "FinalResults/CombinedResultsPbPb_ShiftedX_PaperRAA_13_Aug_2014.root";
     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
     TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_01032018.root"; //LHC11h_EMCal_pi0eta_PbPb_10092015.root";
-    TString fileNameChargedSpectra          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.INEL.20140329.root";
-    TString fileNameChargedRatios           = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.RATIOS.20140329.root";
-    TString fileNameChargedPionRAA          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
-    TString fileNameChargedKaonRAA          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
+    TString fileNameChargedSpectra          = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb276.fullpT.INEL.20140329.root";
+    TString fileNameChargedRatios           = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb276.fullpT.RATIOS.20140329.root";
+    TString fileNameChargedPionRAA          = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Pion_08052014.root";
+    TString fileNameChargedKaonRAA          = "ExternalInputPbPb/IdentifiedCharged_2.76TeV/RAA_Kaon_08052014.root";
     TString nameFileCocktailParamInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV.root";
 
 

@@ -1091,7 +1091,7 @@ void CombineMesonMeasurementsPbPbVer2(TString fileNameConversionPbPb = "", TStri
     TGraphErrors* graphPHENIX62GeVRAAvsNPartAt7GeVc = (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX62GeVRAAvsNPartAt7GeVc");
     TGraphErrors* graphPHENIX39GeVRAAvsNPartAt7GeVc = (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX39GeVRAAvsNPartAt7GeVc");
 
-    TFile* fileDataALICEChargedHadrons = new TFile("ExternalInputPbPb/IdentifiedCharged/PbPb_RAA_sigma_2760GeV_20120809.root");
+    TFile* fileDataALICEChargedHadrons = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/PbPb_RAA_sigma_2760GeV_20120809.root");
     TGraphErrors*	graphChargedRAAStat_0005 = (TGraphErrors*)fileDataALICEChargedHadrons->Get("raa_c0_5_stat");
     TGraphErrors*	graphChargedRAASys_0005 = (TGraphErrors*)fileDataALICEChargedHadrons->Get("raa_c0_5_syst");
     TGraphErrors*	graphChargedRAAStat_0510 = (TGraphErrors*)fileDataALICEChargedHadrons->Get("raa_c5_10_stat");
@@ -1105,7 +1105,7 @@ void CombineMesonMeasurementsPbPbVer2(TString fileNameConversionPbPb = "", TStri
     TGraphErrors*	graphChargedRAAStat_6080 = (TGraphErrors*)fileDataALICEChargedHadrons->Get("raa_c60_80_stat");
     TGraphErrors*	graphChargedRAASys_6080 = (TGraphErrors*)fileDataALICEChargedHadrons->Get("raa_c60_80_syst");
 
-    TFile* fileChargedPionInputPrelim2012 = new TFile("ExternalInputPbPb/IdentifiedCharged/ChargedPionSpectraPbPb_8_Nov_2013.root");
+    TFile* fileChargedPionInputPrelim2012 = new TFile("ExternalInputPbPb/IdentifiedCharged_2.76TeV/ChargedPionSpectraPbPb_8_Nov_2013.root");
     TH1D*	histoChargedPionRAAStat2040 = (TH1D*)fileChargedPionInputPrelim2012->Get("histoChargedPionRAAStat2040");
     TH1D*	histoChargedPionRAASyst2040 = (TH1D*)fileChargedPionInputPrelim2012->Get("histoChargedPionRAASyst2040");
     TH1D*	histoChargedPionRAAStat4060 = (TH1D*)fileChargedPionInputPrelim2012->Get("histoChargedPionRAAStat4060");
