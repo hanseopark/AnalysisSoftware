@@ -2104,19 +2104,23 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     void ProduceGraphAsymmWithoutXErrors(TGraphAsymmErrors* inputgraph){
-        Int_t n                 = inputgraph->GetN();
-        Double_t* xValue        = inputgraph->GetX();
-        Double_t* xErrorHigh    = inputgraph->GetEXhigh();
-        Double_t* xErrorLow     = inputgraph->GetEXlow();
-        Double_t* yValue        = inputgraph->GetY();
-        Double_t* yErrorLow     = inputgraph->GetEYlow();
-        Double_t* yErrorHigh    = inputgraph->GetEYhigh();
-        for (Int_t i= 0; i < n; i++){
-            xErrorHigh[i]       = 0.;
-            xErrorLow[i]        = 0.;
+        if (inputgraph){
+            Int_t n                 = inputgraph->GetN();
+            Double_t* xValue        = inputgraph->GetX();
+            Double_t* xErrorHigh    = inputgraph->GetEXhigh();
+            Double_t* xErrorLow     = inputgraph->GetEXlow();
+            Double_t* yValue        = inputgraph->GetY();
+            Double_t* yErrorLow     = inputgraph->GetEYlow();
+            Double_t* yErrorHigh    = inputgraph->GetEYhigh();
+            for (Int_t i= 0; i < n; i++){
+                xErrorHigh[i]       = 0.;
+                xErrorLow[i]        = 0.;
+            }
+            inputgraph              = new TGraphAsymmErrors(n,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+            return;
+        } else {
+            return;
         }
-        inputgraph              = new TGraphAsymmErrors(n,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
-    //     inputgraph->Print();
     }
 
 

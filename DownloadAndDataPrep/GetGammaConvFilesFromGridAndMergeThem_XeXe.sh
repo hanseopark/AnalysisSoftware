@@ -10,10 +10,10 @@ source basicFunction.sh
 
 DOWNLOADON=1
 MERGEON=1
-SINGLERUN=0
+SINGLERUN=1
 SEPARATEON=0
-MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=1
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -44,7 +44,7 @@ LHC18d2MCd="";
 passNr="1";
 
 if [ $1 = "fbock" ]; then
-    BASEDIR=/mnt/additionalStorage/OutputLegoTrains/XeXe
+    BASEDIR=/media/fbock/Elements/OutputLegoTrains/XeXe
 elif [ $1 = "fbockExt" ]; then
     BASEDIR=/media/fbock/Elements/OutputLegoTrains/XeXe
 elif [ $1 = "dmuhlhei" ]; then
@@ -72,21 +72,31 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC18d2MCc="child_3";
 # LHC18d2MCd="child_4";
 
-TRAINDIR=Legotrain-vAN20180612-EMCAndPHOSAndPCM
-ISAOD=0
-LHC17nData="412"; #pass 1
+# TRAINDIR=Legotrain-vAN20180612-EMCAndPHOSAndPCM
+# ISAOD=0
+# LHC17nData="412"; #pass 1
 # LHC17nData="407"; #pass 1
 # LHC17j7MC="935"; # EMC nl
 # LHC17j7MC="940"; # PHOS nl
 # LHC17j7MCa="child_1";
 # LHC17j7MCb="child_2";
 # LHC17j7MCc="child_3";
-LHC18d2MC="950"; # PHOS nl
+# LHC18d2MC="950"; # PHOS nl
 # LHC18d2MC="944"; # PHOS nl
-LHC18d2MCa="child_1";
+# LHC18d2MCa="child_1";
 # LHC18d2MCb="child_2";
 # LHC18d2MCc="child_3";
 # LHC18d2MCd="child_4";
+
+TRAINDIR=20190520-PCMtrees-QA
+ISAOD=1
+# LHC17nData="510";
+LHC18d2MC="1317";
+LHC18d2MCa="child_1";
+LHC18d2MCb="child_2";
+LHC18d2MCc="child_3";
+LHC18d2MCd="child_4";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -245,7 +255,7 @@ if [ $HAVELHC18d2d == 1 ]; then
     if [ $HAVETOBUILDLHC18d2 == 1 ]; then
         LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MC\_ | grep $LHC18d2MCc`
     else
-        LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MCc\_`
+        LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MCd\_`
     fi
     echo $LHC18d2MCd
     if [ "$LHC18d2MCd" == "" ]; then
@@ -348,7 +358,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             runNumbers=`cat runlists/runNumbersLHC18d2_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2a/$runNumber "/alice/sim/2018/LHC18d2_4/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCa" $NSlashes3 "/alice/sim/2018/LHC18d2_4/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCa/Stage_1/" kTRUE
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2a/$runNumber "/alice/sim/2018/LHC18d2_1/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCa" $NSlashes3 "/alice/sim/2018/LHC18d2_1/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCa/Stage_1/" kTRUE
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC18d2a/mergedAllConv.txt ]; then
                 cd $currentDir
@@ -369,7 +379,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             runNumbers=`cat runlists/runNumbersLHC18d2_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2b/$runNumber "/alice/sim/2018/LHC18d2_1/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCb" $NSlashes3 "/alice/sim/2018/LHC18d2_1/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCb/Stage_1/" kTRUE
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2b/$runNumber "/alice/sim/2018/LHC18d2_2/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCb" $NSlashes3 "/alice/sim/2018/LHC18d2_2/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCb/Stage_1/" kTRUE
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC18d2b/mergedAllConv.txt ]; then
                 cd $currentDir
@@ -390,7 +400,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             runNumbers=`cat runlists/runNumbersLHC18d2_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2c/$runNumber "/alice/sim/2018/LHC18d2_2/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCc" $NSlashes3 "/alice/sim/2018/LHC18d2_2/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCc/Stage_1/" kTRUE
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2c/$runNumber "/alice/sim/2018/LHC18d2_3/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCc" $NSlashes3 "/alice/sim/2018/LHC18d2_3/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCc/Stage_1/" kTRUE
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC18d2c/mergedAllConv.txt ]; then
                 cd $currentDir
@@ -411,7 +421,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             runNumbers=`cat runlists/runNumbersLHC18d2_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2d/$runNumber "/alice/sim/2018/LHC18d2_3/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCd" $NSlashes3 "/alice/sim/2018/LHC18d2_3/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCd/Stage_1/" kTRUE
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC18d2d/$runNumber "/alice/sim/2018/LHC18d2_4/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCd" $NSlashes3 "/alice/sim/2018/LHC18d2_4/$runNumber/PWGGA/$pathTrainMC/$LHC18d2MCd/Stage_1/" kTRUE
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC18d2d/mergedAllConv.txt ]; then
                 cd $currentDir

@@ -294,14 +294,14 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
                                                                                Form("histoKaonPionRatioStat%s",centName[centb+11].Data()) , kFALSE);
             histoKaonPionRatioSyst[centb+11]        = CombineDiffCentsYields  ( histoKaonPionRatioSyst[tobeMerged[centb][0]], histoKaonPionRatioSyst[tobeMerged[centb][1]],
                                                                                Form("histoKaonPionRatioSyst%s",centName[centb+11].Data()) , kTRUE);
-            histoProtonPionRatioStat[centb+11]        = CombineDiffCentsYields  ( histoProtonPionRatioStat[tobeMerged[centb][0]], histoProtonPionRatioStat[tobeMerged[centb][1]],
+            histoProtonPionRatioStat[centb+11]      = CombineDiffCentsYields  ( histoProtonPionRatioStat[tobeMerged[centb][0]], histoProtonPionRatioStat[tobeMerged[centb][1]],
                                                                                  Form("histoProtonPionRatioStat%s",centName[centb+11].Data()) , kFALSE);
-            histoProtonPionRatioSyst[centb+11]        = CombineDiffCentsYields  ( histoProtonPionRatioSyst[tobeMerged[centb][0]], histoProtonPionRatioSyst[tobeMerged[centb][1]],
+            histoProtonPionRatioSyst[centb+11]      = CombineDiffCentsYields  ( histoProtonPionRatioSyst[tobeMerged[centb][0]], histoProtonPionRatioSyst[tobeMerged[centb][1]],
                                                                                  Form("histoProtonPionRatioSyst%s",centName[centb+11].Data()) , kTRUE);
         }
 
         //*********************************** Final K0s, Lambda - PbPb 2.76TeV spectra ***************************************************************
-        TFile* fileK0sFinalPbPb = new TFile("ExternalInputPbPb/NeutralKaon/k0s_lambda_final_spectra_12112013.root");
+        TFile* fileK0sFinalPbPb = new TFile("ExternalInputPbPb/NeutralKaon_PbPb_2.76TeV/k0s_lambda_final_spectra_12112013.root");
         TH1D* histoNeutralKaonSpecStat[16]       = {NULL};
         TH1D* histoNeutralKaonSpecSyst[16]       = {NULL};
         TH1D* histoNeutralLambdaSpecStat[16]     = {NULL};
@@ -560,9 +560,16 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
     // *******************************************************************************************************************************************
     } else if(energy.CompareTo("PbPb_5.02TeV") == 0){
 
-        TString centName[15]            = {"0005", "0510", "1020", "2030", "3040", "4050", "5060", "6070", "7080", "8090", "0010", "2040", "4060", "6080", "0020"};
-        TString centNameOutput[15]      = {"0-5%", "5-10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "0-10%", "20-40%", "40-60%", "60-80%", "0-20%"};
-        TString centNameReadChId[10]    = {"0.00to5.00", "5.00to10.00", "10.00to20.00", "20.00to30.00", "30.00to40.00", "40.00to50.00", "50.00to60.00", "60.00to70.00", "70.00to80.00", "80.00to90.00"};
+        TString centName[15]            = { "0005", "0510", "1020", "2030", "3040", "4050", "5060", "6070", "7080", "8090",
+                                            "0010", "2040", "4060", "6080", "0020"};
+        TString centNameOutput[15]      = { "0-5%", "5-10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%",
+                                            "0-10%", "20-40%", "40-60%", "60-80%", "0-20%"};
+        TString centNameReadChId[10]    = { "0.00to5.00", "5.00to10.00", "10.00to20.00", "20.00to30.00", "30.00to40.00",
+                                            "40.00to50.00", "50.00to60.00", "60.00to70.00", "70.00to80.00", "80.00to90.00"};
+        TString centNameReadChHa[15]    = { "05", "510", "1020", "2030", "3040", "4050", "5060", "6070", "7080", "8090",
+                                            "010", "2040", "4060", "6080", "020"};
+        TString centNameReadK0s[15]     = { "00-05%", "05-10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%",
+                                            "0-10%", "20-40%", "40-60%", "60-80%", "0-20%"};
 
         Int_t tobeMerged[5][2]          = {{0,1}, {3,4}, {5,6}, {7,8}, {10,2}};
 
@@ -700,6 +707,94 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
                                                                                 Form("histoProtonPionRatioSyst%s",centName[centb+10].Data()) , kTRUE);
         }
 
+
+        //*********************************** Final ch hadron - PbPb 5.02TeV RAA **********************************************************
+        // Documentation: ???
+        TFile* fileChargedRAAFinal                  = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/ChargedHadron_corrRAA_PbPb_5TeV_20190521.root");
+        TFile* fileChargedRAAFinal2                 = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/ChargedHadron_corrRAA_PbPb_5TeV_010_3050_6080_20190521.root");
+        TFile* fileChargedSpectraFinal              = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/ChargedHadron_corrSpec_PbPb_5TeV_20190521.root");
+        TFile* fileChargedSpectraFinal2             = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/ChargedHadron_corrSpec_PbPb_5TeV_010_3050_6080_20190521.root");
+        TGraphAsymmErrors* graphChargedHadronSpecStat[15]    = {NULL};
+        TGraphAsymmErrors* graphChargedHadronSpecSyst[15]    = {NULL};
+        TGraphAsymmErrors* graphChargedHadronRAAStat[15]     = {NULL};
+        TGraphAsymmErrors* graphChargedHadronRAASyst[15]     = {NULL};
+        TH1D* histoChargedHadronRAAStat[15]                  = {NULL};
+        TH1D* histoChargedHadronRAASyst[15]                  = {NULL};
+        TH1D* histoChargedHadronSpecStat[15]                 = {NULL};
+        TH1D* histoChargedHadronSpecSyst[15]                = {NULL};
+
+        for (Int_t cent = 0; cent < 15; cent++){
+            histoChargedHadronSpecStat[cent]        = (TH1D*)fileChargedSpectraFinal->Get(Form("hSpec_PbPb_5ATeV_c%s_stat",centNameReadChHa[cent].Data() ));
+            histoChargedHadronSpecSyst[cent]        = (TH1D*)fileChargedSpectraFinal->Get(Form("hSpec_PbPb_5ATeV_c%s_syst",centNameReadChHa[cent].Data() ));
+            histoChargedHadronRAAStat[cent]         = (TH1D*)fileChargedRAAFinal->Get(Form("hRaa_PbPb_5ATeV_c%s_stat",centNameReadChHa[cent].Data() ));
+            histoChargedHadronRAASyst[cent]         = (TH1D*)fileChargedRAAFinal->Get(Form("hRaa_PbPb_5ATeV_c%s_syst",centNameReadChHa[cent].Data() ));
+            if (!histoChargedHadronSpecStat[cent] && !histoChargedHadronSpecSyst[cent]){
+                histoChargedHadronSpecStat[cent]    = (TH1D*)fileChargedSpectraFinal2->Get(Form("hSpec_PbPb_5ATeV_c%s_stat",centNameReadChHa[cent].Data() ));
+                histoChargedHadronSpecSyst[cent]    = (TH1D*)fileChargedSpectraFinal2->Get(Form("hSpec_PbPb_5ATeV_c%s_syst",centNameReadChHa[cent].Data() ));
+            }
+            if (!histoChargedHadronRAAStat[cent] && !histoChargedHadronRAASyst[cent]){
+                histoChargedHadronRAAStat[cent]     = (TH1D*)fileChargedRAAFinal2->Get(Form("hRaa_PbPb_5ATeV_c%s_stat",centNameReadChHa[cent].Data() ));
+                histoChargedHadronRAASyst[cent]     = (TH1D*)fileChargedRAAFinal2->Get(Form("hRaa_PbPb_5ATeV_c%s_syst",centNameReadChHa[cent].Data() ));
+            }
+        }
+
+        //*********************************** K0s, Lambda - PbPb 5.02TeV spectra () ***************************************************************
+        TFile* fileK0sFinalPbPb     = new TFile("ExternalInputPbPb/NeutralKaon_PbPb_5.02TeV/Results-SystematicsR-K0Short.root");
+        TFile* fileLambdaFinalPbPb  = new TFile("ExternalInputPbPb/NeutralKaon_PbPb_5.02TeV/Results-SystematicsR-Lambda.root");
+        TH1D* histoNeutralKaonSpecStat[15]       = {NULL};
+        TH1D* histoNeutralKaonSpecSyst[15]       = {NULL};
+        TH1D* histoNeutralLambdaSpecStat[15]     = {NULL};
+        TH1D* histoNeutralLambdaSpecSyst[15]     = {NULL};
+        TGraphAsymmErrors* graphNeutralKaonSpecStat[15]       = {NULL};
+        TGraphAsymmErrors* graphNeutralKaonSpecSyst[15]       = {NULL};
+        TGraphAsymmErrors* graphNeutralLambdaSpecStat[15]     = {NULL};
+        TGraphAsymmErrors* graphNeutralLambdaSpecSyst[15]     = {NULL};
+
+        for (Int_t cent = 0; cent < 10; cent++){
+            // read K0s spectrum
+            histoNeutralKaonSpecStat[cent]      = (TH1D*)fileK0sFinalPbPb->Get(Form("lCentrality%s/lHistStatSpectrum_rebinned",centNameReadK0s[cent].Data() ));
+            histoNeutralKaonSpecSyst[cent]      = (TH1D*)fileK0sFinalPbPb->Get(Form("lCentrality%s/lHistSystSpectrum_rebinned",centNameReadK0s[cent].Data() ));
+            // calculate average charged pions spectrum
+            if (histoNeutralKaonSpecStat[cent] && histoNeutralKaonSpecSyst[cent] ){
+                histoNeutralKaonSpecStat[cent]->Sumw2();
+                histoNeutralKaonSpecSyst[cent]->Sumw2();
+                ConvertYieldHisto(histoNeutralKaonSpecStat[cent], kTRUE, kTRUE, kFALSE, kFALSE);
+                ConvertYieldHisto(histoNeutralKaonSpecSyst[cent], kTRUE, kTRUE, kFALSE, kFALSE);
+                // set correct name
+                histoNeutralKaonSpecStat[cent]->SetName(Form("histoNeutralKaonSpecStat%s",centName[cent].Data()));
+                histoNeutralKaonSpecSyst[cent]->SetName(Form("histoNeutralKaonSpecSyst%s",centName[cent].Data()));
+            } else {
+                cout << "couldn't find neural kaon inputs for " << centName[cent].Data() << endl;
+            }
+            // read Lambda spectrum
+            histoNeutralLambdaSpecStat[cent]      = (TH1D*)fileLambdaFinalPbPb->Get(Form("lCentrality%s/lHistStatSpectrum_rebinned",centNameReadK0s[cent].Data() ));
+            histoNeutralLambdaSpecSyst[cent]      = (TH1D*)fileLambdaFinalPbPb->Get(Form("lCentrality%s/lHistSystSpectrum_rebinned",centNameReadK0s[cent].Data() ));
+            // calculate average charged pions spectrum
+            if (histoNeutralLambdaSpecStat[cent] && histoNeutralLambdaSpecSyst[cent] ){
+                histoNeutralLambdaSpecStat[cent]->Sumw2();
+                histoNeutralLambdaSpecSyst[cent]->Sumw2();
+                ConvertYieldHisto(histoNeutralLambdaSpecStat[cent], kTRUE, kTRUE, kFALSE, kFALSE);
+                ConvertYieldHisto(histoNeutralLambdaSpecSyst[cent], kTRUE, kTRUE, kFALSE, kFALSE);
+                // set correct name
+                histoNeutralLambdaSpecStat[cent]->SetName(Form("histoNeutralLambdaSpecStat%s",centName[cent].Data()));
+                histoNeutralLambdaSpecSyst[cent]->SetName(Form("histoNeutralLambdaSpecSyst%s",centName[cent].Data()));
+            } else {
+                cout << "couldn't find neural Lambda inputs for " << centName[cent].Data() << endl;
+            }
+        }
+
+        for (Int_t centb = 0; centb < 2; centb++){
+            histoNeutralKaonSpecStat[centb+11]      = CombineDiffCentsYields  ( histoNeutralKaonSpecStat[tobeMerged[centb][0]], histoNeutralKaonSpecStat[tobeMerged[centb][1]],
+                                                                                Form("histoNeutralKaonSpecStat%s",centName[centb+11].Data()) , kFALSE);
+            histoNeutralKaonSpecSyst[centb+11]      = CombineDiffCentsYields  ( histoNeutralKaonSpecSyst[tobeMerged[centb][0]], histoNeutralKaonSpecSyst[tobeMerged[centb][1]],
+                                                                                Form("histoNeutralKaonSpecSyst%s",centName[centb+11].Data()) , kTRUE);
+            histoNeutralLambdaSpecStat[centb+11]    = CombineDiffCentsYields  ( histoNeutralLambdaSpecStat[tobeMerged[centb][0]], histoNeutralLambdaSpecStat[tobeMerged[centb][1]],
+                                                                                Form("histoNeutralLambdaSpecStat%s",centName[centb+11].Data()) , kFALSE);
+            histoNeutralLambdaSpecSyst[centb+11]    = CombineDiffCentsYields  ( histoNeutralLambdaSpecSyst[tobeMerged[centb][0]], histoNeutralLambdaSpecSyst[tobeMerged[centb][1]],
+                                                                                Form("histoNeutralLambdaSpecSyst%s",centName[centb+11].Data()) , kTRUE);
+        }
+
+
         // convert histos also to graph and remove 0s
         for (Int_t cent = 0; cent < 15; cent++){
             graphChargedPionSpecStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedPionSpecStat[cent],Form("graphChargedPionSpecStat%s",centName[cent].Data()) );
@@ -712,6 +807,14 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             graphKaonPionRatioSyst[cent]            = ConvertHistoToGraphAndRemoveZeros(histoKaonPionRatioSyst[cent],Form("graphKaonPionRatioSyst%s",centName[cent].Data()) );
             graphProtonPionRatioStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoProtonPionRatioStat[cent],Form("graphProtonPionRatioStat%s",centName[cent].Data()) );
             graphProtonPionRatioSyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoProtonPionRatioSyst[cent],Form("graphProtonPionRatioSyst%s",centName[cent].Data()) );
+            graphChargedHadronSpecStat[cent]        = ConvertHistoToGraphAndRemoveZeros(histoChargedHadronSpecStat[cent],Form("graphChargedHadronSpecStat%s",centName[cent].Data()) );
+            graphChargedHadronSpecSyst[cent]        = ConvertHistoToGraphAndRemoveZeros(histoChargedHadronSpecSyst[cent],Form("graphChargedHadronSpecSyst%s",centName[cent].Data()) );
+            graphChargedHadronRAAStat[cent]         = ConvertHistoToGraphAndRemoveZeros(histoChargedHadronRAAStat[cent],Form("graphChargedHadronRAAStat%s",centName[cent].Data()) );
+            graphChargedHadronRAASyst[cent]         = ConvertHistoToGraphAndRemoveZeros(histoChargedHadronRAASyst[cent],Form("graphChargedHadronRAASyst%s",centName[cent].Data()) );
+            graphNeutralKaonSpecStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoNeutralKaonSpecStat[cent],Form("graphNeutralKaonSpecStat%s",centName[cent].Data()) );
+            graphNeutralKaonSpecSyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoNeutralKaonSpecSyst[cent],Form("graphNeutralKaonSpecSyst%s",centName[cent].Data()) );
+            graphNeutralLambdaSpecStat[cent]        = ConvertHistoToGraphAndRemoveZeros(histoNeutralLambdaSpecStat[cent],Form("graphNeutralLambdaSpecStat%s",centName[cent].Data()) );
+            graphNeutralLambdaSpecSyst[cent]        = ConvertHistoToGraphAndRemoveZeros(histoNeutralLambdaSpecSyst[cent],Form("graphNeutralLambdaSpecSyst%s",centName[cent].Data()) );
         }
 
         TString outputFileName = Form("ExternalInputPbPb/IdentifiedParticleCollection_ALICE_%s.root",dateForOutput.Data());
@@ -733,6 +836,15 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             if(histoKaonPionRatioSyst[cent])  histoKaonPionRatioSyst[cent]->Write("histoKaonPionRatioSyst", TObject::kOverwrite);
             if(histoProtonPionRatioStat[cent])  histoProtonPionRatioStat[cent]->Write("histoProtonPionRatioStat", TObject::kOverwrite);
             if(histoProtonPionRatioSyst[cent])  histoProtonPionRatioSyst[cent]->Write("histoProtonPionRatioSyst", TObject::kOverwrite);
+            if(histoChargedHadronSpecStat[cent])  histoChargedHadronSpecStat[cent]->Write("histoChargedHadronSpecStat", TObject::kOverwrite);
+            if(histoChargedHadronSpecSyst[cent])  histoChargedHadronSpecSyst[cent]->Write("histoChargedHadronSpecSyst", TObject::kOverwrite);
+
+            if(histoChargedHadronRAAStat[cent])  histoChargedHadronRAAStat[cent]->Write("histoChargedHadronRAAStat", TObject::kOverwrite);
+            if(histoChargedHadronRAASyst[cent])  histoChargedHadronRAASyst[cent]->Write("histoChargedHadronRAASyst", TObject::kOverwrite);
+            if(histoNeutralKaonSpecStat[cent])  histoNeutralKaonSpecStat[cent]->Write("histoNeutralKaonSpecStat", TObject::kOverwrite);
+            if(histoNeutralKaonSpecSyst[cent])  histoNeutralKaonSpecSyst[cent]->Write("histoNeutralKaonSpecSyst", TObject::kOverwrite);
+            if(histoNeutralLambdaSpecStat[cent])  histoNeutralLambdaSpecStat[cent]->Write("histoLambdaSpecStat", TObject::kOverwrite);
+            if(histoNeutralLambdaSpecSyst[cent])  histoNeutralLambdaSpecSyst[cent]->Write("histoLambdaSpecSyst", TObject::kOverwrite);
 
             if(graphChargedPionSpecStat[cent])  graphChargedPionSpecStat[cent]->Write("graphChargedPionSpecStat", TObject::kOverwrite);
             if(graphChargedPionSpecSyst[cent])  graphChargedPionSpecSyst[cent]->Write("graphChargedPionSpecSyst", TObject::kOverwrite);
@@ -744,6 +856,14 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             if(graphKaonPionRatioSyst[cent])  graphKaonPionRatioSyst[cent]->Write("graphKaonPionRatioSyst", TObject::kOverwrite);
             if(graphProtonPionRatioStat[cent])  graphProtonPionRatioStat[cent]->Write("graphProtonPionRatioStat", TObject::kOverwrite);
             if(graphProtonPionRatioSyst[cent])  graphProtonPionRatioSyst[cent]->Write("graphProtonPionRatioSyst", TObject::kOverwrite);
+            if(graphChargedHadronSpecStat[cent])  graphChargedHadronSpecStat[cent]->Write("graphChargedHadronSpecStat", TObject::kOverwrite);
+            if(graphChargedHadronSpecSyst[cent])  graphChargedHadronSpecSyst[cent]->Write("graphChargedHadronSpecSyst", TObject::kOverwrite);
+            if(graphChargedHadronRAAStat[cent])  graphChargedHadronRAAStat[cent]->Write("graphChargedHadronRAAStat", TObject::kOverwrite);
+            if(graphChargedHadronRAASyst[cent])  graphChargedHadronRAASyst[cent]->Write("graphChargedHadronRAASyst", TObject::kOverwrite);
+            if(graphNeutralKaonSpecStat[cent])  graphNeutralKaonSpecStat[cent]->Write("graphNeutralKaonSpecStat", TObject::kOverwrite);
+            if(graphNeutralKaonSpecSyst[cent])  graphNeutralKaonSpecSyst[cent]->Write("graphNeutralKaonSpecSyst", TObject::kOverwrite);
+            if(graphNeutralLambdaSpecStat[cent])  graphNeutralLambdaSpecStat[cent]->Write("graphLambdaSpecStat", TObject::kOverwrite);
+            if(graphNeutralLambdaSpecSyst[cent])  graphNeutralLambdaSpecSyst[cent]->Write("graphLambdaSpecSyst", TObject::kOverwrite);
 
         }
 
