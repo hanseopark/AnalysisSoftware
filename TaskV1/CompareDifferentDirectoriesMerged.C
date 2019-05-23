@@ -139,20 +139,24 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     // Definition of necessary histogram arrays
     const Int_t ConstNumberOfCuts = 20;
     TString FileNameCorrected[ConstNumberOfCuts];
+    TString FileNameUncorrected[ConstNumberOfCuts];
 
     TFile *Cutcorrfile[ConstNumberOfCuts];
+    TFile *CutUncorrfile[ConstNumberOfCuts];
 
     TH1D *histoCorrectedYieldCut[ConstNumberOfCuts];
     TH1D *histoTrueEffiCut[ConstNumberOfCuts];
     TH1D *histoAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoPurityCut[ConstNumberOfCuts];
     TH1D *histoRawYieldCut[ConstNumberOfCuts];
+    TH1D *histoClusterECut[ConstNumberOfCuts];
 
     TH1D *histoRatioCorrectedYieldCut[ConstNumberOfCuts];
     TH1D *histoRatioTrueEffiCut[ConstNumberOfCuts];
     TH1D *histoRatioAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRatioPurityCut[ConstNumberOfCuts];
     TH1D *histoRatioRawYieldCut[ConstNumberOfCuts];
+    TH1D *histoRatioClusterECut[ConstNumberOfCuts];
 
     Double_t maxPt  = 0;
     for (Int_t i=0; i< NumberOfCuts; i++){
@@ -174,6 +178,15 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         Cutcorrfile[i] = new TFile(FileNameCorrected[i]);
         if (Cutcorrfile[i]->IsZombie()) return;
 
+        // read file with corrections
+        if(setFullPathInInputFile)
+            FileNameUncorrected[i] = Form("%s/%s_%s_GammaMergedWithoutCorrection_%s.root", fileDirectory[i].Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        else
+            FileNameUncorrected[i] = Form("%s%s/%s/%s_%s_GammaMergedWithoutCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        cout<< FileNameUncorrected[i] << endl;
+        CutUncorrfile[i] = new TFile(FileNameUncorrected[i]);
+        if (CutUncorrfile[i]->IsZombie()) return;
+
         if (i == 0){
             fNLMmin = ReturnClusterNLM(fClusterMergedCutSelection);
             if (fNLMmin)
@@ -193,6 +206,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         TString nameEfficiency                              = "PrimaryMesonEfficiency";
         TString namePurity                                  = "MesonPurity";
         TString nameAcceptance                              = "fHistoMCAcceptancePt";
+        TString nameClusterE                                = "ClusterPtPerEvent";
 
         // Read histograms and rename them from the original files for each cut
         histoCorrectedYieldCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
@@ -206,6 +220,9 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
 
         histoRawYieldCut[i]         = (TH1D*)Cutcorrfile[i]->Get("histoYieldMesonPerEvent");
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutStringsName[i].Data()));
+
+        histoClusterECut[i]         = (TH1D*)CutUncorrfile[i]->Get("ClusterPtPerEvent");
+        histoClusterECut[i]->SetName(Form("ClusterPtPerEvent_%s",cutStringsName[i].Data()));
 
         // Calculate ratios for comparisons
         histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutStringsName[i].Data()));
@@ -222,6 +239,9 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
 
         histoRatioRawYieldCut[i]    = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s",cutStringsName[i].Data()));
         histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"B");
+
+        histoRatioClusterECut[i]    = (TH1D*) histoClusterECut[i]->Clone(Form("histoRatioClusterECut_%s",cutStringsName[i].Data()));
+        histoRatioClusterECut[i]->Divide(histoRatioClusterECut[i],histoClusterECut[0],1.,1.,"B");
     }
     cout<<"=========================="<<endl;
 
@@ -318,6 +338,99 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         canvasRawYieldMeson->Update();
         canvasRawYieldMeson->SaveAs(Form("%s/%s_%s_RAWYield.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
         delete canvasRawYieldMeson;
+
+
+
+    //**************************************************************************************
+    //********************* Plotting Cluster-E Spectrum ************************************
+    //**************************************************************************************
+
+        // Canvas Definition
+        TCanvas* canvasClusterESpectrum = new TCanvas("canvasClusterESpectrum","",1350,1500);
+        DrawGammaCanvasSettings( canvasClusterESpectrum,  0.13, 0.02, 0.02, 0.09);
+        // Upper pad definition
+        TPad* padClusterE = new TPad("padClusterE", "", 0., 0.33, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padClusterE, 0.12, 0.02, 0.02, 0.);
+        padClusterE->SetLogy();
+        padClusterE->Draw();
+        // lower pad definition
+        TPad* padClusterERatios = new TPad("padClusterERatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+        DrawGammaPadSettings( padClusterERatios, 0.12, 0.02, 0.0, 0.2);
+        padClusterERatios->Draw();
+
+        // Plot raw yield in uppper panel
+        padClusterE->cd();
+        TLegend* legendClusterE = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
+        if (cutVariationName.Contains("dEdxPi")){
+            legendClusterE->SetTextSize(0.02);
+        }
+
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i == 0){
+                Double_t scaleFactorRaw = 5.;
+                DrawGammaSetMarker(histoClusterECut[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoClusterECut[i],
+                                        "", "#it{E}_{cluster} (GeV)", Form("#it{N}_{cluster}/#it{N}_{ev}"),
+                                        kTRUE, scaleFactorRaw, 10e-10, kTRUE,
+                                        kFALSE, 0.0, 0.030,
+                                        kFALSE, 0., 10.);
+                legendClusterE->AddEntry(histoClusterECut[i],Form("standard: %s",cutStringsName[i].Data()));
+            }
+            else {
+                if(i<20){
+                    DrawGammaSetMarker(histoClusterECut[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoClusterECut[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoClusterECut[i]->DrawCopy("same,e1,p");
+                legendClusterE->AddEntry(histoClusterECut[i],cutStringsName[i].Data());
+            }
+        }
+        legendClusterE->Draw();
+        // Labeling of plot
+        labelCollisionSystem->Draw();
+        labelDetProcess = NULL;
+        if (optionPeriod.CompareTo("No") != 0){
+            TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
+            SetStyleTLatex( labelPeriod, 0.038,4);
+            labelPeriod->Draw();
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess = new TLatex(0.55,0.81,detProcess.Data());
+                SetStyleTLatex( labelDetProcess, 0.038,4);
+                labelDetProcess->Draw();
+            }
+        } else {
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess = new TLatex(0.55,0.86,detProcess.Data());
+                SetStyleTLatex( labelDetProcess, 0.038,4);
+                labelDetProcess->Draw();
+            }
+        }
+        // Plot ratio of raw yields in lower panel
+        padClusterERatios->cd();
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i==0){
+                // Set ratio min and max
+                Double_t minYRatio = 0.85;
+                Double_t maxYRatio = 1.15;
+                SetStyleHistoTH1ForGraphs(histoRatioClusterECut[i], "#it{E}_{cluster} (GeV)", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                DrawGammaSetMarker(histoRatioClusterECut[i], 20, 1.,color[0],color[0]);
+                histoRatioClusterECut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                histoRatioClusterECut[i]->DrawCopy("p,e1");
+            } else{
+                if(i<20){
+                    DrawGammaSetMarker(histoRatioClusterECut[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoRatioClusterECut[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoRatioClusterECut[i]->DrawCopy("same,e1,p");
+            }
+        }
+        DrawGammaLines(0., maxPt,1., 1.,0.1);
+
+        canvasClusterESpectrum->Update();
+        canvasClusterESpectrum->SaveAs(Form("%s/%s_%s_ClusterPerEvent_E.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+        delete canvasClusterESpectrum;
 
 
     //*****************************************************************************************

@@ -150,7 +150,7 @@ void PhotonQA_Runwise(
             nameCutsPQAshort.Replace(8,35,"");
             cutsPQA.push_back(nameCutsPQA);
             cutsPQAshort.push_back(nameCutsPQAshort);
-            break;
+            // break;
         }
     }
     cout << "The following cuts are available:" << endl;
@@ -164,6 +164,7 @@ void PhotonQA_Runwise(
     cout << "Processing Cut Number: " << cutNr << endl;
     nameCutsPQA      = cutsPQA.at(cutNr);
     nameCutsPQAshort = cutsPQAshort.at(cutNr);
+    nameMainDir = Form("GammaConvV1_QA_%s",cutsPQA.at(cutNr).Data());
 
     TString fCentralityFromCut = GetCentralityString(nameCutsPQAshort);
     cout << "Corresponding to centrality: " << fCentralityFromCut << endl;

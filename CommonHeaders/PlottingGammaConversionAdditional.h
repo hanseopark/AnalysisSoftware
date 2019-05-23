@@ -4467,6 +4467,8 @@
             return kBlue-7;
         if ( variationName.CompareTo("SPD") == 0 )
             return kCyan+4;
+        if ( variationName.CompareTo("Purity") == 0 )
+            return kBlue+2;
         if ( variationName.CompareTo("CosPoint") == 0 )
             return kSpring+2;
         if ( variationName.CompareTo("Eta") == 0 )
@@ -4559,6 +4561,8 @@
             return 33;
         if ( variationName.CompareTo("SPD") == 0 )
             return 29;
+        if ( variationName.CompareTo("Purity") == 0 )
+            return 27;
         if ( variationName.CompareTo("CosPoint") == 0 )
             return 24;
         if ( variationName.CompareTo("Eta") == 0 )
@@ -4651,6 +4655,8 @@
             return "IB pileup ";
         if ( variationName.CompareTo("BG") == 0 )
             return "BG method";
+        if ( variationName.CompareTo("Purity") == 0 )
+            return "#epsilon_{pur} correction";
         if ( variationName.Contains("Periods"))
             return "periods";
         if ( variationName.CompareTo("SPD") == 0 )

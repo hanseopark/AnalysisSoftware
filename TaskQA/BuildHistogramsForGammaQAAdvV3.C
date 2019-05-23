@@ -447,6 +447,30 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     Double_t firstBinInvMass        = 0.;
     Double_t lastBinInvMass         = 0.2;
 
+
+    Int_t nPBins =12;
+    Double_t *arrPBinning = new Double_t[13]; 
+    for( Int_t i=0;i<nPBins+1;i++){
+      if(i==0){
+	    arrPBinning[i]= 0.05;
+      }else if(i>0 && i<11){
+	    arrPBinning[i]= 0.1*i;
+      }else if(i==11){
+	    arrPBinning[i]= 2.0;
+      }else if(i==12){
+	    arrPBinning[i]= 10.0;
+      }
+    }
+    Int_t nEtaBins =20;
+    Double_t *arrEtaBinning      = new Double_t[21]; 
+    for( Int_t i=0;i<nEtaBins+1;i++){
+      arrEtaBinning[i]= -1.+0.1*i;
+    }
+    Int_t nSigmaDeDxBins=100;
+    Double_t *arrSigmaDeDxBinning      = new Double_t[101]; 
+    for( Int_t i=0;i<nSigmaDeDxBins+1;i++){
+      arrSigmaDeDxBinning[i]= -5.+0.1*i;
+    }
     //********************************************************************************
     //*      Definition of histograms for reconstructed Conversion Points            *
     //********************************************************************************
@@ -454,6 +478,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TH3F* histoPositrondEdxEtaP                 = NULL;
     TH3F* histoElectronNSigmadEdxEtaP           = NULL;
     TH3F* histoPositronNSigmadEdxEtaP           = NULL;
+    TH3F* histoConvRadiusElectronNSigmadEdxEtaP[4]           = {NULL};
+    TH3F* histoConvRadiusPositronNSigmadEdxEtaP[4]           = {NULL};
     TH3F* histoElectronTOFEtaP                  = NULL;
     TH3F* histoPositronTOFEtaP                  = NULL;
     TH3F* histoElectronNSigmaTOFEtaP            = NULL;
@@ -586,6 +612,10 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositronNSigmadEdxEtaP             =  new TH3F("histoPositronNSigmadEdxEtaP","", nBinsSigmaTPC, firstBinSigmaTPC, lastBinSigmaTPC, nBinsEta, firstBinEta, lastBinEta,
                                                             nBinsP, firstBinP, lastBinP);
         SetLogBinningTH3(histoPositronNSigmadEdxEtaP);
+        for(Int_t iRad=0; iRad<4; iRad++){
+            histoConvRadiusElectronNSigmadEdxEtaP[iRad]             =  new TH3F(Form("R%d electron sigma dEdx P Eta",iRad),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
+            histoConvRadiusPositronNSigmadEdxEtaP[iRad]             =  new TH3F(Form("R%d positron sigma dEdx P Eta",iRad),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
+        }
         histoElectronTOFEtaP                    = new TH3F("histoElectronTOFEtaP","", nBinsTOFsignal, firstBinTOFsignal, lastBinTOFsignal,nBinsEtaTOF, firstBinEtaTOF, lastBinEtaTOF,
                                                         nBinsP, firstBinP, lastBinP);
         SetLogBinningTH3(histoElectronTOFEtaP);
@@ -771,6 +801,10 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositrondEdxEtaP                   = (TH3F*)directoryConv->Get("histoPositrondEdxEtaP");
         histoElectronNSigmadEdxEtaP             = (TH3F*)directoryConv->Get("histoElectronNSigmadEdxEtaP");
         histoPositronNSigmadEdxEtaP             = (TH3F*)directoryConv->Get("histoPositronNSigmadEdxEtaP");
+        for(Int_t iRad=0; iRad<4; iRad++){
+            histoConvRadiusElectronNSigmadEdxEtaP[iRad]             = (TH3F*)directoryConv->Get(Form("R%d electron sigma dEdx P Eta",iRad));
+            histoConvRadiusPositronNSigmadEdxEtaP[iRad]             = (TH3F*)directoryConv->Get(Form("R%d positron sigma dEdx P Eta",iRad));
+        }
         histoElectronTOFEtaP                    = (TH3F*)directoryConv->Get("histoElectronTOFEtaP");
         histoPositronTOFEtaP                    = (TH3F*)directoryConv->Get("histoPositronTOFEtaP");
         histoElectronNSigmaTOFEtaP              = (TH3F*)directoryConv->Get("histoElectronNSigmaTOFEtaP");
@@ -880,6 +914,10 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositrondEdxEtaP->Sumw2();
         histoElectronNSigmadEdxEtaP->Sumw2();
         histoPositronNSigmadEdxEtaP->Sumw2();
+        for(Int_t iRad=0; iRad<4; iRad++){
+            histoConvRadiusElectronNSigmadEdxEtaP[iRad]->Sumw2();
+            histoConvRadiusPositronNSigmadEdxEtaP[iRad]->Sumw2();
+        }
         histoElectronTOFEtaP->Sumw2();
         histoPositronTOFEtaP->Sumw2();
         histoElectronNSigmaTOFEtaP->Sumw2();
@@ -1121,6 +1159,19 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
                     }
 
                     histoPositronNSigmadEdxEtaP->Fill(nSigmaTPCPositron,etaPositron,pPositron);
+                    if(photonR < 33.5){
+                        histoConvRadiusElectronNSigmadEdxEtaP[0]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                        histoConvRadiusPositronNSigmadEdxEtaP[0]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else if(photonR > 33.5 && photonR < 72.0 ){
+                        histoConvRadiusElectronNSigmadEdxEtaP[1]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                        histoConvRadiusPositronNSigmadEdxEtaP[1]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else if(photonR > 72.0 && photonR < 145. ){
+                        histoConvRadiusElectronNSigmadEdxEtaP[2]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                        histoConvRadiusPositronNSigmadEdxEtaP[2]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else if(photonR > 145. && photonR < 180. ){
+                        histoConvRadiusElectronNSigmadEdxEtaP[3]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                        histoConvRadiusPositronNSigmadEdxEtaP[3]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    }
                     if(pPositron<0.26){histoPositronNSigmadEdxCut->Fill(nSigmaTPCPositron);}
 
                     histoPositronNSigmadEdxPhi->Fill(nSigmaTPCPositron,photonPhi);  //dedx photon phi
@@ -1327,6 +1378,10 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
 
         histoElectronNSigmadEdxEtaP->Write("histoElectronNSigmadEdxEtaP",TObject::kWriteDelete);
         histoPositronNSigmadEdxEtaP->Write("histoPositronNSigmadEdxEtaP",TObject::kWriteDelete);
+        for(Int_t iRad=0; iRad<4; iRad++){
+            histoConvRadiusElectronNSigmadEdxEtaP[iRad]->Write(Form("R%d electron sigma dEdx P Eta",iRad),TObject::kWriteDelete);
+            histoConvRadiusPositronNSigmadEdxEtaP[iRad]->Write(Form("R%d positron sigma dEdx P Eta",iRad),TObject::kWriteDelete);
+        }
         histoElectronTOFEtaP->Write("histoElectronTOFEtaP",TObject::kWriteDelete);
         histoPositronTOFEtaP->Write("histoPositronTOFEtaP",TObject::kWriteDelete);
         histoElectronNSigmaTOFEtaP->Write("histoElectronNSigmaTOFEtaP",TObject::kWriteDelete);

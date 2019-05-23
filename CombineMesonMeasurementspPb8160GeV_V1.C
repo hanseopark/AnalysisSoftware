@@ -3557,11 +3557,11 @@ cout << __LINE__ << endl;
 
       ratio2DTheoryPP->DrawCopy();
 
-      graphRatioEPOSJJToFit->Draw("3,same");
-      histoRatioEPOSJJToFit->Draw("same,hist,l");
+      // graphRatioEPOSJJToFit->Draw("3,same");
+      // histoRatioEPOSJJToFit->Draw("same,hist,l");
 
-      graphRatioDPMJETToFit->Draw("3,same");
-      histoRatioDPMJETToFit->Draw("same,hist,l");
+      // graphRatioDPMJETToFit->Draw("3,same");
+      // histoRatioDPMJETToFit->Draw("same,hist,l");
 
       histoRatioPythia8EPPS16ToFit->Draw("same,hist,l");
       histoRatioPythia8nCTEQ15ToFit->Draw("same,hist,l");
@@ -3573,10 +3573,11 @@ cout << __LINE__ << endl;
       boxErrorSigmaRatio->Draw();
       DrawGammaLines(minPtPi0, maxPtPi0,1., 1.,0.5,kGray+2);
 
-      legendRatioTheorypp_3Parted = GetAndSetLegend2(0.15,0.76,0.4,0.96, 0.85* textSizeLabelsPixel);
+      // legendRatioTheorypp_3Parted = GetAndSetLegend2(0.15,0.76,0.4,0.96, 0.85* textSizeLabelsPixel);
+      legendRatioTheorypp_3Parted = GetAndSetLegend2(0.15,0.80,0.4,0.96, 0.85* textSizeLabelsPixel);
       legendRatioTheorypp_3Parted->AddEntry(graphRatioCombCombFitSys,"Data","pf");
-      legendRatioTheorypp_3Parted->AddEntry(histoRatioEPOSJJToFit,  "EPOS", "l");
-      legendRatioTheorypp_3Parted->AddEntry(histoRatioDPMJETToFit,  "DPMJET", "l");
+      // legendRatioTheorypp_3Parted->AddEntry(histoRatioEPOSJJToFit,  "EPOS", "l");
+      // legendRatioTheorypp_3Parted->AddEntry(histoRatioDPMJETToFit,  "DPMJET", "l");
       legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8EPPS16ToFit,  "PYTHIA8 EPPS16", "l");
       legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8nCTEQ15ToFit,  "PYTHIA8 nCTEQ15", "l");
       // legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8Monash2013ToFit,  "PYTHIA8 Monash2013", "l");
@@ -5437,9 +5438,18 @@ cout << "#######################################################################
       }
 
 
-      if(graphCombEtaToPi0Tot)graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0CombpPb8TeVTotErr");
-      if(graphCombEtaToPi0Stat)graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0CombpPb8TeVStatErr");
-      if(graphCombEtaToPi0Sys)graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0CombpPb8TeVSysErr");
+      if(graphCombEtaToPi0Tot){
+        while(graphCombEtaToPi0Tot->GetX()[graphCombEtaToPi0Tot->GetN()-1] >20) graphCombEtaToPi0Tot->RemovePoint(graphCombEtaToPi0Tot->GetN()-1);
+        graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0CombpPb8TeVTotErr");
+      }
+      if(graphCombEtaToPi0Stat){
+        while(graphCombEtaToPi0Stat->GetX()[graphCombEtaToPi0Stat->GetN()-1] >20) graphCombEtaToPi0Stat->RemovePoint(graphCombEtaToPi0Stat->GetN()-1);
+        graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0CombpPb8TeVStatErr");
+      }
+      if(graphCombEtaToPi0Sys){
+        while(graphCombEtaToPi0Sys->GetX()[graphCombEtaToPi0Sys->GetN()-1] >20) graphCombEtaToPi0Sys->RemovePoint(graphCombEtaToPi0Sys->GetN()-1);
+        graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0CombpPb8TeVSysErr");
+      }
 
       for (Int_t i = 0; i < 13; i++){
         if(directoryEta[i]){

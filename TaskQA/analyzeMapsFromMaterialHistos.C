@@ -90,35 +90,59 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" ,
     else if(optionMC.CompareTo("MC")==0) outputDir = "DeDxMapsMC";
     gSystem->Exec(Form("mkdir -p %s",outputDir.Data()));
 
-  //TString fileNameMaps = "",
-  //  TString fileNameWithMaps = "/Users/marin/analysis/2018/Grid/OutputLegoTrains/pp/Legotrain-vAN-20180710-13TeV-MaterialHistos-Maps/GammaConv_Material_LHC16d_21.root";
+    TH3F *histoPositronDeDxPEtaR0 = NULL;
+    TH3F *histoPositronDeDxPEtaR1 = NULL;
+    TH3F *histoPositronDeDxPEtaR2 = NULL;
+    TH3F *histoPositronDeDxPEtaR3 = NULL;
+
+    TH3F *histoElectronDeDxPEtaR0 = NULL;
+    TH3F *histoElectronDeDxPEtaR1 = NULL;
+    TH3F *histoElectronDeDxPEtaR2 = NULL;
+    TH3F *histoElectronDeDxPEtaR3 = NULL;
+
     TFile* fileMaterialHistos = new TFile(fileNameWithMaps.Data());
     TString fCutSelectionRead = cutSelection;
     TString nameMainDir = "GammaConvMaterial";
 
     TList *TopDir =(TList*)fileMaterialHistos->Get(nameMainDir.Data());
-    if(TopDir == NULL){
-        cout<<"ERROR: TopDir not Found"<<endl;
-        return;
+    if(TopDir != NULL){
+        TList *HistosGammaConversion = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+        if(HistosGammaConversion == NULL){
+            cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
+            return;
+        }
+
+        TList *MapsContainer           = (TList*)HistosGammaConversion->FindObject(Form("%s  dEdx Maps",fCutSelectionRead.Data()));
+        histoPositronDeDxPEtaR0 = (TH3F*)MapsContainer->FindObject("R0 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR1 = (TH3F*)MapsContainer->FindObject("R1 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR2 = (TH3F*)MapsContainer->FindObject("R2 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR3 = (TH3F*)MapsContainer->FindObject("R3 positron sigma dEdx P Eta");
+
+        histoElectronDeDxPEtaR0 = (TH3F*)MapsContainer->FindObject("R0 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR1 = (TH3F*)MapsContainer->FindObject("R1 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR2 = (TH3F*)MapsContainer->FindObject("R2 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR3 = (TH3F*)MapsContainer->FindObject("R3 electron sigma dEdx P Eta");
+    } else if (TopDir == NULL){
+        cout<<"WARNING: TopDir " << nameMainDir.Data() << " not Found... checking for PhotonQA output"<<endl;
+
+        TString nameDirectory           = Form("GammaConvV1_QA_%s",  fCutSelectionRead.Data());
+        TDirectory* directoryConv           = (TDirectory*)fileMaterialHistos->Get(nameDirectory.Data());
+        if (directoryConv == NULL){
+            cout<<"ERROR: PhotonQA directory " << nameDirectory.Data() << " not Found! Returning..."<<endl;
+            return;
+        } else {
+            cout<<"INFO: PhotonQA directory " << nameDirectory.Data() << " found!"<<endl;
+        }
+        histoPositronDeDxPEtaR0 = (TH3F*)directoryConv->Get("R0 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR1 = (TH3F*)directoryConv->Get("R1 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR2 = (TH3F*)directoryConv->Get("R2 positron sigma dEdx P Eta");
+        histoPositronDeDxPEtaR3 = (TH3F*)directoryConv->Get("R3 positron sigma dEdx P Eta");
+
+        histoElectronDeDxPEtaR0 = (TH3F*)directoryConv->Get("R0 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR1 = (TH3F*)directoryConv->Get("R1 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR2 = (TH3F*)directoryConv->Get("R2 electron sigma dEdx P Eta");
+        histoElectronDeDxPEtaR3 = (TH3F*)directoryConv->Get("R3 electron sigma dEdx P Eta");
     }
-
-    TList *HistosGammaConversion = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
-    if(HistosGammaConversion == NULL){
-        cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
-        return;
-    }
-
-    TList *MapsContainer           = (TList*)HistosGammaConversion->FindObject(Form("%s  dEdx Maps",fCutSelectionRead.Data()));
-    TH3F *histoPositronDeDxPEtaR0 = (TH3F*)MapsContainer->FindObject("R0 positron sigma dEdx P Eta");
-    TH3F *histoPositronDeDxPEtaR1 = (TH3F*)MapsContainer->FindObject("R1 positron sigma dEdx P Eta");
-    TH3F *histoPositronDeDxPEtaR2 = (TH3F*)MapsContainer->FindObject("R2 positron sigma dEdx P Eta");
-    TH3F *histoPositronDeDxPEtaR3 = (TH3F*)MapsContainer->FindObject("R3 positron sigma dEdx P Eta");
-
-    TH3F *histoElectronDeDxPEtaR0 = (TH3F*)MapsContainer->FindObject("R0 electron sigma dEdx P Eta");
-    TH3F *histoElectronDeDxPEtaR1 = (TH3F*)MapsContainer->FindObject("R1 electron sigma dEdx P Eta");
-    TH3F *histoElectronDeDxPEtaR2 = (TH3F*)MapsContainer->FindObject("R2 electron sigma dEdx P Eta");
-    TH3F *histoElectronDeDxPEtaR3 = (TH3F*)MapsContainer->FindObject("R3 electron sigma dEdx P Eta");
-
 
     Int_t nPBins   = 12;
     Double_t *arrPBinning = new Double_t[13];

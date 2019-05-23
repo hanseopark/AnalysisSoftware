@@ -3380,7 +3380,7 @@ cout << __LINE__ << endl;
 
   canvasRatioToCombFit->cd();
   minycomparison = 0.61;
-  maxycomparison = 1.71;
+  maxycomparison = 2.19;
   // histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
   histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(minycomparison,maxycomparison);
   histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(minPtPi0,150);
@@ -3405,7 +3405,7 @@ cout << __LINE__ << endl;
       graphRatioCombFitSys8TeV->Draw("E2same");
       graphRatioCombFitStat8TeV_WOXErr->Draw("p,same,z");
 
-  TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC/pdf/8TeV/2019_01_29/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
+  TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC_noXTalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
   // TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_06/FinalResultsTriggersPatchedLM1EMC-merged_11/data_EMC-mergedResultsFullCorrection_PP.root");
   TDirectory* directory8TeVmergedOld  = (TDirectory*)inputFile8TeVmergedOld->Get("Pi08TeV");
 
@@ -3430,7 +3430,7 @@ cout << __LINE__ << endl;
 
 
   // TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_04_08/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
-  TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_06/FinalResultsTriggersPatchedLM1EMC-merged_11/data_EMC-mergedResultsFullCorrection_PP.root");
+  TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
   // TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_06/FinalResultsTriggersPatchedLM1EMC-merged_65/data_EMC-mergedResultsFullCorrection_PP.root");
   TDirectory* directory8TeVmergedNew  = (TDirectory*)inputFile8TeVmergedNew->Get("Pi08TeV");
 
@@ -3468,6 +3468,30 @@ cout << __LINE__ << endl;
   labelRatioToFitPi0->Draw();
 
   canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfNewMergedAnaToCombFit_PP8TeV.%s",outputDir.Data(),suffix.Data()));
+
+  histo2DPi0RatioToCombFit->Draw("copy");
+
+  DrawGammaLines(minPtPi0,150 , 1., 1.,1, kGray+2);
+  DrawGammaLines(minPtPi0,150 , 1.1, 1.1,1, kGray, 7);
+  DrawGammaLines(minPtPi0,150 , 0.9, 0.9,1, kGray, 7);
+
+      graphRatioCombFitSys8TeV->Draw("E2same");
+      graphRatioCombFitStat8TeV_WOXErr->Draw("p,same,z");
+
+      graphRatioCombFitSys8TeVmEMCNew->Draw("E2same");
+      graphRatioCombFitStat8TeVmEMCNew_WOXErr->Draw("p,same,z");
+
+        legendSpecial8TeVPlot     = GetAndSetLegend2(0.17, 0.79, 0.47, 0.79+0.045*2, 0.85*textsizespecialplot);
+        legendSpecial8TeVPlot->SetNColumns(1);
+        // legendPlot->SetMargin(0.2);
+        legendSpecial8TeVPlot->AddEntry(graphRatioCombFitSys8TeV,"pub. spectrum","pf");
+        legendSpecial8TeVPlot->AddEntry(graphRatioCombFitSys8TeVmEMCNew,"mEMC","pf");
+        legendSpecial8TeVPlot->Draw();
+  labelRatioToFitEnergySpecialPlot->Draw();
+  labelRatioToFitALICE->Draw();
+  labelRatioToFitPi0->Draw();
+
+  canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfNewMergedAnaToCombFit_PP8TeV_woOld.%s",outputDir.Data(),suffix.Data()));
 
   // **********************************************************************************************************************
   // ******************************************* Mass and width for pi0 at 8TeV ****************************************
