@@ -4015,7 +4015,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             graphCombEtaInvYieldRelStat[cent]->Draw("l,x0,same,e1");
             graphCombEtaInvYieldRelSys[cent]->Draw("l,x0,same,e1");
 
-            DrawGammaSetMarkerTGraphAsym(graphCombIndepMethodsEtaInvYieldRelTot[cent], markerStyleComb+4, markerSizeComb, colorCombHighPt , colorCombHighPt);
+            DrawGammaSetMarkerTGraphAsym(graphCombIndepMethodsEtaToPi0RelTot[cent], markerStyleComb+4, markerSizeComb, colorCombHighPt , colorCombHighPt);
 
             graphCombIndepMethodsEtaToPi0RelTot[cent]->Draw("p,same,z");
             graphCombIndepMethodsEtaToPi0RelStat[cent]->Draw("l,x0,same,e1");
@@ -4033,9 +4033,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
             legendRelTotErr8->Draw();
 
         labelRelTotErrEnergy->Draw();
-        labelRelTotErrEta->Draw();
+        labelRelTotErrEtaToPi0->Draw();
 
-        canvasRelTotErr->SaveAs(Form("%s/Eta_ReldecompBoth_%s%s.%s",outputDirSupportComb.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
+        canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_ReldecompBoth_%s%s.%s",outputDirSupportComb.Data(), centArrayOutput[cent].Data(), addCentString[cent].Data(), suffix.Data()));
 
     }
 
