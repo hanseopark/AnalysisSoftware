@@ -56,6 +56,7 @@
 #include "EventQA_Runwise.C"
 #include "PhotonQA_Runwise.C"
 #include "ClusterQA_Runwise.C"
+#include "ClusterQA_Runwise_V2.C"
 #include "PrimaryTrackQA_Runwise.C"
 
 void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selected config file
@@ -100,10 +101,12 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     Bool_t      doEquidistantXaxis      = kFALSE;
     Bool_t      doTrigger               = kFALSE; // was: kTRUE
     Bool_t      doHistsForEverySet      = kFALSE; // was: kTRUE
+    Bool_t      onlytrending            = kFALSE; // was: kTRUE
     Bool_t      useDataRunListForMC     = kFALSE;
     Bool_t      addSubFolder            = kFALSE;
     Int_t       nSigmasBadRun[8]        = {2,2,2,2,2,2,2,2};
     TString     fixedTopDir             = "";
+    Bool_t      SwithManyRuns           = kFALSE; // was: kTRUE
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -189,6 +192,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             doTrigger           = kTRUE;
         } else if (tempValue.BeginsWith("doHistsForEverySet",TString::kIgnoreCase)){
             doHistsForEverySet  = kTRUE;
+        } else if (tempValue.BeginsWith("onlytrending",TString::kIgnoreCase)){
+            onlytrending  = kTRUE;
+        } else if (tempValue.BeginsWith("SwithManyRuns",TString::kIgnoreCase)){
+            SwithManyRuns  = kTRUE;
         } else if (tempValue.BeginsWith("useDataRunListForMC",TString::kIgnoreCase)){
             useDataRunListForMC = kTRUE;
         } else if (tempValue.BeginsWith("fixedTopDir",TString::kIgnoreCase)){
@@ -239,6 +246,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << "doEquidistantXaxis:    " << doEquidistantXaxis         << endl;
     cout << "doTrigger:             " << doTrigger                  << endl;
     cout << "doHistsForEverySet:    " << doHistsForEverySet         << endl;
+    cout << "onlytrending:          " << onlytrending         << endl;
+    cout << "SwithManyRuns:         " << SwithManyRuns         << endl;
     cout << "useDataRunListForMC:   " << useDataRunListForMC        << endl;
     cout << "addSubFolder:          " << addSubFolder               << endl;
     cout << "addLabelRunlist:       " << addLabelRunlist            << endl;
@@ -275,8 +284,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
         PhotonQA_Runwise(   nSets, nData, fEnergyFlag, path, fileNamePhoton, DataSets, plotDataSets, mode, cutNr,
                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, addPhotonCutNr);
     }
-    if (doClusterQA)    ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
-                                            doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
+    if (doClusterQA){
+      if (SwithManyRuns) ClusterQA_Runwise_V2(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kFALSE, 50, onlytrending );
+      else ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
+    }
     if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
                                             1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kTRUE );
     if ( doPrimaryTrackQA ) {
