@@ -727,7 +727,7 @@ then
 	do
 		echo;echo;
 		echo  -e "\e[36m|-> \e[0m $TrainNumber"
-		singletrainDir=$TrainPage-$TrainNumber
+		singletrainDir=.$TrainPage-$TrainNumber
 		for RunlistName in `cat $OptRunlistNamefile`
 		do
 			echo  -e "\t\e[36m|-> \e[0m $RunlistName"

@@ -45,6 +45,11 @@ then
     # ### merging 16 + 17 triggered
     # bash DownScript.sh 775 776 -Name_Skim_Data_pp13TeV_16_17 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -noDown < sayyes.txt #-runwise
 
+    ### Daten LHC17 Data only QA "751"
+    bash DownScript.sh 751 -Name_QA_Data_pp13TeV_2017 GA_pp_AOD ?_HeavyNeutralMesonToGG_1_1000 -mergechilds -childsareperiods -RL_listDPGEDC -runwise < sayyes.txt
+
+
+
 
     #######################################################
     ######################   MC   ######################
