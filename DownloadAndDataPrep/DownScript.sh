@@ -4,7 +4,7 @@ debug=0
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V3.3"
+echo "DownScript.sh Version: V3.4"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -664,7 +664,7 @@ then
 									do
 										runName=`grep "$runfilename" RunlistLinks.txt | awk -F "/" '{print $8}'`
 										printf "Download Run:  $runName "
-										runDir=$OUTPUTDIR/$ChildName/$RunlistName/$runName
+										runDir=$OUTPUTDIR/$RunlistName/$ChildName/$runName
 										mkdir -p $runDir &> /dev/null
 										runoutFile=$runDir/$filename
 										runinFile=${runfilename%%root_archive.zip}/$filename
