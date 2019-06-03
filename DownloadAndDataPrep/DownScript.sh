@@ -1,10 +1,10 @@
 #! /bin/bash
-debug=0
+debug=1
 # This Script is intended to automize the download of train outputs
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V3.4"
+echo "DownScript.sh Version: V3.5"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -46,16 +46,8 @@ thisuser=`echo ${USER}`
 if [[ $thisuser = "adrian" || $thisuser = "amechler" ]]
 then
 	BASEDIR="/media/adrian/Elements/grid_data"
-	if [[ $I_AM_ALIDOCK = "1" ]]
-	then
-		BASEDIR="/home/alidock/media/adrian/Elements/grid_data"
-	fi
 	UserName="Adrian Mechler";
 	pathtocert="~/.globus"
-	if [[ $I_AM_ALIDOCK = "1" ]]
-	then
-		pathtocert="~/.globus"
-	fi
 	alienUserName="amechler"
 	key="key.pem"
 	cacert="ca.pem"
@@ -379,6 +371,7 @@ then
 
 
 		AlienDir="/alice/cern.ch/user/a/alitrain/PWGGA/$TrainPage/"
+
 		OUTPUTDIR=$BASEDIR/$OutName
 		List="listGrid.txt"
 		GlobalVariablesFile="globalvariables.C"
@@ -738,16 +731,16 @@ then
 			if [ -f $FileList ]; then
 				rm $FileList
 			fi
-			ls $singletrainDir/$RunlistName/*.root >> $FileList
+			ls $BASEDIR/$singletrainDir/$RunlistName/*.root >> $FileList
 
 			for filenametmp in `cat $FileList`
 			do
 				filename=${filenametmp#*/*/}
 				echo  -e "\t\t\e[36m|-> \e[0m $filename"
-				outFile=$singletrainDir/$RunlistName/$filename
-				alreadyMerged=$MergeTrainsOutname/$RunlistName/.$TrainNumber-${filename%%.root}.merged
-				logFile=$MergeTrainsOutname/$RunlistName/$TrainNumber-${filename%%.root}.log
-				mergedFile=$MergeTrainsOutname/$RunlistName/$filename
+				outFile=$BASEDIR/$singletrainDir/$RunlistName/$filename
+				alreadyMerged=$BASEDIR/$MergeTrainsOutname/$RunlistName/.$TrainNumber-${filename%%.root}.merged
+				logFile=$BASEDIR/$MergeTrainsOutname/$RunlistName/$TrainNumber-${filename%%.root}.log
+				mergedFile=$BASEDIR/$MergeTrainsOutname/$RunlistName/$filename
 				if [[ -f $alreadyMerged ]]
 				then
 					echo -e "\t\t\e[33m|-> \e[0m$outFile already merged"
@@ -797,6 +790,23 @@ then
 					fi
 				fi
 			done
+			if [[ $Userunwise = 1 ]]
+			then
+				# look for availible periods
+				PeriodList="$BASEDIR/$MergeTrainsOutname/PeriodList.txt"
+				if [ -f $PeriodList ]; then
+					rm $PeriodList
+				fi
+				ls $BASEDIR/$singletrainDir/$RunlistName/LHC* >> $PeriodList
+				for Periodnametmp in `cat $PeriodList`
+				do
+					Periodname=${Periodnametmp#*$RunlistName/}
+					echo  -e "\t\t\e[36m|-> \e[0m $Periodname"
+					cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname $BASEDIR/$MergeTrainsOutname/$RunlistName/$Periodname"
+					echo $cmd
+					eval $cmd
+				done
+			fi
 		done
 	done
 fi
