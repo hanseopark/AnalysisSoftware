@@ -358,7 +358,6 @@ void ExtractSignalV2(
     const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
-
     //******************************************************************************************************
     //***************************** Get Main folder for cut ************************************************
     //******************************************************************************************************
@@ -508,7 +507,7 @@ void ExtractSignalV2(
     else ProduceBckProperWeighting(ESDContainer,ESDContainer, JetContainer, UseTHnSparse);
     //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
-   if(fDoJetAnalysis == kTRUE && fIsMC == 0){
+   if(fDoJetAnalysis){
         fHistJetPt                      = (TH1D*)JetContainer->FindObject("JetPt");
         fHistJetPt->Sumw2();
         fHistJetEta                     = (TH1F*)JetContainer->FindObject("JetEta");
@@ -520,22 +519,26 @@ void ExtractSignalV2(
         fHistNJetsEvents                = (TH1D*)JetContainer->FindObject("NJets");
         fHistNJetsEvents->Sumw2();
         fHistNEventswithJets            = (TH1D*)JetContainer->FindObject("NEvents_with_Jets");
-        fHistNEventswithJets->Sumw2();
-        fHistRatioPtPi0Jet              = (TH1D*)JetContainer->FindObject("Ratio_Pt_Pi0_Jet");
-        fHistRatioPtPi0Jet->Sumw2();
-        fHistDoubleCounting             = (TH1D*)JetContainer->FindObject("Double_Counting_Mesons_Jets");
-        fHistDoubleCounting->Sumw2();
-
-        fHistGammaGammaPi0JetEvent      = (TH2D*)JetContainer->FindObject("ESD_Pi0Jet_Mother_InvMass_Pt");
-        fHistGammaGammaPi0JetEvent->Sumw2();
-        fHistRPi0Jet                    = (TH2D*)JetContainer->FindObject("ESD_RPi0Jet_Pt");
-        fHistRPi0Jet->Sumw2();
-        fHistEtaPhiPi0Jet               = (TH2D*)JetContainer->FindObject("Eta_Phi_Distr_Pi0Jet");
-        fHistEtaPhiPi0Jet->Sumw2();
-        fHistEtaPhiPi0inJet             = (TH2D*)JetContainer->FindObject("Eta_Phi_Distr_Pi0inJet");
-        fHistEtaPhiPi0inJet->Sumw2();
-        fHistFragmFunct                 = (TH2D*)JetContainer->FindObject("ESD_Pi0inJetPt_FragmentationFunc");
-        fHistFragmFunct->Sumw2();
+        fNJetEvents = fHistNEventswithJets->GetBinContent(1)*1.17;
+        if(fIsMC == 0){
+          fHistNEventswithJets->Sumw2();
+          fHistRatioPtPi0Jet              = (TH1D*)JetContainer->FindObject("Ratio_Pt_Pi0_Jet");
+          fHistRatioPtPi0Jet->Sumw2();
+          fHistDoubleCounting             = (TH1D*)JetContainer->FindObject("Double_Counting_Mesons_Jets");
+          fHistDoubleCounting->Sumw2();
+          fHistGammaGammaPi0JetEvent      = (TH2D*)JetContainer->FindObject("ESD_Pi0Jet_Mother_InvMass_Pt");
+          fHistGammaGammaPi0JetEvent->Sumw2();
+          fHistRPi0Jet                    = (TH2D*)JetContainer->FindObject("ESD_RPi0Jet_Pt");
+          fHistRPi0Jet->Sumw2();
+          fHistEtaPhiPi0Jet               = (TH2D*)JetContainer->FindObject("Eta_Phi_Distr_Pi0Jet");
+          fHistEtaPhiPi0Jet->Sumw2();
+          fHistEtaPhiPi0inJet             = (TH2D*)JetContainer->FindObject("Eta_Phi_Distr_Pi0inJet");
+          fHistEtaPhiPi0inJet->Sumw2();
+          fHistFragmFunct                 = (TH2D*)JetContainer->FindObject("ESD_Pi0inJetPt_FragmentationFunc");
+          fHistFragmFunct->Sumw2();
+          fHistFragmZInvMass              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJetPt_Fragm_Z_InvMass");
+          //fHistFragmZInvMass->Sumw2();
+        }
     }
     // enter pure simulation routines
     if(fIsMC){
@@ -577,7 +580,6 @@ void ExtractSignalV2(
             }
             //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         }
-
         cout << "meson Id: " << fMesonId << endl;
         // Loading histograms for Eta
         if( fMesonId == 221){
@@ -656,15 +658,26 @@ void ExtractSignalV2(
 
          if(fDoJetAnalysis){
           TList *TrueJetContainer = (TList*)HistosGammaConversion->FindObject(Form("%s True Jet histograms",fCutSelectionRead.Data()));
-          fHistoDoubleCountTruePi0                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_Pi0inJet");
+          if(fMode != 0){
+            fHistoDoubleCountTruePi0                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_Pi0inJet");
+            fHistoDoubleCountTrueEta                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_EtainJet");
+            fHistoTruePi0FragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TruePi0inJetPt_FragmentationFunc");
+            fHistoTrueEtaFragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TrueEtainJet_FragmentationFunc");
+            fHistoTruePi0FramZInvMass                   = (TH2D*)TrueJetContainer->FindObject("ESD_TruePi0inJetPt_Fragm_Z_InvMass");
+            fHistoTrueEtaFramZInvMass                   = (TH2D*)TrueJetContainer->FindObject("ESD_TrueEtainJetPt_Fragm_Z_InvMass");
+          }else{
+            fHistoDoubleCountTruePi0                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_inJet");
+            fHistoDoubleCountTrueEta                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_inJet");
+            fHistoTruePi0FragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TrueinJetPt_FragmentationFunc");
+            fHistoTrueEtaFragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TrueinJetPt_FragmentationFunc");
+            fHistoTruePi0FramZInvMass                   = (TH2D*)TrueJetContainer->FindObject("ESD_TrueinJetPt_Fragm_Z_InvMass");
+            fHistoTrueEtaFramZInvMass                   = (TH2D*)TrueJetContainer->FindObject("ESD_TrueinJetPt_Fragm_Z_InvMass");
+          }
           fHistoDoubleCountTruePi0->Sumw2();
-          fHistoDoubleCountTrueEta                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_EtainJet");
           fHistoDoubleCountTrueEta->Sumw2();
           fHistoJetUnfold                             = (TH2D*)TrueJetContainer->FindObject("True_JetPt_vs_Rec_JetPt");
           fHistoJetUnfold->Sumw2();
-          fHistoTruePi0FragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TruePi0inJetPt_FragmentationFunc");
           fHistoTruePi0FragmFunc->Sumw2();
-          fHistoTrueEtaFragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TrueEtainJet_FragmentationFunc");
           fHistoTrueEtaFragmFunc->Sumw2();
         }
         cout << ObjectNameTrue.Data() << endl;
@@ -1458,6 +1471,8 @@ void ExtractSignalV2(
                                                                     + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
             fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
             fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
+            if(fDoJetAnalysis) fMesonYieldsPerJetEvent[k][iPt]       = fMesonYieldsCorResidualBckFunc[k][iPt]/fNJetEvents;
+            if(fDoJetAnalysis) fMesonYieldsPerJetEventError[k][iPt]  = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNJetEvents;
 
             //Integrate Fit Function
             IntegrateFitFunc( fFitSignalPeakPosInvMassPtBin[iPt], fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRange[k]);
@@ -1619,6 +1634,8 @@ void ExtractSignalV2(
                                                                     + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
             fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
+            if(fDoJetAnalysis) fMesonYieldsPerJetEvent[k+3][iPt]       = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNJetEvents;
+            if(fDoJetAnalysis) fMesonYieldsPerJetEventError[k+3][iPt]  = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNJetEvents;
 
             //Integrate Fit Function
             IntegrateFitFunc( fFitSignalPeakPosInvMassLeftPtBin[iPt], fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
@@ -2963,7 +2980,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
     } else {
         cout << "Using TH2 for the background" << endl;
         if(fDoJetAnalysis){
-          fHistoMotherZM = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
+          fHistoMotherZM              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
           fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
         }else{
           fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
@@ -3100,6 +3117,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonYieldsResidualBckFunc[k]                              = new Double_t[fNBinsPt];
         fMesonYieldsCorResidualBckFunc[k]                           = new Double_t[fNBinsPt];
         fMesonYieldsPerEvent[k]                                     = new Double_t[fNBinsPt];
+        if(fDoJetAnalysis){
+          fMesonYieldsPerJetEvent[k]                                = new Double_t[fNBinsPt];
+          fMesonYieldsPerJetEventError[k]                           = new Double_t[fNBinsPt];
+        }
 
         // Initialize error arrays
         fGGYieldsError[k]                                           = new Double_t[fNBinsPt];
@@ -3271,6 +3292,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingRemainingBGInvMassPtBin                            = new TH1D*[fNBinsPt];
     fHistoMappingRatioSBInvMassPtBin                                = new TH1D*[fNBinsPt];
     fHistoMappingBackNormAndRemainingBGInvMassPtBin                 = new TH1D*[fNBinsPt];
+    fHistoMapping_Fragm_ZInvMassZBin                                = new TH1D*[fNBinsPt];
 
     // initial  fit-pt-arrays for  data inv mass
     fFitSignalInvMassPtBin                                          = new TF1*[fNBinsPt];
@@ -3348,6 +3370,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fHistoMappingRemainingBGInvMassPtBin[i]                             = NULL;
         fHistoMappingRatioSBInvMassPtBin[i]                                 = NULL;
         fHistoMappingBackNormAndRemainingBGInvMassPtBin[i]                  = NULL;
+        fHistoMapping_Fragm_ZInvMassZBin[i]                                 = NULL;
 
         fFitSignalInvMassPtBin[i]                                           = NULL;
         fFitRemainingBGInvMassPtBin[i]                                      = NULL;
@@ -3480,6 +3503,16 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     ObjectNameTrueMixedCaloConvPhoton   = "ESD_TrueMotherCaloMixedPhotonConvertedPhoton_InvMass_Pt";
     ObjectNameTrueCaloMerged            = "ESD_TrueMotherCaloMergedCluster_InvMass_Pt";
     ObjectNameTrueCaloMergedPartConv    = "ESD_TrueMotherCaloMergedClusterPartConv_InvMass_Pt";
+
+    if(fMode == 0 && fDoJetAnalysis){
+      ObjectNameTrue                      = "ESD_TruePrimaryinJet_InvMass_Pt";
+      ObjectNameTrueFull                  = "ESD_True_inJet_InvMass_Pt";
+      ObjectNameTrueSec                   = "ESD_TrueSecondary_inJet_InvMass_Pt";
+      ObjectNameTrueSecFromK0S            = "ESD_TrueSecondaryFromK0s_inJet_InvMass_Pt";
+      ObjectNameTrueSecFromK0L            = "ESD_TrueSecondaryFromK0l_inJet_InvMass_Pt";
+      ObjectNameTrueSecFromLambda         = "ESD_TrueSecondaryFromLambda_inJet_InvMass_Pt";
+    }
+
     if (fMode > 1 && fMode !=9){
         ObjectNameTrueCaloPhoton            = Form("ESD_True%sCaloPhoton_InvMass_Pt", mesonType.Data());
         ObjectNameTrueCaloConvPhoton        = Form("ESD_True%sCaloConvertedPhoton_InvMass_Pt", mesonType.Data());
@@ -3867,7 +3900,33 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy) {
             Int_t NTotalBins = fHistoMappingGGInvMassPtBin[iPt]->GetNbinsX();
             for(Int_t i = 0; i <= NTotalBins; i++){
                 Double_t value = fHistoMappingGGInvMassPtBin[iPt]->GetBinContent(i);
-                value = value*1.32;
+                Double_t CorrFactor = 1.;
+                if(fMode == 0){
+                  if(fMesonId == 111){        // pi0
+                    CorrFactor = 1.30 - 0.054*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }else if(fMesonId == 221){  // eta
+                    CorrFactor = 1.42 - 0.096*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }
+                }else if(fMode == 2){
+                  if(fMesonId == 111){        //pi0
+                    if((fBinsPt[iPt] + fBinsPt[iPt+1])/2 < 12){
+                      CorrFactor = 1.28 - 0.026*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                    }else CorrFactor = 1.;
+                  }else if(fMesonId == 221){  // eta
+                    CorrFactor = 1.16 - 0.011*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }
+                }else if(fMode == 4){
+                  if(fMesonId == 111){        // pi0
+                    CorrFactor = 1.30 - 0.01*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }else if(fMesonId == 221){  // eta
+                    CorrFactor = 1.48 - 0.027*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }
+                }else if(fMode == 5){
+                  if(fMesonId == 111){
+                    CorrFactor = 1.32 - 0.013*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
+                  }
+                }
+                value = value*CorrFactor;
                 fHistoMappingGGInvMassPtBin[iPt]->SetBinContent(i, value);
             }
         }
@@ -3889,11 +3948,15 @@ void FillMassMCTrueMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill) {
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineColor(2);
 
-        if(fDoJetAnalysis && fMesonId == 221){
+        if(fDoJetAnalysis && fMesonId == 221 && (fMode == 4 || fMode == 2 || fMode == 0)){
             Int_t NTotalBins = fHistoMappingTrueMesonInvMassPtBins[iPt]->GetNbinsX();
+            Double_t CorrFactor = 1.;
+            if(fMode == 0) CorrFactor = 0.7;
+            if(fMode == 2) CorrFactor = 0.74;
+            if(fMode == 4) CorrFactor = 0.72;
             for(Int_t i = 0; i <= NTotalBins; i++){
                 Double_t value = fHistoMappingTrueMesonInvMassPtBins[iPt]->GetBinContent(i);
-                value = value*0.84;
+                value = value*CorrFactor;
                 fHistoMappingTrueMesonInvMassPtBins[iPt]->SetBinContent(i, value);
             }
         }
@@ -4154,7 +4217,6 @@ void FillMassMCTrueSecMesonHistosArray(TH2D** fHistoTrueSecMesonInvMassVSPtFill)
         }
     }
 }
-
 //****************************************************************************
 //********************** Calculate Fraction of Secondaries *******************
 //****************************************************************************
@@ -4181,6 +4243,10 @@ void CreatePtHistos(){
         fHistoYieldMeson[k]->Sumw2();
         fHistoYieldMesonPerEvent[k]            = new TH1D(Form("histoYieldMeson%sPerEvent",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
         fHistoYieldMesonPerEvent[k]->Sumw2();
+        if(fDoJetAnalysis){
+          fHistoYieldMesonPerJetEvent[k]          = new TH1D(Form("histoYieldMeson%sPerJetEvent",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+          fHistoYieldMesonPerJetEvent[k]->Sumw2();
+        }
     }
 
     // yield assumptions with different backgrounds
@@ -4496,6 +4562,8 @@ void FillPtHistos(){
             fHistoYieldMeson[k]->SetBinError(iPt,fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoYieldMesonPerEvent[k]->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoYieldMesonPerEvent[k]->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            if(fDoJetAnalysis) fHistoYieldMesonPerJetEvent[k]->SetBinContent(iPt,(1./fNJetEvents)*fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            if(fDoJetAnalysis) fHistoYieldMesonPerJetEvent[k]->SetBinError(iPt,(1./fNJetEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         }
 
         //normal
@@ -4587,7 +4655,6 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTailRange[1]    = 0.015;
                 fMesonFitRange[0] = 0.05;
                 fMesonFitRange[1] = 0.22;
-            }
             if (fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
                 mesonAmplitudeMax = mesonAmplitude*130./100.;
@@ -4787,6 +4854,11 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
+                }else if(fDoJetAnalysis){
+                    fMesonWidthRange[0]         = 0.007;
+                    fMesonWidthRange[1]         = 0.020;
+                    mesonAmplitudeMin = mesonAmplitude*98./100.;
+                    mesonAmplitudeMax = mesonAmplitude*600./100.;
                 } else {
                     mesonAmplitudeMin = mesonAmplitude*98./100.;
                     mesonAmplitudeMax = mesonAmplitude*600./100.;
@@ -4844,7 +4916,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       fMesonFitRange[1] = 0.28;
                       mesonAmplitudeMin = mesonAmplitude*90./100.;
                     }
-                }else if(fDoJetAnalysis){
+                }else if(fDoJetAnalysis && fMode == 4){
                     fMesonLambdaTailRange[0]        = 0.013;
                     fMesonLambdaTailRange[1]        = 0.03;
                     if(fBinsPt[ptBin] >= 9){
@@ -4877,17 +4949,22 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     fMesonLambdaTail            = 0.011;
                     fMesonLambdaTailRange[0]    = 0.011;
                     fMesonLambdaTailRange[1]    = 0.011;
+                    if(fDoJetAnalysis){
+                      fMesonWidthRange[0]         = 0.007;
+                      fMesonWidthRange[1]         = 0.020;
+                      mesonAmplitudeMin = mesonAmplitude*60./100.;
+                      mesonAmplitudeMax = mesonAmplitude*105./100.;
+                    }
                } else if ( fEnergyFlag.Contains("13TeV") ){
-		  if (ptBin <= 4){
-		    fMesonFitRange[0]                = 0.44;
-		    fMesonFitRange[1]                = 0.6;
-		  }
+                  if (ptBin <= 4){
+                    fMesonFitRange[0]                = 0.44;
+                    fMesonFitRange[1]                = 0.6;
+                  }
 
-		  if (ptBin == 2){
-		    fPeakRange[0]                = 0.52;
-		    fPeakRange[1]                = 0.56;
-		  }
-
+                  if (ptBin == 2){
+                    fPeakRange[0]                = 0.52;
+                    fPeakRange[1]                = 0.56;
+                  }
                 } else {
                     mesonAmplitudeMin = mesonAmplitude*50./100.;
                     mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -4919,7 +4996,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       mesonAmplitudeMin = mesonAmplitude*70./100.;
                       mesonAmplitudeMax = mesonAmplitude*130./100.;
                 }
-                if(fDoJetAnalysis){
+                if(fDoJetAnalysis && fMode == 4){
                   fMesonWidthRange[0]         = 0.022;
                   fMesonWidthRange[1]         = 0.035;
                   if(ptBin < 3){
@@ -4959,6 +5036,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     } else {
       fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
     }
+
     fFitGausExp =NULL;
     fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
@@ -6597,6 +6675,7 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
     for (Int_t k = 0; k < 6; k++){
         if (fHistoYieldMeson[k])            fHistoYieldMeson[k]->Write();
         if (fHistoYieldMesonPerEvent[k])    fHistoYieldMesonPerEvent[k]->Write();
+        if (fHistoYieldMesonPerJetEvent[k]) fHistoYieldMesonPerJetEvent[k]->Write();
     }
 
     // write histograms for assumption of different backgrounds
@@ -6646,6 +6725,7 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
     fMesonFullPtBackNorm->Write();
     fNumberOfGoodESDTracks->Write();
     fEventQuality->Write();
+    if(fDoJetAnalysis) fHistNEventswithJets->Write();
 
     TString nameHistoSignal;
     TString titleHistoSignal;
@@ -7146,7 +7226,7 @@ void PlotJetPlots(
 ){
         TCanvas* canvasJets = new TCanvas(CanvasName.Data(),"",200,10,1350,900);// gives the page size
         DrawGammaCanvasSettings( canvasJets, 0.1, 0.01, 0.02, 0.10);
-
+        HistoJet->SetTitle("");
         if(CanvasName == "RPi0JetDistr")  HistoJet->GetXaxis()->SetRangeUser(0,3.5);
         else if(CanvasName == "RatioPi0JetPt"){
           gPad->SetBottomMargin(0.15);
@@ -7245,7 +7325,7 @@ void PlotJetPlots(
         HistoJet->GetXaxis()->SetLabelSize(0.03);
         HistoJet->GetXaxis()->SetTitleOffset(0.9);
 
-        HistoJet->Draw();
+        HistoJet->Draw("HIST");
 
         if(Top){
             PutProcessLabelAndEnergyOnPlot(0.72, 0.85, 28, collisionSystem.Data(),"Jet p_{t} > 10 GeV" ,"Charged jets rec. with TPC", 43, 0.03);
@@ -7330,6 +7410,7 @@ void Delete(){
         if (fMesonYieldsResidualBckFunc[k])                     delete[] fMesonYieldsResidualBckFunc[k];
         if (fMesonYieldsCorResidualBckFunc[k])                  delete[] fMesonYieldsCorResidualBckFunc[k];
         if (fMesonYieldsPerEvent[k])                            delete[] fMesonYieldsPerEvent[k];
+        if (fMesonYieldsPerJetEvent[k])                         delete[] fMesonYieldsPerJetEvent[k];
 
         // delete arrays for errors
         if (fGGYieldsError[k])                                  delete[] fGGYieldsError[k];
@@ -7339,6 +7420,7 @@ void Delete(){
         if (fMesonYieldsResidualBckFuncError[k])                delete[] fMesonYieldsResidualBckFuncError[k];
         if (fMesonYieldsCorResidualBckFuncError[k])             delete[] fMesonYieldsCorResidualBckFuncError[k];
         if (fMesonYieldsPerEventError[k])                       delete[] fMesonYieldsPerEventError[k];
+        if (fMesonYieldsPerJetEventError[k])                    delete[] fMesonYieldsPerJetEventError[k];
 
         // delete mass range array
         if (fMesonCurIntRange[k])                               delete[] fMesonCurIntRange[k];
@@ -7448,6 +7530,7 @@ void Delete(){
     if (fHistoFillPerEventBGZbinVsPsibin)                       delete[] fHistoFillPerEventBGZbinVsPsibin;
     for (Int_t m = 0; m < 3; m++){
         if (fFitSignalWithOtherBGInvMassPtBin[m])               delete[] fFitSignalWithOtherBGInvMassPtBin[m];
+
         if (fFitBckOtherInvMassPtBin[m])                        delete[] fFitBckOtherInvMassPtBin[m];
     }
     for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){

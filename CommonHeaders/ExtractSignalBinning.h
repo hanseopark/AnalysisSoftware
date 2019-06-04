@@ -877,12 +877,16 @@
                 if (mode == 1 )
                     return 4;
                 if (mode == 2 )
-                    return 8;
+                    if(DoJetAnalysis){
+                        return 4;
+                    }else{
+                        return 8;
+                    }
                 if (mode == 3 )
                     return 4;
                 else if (mode == 4 || mode == 5 )
                     if(DoJetAnalysis){
-                        return 6;
+                        return 5;
                     }else{
                         return 18;
                     }
@@ -1395,12 +1399,16 @@
                         startPtBin = 2;
                         if( energy.Contains("Ref1"))
                             startPtBin = 1;
+                        if(DoJetAnalysis)
+                            startPtBin = 2;
                     } else if ( mode == 1){
                         startPtBin = 1;
                     } else if ( mode == 2 || mode == 13 ){
                         startPtBin = 3;
                         if( energy.Contains("Ref1"))
                             startPtBin = 3;
+                        if(DoJetAnalysis)
+                            startPtBin = 6;
                     } else if ( mode == 3){
                         startPtBin = 1;
                     } else if ( mode == 4){
@@ -1417,6 +1425,8 @@
                     } else if ( mode == 5){
                       startPtBin = 2;
                       if (specialTrigg == 4) startPtBin = 23;
+                      if(DoJetAnalysis)
+                          startPtBin = 7;
                     } else if ( mode == 10){
                         startPtBin = 29;
                     } else if ( mode == 12){
@@ -1798,12 +1808,16 @@
                       startPtBin = 2;
                       if( energy.Contains("Ref1"))
                         startPtBin = 1;
+                      if(DoJetAnalysis)
+                        startPtBin = 0;
                  } else if ( mode == 1 ){
                       startPtBin = 1;
                   } else if ( mode == 2 ){
                       startPtBin = 3;
                       if( energy.Contains("Ref1"))
                         startPtBin = 2;
+                      if(DoJetAnalysis)
+                        startPtBin = 1;
                   } else if ( mode == 3 ){
                     if (energy.CompareTo("5TeV2017") == 0) startPtBin = 4;
                     else startPtBin = 1;
@@ -1815,7 +1829,7 @@
                     }else {
                       if (specialTrigg == 1) startPtBin = 17;
                       else if (specialTrigg == 2) startPtBin = 15;
-                      else if(DoJetAnalysis) startPtBin = 3;
+                      else if(DoJetAnalysis) startPtBin = 1;
                       else startPtBin = 6;
                     }
                   } else if ( mode == 5 ){
@@ -3222,7 +3236,7 @@
                           binning[i] = fBinsEtaPbPb5TeVEMCPt[i];
                         }
                     }else if(DoJetAnalysis){
-                        maxNBins = 13;
+                        maxNBins = 11;
                         for(Int_t i = 0; i < maxNBins+1; i++){
                           binning[i] = fBinsEta5TeV2017PtJets[i];
                         }

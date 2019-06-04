@@ -278,7 +278,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TString outputDir           = Form("%s/%s/%s/%s/CorrectSignalV2%s",fCutSelection.Data(),optionEnergy.Data(),optionPeriod.Data(),suffix.Data(), fDalitz.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
-
     // plot labeling
     TString textProcess         = ReturnMesonString (nameMeson);
     if(textProcess.CompareTo("") == 0 ){
@@ -418,6 +417,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (fileUncorrected.IsZombie()) return;
     TH1F *histoNumberOfGoodESDTracksVtx             = (TH1F*)fileUncorrected.Get("GoodESDTracks");
     TH1D *histoEventQuality                         = (TH1D*)fileUncorrected.Get("NEvents");
+    TH1D *histoJetEvents                            = (TH1D*)fileUncorrected.Get("NEvents_with_Jets");
     TH1D *histoUnCorrectedYield[6]                  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *RatioRaw[6]                               = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *fHistoYieldDiffBckResult[3]               = {NULL, NULL, NULL};
@@ -449,6 +449,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     } else {
         nEvt        = GetNEvents(histoEventQuality);
         // BinContent 5 - Zvertex-position, BinContent 4 - no Trigger Bit, BinContent 7 - PileUp
+    }
+
+    Bool_t DoJetAnalysis = kFALSE;
+    Float_t nJetEvents = 0;
+    if(histoJetEvents){
+        nJetEvents = histoJetEvents->GetBinContent(1)*1.17;
+        DoJetAnalysis = kTRUE;
     }
 
     Double_t scaleFactorMeasXSecForExternalInput              = 1;
@@ -3090,6 +3097,29 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     canvasRAWYield->SaveAs(Form("%s/%s_%s_RAWYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
     delete canvasRAWYield;
 
+    if(DoJetAnalysis){
+      TCanvas* canvasRAWYieldJetNormalisation = new TCanvas("canvasRAWYieldJetNormalisation","",200,10,1350,900);// gives the page size
+      DrawGammaCanvasSettings( canvasRAWYieldJetNormalisation, 0.10, 0.01, 0.02, 0.10);
+      canvasRAWYieldJetNormalisation->SetLogy(1);
+
+        TH1D* histoUnCorrectedYieldDrawing = (TH1D*)histoUnCorrectedYield[0]->Clone();
+        histoUnCorrectedYieldDrawing->Scale(1./nJetEvents);
+        DrawAutoGammaMesonHistos( histoUnCorrectedYieldDrawing,
+                                    "", "#it{p}_{T} (GeV/#it{c})", "RAW Yield/ #it{N}_{Evt}",
+                                    kTRUE, 3., 4e-10, kTRUE,
+                                    kFALSE, 0., 0.7,
+                                    kFALSE, 0., 10.);
+        histoUnCorrectedYieldDrawing->SetLineWidth(1);
+        DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 0.5, kBlack, kBlack);
+        histoUnCorrectedYieldDrawing->DrawCopy("e1");
+
+        PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
+
+      canvasRAWYieldJetNormalisation->Update();
+      canvasRAWYieldJetNormalisation->SaveAs(Form("%s/%s_%s_RAWYieldPt_JetNorm_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+      delete canvasRAWYieldJetNormalisation;
+    }
+
 
      // **************************************************************************************
     // ************** Plot raw yield with differnt yield extraction methods ***********
@@ -3160,6 +3190,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D *RatioNormal[6]                    = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *RatioNormalToTrue                 = NULL;
     TH1D *RatioTrueMCInput                  = NULL;
+    TH1D* histoCorrectedYieldNorm_JetNorm[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoCorrectedYieldTrue_JetNorm[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
 
     // corrected for resonance feed down
     TH1D* histoFeedDownCorrectedYieldNorm[6]        = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -3173,6 +3205,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         Int_t m = k;
         histoCorrectedYieldNorm[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldNormEff%s",nameIntRange[k].Data()));
         histoCorrectedYieldTrue[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff%s",nameIntRange[k].Data()));
+        if(DoJetAnalysis){
+          histoCorrectedYieldNorm_JetNorm[k] = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldNormEff_JetNorm%s",nameIntRange[k].Data()));
+          histoCorrectedYieldTrue_JetNorm[k] = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff_JetNorm%s",nameIntRange[k].Data()));
+        }
 
         histoCorrectedYieldWOSecNorm[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldWOSecNormEff%s",nameIntRange[k].Data()));
         histoCorrectedYieldWOSecTrue[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldWOSecTrueEff%s",nameIntRange[k].Data()));
@@ -3197,6 +3233,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             cout << k << "\t" << k << "\t" << m << endl;
             CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+
+            if(DoJetAnalysis){
+              CorrectYield(histoCorrectedYieldNorm_JetNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nJetEvents, nameMeson);
+              CorrectYield(histoCorrectedYieldTrue_JetNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nJetEvents, nameMeson);
+            }
 
             // resonance feed down correction
             CorrectYieldInclResonanceFeedDown(histoFeedDownCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoYieldResonanceFeedDownPi0FromExternalInput[k], histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
@@ -3324,6 +3365,59 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+
+    if(DoJetAnalysis){
+       padCorrectedYieldHistos->cd();
+
+        TH2F* histo2DDummyPt_JetNorm;
+        histo2DDummyPt_JetNorm               = new TH2F("histo2DDummyPt_JetNorm","histo2DDummyPt_JetNorm",1000,0, histoCorrectedYieldTrue_JetNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue_JetNorm[0]->GetNbinsX()),10000, 0.01*FindSmallestBin1DHist(histoCorrectedYieldTrue_JetNorm[0],1e6 ), 3*histoCorrectedYieldTrue_JetNorm[0]->GetMaximum());
+        SetStyleHistoTH2ForGraphs(histo2DDummyPt_JetNorm, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
+        histo2DDummyPt_JetNorm->DrawCopy();
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(histoCorrectedYieldTrue_JetNorm[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            histoCorrectedYieldTrue_JetNorm[k]->DrawCopy("e1,same");
+        }
+        legendYield3->Draw();
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+
+        padCorrectedYieldRatios->cd();
+
+        histo2DDummyRatioPt->DrawCopy();
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(RatioTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            RatioTrue[k]->DrawCopy("e1,same");
+        }
+        DrawGammaLines(0., histoCorrectedYieldTrue_JetNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue_JetNorm[0]->GetNbinsX()),1., 1.,1);
+
+        canvasCorrectedYield->Update();
+        canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEff_JetNorm_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+
+        padCorrectedYieldHistos->cd();
+
+        histo2DDummyPt_JetNorm->DrawCopy();
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(histoCorrectedYieldNorm_JetNorm[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            histoCorrectedYieldNorm_JetNorm[k]->DrawCopy("e1,same");
+        }
+        legendYield3->Draw();
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+
+        padCorrectedYieldRatios->cd();
+
+        histo2DDummyRatioPt->DrawCopy();
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(RatioNormal[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            RatioNormal[k]->DrawCopy("e1,same");
+        }
+        DrawGammaLines(0., histoCorrectedYieldNorm_JetNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldNorm_JetNorm[0]->GetNbinsX()),1., 1.,1);
+
+        canvasCorrectedYield->Update();
+        canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_JetNorm_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    }
 
     cout << fCutSelection.Data() << endl;
     //***********************************************************************************************

@@ -149,6 +149,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     if (isMC.CompareTo("MC") == 0) collisionSystem = "MC, "+collisionSystem;
 
+    Bool_t fDoJetAnalysis = kFALSE;
+    if(optionEnergy.CompareTo("5TeV2017_Jets") == 0){
+        optionEnergy = "5TeV2017";
+        fDoJetAnalysis = kTRUE;
+    }
+
     Double_t maxPtGlobalCluster     = 25;
     if (optionEnergy.CompareTo("2.76TeV")==0){
         if (mode==2){
@@ -248,6 +254,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameEfficiency                                  = "PrimaryMesonEfficiency";
         nameAcceptance                                  = "fHistoMCAcceptancePt";
         nameMCYield                                     = "MCYield_Meson_oldBin";
+    }
+    if(fDoJetAnalysis){^M
+        nameCorrectedYield                              = "CorrectedYieldNormEff";
     }
 
     //***************************************************************************************************************
@@ -491,7 +500,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     Double_t binningPi0[400];
     Int_t maxNBinsPi0Abs            = 0;
-    Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, -1, kFALSE, fCent );
+    Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, -1, kFALSE, fCent, fDoJetAnalysis );
     Int_t maxNAllowedPi0            = 0;
     Int_t nRealTriggers             = 0;
     cout << "binning pi0" << endl;
@@ -503,7 +512,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t binningEta[400];
     Int_t maxNBinsEtaAbs            = 0;
-    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, -1, kFALSE, fCent );
+    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, -1, kFALSE, fCent, fDoJetAnalysis );
     Int_t maxNAllowedEta            = 0;
     Int_t maxNAllowedEtaToPi0       = 0;
     if (enableEta){

@@ -830,6 +830,7 @@ cout << __LINE__ << endl;
   // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match
   //                                                 PCM,PHOS,EMC,PCMPHOS,PCMEMC,        EMC mEDC
   Int_t offSets[13]                               = { 0,   0,  0,     0,     0, 0,0,0,   6,   0,   0,0,0};
+
   Int_t offSetsSys[13]                            = { 2,   7,  7,     2,     7, 0,0,0,   6,  29,   0,0,0};
 
   Int_t offSetPi0Shifting[13]                     = { 0,  0,  0,  0,  0,
