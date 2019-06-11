@@ -137,6 +137,7 @@ if [ "$LHC18d2MCc" == "" ]; then
     HAVELHC18d2c=0;
     echo $LHC18d2MCc
 fi
+echo "here" ;
 if [ "$LHC18d2MCd" == "" ]; then
     HAVELHC18d2d=0;
     echo $LHC18d2MCd
@@ -253,7 +254,7 @@ if [ $HAVELHC18d2c == 1 ]; then
 fi
 if [ $HAVELHC18d2d == 1 ]; then
     if [ $HAVETOBUILDLHC18d2 == 1 ]; then
-        LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MC\_ | grep $LHC18d2MCc`
+        LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MC\_ | grep $LHC18d2MCd`
     else
         LHC18d2MCd=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/ | grep $LHC18d2MCd\_`
     fi

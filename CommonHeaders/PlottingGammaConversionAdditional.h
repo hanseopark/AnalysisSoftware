@@ -3103,25 +3103,21 @@
                     return kViolet+1;
                 } else if (!generator.CompareTo("DPMJET")){
                     return kViolet+6;
-                } else if (!generator.CompareTo("LHC13b")){
+                } else if (!generator.CompareTo("LHC13b") || !generator.CompareTo("LHC13b_pass4")){
                     return 633;
-                } else if (!generator.CompareTo("LHC13c")){
+                } else if (!generator.CompareTo("LHC13c")|| !generator.CompareTo("LHC13c_pass4")){
                     return 807;
-                } else if (generator.Contains("LHC13b2_efix")){
+                } else if (generator.Contains("LHC13b2_efix") || !generator.CompareTo("LHC18j5")){
                     return 418;
                 } else if (generator.Contains("LHC13e7")){
                     return 601;
                 } else if (!generator.CompareTo("HijingAddSig")){
                     return kViolet-3;
-                } else if (!generator.CompareTo("LHC13b")){
-                    return 633;
-                } else if (!generator.CompareTo("LHC13c")){
-                    return 807;
-                } else if (!generator.CompareTo("LHC13d")){
+                } else if (!generator.CompareTo("LHC13d") || !generator.CompareTo("LHC13d_pass4")){
                     return 800;
-                } else if (!generator.CompareTo("LHC13e")){
+                } else if (!generator.CompareTo("LHC13e") || !generator.CompareTo("LHC13e_pass4")){
                     return kGreen+4;
-                } else if (!generator.CompareTo("LHC13f")){
+                } else if (!generator.CompareTo("LHC13f") || !generator.CompareTo("LHC13f_pass4")){
                     return 418;
                 } else if (generator.Contains("LHC16q_fast")){
                     return 597;
@@ -3550,17 +3546,17 @@
                 } else {
                   return 33;
                 }
-            } else if (!generator.CompareTo("LHC13b")){
+            } else if (!generator.CompareTo("LHC13b") || !generator.CompareTo("LHC13b_pass4")){
                 return 20;
-            } else if (!generator.CompareTo("LHC13c")){
+            } else if (!generator.CompareTo("LHC13c") || !generator.CompareTo("LHC13c_pass4")){
                 return 21;
-            } else if (!generator.CompareTo("LHC13d")){
+            } else if (!generator.CompareTo("LHC13d") || !generator.CompareTo("LHC13d_pass4")){
                 return 20;
-            } else if (!generator.CompareTo("LHC13e")){
+            } else if (!generator.CompareTo("LHC13e") || !generator.CompareTo("LHC13e_pass4")){
                 return 21;
-            } else if (!generator.CompareTo("LHC13f")){
+            } else if (!generator.CompareTo("LHC13f") || !generator.CompareTo("LHC13f_pass4")){
                 return 20;
-            } else if (generator.Contains("LHC13b2_efix")){
+            } else if (generator.Contains("LHC13b2_efix") || !generator.CompareTo("LHC18j5")){
                 return 26;
             } else if (generator.Contains("LHC13e7")){
                 return 28;

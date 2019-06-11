@@ -707,6 +707,39 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
                                                                                 Form("histoProtonPionRatioSyst%s",centName[centb+10].Data()) , kTRUE);
         }
 
+        //*********************************** temporary pi, K, p RAA - PbPb 5.02TeV with measured ref ***************************************************************
+        // Nicolo (09.06.2019)
+        TFile* fileIdentfiedChargedRAA      = new TFile("ExternalInputPbPb/IdentifiedCharged_5.02TeV/20190609_RAA5TeV_MeasuredReference_Histograms.root");
+        TH1D* histoChargedPionRAAStat[15]        = {NULL};
+        TH1D* histoChargedPionRAASyst[15]        = {NULL};
+        TH1D* histoChargedKaonRAAStat[15]        = {NULL};
+        TH1D* histoChargedKaonRAASyst[15]        = {NULL};
+        TH1D* histoChargedProtonRAAStat[15]      = {NULL};
+        TH1D* histoChargedProtonRAASyst[15]      = {NULL};
+        TGraphAsymmErrors* graphChargedPionRAAStat[15]       = {NULL};
+        TGraphAsymmErrors* graphChargedPionRAASyst[15]       = {NULL};
+        TGraphAsymmErrors* graphChargedKaonRAAStat[15]       = {NULL};
+        TGraphAsymmErrors* graphChargedKaonRAASyst[15]       = {NULL};
+        TGraphAsymmErrors* graphChargedProtonRAAStat[15]     = {NULL};
+        TGraphAsymmErrors* graphChargedProtonRAASyst[15]     = {NULL};
+
+        for (Int_t cent = 0; cent < 15; cent++){
+            // read charged pion RAA
+            histoChargedPionRAAStat[cent]      = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAAStatPion_%s",centNameReadChHa[cent].Data() ));
+            histoChargedPionRAASyst[cent]      = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAASystPion_%s",centNameReadChHa[cent].Data() ));
+            // read charged kaon RAA
+            histoChargedKaonRAAStat[cent]      = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAAStatKaon_%s",centNameReadChHa[cent].Data() ));
+            histoChargedKaonRAASyst[cent]      = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAASystKaon_%s",centNameReadChHa[cent].Data() ));
+            // read proton RAA
+            histoChargedProtonRAAStat[cent]    = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAAStatProton_%s",centNameReadChHa[cent].Data() ));
+            histoChargedProtonRAASyst[cent]    = (TH1D*)fileIdentfiedChargedRAA->Get(Form("hRAASystProton_%s",centNameReadChHa[cent].Data() ));
+        }
+//         for (Int_t centb = 0; centb < 6; centb++){
+//             // read pi+ + pi- RAA
+//             histoChargedPionRAAStat[centb+6]   = (TH1D*)fileChargedIdentifiedSpectraAndRAAAdd->Get(Form("hPionRAA_%s",centNameReadChId[centb+6].Data() ));
+//             histoChargedPionRAASyst[centb+6]   = (TH1D*)fileChargedIdentifiedSpectraAndRAAAdd->Get(Form("hPionRAASyst_%s",centNameReadChId[centb+6].Data() ));
+//         }
+
 
         //*********************************** Final ch hadron - PbPb 5.02TeV RAA **********************************************************
         // Documentation: ???
@@ -815,6 +848,13 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             graphNeutralKaonSpecSyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoNeutralKaonSpecSyst[cent],Form("graphNeutralKaonSpecSyst%s",centName[cent].Data()) );
             graphNeutralLambdaSpecStat[cent]        = ConvertHistoToGraphAndRemoveZeros(histoNeutralLambdaSpecStat[cent],Form("graphNeutralLambdaSpecStat%s",centName[cent].Data()) );
             graphNeutralLambdaSpecSyst[cent]        = ConvertHistoToGraphAndRemoveZeros(histoNeutralLambdaSpecSyst[cent],Form("graphNeutralLambdaSpecSyst%s",centName[cent].Data()) );
+
+            graphChargedPionRAAStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedPionRAAStat[cent],Form("graphChargedPionRAAStat%s",centName[cent].Data()) );
+            graphChargedPionRAASyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedPionRAASyst[cent],Form("graphChargedPionRAASyst%s",centName[cent].Data()) );
+            graphChargedKaonRAAStat[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedKaonRAAStat[cent],Form("graphChargedKaonRAAStat%s",centName[cent].Data()) );
+            graphChargedKaonRAASyst[cent]          = ConvertHistoToGraphAndRemoveZeros(histoChargedKaonRAASyst[cent],Form("graphChargedKaonRAASyst%s",centName[cent].Data()) );
+            graphChargedProtonRAAStat[cent]        = ConvertHistoToGraphAndRemoveZeros(histoChargedProtonRAAStat[cent],Form("graphChargedProtonRAAStat%s",centName[cent].Data()) );
+            graphChargedProtonRAASyst[cent]        = ConvertHistoToGraphAndRemoveZeros(histoChargedProtonRAASyst[cent],Form("graphChargedProtonRAASyst%s",centName[cent].Data()) );
         }
 
         TString outputFileName = Form("ExternalInputPbPb/IdentifiedParticleCollection_ALICE_%s.root",dateForOutput.Data());
@@ -841,6 +881,12 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
 
             if(histoChargedHadronRAAStat[cent])  histoChargedHadronRAAStat[cent]->Write("histoChargedHadronRAAStat", TObject::kOverwrite);
             if(histoChargedHadronRAASyst[cent])  histoChargedHadronRAASyst[cent]->Write("histoChargedHadronRAASyst", TObject::kOverwrite);
+            if(graphChargedPionRAAStat[cent])  graphChargedPionRAAStat[cent]->Write("graphChargedPionRAAStat", TObject::kOverwrite);
+            if(graphChargedPionRAASyst[cent])  graphChargedPionRAASyst[cent]->Write("graphChargedPionRAASyst", TObject::kOverwrite);
+            if(graphChargedKaonRAAStat[cent])  graphChargedKaonRAAStat[cent]->Write("graphChargedKaonRAAStat", TObject::kOverwrite);
+            if(graphChargedKaonRAASyst[cent])  graphChargedKaonRAASyst[cent]->Write("graphChargedKaonRAASyst", TObject::kOverwrite);
+            if(graphChargedProtonRAAStat[cent])  graphChargedProtonRAAStat[cent]->Write("graphChargedProtonRAAStat", TObject::kOverwrite);
+            if(graphChargedProtonRAASyst[cent])  graphChargedProtonRAASyst[cent]->Write("graphChargedProtonRAASyst", TObject::kOverwrite);
             if(histoNeutralKaonSpecStat[cent])  histoNeutralKaonSpecStat[cent]->Write("histoNeutralKaonSpecStat", TObject::kOverwrite);
             if(histoNeutralKaonSpecSyst[cent])  histoNeutralKaonSpecSyst[cent]->Write("histoNeutralKaonSpecSyst", TObject::kOverwrite);
             if(histoNeutralLambdaSpecStat[cent])  histoNeutralLambdaSpecStat[cent]->Write("histoLambdaSpecStat", TObject::kOverwrite);
@@ -864,6 +910,20 @@ void PrepareParticleCompilationALICE_PbPb(TString energy = "PbPb_5.02TeV"){
             if(graphNeutralKaonSpecSyst[cent])  graphNeutralKaonSpecSyst[cent]->Write("graphNeutralKaonSpecSyst", TObject::kOverwrite);
             if(graphNeutralLambdaSpecStat[cent])  graphNeutralLambdaSpecStat[cent]->Write("graphLambdaSpecStat", TObject::kOverwrite);
             if(graphNeutralLambdaSpecSyst[cent])  graphNeutralLambdaSpecSyst[cent]->Write("graphLambdaSpecSyst", TObject::kOverwrite);
+
+            if(histoChargedPionRAAStat[cent])  histoChargedPionRAAStat[cent]->Write("histoChargedPionRAAStat", TObject::kOverwrite);
+            if(histoChargedPionRAASyst[cent])  histoChargedPionRAASyst[cent]->Write("histoChargedPionRAASyst", TObject::kOverwrite);
+            if(histoChargedKaonRAAStat[cent])  histoChargedKaonRAAStat[cent]->Write("histoChargedKaonRAAStat", TObject::kOverwrite);
+            if(histoChargedKaonRAASyst[cent])  histoChargedKaonRAASyst[cent]->Write("histoChargedKaonRAASyst", TObject::kOverwrite);
+            if(histoChargedProtonRAAStat[cent])  histoChargedProtonRAAStat[cent]->Write("histoChargedProtonRAAStat", TObject::kOverwrite);
+            if(histoChargedProtonRAASyst[cent])  histoChargedProtonRAASyst[cent]->Write("histoChargedProtonRAASyst", TObject::kOverwrite);
+
+            if(graphChargedPionRAAStat[cent])  graphChargedPionRAAStat[cent]->Write("graphChargedPionRAAStat", TObject::kOverwrite);
+            if(graphChargedPionRAASyst[cent])  graphChargedPionRAASyst[cent]->Write("graphChargedPionRAASyst", TObject::kOverwrite);
+            if(graphChargedKaonRAAStat[cent])  graphChargedKaonRAAStat[cent]->Write("graphChargedKaonRAAStat", TObject::kOverwrite);
+            if(graphChargedKaonRAASyst[cent])  graphChargedKaonRAASyst[cent]->Write("graphChargedKaonRAASyst", TObject::kOverwrite);
+            if(graphChargedProtonRAAStat[cent])  graphChargedProtonRAAStat[cent]->Write("graphChargedProtonRAAStat", TObject::kOverwrite);
+            if(graphChargedProtonRAASyst[cent])  graphChargedProtonRAASyst[cent]->Write("graphChargedProtonRAASyst", TObject::kOverwrite);
 
         }
 

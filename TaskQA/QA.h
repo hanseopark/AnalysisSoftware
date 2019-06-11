@@ -1463,6 +1463,7 @@ void DrawVectorOverviewTH2D(    TCanvas* canvas, std::vector<TH2D*> vec, TString
                                 Double_t latX, Double_t latY, TBox* box, Bool_t logY, Bool_t logZ){
     Int_t iD = 1;
     Int_t varDraw = 0;
+    canvas->Clear();
     canvas->Divide(4,4);
     for(Int_t j=0; j<(Int_t) vec.size(); j++, iD++)
     {

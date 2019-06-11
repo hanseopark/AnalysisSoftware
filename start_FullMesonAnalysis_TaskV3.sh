@@ -1172,7 +1172,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         if [ $ISROOT6 -eq 0 ]; then
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0DATARAWFILE\"\,\"$PI0MCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTPI0\,$MODE\)
                         else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$PI0DATARAWFILE\"\,\"$PI0MCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTPI0\,$MODE\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0DATARAWFILE\"\,\"$PI0MCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTPI0\,$MODE\)
                         fi
                     fi
                 fi
@@ -1249,7 +1249,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         if [ $ISROOT6 -eq 0 ]; then
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
                         else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0ETADATARAWFILE\"\,\"$PI0ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0EtaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
                         fi
                     fi
                 fi
@@ -1302,7 +1302,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         if [ $ISROOT6 -eq 0 ]; then
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETADATARAWFILE\"\,\"$ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Eta\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
                         else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$ETADATARAWFILE\"\,\"$ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Eta\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETADATARAWFILE\"\,\"$ETAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Eta\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETA\,$MODE\)
                         fi
                     fi
                 fi
@@ -1355,7 +1355,7 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         if [ $ISROOT6 -eq 0 ]; then
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
                         else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
                         fi
                     fi
                 fi

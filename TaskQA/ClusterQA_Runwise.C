@@ -934,7 +934,7 @@ void ClusterQA_Runwise(
             } else cout << "Info: Object |EtaPhi_afterClusterQA| could not be found! Skipping..." << endl;
 
 
-            if (i<nData){
+            if (i<nData && nSets < 3){
                 TH2D* CellTimeVsCellID     = (TH2D*)CaloExtQAContainer->FindObject(Form("CellTimeVsCellID %s", fClusterCutSelection.Data()));
                 if (CellTimeVsCellID){
                     TH2D* tempCellTimeVsCellId = new TH2D(*CellTimeVsCellID);
@@ -966,7 +966,7 @@ void ClusterQA_Runwise(
                 vecClusterNCells[i].push_back(tempClusNCells);
             } else cout << "Info: Object |NCellPerCluster_afterClusterQA| could not be found! Skipping..." << endl;
 
-            if(doExtQA>0){
+            if(doExtQA>0 && nSets < 3){
                 TH2D* ClusEVsNCells = (TH2D*) CaloExtQAContainer->FindObject(Form("ClusterEnergyVsNCells_afterQA %s", fClusterCutSelection.Data()));
                 if(ClusEVsNCells){
                     TH2D* tempClusEVsNCells = new TH2D(*ClusEVsNCells);
@@ -1056,7 +1056,7 @@ void ClusterQA_Runwise(
                 hClusterRMSTime[i]->SetBinError(bin, Time->GetRMSError());
             } else cout << "Info: Object |ClusterTimeVsE_afterClusterQA| could not be found! Skipping Fill..." << endl;
 
-            if(i<nData){
+            if(i<nData && nSets < 3){
                 TH2D* ClusEnergyTime = (TH2D*) CaloCutsContainer->FindObject(Form("ClusterTimeVsE_afterClusterQA %s", fClusterCutSelection.Data()));
                 if(ClusEnergyTime){
                     TH2D* tempClusEnergyTime = new TH2D(*ClusEnergyTime);
@@ -1442,19 +1442,19 @@ void ClusterQA_Runwise(
 
             DrawVectorOverviewTH2D( canvaslarge, vecClusterEtaPhi[i], "hClusterEtaPhi_scaledNEventsAndMean", outputDirDataSet, suffix,
                                     0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kFALSE);
-            if(i<nData)
+            if(i<nData && nSets < 3)
                 DrawVectorOverviewTH2D( canvaslarge, vecCellTimeID[i], "hCellTimeVsId", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kTRUE);
 
             TGaxis::SetExponentOffset(0, -0.1, "x");
-            if(i<nData)
+            if(i<nData && nSets < 3)
                 DrawVectorOverviewTH2D( canvaslarge, vecClusterEnergyTime[i], "ExtQA/hClusterEnergyTime", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, 0x0, kTRUE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
 
             if(doExtQA>0){
-                DrawVectorOverviewTH2D( canvaslarge, vecClusterEVsNCells[i], "ExtQA/hClusterEVsNCells", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, boxLabel2, kFALSE, kTRUE);
+                if (nSets < 3) DrawVectorOverviewTH2D( canvaslarge, vecClusterEVsNCells[i], "ExtQA/hClusterEVsNCells", outputDirDataSet, suffix,
+                                                      0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, boxLabel2, kFALSE, kTRUE);
                 DrawVectorOverviewTH1D( canvaslarge, vecClusterIncludedCells[i], "ExtQA/IncludedCells/hClusterIncludedCells", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
                 DrawVectorOverviewTH1D(canvaslarge, vecClusterIncludedCellsBefore[i], "ExtQA/IncludedCells/hClusterIncludedCellsBefore", outputDirDataSet, suffix,
@@ -1817,7 +1817,11 @@ void ClusterQA_Runwise(
             }
         }
 
+        if(doExtQA>0){
+          DeleteVecTH2D(vecClusterFiredCellIDs[i]);
+        }
         DeleteVecTH2D(vecClusterFiredCellIDs[i]);
+
 
         DeleteVecTH1D(vecClusterEnergy[i]);
         DeleteVecTH1D(vecClusterM02[i]);

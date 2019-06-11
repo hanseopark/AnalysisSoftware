@@ -2744,7 +2744,8 @@
                 } else if ( mode == 2 || mode == 13 ) {
                     maxNBins = 23;
                     if ( !centrality.CompareTo("0-80%") || !centrality.CompareTo("0-90%") ){
-                        maxNBins = 23;
+                        maxNBins    = 23;
+                        binningMax  = 23;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVPt[i];
                         }
@@ -2784,14 +2785,15 @@
                     }
                 } else if ( mode == 4 || mode == 12  ) {
                     if ( !centrality.CompareTo("0-80%") || !centrality.CompareTo("0-90%") ){
-                        maxNBins = 24;
+                        maxNBins    = 24;
+                        binningMax  = 24;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVPt[i];
                         }
                     } else if ( !centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%")  || !centrality.CompareTo("20-40%") ){
                         maxNBins    = 16;
                         if (!centrality.CompareTo("0-40%")) maxNBins    = 17;
-                        binningMax  = 17;
+                        binningMax  = maxNBins;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVCentEMCPt[i];
                         }
@@ -2804,20 +2806,21 @@
                     }
                 } else if ( mode == 5  ) {
                     if ( !centrality.CompareTo("0-80%") || !centrality.CompareTo("0-90%") ){
-                        maxNBins = 22;
+                        maxNBins    = 22;
+                        binningMax  = 22;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVPt[i];
                         }
                     } else if ( !centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%")  || !centrality.CompareTo("20-40%") ){
                         maxNBins    = 18;
                         if (!centrality.CompareTo("20-40%")) maxNBins    = 17;
-                        binningMax  = 20;
+                        binningMax  = maxNBins;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVCentPHOSPt[i];
                         }
                     } else if ( !centrality.CompareTo("40-80%") ){
                         maxNBins    = 15;
-                        binningMax  = 17;
+                        binningMax  = 15;
                         for(Int_t i = 0; i < binningMax+1; i++){
                             binning[i] = fBinsPi0XeXe5440GeVPerPHOSPt[i];
                         }
@@ -3984,7 +3987,7 @@
             specialTrigg        = triggerSet;
         }
 
-	cout<< "specialTrigg::"<< specialTrigg<<endl;
+        cout<< "specialTrigg::"<< specialTrigg<<endl;
         //*************************************************************************************************
         //************************************ Binning for Pi0 ********************************************
         //*************************************************************************************************
@@ -5216,7 +5219,7 @@
             //********************************** Pi0 for XeXe 5.44TeV**************************************
             //*********************************************************************************************
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
-                fStartPtBin     = GetStartBin("Pi0", energy, modi, -1, centrality);
+                fStartPtBin                 = GetStartBin("Pi0", energy, modi, -1, centrality);
                 Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
