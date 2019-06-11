@@ -4,7 +4,7 @@ debug=1
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V3.5"
+echo "DownScript.sh Version: V3.6"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -594,8 +594,95 @@ then
 								outFile=$OUTPUTDIR/$ChildName/$RunlistName/$filename
 								inFile=$AlienDir$child/merge_runlist_$RunlistID/$filename
 								downlogFile=$OUTPUTDIR/$ChildName/$RunlistName/${filename%%.root}.downlog
-								GetFile $inFile $outFile $downlogFile
-
+								MergeRuns=0
+								if [[ `alien_ls $inFile | grep "no such file or directory" | wc -c` -eq 0 ]]; then
+									GetFile $inFile $outFile $downlogFile
+								else
+									MergeRuns=1
+									echo -e "\e[31mError\e[0m  $inFile not found, trying to merge from runwise output" | tee -a $ErrorLog
+								fi
+								if [[ $Userunwise = 1 ]] || [[ $MergeRuns = 1 ]]
+								then
+								# Download all runs
+									for runfilename in `cat RunlistLinks.txt`
+									do
+										runName=`grep "$runfilename" RunlistLinks.txt | awk -F "/" '{print $8}'`
+										printf "Download Run:  $runName "
+										runDir=$OUTPUTDIR/$RunlistName/$ChildName/$runName
+										mkdir -p $runDir &> /dev/null
+										runoutFile=$runDir/$filename
+										runinFile=${runfilename%%root_archive.zip}/$filename
+										rundownlogFile=$runDir/${filename%%.root}.downlog
+										if [[ -f $rundownlogFile ]]
+										then
+											rm $rundownlogFile
+										fi
+										if [[ `alien_ls $runinFile | grep "no such file or directory" | wc -c` -eq 0 ]]; then
+											GetFile $runinFile $runoutFile $rundownlogFile #>> $rundownlogFile
+										else
+											echo -e "\e[31mError\e[0m  $runinFile not found" | tee -a $ErrorLog
+										fi
+										if [[ $MergeRuns = 1 ]]
+										then
+											runoutFile=$runDir/$filename
+											alreadyMerged=$runDir/.${filename%%.root}.merged
+											logFile=$runDir/${filename%%.root}.log
+											mergedFile=$OUTPUTDIR/$ChildName/$RunlistName/$filename
+											if [[ -f $alreadyMerged ]]
+											then
+												echo -e "\e[33m|-> \e[0m$outFile already merged"
+											else
+												if [[ -f $logFile ]]
+												then
+													rm $logFile
+												fi
+												if [[ -f $outFile ]]
+												then
+													if [[ -f $mergedFile ]]
+													then
+														echo -e "\e[33m|->\e[0m merging $outFile"  #(log: $logFile)"
+														hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+														then
+															echo " Log:"
+															cat $logFile
+															echo;echo;
+														fi
+														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+														then
+															echo "rm $mergedFile"
+														fi
+														if [[ `wc -l $logFile` > 9 ]]
+														then
+															echo -e "\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
+															cat $logFile >> $ErrorLog
+															rm $mergedFile.tmp
+														else
+															rm $mergedFile
+															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+															then
+																echo "mv $mergedFile.tmp $mergedFile "
+															fi
+															mv $mergedFile.tmp $mergedFile
+															touch $alreadyMerged
+														fi
+													else
+														echo -e "\e[33m|->\e[0m Copy: $outFile is first"
+														echo "Copyed to $mergedFile" > $logFile
+														cp $outFile $mergedFile
+														touch $alreadyMerged
+													fi
+												else
+													echo -e "\e[31m|->\e[0m missing $outFile  "
+												fi
+											fi
+										fi
+										# ###################################
+									done
+									if [[ $MergeRuns = 1 ]]; then
+										echo -e "merge from runwise.. done" | tee -a $ErrorLog
+									fi
+								fi
 								if [[ $UseMerge = 1 ]]
 								then
 									alreadyMerged=$OUTPUTDIR/$ChildName/$RunlistName/.${filename%%.root}.merged
@@ -649,25 +736,6 @@ then
 											echo -e "\e[31m|->\e[0m missing $outFile  "
 										fi
 									fi
-								fi
-								if [[ $Userunwise = 1 ]]
-								then
-								# Download all runs
-									for runfilename in `cat RunlistLinks.txt`
-									do
-										runName=`grep "$runfilename" RunlistLinks.txt | awk -F "/" '{print $8}'`
-										printf "Download Run:  $runName "
-										runDir=$OUTPUTDIR/$RunlistName/$ChildName/$runName
-										mkdir -p $runDir &> /dev/null
-										runoutFile=$runDir/$filename
-										runinFile=${runfilename%%root_archive.zip}/$filename
-										rundownlogFile=$runDir/${filename%%.root}.downlog
-										if [[ -f $rundownlogFile ]]
-										then
-											rm $rundownlogFile
-										fi
-										GetFile $runinFile $runoutFile $rundownlogFile #>> $rundownlogFile
-									done
 								fi
 							done
 							if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -818,3 +886,13 @@ rm $OptRunlistNamefile
 
 
 echo;echo;echo;echo;
+if [[ -f $ErrorLog ]]; then
+	echo "Errors:   "
+	echo  -e "\e[36m------------------------------------\e[0m"
+	cat $ErrorLog
+	echo  -e "\e[36m------------------------------------\e[0m"
+else
+	echo  -e "\e[36m------------------------------------\e[0m"
+	echo  -e "\tfinished without errors"
+	echo  -e "\e[36m------------------------------------\e[0m"
+fi

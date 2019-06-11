@@ -48,20 +48,19 @@ then
 
 
 ##### new Trains
-    ### LHC16 Data 729
-    bash DownScript.sh 729 -Name_QA_LHC16Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
-    bash DownScript.sh 729 -Name_LHC16Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt #-runwise
+    ### LHC16 Data 829
+    bash DownScript.sh 829 -Name_LHC16Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
 
-    ### LHC17 Data 730
-    bash DownScript.sh 730 -Name_QA_LHC17Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
-    bash DownScript.sh 730 -Name_LHC17Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt #-runwise
+    ### LHC17 Data 830
+    bash DownScript.sh 830 -Name_LHC17Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
 
     ### LHC18 Data 734
-    bash DownScript.sh 734 -Name_QA_LHC18Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
-    bash DownScript.sh 734 -Name_LHC18Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt  #-runwise
+    bash DownScript.sh 834 -Name_LHC18Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt
 
     ### merging 16 + 17 + 18
-    bash DownScript.sh 729 730 734 -Name_Data_pp13TeV_16_17_18_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 829 830 -Name_Data_pp13TeV_16_17_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown -runwise < sayyes.txt #-runwise
+    ### merging 16 + 17 + 18
+    bash DownScript.sh 829 830 834 -Name_Data_pp13TeV_16_17_18_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown -runwise < sayyes.txt #-runwise
 
     #######################################################
     ######################   MC   ######################
@@ -113,17 +112,18 @@ then
 
 ##### new Trains
     ### LHC16 Data 1546 + 1547 + 1548
-    bash DownScript.sh 1546 1547 1548 -Name_LHC16MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt #-runwise
+    bash DownScript.sh 1546 1547 1548 -Name_LHC16MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt #-runwise
 
     ### LHC17 Data 1549 + 1550
-    bash DownScript.sh 1549 1550 -Name_LHC17MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt #-runwise
+    bash DownScript.sh 1549 1550 -Name_LHC17MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt #-runwise
 
-    ### LHC18 Data 1554
-    bash DownScript.sh 734 -Name_LHC18MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -noDown < sayyes.txt  #-runwise
+    ### LHC18 Data 1556 1557
+    bash DownScript.sh 1556 1557 -Name_LHC18MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -runwise < sayyes.txt  #-runwise
 
+    ### merging 16 + 17
+    bash DownScript.sh 1546 1547 1548 1549 1550 -Name_MC_pp13TeV_16_17_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown < sayyes.txt #-runwise
     ### merging 16 + 17 + 18
-    bash DownScript.sh 1546 1547 1548 1549 1550 734 -Name_MC_pp13TeV_16_17_18_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown < sayyes.txt #-runwise
-    bash DownScript.sh 1546 1547 1548 1549 1550 734 -Name_MC_pp13TeV_QA_Pythia_ancLHC_16_17_18_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 1546 1547 1548 1549 1550 1556 1557 -Name_MC_pp13TeV_16_17_18_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGEDC -noDown < sayyes.txt #-runwise
 
     rm sayyes.txt
     exit
