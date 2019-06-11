@@ -1604,6 +1604,11 @@
                         fMesonLambdaTailRange[1]    = 0.02;
                         fMesonWidthExpect           = 0.025;
                     }
+                } else if (fEnergyFlag.Contains("13TeV") ){
+                    fMesonWidthExpect           = 0.03;
+                    fMesonLambdaTail            = 0.04;
+                    fMesonLambdaTailRange[0]    = 0.03;
+                    fMesonLambdaTailRange[1]    = 0.05;
                 } else if (fEnergyFlag.Contains("pPb_5.023TeV") ){
                     fMesonWidthExpect               = 0.020;
                     fMesonWidthRange[0]             = 0.010;
