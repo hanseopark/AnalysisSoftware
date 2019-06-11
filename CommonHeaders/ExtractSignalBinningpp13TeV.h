@@ -476,16 +476,16 @@
     std::vector<Int_t>    fBinsEta13TeVDalitzTrigINT7PtRebin { // size: 9
         10, 10, 10, 10, 10, 10, 10, 10, 10 };
     // PCM-EMC (mode 2)
-    std::vector<Double_t> fBinsEta13TeVPCMEMCTrigINT7Pt {      // size: 39
-        0.0, 1.1, 1.2, 1.3, 1.4, 1.6, 1.7, 1.8, 1.9, 2.0,
-        2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.8, 2.9, 3.0, 3.2,
-        3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.5,
-        6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 20., 30., 40. };
-    std::vector<Int_t>    fBinsEta13TeVPCMEMCTrigINT7PtRebin { // size: 38
+    std::vector<Double_t> fBinsEta13TeVPCMEMCTrigINT7Pt {      // size: 36
+        0.0, 1.2, 1.4, 1.6, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3,
+        2.4, 2.5, 2.6, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8,
+        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.5, 6.0, 7.0, 8.0,
+        10.0, 12.0, 16.0, 20., 30., 40. };
+    std::vector<Int_t>    fBinsEta13TeVPCMEMCTrigINT7PtRebin { // size: 35
         10, 10, 10, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 10, 10, 12, 20, 20, 20, 20 };
+        8, 8, 8, 8, 8, 8, 8, 8, 10, 10,
+        12, 20, 20, 20, 20 };
     // PCM-PHOS (mode 3)
     std::vector<Double_t> fBinsEta13TeVPCMPHOSTrigINT7Pt {      // size: 20
         0.0,  0.8,  1.2,  1.6,  2.0,     2.2,  2.4,  2.6,  2.8,  3.0,
