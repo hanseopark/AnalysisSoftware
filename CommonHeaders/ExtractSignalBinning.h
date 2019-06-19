@@ -1400,7 +1400,7 @@
                         if( energy.Contains("Ref1"))
                             startPtBin = 1;
                         if(DoJetAnalysis)
-                            startPtBin = 2;
+                            startPtBin = 3;
                     } else if ( mode == 1){
                         startPtBin = 1;
                     } else if ( mode == 2 || mode == 13 ){

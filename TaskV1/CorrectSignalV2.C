@@ -458,6 +458,25 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DoJetAnalysis = kTRUE;
     }
 
+    TF1* Unfolding_Fit = new TF1();
+    if(DoJetAnalysis){
+        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+        if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            Unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+        }else{
+            Unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+        }
+        for (Int_t k= 0; k < 6; k++){
+          Int_t NTotalBins = histoUnCorrectedYield[k]->GetNbinsX();
+          for(Int_t i = 0; i <= NTotalBins; i++){
+            Double_t value = histoUnCorrectedYield[k]->GetBinContent(i);
+            Double_t x = histoUnCorrectedYield[k]->GetBinCenter(i);
+            value = value*(Unfolding_Fit->GetParameter(0) + Unfolding_Fit->GetParameter(1)*x);
+            histoUnCorrectedYield[k]->SetBinContent(i, value);
+          }
+        }
+    }
+
     Double_t scaleFactorMeasXSecForExternalInput              = 1;
     if ( kCollisionSystem == 0){
         // obtain effective xSection
@@ -561,6 +580,17 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoExternalInputSecPi0[j]->Scale(1/nEvt);
                 foundToyMCInput                         = kTRUE;
             }
+        }
+    }
+    if(DoJetAnalysis){
+        for(Int_t k = 0; k < 6; k++){
+          Int_t NTotalBins = histoEffiPt[k]->GetNbinsX();
+          for(Int_t i = 0; i <= NTotalBins; i++){
+            Double_t value = histoEffiPt[k]->GetBinContent(i);
+            Double_t x = histoEffiPt[k]->GetBinCenter(i);
+            value = value*(Unfolding_Fit->GetParameter(0) + Unfolding_Fit->GetParameter(1)*x);
+            histoEffiPt[k]->SetBinContent(i, value);
+          }
         }
     }
 
@@ -2893,6 +2923,20 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         canvasEffSimple->Update();
         PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+        if(DoJetAnalysis){
+          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+          TF1* unfolding_fit;
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
+          TLatex T1;
+          T1.SetTextSize(0.025);
+          T1.SetTextAlign(12);
+          T1.SetNDC();
+          T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        }
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -3093,6 +3137,21 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
 
+        if(DoJetAnalysis){
+          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+          TF1* unfolding_fit = new TF1();
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
+          TLatex T1;
+          T1.SetTextSize(0.025);
+          T1.SetTextAlign(12);
+          T1.SetNDC();
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        }
+
     canvasRAWYield->Update();
     canvasRAWYield->SaveAs(Form("%s/%s_%s_RAWYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
     delete canvasRAWYield;
@@ -3114,6 +3173,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYieldDrawing->DrawCopy("e1");
 
         PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
+        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+        TF1* unfolding_fit = new TF1();
+        if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+          unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+        }else{
+          unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+        }
+        TLatex T1;
+        T1.SetTextSize(0.025);
+        T1.SetTextAlign(12);
+        T1.SetNDC();
+        T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
 
       canvasRAWYieldJetNormalisation->Update();
       canvasRAWYieldJetNormalisation->SaveAs(Form("%s/%s_%s_RAWYieldPt_JetNorm_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3153,6 +3224,20 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYieldRaw->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+        TF1* unfolding_fit = new TF1();
+        if(DoJetAnalysis){
+          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
+          TLatex T1;
+          T1.SetTextSize(0.025);
+          T1.SetTextAlign(12);
+          T1.SetNDC();
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        }
 
     padRawYieldRatios->cd();
     padRawYieldRatios->SetTickx();
@@ -3316,6 +3401,20 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+        if(DoJetAnalysis){
+          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+          TF1* unfolding_Fit = new TF1();
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
+          TLatex T1;
+          T1.SetTextSize(0.025);
+          T1.SetTextAlign(12);
+          T1.SetNDC();
+          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        }
 
     padCorrectedYieldRatios->cd();
     padCorrectedYieldRatios->SetTickx();
@@ -3353,6 +3452,21 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
+        if(DoJetAnalysis){
+          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+          TF1* unfolding_Fit = new TF1();
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
+          TLatex T1;
+          T1.SetTextSize(0.025);
+          T1.SetTextAlign(12);
+          T1.SetNDC();
+          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        }
+
     padCorrectedYieldRatios->cd();
 
         histo2DDummyRatioPt->DrawCopy();
@@ -3380,6 +3494,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+        TF1* unfolding_Fit = new TF1();
+        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+        if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+          unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+        }else{
+          unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+        }
+        TLatex T1;
+        T1.SetTextSize(0.025);
+        T1.SetTextAlign(12);
+        T1.SetNDC();
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 
@@ -3393,7 +3519,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         canvasCorrectedYield->Update();
         canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEff_JetNorm_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
-
         padCorrectedYieldHistos->cd();
 
         histo2DDummyPt_JetNorm->DrawCopy();
@@ -3404,6 +3529,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 

@@ -37,6 +37,7 @@ BINSPTETAPRIME=0
 ENERGY=""
 MODE=-1
 DIRECTPHOTON="No"
+DOJETANALYSIS=0
 
 # fileNames
 DATAROOTFILE=""
@@ -326,6 +327,11 @@ fi
 if [[ "$1" == *-*aPUC* ]]; then
     ADDPILEUPCORR=kTRUE
     echo "additionally pileup correction on"
+fi
+
+if [[ "$1" == *-*DoJets* ]]; then
+    DOJETANALYSIS=1
+    echo "Jet analysis on"
 fi
 
 if [[ "$1" == *-h* ]] ; then
@@ -1079,6 +1085,27 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
         done
     fi
 
+    if [ $DOJETANALYSIS -eq 1 ]; then
+        echo "Jet Analysis detected, Do you want to run the unfolding procedure? Yes/No?"
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo -e "--> Generating unfolding file first \n";
+            echo "Please enter the filepath of the unfolding file."
+            read UNFOLDINGFILE
+            if [ -f $UNFOLDINGFILE ]; then
+                echo -e "--> The unfolding file specified is $UNFOLDINGFILE\n"
+                UNFOLDING=1
+            else
+                echo -e "--> No unfolding file specified, it will not be used.\n"
+                UNFOLDING=0
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo -e "--> Using alreasy existing unfolding file \n";
+        else
+            echo "--> Command \"$answer\" not found. Please try again."
+        fi
+    fi
+
     # echo "Hauptroutine stimmt"
     CORRECT=0
     while [ $CORRECT -eq 0 ]
@@ -1129,6 +1156,37 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
             fi
             if [ $USECOCK -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
                 root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$COCKROOTFILE\"\,\"$SUFFIX\"\,\"$CUTSELECTION\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,\"$COCKRAP\"\,\"\"\,$BINSPTPI0\,$MODE,kFALSE\)
+            fi
+
+            if [ $UNFOLDING -eq 1 ];then
+                UnfoldingEnergy=$ENERGY
+                UnfoldingEnergy+="_Unfolding_AsData"
+                mkdir $CUTSELECTION/$UnfoldingEnergy/$SUFFIX
+                OPTIONSPI0MC=\"Pi0\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,kFALSE
+                ExtractSignal $OPTIONSPI0MC
+
+                OPTIONSETAMC=\"Eta\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,kFALSE
+                ExtractSignal $OPTIONSETAMC
+
+                UnfoldingEnergy=$ENERGY
+                UnfoldingEnergy+="_Unfolding_Missed"
+                mkdir $CUTSELECTION/$UnfoldingEnergy/$SUFFIX
+                OPTIONSPI0MC=\"Pi0\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,kFALSE
+                ExtractSignal $OPTIONSPI0MC
+
+                OPTIONSETAMC=\"Eta\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,kFALSE
+                ExtractSignal $OPTIONSETAMC
+
+                UnfoldingEnergy=$ENERGY
+                UnfoldingEnergy+="_Unfolding_Reject"
+                mkdir $CUTSELECTION/$UnfoldingEnergy/$SUFFIX
+                OPTIONSPI0MC=\"Pi0\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTPI0\,kFALSE
+                ExtractSignal $OPTIONSPI0MC
+
+                OPTIONSETAMC=\"Eta\"\,\"$UNFOLDINGFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$UnfoldingEnergy\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTETA\,kFALSE
+                ExtractSignal $OPTIONSETAMC
+
+                root -b -x -l -q Jet_Unfolding_Macro.C\+\(\"$CUTSELECTION\"\,\"$ENERGY\"\,$MODE\,$BINSPTPI0\,$BINSPTETA\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then

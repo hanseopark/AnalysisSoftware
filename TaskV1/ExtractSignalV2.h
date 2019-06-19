@@ -86,6 +86,9 @@
     TString     nameIntBckResult[3]                                         = {"pol2_normal","exp_normal","exp2_normal"};
 
     Bool_t      fDoJetAnalysis                                              = kFALSE;
+    Bool_t      fUsingUnfolding_AsData                                      = kFALSE;
+    Bool_t      fUsingUnfolding_Missed                                      = kFALSE;
+    Bool_t      fUsingUnfolding_Reject                                      = kFALSE;
 
     //****************************************************************************
     //******************************** Output files ******************************
@@ -234,7 +237,7 @@
     void FitTrueInvMassInPtBins(TH1D * ,Double_t *, Int_t, Bool_t);                                             // Fits the true invariant mass histos with a gaussian plus exponential plus lin BG
     void FitTrueInvMassPureGaussianInPtBins(TH1D * , Int_t);                                                    // Fits the true invariant mass histos with a gaussian plus lin BG
     void FitCBSubtractedInvMassInPtBins(TH1D* ,Double_t * , Int_t ,Bool_t,TString, Bool_t );                    // Fits the invariant mass histos with a CB function
-    void ProduceBckProperWeighting(TList*, TList*, TList*, Bool_t);                                             // Create BG with proper weighting
+    void ProduceBckProperWeighting(TList*, TList*, TList*, TList* ,Bool_t);                                     // Create BG with proper weighting
     void ProduceBckWithoutWeighting(TH2D *);                                                                    // Create BG without proper weighting
     void IntegrateHistoInvMassStream(TH1D * , Double_t *);                                                      // Integrate invariant mass histogram with output to ifstream
     void IntegrateHistoInvMass(TH1D * , Double_t *);                                                            // Integrate invariant mass histogram

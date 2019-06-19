@@ -144,6 +144,22 @@ void ExtractSignalV2(
         return ;
     }
 
+    if(fEnergyFlag.Contains("Unfolding_AsData")){
+        fUsingUnfolding_AsData = kTRUE;
+        Int_t length = fEnergyFlag.Length();
+        fEnergyFlag.Remove(length-17);
+    }
+    if(fEnergyFlag.Contains("Unfolding_Missed")){
+        fUsingUnfolding_Missed = kTRUE;
+        Int_t length = fEnergyFlag.Length();
+        fEnergyFlag.Remove(length-17);
+    }
+    if(fEnergyFlag.Contains("Unfolding_Reject")){
+        fUsingUnfolding_Reject = kTRUE;
+        Int_t length = fEnergyFlag.Length();
+        fEnergyFlag.Remove(length-17);
+    }
+
     fTextMeasurement    = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
     fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
     if (fCollisionSystem.CompareTo("") == 0){
@@ -342,6 +358,8 @@ void ExtractSignalV2(
         return;
     }
 
+    if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
+
     // set global variables for rap and BG number
     TString rapidityRange;
     fYMaxMeson                          = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
@@ -489,12 +507,22 @@ void ExtractSignalV2(
     TString ObjectNameESD               = "ESD_Mother_InvMass_Pt";
     TString ObjectNameBck               = "ESD_Background_InvMass_Pt";
 
+    TList *TrueJetContainer         = (TList*)HistosGammaConversion->FindObject(Form("%s True Jet histograms",fCutSelectionRead.Data()));
+
     if(fDoJetAnalysis){
       fGammaGammaInvMassVSPt              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
       fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
     }else{
-      fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
-      fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+      if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
+        if(fUsingUnfolding_AsData) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
+        if(fUsingUnfolding_Missed) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
+        if(fUsingUnfolding_Reject) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
+        fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+      }else{
+        fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
+        //fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+        fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+      }
     }
     fGammaGammaInvMassVSPt->Sumw2();
     fBckInvMassVSPt->Sumw2();
@@ -503,8 +531,8 @@ void ExtractSignalV2(
                                         fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
 
-    if(UseTHnSparse) ProduceBckProperWeighting(BackgroundContainer,MotherContainer, JetContainer, UseTHnSparse);
-    else ProduceBckProperWeighting(ESDContainer,ESDContainer, JetContainer, UseTHnSparse);
+    if(UseTHnSparse) ProduceBckProperWeighting(BackgroundContainer,MotherContainer, JetContainer, TrueJetContainer ,UseTHnSparse);
+    else ProduceBckProperWeighting(ESDContainer,ESDContainer, JetContainer, TrueJetContainer ,UseTHnSparse);
     //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
    if(fDoJetAnalysis){
@@ -545,7 +573,6 @@ void ExtractSignalV2(
         // load containers for simulation
         TList *MCContainer              = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
         TList *TrueConversionContainer  = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
-        TList *TrueJetContainer         = (TList*)HistosGammaConversion->FindObject(Form("%s True Jet histograms",fCutSelectionRead.Data()));
 
         // loading histograms for pi0
         if( fMesonId == 111){
@@ -2632,7 +2659,7 @@ void ExtractSignalV2(
 //****************************************************************************
 //************** Produce background with proper weighting ********************
 //****************************************************************************
-void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer, TList* JetContainer, Bool_t UseTHnSparse){
+void void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer, TList* JetContainer, TList* TrueJetContainer ,Bool_t UseTHnSparse){
 
     if(UseTHnSparse){
         cout << "Using THnSparse for the background" << endl;
@@ -2983,8 +3010,16 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
           fHistoMotherZM              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
           fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
         }else{
-          fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
-          fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+          if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
+            if(fUsingUnfolding_AsData) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
+            if(fUsingUnfolding_Missed) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
+            if(fUsingUnfolding_Reject) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
+            fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+          }else{
+            fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
+            //fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+            fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+          }
         }
         fHistoMotherZM->Sumw2();
         fHistoBckZM->Sumw2();
@@ -3896,40 +3931,6 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy) {
         fNameHistoGG    = Form("Mapping_GG_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingGGInvMassPtBin[iPt]);
         fHistoMappingGGInvMassPtBin[iPt]=  FillProjectionX(fGammaGammaInvMassVSPtDummy, fNameHistoGG, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        if(fDoJetAnalysis){
-            Int_t NTotalBins = fHistoMappingGGInvMassPtBin[iPt]->GetNbinsX();
-            for(Int_t i = 0; i <= NTotalBins; i++){
-                Double_t value = fHistoMappingGGInvMassPtBin[iPt]->GetBinContent(i);
-                Double_t CorrFactor = 1.;
-                if(fMode == 0){
-                  if(fMesonId == 111){        // pi0
-                    CorrFactor = 1.30 - 0.054*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }else if(fMesonId == 221){  // eta
-                    CorrFactor = 1.42 - 0.096*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }
-                }else if(fMode == 2){
-                  if(fMesonId == 111){        //pi0
-                    if((fBinsPt[iPt] + fBinsPt[iPt+1])/2 < 12){
-                      CorrFactor = 1.28 - 0.026*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                    }else CorrFactor = 1.;
-                  }else if(fMesonId == 221){  // eta
-                    CorrFactor = 1.16 - 0.011*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }
-                }else if(fMode == 4){
-                  if(fMesonId == 111){        // pi0
-                    CorrFactor = 1.30 - 0.01*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }else if(fMesonId == 221){  // eta
-                    CorrFactor = 1.48 - 0.027*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }
-                }else if(fMode == 5){
-                  if(fMesonId == 111){
-                    CorrFactor = 1.32 - 0.013*(fBinsPt[iPt] + fBinsPt[iPt+1])/2;
-                  }
-                }
-                value = value*CorrFactor;
-                fHistoMappingGGInvMassPtBin[iPt]->SetBinContent(i, value);
-            }
-        }
     }
 }
 
@@ -3947,19 +3948,6 @@ void FillMassMCTrueMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill) {
 //         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineColor(2);
-
-        if(fDoJetAnalysis && fMesonId == 221 && (fMode == 4 || fMode == 2 || fMode == 0)){
-            Int_t NTotalBins = fHistoMappingTrueMesonInvMassPtBins[iPt]->GetNbinsX();
-            Double_t CorrFactor = 1.;
-            if(fMode == 0) CorrFactor = 0.7;
-            if(fMode == 2) CorrFactor = 0.74;
-            if(fMode == 4) CorrFactor = 0.72;
-            for(Int_t i = 0; i <= NTotalBins; i++){
-                Double_t value = fHistoMappingTrueMesonInvMassPtBins[iPt]->GetBinContent(i);
-                value = value*CorrFactor;
-                fHistoMappingTrueMesonInvMassPtBins[iPt]->SetBinContent(i, value);
-            }
-        }
     }
 }
 
@@ -6605,7 +6593,21 @@ TH1D* CalculateMesonEfficiency(TH1D* MC_fMesonYieldsPt, TH1D** MC_SecondaryYield
 //****** RAW output file, no correction histograms ***************************
 //****************************************************************************
 void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSparse ) {
-    TString nameOutput = Form("%s/%s/%s_%s_GammaConvV1WithoutCorrection%s_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),prefix3.Data(),fPeriodFlag.Data(),cutID.Data());
+    TString nameOutput;
+    if(fUsingUnfolding_AsData){
+        TString EnergyUnfolding = Form("%s_Unfolding_AsData",fEnergyFlag.Data());
+        nameOutput = Form("%s/%s/%s_%s_GammaConvV1WithoutCorrection%s_%s.root",fCutSelection.Data(),EnergyUnfolding.Data(),fPrefix.Data(),prefix3.Data(),fPeriodFlag.Data(),cutID.Data());
+    }
+    else if(fUsingUnfolding_Missed){
+        TString EnergyUnfolding = Form("%s_Unfolding_Missed",fEnergyFlag.Data());
+        nameOutput = Form("%s/%s/%s_%s_GammaConvV1WithoutCorrection%s_%s.root",fCutSelection.Data(),EnergyUnfolding.Data(),fPrefix.Data(),prefix3.Data(),fPeriodFlag.Data(),cutID.Data());
+    }
+    else if(fUsingUnfolding_Reject){
+        TString EnergyUnfolding = Form("%s_Unfolding_Reject",fEnergyFlag.Data());
+        nameOutput = Form("%s/%s/%s_%s_GammaConvV1WithoutCorrection%s_%s.root",fCutSelection.Data(),EnergyUnfolding.Data(),fPrefix.Data(),prefix3.Data(),fPeriodFlag.Data(),cutID.Data());
+    }else{
+        nameOutput = Form("%s/%s/%s_%s_GammaConvV1WithoutCorrection%s_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),prefix3.Data(),fPeriodFlag.Data(),cutID.Data());
+    }
     fOutput1 = new TFile(nameOutput.Data(),"RECREATE");
 
     cout << "----------------------------------------------------------------------------------" << endl;
