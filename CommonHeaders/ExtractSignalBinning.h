@@ -951,7 +951,7 @@
                 }
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0) {
                 if (mode == 0){
-                    return 2;
+                    return 4;
                 } else if (mode == 2){
                     switch (trigger){
                         case 83:
@@ -4665,6 +4665,19 @@
                       optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
                       optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
                       //fStartPtBin  = 1;
+		    }else if( rBin.CompareTo("h") ==0){
+                      nIterBGFit                  = 8;
+                      fMaxYFracBGOverIntHist      = 100;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    }else if( rBin.CompareTo("i") ==0){
+                      nIterBGFit                  = 8;
+                      fMaxYFracBGOverIntHist      = 100;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+
                     }else{
                       nIterBGFit                  = 6;
                       fMaxYFracBGOverIntHist      = 100;

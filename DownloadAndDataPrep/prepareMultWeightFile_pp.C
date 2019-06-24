@@ -58,7 +58,7 @@ void prepareMultWeightFile_pp(TString inputPath = "/Users/marin/analysis/multWei
     TString centralityClasses1[nCentralityClasses] = {"000"};   // config 23
 
     // file names for Pythia - Phojet - all  MB
-    TString productionNames13TeV[nProductions] = {"LHC16d", "LHC17f6","LHC18d6a2" };
+    TString productionNames13TeV[nProductions] = {"LHC16d", "LHC16P1Pyt8","LHC18d6a2" };
     TString fileNames13TeV[nProductions]       = {"GammaConv_Material_LHC16d_23.root",  // LHC16d
                                                   "GammaConv_Material_MC_LHC17f6total_23.root", // Pythia 13 TeV
                                                   "GammaConv_Material_MC_LHC18d6a2_23.root" };  // Phojet 13 TeV
@@ -98,6 +98,7 @@ void prepareMultWeightFile_pp(TString inputPath = "/Users/marin/analysis/multWei
         TList *topList        = (TList*)inputFile.Get("GammaConvMaterial");
         TList *cutList        = (TList*)topList->FindObject(Form("Cut Number %s",fullCutString.Data()));
         TList *subList        = (TList*)cutList->FindObject(Form("%s ESD histograms", fullCutString.Data()));
+
         TH1D *histoTracks     = (TH1D*)subList->FindObject("GoodESDTracksEta08");
         topList->SetOwner(kTRUE);  // enables recursive free of memory
         cutList->SetOwner(kTRUE);
@@ -112,6 +113,25 @@ void prepareMultWeightFile_pp(TString inputPath = "/Users/marin/analysis/multWei
         targetFile.cd();
         histoTracksSave->Write();
         cout << "\t done"<< endl;
+
+
+	// V0 Mult
+
+        TH1D *histoV0Tracks     = (TH1D*)subList->FindObject("V0 Multiplicity");
+        topList->SetOwner(kTRUE);  // enables recursive free of memory
+        cutList->SetOwner(kTRUE);
+        subList->SetOwner(kTRUE);
+        TH1D* histoV0TracksSave = (TH1D*)histoV0Tracks->Clone();
+        histoV0TracksSave->Sumw2();
+        cout<< histoV0TracksSave->GetEntries()<< endl;
+        if(histoV0TracksSave->GetEntries()>0) histoV0TracksSave->Scale(1./histoV0TracksSave->GetEntries());
+        //	histoTracksSave->SetTitle(Form("GoodESDTracks %s %s", productions.Data(), centForTitle.Data()));
+        histoV0TracksSave->SetTitle(Form("V0Multiplicity %s", productions.Data() ));
+        histoV0TracksSave->SetName(Form("V0M_%s_%s", productions.Data(), centralityClass.Data()));
+        targetFile.cd();
+        histoV0TracksSave->Write();
+        cout << "\t done"<< endl;
+
         // clean up
         inputFile.Close();
         delete topList;   // needs to be deleted because Close() does not free list memory correctly

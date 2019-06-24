@@ -35,6 +35,8 @@ const int nBinsPt=69;
 Double_t arrayPtBins[nBinsPt]; 
 const int nBinsPtTwo=31;
 Double_t arrayPtBinsTwo[nBinsPtTwo]; 
+const int nBinsPtThree=23;
+Double_t arrayPtBinsThree[nBinsPtThree]; 
 
 //const int nBinsPtFine             = 15;
 //Double_t projPtBinsFine[nBinsPtFine]     = {0.05, 0.1, 0.15, 0.2, 0.25,
@@ -106,6 +108,13 @@ TString arrayNamesRBins[12]       = { "Vertex",                                 
 Double_t fMaterialWeightsForSecEffCor[12]={1.0377,1.19547,1.24405,1.22941,1.07585,1.12396, 1.09077, 1.03798,0.948079,0.981036, 1.,0.964843};
 //1.0313, 1.18782, 1.23548, 1.22107 ,1.07171, 1.11886, 1.08748, 1.0367, 0.950803, 0.982077, 1., 0.966804};
 //{1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.};
+
+TH1F * histoTrueRecEffEachRBin[nBinsR];
+TH1F * histoConvPtEachRBinMC[nBinsR];
+
+TH1F * histoPtTruePrimMCEachRBinRebin[nBinsR];
+TH1F * histoPtTrueMCEachRBinRebin[nBinsR];
+TH1F * histoConvPtEachRBinRebinMC[nBinsR];
 
 TH1F * histoMCSecGammaPtBySource[4]={NULL,NULL,NULL,NULL};
 TH1F * histoMCSecConvGammaPtBySource[4]={NULL,NULL,NULL,NULL};
@@ -249,6 +258,13 @@ TH1D*   histoPhiInRData[nBinsR];
 TH1D*   histoPhiInRMC[nBinsR];
 TH1D*   histoPhiInRTrueMC[nBinsR];
 TH1D*	histoDataMCRatioPhiInR[nBinsR];
+
+TH1D*   histoPhiFromConvInRData[nBinsR];
+TH1D*   histoPhiFromConvInRMC[nBinsR];
+TH1D*   histoPhiFromConvInRTrueMC[nBinsR];
+TH1D*	histoDataMCRatioPhiFromConvInR[nBinsR];
+
+
 
 TH1D*   histoIntegralGasStatErrorDataFullRange[nBinsR];
 TH1D*   histoIntegralGasStatErrorDataPtBin1[nBinsR];

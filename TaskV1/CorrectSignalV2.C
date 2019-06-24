@@ -2417,7 +2417,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
 
     if (    (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) ))
-        || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV"))){
+	    || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV")) ||  (nameMeson.Contains("Eta") &&  optionEnergy.Contains("13TeV")) ){
         cout << "\n\n\nINFO:: Entered ratio ftting of efficiency " << endl;
         if (scaleTrueEffiWithFit)
             cout << "INFO:: will be scaling true effi with ratio fit of normal/true effi to correct for offset " << endl;
@@ -2519,6 +2519,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (optionEnergy.CompareTo("PbPb_5.02TeV") == 0){
                     minYRatioEffis          =  0.5;
                 }
+                if (optionEnergy.Contains("13TeV") ){
+                    minYRatioEffis          =  0.5;
+                }
+
                 // plotting corresponding ratio with fit function
                 DrawAutoGammaMesonHistos(   histoRatioEffWOWeightingEff[k],
                                             "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{eff,%s, rec}/#epsilon_{eff,%s, true wo weights} ", textMeson.Data(), textMeson.Data()),

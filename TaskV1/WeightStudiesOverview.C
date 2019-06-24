@@ -199,6 +199,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     TH1F * histoWeightsEachRPtMinSecSub[nBinsR][ConstNumberOfCuts];   // Still a test
     TH1F * histoWeightsEachRPtMinSecSubUsingCocktail[nBinsR][ConstNumberOfCuts];   // Still a test
     TH1F * histoPurityPtEachRBin[nBinsR][ConstNumberOfCuts];
+    TH1F*  histoTrueRecEffEachRBin[nBinsR][ConstNumberOfCuts];
 
     for (Int_t i=0; i< NumberOfCuts; i++){
 
@@ -224,6 +225,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 	  histoWeightsEachRPtMinSecSub[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMinSecSub%i",j));
 	  histoWeightsEachRPtMinSecSubUsingCocktail[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoWeightsEachRPtMinSecSubUsingCocktail%i",j));
 	  histoPurityPtEachRBin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoPurityPtEachRBin_%i",j)); ;
+	  histoTrueRecEffEachRBin[j][i] = (TH1F*)WeightFileAdditional[i]->Get(Form("histoTrueRecEffPtEachRBin_%i",j)); ;
 	  //	  cout<< "mean" <<histoWeightsEachRPtMin[i][j]->GetMean() <<endl;
 	}
         if(sequence==0){
@@ -338,6 +340,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 		  << " (Tot = "     << std::setprecision(3) << (totalWeightError[j-1]/histWeight[0]->GetBinContent(j))*100 << "%)" << endl ;
     }
 
+    cout << "line " << __LINE__ << endl;
     // Calculation of average sys. for 1 photon based on the R weight beyond 5 cm
     Int_t       nBins = histWeight[0]->GetNbinsX();
     Double_t*   binsR = new Double_t[nBins+1];
@@ -345,7 +348,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         if (i<nBins)    binsR[i]   = histWeight[0]->GetXaxis()->GetBinLowEdge(i+1);
         else            binsR[i]   = histWeight[0]->GetXaxis()->GetBinUpEdge(i);
     }
-
+    cout << "line " << __LINE__ << endl;
     TH1F * histWeightStaErr = new TH1F("weightStaErr","weightStaErr",nBins,binsR);
     TH1F * histWeightSysErr = new TH1F("weightSysErr","weightSysErr",nBins,binsR);
     TH1F * histWeightTotErr = new TH1F("weightTotErr","weightTotErr",nBins,binsR);
@@ -392,148 +395,151 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     }
     std::cout<< std::setprecision(4)  << "Average Weight = " << averageWeight << ", Stat = " << (averageWeightSta/averageWeight)*100 << "%, Sys = " << (averageWeightSys/averageWeight)*100 << "%, Tot = " << (averageWeightTot/averageWeight)*100 << "%" << endl;
 
+    cout << "line " << __LINE__ << endl;
 
     // plotting
     Double_t minYRatio = 0.9;
     Double_t maxYRatio = 1.5;
     TCanvas* canvasWeight = new TCanvas("canvasWeight","",1500,1300);
     DrawGammaCanvasSettings( canvasWeight,  0.13, 0.02, 0.02, 0.09);
-        TPad* padWeight = new TPad("padWeight", "", 0., 0.33, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padWeight, 0.1, 0.03, 0.02, 0.);
-        padWeight->Draw();
+    TPad* padWeight = new TPad("padWeight", "", 0., 0.33, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padWeight, 0.1, 0.03, 0.02, 0.);
+    padWeight->Draw();
+    
+    TPad* padWeightRatios = new TPad("padWeightRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+    DrawGammaPadSettings( padWeightRatios, 0.1, 0.03, 0.0, 0.2);
+    padWeightRatios->Draw();
+    padWeight->cd();
+    padWeight->SetTickx();
+    padWeight->SetTicky();
+    padWeight->cd();
+    
+    TH2F * histo2DDummy = new TH2F("","",1000,0.,180.,1000,0.,1.5);
+    SetStyleHistoTH2ForGraphs(histo2DDummy, "R (cm)", "Weights",0.04,0.04, 0.04,0.04, 1.,1.);
+    //         histo2DDummy->GetXaxis()->SetMoreLogLabels();
+    //         histo2DDummy->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DDummy->GetYaxis()->SetRangeUser(0.875,1.35);
+    histo2DDummy->Draw("copy");
+    
+    DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
+    TLatex *labelR5cm = new TLatex(0.13,0.10,label5cm.Data());
+    SetStyleTLatex( labelR5cm,0.04,4);
+    labelR5cm->Draw();
+    
+    TLegend* legendWeightOnfly= new TLegend(0.45,0.93-(1+counterOnfly)*0.04,0.7,0.93); //0.17,0.13,0.5,0.24);
+    legendWeightOnfly->SetFillColor(0);
+    legendWeightOnfly->SetMargin(0.17);
+    legendWeightOnfly->SetLineColor(0);
+    legendWeightOnfly->SetTextFont(42);
+    legendWeightOnfly->SetTextSize(0.035);
+    legendWeightOnfly->SetHeader("On-the-Fly V0 finder");
+    
+    TLegend* legendWeightOffline= new TLegend(0.7,0.93-(1+counterOffline)*0.04,0.93,0.93); //0.17,0.13,0.5,0.24);
+    legendWeightOffline->SetFillColor(0);
+    legendWeightOffline->SetMargin(0.17);
+    legendWeightOffline->SetLineColor(0);
+    legendWeightOffline->SetTextFont(42);
+    legendWeightOffline->SetTextSize(0.035);
+    legendWeightOffline->SetHeader("Offline V0 finder");
+    
+    TLegend* legendWeight = GetAndSetLegend2(0.3,0.93-1.15*0.04*NumberOfCuts,0.65,0.93,40);
+    DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+      
+      DrawGammaSetMarker(histWeight[i], marker[i], 1.5,color[i],color[i]);
+      histWeight[i]->Draw("same,c,p");
+      
+      if(V0ReaderName[i].Contains("Offline"))
+	legendWeightOffline->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+      else
+	legendWeightOnfly->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+      
+      legendWeightOnfly->Draw();
+      legendWeightOffline->Draw();
+      
+      
+      legendWeight->AddEntry(histWeight[i],Form("%s, (%s) - %s",periodName[i].Data(),generatorName[i].Data(),V0ReaderName[i].Data()));   //" %s",cutNumber[i].Data()));
+      //                 legendWeight->AddEntry(histWeight[i],Form("%s, %s (%s) - %s",periodName[i].Data(),clusterName[i].Data(),generatorName[i].Data(),V0ReaderName[i].Data()));   //" %s",cutNumber[i].Data()));
+      //             legendWeight->Draw();
+    }
+    
+    histo2DDummy->DrawCopy("axis,same");
+    padWeightRatios->cd();
+    minYRatio = 0.92;
+    maxYRatio = 1.065; //qui
+    TH2F * histo2DDummyRatio = new TH2F("","",1000,0.,180.,1000,0.,2.);
+    SetStyleHistoTH2ForGraphs(histo2DDummyRatio, "R (cm)", "#frac{modified}{standard}",0.08,0.085, 0.08,0.085,0.9,0.55);
+    histo2DDummyRatio->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+    histo2DDummyRatio->Draw("copy");
+    
+    DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
+    DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
+    DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
+    
+    DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
+    
+    cout << "line " << __LINE__ << endl;
 
-        TPad* padWeightRatios = new TPad("padWeightRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
-        DrawGammaPadSettings( padWeightRatios, 0.1, 0.03, 0.0, 0.2);
-        padWeightRatios->Draw();
-        padWeight->cd();
-        padWeight->SetTickx();
-        padWeight->SetTicky();
-        padWeight->cd();
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+      if(i<12)  DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i],color[i]);
+      else      DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i-12],color[i-12]);
+      histoRatioWeightCut[i]->Draw("same,c,p");
+    }
 
-        TH2F * histo2DDummy = new TH2F("","",1000,0.,180.,1000,0.,1.5);
-        SetStyleHistoTH2ForGraphs(histo2DDummy, "R (cm)", "Weights",0.04,0.04, 0.04,0.04, 1.,1.);
-//         histo2DDummy->GetXaxis()->SetMoreLogLabels();
-//         histo2DDummy->GetXaxis()->SetLabelOffset(-0.01);
-        histo2DDummy->GetYaxis()->SetRangeUser(0.875,1.35);
-        histo2DDummy->Draw("copy");
-
-        DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
-        TLatex *labelR5cm = new TLatex(0.13,0.10,label5cm.Data());
-        SetStyleTLatex( labelR5cm,0.04,4);
-        labelR5cm->Draw();
-
-        TLegend* legendWeightOnfly= new TLegend(0.45,0.93-(1+counterOnfly)*0.04,0.7,0.93); //0.17,0.13,0.5,0.24);
-        legendWeightOnfly->SetFillColor(0);
-        legendWeightOnfly->SetMargin(0.17);
-        legendWeightOnfly->SetLineColor(0);
-        legendWeightOnfly->SetTextFont(42);
-        legendWeightOnfly->SetTextSize(0.035);
-        legendWeightOnfly->SetHeader("On-the-Fly V0 finder");
-
-        TLegend* legendWeightOffline= new TLegend(0.7,0.93-(1+counterOffline)*0.04,0.93,0.93); //0.17,0.13,0.5,0.24);
-        legendWeightOffline->SetFillColor(0);
-        legendWeightOffline->SetMargin(0.17);
-        legendWeightOffline->SetLineColor(0);
-        legendWeightOffline->SetTextFont(42);
-        legendWeightOffline->SetTextSize(0.035);
-        legendWeightOffline->SetHeader("Offline V0 finder");
-
-        TLegend* legendWeight = GetAndSetLegend2(0.3,0.93-1.15*0.04*NumberOfCuts,0.65,0.93,40);
-        DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
-        for(Int_t i = 0; i< NumberOfCuts; i++){
-
-            DrawGammaSetMarker(histWeight[i], marker[i], 1.5,color[i],color[i]);
-            histWeight[i]->Draw("same,c,p");
-
-            if(V0ReaderName[i].Contains("Offline"))
-                legendWeightOffline->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
-            else
-                legendWeightOnfly->AddEntry(histWeight[i],Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
-
-            legendWeightOnfly->Draw();
-            legendWeightOffline->Draw();
-
-
-                legendWeight->AddEntry(histWeight[i],Form("%s, (%s) - %s",periodName[i].Data(),generatorName[i].Data(),V0ReaderName[i].Data()));   //" %s",cutNumber[i].Data()));
-//                 legendWeight->AddEntry(histWeight[i],Form("%s, %s (%s) - %s",periodName[i].Data(),clusterName[i].Data(),generatorName[i].Data(),V0ReaderName[i].Data()));   //" %s",cutNumber[i].Data()));
-//             legendWeight->Draw();
-        }
-
-        histo2DDummy->DrawCopy("axis,same");
-        padWeightRatios->cd();
-        minYRatio = 0.92;
-        maxYRatio = 1.065; //qui
-        TH2F * histo2DDummyRatio = new TH2F("","",1000,0.,180.,1000,0.,2.);
-        SetStyleHistoTH2ForGraphs(histo2DDummyRatio, "R (cm)", "#frac{modified}{standard}",0.08,0.085, 0.08,0.085,0.9,0.55);
-        histo2DDummyRatio->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-        histo2DDummyRatio->Draw("copy");
-
-        DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
-        DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
-        DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
-
-        DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
-
-        for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i<12)  DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i],color[i]);
-            else      DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i-12],color[i-12]);
-            histoRatioWeightCut[i]->Draw("same,c,p");
-        }
-
-        histo2DDummyRatio->DrawCopy("axis,same");
+    histo2DDummyRatio->DrawCopy("axis,same");
     canvasWeight->Update();
     canvasWeight->SaveAs(Form("%s/Weight_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
     canvasWeight->cd();
     padWeight->cd();
 
-        histo2DDummy->Draw("copy");
-        DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
-        DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
-        labelR5cm->Draw();
-
-        TLegend* legendStd= new TLegend(0.6,0.93-3.5*0.04,0.93,0.93); //0.17,0.13,0.5,0.24);
-        legendStd->SetFillColor(0);
-        legendStd->SetMargin(0.17);
-        legendStd->SetLineColor(0);
-        legendStd->SetTextFont(42);
-        legendStd->SetTextSize(0.04);
-        legendStd->SetHeader("Pythia, On-the-Fly V0 finder");
-
-        for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(generatorName[i].Contains("Pythia") && V0ReaderName[i].Contains("On-the-Fly")){
-
-                DrawGammaSetMarker(histWeight[i], marker[i], 1.5,color[i],color[i]);
-                histWeight[i]->Draw("same,c,p");
-
-                legendStd->AddEntry(histWeight[i],Form("%s",periodName[i].Data()));
-            }
-        }
-        legendStd->Draw();
-
-        histo2DDummy->DrawCopy("axis,same");
-        padWeightRatios->cd();
-        histo2DDummyRatio->Draw("copy");
-
-        DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
-        DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
-        DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
-        DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
-//         TLatex *labelR5cm = new TLatex(0.13,0.9,label5cm.Data());
-        SetStyleTLatex( labelR5cm,0.04,4);
-
-        for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(generatorName[i].Contains("Pythia") && V0ReaderName[i].Contains("On-the-Fly")){
-                DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i],color[i]);
-                histoRatioWeightCut[i]->Draw("same,c,p");
-            }
-        }
-
-        histo2DDummyRatio->DrawCopy("axis,same");
+    histo2DDummy->Draw("copy");
+    DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
+    DrawGammaLines(5., 5.,0.875,1.35,1.1,kGray+2,1);
+    labelR5cm->Draw();
+    
+    TLegend* legendStd= new TLegend(0.6,0.93-3.5*0.04,0.93,0.93); //0.17,0.13,0.5,0.24);
+    legendStd->SetFillColor(0);
+    legendStd->SetMargin(0.17);
+    legendStd->SetLineColor(0);
+    legendStd->SetTextFont(42);
+    legendStd->SetTextSize(0.04);
+    legendStd->SetHeader("Pythia, On-the-Fly V0 finder");
+    
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+      if(generatorName[i].Contains("Pythia") && V0ReaderName[i].Contains("On-the-Fly")){
+	
+	DrawGammaSetMarker(histWeight[i], marker[i], 1.5,color[i],color[i]);
+	histWeight[i]->Draw("same,c,p");
+	
+	legendStd->AddEntry(histWeight[i],Form("%s",periodName[i].Data()));
+      }
+    }
+    legendStd->Draw();
+    
+    histo2DDummy->DrawCopy("axis,same");
+    padWeightRatios->cd();
+    histo2DDummyRatio->Draw("copy");
+    
+    DrawGammaLines(0., maxR,1., 1.,1.1,kGray+1,2);
+    DrawGammaLines(0., maxR,1.02, 1.02,1.1,kGray+1,2);
+    DrawGammaLines(0., maxR,0.98, 0.98,1.1,kGray+1,2);
+    DrawGammaLines(5., 5.,minYRatio,maxYRatio,1.1,kGray+2,1);
+    //         TLatex *labelR5cm = new TLatex(0.13,0.9,label5cm.Data());
+    SetStyleTLatex( labelR5cm,0.04,4);
+    
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+      if(generatorName[i].Contains("Pythia") && V0ReaderName[i].Contains("On-the-Fly")){
+	DrawGammaSetMarker(histoRatioWeightCut[i], marker[i], 1.5,color[i],color[i]);
+	histoRatioWeightCut[i]->Draw("same,c,p");
+      }
+    }
+    
+    histo2DDummyRatio->DrawCopy("axis,same");
     canvasWeight->Update();
     canvasWeight->SaveAs(Form("%s/WeightStandard_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
     delete canvasWeight;
-
+    
 
     TCanvas* canvasWeightDoublePad = new TCanvas("canvasWeightDoublePad","",1500,1300);
     DrawGammaCanvasSettings( canvasWeightDoublePad,  0.13, 0.02, 0.02, 0.03);
@@ -696,6 +702,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     canvasWeightDiff->SaveAs(Form("%s/WeightDiff_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
     delete canvasWeightDiff;
 
+    cout << "line " << __LINE__ << endl;
 
    //_______________________ Ploting weights vs pT in each R bin On-the-fly finder__________________________
 
@@ -754,7 +761,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     canvasMBWeightEachROnfly->Print(Form("%s/MBWeightVSPtMinOnflyEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
 
-
+    cout << "line " << __LINE__ << endl;
  //_______________________ Ploting weights vs pT in each R bin Offline finder__________________________
 
     TCanvas *canvasMBWeightEachROffline          = new TCanvas("canvasMBWeighEachROffline","",1400,900);  // gives the page size
@@ -813,6 +820,7 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
 
    //____________________________________________________________________________________
+    cout << "line " << __LINE__ << endl;
 
    //_______________________ Ploting weights vs pT in each R bin On-the-fly finder Secondary Subtracted usingCocktail__________________________
 
@@ -941,7 +949,68 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
 
    //____________________________________________________________________________________
 
+    cout << "line " << __LINE__ << endl;
 
+   //_______________________ Ploting efficiency vs pT in each R bin On-the-fly finder__________________________
+
+    TCanvas *canvasMBEffiEachROnfly          = new TCanvas("canvasMBEffiEachROnfly","",1400,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasMBEffiEachROnfly, 0, 0, 0, 0);
+    canvasMBEffiEachROnfly->cd();
+    TPad * padMBEffiEachROnfly               = new TPad("padMBEffiEachROnfly","",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    DrawGammaPadSettings( padMBEffiEachROnfly, 0, 0, 0, 0);
+    padMBEffiEachROnfly->Divide(4,3,0.0,0.0);
+    padMBEffiEachROnfly->Draw();
+    Int_t place1  = 0;
+    TH2F *histoDummyEffiEachROnfly =  new TH2F("histoDummyEffitEachROnfly","histoDummyEffiEachROnfly",1000,0.0,10.,1000,0.,1.5);
+    SetStyleHistoTH2ForGraphs(histoDummyEffiEachROnfly, "#it{p}_{T}^{Min} (GeV/c)","Effi_i", 0.05,0.05, 0.05,0.05);
+    cout << "line " << __LINE__ << endl;
+    // TLegend* legendEffiPtOnfly= new TLegend(0.5,0.91-(1+counterOnfly)*0.05,0.8,0.91); //0.17,0.13,0.5,0.24);
+    // legendEffiPtOnfly->SetFillColor(0);
+    // legendEffiPtOnfly->SetMargin(0.17);
+    // legendEffiPtOnfly->SetLineColor(0);
+    // legendEffiPtOnfly->SetTextFont(42);
+    // legendEffiPtOnfly->SetTextSize(0.05);
+    // legendEffiPtOnfly->SetHeader("On-the-Fly V0 finder");
+    // for(Int_t i = 0; i< 2; i++){
+    //     if(V0ReaderName[i].Contains("On-the-Fly"))
+    //         legendEffiPtOnfly->AddEntry(,Form("%s, %s",periodName[i].Data(),generatorName[i].Data()));
+    // }
+
+    for(Int_t j=0; j < nBinsR; j++){
+        place1  = place1 + 1;
+        padMBEffiEachROnfly->cd(place1);
+        padMBEffiEachROnfly->cd(place1)->SetTopMargin(0.04);
+        padMBEffiEachROnfly->cd(place1)->SetBottomMargin(0.15);
+        padMBEffiEachROnfly->cd(place1)->SetLeftMargin(0.15);
+        padMBEffiEachROnfly->cd(place1)->SetRightMargin(0.05);
+        histoDummyEffiEachROnfly->GetYaxis()->SetNdivisions(504);
+
+//         if(j>1 && j<=3)      histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.3);
+//         else if(j>3 && j<=6) histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.2);
+//         else if(j>7 )        histoDummyWeightEachROnfly->GetYaxis()->SetRangeUser(0.9,1.1);
+	histoDummyEffiEachROnfly->GetYaxis()->SetRangeUser(0.,1.2);
+	// histoDummyEffiEachROnfly->GetXaxis()->SetRangeUser(0.,10.);
+
+        histoDummyEffiEachROnfly->DrawCopy();
+	//cout << "line " << __LINE__ << endl;
+        DrawGammaLines(0.,10.,1., 1.,1.,kGray,1);
+	//        DrawGammaLines(0.4,0.4,0.82,1.3,1.,kGray,2);
+	//cout << "line " << __LINE__ << endl;
+        for(Int_t i = 0; i< 4; i++){
+            if(i<12) DrawGammaSetMarker(histoTrueRecEffEachRBin[j][i] , marker[i], 0.5,color[i],color[i]);
+            else     DrawGammaSetMarker(histoTrueRecEffEachRBin[j][i] , marker[i], 0.5,color[i-12],color[i-12]);
+	    //if(j<2) histoTrueRecEffEachRBin[j][i]->SetLineStyle(3);
+	    // cout << "line " << __LINE__ << "nBinsR::"<< j<< endl;
+	    histoTrueRecEffEachRBin[j][i]->Draw("same");
+	    // if(i<12) DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i]);
+            // else     DrawGammaSetMarker(histoWeightsEachRPtMinSecSub[j][i], marker[i], 0.5,6,color[i-12]);
+            // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
+        }
+	// if (j==0)  legendEffiPtOnfly->Draw();
+    }
+
+    cout << "line " << __LINE__ << endl;
+    canvasMBEffiEachROnfly->Print(Form("%s/MBEffiVSPtMinOnflyEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
 
 

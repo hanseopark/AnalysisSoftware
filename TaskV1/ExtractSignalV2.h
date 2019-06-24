@@ -1050,6 +1050,9 @@
                 } else if( fEnergyFlag.Contains("pPb_5.023TeV")){
                     fMesonFitRange[0]       = 0.03;
                     fMesonFitRange[1]       = 0.25;
+               } else if( fEnergyFlag.Contains("13TeV")){
+                    fMesonFitRange[0]       = 0.05;
+                    fMesonFitRange[1]       = 0.25;
                 } else {
                     fMesonFitRange[0]       = 0.03;
                     fMesonFitRange[1]       = 0.25;
@@ -1372,7 +1375,7 @@
             } else if (mode == 5) {
                 fFitRange[0]                = 0.38;
                 fFitRange[1]                = 0.73;
-            } else {
+             } else {
                 fFitRange[0]            = 0.4;
                 fFitRange[1]            = 0.65;
             }
@@ -1570,6 +1573,15 @@
                     fMesonFitRange[0]           = 0.38;
                     fMesonFitRange[1]           = 0.73;
                 }
+	    } else if (mode == 0) {
+		if( fEnergyFlag.Contains("13TeV") == 0 ){
+		  fFitRange[0]                = 0.44;
+		  fFitRange[1]                = 0.65;
+		}else{
+		  fFitRange[0]                = 0.4;
+		  fFitRange[1]                = 0.7;
+		}
+
             } else {
                 fMesonFitRange[0]           = 0.4;
                 fMesonFitRange[1]           = 0.7;
