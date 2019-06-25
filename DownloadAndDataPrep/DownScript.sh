@@ -71,6 +71,13 @@ fi
 #####################################
 #####################################
 
+function usecmd()
+{
+	if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+	then
+		echo $1
+	fi
+}
 
 
 # Fuction to check if file is up to date and download it if not
@@ -195,13 +202,6 @@ function AddToList()
 	fi
 }
 
-function usecmd()
-{
-	if [[ $debug = 1 ]] || [[ $debug = 2 ]]
-	then
-		echo $1
-	fi
-}
 
 
 #####################################
@@ -835,7 +835,7 @@ then
 														echo "$subrunfilename" >> $RunFileList
 														subruninFile=$subpath/$subrunfilename
 													fi
-													
+
 													# subrunDir=$OUTPUTDIR/$RunlistName/$ChildName/$runName/$subrunname/
 													mkdir -p $subrunDir &> /dev/null
 
