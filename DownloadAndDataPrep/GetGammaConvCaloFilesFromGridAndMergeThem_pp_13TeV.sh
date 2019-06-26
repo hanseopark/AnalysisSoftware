@@ -2,9 +2,12 @@
 
 
 thisuser=`echo ${USER}`
+d=`date +%Y_%m_%d`
 if [[ $thisuser = "adrian" || $thisuser = "amechler" ]]
 then
     echo -e "y" > sayyes.txt
+    rm Error.log
+
 
     #######################################################
     ######################   Daten   ######################
@@ -23,44 +26,44 @@ then
     # bash DownScript.sh 753 -Name_LHC18Data GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise
 
     # ### Daten LHC16Data="773"
-    # bash DownScript.sh 773 -Name_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 773 -Name_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### Daten LHC17Data="774"
-    # bash DownScript.sh 774 -Name_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 774 -Name_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### Daten LHC18Data="753"
-    # bash DownScript.sh 753 -Name_Data_pp13TeV_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -runwise < sayyes.txt
+    # bash DownScript.sh 753 -Name_Data_pp13TeV_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -runwise < sayyes.txt
 
     ### merging 16 + 17
-    # bash DownScript.sh 773 774 -Name_Data_pp13TeV_16_17_v0 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -noDown < sayyes.txt #-runwise
+    # bash DownScript.sh 773 774 -Name_Data_pp13TeV_16_17_v0 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -noDown < sayyes.txt #-runwise
 
     # ### merging 16 + 17 + 18
-    # bash DownScript.sh 773 774 753 -Name_Data_pp13TeV_16_17_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown < sayyes.txt #-runwise
+    # bash DownScript.sh 773 774 753 -Name_Data_pp13TeV_16_17_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown < sayyes.txt #-runwise
 
     # ### Daten LHC16Data_triggered="775"
-    # bash DownScript.sh 775 -Name_Skim_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 775 -Name_Skim_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### Daten LHC17Data_triggered="776"
-    # bash DownScript.sh 776 -Name_Skim_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 776 -Name_Skim_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### merging 16 + 17 triggered
-    # bash DownScript.sh 775 776 -Name_Skim_Data_pp13TeV_16_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -noDown < sayyes.txt #-runwise
+    # bash DownScript.sh 775 776 -Name_Skim_Data_pp13TeV_16_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -noDown < sayyes.txt #-runwise
 
 
 ##### new Trains
     ### LHC16 Data 829
-    bash DownScript.sh 829 -Name_LHC16Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt
+    bash DownScript.sh 829 -Name_LHC16Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt
 
     ### LHC17 Data 830
-    bash DownScript.sh 830 -Name_LHC17Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt
+    bash DownScript.sh 830 -Name_LHC17Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt
 
     ### LHC18 Data 734
-    bash DownScript.sh 834 -Name_LHC18Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt
+    bash DownScript.sh 834 -Name_LHC18Data_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt
 
     ### merging 16 + 17 + 18
-    bash DownScript.sh 829 830 -Name_Data_pp13TeV_16_17_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods -noDown -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 829 830 -Name_Data_pp13TeV_16_17_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown -runwise -totalLog < sayyes.txt #-runwise
     ### merging 16 + 17 + 18
-    bash DownScript.sh 829 830 834 -Name_Data_pp13TeV_16_17_18_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods -noDown -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 829 830 834 -Name_Data_pp13TeV_16_17_18_v1 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown -runwise -totalLog < sayyes.txt #-runwise
 
     #######################################################
     ######################   MC   ######################
@@ -86,45 +89,47 @@ then
     # bash DownScript.sh 1415 -Name_LHC18xMCPHY GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC < sayyes.txt #-runwise
 
     # ### PYT8_13TeV_anchLHC16_AOD209
-    # bash DownScript.sh 1470 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1470 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### PYT8_13TeV_anchLHC16_AOD209_extra
-    # bash DownScript.sh 1471 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1471 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### PYT8_13TeV_anchLHC16_AOD209_extra2
-    # bash DownScript.sh 1472 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1472 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### PYT8_13TeV_anchLHC17_AOD209_extra
-    # bash DownScript.sh 1473 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1473 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### PYT8_13TeV_anchLHC17_AOD209
-    # bash DownScript.sh 1474 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1474 -Name_MC_pp13TeV_16_17 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
     # ### merging 16 MCs
-    # bash DownScript.sh 1470 1471 1472 -Name_MC_pp13TeV_16_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt
+    # bash DownScript.sh 1470 1471 1472 -Name_MC_pp13TeV_16_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt
     #
     # ### merging 17 MC
-    # bash DownScript.sh 1473 1474 -Name_MC_pp13TeV_17_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt
+    # bash DownScript.sh 1473 1474 -Name_MC_pp13TeV_17_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt
     #
     # ### merging 16 + 17 MCs
-    # bash DownScript.sh 1470 1471 1472 1473 1474 -Name_MC_pp13TeV_16_17_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPCIncAccTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
+    # bash DownScript.sh 1470 1471 1472 1473 1474 -Name_MC_pp13TeV_16_17_v0 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC < sayyes.txt #-runwise
 
 ##### new Trains
     ### LHC16 Data 1546 + 1547 + 1548
-    bash DownScript.sh 1546 1547 1548 -Name_LHC16MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 1546 1547 1548 -Name_LHC16MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt #-runwise
 
     ### LHC17 Data 1549 + 1550
-    bash DownScript.sh 1549 1550 -Name_LHC17MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt #-runwise
+    bash DownScript.sh 1549 1550 -Name_LHC17MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt #-runwise
 
     ### LHC18 Data 1556 1557
-    bash DownScript.sh 1556 1557 -Name_LHC18MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods -runwise < sayyes.txt  #-runwise
+    bash DownScript.sh 1556 1557 -Name_LHC18MC_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -runwise -totalLog < sayyes.txt  #-runwise
 
     ### merging 16 + 17
-    bash DownScript.sh 1546 1547 1548 1549 1550 -Name_MC_pp13TeV_16_17_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods -noDown < sayyes.txt #-runwise
+    bash DownScript.sh 1546 1547 1548 1549 1550 -Name_MC_pp13TeV_16_17_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown -totalLog < sayyes.txt #-runwise
     ### merging 16 + 17 + 18
-    bash DownScript.sh 1546 1547 1548 1549 1550 1556 1557 -Name_MC_pp13TeV_16_17_18_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods -noDown < sayyes.txt #-runwise
+    bash DownScript.sh 1546 1547 1548 1549 1550 1556 1557 -Name_MC_pp13TeV_16_17_18_v1 GA_pp_MC_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listPCMEMCgood -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_centralbarrelEMCgood -RL_EMCalDCalGood -RL_listPCMEMCALgoodkINT7 -RL_listDPGEMC -RL_listDPGEDC -noDown -totalLog < sayyes.txt #-runwise
 
     rm sayyes.txt
+    cat Error.log
+    mv Error.log AllError_$d.log
     exit
 fi
 

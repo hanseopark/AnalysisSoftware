@@ -1,10 +1,12 @@
 #! /bin/bash
 debug=0
+ErrorLog=""
+WARNINGLog=""
 # This Script is intended to automize the download of train outputs
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V4"
+echo "DownScript.sh Version: V4.2"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -165,7 +167,7 @@ function GetFile()
 			printf "\e[33m|-> \e[0mFile exists."
 		fi
 	else
-		if [[ `alien_ls $1 | grep "no such file or directory" | wc -c` -eq 0 ]]; then
+		if [[ `alien_ls $1 2> /dev/null | grep "no such file or directory" | wc -c` -eq 0 ]]; then
 			if [[ $debug = 1 ]] || [[ $debug = 2 ]]; then
 				echo -e "\e[33m|-> \e[0mDownloading file alien:/$1"
 				alien_cp -o  alien:/$1 file:/$2 | tee -a $3
@@ -174,7 +176,12 @@ function GetFile()
 				alien_cp -o  alien:/$1 file:/$2 &> $3
 			fi
 		else
-			echo -e "\e[31m|->\e[0m missing $1 on alien"  | tee -a $3  | tee -a $ErrorLog
+			if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+			then
+				echo -e "\e[31m|->\e[0m missing $1 on alien"  | tee -a $3  | tee -a $ErrorLog
+			else
+				echo -e "\e[31m|->\e[0m missing on alien"  | tee -a $3  | tee -a $ErrorLog
+			fi
 		fi
 	fi
 }
@@ -231,13 +238,10 @@ TrainNumber=""
 MergeTrains=0
 DoDown=1
 MergeTrainsOutname=0
-TrainNumberFile="TrainNumberFile.txt"
 OutName=""
 Search=".root"
-Searchfile="Searchfile.txt"
 OptRunlistName=list
 OptRunlistNameSet=0
-OptRunlistNamefile=OptRunlistNames.txt
 OptAllRunlists=0
 UseMerge=0
 MergeTrains=0
@@ -247,6 +251,32 @@ SetOutName=""
 Usechildsareperiods=0
 newfiles=0
 re='^[0-9]+$'
+
+RunningScripts=0
+while [[ -f OptRunlistNames_$RunningScripts.txt ]]; do
+	((RunningScripts++))
+done
+OptRunlistNamefile=OptRunlistNames_$RunningScripts.txt
+TrainNumberFile=TrainNumberFile_$RunningScripts.txt
+Searchfile=Searchfile_$RunningScripts.txt
+
+job=$$
+lockfile=$job.lock
+for Process in `ls *.lock | grep -v $job` ; do
+	tmpjob=${Process%.lock}
+	status=`ps -efww | grep -w "DownScript.sh" | grep -v grep | grep $tmpjob | awk '{ print $2 }'`
+	if [ -z "$status" ]; then
+		for tmp in `cat $Process` ; do
+			if [[ -f OptRunlistNames_$tmp.txt ]]; then rm OptRunlistNames_$tmp.txt; fi
+			if [[ -f TrainNumberFile_$tmp.txt ]]; then rm TrainNumberFile_$tmp.txt; fi
+			if [[ -f Searchfile_$tmp.txt ]]; then rm Searchfile_$tmp.txt; fi
+		done
+		rm $Process
+	fi
+done
+echo "$RunningScripts" > $lockfile
+
+
 
 if [[ -f $TrainNumberFile ]]
 then
@@ -412,12 +442,8 @@ echo  -e "\e[36m------------------------------------\e[0m"
 echo ""
 echo ""
 echo ""
-ErrorLog="$BASEDIR/Errors.log"
-WARNINGLog="$BASEDIR/Warnings.log"
-echo -e "ErrorLog = $ErrorLog \e[36m | \e[0m WARNINGLog = $WARNINGLog"
+
 echo ""
-if [[ -f $ErrorLog ]]; then rm $ErrorLog; fi
-if [[ -f $WARNINGLog ]]; then rm $WARNINGLog; fi
 
 if [[ $DoDown = 1 ]]
 then
@@ -426,6 +452,11 @@ then
 
 		OutName=.$TrainPage-$TrainNumber
 		AlienDir="/alice/cern.ch/user/a/alitrain/PWGGA/$TrainPage/"
+
+		ErrorLog="$BASEDIR/$OutName/Errors.log"
+		WARNINGLog="$BASEDIR/$OutName/Warnings.log"
+		if [[ -f $ErrorLog ]]; then rm $ErrorLog; fi
+		if [[ -f $WARNINGLog ]]; then rm $WARNINGLog; fi
 
 		OUTPUTDIR=$BASEDIR/$OutName
 		List="ListGrid.txt"
@@ -463,7 +494,7 @@ then
 		echo
 
 		# get all childs involved in train run
-		alien_ls $AlienDir | grep $TrainNumber\_2 &> $List
+		alien_ls $AlienDir 2> /dev/null | grep $TrainNumber\_2 &> $List
 
 
 		# get one env.sh to get basic information about the train
@@ -692,7 +723,7 @@ then
 							if [ $newfiles = 1 ] || [ ! -f $FileList ]; then
 								for Search in `cat $Searchfile`
 								do
-									cmd="alien_ls $AlienDir$child/merge_runlist_$RunlistID/ | grep "$Search" > $FileList.tmp"
+									cmd="alien_ls $AlienDir$child/merge_runlist_$RunlistID/ 2> /dev/null | grep "$Search" > $FileList.tmp"
 									eval $cmd
 									usecmd $cmd
 									AddToList $FileList.tmp $FileList
@@ -701,7 +732,7 @@ then
 
 							# check if merging was successful
 							MergeRuns=0
-							if [[ `alien_ls $AlienDir$child/merge_runlist_$RunlistID/ | grep "AnalysisResults.root" | wc -l ` < 1 ]]; then
+							if [[ `alien_ls $AlienDir$child/merge_runlist_$RunlistID/ 2> /dev/null | grep "AnalysisResults.root" | wc -l ` < 1 ]]; then
 								MergeRuns=1
 								echo  -e "\e[33mWARNING:  No files found\e[0m, trying to merge from runwise output: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
 								echo  -e "\e[36m------------------------------------\e[0m"
@@ -739,9 +770,9 @@ then
 									if [ $newfiles = 1 ] || [ ! -f $RunPathList ]; then
 										cmd=""
 										if [[ $Type = "sim" ]]; then
-											cmd="alien_find /alice/$Type/$Year/$ChildName/$runName/ AnalysisResults.root | grep $TrainPage/$TrainNumber | grep _$childID/AnalysisResults.root > $RunPathList.tmp"
+											cmd="alien_find /alice/$Type/$Year/$ChildName/$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber | grep _$childID/AnalysisResults.root > $RunPathList.tmp"
 										else
-											cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root | grep $TrainPage/$TrainNumber | grep _$childID/AnalysisResults.root  > $RunPathList.tmp"
+											cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber | grep _$childID/AnalysisResults.root  > $RunPathList.tmp"
 										fi
 										eval $cmd
 										usecmd $cmd
@@ -757,9 +788,9 @@ then
 										if [ $newfiles = 1 ] || [ ! -f $RunPathList ]; then
 											cmd=""
 											if [[ $Type = "sim" ]]; then
-												cmd="alien_find /alice/$Type/$Year/$ChildName/$runName/ AnalysisResults.root | grep $TrainPage/$TrainNumber > $RunPathList.tmp"
+												cmd="alien_find /alice/$Type/$Year/$ChildName/$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber > $RunPathList.tmp"
 											else
-												cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root | grep $TrainPage/$TrainNumber  > $RunPathList.tmp"
+												cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber  > $RunPathList.tmp"
 											fi
 											eval $cmd
 											usecmd $cmd
@@ -782,7 +813,7 @@ then
 											subrunDir=$OUTPUTDIR/.$child/$runName/$subrunname/
 											for Search in `cat $Searchfile`
 											do
-												cmd="alien_ls $subpath | grep "$Search" > $SubRunFileList.tmp"
+												cmd="alien_ls $subpath 2> /dev/null | grep "$Search" > $SubRunFileList.tmp"
 												eval $cmd
 												usecmd $cmd
 												if [[ -f $SubRunFileList.tmp ]]; then
@@ -869,6 +900,7 @@ then
 																printf "\t\e[33m|->\e[0m merging subrun to run"  #(log: $logFile)"
 																# echo -e "\e[33m|->\e[0m merging subrun to run $RunlistName $ChildName $runName $subrunname"  #(log: $logFile)"
 																hadd -k $submergedFile.tmp $submergedFile $subrunoutFile  &> $sublogFile
+																wait
 																if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 																then
 																	echo " Log:"
@@ -894,7 +926,12 @@ then
 																touch $subalreadyMerged
 															fi
 														else
-															echo -e "\e[31m|->\e[0m missing $subrunoutFile  "  | tee -a $ErrorLog
+															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+															then
+																echo -e "\t\e[31m|->\e[0m missing $subrunoutFile  "  | tee -a $ErrorLog
+															else
+																echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+															fi
 														fi
 													fi
 												done
@@ -916,7 +953,7 @@ then
 											if [ $newfiles = 1 ] || [ ! -f $RunFileList ]; then
 												for Search in `cat $Searchfile`
 												do
-													cmd="alien_ls $path | grep "$Search" > $RunFileList.tmp "
+													cmd="alien_ls $path 2> /dev/null | grep "$Search" > $RunFileList.tmp "
 													eval $cmd
 													usecmd $cmd
 													AddToList $RunFileList.tmp $RunFileList
@@ -974,9 +1011,10 @@ then
 												then
 													if [[ -f $mergedFile ]]
 													then
-														printf "\t\e[33m|->\e[0m merging run to period\n"  #(log: $logFile)"
+														printf "\t\e[33m|->\e[0m merging run to period"  #(log: $logFile)"
 														# echo -e "\e[33m|->\e[0m merging run to period $RunlistName $ChildName $runName"  #(log: $logFile)"
 														hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
+														wait
 														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 														then
 															echo " Log:"
@@ -992,6 +1030,7 @@ then
 															echo -e "\e[31mError\e[0m $RunlistName $ChildName $runName not merged correctly" | tee -a $ErrorLog
 															cat $logFile >> $ErrorLog
 															rm $mergedFile.tmp
+															rm $runoutFile
 														else
 															rm $mergedFile
 															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -1000,6 +1039,7 @@ then
 															fi
 															mv $mergedFile.tmp $mergedFile
 															touch $alreadyMerged
+															printf "\t\e[33m|->\e[0m successful\n"
 														fi
 													else
 														printf "\t\e[33m|->\e[0m Copy: is first\n"
@@ -1009,7 +1049,12 @@ then
 														touch $alreadyMerged
 													fi
 												else
-													echo -e "\e[31m|->\e[0m missing $runinFile  "  | tee -a $ErrorLog
+													if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+													then
+														echo -e "\t\e[31m|->\e[0m missing $runinFile  "  | tee -a $ErrorLog
+													else
+														echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+													fi
 												fi
 											fi
 										else
@@ -1055,6 +1100,7 @@ then
 											then
 												printf "\e[33m|->\e[0m merging childs \n"  #(log: $logFile)"
 												hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+												wait
 												if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 												then
 													echo " Log:"
@@ -1070,6 +1116,7 @@ then
 													echo -e "\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 													cat $logFile >> $ErrorLog
 													rm $mergedFile.tmp
+													# rm $outFile
 												else
 													rm $mergedFile
 													if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -1086,7 +1133,12 @@ then
 												touch $alreadyMerged
 											fi
 										else
-											echo -e "\e[31m|->\e[0m missing $inFile  "  | tee -a $ErrorLog
+											if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+											then
+												echo -e "\t\e[31m|->\e[0m missing $inFile  "  | tee -a $ErrorLog
+											else
+												echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+											fi
 										fi
 									fi
 								fi
@@ -1244,6 +1296,7 @@ then
 							then
 								printf "\t\e[33m|->\e[0m merging trains $RunlistName $Periodname $runname $filename"  #(log: $logFile)"
 								hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+								wait
 								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 								then
 									echo " Log:"
@@ -1259,6 +1312,7 @@ then
 									echo -e "\t\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 									cat $logFile >> $ErrorLog
 									rm $mergedFile.tmp
+									# rm $outFile
 								else
 									rm $mergedFile
 									if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -1276,7 +1330,12 @@ then
 								touch $alreadyMerged
 							fi
 						else
-							echo -e "\t\e[31m|->\e[0m missing ($outFile)" | tee -a $ErrorLog
+							if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+							then
+								echo -e "\t\e[31m|->\e[0m missing ($outFile)"  | tee -a $ErrorLog
+							else
+								echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+							fi
 						fi
 					fi
 				done
@@ -1357,6 +1416,7 @@ then
 								then
 									printf "\t\e[33m|->\e[0m merging trains"  #(log: $logFile)"
 									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+									wait
 									if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 									then
 										echo " Log:"
@@ -1389,7 +1449,12 @@ then
 									touch $alreadyMerged
 								fi
 							else
-								echo -e "\t\e[31m|->\e[0m missing ($outFile)" | tee -a $ErrorLog
+								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+								then
+									echo -e "\t\e[31m|->\e[0m missing ($outFile)" | tee -a $ErrorLog
+								else
+									echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+								fi
 							fi
 						fi
 					done
@@ -1429,19 +1494,19 @@ echo;echo;echo;
 
 for setting in "$@"
 do
-	printf "${setting#-} " >> $BASEDIR/Error.log
+	printf "${setting#-} \n" >> ${PWD}/Error.log
 	# echo $setting
 	if [[ $setting = "-totalLog" ]]
 	then
-		echo " " >> $BASEDIR/Error.log
-		echo  -e "\e[36m------------------------------------\e[0m" >> $BASEDIR/Error.log
-		# echo "$@" >> $BASEDIR/Error.log
-		echo  >> $BASEDIR/Error.log
-		if [[ -f $ErrorLog ]]; then cat $ErrorLog >> $BASEDIR/Error.log; fi
-		if [[ -f $WARNINGLog ]]; then cat $WARNINGLog >> $BASEDIR/Error.log; fi
-		echo  -e "\e[36m------------------------------------\e[0m" >> $BASEDIR/Error.log
-		echo  >> $BASEDIR/Error.log
-		echo  >> $BASEDIR/Error.log
+		echo " " >> ${PWD}/Error.log
+		echo  -e "\e[36m------------------------------------\e[0m" >> ${PWD}/Error.log
+		# echo "$@" >> ${PWD}/Error.log
+		echo  >> ${PWD}/Error.log
+		if [[ -f $ErrorLog ]]; then cat $ErrorLog >> ${PWD}/Error.log; fi
+		if [[ -f $WARNINGLog ]]; then cat $WARNINGLog >> ${PWD}/Error.log; fi
+		echo  -e "\e[36m------------------------------------\e[0m" >> ${PWD}/Error.log
+		echo  >> ${PWD}/Error.log
+		echo  >> ${PWD}/Error.log
 	fi
 done
 echo;
