@@ -62,8 +62,11 @@ using namespace std;
     #include <TSystem.h>
     #include <TVirtualFitter.h>
     #include <TRandom3.h>
+
+
 #endif
 
+#include "TExec.h"
 #include "../CommonHeaders/PlottingMeson.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
@@ -103,6 +106,25 @@ struct CellQAObj{
     std::vector<Int_t> goodCells;
 };
 
+
+void PalColor(){
+    static Int_t  colors[50];
+    static Bool_t initialized = kFALSE;
+
+    Double_t stops[5] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
+    Double_t red[5]   = { 0.00, 0.00, 0.87, 1.00, 0.51 };
+    Double_t green[5] = { 0.31, 0.81, 1.00, 0.20, 0.00 };
+    Double_t blue[5]  = { 0.51, 1., 0.12, 0.00, 0.00};
+
+    if(!initialized){
+        Int_t FI = TColor::CreateGradientColorTable(5, stops, red, green, blue, 50);
+        for (int i=0; i<50; i++) colors[i] = FI+i;
+        initialized = kTRUE;
+        return;
+    }
+    gStyle->SetPalette(50,colors);
+}
+
 typedef struct {
   Int_t nSigmaBad;    // consider a deviation of nSigmaBad * error from mean over runs as bad
   Int_t nRunsBad;     // number of runs with bad QA due to
@@ -136,6 +158,7 @@ public:
     TH1D* GetSignalEta(){return fSignalEta;}
     TF1* GetFitPi0(){return fFitRecoPi;}
     TF1* GetFitEta(){return fFitRecoEta;}
+
 
     void GetMeson(Bool_t isPi0, Double_t &width,Double_t &widthErr,Double_t &mass, Double_t &massErr){
         if(isPi0){
@@ -1235,9 +1258,10 @@ void DrawPeriodQAHistoTH2(  TCanvas* canvas,Double_t leftMargin,Double_t rightMa
     if(title.IsNull()) fHist->SetTitle("");
     else{
     if(topMargin<0.06) canvas->SetTopMargin(0.06);
-    fHist->SetTitle(title.Data());
+        fHist->SetTitle(title.Data());
     }
     fHist->DrawCopy("colz");
+
     return;
 }
 

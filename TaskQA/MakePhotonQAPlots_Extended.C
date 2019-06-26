@@ -20,6 +20,7 @@
 #include "TVirtualFitter.h"
 #include "TObject.h"
 #include "TCanvas.h"
+#include "TASImage.h"
 #include "TMultiGraph.h"
 #include "TLegend.h"
 #include "TTree.h"
@@ -84,10 +85,13 @@ void PalColor()
 }
 
 void MakePhotonQAPlots_Extended(
-    TString fileName   = "GammaConvV1_QA_5460001022092970003190000000.root",
-    TString cutnumber   = "0005314140",
-    Bool_t isMC = kFALSE,
-    TString suffix   = "pdf"
+    TString fileName        = "GammaConvV1_QA_5460001022092970003190000000.root",
+    TString cutnumber       = "0005314140",
+    Bool_t isMC             = kFALSE,
+    TString suffix          = "pdf",
+    TString optionEnergy    = "8TeV",
+    TString centCutNumber   = "000",
+    TString addName         = ""
 ){
 
     gROOT->Reset();
@@ -112,15 +116,26 @@ void MakePhotonQAPlots_Extended(
         delete f;
         return;
     }
-    TString nameDirectory           = Form("GammaConv_%s",  cutnumber.Data());
-    TDirectory* directoryConv           = (TDirectory*)f->Get(nameDirectory.Data());
-
+    TString nameDirectory           = Form("GammaConvV1_QA_%s",  cutnumber.Data());
+    TDirectory* directoryConv       = (TDirectory*)f->Get(nameDirectory.Data());
+    if (!directoryConv){
+        cout << "missing directory: " << nameDirectory.Data() << ", aborting ..."<< endl;
+        return;
+    }
   //___________________________________ Declaration of files _____________________________________________
     TString dateForOutput                           = ReturnDateStringForOutput();
     cout << dateForOutput.Data() << endl;
-    TString collisionSystem                     = "pp, #sqrt{#it{s}} = 8 TeV";
+    TString collisionSystem                         = ReturnFullCollisionsSystem(optionEnergy);
+    TString centralityString                        = GetCentralityString(centCutNumber);
+    if (centralityString.CompareTo("pp")==0){
+        centralityString    = "";
+    } else {
+        if ( !centralityString.Contains("0-100%") )
+            collisionSystem = Form("%s %s", centralityString.Data(), collisionSystem.Data());
+    }
+
     TString labelALICEforPlots                      = "ALICE";
-    TString outputDir                               = Form("%s/%s/MakePhotonQAPlots_%s",suffix.Data(),dateForOutput.Data(),cutnumber.Data());
+    TString outputDir                               = Form("%s/%s/MakePhotonQAPlots_%s%s",suffix.Data(),dateForOutput.Data(),cutnumber.Data(),addName.Data());
     cout << outputDir.Data() << endl;
 
     gSystem->Exec("mkdir -p "+outputDir);
@@ -135,284 +150,79 @@ void MakePhotonQAPlots_Extended(
         1.0, 1.5, 2.0, 3.0, 4.0,
         6.0, 10., 15., 20., 30.,
         50.};
-    TH3F* histoElectrondEdxEtaP                 = NULL;
-    TH3F* histoPositrondEdxEtaP                 = NULL;
-    TH3F* histoElectronNSigmadEdxEtaP           = NULL;
-    TH3F* histoPositronNSigmadEdxEtaP           = NULL;
-    TH3F* histoElectronTOFEtaP                  = NULL;
-    TH3F* histoPositronTOFEtaP                  = NULL;
-    TH3F* histoElectronNSigmaTOFEtaP            = NULL;
-    TH3F* histoPositronNSigmaTOFEtaP            = NULL;
-    TH3F* histoElectronNSigmaITSEtaP            = NULL;
-    TH3F* histoPositronNSigmaITSEtaP            = NULL;
-    TH3F* histoElectronITSdEdxEtaP              = NULL;
-    TH3F* histoPositronITSdEdxEtaP              = NULL;
-    TH3F* histonSigdEdxElnSigdEdxPosGammaP      = NULL;
-    TH2F* histoElectronNSigmadEdxPhi            = NULL;
-    TH2F* histoPositronNSigmadEdxPhi            = NULL;
-    TH2F* histoElectronNSigmadEdxPhiEtaNeg      = NULL;
-    TH2F* histoPositronNSigmadEdxPhiEtaNeg      = NULL;
-    TH2F* histoElectronNSigmadEdxPhiEtaPos      = NULL;
-    TH2F* histoPositronNSigmadEdxPhiEtaPos      = NULL;
-    TH2F* histoElectronFClPt                    = NULL;
-    TH2F* histoPositronFClPt                    = NULL;
-    TH2F* histoElectronClPt                     = NULL;
-    TH2F* histoPositronClPt                     = NULL;
-    TH2F* histoGammaChi2NDFPt                   = NULL;
-    TH2F* histoGammaChi2NDFPtEtaNeg             = NULL;
-    TH2F* histoGammaChi2NDFPtEtaPos             = NULL;
-    TH2F* histoGammaChi2NDFR                    = NULL;
-    TH2F* histoElectronEtaPt                    = NULL;
-    TH2F* histoPositronEtaPt                    = NULL;
-    TH2F* histoElectronITSClPt                  = NULL;
-    TH2F* histoPositronITSClPt                  = NULL;
-    TH2F* histoElectronITSClEta                 = NULL;
-    TH2F* histoPositronITSClEta                 = NULL;
-    TH2F* histoPositronITSClR                   = NULL;
-    TH2F* histoElectronITSClR                   = NULL;
-    TH2F* histoPositronITSClPhi                 = NULL;
-    TH2F* histoElectronITSClPhi                 = NULL;
-    TH2F* histoPositronClR                      = NULL;
-    TH2F* histoElectronClR                      = NULL;
-    TH2F* histoPositronClPhi                    = NULL;
-    TH2F* histoElectronClPhi                    = NULL;
-    TH1F* histoGammaPhiEtaNeg                   = NULL;
-    TH1F* histoGammaPhiEtaPos                   = NULL;
-    TH1F* histoPositronNSigmadEdxCut            = NULL;
-    TH1F* histoElectronNSigmadEdxCut            = NULL;
-    TH1F *histoVertexZ                          = NULL;
-    TH1F *histoContrVertexZ                     = NULL;
-    TH1F *histoGoodESDTracks                    = NULL;
-    TH1F *histoVertexZdummy                     = NULL;
-    TH1F *histoContrVertexZdummy                = NULL;
-    TH1F *histoGoodESDTracksdummy               = NULL;
-    TH2F* histoGammaAsymP                       = NULL;
-    TH2F* histoGammaAsymR                       = NULL;
-    TH2F* histoGammaAlphaQt                     = NULL;
     TH3F* histoGammaAlphaQtPt                   = NULL;
     TH3F* histoGammaAlphaQtPtCopy               = NULL;
-    TH2F* histoGammaAlphaQtPtSliced[15]         = {NULL};
-    TH2F* histoGammaAlphaPt                     = NULL;
-    TH2F* histoGammaAlphaR                      = NULL;
-    TH2F* histoGammaQtPt                        = NULL;
-    TH2F* histoGammaQtR                         = NULL;
-    TH2F* histoGammaEtaPt                       = NULL;
-    TH2F* histoGammaEtaR                        = NULL;
-    TH2F* histoGammaPsiPairPt                   = NULL;
-    TH2F* histoGammaPsiPairPtEtaNeg             = NULL;
-    TH2F* histoGammaPsiPairPtEtaPos             = NULL;
-    TH2F* histoGammaPsiPairR                    = NULL;
-    TH2F* histoGammaCosPointPt                  = NULL;
-    TH2F* histoGammaCosPointR                   = NULL;
-    TH2F* histoGammaCosPointChi2                = NULL;
-    TH2F* histoGammaInvMassPt                   = NULL;
-    TH2F* histoGammaInvMassR                    = NULL;
-    TH2F* histoGammaCosPointPsiPair             = NULL;
-    TH2F* histoGammaChi2PsiPair                 = NULL;
     TH3F* histoGammaChi2PsiPairPt               = NULL;
     TH3F* histoGammaChi2PsiPairPtCopy           = NULL;
-    TH2F* histoGammaChi2PsiPairPtSliced[15]     = {NULL};
-    TH2F* histoGammaChi2Pt                      = NULL;
-    TH1F* histoGammaPhi                         = NULL;
-    TH2F* histoGammaPhiR                        = NULL;
-    TH2F* histoGammaZR                          = NULL;
-    TH2F* histoGammaXY                          = NULL;
+    // projections
+    TH2D* histoGammaAlphaQt                     = NULL;
+    TH2D* histoGammaAlphaQtPtSliced[15]         = {NULL};
+    TH2D* histoGammaAlphaPt                     = NULL;
+    TH2D* histoGammaQtPt                        = NULL;
+    TH2D* histoGammaPsiPairPt                   = NULL;
+    TH2D* histoGammaChi2PsiPair                 = NULL;
+    TH2D* histoGammaChi2PsiPairPtSliced[15]     = {NULL};
+    TH2D* histoGammaChi2Pt                      = NULL;
 
-    TH2F* histoTruePrimGammaChi2NDFPt           = NULL;
-    TH2F* histoTruePrimGammaAlphaQt             = NULL;
-    TH3F* histoTruePrimGammaAlphaQtPt           = NULL;
-    TH2F* histoTruePrimGammaAlphaPt             = NULL;
-    TH2F* histoTruePrimGammaQtPt                = NULL;
-    TH2F* histoTruePrimGammaQtR                 = NULL;
-    TH2F* histoTruePrimGammaPsiPairPt           = NULL;
-    TH2F* histoTruePrimGammaCosPointPt          = NULL;
-    TH2F* histoTruePrimGammaAsymP               = NULL;
-    TH2F* histoTrueMCKindQtPt[20]               = {NULL};
-    TH2F* histoTrueMCKindAlphaPt[20]            = {NULL};
-    TH2F* histoTrueMCKindPsiPairPt[20]          = {NULL};
-    TH2F* histoTrueMCKindChi2Pt[20]             = {NULL};
-    TH2F* histoTrueMCKindCosPointPt[20]         = {NULL};
-    TH2F* histoTrueMCKindChi2PsiPair[20]        = {NULL};
     TH3F* histoTrueMCKindChi2PsiPairPt[20]      = {NULL};
     TH3F* histoTrueMCKindChi2PsiPairPtCopy[20]  = {NULL};
-    TH2F* histoTrueMCKindChi2PsiPairPtSliced[20][15]    = {NULL};
-    TH2F* histoTrueMCKindAlphaQt[20]            = {NULL};
     TH3F* histoTrueMCKindAlphaQtPt[20]          = {NULL};
     TH3F* histoTrueMCKindAlphaQtPtCopy[20]      = {NULL};
-    TH2F* histoTrueMCKindAlphaQtPtSliced[20][15]= {NULL};
-    TH2F* histoTrueSecGammaChi2NDFPt            = NULL;
-    TH2F* histoTrueSecGammaAlphaQt              = NULL;
-    TH2F* histoTrueSecGammaQtPt                 = NULL;
-    TH2F* histoTrueSecGammaPsiPairPt            = NULL;
-    TH2F* histoTrueSecGammaCosPointPt           = NULL;
-    TH2F* histoTrueSecGammaAsymP                = NULL;
-    TH2F* histoTrueDalitzGammaChi2NDFPt         = NULL;
-    TH2F* histoTrueDalitzGammaAlphaQt           = NULL;
-    TH2F* histoTrueDalitzGammaQtPt              = NULL;
-    TH2F* histoTrueDalitzGammaPsiPairPt         = NULL;
-    TH2F* histoTrueDalitzGammaCosPointPt        = NULL;
-    TH2F* histoTrueDalitzGammaAsymP             = NULL;
-    TH2F* histoTrueGammaCosPointChi2            = NULL;
-    TH2F* histoTrueGammaInvMassPt               = NULL;
-    TH2F* histoTrueGammaCosPointPsiPair         = NULL;
-    TH2F* histoTrueGammaChi2PsiPair             = NULL;
     TH3F* histoTrueGammaChi2PsiPairPt           = NULL;
-    TH2F* histoTrueDalitzGammaCosPointChi2      = NULL;
-    TH2F* histoTrueDalitzGammaInvMassPt         = NULL;
-    TH2F* histoTrueDalitzGammaCosPointPsiPair   = NULL;
-    TH2F* histoTrueDalitzGammaChi2PsiPair       = NULL;
-    TH2F* histoTrueElectronNSigmadEdxTPCP       = NULL;
-    TH2F* histoTruePositronNSigmadEdxTPCP       = NULL;
-    TH2F* histoTrueElectronNSigmadEdxITSP       = NULL;
-    TH2F* histoTruePositronNSigmadEdxITSP       = NULL;
-    TH2F* histoTrueElectronNSigmaTOFP           = NULL;
-    TH2F* histoTruePositronNSigmaTOFP           = NULL;
-    TH2F* histoTruePositronITSClR               = NULL;
-    TH2F* histoTrueElectronITSClR               = NULL;
 
-    histoElectrondEdxEtaP                   = (TH3F*)directoryConv->Get("histoElectrondEdxEtaP");
-    histoPositrondEdxEtaP                   = (TH3F*)directoryConv->Get("histoPositrondEdxEtaP");
-    histoElectronNSigmadEdxEtaP             = (TH3F*)directoryConv->Get("histoElectronNSigmadEdxEtaP");
-    histoPositronNSigmadEdxEtaP             = (TH3F*)directoryConv->Get("histoPositronNSigmadEdxEtaP");
-    histoElectronTOFEtaP                    = (TH3F*)directoryConv->Get("histoElectronTOFEtaP");
-    histoPositronTOFEtaP                    = (TH3F*)directoryConv->Get("histoPositronTOFEtaP");
-    histoElectronNSigmaTOFEtaP              = (TH3F*)directoryConv->Get("histoElectronNSigmaTOFEtaP");
-    histoPositronNSigmaTOFEtaP              = (TH3F*)directoryConv->Get("histoPositronNSigmaTOFEtaP");
-    histoElectronNSigmadEdxPhi              = (TH2F*)directoryConv->Get("histoElectronNSigmadEdxPhi");
-    histoPositronNSigmadEdxPhi              = (TH2F*)directoryConv->Get("histoPositronNSigmadEdxPhi");
-    histoElectronNSigmadEdxPhiEtaNeg        = (TH2F*)directoryConv->Get("histoElectronNSigmadEdxPhiEtaNeg");
-    histoPositronNSigmadEdxPhiEtaNeg        = (TH2F*)directoryConv->Get("histoPositronNSigmadEdxPhiEtaNeg");
-    histoElectronNSigmadEdxPhiEtaPos        = (TH2F*)directoryConv->Get("histoElectronNSigmadEdxPhiEtaPos");
-    histoPositronNSigmadEdxPhiEtaPos        = (TH2F*)directoryConv->Get("histoPositronNSigmadEdxPhiEtaPos");
-    histoElectronFClPt                      = (TH2F*)directoryConv->Get("histoElectronFClPt");
-    histoPositronFClPt                      = (TH2F*)directoryConv->Get("histoPositronFClPt");
-    histoElectronClPt                       = (TH2F*)directoryConv->Get("histoElectronClPt");
-    histoPositronClPt                       = (TH2F*)directoryConv->Get("histoPositronClPt");
-    histoGammaChi2NDFPt                     = (TH2F*)directoryConv->Get("histoGammaChi2NDFPt");
-    histoGammaChi2NDFPtEtaNeg               = (TH2F*)directoryConv->Get("histoGammaChi2NDFPtEtaNeg");
-    histoGammaChi2NDFPtEtaPos               = (TH2F*)directoryConv->Get("histoGammaChi2NDFPtEtaPos");
-    histoGammaChi2NDFR                      = (TH2F*)directoryConv->Get("histoGammaChi2NDFR");
-    histoElectronEtaPt                      = (TH2F*)directoryConv->Get("histoElectronEtaPt");
-    histoPositronEtaPt                      = (TH2F*)directoryConv->Get("histoPositronEtaPt");
-    histoElectronITSClR                     = (TH2F*)directoryConv->Get("histoElectronITSClR");
-    histoPositronITSClR                     = (TH2F*)directoryConv->Get("histoPositronITSClR");
-    histoElectronITSClPhi                   = (TH2F*)directoryConv->Get("histoElectronITSClPhi");
-    histoPositronITSClPhi                   = (TH2F*)directoryConv->Get("histoPositronITSClPhi");
-    histoElectronClR                        = (TH2F*)directoryConv->Get("histoElectronClR");
-    histoPositronClR                        = (TH2F*)directoryConv->Get("histoPositronClR");
-    histoElectronClPhi                      = (TH2F*)directoryConv->Get("histoElectronClPhi");
-    histoPositronClPhi                      = (TH2F*)directoryConv->Get("histoPositronClPhi");
-    histoGammaPhiEtaNeg                     = (TH1F*)directoryConv->Get("histoGammaPhiEtaNeg");
-    histoGammaPhiEtaPos                     = (TH1F*)directoryConv->Get("histoGammaPhiEtaPos");
-    histoPositronNSigmadEdxCut              = (TH1F*)directoryConv->Get("histoPositronNSigmadEdxCut");
-    histoElectronNSigmadEdxCut              = (TH1F*)directoryConv->Get("histoElectronNSigmadEdxCut");
-    histoGammaEtaPt                         = (TH2F*)directoryConv->Get("histoGammaEtaPt");
-    histoGammaEtaR                          = (TH2F*)directoryConv->Get("histoGammaEtaR");
-    histoGammaAlphaQt                       = (TH2F*)directoryConv->Get("histoGammaAlphaQt");
+    TH2D* histoTrueMCKindQtPt[20]               = {NULL};
+    TH2D* histoTrueMCKindAlphaPt[20]            = {NULL};
+    TH2D* histoTrueMCKindPsiPairPt[20]          = {NULL};
+    TH2D* histoTrueMCKindChi2Pt[20]             = {NULL};
+    TH2D* histoTrueMCKindChi2PsiPair[20]        = {NULL};
+    TH2D* histoTrueMCKindChi2PsiPairPtSliced[20][15]    = {NULL};
+    TH2D* histoTrueMCKindAlphaQt[20]            = {NULL};
+    TH2D* histoTrueMCKindAlphaQtPtSliced[20][15]= {NULL};
+    TH2D* histoTrueGammaChi2PsiPair             = NULL;
+
     histoGammaAlphaQtPt                     = (TH3F*)directoryConv->Get("histoGammaAlphaQtPt");
-    histoGammaAlphaPt                       = (TH2F*)directoryConv->Get("histoGammaAlphaPt");
-    histoGammaAlphaR                        = (TH2F*)directoryConv->Get("histoGammaAlphaR");
-    histoGammaQtPt                          = (TH2F*)directoryConv->Get("histoGammaQtPt");
-    histoGammaQtR                           = (TH2F*)directoryConv->Get("histoGammaQtR");
-    histoGammaPhi                           = (TH1F*)directoryConv->Get( "histoGammaPhi");
-    histoGammaPhiR                          = (TH2F*)directoryConv->Get( "histoGammaPhiR");
-    histoGammaPsiPairPt                     = (TH2F*)directoryConv->Get( "histoGammaPsiPairPt");
-    histoGammaPsiPairPtEtaNeg               = (TH2F*)directoryConv->Get( "histoGammaPsiPairPtEtaNeg");
-    histoGammaPsiPairPtEtaPos               = (TH2F*)directoryConv->Get( "histoGammaPsiPairPtEtaPos");
-    histoGammaPsiPairR                      = (TH2F*)directoryConv->Get( "histoGammaPsiPairR");
-    histoGammaCosPointPt                    = (TH2F*)directoryConv->Get( "histoGammaCosPointPt");
-    histoGammaCosPointR                     = (TH2F*)directoryConv->Get( "histoGammaCosPointR");
-    histoGammaAsymP                         = (TH2F*)directoryConv->Get("histoGammaAsymP");
-    histoGammaAsymR                         = (TH2F*)directoryConv->Get("histoGammaAsymR");
-    histoGammaChi2PsiPair                   = (TH2F*)directoryConv->Get("histoGammaChi2PsiPair");
     histoGammaChi2PsiPairPt                 = (TH3F*)directoryConv->Get("histoGammaChi2PsiPairPt");
-    histoGammaChi2Pt                        = (TH2F*)directoryConv->Get("histoGammaChi2Pt");
-    histoGammaCosPointChi2                  = (TH2F*)directoryConv->Get("histoGammaCosPointChi2");
-    histoGammaCosPointPsiPair               = (TH2F*)directoryConv->Get("histoGammaCosPointPsiPair");
-    histoGammaInvMassPt                     = (TH2F*)directoryConv->Get("histoGammaInvMassPt");
-    histoGammaInvMassR                      = (TH2F*)directoryConv->Get("histoGammaInvMassR");
-    histoGammaZR                            = (TH2F*)directoryConv->Get("histoGammaZR");
-    histoGammaXY                            = (TH2F*)directoryConv->Get("histoGammaXY");
+
+    histoGammaAlphaQt                       = (TH2D*)histoGammaAlphaQtPt->Project3D("yx");
+    histoGammaAlphaPt                       = (TH2D*)histoGammaAlphaQtPt->Project3D("zx");
+    histoGammaQtPt                          = (TH2D*)histoGammaAlphaQtPt->Project3D("zy");
+    histoGammaPsiPairPt                     = (TH2D*)histoGammaChi2PsiPairPt->Project3D("zy");
+    histoGammaChi2PsiPair                   = (TH2D*)histoGammaChi2PsiPairPt->Project3D("yx");
+    histoGammaChi2Pt                        = (TH2D*)histoGammaChi2PsiPairPt->Project3D("zx");
+    // copies for projecting
     histoGammaChi2PsiPairPtCopy             = (TH3F*)histoGammaChi2PsiPairPt->Clone("histoGammaChi2PsiPairPtCopy");
     histoGammaAlphaQtPtCopy                 = (TH3F*)histoGammaAlphaQtPt->Clone("histoGammaAlphaQtPtCopy");
     for(Int_t j=0; j<15; j++){
         histoGammaChi2PsiPairPtCopy->GetZaxis()->SetRangeUser(projBinnin[j],projBinnin[j+1]);
-        histoGammaChi2PsiPairPtSliced[j]   = (TH2F*)histoGammaChi2PsiPairPtCopy->Project3D(Form("yx%d",j));
+        histoGammaChi2PsiPairPtSliced[j]   = (TH2D*)histoGammaChi2PsiPairPtCopy->Project3D(Form("yx%d",j));
         histoGammaAlphaQtPtCopy->GetZaxis()->SetRangeUser(projBinnin[j],projBinnin[j+1]);
-        histoGammaAlphaQtPtSliced[j]       = (TH2F*)histoGammaAlphaQtPtCopy->Project3D(Form("yx%d",j));
+        histoGammaAlphaQtPtSliced[j]       = (TH2D*)histoGammaAlphaQtPtCopy->Project3D(Form("yx%d",j));
     }
-    //ITS add
-    histoElectronITSdEdxEtaP                = (TH3F*)directoryConv->Get("histoElectronITSdEdxEtaP");
-    histoPositronITSdEdxEtaP                = (TH3F*)directoryConv->Get("histoPositronITSdEdxEtaP");
-    histonSigdEdxElnSigdEdxPosGammaP        = (TH3F*)directoryConv->Get("histonSigdEdxElnSigdEdxPosGammaP"); // new sept 7 2015
-    histoElectronNSigmaITSEtaP              = (TH3F*)directoryConv->Get("histoElectronNSigmaITSEtaP");
-    histoPositronNSigmaITSEtaP              = (TH3F*)directoryConv->Get("histoPositronNSigmaITSEtaP");
-    histoElectronITSClPt                    = (TH2F*)directoryConv->Get("histoElectronITSClPt");
-    histoPositronITSClPt                    = (TH2F*)directoryConv->Get("histoPositronITSClPt");
-    histoElectronITSClEta                   = (TH2F*)directoryConv->Get("histoElectronITSClEta");
-    histoPositronITSClEta                   = (TH2F*)directoryConv->Get("histoPositronITSClEta");
-
     if (isMC){
-        histoTrueElectronNSigmadEdxITSP     = (TH2F*)directoryConv->Get("histoTrueElectronNSigmadEdxITSP");
-        histoTrueElectronNSigmadEdxTPCP     = (TH2F*)directoryConv->Get("histoTrueElectronNSigmadEdxTPCP");
-        histoTrueElectronNSigmaTOFP         = (TH2F*)directoryConv->Get("histoTrueElectronNSigmaTOFP");
-        histoTrueElectronITSClR             = (TH2F*)directoryConv->Get("histoTrueElectronITSClR");
-        histoTruePositronNSigmadEdxITSP     = (TH2F*)directoryConv->Get("histoTruePositronNSigmadEdxITSP");
-        histoTruePositronNSigmadEdxTPCP     = (TH2F*)directoryConv->Get("histoTruePositronNSigmadEdxTPCP");
-        histoTruePositronNSigmaTOFP         = (TH2F*)directoryConv->Get("histoTruePositronNSigmaTOFP");
-        histoTruePositronITSClR             = (TH2F*)directoryConv->Get("histoTruePositronITSClR");
-        histoTruePrimGammaChi2NDFPt         = (TH2F*)directoryConv->Get("histoTruePrimGammaChi2NDFPt");
-        histoTruePrimGammaAlphaQt           = (TH2F*)directoryConv->Get("histoTruePrimGammaAlphaQt");
-        histoTruePrimGammaAlphaQtPt         = (TH3F*)directoryConv->Get("histoTruePrimGammaAlphaQtPt");
-        histoTruePrimGammaAlphaPt           = (TH2F*)directoryConv->Get("histoTruePrimGammaAlphaPt");
-        histoTruePrimGammaQtPt              = (TH2F*)directoryConv->Get("histoTruePrimGammaQtPt");
-        histoTruePrimGammaQtR               = (TH2F*)directoryConv->Get("histoTruePrimGammaQtR");
-        histoTruePrimGammaPsiPairPt         = (TH2F*)directoryConv->Get("histoTruePrimGammaPsiPairPt");
-        histoTruePrimGammaCosPointPt        = (TH2F*)directoryConv->Get("histoTruePrimGammaCosPointPt");
-        histoTrueSecGammaChi2NDFPt          = (TH2F*)directoryConv->Get("histoTrueSecGammaChi2NDFPt");
-        histoTrueSecGammaAlphaQt            = (TH2F*)directoryConv->Get("histoTrueSecGammaAlphaQt");
-        histoTrueSecGammaQtPt               = (TH2F*)directoryConv->Get("histoTrueSecGammaQtPt");
         for(Int_t i=0;i<20;i++){
             if(i!=0 && i!=10 && i!=11 && i!=13) continue;
-            histoTrueMCKindQtPt[i]          = (TH2F*)directoryConv->Get(Form("histoTrueMCKindQtPt_kind%d",i));
-            histoTrueMCKindAlphaPt[i]       = (TH2F*)directoryConv->Get(Form("histoTrueMCKindAlphaPt_kind%d",i));
-            histoTrueMCKindPsiPairPt[i]     = (TH2F*)directoryConv->Get(Form("histoTrueMCKindPsiPairPt_kind%d",i));
-            histoTrueMCKindChi2Pt[i]        = (TH2F*)directoryConv->Get(Form("histoTrueMCKindChi2Pt_kind%d",i));
-            histoTrueMCKindCosPointPt[i]    = (TH2F*)directoryConv->Get(Form("histoTrueMCKindCosPointPt_kind%d",i));
-
-            histoTrueMCKindChi2PsiPair[i]   = (TH2F*)directoryConv->Get(Form("histoTrueMCKindChi2PsiPair_kind%d",i));
             histoTrueMCKindChi2PsiPairPt[i] = (TH3F*)directoryConv->Get(Form("histoTrueMCKindChi2PsiPairPt_kind%d",i));
-            histoTrueMCKindAlphaQt[i]       = (TH2F*)directoryConv->Get(Form("histoTrueMCKindAlphaQt_kind%d",i));
             histoTrueMCKindAlphaQtPt[i]     = (TH3F*)directoryConv->Get(Form("histoTrueMCKindAlphaQtPt_kind%d",i));
+
+            histoTrueMCKindQtPt[i]          = (TH2D*)histoTrueMCKindAlphaQtPt[i]->Project3D(Form("zy%d",i));
+            histoTrueMCKindAlphaPt[i]       = (TH2D*)histoTrueMCKindAlphaQtPt[i]->Project3D(Form("zx%d",i));
+            histoTrueMCKindAlphaQt[i]       = (TH2D*)histoTrueMCKindAlphaQtPt[i]->Project3D(Form("yx%d",i));
+
+            histoTrueMCKindPsiPairPt[i]     = (TH2D*)histoTrueMCKindChi2PsiPairPt[i]->Project3D(Form("zy%d",i));
+            histoTrueMCKindChi2Pt[i]        = (TH2D*)histoTrueMCKindChi2PsiPairPt[i]->Project3D(Form("zx%d",i));
+            histoTrueMCKindChi2PsiPair[i]   = (TH2D*)histoTrueMCKindChi2PsiPairPt[i]->Project3D(Form("yx%d",i));
 
             histoTrueMCKindChi2PsiPairPtCopy[i] = (TH3F*)histoTrueMCKindChi2PsiPairPt[i]->Clone(Form("histoTrueMCKindChi2PsiPairPtCopy%d",i));
             histoTrueMCKindAlphaQtPtCopy[i]     = (TH3F*)histoTrueMCKindAlphaQtPt[i]->Clone(Form("histoTrueMCKindAlphaQtPtCopy%d",i));
             for(Int_t j=0; j<15; j++){
                 histoTrueMCKindChi2PsiPairPtCopy[i]->GetZaxis()->SetRangeUser(projBinnin[j],projBinnin[j+1]);
-                histoTrueMCKindChi2PsiPairPtSliced[i][j]   = (TH2F*)histoTrueMCKindChi2PsiPairPtCopy[i]->Project3D(Form("yx%d",j));
+                histoTrueMCKindChi2PsiPairPtSliced[i][j]   = (TH2D*)histoTrueMCKindChi2PsiPairPtCopy[i]->Project3D(Form("yx%d",j));
                 histoTrueMCKindAlphaQtPtCopy[i]->GetZaxis()->SetRangeUser(projBinnin[j],projBinnin[j+1]);
-                histoTrueMCKindAlphaQtPtSliced[i][j]       = (TH2F*)histoTrueMCKindAlphaQtPtCopy[i]->Project3D(Form("yx%d",j));
+                histoTrueMCKindAlphaQtPtSliced[i][j]       = (TH2D*)histoTrueMCKindAlphaQtPtCopy[i]->Project3D(Form("yx%d",j));
             }
         }
-        histoTrueSecGammaPsiPairPt          = (TH2F*)directoryConv->Get("histoTrueSecGammaPsiPairPt");
-        histoTrueSecGammaCosPointPt         = (TH2F*)directoryConv->Get("histoTrueSecGammaCosPointPt");
-        histoTrueDalitzGammaChi2NDFPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaChi2NDFPt");
-        histoTrueDalitzGammaAlphaQt         = (TH2F*)directoryConv->Get("histoTrueDalitzGammaAlphaQt");
-        histoTrueDalitzGammaQtPt            = (TH2F*)directoryConv->Get("histoTrueDalitzGammaQtPt");
-        histoTrueDalitzGammaPsiPairPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaPsiPairPt");
-        histoTrueDalitzGammaCosPointPt      = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointPt");
-        histoTruePrimGammaAsymP             = (TH2F*)directoryConv->Get("histoTruePrimGammaAsymP");
-        histoTrueSecGammaAsymP              = (TH2F*)directoryConv->Get("histoTrueSecGammaAsymP");
-        histoTrueDalitzGammaAsymP           = (TH2F*)directoryConv->Get("histoTrueDalitzGammaAsymP");
-        histoTrueGammaChi2PsiPair           = (TH2F*)directoryConv->Get("histoTrueGammaChi2PsiPair");
         histoTrueGammaChi2PsiPairPt         = (TH3F*)directoryConv->Get("histoTrueGammaChi2PsiPairPt");
-        histoTrueGammaCosPointChi2          = (TH2F*)directoryConv->Get("histoTrueGammaCosPointChi2");
-        histoTrueGammaCosPointPsiPair       = (TH2F*)directoryConv->Get("histoTrueGammaCosPointPsiPair");
-        histoTrueGammaInvMassPt             = (TH2F*)directoryConv->Get("histoTrueGammaInvMassPt");
-        histoTrueDalitzGammaChi2PsiPair     = (TH2F*)directoryConv->Get("histoTrueDalitzGammaChi2PsiPair");
-        histoTrueDalitzGammaCosPointChi2    = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointChi2");
-        histoTrueDalitzGammaCosPointPsiPair = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointPsiPair");
-        histoTrueDalitzGammaInvMassPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaInvMassPt");
+        histoTrueGammaChi2PsiPair           = (TH2D*)histoTrueGammaChi2PsiPairPt->Project3D("yx");
     }
 
     TLatex* labelpTrange;
@@ -460,31 +270,37 @@ void MakePhotonQAPlots_Extended(
         ex1->Draw();
         histoGammaQtPt->Draw("col,same");
     }
-    TF1 *funcPtDepQtCut_std = new TF1("funcPtDepQtCut_std","x/[0]",0.005,1.);
-    DrawGammaSetMarkerTF1( funcPtDepQtCut_std, 1, 3, kMagenta+2);
-    funcPtDepQtCut_std->SetParameter(0,0.125);
-    funcPtDepQtCut_std->Draw("same");
-    TF1 *funcPtDepQtCut_hard = new TF1("funcPtDepQtCut_hard","x/[0]",0.005,1.);
-    DrawGammaSetMarkerTF1( funcPtDepQtCut_hard, 2, 3, kMagenta+4);
-    funcPtDepQtCut_hard->SetParameter(0,0.11);
-    funcPtDepQtCut_hard->Draw("same");
-    TF1 *funcPtDepQtCut_soft = new TF1("funcPtDepQtCut_soft","x/[0]",0.005,1.);
-    DrawGammaSetMarkerTF1( funcPtDepQtCut_soft, 2, 3, kMagenta-4);
-    funcPtDepQtCut_soft->SetParameter(0,0.14);
-    funcPtDepQtCut_soft->Draw("same");
-    TF1 *funcPtDepQtCut_soft2 = new TF1("funcPtDepQtCut_soft2","x/[0]",0.005,1.);
-    DrawGammaSetMarkerTF1( funcPtDepQtCut_soft2, 2, 3, kMagenta-1);
-    funcPtDepQtCut_soft2->SetParameter(0,0.16);
-    funcPtDepQtCut_soft2->Draw("same");
+    // initialize cuts for QT vs pT
+    Double_t funcParamQtPt[4][2]    = {{0.11,0.04},{0.125,0.05},{0.14,0.06},{0.16,0.07}};
+    if (optionEnergy.CompareTo("XeXe_5.44TeV") == 0 || optionEnergy.CompareTo("13TeVLowB") == 0){
+        funcParamQtPt[0][0]    = 0.18;
+        funcParamQtPt[0][1]    = 0.032;
+        funcParamQtPt[1][0]    = 0.2;
+        funcParamQtPt[1][1]    = 0.035;
+        funcParamQtPt[2][0]    = 0.25;
+        funcParamQtPt[2][1]    = 0.04;
+        funcParamQtPt[3][0]    = 0.3;
+        funcParamQtPt[3][1]    = 0.045;
+    }
+    Color_t colorQtFunc[5]          = {kMagenta+2, kMagenta+4, kMagenta-4, kMagenta-8, kMagenta+1};
+    Style_t styleQtFunc[5]          = {1,7,8,9,6};
+
     DrawGammaLines(0.05, 0.05, 0.04, 8, 3, kGreen-8, 9);
+    TF1* funcPtDepQtCut[4]      = {NULL};
+    for (Int_t k = 0; k< 4; k++){
+        funcPtDepQtCut[k] = new TF1(Form("funcPtDepQtCut_%d",k),"x/[0]",0.005,funcParamQtPt[k][1]);
+        DrawGammaSetMarkerTF1( funcPtDepQtCut[k], styleQtFunc[k+1], 2, colorQtFunc[k+1]);
+        funcPtDepQtCut[k]->SetParameter(0,funcParamQtPt[k][0]);
+        funcPtDepQtCut[k]->Draw("same");
+        DrawGammaLines(funcParamQtPt[k][1], funcParamQtPt[k][1], funcParamQtPt[k][1]/funcParamQtPt[k][0], 8, 2, colorQtFunc[k+1], styleQtFunc[k+1]);
+    }
     TF1 *funcOldCutDummy = new TF1("funcOldCutDummy","x/[0]",0.005,1.);
     DrawGammaSetMarkerTF1( funcOldCutDummy, 9, 3, kGreen-8);
-    TLegend* legendQtPlotFits  = GetAndSetLegend2(0.67, 0.14, 0.95, 0.14+(0.035*5*1.35), 0.85*textSizeLabelsPixel);
+    TLegend* legendQtPlotFits  = GetAndSetLegend2(0.58, 0.13, 0.95, 0.13+(0.035*5*1.15), 0.75*textSizeLabelsPixel,1,"",43,0.1);
     legendQtPlotFits->AddEntry(funcOldCutDummy, "#it{q}_{T}^{max} = 0.05","l");
-    legendQtPlotFits->AddEntry(funcPtDepQtCut_hard, "#it{q}_{T}^{max} = 0.110*#it{p}_{T}","l");
-    legendQtPlotFits->AddEntry(funcPtDepQtCut_std,  "#it{q}_{T}^{max} = 0.125*#it{p}_{T}","l");
-    legendQtPlotFits->AddEntry(funcPtDepQtCut_soft, "#it{q}_{T}^{max} = 0.140*#it{p}_{T}","l");
-    legendQtPlotFits->AddEntry(funcPtDepQtCut_soft2,"#it{q}_{T}^{max} = 0.160*#it{p}_{T}","l");
+    for (Int_t k = 0; k< 4; k++){
+        legendQtPlotFits->AddEntry(funcPtDepQtCut[k], Form("#it{q}_{T}^{max} = %0.3f#it{p}_{T}, #it{q}_{T}^{max} = %0.3f",funcParamQtPt[k][0],funcParamQtPt[k][1] ),"l");
+    }
     legendQtPlotFits->Draw();
     TLatex *labelColor                  = new TLatex(0.12,0.90, isMC ? "#gamma rec. from e^{+}e^{-} (color)" : "");
     SetStyleTLatex( labelColor, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
@@ -509,8 +325,10 @@ void MakePhotonQAPlots_Extended(
         histoTrueMCKindQtPt[0]->Draw("col,same");
     }
     DrawGammaLines(0.05, 0.05, 0.04, 8, 3, kGreen-8, 9);
-    legendQtPlotFits  = GetAndSetLegend2(0.67, 0.14, 0.95, 0.14+(0.035*1*1.35), 0.85*textSizeLabelsPixel);
-    legendQtPlotFits->AddEntry(funcOldCutDummy, "#it{q}_{T}^{max} = 0.05","l");
+    for (Int_t k = 0; k< 4; k++){
+        funcPtDepQtCut[k]->Draw("same");
+        DrawGammaLines(funcParamQtPt[k][1], funcParamQtPt[k][1], funcParamQtPt[k][1]/funcParamQtPt[k][0], 8, 2, colorQtFunc[k+1], styleQtFunc[k+1]);
+    }
     legendQtPlotFits->Draw();
     labelColor->Draw();
     labelEnergy->Draw();
@@ -1221,49 +1039,71 @@ void MakePhotonQAPlots_Extended(
         ex1->Draw();
         histoGammaChi2PsiPair->Draw("col,same");
     }
-    TF1 *funcPtDepAlphaCut_std = new TF1("funcPtDepAlphaCut_std","-0.1+(0.1/30)*x",0,30);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_std, 1, 3, kMagenta+2);
-    funcPtDepAlphaCut_std->Draw("same");
-    TF1 *funcPtDepAlphaCut_std2 = new TF1("funcPtDepAlphaCut_std","0.1-(0.1/30)*x",0,30);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_std2, 1, 3, kMagenta+2);
-    funcPtDepAlphaCut_std2->Draw("same");
-    TF1 *funcPtDepAlphaCut_hard = new TF1("funcPtDepAlphaCut_hard","-0.15+0.003*x",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_hard, 2, 3, kMagenta+4);
-    funcPtDepAlphaCut_hard->Draw("same");
-    TF1 *funcPtDepAlphaCut_hard2 = new TF1("funcPtDepAlphaCut_hard","0.15-0.003*x",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_hard2, 2, 3, kMagenta+4);
-    funcPtDepAlphaCut_hard2->Draw("same");
-    TF1 *funcPtDepAlphaCut_soft = new TF1("funcPtDepAlphaCut_soft","0.18*TMath::Exp(-0.055*x)",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_soft, 2, 3, kMagenta-4);
-    funcPtDepAlphaCut_soft->Draw("same");
-    TF1 *funcPtDepAlphaCut_soft2 = new TF1("funcPtDepAlphaCut_soft","-(0.18*TMath::Exp(-0.055*x))",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_soft2, 2, 3, kMagenta-4);
-    funcPtDepAlphaCut_soft2->Draw("same");
-    TF1 *funcPtDepAlphaCut_verysoft = new TF1("funcPtDepAlphaCut_verysoft","0.20*TMath::Exp(-0.050*x)",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_verysoft, 2, 3, kMagenta-8);
-    funcPtDepAlphaCut_verysoft->Draw("same");
-    TF1 *funcPtDepAlphaCut_verysoft2 = new TF1("funcPtDepAlphaCut_verysoft2","-(0.20*TMath::Exp(-0.050*x))",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_verysoft2, 2, 3, kMagenta-8);
-    funcPtDepAlphaCut_verysoft2->Draw("same");
-    TF1 *funcPtDepAlphaCut_veryhard = new TF1("funcPtDepAlphaCut_veryhard","0.15*TMath::Exp(-0.065*x)",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_veryhard, 2, 3, kMagenta+1);
-    funcPtDepAlphaCut_veryhard->Draw("same");
-    TF1 *funcPtDepAlphaCut_veryhard2 = new TF1("funcPtDepAlphaCut_veryhard2","-(0.15*TMath::Exp(-0.065*x))",0,50);
-    DrawGammaSetMarkerTF1( funcPtDepAlphaCut_veryhard2, 2, 3, kMagenta+1);
-    funcPtDepAlphaCut_veryhard2->Draw("same");
-    TLegend* legendChi2PsiPairPlotFits  = GetAndSetLegend2(0.50, 0.13, 0.95, 0.13+(0.035*5*1.35), 0.85*textSizeLabelsPixel);
-    legendChi2PsiPairPlotFits->AddEntry(funcPtDepAlphaCut_std, "|#Psi_{pair}| < 0.10/30#chi^{2}+0.10","l");
-    legendChi2PsiPairPlotFits->AddEntry(funcPtDepAlphaCut_hard, "|#Psi_{pair}| < 0.15/50#chi^{2}+0.15","l");
-    legendChi2PsiPairPlotFits->AddEntry(funcPtDepAlphaCut_veryhard, "|#Psi_{pair}| < 0.15*exp(-0.065#chi^{2})","l");
-    legendChi2PsiPairPlotFits->AddEntry(funcPtDepAlphaCut_soft, "|#Psi_{pair}| < 0.18*exp(-0.055#chi^{2})","l");
-    legendChi2PsiPairPlotFits->AddEntry(funcPtDepAlphaCut_verysoft2, "|#Psi_{pair}| < 0.20*exp(-0.050#chi^{2})","l");
+
+    Double_t funcParamChi2PsiPairLin[2][2]  = {{0.1,30}, {0.15, 50}};
+    Double_t funcParamChi2PsiPair[3][2]     = {{0.15,-0.065}, {0.18, -0.055}, { 0.20, -0.050}};
+    if (optionEnergy.CompareTo("XeXe_5.44TeV") == 0 || optionEnergy.CompareTo("13TeVLowB") == 0){
+        funcParamChi2PsiPair[0][0]     = 0.3;
+        funcParamChi2PsiPair[0][1]     = -0.085;
+        funcParamChi2PsiPair[1][0]     = 0.35;
+        funcParamChi2PsiPair[1][1]     = -0.075;
+        funcParamChi2PsiPair[2][0]     = 0.4;
+        funcParamChi2PsiPair[2][1]     = -0.065;
+    }
+    Color_t colorTriFunc[2]                 = {kMagenta+2, kMagenta+4};
+    Color_t colorModFunc[3]                 = {kMagenta-4, kMagenta-8, kMagenta+1};
+
+    TF1 *funcChi2PsiPairTri[4]      = {NULL};
+    for (Int_t k = 0; k< 2; k++){
+        funcChi2PsiPairTri[k*2] =  new TF1(Form("funcChi2PsiPairTri_%d",k*2),Form("-%0.2f+(%0.2f/%f*x)",funcParamChi2PsiPairLin[k][0],funcParamChi2PsiPairLin[k][0],funcParamChi2PsiPairLin[k][1]),0,funcParamChi2PsiPairLin[k][1]);
+        DrawGammaSetMarkerTF1( funcChi2PsiPairTri[k*2], 2, 3, colorTriFunc[k]);
+        funcChi2PsiPairTri[k*2]->Draw("same");
+        funcChi2PsiPairTri[k*2+1] =   new TF1(Form("funcChi2PsiPairTri_%d",k*2+1),Form("%0.2f-(%0.2f/%f*x)",funcParamChi2PsiPairLin[k][0],funcParamChi2PsiPairLin[k][0],funcParamChi2PsiPairLin[k][1]),0,funcParamChi2PsiPairLin[k][1]);
+        DrawGammaSetMarkerTF1( funcChi2PsiPairTri[k*2+1], 2, 3, colorTriFunc[k]);
+        funcChi2PsiPairTri[k*2+1]->Draw("same");
+    }
+    TF1 *funcChi2PsiPairExp[6]      = {NULL};
+    for (Int_t k = 0; k< 3; k++){
+        funcChi2PsiPairExp[k*2] =  new TF1(Form("funcChi2PsiPairExp_%d",k*2),Form("%0.2f*TMath::Exp(%0.3f*x)",funcParamChi2PsiPair[k][0],funcParamChi2PsiPair[k][1]),0,50);
+        DrawGammaSetMarkerTF1( funcChi2PsiPairExp[k*2], 2, 3, colorModFunc[k]);
+        funcChi2PsiPairExp[k*2]->Draw("same");
+        funcChi2PsiPairExp[k*2+1] =  new TF1(Form("funcChi2PsiPairExp_%d",k*2+1),Form("-%0.2f*TMath::Exp(%0.3f*x)",funcParamChi2PsiPair[k][0],funcParamChi2PsiPair[k][1]),0,50);
+        DrawGammaSetMarkerTF1( funcChi2PsiPairExp[k*2+1], 2, 3, colorModFunc[k]);
+        funcChi2PsiPairExp[k*2+1]->Draw("same");
+
+    }
+    TLegend* legendChi2PsiPairPlotFits  = GetAndSetLegend2(0.65, 0.13, 0.95, 0.13+(0.035*5*1.15), 0.75*textSizeLabelsPixel,1, "", 43, 0.1);
+    for (Int_t k = 0; k< 2; k++){
+        legendChi2PsiPairPlotFits->AddEntry(funcChi2PsiPairTri[k*2], Form("|#Psi_{pair}| < %0.2f/%.0f#chi^{2}+%0.2f",funcParamChi2PsiPairLin[k][0], funcParamChi2PsiPairLin[k][1],funcParamChi2PsiPairLin[k][0]),"l");
+    }
+    for (Int_t k = 0; k< 3; k++){
+        legendChi2PsiPairPlotFits->AddEntry(funcChi2PsiPairExp[k*2], Form("|#Psi_{pair}| < %0.2fexp(%0.3f#chi^{2})",funcParamChi2PsiPair[k][0],funcParamChi2PsiPair[k][1]),"l");
+    }
     legendChi2PsiPairPlotFits->Draw();
     labelEnergy->Draw();
     labelProcess->Draw();
     histo2DChi2PsiPairDummy->Draw("axis,same");
     canvasChi2PsiPairPlots->SaveAs(Form("%s/Chi2PsiPair_vs_Pt_Final_withCuts_%s.%s",outputDir.Data(),isMC ? "MC" : "data",suffix.Data()));
 
-
+    // TRUE GAMMAS AND COMBINATORIAL GAMMA CANDIDATES PLOT
+    histo2DChi2PsiPairDummy->Draw("copy");
+    if (isMC){
+        // draw true gamma->ee
+        histoTrueGammaChi2PsiPair->Draw("col,same");
+        for (Int_t k = 0; k< 2; k++){
+            funcChi2PsiPairTri[k*2]->Draw("same");
+            funcChi2PsiPairTri[k*2+1]->Draw("same");
+        }
+        for (Int_t k = 0; k< 3; k++){
+            funcChi2PsiPairExp[k*2]->Draw("same");
+            funcChi2PsiPairExp[k*2+1]->Draw("same");
+        }
+        legendChi2PsiPairPlotFits->Draw();
+        labelEnergy->Draw();
+        labelProcess->Draw();
+        histo2DChi2PsiPairDummy->Draw("axis,same");
+        canvasChi2PsiPairPlots->SaveAs(Form("%s/Chi2PsiPair_vs_Pt_trueGamma.%s",outputDir.Data(), suffix.Data()));
+    }
 
 
 
@@ -1321,10 +1161,10 @@ void MakePhotonQAPlots_Extended(
     histo2DAlphaQtDummy->Draw("copy");
     if (isMC){
         // draw true gamma->ee
-        histoTruePrimGammaAlphaQt->Draw("col,same");
+        histoTrueMCKindAlphaQt[0]->Draw("col,same");
         ex1 = new TExec("ex1","PalColor();");
         ex1->Draw();
-        histoTruePrimGammaAlphaQt->Draw("col,same");
+        histoTrueMCKindAlphaQt[0]->Draw("col,same");
     }
     labelColor                  = new TLatex(0.12,0.90, isMC ? "#gamma rec. from e^{+}e^{-} (color)" : "");
     SetStyleTLatex( labelColor, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
@@ -1384,10 +1224,10 @@ void MakePhotonQAPlots_Extended(
     histo2DAlphaQtDummy->Draw("copy");
     if (isMC){
         // draw true gamma->ee
-        histoTruePrimGammaAlphaQt->Draw("col,same");
+        histoTrueMCKindAlphaQt[0]->Draw("col,same");
         ex1 = new TExec("ex1","PalColor();");
         ex1->Draw();
-        histoTruePrimGammaAlphaQt->Draw("col,same");
+        histoTrueMCKindAlphaQt[0]->Draw("col,same");
         // // draw ee combinatorics
         // histoTrueMCKindAlphaQtPt[11]->Draw("col,same");
         // ex2 = new TExec("ex2","gStyle->SetPalette(9);");
@@ -1436,9 +1276,4 @@ void MakePhotonQAPlots_Extended(
     labelProcess->Draw();
     histo2DAlphaQtDummy->Draw("axis,same");
     canvasAlphaQtPlots->SaveAs(Form("%s/AlphaQt_vs_Pt_Final_withCuts_%s.%s",outputDir.Data(),isMC ? "MC" : "data",suffix.Data()));
-
-
-
-
-
 }

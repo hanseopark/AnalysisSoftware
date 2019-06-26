@@ -1085,19 +1085,63 @@
         return FitHist;
     }
 
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    Double_t FindLargestBin1DHistX(TH1* hist ){
+        Double_t largestContent     = 0;
+        Double_t largestBinX        = -1;
+        for (Int_t i= 1; i < hist->GetNbinsX()+1; i++){
+            if (largestContent < hist->GetBinContent(i)){
+                largestContent  = hist->GetBinContent(i);
+                largestBinX     = hist->GetBinCenter(i);
+            }
+        }
+        return largestBinX;
+    }
+
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    Double_t FindLargestBin1DHistFit(TH1* hist ){
+        Double_t largestContent     = 0;
+        for (Int_t i= 0; i < hist->GetNbinsX(); i++){
+            if (largestContent < hist->GetBinContent(i)){
+                largestContent = hist->GetBinContent(i);
+            }
+        }
+        return largestContent;
+    }
+
+
     /*****************************************************************/
     /*****************************************************************/
     /*****************************************************************/
-    TF1* FitTH1DRecursivelyGaussian (TH1D* histo, Double_t precision, Double_t fitRangeMin, Double_t fitRangeMax ){
+    TF1* FitTH1DRecursivelyGaussian (TH1D* histo, Double_t precision, Double_t fitRangeMin, Double_t fitRangeMax, Int_t useMeanHist = 0, Double_t multWidth = 2. ){
         TF1 *f0 = new TF1("f0", "gaus", fitRangeMin,fitRangeMax);
+        if (useMeanHist>0){
+            f0->SetParameter(0,FindLargestBin1DHistFit(histo));
+            f0->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
+            f0->SetParameter(1,FindLargestBin1DHistX (histo));
+            f0->SetParLimits(1,FindLargestBin1DHistX (histo)-histo->GetRMS(),FindLargestBin1DHistX (histo)+histo->GetRMS());
+        }
         histo->Fit(f0,"0RMEQ");
         Double_t rp = f0->GetParameter(2);
         Double_t mp = f0->GetParameter(1);
-        Double_t ymin = mp -(rp * 2.);
-        Double_t ymax = mp + (rp * 2.);
+        Double_t ymin = mp -(rp * multWidth);
+        Double_t ymax = mp + (rp * multWidth);
+        if (useMeanHist>1)
+            ymax = mp +(rp * multWidth*0.75);
+
         Double_t deviation = 100;
         Int_t counter = 0;
         TF1* f1 = new TF1 ("f1", "gaus", ymin, ymax);
+        if (useMeanHist>0){
+            f1->SetParameter(0,FindLargestBin1DHistFit(histo));
+            f1->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
+            f1->SetParameter(1,FindLargestBin1DHistX (histo));
+            f1->SetParLimits(1,FindLargestBin1DHistX (histo)-histo->GetRMS(),FindLargestBin1DHistX (histo)+histo->GetRMS());
+        }
         while(deviation > precision && counter < 100){
             f1->SetRange(ymin,ymax);
             histo->Fit(f1,"0RMEQ");
@@ -1106,8 +1150,11 @@
                 else {deviation = rp -rp2 ;}
             rp = rp2 ;
             mp = f1->GetParameter(1);
-            ymin = mp -(rp * 2);
-            ymax = mp +(rp * 2);
+            ymin = mp -(rp * multWidth);
+            if (useMeanHist>1)
+                ymax = mp +(rp * multWidth*0.75);
+            else
+                ymax = mp +(rp * multWidth);
             counter++;
         }
         delete f0;

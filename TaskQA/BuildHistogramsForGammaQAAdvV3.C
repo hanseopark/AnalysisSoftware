@@ -79,13 +79,15 @@ void SetLogBinningXTH2(TH2* histoRebin){
 }
 
 
-void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConvV1_QA_5460001022092970003190000000.root",
+void BuildHistogramsForGammaQAAdvV3(
+                                    TString fileName               = "GammaConvV1_QA_5460001022092970003190000000.root",
                                     TString fCutSelection           = "5460001022092970003190000000",
                                     TString specificCutSelection    = "0004314141",
                                     Bool_t kMC                      = 0,
                                     Bool_t merge                    = 0,
                                     TString nameOutputBase          = "PhotonQA",
-                                    Bool_t addExtFolderToOutput     = kFALSE
+                                    Bool_t addExtFolderToOutput     = kFALSE,
+                                    Long64_t maxNumGammasProcess    = -1
         ){
 
     //Reset ROOT and connect tree file
@@ -99,6 +101,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TString twoDimQtCutNumber           = specificCutSelection(7,1);
     TString cosPointingCutNumber        = specificCutSelection(8,1);
     TString asymmetryCutNumber          = specificCutSelection(9,1);
+    TString alphaGammaCutNumber         = specificCutSelection(10,1);
 
     if ( V0Finder.CompareTo("0") == 0){
         cout << "V0Finder: " <<  "Onfly" << endl;
@@ -126,6 +129,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     } else if (etaCutNumber.CompareTo("6") == 0 ){
         etaMaxCut                   = 10.;
         etaMinCut                   = -0.1;
+    } else if (etaCutNumber.CompareTo("7") == 0 ){
+        etaMaxCut                   = 0.8;
     }
     if (etaMinCut != -0.1){
         cout << "Eta range: " <<   etaMinCut  <<  " < |eta| < " << etaMaxCut << endl;
@@ -174,6 +179,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     cout<< "Chi2 per DOF Cut: " << chi2PerDOFCut << endl;
 
     Double_t psiPairCut             = 10000.0;
+    Double_t psiPairExpCut          = 1;
+    Bool_t doChi2DepPsiPairCut      = kFALSE;
     if (psiPairCutNumber.CompareTo("0") == 0){
         psiPairCut                  = 10000.;
     } else if (psiPairCutNumber.CompareTo("1") == 0 ){
@@ -188,6 +195,32 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         psiPairCut                  = 0.035;
     } else if (psiPairCutNumber.CompareTo("6") == 0 ){
         psiPairCut                  = 0.02;
+    } else if (psiPairCutNumber.CompareTo("7") == 0 ){
+        psiPairCut                  = 0.15;
+    } else if (psiPairCutNumber.CompareTo("8") == 0 ){
+        psiPairCut                  = -0.055;
+        psiPairExpCut               = 0.18;
+        doChi2DepPsiPairCut         = kTRUE;
+    } else if (psiPairCutNumber.CompareTo("9") == 0 ){
+        psiPairCut                  = -0.065;
+        psiPairExpCut               = 0.15;
+        doChi2DepPsiPairCut         = kTRUE;
+    } else if (psiPairCutNumber.CompareTo("a") == 0 ){
+        psiPairCut                  = -0.050;
+        psiPairExpCut               = 0.20;
+        doChi2DepPsiPairCut         = kTRUE;
+    } else if (psiPairCutNumber.CompareTo("b") == 0 ){
+        psiPairCut                  = -0.075;
+        psiPairExpCut               = 0.35;
+        doChi2DepPsiPairCut         = kTRUE;
+    } else if (psiPairCutNumber.CompareTo("c") == 0 ){
+        psiPairCut                  = -0.085;
+        psiPairExpCut               = 0.30;
+        doChi2DepPsiPairCut         = kTRUE;
+    } else if (psiPairCutNumber.CompareTo("c") == 0 ){
+        psiPairCut                  = -0.065;
+        psiPairExpCut               = 0.40;
+        doChi2DepPsiPairCut         = kTRUE;
     }
     cout<< "Psi Pair Cut: " << psiPairCut << endl;
     Bool_t f2DChi2PsiPair           = kFALSE;
@@ -199,6 +232,9 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     if (f2DChi2PsiPair) cout << "making 2D cut in Psi Pair and Chi2" << endl;
 
     Double_t qtCut                  = 1;
+    Double_t qtCutPtDep             = 1;
+    Bool_t useQtCutFunc             = kFALSE;
+
     if (qtCutNumber.CompareTo("0") == 0){
         qtCut                       = 1;
     } else if (qtCutNumber.CompareTo("1") == 0 ){
@@ -213,6 +249,50 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         qtCut                       = 0.03;
     } else if (qtCutNumber.CompareTo("6") == 0 ){
         qtCut                       = 0.02;
+    } else if (qtCutNumber.CompareTo("7") == 0 ){
+        qtCutPtDep                  = 0.125; // std?
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("8") == 0 ){
+        qtCutPtDep                  = 0.11; // hard
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("9") == 0 ){
+        qtCutPtDep                  = 0.14; // soft
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("a") == 0 ){
+        qtCutPtDep                  = 0.16; // soft
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("b") == 0 ){
+        qtCutPtDep                  = 0.125; // std?
+        qtCut                       = 0.050;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("c") == 0 ){
+        qtCutPtDep                  = 0.11; // hard
+        qtCut                       = 0.040;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("d") == 0 ){
+        qtCutPtDep                  = 0.14; // soft
+        qtCut                       = 0.060;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("e") == 0 ){
+        qtCutPtDep                  = 0.16; // soft
+        qtCut                       = 0.070;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("f") == 0 ){
+        qtCutPtDep                  = 0.200; // std low B
+        qtCut                       = 0.035;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("g") == 0 ){
+        qtCutPtDep                  = 0.180; // hard low B
+        qtCut                       = 0.032;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("h") == 0 ){
+        qtCutPtDep                  = 0.250; // soft low B
+        qtCut                       = 0.040;
+        useQtCutFunc                = kTRUE;
+    } else if (qtCutNumber.CompareTo("i") == 0 ){
+        qtCutPtDep                  = 0.300; // soft low B
+        qtCut                       = 0.045;
+        useQtCutFunc                = kTRUE;
     }
     cout<< "Qt Cut: " << qtCut << endl;
     Bool_t f2DQt                    = kFALSE;
@@ -249,6 +329,18 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     } else if (asymmetryCutNumber.CompareTo("1") == 0 ){
         fAsymmCut                   = kTRUE;
     }
+
+    Double_t alphaCut          = -1;
+    if (alphaGammaCutNumber.CompareTo("0") == 0){
+        alphaCut     = 0.95;
+    } else if (alphaGammaCutNumber.CompareTo("1") == 0 ){
+        alphaCut     = 0.99;
+    } else if (alphaGammaCutNumber.CompareTo("2") == 0 ){
+        alphaCut     = 1;
+    } else if (alphaGammaCutNumber.CompareTo("3") == 0 ){
+        alphaCut     = 0.8;
+    }
+    cout<< "photon asymmetry cut: " << alphaCut << endl;
 
     //********************************************************************************
     //*            Definition of Cuts                                                *
@@ -449,7 +541,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
 
 
     Int_t nPBins =12;
-    Double_t *arrPBinning = new Double_t[13]; 
+    Double_t *arrPBinning = new Double_t[13];
     for( Int_t i=0;i<nPBins+1;i++){
       if(i==0){
 	    arrPBinning[i]= 0.05;
@@ -462,12 +554,12 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
       }
     }
     Int_t nEtaBins =20;
-    Double_t *arrEtaBinning      = new Double_t[21]; 
+    Double_t *arrEtaBinning      = new Double_t[21];
     for( Int_t i=0;i<nEtaBins+1;i++){
       arrEtaBinning[i]= -1.+0.1*i;
     }
     Int_t nSigmaDeDxBins=100;
-    Double_t *arrSigmaDeDxBinning      = new Double_t[101]; 
+    Double_t *arrSigmaDeDxBinning      = new Double_t[101];
     for( Int_t i=0;i<nSigmaDeDxBins+1;i++){
       arrSigmaDeDxBinning[i]= -5.+0.1*i;
     }
@@ -499,7 +591,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TH2F* histoPositronFClPt                    = NULL;
     TH2F* histoElectronClPt                     = NULL;
     TH2F* histoPositronClPt                     = NULL;
-    TH2F* histoGammaChi2NDFPt                   = NULL;
     TH2F* histoGammaChi2NDFPtEtaNeg             = NULL;
     TH2F* histoGammaChi2NDFPtEtaPos             = NULL;
     TH2F* histoGammaChi2NDFR                    = NULL;
@@ -529,13 +620,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TH1F *histoGoodESDTracksdummy               = NULL;
     TH2F* histoGammaAsymP                       = NULL;
     TH2F* histoGammaAsymR                       = NULL;
-    TH2F* histoGammaAlphaQt                     = NULL;
+    TH3F* histoGammaAlphaQtPt                   = NULL;
     TH2F* histoGammaAlphaR                      = NULL;
-    TH2F* histoGammaQtPt                        = NULL;
     TH2F* histoGammaQtR                         = NULL;
     TH2F* histoGammaEtaPt                       = NULL;
     TH2F* histoGammaEtaR                        = NULL;
-    TH2F* histoGammaPsiPairPt                   = NULL;
     TH2F* histoGammaPsiPairPtEtaNeg             = NULL;
     TH2F* histoGammaPsiPairPtEtaPos             = NULL;
     TH2F* histoGammaPsiPairR                    = NULL;
@@ -545,34 +634,26 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     TH2F* histoGammaInvMassPt                   = NULL;
     TH2F* histoGammaInvMassR                    = NULL;
     TH2F* histoGammaCosPointPsiPair             = NULL;
-    TH2F* histoGammaChi2PsiPair                 = NULL;
+    TH3F* histoGammaChi2PsiPairPt               = NULL;
     TH1F* histoGammaPhi                         = NULL;
     TH2F* histoGammaPhiR                        = NULL;
     TH2F* histoGammaZR                          = NULL;
     TH2F* histoGammaXY                          = NULL;
 
-    TH2F* histoTruePrimGammaChi2NDFPt           = NULL;
-    TH2F* histoTruePrimGammaAlphaQt             = NULL;
-    TH2F* histoTruePrimGammaQtPt                = NULL;
-    TH2F* histoTruePrimGammaPsiPairPt           = NULL;
+    TH2F* histoTruePrimGammaQtR                 = NULL;
     TH2F* histoTruePrimGammaCosPointPt          = NULL;
     TH2F* histoTruePrimGammaAsymP               = NULL;
-    TH2F* histoTrueSecGammaChi2NDFPt            = NULL;
-    TH2F* histoTrueSecGammaAlphaQt              = NULL;
-    TH2F* histoTrueSecGammaQtPt                 = NULL;
-    TH2F* histoTrueSecGammaPsiPairPt            = NULL;
+    TH2F* histoTrueMCKindCosPointPt[20]         = {NULL};
+    TH3F* histoTrueMCKindChi2PsiPairPt[20]      = {NULL};
+    TH3F* histoTrueMCKindAlphaQtPt[20]          = {NULL};
     TH2F* histoTrueSecGammaCosPointPt           = NULL;
     TH2F* histoTrueSecGammaAsymP                = NULL;
-    TH2F* histoTrueDalitzGammaChi2NDFPt         = NULL;
-    TH2F* histoTrueDalitzGammaAlphaQt           = NULL;
-    TH2F* histoTrueDalitzGammaQtPt              = NULL;
-    TH2F* histoTrueDalitzGammaPsiPairPt         = NULL;
     TH2F* histoTrueDalitzGammaCosPointPt        = NULL;
     TH2F* histoTrueDalitzGammaAsymP             = NULL;
     TH2F* histoTrueGammaCosPointChi2            = NULL;
     TH2F* histoTrueGammaInvMassPt               = NULL;
     TH2F* histoTrueGammaCosPointPsiPair         = NULL;
-    TH2F* histoTrueGammaChi2PsiPair             = NULL;
+    TH3F* histoTrueGammaChi2PsiPairPt           = NULL;
     TH2F* histoTrueDalitzGammaCosPointChi2      = NULL;
     TH2F* histoTrueDalitzGammaInvMassPt         = NULL;
     TH2F* histoTrueDalitzGammaCosPointPsiPair   = NULL;
@@ -662,8 +743,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         SetLogBinningTH2(histoElectronClPt);
         histoPositronClPt                       = new TH2F("histoPositronClPt","", nBinsCls, firstBinCls,    lastBinCls, nBinsPt, firstBinPt, lastBinPt);
         SetLogBinningTH2(histoPositronClPt);
-        histoGammaChi2NDFPt                     = new TH2F("histoGammaChi2NDFPt","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
-        SetLogBinningTH2(histoGammaChi2NDFPt);
         histoGammaChi2NDFPtEtaNeg               = new TH2F("histoGammaChi2NDFPtEtaNeg","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
         SetLogBinningTH2(histoGammaChi2NDFPtEtaNeg);
         histoGammaChi2NDFPtEtaPos               = new TH2F("histoGammaChi2NDFPtEtaPos","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
@@ -688,15 +767,13 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoGammaPhiEtaPos                     = new TH1F("histoGammaPhiEtaPos","", nBinsPhi, firstBinPhi, lastBinPhi);
         histoPositronNSigmadEdxCut              = new TH1F("histoPositronNSigmadEdxCut","", nBinsSigmaTPC, firstBinSigmaTPC, lastBinSigmaTPC);
         histoElectronNSigmadEdxCut              = new TH1F("histoElectronNSigmadEdxCut","", nBinsSigmaTPC, firstBinSigmaTPC, lastBinSigmaTPC);
-        histoGammaAlphaQt                       = new TH2F("histoGammaAlphaQt","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt);
+        histoGammaAlphaQtPt                     = new TH3F("histoGammaAlphaQtPt","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt, nBinsPt, firstBinPt, lastBinPt);
+        SetLogBinningTH3(histoGammaAlphaQtPt);
+
         histoGammaAlphaR                        = new TH2F("histoGammaAlphaR","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsR, firstBinR, lastBinR);
-        histoGammaQtPt                          = new TH2F("histoGammaQtPt","", nBinsQt, firstBinQt, lastBinQt,nBinsPt, firstBinPt, lastBinPt);
-        SetLogBinningTH2(histoGammaQtPt);
         histoGammaQtR                           = new TH2F("histoGammaQtR","", nBinsQt, firstBinQt, lastBinQt,nBinsR, firstBinR, lastBinR);
         histoGammaPhi                           = new TH1F("histoGammaPhi","", nBinsPhi, firstBinPhi, lastBinPhi);
         histoGammaPhiR                          = new TH2F("histoGammaPhiR","", nBinsPhi, firstBinPhi, lastBinPhi,nBinsRdetailed, firstBinRdetailed, lastBinRdetailed);
-        histoGammaPsiPairPt                     = new TH2F("histoGammaPsiPairPt","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
-        SetLogBinningTH2(histoGammaPsiPairPt);
         histoGammaPsiPairPtEtaNeg               = new TH2F("histoGammaPsiPairPtEtaNeg","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
         SetLogBinningTH2(histoGammaPsiPairPtEtaNeg);
         histoGammaPsiPairPtEtaPos               = new TH2F("histoGammaPsiPairPtEtaPos","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
@@ -705,7 +782,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
 
         histoGammaCosPointPt                    = new TH2F("histoGammaCosPointPt","", nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPt, firstBinPt, lastBinPt);
         SetLogBinningTH2(histoGammaCosPointPt);
-        histoGammaChi2PsiPair                   = new TH2F("histoGammaChi2PsiPair","",nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
+        histoGammaChi2PsiPairPt                 = new TH3F("histoGammaChi2PsiPairPt","",nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair, nBinsPt, firstBinPt, lastBinPt);
+        SetLogBinningTH3(histoGammaChi2PsiPairPt);
         histoGammaCosPointChi2                  = new TH2F("histoGammaCosPointChi2","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2);
         histoGammaCosPointR                     = new TH2F("histoGammaCosPointR","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsR, firstBinR, lastBinR);
         histoGammaCosPointPsiPair               = new TH2F("histoGammaCosPointPsiPair","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
@@ -733,45 +811,35 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
             SetLogBinningXTH2(histoTruePositronNSigmaTOFP);
             histoTrueElectronITSClR             = new TH2F("histoTrueElectronITSClR","",nBinsClsITS, firstBinClsITS, lastBinClsITS, nBinsGammaR, firstBinGammaR, lastBinGammaR);
             histoTruePositronITSClR             = new TH2F("histoTruePositronITSClR","",nBinsClsITS, firstBinClsITS, lastBinClsITS, nBinsGammaR, firstBinGammaR, lastBinGammaR);
-            histoTruePrimGammaChi2NDFPt         = new TH2F("histoTruePrimGammaChi2NDFPt","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTruePrimGammaChi2NDFPt);
-            histoTruePrimGammaAlphaQt           = new TH2F("histoTruePrimGammaAlphaQt","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt);
-            histoTruePrimGammaQtPt              = new TH2F("histoTruePrimGammaQtPt","", nBinsQt, firstBinQt, lastBinQt,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTruePrimGammaQtPt);
-            histoTruePrimGammaPsiPairPt         = new TH2F( "histoTruePrimGammaPsiPairPt","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTruePrimGammaPsiPairPt);
+            histoTruePrimGammaQtR               = new TH2F("histoTruePrimGammaQtR","", nBinsQt, firstBinQt, lastBinQt,nBinsR, firstBinR, lastBinR);
             histoTruePrimGammaCosPointPt        = new TH2F( "histoTruePrimGammaCosPointPt","", nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTruePrimGammaCosPointPt);
             histoTruePrimGammaAsymP             = new TH2F("histoTruePrimGammaAsymP", "",nBinsAsym,firstBinAsym,lastBinAsym,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTruePrimGammaAsymP);
-            histoTrueSecGammaChi2NDFPt          = new TH2F("histoTrueSecGammaChi2NDFPt","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueSecGammaChi2NDFPt);
-            histoTrueSecGammaAlphaQt            = new TH2F("histoTrueSecGammaAlphaQt","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt);
-            histoTrueSecGammaQtPt               = new TH2F("histoTrueSecGammaQtPt","", nBinsQt, firstBinQt, lastBinQt,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueSecGammaQtPt);
-            histoTrueSecGammaPsiPairPt          = new TH2F( "histoTrueSecGammaPsiPairPt","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueSecGammaPsiPairPt);
+            for(Int_t i=0;i<20;i++){
+                histoTrueMCKindCosPointPt[i]               = new TH2F(Form("histoTrueMCKindCosPointPt_kind%d",i),"", nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPt, firstBinPt, lastBinPt);
+                SetLogBinningTH2(histoTrueMCKindCosPointPt[i]);
+
+                histoTrueMCKindChi2PsiPairPt[i]               = new TH3F(Form("histoTrueMCKindChi2PsiPairPt_kind%d",i),"", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
+                SetLogBinningTH3(histoTrueMCKindChi2PsiPairPt[i]);
+
+                histoTrueMCKindAlphaQtPt[i]               = new TH3F(Form("histoTrueMCKindAlphaQtPt_kind%d",i),"", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt ,nBinsPt, firstBinPt, lastBinPt);
+                SetLogBinningTH3(histoTrueMCKindAlphaQtPt[i]);
+            }
             histoTrueSecGammaCosPointPt         = new TH2F( "histoTrueSecGammaCosPointPt","", nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTrueSecGammaCosPointPt);
             histoTrueSecGammaAsymP              = new TH2F("histoTrueSecGammaAsymP", "",nBinsAsym,firstBinAsym,lastBinAsym,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTrueSecGammaAsymP);
-            histoTrueGammaChi2PsiPair           = new TH2F( "histoTrueGammaChi2PsiPair","",nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
+            histoTrueGammaChi2PsiPairPt         = new TH3F( "histoTrueGammaChi2PsiPairPt","",nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
+            SetLogBinningTH3(histoTrueGammaChi2PsiPairPt);
             histoTrueGammaCosPointChi2          = new TH2F( "histoTrueGammaCosPointChi2","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2);
             histoTrueGammaCosPointPsiPair       = new TH2F( "histoTrueGammaCosPointPsiPair","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
             histoTrueGammaInvMassPt             = new TH2F( "histoTrueGammaInvMassPt","",nBinsInvMass, firstBinInvMass, lastBinInvMass, nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTrueGammaInvMassPt);
-            histoTrueDalitzGammaChi2NDFPt       = new TH2F("histoTrueDalitzGammaChi2NDFPt","", nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueDalitzGammaChi2NDFPt);
-            histoTrueDalitzGammaAlphaQt         = new TH2F("histoTrueDalitzGammaAlphaQt","", nBinsAlpha, firstBinAlpha, lastBinAlpha, nBinsQt, firstBinQt, lastBinQt);
-            histoTrueDalitzGammaQtPt            = new TH2F("histoTrueDalitzGammaQtPt","", nBinsQt, firstBinQt, lastBinQt,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueDalitzGammaQtPt);
-            histoTrueDalitzGammaPsiPairPt       = new TH2F( "histoTrueDalitzGammaPsiPairPt","", nBinsPsiPair, firstBinPsiPair, lastBinPsiPair,nBinsPt, firstBinPt, lastBinPt);
-            SetLogBinningTH2(histoTrueDalitzGammaPsiPairPt);
             histoTrueDalitzGammaCosPointPt      = new TH2F( "histoTrueDalitzGammaCosPointPt","", nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTrueDalitzGammaCosPointPt);
             histoTrueDalitzGammaAsymP           = new TH2F("histoTrueDalitzGammaAsymP", "",nBinsAsym,firstBinAsym,lastBinAsym,nBinsPt, firstBinPt, lastBinPt);
             SetLogBinningTH2(histoTrueDalitzGammaAsymP);
-            histoTrueDalitzGammaChi2PsiPair     = new TH2F( "histoTrueDalitzGammaChi2PsiPair","",nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2, nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
             histoTrueDalitzGammaCosPointChi2    = new TH2F( "histoTrueDalitzGammaCosPointChi2","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsGammaChi2, firstBinGammaChi2, lastBinGammaChi2);
             histoTrueDalitzGammaCosPointPsiPair = new TH2F( "histoTrueDalitzGammaCosPointPsiPair","",nBinsCosPoint, firstBinCosPoint, lastBinCosPoint,nBinsPsiPair, firstBinPsiPair, lastBinPsiPair);
             histoTrueDalitzGammaInvMassPt       = new TH2F( "histoTrueDalitzGammaInvMassPt","",nBinsInvMass, firstBinInvMass, lastBinInvMass, nBinsPt, firstBinPt, lastBinPt);
@@ -819,7 +887,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositronFClPt                      = (TH2F*)directoryConv->Get("histoPositronFClPt");
         histoElectronClPt                       = (TH2F*)directoryConv->Get("histoElectronClPt");
         histoPositronClPt                       = (TH2F*)directoryConv->Get("histoPositronClPt");
-        histoGammaChi2NDFPt                     = (TH2F*)directoryConv->Get("histoGammaChi2NDFPt");
         histoGammaChi2NDFPtEtaNeg               = (TH2F*)directoryConv->Get("histoGammaChi2NDFPtEtaNeg");
         histoGammaChi2NDFPtEtaPos               = (TH2F*)directoryConv->Get("histoGammaChi2NDFPtEtaPos");
         histoGammaChi2NDFR                      = (TH2F*)directoryConv->Get("histoGammaChi2NDFR");
@@ -839,13 +906,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoElectronNSigmadEdxCut              = (TH1F*)directoryConv->Get("histoElectronNSigmadEdxCut");
         histoGammaEtaPt                         = (TH2F*)directoryConv->Get("histoGammaEtaPt");
         histoGammaEtaR                          = (TH2F*)directoryConv->Get("histoGammaEtaR");
-        histoGammaAlphaQt                       = (TH2F*)directoryConv->Get("histoGammaAlphaQt");
+        histoGammaAlphaQtPt                     = (TH3F*)directoryConv->Get("histoGammaAlphaQtPt");
         histoGammaAlphaR                        = (TH2F*)directoryConv->Get("histoGammaAlphaR");
-        histoGammaQtPt                          = (TH2F*)directoryConv->Get("histoGammaQtPt");
         histoGammaQtR                           = (TH2F*)directoryConv->Get("histoGammaQtR");
         histoGammaPhi                           = (TH1F*)directoryConv->Get( "histoGammaPhi");
         histoGammaPhiR                          = (TH2F*)directoryConv->Get( "histoGammaPhiR");
-        histoGammaPsiPairPt                     = (TH2F*)directoryConv->Get( "histoGammaPsiPairPt");
         histoGammaPsiPairPtEtaNeg               = (TH2F*)directoryConv->Get( "histoGammaPsiPairPtEtaNeg");
         histoGammaPsiPairPtEtaPos               = (TH2F*)directoryConv->Get( "histoGammaPsiPairPtEtaPos");
         histoGammaPsiPairR                      = (TH2F*)directoryConv->Get( "histoGammaPsiPairR");
@@ -853,7 +918,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoGammaCosPointR                     = (TH2F*)directoryConv->Get( "histoGammaCosPointR");
         histoGammaAsymP                         = (TH2F*)directoryConv->Get("histoGammaAsymP");
         histoGammaAsymR                         = (TH2F*)directoryConv->Get("histoGammaAsymR");
-        histoGammaChi2PsiPair                   = (TH2F*)directoryConv->Get("histoGammaChi2PsiPair");
+        histoGammaChi2PsiPairPt                 = (TH3F*)directoryConv->Get("histoGammaChi2PsiPairPt");
         histoGammaCosPointChi2                  = (TH2F*)directoryConv->Get("histoGammaCosPointChi2");
         histoGammaCosPointPsiPair               = (TH2F*)directoryConv->Get("histoGammaCosPointPsiPair");
         histoGammaInvMassPt                     = (TH2F*)directoryConv->Get("histoGammaInvMassPt");
@@ -881,29 +946,22 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
             histoTruePositronNSigmadEdxTPCP     = (TH2F*)directoryConv->Get("histoTruePositronNSigmadEdxTPCP");
             histoTruePositronNSigmaTOFP         = (TH2F*)directoryConv->Get("histoTruePositronNSigmaTOFP");
             histoTruePositronITSClR             = (TH2F*)directoryConv->Get("histoTruePositronITSClR");
-            histoTruePrimGammaChi2NDFPt         = (TH2F*)directoryConv->Get("histoTruePrimGammaChi2NDFPt");
-            histoTruePrimGammaAlphaQt           = (TH2F*)directoryConv->Get("histoTruePrimGammaAlphaQt");
-            histoTruePrimGammaQtPt              = (TH2F*)directoryConv->Get("histoTruePrimGammaQtPt");
-            histoTruePrimGammaPsiPairPt         = (TH2F*)directoryConv->Get("histoTruePrimGammaPsiPairPt");
+            histoTruePrimGammaQtR               = (TH2F*)directoryConv->Get("histoTruePrimGammaQtR");
             histoTruePrimGammaCosPointPt        = (TH2F*)directoryConv->Get("histoTruePrimGammaCosPointPt");
-            histoTrueSecGammaChi2NDFPt          = (TH2F*)directoryConv->Get("histoTrueSecGammaChi2NDFPt");
-            histoTrueSecGammaAlphaQt            = (TH2F*)directoryConv->Get("histoTrueSecGammaAlphaQt");
-            histoTrueSecGammaQtPt               = (TH2F*)directoryConv->Get("histoTrueSecGammaQtPt");
-            histoTrueSecGammaPsiPairPt          = (TH2F*)directoryConv->Get("histoTrueSecGammaPsiPairPt");
+            for(Int_t i=0;i<20;i++){
+                histoTrueMCKindCosPointPt[i]    = (TH2F*)directoryConv->Get(Form("histoTrueMCKindCosPointPt_kind%d",i));
+                histoTrueMCKindChi2PsiPairPt[i] = (TH3F*)directoryConv->Get(Form("histoTrueMCKindChi2PsiPairPt_kind%d",i));
+                histoTrueMCKindAlphaQtPt[i]     = (TH3F*)directoryConv->Get(Form("histoTrueMCKindAlphaQtPt_kind%d",i));
+            }
             histoTrueSecGammaCosPointPt         = (TH2F*)directoryConv->Get("histoTrueSecGammaCosPointPt");
-            histoTrueDalitzGammaChi2NDFPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaChi2NDFPt");
-            histoTrueDalitzGammaAlphaQt         = (TH2F*)directoryConv->Get("histoTrueDalitzGammaAlphaQt");
-            histoTrueDalitzGammaQtPt            = (TH2F*)directoryConv->Get("histoTrueDalitzGammaQtPt");
-            histoTrueDalitzGammaPsiPairPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaPsiPairPt");
             histoTrueDalitzGammaCosPointPt      = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointPt");
             histoTruePrimGammaAsymP             = (TH2F*)directoryConv->Get("histoTruePrimGammaAsymP");
             histoTrueSecGammaAsymP              = (TH2F*)directoryConv->Get("histoTrueSecGammaAsymP");
             histoTrueDalitzGammaAsymP           = (TH2F*)directoryConv->Get("histoTrueDalitzGammaAsymP");
-            histoTrueGammaChi2PsiPair           = (TH2F*)directoryConv->Get("histoTrueGammaChi2PsiPair");
+            histoTrueGammaChi2PsiPairPt         = (TH3F*)directoryConv->Get("histoTrueGammaChi2PsiPairPt");
             histoTrueGammaCosPointChi2          = (TH2F*)directoryConv->Get("histoTrueGammaCosPointChi2");
             histoTrueGammaCosPointPsiPair       = (TH2F*)directoryConv->Get("histoTrueGammaCosPointPsiPair");
             histoTrueGammaInvMassPt             = (TH2F*)directoryConv->Get("histoTrueGammaInvMassPt");
-            histoTrueDalitzGammaChi2PsiPair     = (TH2F*)directoryConv->Get("histoTrueDalitzGammaChi2PsiPair");
             histoTrueDalitzGammaCosPointChi2    = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointChi2");
             histoTrueDalitzGammaCosPointPsiPair = (TH2F*)directoryConv->Get("histoTrueDalitzGammaCosPointPsiPair");
             histoTrueDalitzGammaInvMassPt       = (TH2F*)directoryConv->Get("histoTrueDalitzGammaInvMassPt");
@@ -932,7 +990,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositronFClPt->Sumw2();
         histoElectronClPt->Sumw2();
         histoPositronClPt->Sumw2();
-        histoGammaChi2NDFPt->Sumw2();
         histoGammaChi2NDFPtEtaNeg->Sumw2();
         histoGammaChi2NDFPtEtaPos->Sumw2();
         histoGammaChi2NDFR->Sumw2();
@@ -952,13 +1009,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoElectronNSigmadEdxCut->Sumw2();
         histoGammaEtaPt->Sumw2();
         histoGammaEtaR->Sumw2();
-        histoGammaAlphaQt->Sumw2();
+        histoGammaAlphaQtPt->Sumw2();
         histoGammaAlphaR->Sumw2();
-        histoGammaQtPt->Sumw2();
         histoGammaQtR->Sumw2();
         histoGammaPhi->Sumw2();
         histoGammaPhiR->Sumw2();
-        histoGammaPsiPairPt->Sumw2();
         histoGammaPsiPairPtEtaNeg->Sumw2();
         histoGammaPsiPairPtEtaPos->Sumw2();
         histoGammaPsiPairR->Sumw2();
@@ -966,7 +1021,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoGammaCosPointR->Sumw2();
         histoGammaAsymP->Sumw2();
         histoGammaAsymR->Sumw2();
-        histoGammaChi2PsiPair->Sumw2();
+        histoGammaChi2PsiPairPt->Sumw2();
         histoGammaCosPointChi2->Sumw2();
         histoGammaCosPointPsiPair->Sumw2();
         histoGammaInvMassPt->Sumw2();
@@ -993,29 +1048,22 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
             histoTruePositronNSigmadEdxTPCP->Sumw2();
             histoTruePositronNSigmaTOFP->Sumw2();
             histoTruePositronITSClR->Sumw2();
-            histoTruePrimGammaChi2NDFPt->Sumw2();
-            histoTruePrimGammaAlphaQt->Sumw2();
-            histoTruePrimGammaQtPt->Sumw2();
+            histoTruePrimGammaQtR->Sumw2();
             histoTruePrimGammaCosPointPt->Sumw2();
-            histoTruePrimGammaPsiPairPt->Sumw2();
-            histoTrueSecGammaChi2NDFPt->Sumw2();
-            histoTrueSecGammaAlphaQt->Sumw2();
-            histoTrueSecGammaQtPt->Sumw2();
+            for(Int_t i=0;i<20;i++){
+                histoTrueMCKindCosPointPt[i]->Sumw2();
+                histoTrueMCKindChi2PsiPairPt[i]->Sumw2();
+                histoTrueMCKindAlphaQtPt[i]->Sumw2();
+            }
             histoTrueSecGammaCosPointPt->Sumw2();
-            histoTrueSecGammaPsiPairPt->Sumw2();
-            histoTrueDalitzGammaChi2NDFPt->Sumw2();
-            histoTrueDalitzGammaAlphaQt->Sumw2();
-            histoTrueDalitzGammaQtPt->Sumw2();
             histoTrueDalitzGammaCosPointPt->Sumw2();
-            histoTrueDalitzGammaPsiPairPt->Sumw2();
             histoTrueDalitzGammaAsymP->Sumw2();
             histoTruePrimGammaAsymP->Sumw2();
             histoTrueSecGammaAsymP->Sumw2();
-            histoTrueGammaChi2PsiPair->Sumw2();
+            histoTrueGammaChi2PsiPairPt->Sumw2();
             histoTrueGammaCosPointChi2->Sumw2();
             histoTrueGammaCosPointPsiPair->Sumw2();
             histoTrueGammaInvMassPt->Sumw2();
-            histoTrueDalitzGammaChi2PsiPair->Sumw2();
             histoTrueDalitzGammaCosPointChi2->Sumw2();
             histoTrueDalitzGammaCosPointPsiPair->Sumw2();
             histoTrueDalitzGammaInvMassPt->Sumw2();
@@ -1029,6 +1077,8 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     //********************************************************************************
 
     Long64_t nEntriesRecGam                 = PhotonQA->GetEntries();
+    if(maxNumGammasProcess>0 && maxNumGammasProcess<nEntriesRecGam)
+        nEntriesRecGam = maxNumGammasProcess;
     Int_t nGammas                           = 0;
     cout << "Number of Gammas to be processed: " << nEntriesRecGam << endl;
     //    (*ptGammaAssosiatedPi0)[k]
@@ -1043,6 +1093,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     Int_t posTracksWithoutnSigmaITS         = 0;
 
     for (Long64_t i=0; i<nEntriesRecGam;i++) {
+        if ((Long64_t)i%(Long64_t)1e6 == 0) cout << i/1e6 << "Mio gammas processed" << endl;
         nbytesRecGam                        += PhotonQA->GetEntry(i);
         Float_t photonEta                   = -TMath::Log(TMath::Tan(photonTheta/2.));
         Float_t photonP                     = photonPt * TMath::CosH(photonEta);
@@ -1114,8 +1165,10 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         }
 
         Bool_t kPassedQt                    = 0;
-        if (f2DQt) {
-            if (TMath::Power(photonAlpha/0.95,2)+TMath::Power(photonQt/qtCut,2) < 1 ) kPassedQt = kTRUE;
+        if (useQtCutFunc) {
+            if (photonQt <  (qtCutPtDep*photonPt) && photonQt < qtCut) kPassedQt = kTRUE;
+        } else if (f2DQt) {
+            if (TMath::Power(photonAlpha/alphaCut,2)+TMath::Power(photonQt/qtCut,2) < 1 ) kPassedQt = kTRUE;
         } else {
             if (photonQt < qtCut ) kPassedQt = kTRUE;
         }
@@ -1125,7 +1178,15 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
 
         Bool_t kPassedPsiPair               = 0;
         Bool_t kPassedChi2                  = 0;
-        if (f2DChi2PsiPair){
+        if (doChi2DepPsiPairCut){
+            if (TMath::Abs(photonPsiPair) < psiPairExpCut*TMath::Exp(psiPairCut*photonChi2Ndf)){
+                kPassedPsiPair              = kTRUE;
+                if(photonChi2Ndf > chi2PerDOFCut)
+                    kPassedChi2                 = kFALSE;
+                else
+                    kPassedChi2                 = kTRUE;
+            }
+        } else if (f2DChi2PsiPair){
             if (TMath::Abs(photonPsiPair) < -psiPairCut/chi2PerDOFCut*photonChi2Ndf + psiPairCut){
                 kPassedPsiPair              = kTRUE;
                 kPassedChi2                 = kTRUE;
@@ -1281,21 +1342,18 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
                             histoTruePositronITSClR->Fill(clsITSPositron,photonR);
                         }
                     }
-                    histoGammaAlphaQt->Fill(photonAlpha,photonQt);
+                    histoGammaAlphaQtPt->Fill(photonAlpha,photonQt,photonPt);
                     histoGammaAlphaR->Fill(photonAlpha,photonR);
-                    histoGammaQtPt->Fill(photonQt,photonPt);
                     histoGammaQtR->Fill(photonQt,photonR);
                     histoGammaPhi->Fill(photonPhi);
                     histoGammaPhiR->Fill(photonPhi,photonR);
-                    histoGammaChi2NDFPt->Fill(photonChi2Ndf,photonPt);
                     histoGammaChi2NDFR->Fill(photonChi2Ndf,photonR);
                     histoGammaEtaPt->Fill(photonEta, photonPt);
                     histoGammaEtaR->Fill(photonEta, photonR);
-                    histoGammaPsiPairPt->Fill(photonPsiPair, photonPt);
                     histoGammaPsiPairR->Fill(photonPsiPair, photonR);
                     histoGammaCosPointPt->Fill(photonCosPoint, photonPt);
                     histoGammaCosPointR->Fill(photonCosPoint, photonR);
-                    histoGammaChi2PsiPair->Fill(photonChi2Ndf,photonPsiPair);
+                    histoGammaChi2PsiPairPt->Fill(photonChi2Ndf,photonPsiPair, photonPt);
                     histoGammaCosPointChi2->Fill(photonCosPoint, photonChi2Ndf);
                     histoGammaCosPointPsiPair->Fill(photonCosPoint,photonPsiPair);
                     histoGammaInvMassPt->Fill(photonInvMass, photonPt);
@@ -1308,44 +1366,36 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
                     histoGammaXY->Fill(photonX, photonY);
 
                     if (kMC){
+                        histoTrueMCKindCosPointPt[kind]->Fill(photonCosPoint,photonPt);
+                        histoTrueMCKindChi2PsiPairPt[kind]->Fill(photonChi2Ndf,photonPsiPair,photonPt);
+                        histoTrueMCKindAlphaQtPt[kind]->Fill(photonAlpha,photonQt,photonPt);
+
                         if (kind ==0){
-                            histoTruePrimGammaChi2NDFPt->Fill(photonChi2Ndf,photonPt);
-                            histoTruePrimGammaAlphaQt->Fill(photonAlpha,photonQt);
-                            histoTruePrimGammaQtPt->Fill(photonQt,photonPt);
-                            histoTruePrimGammaPsiPairPt->Fill(photonPsiPair, photonPt);
+                            histoTruePrimGammaQtR->Fill(photonQt,photonR);
                             histoTruePrimGammaCosPointPt->Fill(photonCosPoint, photonPt);
                             if (photonP != 0){
                                 histoTruePrimGammaAsymP->Fill(photonAsymE,photonP);
                             }
-                            histoTrueGammaChi2PsiPair->Fill(photonChi2Ndf,photonPsiPair);
+                            histoTrueGammaChi2PsiPairPt->Fill(photonChi2Ndf,photonPsiPair,photonPt);
                             histoTrueGammaCosPointChi2->Fill(photonCosPoint, photonChi2Ndf);
                             histoTrueGammaCosPointPsiPair->Fill(photonCosPoint,photonPsiPair);
                             histoTrueGammaInvMassPt->Fill(photonInvMass, photonPt);
                         }
                         if (kind ==5){
-                            histoTrueSecGammaChi2NDFPt->Fill(photonChi2Ndf,photonPt);
-                            histoTrueSecGammaAlphaQt->Fill(photonAlpha,photonQt);
-                            histoTrueSecGammaQtPt->Fill(photonQt,photonPt);
-                            histoTrueSecGammaPsiPairPt->Fill(photonPsiPair, photonPt);
                             histoTrueSecGammaCosPointPt->Fill(photonCosPoint, photonPt);
                             if (photonP != 0){
                                 histoTrueSecGammaAsymP->Fill(photonAsymE,photonP);
                             }
-                            histoTrueGammaChi2PsiPair->Fill(photonChi2Ndf,photonPsiPair);
+                            histoTrueGammaChi2PsiPairPt->Fill(photonChi2Ndf,photonPsiPair,photonPt);
                             histoTrueGammaCosPointChi2->Fill(photonCosPoint, photonChi2Ndf);
                             histoTrueGammaCosPointPsiPair->Fill(photonCosPoint,photonPsiPair);
                             histoTrueGammaInvMassPt->Fill(photonInvMass, photonPt);
                         }
                         if (kind ==3 || kind == 4){
-                            histoTrueDalitzGammaChi2NDFPt->Fill(photonChi2Ndf,photonPt);
-                            histoTrueDalitzGammaAlphaQt->Fill(photonAlpha,photonQt);
-                            histoTrueDalitzGammaQtPt->Fill(photonQt,photonPt);
-                            histoTrueDalitzGammaPsiPairPt->Fill(photonPsiPair, photonPt);
                             histoTrueDalitzGammaCosPointPt->Fill(photonCosPoint, photonPt);
                             if (photonP != 0){
                                 histoTrueDalitzGammaAsymP->Fill(photonAsymE,photonP);
                             }
-                            histoTrueDalitzGammaChi2PsiPair->Fill(photonChi2Ndf,photonPsiPair);
                             histoTrueDalitzGammaCosPointChi2->Fill(photonCosPoint, photonChi2Ndf);
                             histoTrueDalitzGammaCosPointPsiPair->Fill(photonCosPoint,photonPsiPair);
                             histoTrueDalitzGammaInvMassPt->Fill(photonInvMass, photonPt);
@@ -1396,7 +1446,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoPositronFClPt->Write("histoPositronFClPt",TObject::kWriteDelete);
         histoElectronClPt->Write("histoElectronClPt",TObject::kWriteDelete);
         histoPositronClPt->Write("histoPositronClPt",TObject::kWriteDelete);
-        histoGammaChi2NDFPt->Write("histoGammaChi2NDFPt",TObject::kWriteDelete);
         histoGammaChi2NDFPtEtaNeg->Write("histoGammaChi2NDFPtEtaNeg",TObject::kWriteDelete);
         histoGammaChi2NDFPtEtaPos->Write("histoGammaChi2NDFPtEtaPos",TObject::kWriteDelete);
         histoGammaChi2NDFR->Write("histoGammaChi2NDFR",TObject::kWriteDelete);
@@ -1419,13 +1468,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         if (ESDQADirectory)histoGoodESDTracks->Write("histoGoodESDTracks",TObject::kWriteDelete);
         histoGammaEtaPt->Write("histoGammaEtaPt",TObject::kWriteDelete);
         histoGammaEtaR->Write("histoGammaEtaR",TObject::kWriteDelete);
-        histoGammaAlphaQt->Write("histoGammaAlphaQt",TObject::kWriteDelete);
+        histoGammaAlphaQtPt->Write("histoGammaAlphaQtPt",TObject::kWriteDelete);
         histoGammaAlphaR->Write("histoGammaAlphaR",TObject::kWriteDelete);
-        histoGammaQtPt->Write("histoGammaQtPt",TObject::kWriteDelete);
         histoGammaQtR->Write("histoGammaQtR",TObject::kWriteDelete);
         histoGammaPhi->Write("histoGammaPhi",TObject::kWriteDelete);
         histoGammaPhiR->Write("histoGammaPhiR",TObject::kWriteDelete);
-        histoGammaPsiPairPt->Write("histoGammaPsiPairPt",TObject::kWriteDelete);
         histoGammaPsiPairPtEtaNeg->Write("histoGammaPsiPairPtEtaNeg",TObject::kWriteDelete);
         histoGammaPsiPairPtEtaPos->Write("histoGammaPsiPairPtEtaPos",TObject::kWriteDelete);
         histoGammaPsiPairR->Write("histoGammaPsiPairR",TObject::kWriteDelete);
@@ -1433,7 +1480,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         histoGammaCosPointR->Write("histoGammaCosPointR",TObject::kWriteDelete);
         histoGammaAsymP->Write("histoGammaAsymP",TObject::kWriteDelete);
         histoGammaAsymR->Write("histoGammaAsymR",TObject::kWriteDelete);
-        histoGammaChi2PsiPair->Write("histoGammaChi2PsiPair",TObject::kWriteDelete);
+        histoGammaChi2PsiPairPt->Write("histoGammaChi2PsiPairPt",TObject::kWriteDelete);
         histoGammaCosPointChi2->Write("histoGammaCosPointChi2",TObject::kWriteDelete);
         histoGammaCosPointPsiPair->Write("histoGammaCosPointPsiPair",TObject::kWriteDelete);
         histoGammaInvMassPt->Write("histoGammaInvMassPt",TObject::kWriteDelete);
@@ -1460,29 +1507,22 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
             histoTruePositronNSigmadEdxTPCP->Write("histoTruePositronNSigmadEdxTPCP",TObject::kWriteDelete);
             histoTruePositronNSigmaTOFP->Write("histoTruePositronNSigmaTOFP",TObject::kWriteDelete);
             histoTruePositronITSClR->Write("histoTruePositronITSClR",TObject::kWriteDelete);
-            histoTruePrimGammaChi2NDFPt->Write("histoTruePrimGammaChi2NDFPt",TObject::kWriteDelete);
-            histoTruePrimGammaAlphaQt->Write("histoTruePrimGammaAlphaQt",TObject::kWriteDelete);
-            histoTruePrimGammaQtPt->Write("histoTruePrimGammaQtPt",TObject::kWriteDelete);
-            histoTruePrimGammaPsiPairPt->Write("histoTruePrimGammaPsiPairPt",TObject::kWriteDelete);
+            histoTruePrimGammaQtR->Write("histoTruePrimGammaQtR",TObject::kWriteDelete);
             histoTruePrimGammaCosPointPt->Write("histoTruePrimGammaCosPointPt",TObject::kWriteDelete);
             histoTruePrimGammaAsymP->Write("histoTruePrimGammaAsymP",TObject::kWriteDelete);
-            histoTrueSecGammaChi2NDFPt->Write("histoTrueSecGammaChi2NDFPt",TObject::kWriteDelete);
-            histoTrueSecGammaAlphaQt->Write("histoTrueSecGammaAlphaQt",TObject::kWriteDelete);
-            histoTrueSecGammaQtPt->Write("histoTrueSecGammaQtPt",TObject::kWriteDelete);
-            histoTrueSecGammaPsiPairPt->Write("histoTrueSecGammaPsiPairPt",TObject::kWriteDelete);
+            for(Int_t i=0;i<20;i++){
+                histoTrueMCKindCosPointPt[i]->Write(Form("histoTrueMCKindCosPointPt_kind%d",i),TObject::kWriteDelete);
+                histoTrueMCKindChi2PsiPairPt[i]->Write(Form("histoTrueMCKindChi2PsiPairPt_kind%d",i),TObject::kWriteDelete);
+                histoTrueMCKindAlphaQtPt[i]->Write(Form("histoTrueMCKindAlphaQtPt_kind%d",i),TObject::kWriteDelete);
+            }
             histoTrueSecGammaCosPointPt->Write("histoTrueSecGammaCosPointPt",TObject::kWriteDelete);
             histoTrueSecGammaAsymP->Write("histoTrueSecGammaAsymP",TObject::kWriteDelete);
-            histoTrueGammaChi2PsiPair->Write("histoTrueGammaChi2PsiPair",TObject::kWriteDelete);
+            histoTrueGammaChi2PsiPairPt->Write("histoTrueGammaChi2PsiPairPt",TObject::kWriteDelete);
             histoTrueGammaCosPointChi2->Write("histoTrueGammaCosPointChi2",TObject::kWriteDelete);
             histoTrueGammaCosPointPsiPair->Write("histoTrueGammaCosPointPsiPair",TObject::kWriteDelete);
             histoTrueGammaInvMassPt->Write("histoTrueGammaInvMassPt",TObject::kWriteDelete);
-            histoTrueDalitzGammaChi2NDFPt->Write("histoTrueDalitzGammaChi2NDFPt",TObject::kWriteDelete);
-            histoTrueDalitzGammaAlphaQt->Write("histoTrueDalitzGammaAlphaQt",TObject::kWriteDelete);
-            histoTrueDalitzGammaQtPt->Write("histoTrueDalitzGammaQtPt",TObject::kWriteDelete);
-            histoTrueDalitzGammaPsiPairPt->Write("histoTrueDalitzGammaPsiPairPt",TObject::kWriteDelete);
             histoTrueDalitzGammaCosPointPt->Write("histoTrueDalitzGammaCosPointPt",TObject::kWriteDelete);
             histoTrueDalitzGammaAsymP->Write("histoTrueDalitzGammaAsymP",TObject::kWriteDelete);
-            histoTrueDalitzGammaChi2PsiPair->Write("histoTrueDalitzGammaChi2PsiPair",TObject::kWriteDelete);
             histoTrueDalitzGammaCosPointChi2->Write("histoTrueDalitzGammaCosPointChi2",TObject::kWriteDelete);
             histoTrueDalitzGammaCosPointPsiPair->Write("histoTrueDalitzGammaCosPointPsiPair",TObject::kWriteDelete);
             histoTrueDalitzGammaInvMassPt->Write("histoTrueDalitzGammaInvMassPt",TObject::kWriteDelete);
@@ -1509,7 +1549,6 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     delete   histoPositronFClPt;
     delete   histoElectronClPt;
     delete   histoPositronClPt;
-    delete   histoGammaChi2NDFPt;
     delete   histoGammaChi2NDFPtEtaNeg;
     delete   histoGammaChi2NDFPtEtaPos;
     delete   histoGammaChi2NDFR;
@@ -1535,13 +1574,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     if (histoGoodESDTracksdummy)    delete   histoGoodESDTracksdummy;
     delete   histoGammaEtaPt;
     delete   histoGammaEtaR;
-    delete   histoGammaAlphaQt;
+    delete   histoGammaAlphaQtPt;
     delete   histoGammaAlphaR;
-    delete   histoGammaQtPt;
     delete   histoGammaQtR;
     delete   histoGammaPhi;
     delete   histoGammaPhiR;
-    delete   histoGammaPsiPairPt;
     delete   histoGammaPsiPairPtEtaNeg;
     delete   histoGammaPsiPairPtEtaPos;
     delete   histoGammaPsiPairR;
@@ -1549,14 +1586,14 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     delete   histoGammaCosPointR;
     delete   histoGammaAsymP;
     delete   histoGammaAsymR;
-    delete   histoGammaChi2PsiPair;
+    delete   histoGammaChi2PsiPairPt;
     delete   histoGammaCosPointChi2;
     delete   histoGammaCosPointPsiPair;
     delete   histoGammaInvMassPt;
     delete   histoGammaInvMassR;
     delete   histoGammaZR;
     delete   histoGammaXY;
-    delete 	 histoElectronNSigmaITSEtaP;
+    delete   histoElectronNSigmaITSEtaP;
     delete   histoPositronNSigmaITSEtaP;
     delete   histoElectronITSdEdxEtaP;
     delete   histoPositronITSdEdxEtaP;
@@ -1565,40 +1602,36 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     delete   histoPositronITSClPt;
     delete   histoElectronITSClEta;
     delete   histoPositronITSClEta;
-    delete   histoTrueElectronNSigmadEdxITSP;
-    delete   histoTrueElectronNSigmadEdxTPCP;
-    delete   histoTrueElectronNSigmaTOFP;
-    delete   histoTrueElectronITSClR;
-    delete   histoTruePositronNSigmadEdxITSP;
-    delete   histoTruePositronNSigmadEdxTPCP;
-    delete   histoTruePositronNSigmaTOFP;
-    delete   histoTruePositronITSClR;
-    delete   histoTrueDalitzGammaChi2NDFPt;
-    delete   histoTrueDalitzGammaAlphaQt;
-    delete   histoTrueDalitzGammaQtPt;
-    delete   histoTrueDalitzGammaCosPointPt;
-    delete   histoTrueDalitzGammaPsiPairPt;
-    delete   histoTrueDalitzGammaAsymP;
-    delete   histoTrueSecGammaChi2NDFPt;
-    delete   histoTrueSecGammaAlphaQt;
-    delete   histoTrueSecGammaQtPt;
-    delete   histoTrueSecGammaCosPointPt;
-    delete   histoTrueSecGammaPsiPairPt;
-    delete   histoTrueSecGammaAsymP;
-    delete   histoTruePrimGammaChi2NDFPt;
-    delete   histoTruePrimGammaAlphaQt;
-    delete   histoTruePrimGammaQtPt;
-    delete   histoTruePrimGammaCosPointPt;
-    delete   histoTruePrimGammaPsiPairPt;
-    delete   histoTruePrimGammaAsymP;
-    delete   histoTrueGammaChi2PsiPair;
-    delete   histoTrueGammaCosPointChi2;
-    delete   histoTrueGammaCosPointPsiPair;
-    delete   histoTrueGammaInvMassPt;
-    delete   histoTrueDalitzGammaChi2PsiPair;
-    delete   histoTrueDalitzGammaCosPointChi2;
-    delete   histoTrueDalitzGammaCosPointPsiPair;
-    delete   histoTrueDalitzGammaInvMassPt;
+    if (kMC){
+      if (histoTrueElectronNSigmadEdxITSP) delete histoTrueElectronNSigmadEdxITSP;
+      if (histoTrueElectronNSigmadEdxTPCP) delete histoTrueElectronNSigmadEdxTPCP;
+      if (histoTrueElectronNSigmaTOFP) delete histoTrueElectronNSigmaTOFP;
+      if (histoTrueElectronITSClR) delete histoTrueElectronITSClR;
+      if (histoTruePositronNSigmadEdxITSP) delete histoTruePositronNSigmadEdxITSP;
+      if (histoTruePositronNSigmadEdxTPCP) delete histoTruePositronNSigmadEdxTPCP;
+      if (histoTruePositronNSigmaTOFP) delete histoTruePositronNSigmaTOFP;
+      if (histoTruePositronITSClR) delete histoTruePositronITSClR;
+      if (histoTruePrimGammaQtR) delete histoTruePrimGammaQtR;
+      if (histoTruePrimGammaCosPointPt) delete histoTruePrimGammaCosPointPt;
+      if (histoTruePrimGammaAsymP) delete histoTruePrimGammaAsymP;
+      if (histoTrueSecGammaCosPointPt) delete histoTrueSecGammaCosPointPt;
+      if (histoTrueSecGammaAsymP) delete histoTrueSecGammaAsymP;
+      if (histoTrueGammaChi2PsiPairPt) delete histoTrueGammaChi2PsiPairPt;
+      if (histoTrueGammaCosPointChi2) delete histoTrueGammaCosPointChi2;
+      if (histoTrueGammaCosPointPsiPair) delete histoTrueGammaCosPointPsiPair;
+      if (histoTrueGammaInvMassPt) delete histoTrueGammaInvMassPt;
+      if (histoTrueDalitzGammaCosPointPt) delete histoTrueDalitzGammaCosPointPt;
+      if (histoTrueDalitzGammaAsymP) delete histoTrueDalitzGammaAsymP;
+      if (histoTrueDalitzGammaCosPointChi2) delete histoTrueDalitzGammaCosPointChi2;
+      if (histoTrueDalitzGammaCosPointPsiPair) delete histoTrueDalitzGammaCosPointPsiPair;
+      if (histoTrueDalitzGammaInvMassPt) delete histoTrueDalitzGammaInvMassPt;
+      for(Int_t i=0;i<20;i++){
+        if (histoTrueMCKindCosPointPt[i]) delete histoTrueMCKindCosPointPt[i];
+        if (histoTrueMCKindChi2PsiPairPt[i]) delete histoTrueMCKindChi2PsiPairPt[i];
+        if (histoTrueMCKindAlphaQtPt[i]) delete histoTrueMCKindAlphaQtPt[i];
+      }
+    }
+
 
     delete daugtherProp;
     delete gammaConvCoord;

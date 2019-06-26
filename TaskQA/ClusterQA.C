@@ -1058,7 +1058,7 @@ void ClusterQA(
             GetMinMaxBin(fHistM02BeforeQA,minB,maxB);
             SetXRange(fHistM02BeforeQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistM02BeforeQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{0}^{2}}",1,1,
+                                fHistM02BeforeQA,"","#sigma_{long}^{2}","#frac{d#it{N}}{d#sigma_{long}^{2}}",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM02BeforeQA, Form("%s/M02_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistM02BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1069,7 +1069,7 @@ void ClusterQA(
             GetMinMaxBin(fHistM02AfterQA,minB,maxB);
             SetXRange(fHistM02AfterQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistM02AfterQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{0}^{2}}",1,1,
+                                fHistM02AfterQA,"","#sigma_{long}^{2}","#frac{d#it{N}}{d#sigma_{long}^{2}}",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM02AfterQA, Form("%s/M02_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterM02.push_back(new TH1D(*fHistM02AfterQA));
@@ -1081,7 +1081,7 @@ void ClusterQA(
             GetMinMaxBin(fHistM20BeforeQA,minB,maxB);
             SetXRange(fHistM20BeforeQA,1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistM20BeforeQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{1}^{2}}",1,1,
+                                fHistM20BeforeQA,"","#sigma_{long}^{2}","#frac{d#it{N}}{d#sigma_{short}^{2}}",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM20BeforeQA, Form("%s/M20_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistM20BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1092,7 +1092,7 @@ void ClusterQA(
             GetMinMaxBin(fHistM20AfterQA,minB,maxB);
             SetXRange(fHistM20AfterQA,1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistM20AfterQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{1}^{2}}",1,1,
+                                fHistM20AfterQA,"","#sigma_{long}^{2}","#frac{d#it{N}}{d#sigma_{short}^{2}}",1,1,
                                 0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM20AfterQA, Form("%s/M20_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterM20.push_back(new TH1D(*fHistM20AfterQA));
@@ -1134,7 +1134,7 @@ void ClusterQA(
                 SetZMinMaxTH2(fHistClusterEM02BeforeQA,1,fHistClusterEM02BeforeQA->GetNbinsX(),1,fHistClusterEM02BeforeQA->GetNbinsY());
                 DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                     fHistClusterEM02BeforeQA,"",
-                                    "E (GeV)","#lambda_{0}^{2}",1,1,
+                                    "E (GeV)","#sigma_{long}^{2}",1,1,
                                     0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEM02BeforeQA, Form("%s/EVsM02_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistClusterEM02BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1145,7 +1145,7 @@ void ClusterQA(
                 SetZMinMaxTH2(fHistClusterEM02AfterQA,1,fHistClusterEM02AfterQA->GetNbinsX(),1,fHistClusterEM02AfterQA->GetNbinsY());
                 DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                     fHistClusterEM02AfterQA,"",
-                                    "E (GeV)","#lambda_{0}^{2}",1,1,
+                                    "E (GeV)","#sigma_{long}^{2}",1,1,
                                     0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEM02AfterQA, Form("%s/EVsM02_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecClusterEM02.push_back(new TH2D(*fHistClusterEM02AfterQA));
@@ -1167,7 +1167,7 @@ void ClusterQA(
                     SetZMinMaxTH2(fHistClusterM20M02BeforeQA,1,maxBX+1,minB-1,maxB+1);
                     DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02BeforeQA,"",
-                                        "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
+                                        "#sigma_{short}^{2}","#sigma_{long}^{2}",1,1.2,
                                         0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02BeforeQA, Form("%s/M20VsM02_all_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterM20M02BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1186,7 +1186,7 @@ void ClusterQA(
                     SetZMinMaxTH2(fHistClusterM20M02AfterQA,1,maxBX+1,minB-1,maxB+1);
                     DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02AfterQA,"",
-                                        "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
+                                        "#sigma_{short}^{2}","#sigma_{long}^{2}",1,1.2,
                                         0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02AfterQA, Form("%s/M20VsM02_accepted_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterM20M02AfterQA| could not be found! Skipping Draw..." << endl;
@@ -1196,7 +1196,7 @@ void ClusterQA(
                     fHistClusterM20M02MatchedAfterQA->Add(fHistClusterM20M02AfterQA,-1);
                     DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02MatchedAfterQA,"",
-                                        "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
+                                        "#sigma_{short}^{2}","#sigma_{long}^{2}",1,1.2,
                                         0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02MatchedAfterQA, Form("%s/M20VsM02_rejected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     delete fHistClusterM20M02MatchedAfterQA;
@@ -1240,7 +1240,7 @@ void ClusterQA(
                     DrawAutoGammaHistoPaper2D(fHistClusterTrueGammaEM02,
                                                 "",
                                                 "E (GeV)",
-                                                "#lambda_{0}^{2}",
+                                                "#sigma_{long}^{2}",
                                                 0,0,0,
                                                 1,0.1,2.95,
                                                 1,4.95,50.05,0.8,0.65);
@@ -1276,7 +1276,7 @@ void ClusterQA(
                     DrawAutoGammaHistoPaper2D(fHistClusterTruePi0EM02,
                                                 "",
                                                 "E (GeV)",
-                                                "#lambda_{0}^{2}",
+                                                "#sigma_{long}^{2}",
                                                 0,0,0,
                                                 1,0.1,2.95,
                                                 1,4.95,50.05,0.8,0.65);
@@ -1336,7 +1336,7 @@ void ClusterQA(
                         DrawAutoGammaHistoPaper2D(fHistClusterTrueEtaEM02,
                                                     "",
                                                     "E (GeV)",
-                                                    "#lambda_{0}^{2}",
+                                                    "#sigma_{long}^{2}",
                                                     0,0,0,
                                                     1,0.1,2.95,
                                                     1,4.95,50.05,0.8,0.65);
@@ -1371,7 +1371,7 @@ void ClusterQA(
                         DrawAutoGammaHistoPaper2D(fHistClusterTrueElectronEM02,
                                                     "",
                                                     "E (GeV)",
-                                                    "#lambda_{0}^{2}",
+                                                    "#sigma_{long}^{2}",
                                                     0,0,0,
                                                     1,0.1,2.95,
                                                     1,4.95,50.05,0.8,0.65);
@@ -2725,13 +2725,13 @@ void ClusterQA(
             ((TH1D*)vecClusterEM02_TH1D[iEM02].at(iVec))->GetXaxis()->SetRange(Xmin,Xmax);
           }
           DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                      vecClusterEM02_TH1D[iEM02],"",Form("#lambda_{0}^{2} for %.01f < E_{#mbox{cluster}} < %.01f GeV",EM02_bins[iEM02],EM02_bins[iEM02+1]),"#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                      vecClusterEM02_TH1D[iEM02],"",Form("#sigma_{long}^{2} for %.01f < E_{#mbox{cluster}} < %.01f GeV",EM02_bins[iEM02],EM02_bins[iEM02+1]),"#frac{1}{N} #frac{dN}{d#sigma_{long}^{2}}",1,1.1,
                                       labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                       0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
           SaveCanvas(canvas, Form("%s/Comparison/ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()),kFALSE,kTRUE);
 
           DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                          vecClusterEM02_TH1D[iEM02],"","#lambda_{0}^{2}","#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                          vecClusterEM02_TH1D[iEM02],"","#sigma_{long}^{2}","#frac{1}{N} #frac{dN}{d#sigma_{long}^{2}}",1,1.1,
                                           labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                           0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
           SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()));
@@ -2782,13 +2782,13 @@ void ClusterQA(
     //---------------------------------------------------------------------------------------------------------------
     // M02 (long axis)
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                vecClusterM02,"","#sigma_{long}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#sigma_{long}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                 0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/M02_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                    vecClusterM02,"","#sigma_{long}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#sigma_{long}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M02_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2801,13 +2801,13 @@ void ClusterQA(
         temp->Scale(1./temp->Integral());
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
+                                vecClusterM20,"","#sigma_{short}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#sigma_{short}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                 0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/M20_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
+                                    vecClusterM20,"","#sigma_{short}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#sigma_{short}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M20_afterQA.%s", outputDir.Data(), suffix.Data()));

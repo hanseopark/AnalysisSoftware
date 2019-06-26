@@ -38,7 +38,7 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
@@ -95,14 +95,14 @@ Double_t FindLargestEntryIn1D(TH1D* histo){
 //******************* Standardized plotting of 2D plots ****************************
 //**********************************************************************************
 void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xTitle, TString yTitle, Bool_t kRangeY, Double_t startY, Double_t endY, Bool_t kRangeX, Double_t startX, Double_t endX, Int_t logX, Int_t logY, Int_t logZ, Float_t* floatLogo, Int_t canvasSizeX = 500, Int_t canvasSizeY = 500, TString generator ="" , TString period =""){
-    TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size      
+    TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size
     canvasStandard->SetLogx(logX);
     canvasStandard->SetLogy(logY);
     canvasStandard->SetLogz(logZ);
-    canvasStandard->SetRightMargin(0.12);     
-    canvasStandard->SetLeftMargin(0.12);      
-    canvasStandard->SetBottomMargin(0.1);     
-    canvasStandard->SetTopMargin(0.04);       
+    canvasStandard->SetRightMargin(0.12);
+    canvasStandard->SetLeftMargin(0.12);
+    canvasStandard->SetBottomMargin(0.1);
+    canvasStandard->SetTopMargin(0.04);
     canvasStandard->cd();
     histo2D->SetTitle("");
     DrawAutoGammaHisto2D(   histo2D,
@@ -113,12 +113,12 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
     if (logX==1){
     //       cout << histo2D->GetXaxis()->GetLabelOffset() << endl;
         histo2D->GetXaxis()->SetLabelOffset(0.);
-    }   
-        
+    }
+
     histo2D->Draw("colz");
     DrawLabelsEvents(floatLogo[0],floatLogo[1],floatLogo[2], 0.00, collisionSystem, generator, period);
     TLatex *detprocess = 	new TLatex(floatLogo[0], floatLogo[1] - 3.2*floatLogo[2], fDetectionProcess);
-    detprocess->SetNDC(); 
+    detprocess->SetNDC();
     detprocess->SetTextColor(1);
     detprocess->SetTextSize(floatLogo[2]);
     detprocess->Draw();
@@ -132,37 +132,37 @@ delete canvasStandard;
 //**********************************************************************************
 //************ Main function to plot addition meson distributions ******************
 //**********************************************************************************
-void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput", 
-                                        TString cutSel = "", 
-                                        TString suffix = "gif", 
-                                        TString optEnergy = "", 
-                                        TString optPeriod = "", 
-                                        TString optGenerator = "", 
+void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
+                                        TString cutSel = "",
+                                        TString suffix = "gif",
+                                        TString optEnergy = "",
+                                        TString optPeriod = "",
+                                        TString optGenerator = "",
                                         Int_t mode = 9){
 
     //**********************************************************************************
     //**************************** Set global variables ********************************
-    //**********************************************************************************	
-    gROOT->Reset();   
+    //**********************************************************************************
+    gROOT->Reset();
     gROOT->SetStyle("Plain");
-    
-    StyleSettingsThesis();  
+
+    StyleSettingsThesis();
     SetPlotStyle();
-    
+
     date 						= ReturnDateString();
     collisionSystem 			= ReturnFullCollisionsSystem(optEnergy);
     TString centralityString 	= GetCentralityString(cutSel.Data());
     fDetectionProcess 			= ReturnFullTextReconstructionProcess(mode);
-    
+
     Float_t floatLocationRightUp2D[4] = {0.45,0.95,0.035, 0.02};
     Float_t floatLocationLeftDown2D[4] = {0.15,0.25,0.035, 0.02};
     Float_t floatLocationRightDown2D[4] = {0.45,0.25,0.035, 0.02};
-    
+
     TString outputDirectory 	= Form("%s/%s/%s/AnalyseNeutralMesonCaloTree",cutSel.Data(),optEnergy.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+outputDirectory);
 
     Bool_t enableExtConvCaloQA = kFALSE;
-    
+
     //**********************************************************************************
     //**************************** Defining binning ************************************
     //**********************************************************************************
@@ -172,24 +172,23 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
 
     Int_t startBinEta 			= 0;
     if (mode == 2 )startBinEta 	= 2;
-    if (mode == 4 )startBinEta 	= 3;	
-    
-    Double_t ptBins[16] 		= {	0.2, 0.3, 0.4, 0.5, 0.6, 
-                                    0.8, 1.0, 1.5, 2.0, 3.0, 
-                                    4.0, 6.0, 8.0, 10.0, 15.0, 
+    if (mode == 4 )startBinEta 	= 3;
+
+    Double_t ptBins[16] 		= {	0.2, 0.3, 0.4, 0.5, 0.6,
+                                    0.8, 1.0, 1.5, 2.0, 3.0,
+                                    4.0, 6.0, 8.0, 10.0, 15.0,
                                     20.0};
 
-    
     //**********************************************************************************
     //**************************** Read MC file ****************************************
-    //**********************************************************************************	
+    //**********************************************************************************
     TFile* fileMC 						= new TFile(fileNameMC.Data());
     TString autoDetectedMainDir         = AutoDetectMainTList(mode , fileMC);
     if (autoDetectedMainDir.CompareTo("") == 0){
         cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
     }
-    
+
     TList *TopDirMC 					= (TList*)fileMC->Get(autoDetectedMainDir.Data());
     if(TopDirMC == NULL){
         cout<<"ERROR: TopDirMC not Found"<<endl;
@@ -207,7 +206,7 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
     if(listTreeMCCalo != NULL) enableMesonTree = kTRUE;
     cout << "here" << endl;
     if (enableMesonTree){
-        
+
         //Declaration of leaves types
         Float_t         InvMass;
         Float_t         RConv;
@@ -215,7 +214,7 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
         Float_t         InvMassRTOF;
         Float_t         Pt;
         UChar_t         cat;
-        
+
         TTree *clusterTree 		= (TTree*)listTreeMCCalo->FindObject("ESD_ConvGamma_Pt_Dcaz_R_Eta");
         clusterTree->SetBranchAddress("InvMass",&InvMass);
         clusterTree->SetBranchAddress("RConv",&RConv);
@@ -276,7 +275,7 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
         TH2F* hist2DTruePi0SecMat_InvMassRTof_RConv = new TH2F("hist2DTruePi0SecMat_InvMassRTof_RConv","",  1800, 0, 1.8,  800, 0, 400);
         hist2DTruePi0SecMat_InvMassRTof_RConv->GetXaxis()->SetTitle("M_{clus,clus}, R_{375 cm}");
         hist2DTruePi0SecMat_InvMassRTof_RConv->GetYaxis()->SetTitle("R_{conv}");
-        
+
         TH2F* hist2DTrueEtaPrim_InvMassPrimVtx_InvMassRTof = new TH2F("hist2DTrueEtaPrim_InvMassPrimVtx_InvMassRTof","", 800, 0, 0.8,  1500, 0, 3.0);
         hist2DTrueEtaPrim_InvMassPrimVtx_InvMassRTof->GetXaxis()->SetTitle("M_{clus,clus}, R_{primVtx}");
         hist2DTrueEtaPrim_InvMassPrimVtx_InvMassRTof->GetYaxis()->SetTitle("M_{clus,clus}, R_{375 cm}");
@@ -286,7 +285,7 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
         TH2F* hist2DTrueEtaPrim_InvMassRTof_RConv = new TH2F("hist2DTrueEtaPrim_InvMassRTof_RConv","",  1500, 0, 3.0,  800, 0, 400);
         hist2DTrueEtaPrim_InvMassRTof_RConv->GetXaxis()->SetTitle("M_{clus,clus}, R_{375 cm}");
         hist2DTrueEtaPrim_InvMassRTof_RConv->GetYaxis()->SetTitle("R_{conv}");
-        
+
         Long64_t nEntriesPairs 				= clusterTree->GetEntries();
         Int_t nPairs 							= 0;
         cout << "Number of P to be processed: " << nEntriesPairs << endl;
@@ -294,7 +293,7 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
         Long64_t nbytesPairs 					= 0;
 
         for (Long64_t i=0; i<nEntriesPairs;i++) {
-            nbytesPairs 						+= clusterTree->GetEntry(i); 
+            nbytesPairs 						+= clusterTree->GetEntry(i);
             if (Pt >0.5) {
                 if (cat ==0){
                     hist2DTrueGamma_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
@@ -304,19 +303,17 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
                         hist2DTrueGammaRConvS250cm_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
                     } else {
                         hist2DTrueGammaRConvG250cm_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
-                    }	
+                    }
                     hist2DTrueGamma_InvMass_OpenAngle->Fill(InvMass,OpenAngleRPrimVtx);
                     hist2DTrueGamma_InvMassRTof_OpenAngle->Fill(InvMassRTOF,OpenAngleRPrimVtx);
                 }
-            }	
-            if (Pt >1) {	
+            }
+            if (Pt >1) {
                 if (cat == 1){
                     hist2DTruePi0Prim_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
                     hist2DTruePi0Prim_InvMassPrimVtx_RConv->Fill(InvMass,RConv);
                     hist2DTruePi0Prim_InvMassRTof_RConv->Fill(InvMassRTOF,RConv);
                     hist2DTruePi0Prim_InvMass_OpenAngle->Fill(InvMass,OpenAngleRPrimVtx);
-
-                    
                 }
                 if (cat == 3){
                     hist2DTruePi0SecK0s_InvMassPrimVtx_InvMassRTof->Fill(InvMass,InvMassRTOF);
@@ -335,7 +332,6 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
                     hist2DTrueEtaPrim_InvMassRTof_RConv->Fill(InvMassRTOF,RConv);
                 }
             }
-            
         }
         TFile* fOutputGamma = new TFile(Form("%s/outputTreeProjections.root",outputDirectory.Data()),"RECREATE");\
             hist2DTrueGamma_InvMassPrimVtx_InvMassRTof->Write();
@@ -362,8 +358,5 @@ void AnalyseNeutralMesonTreeCalo(		TString fileNameMC = "myOutput",
 
         fOutputGamma->Write();
         fOutputGamma->Close();
-
-        
     }
-    
 }

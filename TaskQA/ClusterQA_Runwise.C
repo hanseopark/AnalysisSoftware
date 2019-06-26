@@ -552,13 +552,13 @@ void ClusterQA_Runwise(
 
         histoName                   = "hClusterM02-Mean";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterMeanM02[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM02; Run Number ; #bar{#lower[0.1]{#lambda_{0}^{2}}}",hNBin,hFBin,hLBin);
+        hClusterMeanM02[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM02; Run Number ; #bar{#lower[0.1]{#sigma_{long}^{2}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterMeanM02[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterMeanM02[i]);
 
         histoName                   = "hClusterM02-RMS";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterRMSM02[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM02; Run Number ; #sigma_{#lambda_{0}^{2}}",hNBin,hFBin,hLBin);
+        hClusterRMSM02[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM02; Run Number ; #sigma_{#sigma_{long}^{2}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterRMSM02[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterRMSM02[i]);
 
@@ -636,13 +636,13 @@ void ClusterQA_Runwise(
 
         histoName                   = "hClusterM20-Mean";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterMeanM20[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM20; Run Number ; #bar{#lower[0.1]{#lambda_{1}^{2}}}",hNBin,hFBin,hLBin);
+        hClusterMeanM20[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM20; Run Number ; #bar{#lower[0.1]{#sigma_{short}^{2}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterMeanM20[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterMeanM20[i]);
 
         histoName                   = "hClusterM20-RMS";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterRMSM20[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM20; Run Number ; #sigma_{#lower[0.1]{#lambda_{1}^{2}}}",hNBin,hFBin,hLBin);
+        hClusterRMSM20[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM20; Run Number ; #sigma_{#lower[0.1]{#sigma_{short}^{2}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterRMSM20[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterRMSM20[i]);
 
@@ -1008,8 +1008,8 @@ void ClusterQA_Runwise(
                 TH1D* tempClusM02 = new TH1D(*ClusM02);
                 tempClusM02->Sumw2();
                 tempClusM02->Scale(1 / nEvents);
-                tempClusM02->GetXaxis()->SetTitle("#lambda_{0}^{2}");
-                tempClusM02->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{d#lambda_{0}^{2}}");
+                tempClusM02->GetXaxis()->SetTitle("#sigma_{long}^{2}");
+                tempClusM02->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{d#sigma_{long}^{2}}");
                 vecClusterM02[i].push_back(tempClusM02);
             } else cout << "Info: Object |M02_afterClusterQA| could not be found! Skipping..." << endl;
             TH1D* ClusM20 = (TH1D*) CaloCutsContainer->FindObject(Form("M20_afterClusterQA %s", fClusterCutSelection.Data()));
@@ -1017,8 +1017,8 @@ void ClusterQA_Runwise(
                 TH1D* tempClusM20 = new TH1D(*ClusM20);
                 tempClusM20->Sumw2();
                 tempClusM20->Scale(1 / nEvents);
-                tempClusM20->GetXaxis()->SetTitle("#lambda_{1}^{2}");
-                tempClusM20->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{d#lambda_{1}^{2}}");
+                tempClusM20->GetXaxis()->SetTitle("#sigma_{short}^{2}");
+                tempClusM20->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{d#sigma_{short}^{2}}");
                 vecClusterM20[i].push_back(tempClusM20);
             } else cout << "Info: Object |M20_afterClusterQA| could not be found! Skipping..." << endl;
             TH1D* ClusDispersion = (TH1D*) CaloCutsContainer->FindObject(Form("Dispersion_afterClusterQA %s", fClusterCutSelection.Data()));
@@ -1818,7 +1818,8 @@ void ClusterQA_Runwise(
         }
 
         if(doExtQA>0){
-          DeleteVecTH2D(vecClusterFiredCellIDs[i]);
+          DeleteVecTH2D(vecClusterEVsNCells[i]);
+
         }
         DeleteVecTH2D(vecClusterFiredCellIDs[i]);
 

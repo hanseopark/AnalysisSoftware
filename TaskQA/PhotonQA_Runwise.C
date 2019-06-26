@@ -168,17 +168,22 @@ void PhotonQA_Runwise(
 
     TString fCentralityFromCut = GetCentralityString(nameCutsPQAshort);
     cout << "Corresponding to centrality: " << fCentralityFromCut << endl;
+    if (!fCentralityFromCut.CompareTo("pp") || !fCentralityFromCut.CompareTo("0-100%"))
+      fCentralityFromCut = "";
+
     // plotting settings according to default for energy, dataset and centrality
     for(Int_t i=0; i<nSets; i++){
 
         if (i < nDataIn){
-            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
-            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
-            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut);
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut);
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut);
+            cout  << i << "\t"<< hMarkerStyle[i] << "\t"<< hMarkerColor[i] << "\t"<< hLineColor[i] << endl;
         } else {
-            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
-            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
-            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),"");
+            hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),plotDataSets[i].Data(),fCentralityFromCut);
+            hMarkerColor[i]         = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),fCentralityFromCut);
+            hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),plotDataSets[i].Data(),fCentralityFromCut);
+            cout  << i << "\t"<< hMarkerStyle[i] << "\t"<< hMarkerColor[i] << "\t"<< hLineColor[i] << endl;
         }
     }
 
@@ -240,8 +245,7 @@ void PhotonQA_Runwise(
 
     std::vector<TString> globalRuns;
 
-    for(Int_t i=0; i<nSets; i++)
-    {
+    for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
         if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
@@ -343,14 +347,11 @@ void PhotonQA_Runwise(
     Int_t hLBin;
     Int_t hNBin;
 
-    if(doEquidistantXaxis)
-    {
+    if(doEquidistantXaxis) {
         hFBin = 0;
         hLBin = globalRuns.size();
         hNBin = globalRuns.size();
-    }
-    else
-    {
+    } else {
         if(nSets>2){
             hFBin = ((TString) globalRuns.at(0)).Atoi() - 500;
             hLBin = ((TString) globalRuns.at(globalRuns.size()-1)).Atoi()  + 500;
@@ -366,8 +367,7 @@ void PhotonQA_Runwise(
     std::vector<TString> vecHistosName;
     TString histoName;
 
-    for(Int_t i=0; i<nSets; i++)
-    {
+    for(Int_t i=0; i<nSets; i++) {
         histoName = "nGamma";
         if(i==0) vecHistosName.push_back(histoName);
         hGammaN[i] = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"nGamma; Run Number ; Number of Photons",hNBin,hFBin,hLBin);
@@ -634,8 +634,7 @@ void PhotonQA_Runwise(
 
     std::vector<TString>* vecMissingRuns = new std::vector<TString>[nSets];
 
-    for(Int_t i=0; i<nSets; i++)
-    {
+    for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
         fDataSet = vecDataSet.at(i);
         if(!readin(fileRuns[i], vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
@@ -657,15 +656,14 @@ void PhotonQA_Runwise(
         fLog[i] << "Looping over Runs:" << endl;
 
         vecMissingRuns[i].clear();
-        for(Int_t j=0; j<(Int_t) vecRuns.size(); j++)
-        {
+        for(Int_t j=0; j<(Int_t) vecRuns.size(); j++) {
             fRunNumber = vecRuns.at(j);
             if(i>=nData) fRootFile = Form("%s/%s/%s/PhotonQA_MC.root", filePath.Data(), fDataSet.Data(), fRunNumber.Data());
             else fRootFile = Form("%s/%s/%s/PhotonQA_Data.root", filePath.Data(), fDataSet.Data(), fRunNumber.Data());
 
             cout << endl;
             cout << "\t\t----------------------------------------------------------------------------" << endl;
-            cout << Form("\t\tRun %s", fRunNumber.Data()) << endl;
+            cout << Form("\t\tRun %s", fRunNumber.Data()) << "\t"<<  j << "/"<< (Int_t) vecRuns.size() << endl;
             cout << "\t\tProcessing file: " << fRootFile.Data() << endl;
             cout << "\t\t----------------------------------------------------------------------------" << endl;
             cout << endl;
@@ -777,15 +775,15 @@ void PhotonQA_Runwise(
             Double_t nEvents = 0;
             TH1D* GOODESD = (TH1D*) TopDir->Get("histoGoodESDTracks");
             if(GOODESD){
-            nEvents = (Double_t) GOODESD->Integral();
-            delete GOODESD;
+                nEvents = (Double_t) GOODESD->Integral();
+                delete GOODESD;
             }
 
             TH2D* GammaEtaPt = (TH2D*) TopDir->Get("histoGammaEtaPt");
             Double_t nGammas = 1.;
             if(GammaEtaPt){
-            nGammas = GammaEtaPt->Integral();
-            hGammaN[i]->SetBinContent(bin, nGammas);
+                nGammas = GammaEtaPt->Integral();
+                hGammaN[i]->SetBinContent(bin, nGammas);
             }
             //---------
             fLog[i] << "----------------------------------------------------------------------------" << endl;
@@ -829,39 +827,44 @@ void PhotonQA_Runwise(
     //---------
             TH1D* GammaPhi = (TH1D*) TopDir->Get("histoGammaPhi");
             if(GammaPhi){
-            hGammaPhi[i]->SetBinContent(bin, GammaPhi->GetMean());
-            hGammaPhi[i]->SetBinError(bin, GammaPhi->GetMeanError());
-            hGammaPhiRMS[i]->SetBinContent(bin, GammaPhi->GetRMS());
-            hGammaPhiRMS[i]->SetBinError(bin, GammaPhi->GetRMSError());
-            hGammaPhiLow[i]->SetBinContent(bin, GetHistogramIntegral(GammaPhi,0,TMath::Pi())/GammaPhi->Integral());
-            hGammaPhiLow[i]->SetBinError(bin, GetHistogramIntegralError(GammaPhi,0,TMath::Pi())/GammaPhi->Integral());
-            hGammaPhiHigh[i]->SetBinContent(bin, GetHistogramIntegral(GammaPhi,TMath::Pi(),2*TMath::Pi())/GammaPhi->Integral());
-            hGammaPhiHigh[i]->SetBinError(bin, GetHistogramIntegralError(GammaPhi,TMath::Pi(),2*TMath::Pi())/GammaPhi->Integral());
-            GammaPhi->GetXaxis()->SetTitle("Photon #phi");
-            GammaPhi->GetYaxis()->SetTitle("#frac{1}{N_{#gamma}} #frac{dN}{d#phi}");
-            GammaPhi->Sumw2();
-            GammaPhi->Scale(1 / nGammas);
-            vecGammaPhi[i].push_back(GammaPhi);
+                hGammaPhi[i]->SetBinContent(bin, GammaPhi->GetMean());
+                hGammaPhi[i]->SetBinError(bin, GammaPhi->GetMeanError());
+                hGammaPhiRMS[i]->SetBinContent(bin, GammaPhi->GetRMS());
+                hGammaPhiRMS[i]->SetBinError(bin, GammaPhi->GetRMSError());
+                hGammaPhiLow[i]->SetBinContent(bin, GetHistogramIntegral(GammaPhi,0,TMath::Pi())/GammaPhi->Integral());
+                hGammaPhiLow[i]->SetBinError(bin, GetHistogramIntegralError(GammaPhi,0,TMath::Pi())/GammaPhi->Integral());
+                hGammaPhiHigh[i]->SetBinContent(bin, GetHistogramIntegral(GammaPhi,TMath::Pi(),2*TMath::Pi())/GammaPhi->Integral());
+                hGammaPhiHigh[i]->SetBinError(bin, GetHistogramIntegralError(GammaPhi,TMath::Pi(),2*TMath::Pi())/GammaPhi->Integral());
+                GammaPhi->GetXaxis()->SetTitle("Photon #phi");
+                GammaPhi->GetYaxis()->SetTitle("#frac{1}{N_{#gamma}} #frac{dN}{d#phi}");
+                GammaPhi->Sumw2();
+                GammaPhi->Scale(1 / nGammas);
+                vecGammaPhi[i].push_back(GammaPhi);
             }else cout << "INFO: Object |histoGammaPhi| could not be found! Skipping Fill..." << endl;
 
             TH1D* GammaPhiEtaNeg = (TH1D*) TopDir->Get("histoGammaPhiEtaNeg");
             if(GammaPhiEtaNeg){
                 hGammaPhiEtaNeg[i]->SetBinContent(bin, GammaPhiEtaNeg->GetMean());
                 hGammaPhiEtaNeg[i]->SetBinError(bin, GammaPhiEtaNeg->GetMeanError());
-                delete GammaPhiEtaNeg;
             }else cout << "INFO: Object |histoGammaPhiEtaNeg| could not be found! Skipping Fill..." << endl;
 
             TH1D* GammaPhiEtaPos = (TH1D*) TopDir->Get("histoGammaPhiEtaPos");
             if(GammaPhiEtaPos){
                 hGammaPhiEtaPos[i]->SetBinContent(bin, GammaPhiEtaPos->GetMean());
                 hGammaPhiEtaPos[i]->SetBinError(bin, GammaPhiEtaPos->GetMeanError());
-                delete GammaPhiEtaPos;
             }else cout << "INFO: Object |histoGammaPhiEtaPos| could not be found! Skipping Fill..." << endl;
 
-    //---------
-            TH2D* GammaAlphaQt = (TH2D*) TopDir->Get("histoGammaAlphaQt");
-            if(GammaAlphaQt){
-                TH1D * GammaAlpha = (TH1D*) GammaAlphaQt->ProjectionX("GammaAlpha");
+            //---------
+            TH3F* GammaAlphaQtPt = (TH3F*) TopDir->Get("histoGammaAlphaQtPt");
+            if(GammaAlphaQtPt){
+                TH1D * GammaQt = (TH1D*) GammaAlphaQtPt->ProjectionY("GammaQt");
+                hGammaQt[i]->SetBinContent(bin, GammaQt->GetMean());
+                hGammaQt[i]->SetBinError(bin, GammaQt->GetMeanError());
+                hGammaQtRMS[i]->SetBinContent(bin, GammaQt->GetRMS());
+                hGammaQtRMS[i]->SetBinError(bin, GammaQt->GetRMSError());
+                delete GammaQt;
+
+                TH1D * GammaAlpha = (TH1D*) GammaAlphaQtPt->ProjectionX("GammaAlpha");
                 hGammaAlpha[i]->SetBinContent(bin, GammaAlpha->GetMean());
                 hGammaAlpha[i]->SetBinError(bin, GammaAlpha->GetMeanError());
                 hGammaAlphaRMS[i]->SetBinContent(bin, GammaAlpha->GetRMS());
@@ -871,12 +874,13 @@ void PhotonQA_Runwise(
                 GammaAlpha->Sumw2();
                 GammaAlpha->Scale(1 / nGammas);
                 vecGammaAlpha[i].push_back(GammaAlpha);
-                delete GammaAlphaQt;
-            }else cout << "INFO: Object |histoGammaAlphaQt| could not be found! Skipping Fill..." << endl;
+//                 delete GammaAlpha;
+                delete GammaAlphaQtPt;
+            }else cout << "INFO: Object |GammaAlphaQtPt| could not be found! Skipping Fill..." << endl;
 
-            TH2D* GammaChi2Pt = (TH2D*) TopDir->Get("histoGammaChi2NDFPt");
-            if(GammaChi2Pt){
-                TH1D * GammaChi2 = (TH1D*) GammaChi2Pt->ProjectionX("GammaChi2");
+            TH3F* GammaChi2PsiPairPt = (TH3F*) TopDir->Get("histoGammaChi2PsiPairPt");
+            if(GammaChi2PsiPairPt){
+                TH1D * GammaChi2 = (TH1D*) GammaChi2PsiPairPt->ProjectionX("GammaChi2");
                 hGammaChi2[i]->SetBinContent(bin, GammaChi2->GetMean());
                 hGammaChi2[i]->SetBinError(bin, GammaChi2->GetMeanError());
                 hGammaChi2RMS[i]->SetBinContent(bin, GammaChi2->GetRMS());
@@ -886,12 +890,9 @@ void PhotonQA_Runwise(
                 GammaChi2->Sumw2();
                 GammaChi2->Scale(1 / nGammas);
                 vecGammaChi2[i].push_back(GammaChi2);
-                delete GammaChi2Pt;
-            }else cout << "INFO: Object |histoGammaChi2NDFPt| could not be found! Skipping Fill..." << endl;
+//                 delete GammaChi2;
 
-            TH2D* GammaPsiPairPt = (TH2D*) TopDir->Get("histoGammaPsiPairPt");
-            if(GammaPsiPairPt){
-                TH1D * GammaPsiPair = (TH1D*) GammaPsiPairPt->ProjectionX("GammaPsiPair");
+                TH1D * GammaPsiPair = (TH1D*) GammaChi2PsiPairPt->ProjectionY("GammaPsiPair");
                 hGammaPsiPair[i]->SetBinContent(bin, GammaPsiPair->GetMean());
                 hGammaPsiPair[i]->SetBinError(bin, GammaPsiPair->GetMeanError());
                 hGammaPsiPairRMS[i]->SetBinContent(bin, GammaPsiPair->GetRMS());
@@ -901,10 +902,11 @@ void PhotonQA_Runwise(
                 GammaPsiPair->Sumw2();
                 GammaPsiPair->Scale(1 / nGammas);
                 vecGammaPsiPair[i].push_back(GammaPsiPair);
-                delete GammaPsiPairPt;
-            }else cout << "INFO: Object |histoGammaPsiPairPt| could not be found! Skipping Fill..." << endl;
+//                 delete GammaPsiPair;
+                delete GammaChi2PsiPairPt;
+            }else cout << "INFO: Object |histoGammaChi2PsiPairPt| could not be found! Skipping Fill..." << endl;
 
-        TH2D* GammaCosPointPt = (TH2D*) TopDir->Get("histoGammaCosPointPt");
+            TH2D* GammaCosPointPt = (TH2D*) TopDir->Get("histoGammaCosPointPt");
             if(GammaCosPointPt){
                 TH1D * GammaCosPoint = (TH1D*) GammaCosPointPt->ProjectionX("GammaCosPoint");
                 hGammaCosPoint[i]->SetBinContent(bin, GammaCosPoint->GetMean());
@@ -916,6 +918,7 @@ void PhotonQA_Runwise(
                 GammaCosPoint->Sumw2();
                 GammaCosPoint->Scale(1 / nGammas);
                 vecGammaCosPoint[i].push_back(GammaCosPoint);
+//                 delete GammaCosPoint;
                 delete GammaCosPointPt;
             }else cout << "INFO: Object |histoGammaCosPointPt| could not be found! Skipping Fill..." << endl;
 
@@ -931,68 +934,65 @@ void PhotonQA_Runwise(
                 GammaInvMass->Sumw2();
                 GammaInvMass->Scale(1 / nGammas);
                 vecGammaInvMass[i].push_back(GammaInvMass);
+//                 delete GammaInvMass;
                 delete GammaInvMassPt;
             }else cout << "INFO: Object |histoGammaInvMassPt| could not be found! Skipping Fill..." << endl;
 
-            TH2D* GammaQtPt = (TH2D*) TopDir->Get("histoGammaQtPt");
-            if(GammaQtPt){
-                TH1D * GammaQt = (TH1D*) GammaQtPt->ProjectionX("GammaQt");
-                hGammaQt[i]->SetBinContent(bin, GammaQt->GetMean());
-                hGammaQt[i]->SetBinError(bin, GammaQt->GetMeanError());
-                hGammaQtRMS[i]->SetBinContent(bin, GammaQt->GetRMS());
-                hGammaQtRMS[i]->SetBinError(bin, GammaQt->GetRMSError());
-                delete GammaQt;
-                delete GammaQtPt;
-            }else cout << "INFO: Object |histoGammaQtPt| could not be found! Skipping Fill..." << endl;
-
             TH2D* GammaInvMassR = (TH2D*) TopDir->Get("histoGammaInvMassR");
             if(GammaInvMassR){
-            GammaInvMassR->SetTitle(fRunNumber);
-            vecInvMassR[i].push_back(GammaInvMassR);
+                GammaInvMassR->SetTitle(fRunNumber);
+                vecInvMassR[i].push_back(GammaInvMassR);
+//                 delete GammaInvMassR;
             }else cout << "INFO: Object |histoGammaInvMassR| could not be found! Skipping Fill..." << endl;
 
             TH2D* GammaEtaR = (TH2D*) TopDir->Get("histoGammaEtaR");
             if(GammaEtaR){
-            GammaEtaR->SetTitle(fRunNumber);
-            vecEtaR[i].push_back(GammaEtaR);
+                GammaEtaR->SetTitle(fRunNumber);
+                vecEtaR[i].push_back(GammaEtaR);
+//                 delete GammaEtaR;
             }else cout << "INFO: Object |histoGammaEtaR| could not be found! Skipping Fill..." << endl;
 
             TH2D* GammaPhiR = (TH2D*) TopDir->Get("histoGammaPhiR");
             if(GammaPhiR){
-            GammaPhiR->SetTitle(fRunNumber);
-            vecPhiR[i].push_back(GammaPhiR);
+                GammaPhiR->SetTitle(fRunNumber);
+                vecPhiR[i].push_back(GammaPhiR);
+//                 delete GammaPhiR;
             }else cout << "INFO: Object |histoGammaPhiR| could not be found! Skipping Fill..." << endl;
 
             TH2D* GammaAlphaR = (TH2D*) TopDir->Get("histoGammaAlphaR");
             if(GammaAlphaR){
-            GammaAlphaR->SetTitle(fRunNumber);
-            vecAlphaR[i].push_back(GammaAlphaR);
+                GammaAlphaR->SetTitle(fRunNumber);
+                vecAlphaR[i].push_back(GammaAlphaR);
+//                 delete GammaAlphaR;
             }else cout << "INFO: Object |histoGammaAlphaR| could not be found! Skipping Fill..." << endl;
 
             TH2D* GammaPsiPairR = (TH2D*) TopDir->Get("histoGammaPsiPairR");
             if(GammaPsiPairR){
-            GammaPsiPairR->SetTitle(fRunNumber);
-            vecPsiPairR[i].push_back(GammaPsiPairR);
+                GammaPsiPairR->SetTitle(fRunNumber);
+                vecPsiPairR[i].push_back(GammaPsiPairR);
+//                 delete GammaPsiPairR;
             }else cout << "INFO: Object |histoGammaPsiPairR| could not be found! Skipping Fill..." << endl;
 
             TH2D* GammaAsymR = (TH2D*) TopDir->Get("histoGammaAsymR");
             if(GammaAsymR){
-            TH1D * GammaAsym = (TH1D*) GammaAsymR->ProjectionX("GammaAsym");
-            hGammaAsym[i]->SetBinContent(bin, GammaAsym->GetMean());
-            hGammaAsym[i]->SetBinError(bin, GammaAsym->GetMeanError());
-            hGammaAsymRMS[i]->SetBinContent(bin, GammaAsym->GetRMS());
-            hGammaAsymRMS[i]->SetBinError(bin, GammaAsym->GetRMSError());
-            delete GammaAsym;
+                TH1D * GammaAsym = (TH1D*) GammaAsymR->ProjectionX("GammaAsym");
+                hGammaAsym[i]->SetBinContent(bin, GammaAsym->GetMean());
+                hGammaAsym[i]->SetBinError(bin, GammaAsym->GetMeanError());
+                hGammaAsymRMS[i]->SetBinContent(bin, GammaAsym->GetRMS());
+                hGammaAsymRMS[i]->SetBinError(bin, GammaAsym->GetRMSError());
 
-            TH1D * GammaR = (TH1D*) GammaAsymR->ProjectionY("GammaR");
-            hGammaR[i]->SetBinContent(bin, GammaR->GetMean());
-            hGammaR[i]->SetBinError(bin, GammaR->GetMeanError());
-            hGammaRRMS[i]->SetBinContent(bin, GammaR->GetRMS());
-            hGammaRRMS[i]->SetBinError(bin, GammaR->GetRMSError());
-            delete GammaR;
+                delete GammaAsym;
 
-            GammaAsymR->SetTitle(fRunNumber);
-            vecAsymR[i].push_back(GammaAsymR);
+                TH1D * GammaR = (TH1D*) GammaAsymR->ProjectionY("GammaR");
+                hGammaR[i]->SetBinContent(bin, GammaR->GetMean());
+                hGammaR[i]->SetBinError(bin, GammaR->GetMeanError());
+                hGammaRRMS[i]->SetBinContent(bin, GammaR->GetRMS());
+                hGammaRRMS[i]->SetBinError(bin, GammaR->GetRMSError());
+                delete GammaR;
+
+                GammaAsymR->SetTitle(fRunNumber);
+                vecAsymR[i].push_back(GammaAsymR);
+//                 delete GammaAsymR;
             }else cout << "INFO: Object |histoGammaAsymR| could not be found! Skipping Fill..." << endl;
 
             //-----------------------------------
@@ -1002,62 +1002,64 @@ void PhotonQA_Runwise(
             //-----------------------------------
 
             for(Int_t iL=0; iL<2; iL++){
-            //iL==0, Electron - iL==1, Positron
+                //iL==0, Electron - iL==1, Positron
 
-            TH3D* NSigmadEdxEtaP = (TH3D*) TopDir->Get(Form("histo%sNSigmadEdxEtaP",lepton[iL].Data()));
-            if(NSigmadEdxEtaP){
-                TH1D * NSigmadEdx = (TH1D*) NSigmadEdxEtaP->Project3D("x");
-                hNSdEdx[i][iL]->SetBinContent(bin, NSigmadEdx->GetMean(1));
-                hNSdEdx[i][iL]->SetBinError(bin, NSigmadEdx->GetMeanError(1));
-                hNSdEdxRMS[i][iL]->SetBinContent(bin, NSigmadEdx->GetRMS(1));
-                hNSdEdxRMS[i][iL]->SetBinError(bin, NSigmadEdx->GetRMSError(1));
-                delete NSigmadEdx;
-                TH1D * Eta = (TH1D*) NSigmadEdxEtaP->Project3D("y");
-                hEta[i][iL]->SetBinContent(bin, Eta->GetMean(1));
-                hEta[i][iL]->SetBinError(bin, Eta->GetMeanError(1));
-                hEtaRMS[i][iL]->SetBinContent(bin, Eta->GetRMS(1));
-                hEtaRMS[i][iL]->SetBinError(bin, Eta->GetRMSError(1));
-                delete Eta;
-                TH1D * Pt = (TH1D*) NSigmadEdxEtaP->Project3D("z");
-                hPt[i][iL]->SetBinContent(bin, Pt->GetMean(1));
-                hPt[i][iL]->SetBinError(bin, Pt->GetMeanError(1));
-                hPtRMS[i][iL]->SetBinContent(bin, Pt->GetRMS(1));
-                hPtRMS[i][iL]->SetBinError(bin, Pt->GetRMSError(1));
-                delete Pt;
-                delete NSigmadEdxEtaP;
-            }else cout << Form("INFO: Object |histo%sNSigmadEdxEtaP| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
+                TH3D* NSigmadEdxEtaP = (TH3D*) TopDir->Get(Form("histo%sNSigmadEdxEtaP",lepton[iL].Data()));
+                if(NSigmadEdxEtaP){
+                    TH1D * NSigmadEdx = (TH1D*) NSigmadEdxEtaP->Project3D("x");
+                    hNSdEdx[i][iL]->SetBinContent(bin, NSigmadEdx->GetMean(1));
+                    hNSdEdx[i][iL]->SetBinError(bin, NSigmadEdx->GetMeanError(1));
+                    hNSdEdxRMS[i][iL]->SetBinContent(bin, NSigmadEdx->GetRMS(1));
+                    hNSdEdxRMS[i][iL]->SetBinError(bin, NSigmadEdx->GetRMSError(1));
+                    delete NSigmadEdx;
+                    TH1D * Eta = (TH1D*) NSigmadEdxEtaP->Project3D("y");
+                    hEta[i][iL]->SetBinContent(bin, Eta->GetMean(1));
+                    hEta[i][iL]->SetBinError(bin, Eta->GetMeanError(1));
+                    hEtaRMS[i][iL]->SetBinContent(bin, Eta->GetRMS(1));
+                    hEtaRMS[i][iL]->SetBinError(bin, Eta->GetRMSError(1));
+                    delete Eta;
+                    TH1D * Pt = (TH1D*) NSigmadEdxEtaP->Project3D("z");
+                    hPt[i][iL]->SetBinContent(bin, Pt->GetMean(1));
+                    hPt[i][iL]->SetBinError(bin, Pt->GetMeanError(1));
+                    hPtRMS[i][iL]->SetBinContent(bin, Pt->GetRMS(1));
+                    hPtRMS[i][iL]->SetBinError(bin, Pt->GetRMSError(1));
+                    delete Pt;
+                    delete NSigmadEdxEtaP;
+                }else cout << Form("INFO: Object |histo%sNSigmadEdxEtaP| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
 
-            TH2D* TPCclustersPt= (TH2D*) TopDir->Get(Form("histo%sClPt",lepton[iL].Data()));
-            if(TPCclustersPt){
-                TH1D * TPCclusters = (TH1D*) TPCclustersPt->ProjectionX("TPCclusters");
-                hTPCclusters[i][iL]->SetBinContent(bin, TPCclusters->GetMean());
-                hTPCclusters[i][iL]->SetBinError(bin, TPCclusters->GetMeanError());
-                hTPCclustersRMS[i][iL]->SetBinContent(bin, TPCclusters->GetRMS());
-                hTPCclustersRMS[i][iL]->SetBinError(bin, TPCclusters->GetRMSError());
-                delete TPCclusters;
-                delete TPCclustersPt;
-            }else cout << Form("INFO: Object |histo%sClPt| could not be found! Skipping Fill...", lepton[iL].Data()) << endl;
+                TH2D* TPCclustersPt= (TH2D*) TopDir->Get(Form("histo%sClPt",lepton[iL].Data()));
+                if(TPCclustersPt){
+                    TH1D * TPCclusters = (TH1D*) TPCclustersPt->ProjectionX("TPCclusters");
+                    hTPCclusters[i][iL]->SetBinContent(bin, TPCclusters->GetMean());
+                    hTPCclusters[i][iL]->SetBinError(bin, TPCclusters->GetMeanError());
+                    hTPCclustersRMS[i][iL]->SetBinContent(bin, TPCclusters->GetRMS());
+                    hTPCclustersRMS[i][iL]->SetBinError(bin, TPCclusters->GetRMSError());
+                    delete TPCclusters;
+                    delete TPCclustersPt;
+                }else cout << Form("INFO: Object |histo%sClPt| could not be found! Skipping Fill...", lepton[iL].Data()) << endl;
 
-            TH2D* fTPCclustersPt= (TH2D*) TopDir->Get(Form("histo%sFClPt",lepton[iL].Data()));
-            if(fTPCclustersPt){
-                TH1D * fTPCclusters = (TH1D*) fTPCclustersPt->ProjectionX("fTPCclusters");
-                hfTPCclusters[i][iL]->SetBinContent(bin, fTPCclusters->GetMean());
-                hfTPCclusters[i][iL]->SetBinError(bin, fTPCclusters->GetMeanError());
-                hfTPCclustersRMS[i][iL]->SetBinContent(bin, fTPCclusters->GetRMS());
-                hfTPCclustersRMS[i][iL]->SetBinError(bin, fTPCclusters->GetRMSError());
-                delete fTPCclusters;
-                delete fTPCclustersPt;
-            }else cout << Form("INFO: Object |histo%sFClPt| could not be found! Skipping Fill...", lepton[iL].Data()) << endl;
-            //---------
-            TH2D* NSdEdx = (TH2D*) TopDir->Get(Form("histo%sNSigmadEdxPhi",lepton[iL].Data()));
-            if(NSdEdx){
-                vecNSdEdx[i][iL].push_back(NSdEdx);
-            }else cout << Form("INFO: Object |histo%sNSigmadEdxPhi| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
+                TH2D* fTPCclustersPt= (TH2D*) TopDir->Get(Form("histo%sFClPt",lepton[iL].Data()));
+                if(fTPCclustersPt){
+                    TH1D * fTPCclusters = (TH1D*) fTPCclustersPt->ProjectionX("fTPCclusters");
+                    hfTPCclusters[i][iL]->SetBinContent(bin, fTPCclusters->GetMean());
+                    hfTPCclusters[i][iL]->SetBinError(bin, fTPCclusters->GetMeanError());
+                    hfTPCclustersRMS[i][iL]->SetBinContent(bin, fTPCclusters->GetRMS());
+                    hfTPCclustersRMS[i][iL]->SetBinError(bin, fTPCclusters->GetRMSError());
+                    delete fTPCclusters;
+                    delete fTPCclustersPt;
+                }else cout << Form("INFO: Object |histo%sFClPt| could not be found! Skipping Fill...", lepton[iL].Data()) << endl;
+                //---------
+                TH2D* NSdEdx = (TH2D*) TopDir->Get(Form("histo%sNSigmadEdxPhi",lepton[iL].Data()));
+                if(NSdEdx){
+                    vecNSdEdx[i][iL].push_back(NSdEdx);
+//                     delete NSdEdx;
+                }else cout << Form("INFO: Object |histo%sNSigmadEdxPhi| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
 
-            TH2D* TPCclustersR = (TH2D*) TopDir->Get(Form("histo%sClR",lepton[iL].Data()));
-            if(TPCclustersR){
-                vecTPCClusR[i][iL].push_back(TPCclustersR);
-            }else cout << Form("INFO: Object |histo%sClR| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
+                TH2D* TPCclustersR = (TH2D*) TopDir->Get(Form("histo%sClR",lepton[iL].Data()));
+                if(TPCclustersR){
+                    vecTPCClusR[i][iL].push_back(TPCclustersR);
+//                     delete TPCclustersR;
+                }else cout << Form("INFO: Object |histo%sClR| could not be found! Skipping Fill...",lepton[iL].Data()) << endl;
 
             }
 
@@ -1075,7 +1077,7 @@ void PhotonQA_Runwise(
         }
     }
 
-//****************************** Drawing Histograms ************************************************
+    //****************************** Drawing Histograms ************************************************
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Histograms" << endl;
 
@@ -1088,8 +1090,7 @@ void PhotonQA_Runwise(
     Float_t xPosLabel = 0.8;
     if(fEnergyFlag.Contains("PbPb")) xPosLabel = 0.75;
 
-    if(doHistsForEverySet)
-    {
+    if(doHistsForEverySet) {
         TBox *boxLabel = new TBox(1.37,0.7,1.78,0.83);
         boxLabel->SetFillStyle(0);boxLabel->SetFillColor(0);boxLabel->SetLineColor(1);boxLabel->SetLineWidth(1);
         TBox *boxLabel2 = new TBox(-0.4,51,6.5,56.5);
@@ -1097,8 +1098,7 @@ void PhotonQA_Runwise(
 
         TString outputDirDataSet;
 
-        for(Int_t i=0; i<nSets; i++)
-        {
+        for(Int_t i=0; i<nSets; i++) {
             cout << "DataSet: " << DataSets[i].Data() << endl;
             outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
             if(useDataRunListForMC && i>=nData) {
@@ -1159,15 +1159,14 @@ void PhotonQA_Runwise(
         }
         delete boxLabel;
         delete boxLabel2;
-//****************************** Drawing Runwise Histograms ************************************************
+        //****************************** Drawing Runwise Histograms ************************************************
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "Drawing Runwise Histograms" << endl;
 
         TCanvas* canvasRunwise;
         TLegend *legendRuns;
 
-        for(Int_t i=0; i<nSets; i++)
-        {
+        for(Int_t i=0; i<nSets; i++) {
             vecRuns.clear();
             fDataSet = vecDataSet.at(i);
             outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
@@ -1202,7 +1201,7 @@ void PhotonQA_Runwise(
                 if(fTrigger.Contains("not defined")) fTrigger = "";
             }
 
-        //---------
+            //---------
 
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPt[i], vecRuns, 5, 5, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaPt", plotDataSets[i], kFALSE,
@@ -1244,10 +1243,10 @@ void PhotonQA_Runwise(
         canvas->cd();
     }
 
-//****************************** Combined Trending Histograms ************************************************
+    //****************************** Combined Trending Histograms ************************************************
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Trending Histograms" << endl;
-//---------
+    //---------
     if(useDataRunListForMC) cout << "WARNING: useDataRunListForMC is true, overwriting histograms for DataSet!" << endl;
 
     TLegend *legend = new TLegend(0.15,0.95,0.95,0.98);
@@ -1256,15 +1255,12 @@ void PhotonQA_Runwise(
     legend->SetLineColor(0);
     legend->SetTextSize(0.03);
     legend->SetTextFont(42);
-//---------
-    if(nSets > 1)
-    {
-        for(Int_t h=0; h<(Int_t) vecHistos[0].size(); h++)
-        {
+    //---------
+    if(nSets > 1) {
+        for(Int_t h=0; h<(Int_t) vecHistos[0].size(); h++) {
             TString fTrigger = "";
             TString fTriggerCut = nameCutsPQAshort(3,2);
-            for(Int_t i=0; i<nSets; i++)
-            {
+            for(Int_t i=0; i<nSets; i++) {
                 if(doTrigger && i<nData && i==0){
                     fTrigger = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
                     if(fTrigger.Contains("not defined")) fTrigger = "";
@@ -1274,8 +1270,7 @@ void PhotonQA_Runwise(
             AdjustHistRange(vecHistos,1.1,1.1,h,nSets,kTRUE);
             if(((TString)vecHistosName.at(h)).CompareTo("hGammaCosPoint")==0) AdjustHistRange(vecHistos,1.001,1.001,h,nSets,kTRUE);
             if(((TString)vecHistosName.at(h)).CompareTo("hGammaN")==0) AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE);
-            for(Int_t i=nSets-1; i>=0; i--)
-            {
+            for(Int_t i=nSets-1; i>=0; i--) {
                 TString draw = (i==nSets-1)?"px0e1":"px0e1, same";
                 ((TH1D*) vecHistos[i].at(h))->SetTitle("");
                 ((TH1D*) vecHistos[i].at(h))->Draw(draw.Data());
@@ -1287,11 +1282,12 @@ void PhotonQA_Runwise(
 
             if(canvas->GetTopMargin()!=0.06) canvas->SetTopMargin(0.06);
             if(useDataRunListForMC && !addSubFolder){
-            if( ((TString)vecHistosName.at(h)).CompareTo("nGamma")==0 ) SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(), DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+                if( ((TString)vecHistosName.at(h)).CompareTo("nGamma")==0 ) SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(),
+                    DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
                 else SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(), DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()));
             }else{
-            if(((TString)vecHistosName.at(h)).CompareTo("nGamma")==0) SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
-            else SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(), suffix.Data()));
+                if(((TString)vecHistosName.at(h)).CompareTo("nGamma")==0) SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
+                else SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(), suffix.Data()));
             }
             legend->Clear();
         }
@@ -1301,23 +1297,18 @@ void PhotonQA_Runwise(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Ratio Trending Histograms" << endl;
 
-    if(doHistsForEverySet)
-    {
+    if(doHistsForEverySet) {
         TString* ratioSets[nSets-nData];
         TH1D* ratio[nSets-nData];
         TString outputDirDataSet;
 
-        if(nSets>1 && nSets>nData)
-        {
+        if(nSets>1 && nSets>nData) {
             legend->SetNColumns(nData*(nSets-nData));
             Int_t markerStyles[14]={2,4,5,20,21,22,23,24,25,26,27,28,29,30};
 
-            for(Int_t h=0; h<(Int_t) vecHistos[0].size(); h++)
-            {
-                for(Int_t i=0; i<nData; i++)
-                {
-                    for(Int_t j=0; j<nSets-nData; j++)
-                    {
+            for(Int_t h=0; h<(Int_t) vecHistos[0].size(); h++) {
+                for(Int_t i=0; i<nData; i++) {
+                    for(Int_t j=0; j<nSets-nData; j++)  {
                         ratioSets[j] = new TString(Form("%s / %s", plotDataSets[i].Data(), plotDataSets[j+nData].Data()));
                         ratio[j] = new TH1D(Form("%s%i%i",((TH1D*) vecHistos[i].at(h))->GetName(),i,j),
                                             Form("%s%i%i;%s;%s - Ratio: Data / MC",((TH1D*) vecHistos[i].at(h))->GetTitle(),i,j,((TH1D*) vecHistos[i].at(h))->GetXaxis()->GetTitle(),((TH1D*) vecHistos[i].at(h))->GetYaxis()->GetTitle()),
@@ -1325,11 +1316,9 @@ void PhotonQA_Runwise(
                         EditTH1(globalRuns, doEquidistantXaxis, ratio[j], markerStyles[j % 14], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
                     }
 
-                    for(Int_t b=1; b<hNBin+1; b++)
-                    {
+                    for(Int_t b=1; b<hNBin+1; b++) {
                         Double_t hData = ((TH1D*) vecHistos[i].at(h))->GetBinContent(b);
-                        for(Int_t j=0; j<nSets-nData; j++)
-                        {
+                        for(Int_t j=0; j<nSets-nData; j++) {
                             Double_t hMC = ((TH1D*) vecHistos[j+nData].at(h))->GetBinContent(b);
                             if(hMC!=0) {
                                 if(hData/hMC>1.98) ratio[j]->SetBinContent(b,1.98);
@@ -1339,8 +1328,7 @@ void PhotonQA_Runwise(
                         }
                     }
 
-                    for(Int_t j=0; j<nSets-nData; j++)
-                    {
+                    for(Int_t j=0; j<nSets-nData; j++) {
                         TString draw = (i==0&&j==0)?"p":"p, same";
                         ratio[j]->SetTitle("");
                         ratio[j]->GetYaxis()->SetRangeUser(0,2);
@@ -1353,25 +1341,23 @@ void PhotonQA_Runwise(
                     gSystem->Exec("mkdir -p "+outputDirDataSet);
 
                     if(doTrigger){
-                    TString fTrigger = "";
-                    TString fTriggerCut = nameCutsPQAshort(3,2);
-                    fTrigger = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
-                    if(fTrigger.Contains("not defined")) fTrigger = "";
+                        TString fTrigger = "";
+                        TString fTriggerCut = nameCutsPQAshort(3,2);
+                        fTrigger = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
+                        if(fTrigger.Contains("not defined")) fTrigger = "";
 
-                    PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
+                        PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
                     }else PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), "", "");
 
                     SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(),Form("%s",((TH1D*) vecHistos[i].at(h))->GetName()),suffix.Data()));
                     legend->Clear();
-                    for(Int_t j=0; j<nSets-nData; j++)
-                    {
-                    delete ratio[j];
-                    delete ratioSets[j];
+                    for(Int_t j=0; j<nSets-nData; j++) {
+                        delete ratio[j];
+                        delete ratioSets[j];
                     }
                 }
             }
         }else cout << "...skipped due to nSets<=1 or nSets==nData!" << endl;
-
     }
     delete legend;
     delete canvas;
@@ -1380,8 +1366,7 @@ void PhotonQA_Runwise(
 
     const char* nameOutput;
 
-    for(Int_t i=0; i<nSets; i++)
-    {
+    for(Int_t i=0; i<nSets; i++) {
         fDataSet = vecDataSet.at(i);
 
         if(useDataRunListForMC && i>=nData) nameOutput = Form("%s_%s/%s/PhotonQA/%s-%s_PhotonQARunwise.root",nameCutsPQA.Data(), cutTreeProjection.Data() ,fEnergyFlag.Data(),fDataSet.Data(),vecDataSet.at(0).Data());
@@ -1442,8 +1427,8 @@ void PhotonQA_Runwise(
     delete[] vecPsiPairR;
     delete[] vecAsymR;
     for (Int_t i=0; i<nSets; i++) {
-    delete[] vecNSdEdx[i];
-    delete[] vecTPCClusR[i];
+        delete[] vecNSdEdx[i];
+        delete[] vecTPCClusR[i];
     }
     delete[] vecNSdEdx;
     delete[] vecTPCClusR;

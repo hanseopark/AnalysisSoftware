@@ -1,3 +1,5 @@
+#include <fstream>
+
 //!  PHOS bad channel map creation macro
 /*!
 * provide by Nicolas Schmidt:
@@ -71,26 +73,28 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     //     updateFile(fileNameOADBtemp,"BadChannels15o_V1","LHC15o/LHC15o_badCellList.log",252666,260000,1);
 
     // LHC10x pass4 Florian update pp 7TeV
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC10b - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10b_pass4.log",114737,117223,0);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC10c - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10c_pass4.log",118503,121040,0);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC10d - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10d_pass4.log",121694,126437,0);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC10e - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10e_pass4.log",127102,130850,0);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC10f - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10f_pass4.log",133004,135031,0);
-    
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC10b - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10b_pass4.log",114737,117223,0);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC10c - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10c_pass4.log",118503,121040,0);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC10d - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10d_pass4.log",121694,126437,0);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC10e - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10e_pass4.log",127102,130850,0);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC10f - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10f_pass4.log",133004,135031,0);
+
     // LHC15n pass3 Nico update pp 5TeV
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
 
     // LHC16qt pass1 Friederike & Andrea & Toon pPb 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265309-265335.log",265309,265335,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265336-265388.log",265336,265388,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265419-265525.log",265389,265525,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16t_267163-267166.log",267163,267166,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265309-265335.log",265309,265335,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265336-265388.log",265336,265388,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265419-265525.log",265389,265525,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16t_267163-267166.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull2.log",280234,280235,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull2.log",280234,280235,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/badChannelsPHOSAdditional_LHC17n.txt",280234,280235,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_Additional.log",280234,280235,1);
 
     // add completely new bad channels, replacing existing map in range (last argument == 0)
     //     updateFile(fileNameOADBtemp,"BadChannelsLHC10c_20171213Update","LHC10c/LHC10c_addCells.log",138125,139517,0);
@@ -170,14 +174,26 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
         }
     }
 
+
+    TObjArray *tempArr  = fileName.Tokenize(".");
+    const char *fileNameCleaned = Form("%s_cleaned.%s",((TString)((TObjString*)tempArr->At(0))->GetString()).Data(), ((TString)((TObjString*)tempArr->At(1))->GetString()).Data());
+    cout << "creating cleaned file with only new bad cells: " << fileNameCleaned << endl;
+//     fstream cleanedFile;
+//     cleanedFile.open(fileNameCleaned), ios::out);
+
     // fill bad channel map with new channels from input list
     Int_t positionFromID[3];
     for(Int_t j=0; j<(Int_t) vecBadChannels.size(); j++){
         // Get the position (module, row, column) from the cellID and fill it in 2D map
         ReturnPHOSModuleAndPositionFromID(vecBadChannels.at(j).Atoi(),positionFromID);
-        cout << "supmod: " << positionFromID[0] << "  pos1: " << positionFromID[1] << "  pos2: " << positionFromID[2] << endl;
+//         cout << "supmod: " << positionFromID[0] << "  pos1: " << positionFromID[1] << "  pos2: " << positionFromID[2] << endl;
         hBadMap[positionFromID[0]]->SetBinContent(positionFromID[1],positionFromID[2],1);
+        if(hBadMap[positionFromID[0]]->GetBinContent(positionFromID[1],positionFromID[2]) == 0){
+          cout  << vecBadChannels.at(j).Atoi() <<  endl;
+        }
+//         else cout << vecBadChannels.at(j) << " channel was already marked as bad. " << endl;
     }
+//     cleanedFile.close();
 
     // add histograms to a new array
     for (Int_t mod=1;mod<nSM;mod++){

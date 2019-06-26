@@ -3354,7 +3354,7 @@
 
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("LHC17n") || !generator.CompareTo("") ){
-                if (!centrality.CompareTo("0-20%")){
+                if (!centrality.CompareTo("0-20%")|| !centrality.CompareTo("0-10%")){
                     return kRed+1;
                 } else if (!centrality.CompareTo("20-40%")){
                     return kGreen+2;
@@ -3364,9 +3364,11 @@
                     return kBlue+2;
                 } else if (!centrality.CompareTo("0-80%")){
                     return kBlack;
+                } else if (!centrality.CompareTo("60-90%")){
+                  return kBlack;
                 } else return kGray+1;
-            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING") || !generator.CompareTo("Hijing")){
-                if (!centrality.CompareTo("0-20%")){
+            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING") || !generator.CompareTo("Hijing") || !generator.CompareTo("LHC18d2")){
+                if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") ){
                     return kRed-6;
                 } else if (!centrality.CompareTo("20-40%")){
                     return kGreen-6;
@@ -3376,6 +3378,8 @@
                     return kBlue-6;
                 } else if (!centrality.CompareTo("0-80%")){
                     return kGray+2;
+                } else if (!centrality.CompareTo("60-90%")){
+                  return kGray+2;
                 } else return kGray+2;
             }
         }
@@ -3736,7 +3740,7 @@
             if (!generator.CompareTo("LHC17n") || !generator.CompareTo("")){
                 if (!centrality.CompareTo("0-80%")){
                     return kFullSquare;
-                } else if (!centrality.CompareTo("0-20%")){
+                } else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%")){
                     return kFullCircle;
                 } else if (!centrality.CompareTo("20-40%")){
                     return kFullDiamond;
@@ -3744,11 +3748,13 @@
                     return kFullCross;
                 } else if (!centrality.CompareTo("40-80%")){
                     return kFullStar;
+                } else if (!centrality.CompareTo("60-90%")){
+                  return kFullStar;
                 } else return kFullSquare;
-            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING")){
+            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING") || !generator.CompareTo("Hijing") || !generator.CompareTo("LHC18d2") ){
                 if (!centrality.CompareTo("0-80%")){
                     return kOpenSquare;
-                } else if (!centrality.CompareTo("0-20%")){
+                } else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%")){
                     return kOpenCircle;
                 } else if (!centrality.CompareTo("20-40%")){
                     return kOpenDiamond;
@@ -3756,6 +3762,8 @@
                     return kOpenCross;
                 } else if (!centrality.CompareTo("40-80%")){
                     return kOpenStar;
+                } else if (!centrality.CompareTo("60-90%")){
+                  return kOpenStar;
                 } else return kOpenSquare;
             }
         }
