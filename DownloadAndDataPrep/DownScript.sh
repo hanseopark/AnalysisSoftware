@@ -6,7 +6,7 @@ WARNINGLog=""
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V4.2"
+echo "DownScript.sh Version: V4.3"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -120,21 +120,21 @@ function GetWebpage()
 	# we download the html to grep needed information from there
 	if [ -f $1 ]
 	then # Check if older than one day (or not)
-	if [[ `wc -l $1` < 100 ]]
-	then
-		rm $1
-	fi
-	if [ "$(( $(date +"%s") - $(stat -c "%Y" $1) ))" -gt "86400" ]
-	then
-		echo -e "\e[33m|-> \e[0mFile $1 exists. \e[33m|-> \e[0mbut is older then 1 Day! download new one from alien:/$1"
-		# cmd="curl -s '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
-		cmd="curl '${Webpage}' --key $certpath/$key -k --cert $certpath/$clientca &> $1"
-		eval $cmd
-		usecmd $cmd
-		touch "$1";
-	else
-		echo -e "\e[33m|-> \e[0mFile $1 exists. \e[33m|-> \e[0mand is up-to-date"
-	fi
+		if [[ `wc -l $1` < 100 ]]
+		then
+			rm $1
+		fi
+		if [ "$(( $(date +"%s") - $(stat -c "%Y" $1) ))" -gt "86400" ]
+		then
+			echo -e "\e[33m|-> \e[0mFile $1 exists. \e[33m|-> \e[0mbut is older then 1 Day! download new one from alien:/$1"
+			# cmd="curl -s '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
+			cmd="curl '${Webpage}' --key $certpath/$key -k --cert $certpath/$clientca &> $1"
+			eval $cmd
+			usecmd $cmd
+			touch "$1";
+		else
+			echo -e "\e[33m|-> \e[0mFile $1 exists. \e[33m|-> \e[0mand is up-to-date"
+		fi
 	else
 		echo -e "\e[33m|-> \e[0mDownloading ${Webpage}"
 		# cmd="curl '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
@@ -174,6 +174,24 @@ function GetFile()
 			else
 				printf "\e[33m|-> \e[0mDownloading file"
 				alien_cp -o  alien:/$1 file:/$2 &> $3
+			fi
+			tmp=1
+			if [[ ! -f $2 ]]; then
+				printf "  \e[33m|->\e[0m Retry "
+			fi
+			while [[ ! -f $2 ]]; do
+				if [[ $tmp = 11 ]]; then
+					echo "."
+					break
+				fi
+				printf "${tmp} "
+				alien_cp -o  alien:/$1 file:/$2 &> $3
+				((tmp++))
+			done
+			if [[ -f $2 ]]; then
+				printf "  \e[33m|->\e[0m successful"
+			else
+				printf "  \e[33m|->\e[0m Download failed"  | tee -a $3  | tee -a $ErrorLog
 			fi
 		else
 			if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -428,17 +446,17 @@ else
 	fi
 fi
 echo  -e "\e[36m------------------------------------\e[0m"
-echo -e "\e[33mIs this Setup correct?\e[0m (y/n)"
-printf "Answer: "
-read -e setupcorrect
-if [ ! "$setupcorrect" = "y" ]
-then
-  echo ""
-  echo "please try again   :-("
-  echo ""
-  exit
-fi
-echo  -e "\e[36m------------------------------------\e[0m"
+# echo -e "\e[33mIs this Setup correct?\e[0m (y/n)"
+# printf "Answer: "
+# read -e setupcorrect
+# if [ ! "$setupcorrect" = "y" ]
+# then
+#   echo ""
+#   echo "please try again   :-("
+#   echo ""
+#   exit
+# fi
+# echo  -e "\e[36m------------------------------------\e[0m"
 echo ""
 echo ""
 echo ""
@@ -730,19 +748,33 @@ then
 								done
 							fi
 
+							mkdir -p $OUTPUTDIR/$RunlistName
+							mkdir -p $OUTPUTDIR/$RunlistName/$ChildName
+
 							# check if merging was successful
 							MergeRuns=0
-							if [[ `alien_ls $AlienDir$child/merge_runlist_$RunlistID/ 2> /dev/null | grep "AnalysisResults.root" | wc -l ` < 1 ]]; then
+							test=".err.log"
+							if [[ -f $test ]]; then rm $test; fi
+							tmp=`alien_ls $AlienDir$child/merge_runlist_${RunlistID}/ 2> $test | grep "AnalysisResults.root" | wc -l`
+							if [[ `grep "FATAL" $test | wc -l` > 0 ]]; then
+								printf "alien connection lost Retry  "
+							fi
+							count=1
+							while [[ `grep "FATAL" $test | wc -l` > 0 ]]; do
+								printf "$count.."
+								((count++))
+								sleep 1
+								tmp=`alien_ls $AlienDir$child/merge_runlist_${RunlistID}/ 2> $test | grep "AnalysisResults.root" | wc -l`
+							done
+							printf "\n"
+
+							rm $test
+							if [[ $tmp < 1 ]]; then
 								MergeRuns=1
 								echo  -e "\e[33mWARNING:  No files found\e[0m, trying to merge from runwise output: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
 								echo  -e "\e[36m------------------------------------\e[0m"
 							fi
 
-							if [[ $UseMerge = 1 ]]
-							then
-								mkdir -p $OUTPUTDIR/$RunlistName
-								mkdir -p $OUTPUTDIR/$RunlistName/$ChildName
-							fi
 
 							if [[ $Userunwise = 1 ]] || [[ $MergeRuns = 1 ]]; then
 								# Download all runs
@@ -797,9 +829,28 @@ then
 											AddToList $RunPathList.tmp $RunPathList
 										fi
 
+										tmp=1
+										tmp2=0
 										if [ ! -f $RunPathList ]; then
-											echo -e "\e[31mError\e[0m Run $runName wasn't found!" | tee -a $ErrorLog
+											tmp2=1
+											printf "  \e[33m|->\e[0m Run $runName wasn't found! Retry "
+										fi
+										while [[ ! -f $RunPathList ]]; do
+											if [[ $tmp = 11 ]]; then
+												break
+											fi
+											printf "${tmp} "
+											alien_cp -o  alien:/$1 file:/$2 &> $3
+											((tmp++))
+										done
+
+
+										if [ ! -f $RunPathList ]; then
+											echo -e "\t\e[31mError\e[0m Run $runName wasn't found!" | tee -a $ErrorLog
 											continue
+										fi
+										if [[ $tmp2 = 1 ]]; then
+											printf "\n"
 										fi
 
 										for path2 in `cat $RunPathList `
@@ -928,9 +979,9 @@ then
 														else
 															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 															then
-																echo -e "\t\e[31m|->\e[0m missing $subrunoutFile  "  | tee -a $ErrorLog
+																echo -e "\t\e[31m|->\e[0m subrun missing $subrunoutFile  "  | tee -a $ErrorLog
 															else
-																echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+																echo -e "\t\e[31m|->\e[0m subrun missing "  | tee -a $ErrorLog
 															fi
 														fi
 													fi
@@ -1011,8 +1062,12 @@ then
 												then
 													if [[ -f $mergedFile ]]
 													then
-														printf "\t\e[33m|->\e[0m merging run to period"  #(log: $logFile)"
-														# echo -e "\e[33m|->\e[0m merging run to period $RunlistName $ChildName $runName"  #(log: $logFile)"
+														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+														then
+															echo -e "\e[33m|->\e[0m merging run to period $RunlistName $ChildName $runName (log: $logFile)"
+														else
+															printf "\t\e[33m|->\e[0m merging run to period"
+														fi
 														hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
 														wait
 														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -1051,9 +1106,9 @@ then
 												else
 													if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 													then
-														echo -e "\t\e[31m|->\e[0m missing $runinFile  "  | tee -a $ErrorLog
+														echo -e "\t\e[31m|->\e[0m run missing $runinFile  "  | tee -a $ErrorLog
 													else
-														echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+														echo -e "\t\e[31m|->\e[0m run missing "  | tee -a $ErrorLog
 													fi
 												fi
 											fi
@@ -1135,9 +1190,9 @@ then
 										else
 											if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 											then
-												echo -e "\t\e[31m|->\e[0m missing $inFile  "  | tee -a $ErrorLog
+												echo -e "\t\e[31m|->\e[0m child missing $inFile  "  | tee -a $ErrorLog
 											else
-												echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+												echo -e "\t\e[31m|->\e[0m child missing "  | tee -a $ErrorLog
 											fi
 										fi
 									fi
@@ -1511,3 +1566,4 @@ do
 done
 echo;
 echo;
+rm $lockfile
