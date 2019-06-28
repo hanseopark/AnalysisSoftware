@@ -49,27 +49,33 @@ else
   exit;
 fi
 
-NCellsGood=`ls $location/Good/Cell*.png | wc -l`
-if [ $NCellsToBeLookedAt -gt 0 ]; then
-	echo "Let me show you some good examples first. Use Key X to finish viewing examples ............ "
-	sleep 5s
-	cd $location/Good
-        feh -F --cycle-once
+if [ -d $location/Good ]; then
+    NCellsGood=`ls $location/Good/Cell*.png | wc -l`
+    if [ $NCellsToBeLookedAt -gt 0 ]; then
+            echo "Let me show you some good examples first. Use Key X to finish viewing examples ............ "
+            sleep 2s
+            cd $location/Good
+            feh -F --cycle-once
+    fi
+else
+    cd $location
+    echo "no Good folder found"
 fi
 echo "*******************************************************************************************"
 echo "*******************************************************************************************"
 
-
 echo "Now lets start classifying (use the 'd' key to toggle display or filename)............................................."
-sleep 5s
-cd ..
+sleep 1s
+if [ -d $location/Good ]; then
+    cd ..
+fi
 echo $location $basedir/$location2 $suffix
 pwd
-feh -F --cycle-once --action1 "mv -f '%F' $basedir/$location2/bad/%F " \
+#option -F == Fullscreen
+feh --cycle-once --action1 "mv -f '%F' $basedir/$location2/bad/%F " \
 --action2  "mv -f '%F' $basedir/$location2/maybe/%F" \
 --action3  "mv -f '%F' $basedir/$location2/ok/%F" \
 *.$suffix
-
 echo "*******************************************************************************************"
 echo "Great you have done it! Congrats!!"
 echo "*******************************************************************************************"
