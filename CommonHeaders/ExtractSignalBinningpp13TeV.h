@@ -464,19 +464,17 @@
         12, 20, 20, 20, 20 };
     // PCM-PHOS (mode 3)
     std::vector<Double_t> fBinsEta13TeVPCMPHOSTrigINT7Pt {      // size: 11
-        0.0,  1.0,  2.5,  4.0,     5.5,  7.0,  9.0,  13.0, 16.0,
-       25.0};
+        0.0,  1.0,  2.5,  4.0,  5.5,        7.0,  9.0,  13.0, 16.0, 25.0};
     std::vector<Int_t>    fBinsEta13TeVPCMPHOSTrigINT7PtRebin { // size: 10
-       16,  8,  4,  4,  4,      8, 16, 16, 16, 16};
+       16,  8,  8,  8,  8,                 8, 16, 16, 16};
     std::vector<Int_t>    fBinsPi0EtaBinning13TeVPCMPHOSTrigINT7PtRebin { // size: 19
         8,  4,  4,  4,  4,      4,  4,  4,  4,  4,
         4,  4,  4,  4,  4,      4,  8,  8, 10};
     // PHOS-PHOS (mode 5)
-    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt {      // size: 11
-        0.0,  1.0,  2.5,  4.0,     5.5,  7.0,  9.0,  13.0, 16.0,
-       25.0};
-    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin { // size: 10
-        16,  8,  4,  4,  4,      8, 16, 16, 16, 16};
+    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt {      // size: 10
+        0.0,  1.0,  2.5,  4.0,  5.5,        7.0,  9.0,  13.0, 16.0, 25.0};
+    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin { // size: 9
+        16,  8,  8,  8,  8,                 8, 16, 16, 16};
     // PHOS-PHOS (mode 5)
     std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt_Backup {      // size: 41
         0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.3, 1.4, 1.5, 1.6,
