@@ -271,7 +271,7 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     sort(CellNumbersOwnBad.begin(),CellNumbersOwnBad.end());
     if(useMaybe==2){
         cout << "-----------------------------------------------------------------------------------" <<endl;
-        cout << "Cells flagged as bad or maybeby user:" <<endl;
+        cout << "Cells flagged as bad or maybe by user:" <<endl;
         cout << "-----------------------------------------------------------------------------------" <<endl;
     } else{
         cout << "-----------------------------------------------------------------------------------" <<endl;
@@ -585,10 +585,28 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
         cout << "-----------------------------------------------------------------------------------" <<endl;
         cout << " Finished cleaning the log files, however there were " << CellsThatNeedCheck.size()<< " cells found that were" << endl;
         cout << " flagged as bad by you, but not by HotCellCompare or DeadCellCompare. Please check" << endl;
-        cout << " these cells again and add them to the log file by hand if they are realy bad!" << endl;
+        cout << " these cells again and add them to the log file by hand if they are really bad!" << endl;
         cout << endl;
+        gSystem->Exec(Form("mkdir -p %s/AfterRunwiseComparison/maybe", inputDirUserBad.Data()));
+        gSystem->Exec(Form("mkdir -p %s/AfterRunwiseComparison/ok", inputDirUserBad.Data()));
+        gSystem->Exec(Form("mkdir -p %s/AfterRunwiseComparison/bad", inputDirUserBad.Data()));
+        TString TStrCurrentCellName;
+        TString BadCellLocation;
+        TString MaybeCellLocation;
+        TString TargetCellLocation;
+        TString TStrCpBad;
+        TString TStrCpMaybe;
+        TString TStrCopyBadOrMaybeString;
         for(UInt_t i = 0; i < CellsThatNeedCheck.size();i++){
             cout << CellsThatNeedCheck.at(i) << ", ";
+            TStrCurrentCellName=Form("Cell%d_EnergyAndTimeComparison.%s", CellsThatNeedCheck.at(i), suffix.Data() );
+            MaybeCellLocation=Form("%s/%s", inputDirUserMaybe.Data(), TStrCurrentCellName.Data() );
+            BadCellLocation=Form("%s/%s", inputDirUserBad.Data(), TStrCurrentCellName.Data() );
+            TargetCellLocation=Form("%s/AfterRunwiseComparison/%s", inputDirUserBad.Data(), TStrCurrentCellName.Data());
+            TStrCpBad=Form("cp %s %s", BadCellLocation.Data(), TargetCellLocation.Data());
+            TStrCpMaybe=Form("cp %s %s", MaybeCellLocation.Data(), TargetCellLocation.Data());
+            TStrCopyBadOrMaybeString=Form("if [ -f %s ]; then %s; elif  [ -f %s ]; then %s; fi", BadCellLocation.Data(), TStrCpBad.Data(), MaybeCellLocation.Data(), TStrCpMaybe.Data() );
+            gSystem->Exec(Form("%s", TStrCopyBadOrMaybeString.Data()));
         }
         cout << endl;
     }
