@@ -2276,7 +2276,7 @@
                                 cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigCombPt"<<endl;
                                 maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigCombPt, binning, 103 ); break;
                             case 0:
-                                if(energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 19 );
+                                if(energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 18 );
                                 else                         maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
                                 break;
                             case 1: cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigINT7Pt"<<endl; maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigEMC7Pt, binning, 64 ); break;
@@ -2285,7 +2285,7 @@
                             case 4:
                             case 5:
                                 cout<<"; Special Trigger: "<<SpecialTrigger<<endl;
-                                if( energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 19 );
+                                if( energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 18 );
                                 else                          maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
                                 break;
                         }
@@ -3054,17 +3054,22 @@
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0){
                 switch(mode) {
                     case 0: //PCM-PCM
-                        cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode;
+		      cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode << "  SpecialTrigger::"<< SpecialTrigger << endl;
                         if( DCAcase==kTRUE ) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7PtDCA, binning, 9 );
                         else switch(SpecialTrigger) {
                             case -1: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigCombPt, binning, 24 ); break;
                             case 0:
-                             if(energy.Contains("RBins")) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 19 );
-                              else                         maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 );
-                              break;
+                             if(energy.Contains("RBins")){ 
+			          maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 18 );
+                               }else  {                       
+			          maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 ) ;
+			     }
+
+			     cout << "maxNBins"<< maxNBins<< endl;
+			     break;
 
                             case 4:
-                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 ); break;
+                            case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 41 ); break;
                             case 1: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigEMC7Pt, binning, 22 ); break;
                             case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigEG1Pt, binning, 22 ); break;
                             case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigEG2Pt, binning, 22 ); break;
@@ -5743,8 +5748,11 @@
                         case 0:
                             switch(specialTrigg) {
                                 case 0:
-                                    if (energy.Contains("RBins")) CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
-                                        else  CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
+                                    if (energy.Contains("RBins")) {
+				      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
+				    }else{  
+				      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
+				    }
                                     break;
                                 case 1: CopyVectorToArray(fBinsEta13TeVPCMTrigEMC7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG1PtRebin, fNRebin); break;

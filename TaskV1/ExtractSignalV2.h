@@ -1327,7 +1327,14 @@
             fMidPt[1]                   = 2.5;
 
             // Initialize peak range
-            if (mode == 2 || mode == 13){
+	    if(mode ==0){
+	      fPeakRange[0]           = 0.48;
+	      fPeakRange[1]           = 0.58;
+	      if (fEnergyFlag.Contains("13TeV")){
+		fPeakRange[0]           = 0.5;
+		fPeakRange[1]           = 0.57;
+ 	      }
+	    }else if (mode == 2 || mode == 13){
                 fPeakRange[0]           = 0.48;
                 fPeakRange[1]           = 0.58;
             } else if (mode == 3){
@@ -1375,6 +1382,12 @@
             } else if (mode == 5) {
                 fFitRange[0]                = 0.38;
                 fFitRange[1]                = 0.73;
+            } else if (mode == 0) {
+                if( fEnergyFlag.Contains("13TeV")  ){
+		  fFitRange[0]                = 0.44;
+		  fFitRange[1]                = 0.65;
+		}
+
              } else {
                 fFitRange[0]            = 0.4;
                 fFitRange[1]            = 0.65;
@@ -1574,12 +1587,12 @@
                     fMesonFitRange[1]           = 0.73;
                 }
 	    } else if (mode == 0) {
-		if( fEnergyFlag.Contains("13TeV") == 0 ){
-		  fFitRange[0]                = 0.44;
-		  fFitRange[1]                = 0.65;
+		if( fEnergyFlag.Contains("13TeV")  ){
+		  fMesonFitRange[0]                = 0.44;
+		  fMesonFitRange[1]                = 0.7;
 		}else{
-		  fFitRange[0]                = 0.4;
-		  fFitRange[1]                = 0.7;
+		  fMesonFitRange[0]                = 0.4;
+		  fMesonFitRange[1]                = 0.7;
 		}
 
             } else {
@@ -1703,6 +1716,7 @@
                 fMesonLambdaTailRange[0]    = 0.004;
                 fMesonLambdaTailRange[1]    = 0.03;
             }
+
 
         //****************************************************************************************************
         // Initialization for eta' meson

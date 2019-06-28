@@ -5073,6 +5073,21 @@
                 return "|#alpha_{meson}| < 0.6";
             case 9:	// 0.0-0.3
                 return "|#alpha_{meson}| < 0.3";
+
+    	    case 10:	// 0.0-0.2
+                return "|#alpha_{meson}| < 0.2";
+
+            case 13:	// 0.0-0.1
+                return "|#alpha_{meson}| < 0.1";
+
+            case 14:	// 0.0-0.3
+                return "|#alpha_{meson}| < 0.3";
+
+            case 15:	// 0.0-0.4
+                return "|#alpha_{meson}| < 0.4";
+
+	    case 16:	// 0.0-0.5
+                return "|#alpha_{meson}| < 0.5";
             default:
                 return "no alpha cut defined";
         }
@@ -5367,6 +5382,34 @@
         return "M_{#gamma#gamma} cut unknown";
     }
     }
+
+    //************************************************************************************
+    //** Analyzes the RBins cut, return correct cut label **************************
+    //************************************************************************************
+    TString AnalyseRBinCut(Int_t RBinCut){
+        switch(RBinCut){
+	    case 0:	// 5-33.5
+                return "0 cm < R < 180. cm ";   
+	    case 2:	// 5- 180
+                return " 5 cm < R < 180 cm ";
+            case 10:	//a 5-33.5
+                return "5 cm < R < 33.5 cm "; 
+            case 11:	//b 33.5-72.
+                return "33.5 cm < R < 72 cm "; 
+            case 12:	//c 72-180
+                return "72 cm < R < 180 cm "; 
+            case 17:	//h 5-13 
+                return "5 cm < R < 13. cm "; 
+            case 18:	//i 13-33.5
+                return "13 cm < R < 33.5 cm "; 
+  
+	default:
+       return "RBins cut unknown";
+	}
+    }
+
+
+
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
