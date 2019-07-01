@@ -159,6 +159,12 @@ function GetFile()
 		echo -e "\e[33mGetFile(): \e[0m alien:/$1  file:/$2"
 	fi
 
+	if [[ -f $3 ]]; then
+		if [[ ! `grep "100.00 %" $3 | wc -l` > 0 ]]; then
+			if [[ -f $2 ]]; then rm $2; fi
+		fi
+	fi
+
 	if [[ -f $2 ]] # Check if file there
 	then
 		if [[ $debug = 1 ]] || [[ $debug = 2 ]]; then
@@ -176,10 +182,10 @@ function GetFile()
 				alien_cp -o  alien:/$1 file:/$2 &> $3
 			fi
 			tmp=1
-			if [[ ! -f $2 ]]; then
+			if [[ ! -f $2 ]] || [[ ! `grep "100.00 %" $3 | wc -l` > 0 ]]; then
 				printf "  \e[33m|->\e[0m Retry "
 			fi
-			while [[ ! -f $2 ]]; do
+			while [[ ! -f $2 ]] || [[ ! `grep "100.00 %" $3 | wc -l` > 0 ]]; do
 				if [[ $tmp = 11 ]]; then
 					echo "."
 					break
@@ -188,20 +194,21 @@ function GetFile()
 				alien_cp -o  alien:/$1 file:/$2 &> $3
 				((tmp++))
 			done
-			if [[ -f $2 ]]; then
+			if [[ -f $2 ]] && [[ `grep "100.00 %" $3 | wc -l` > 0 ]] ; then
 				printf "  \e[33m|->\e[0m successful"
 			else
-				printf "  \e[33m|->\e[0m Download failed"  | tee -a $3  | tee -a $ErrorLog
+				printf "  \e[33m|->\e[0m Download failed"   | tee -a $ErrorLog
 			fi
 		else
 			if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 			then
-				echo -e "\e[31m|->\e[0m missing $1 on alien"  | tee -a $3  | tee -a $ErrorLog
+				echo -e "\e[31m|->\e[0m missing $1 on alien"    | tee -a $ErrorLog
 			else
-				echo -e "\e[31m|->\e[0m missing on alien"  | tee -a $3  | tee -a $ErrorLog
+				echo -e "\e[31m|->\e[0m missing on alien"  | tee -a $ErrorLog
 			fi
 		fi
 	fi
+
 }
 
 
@@ -255,7 +262,7 @@ TrainPageNum=""
 TrainNumber=""
 MergeTrains=0
 DoDown=1
-MergeTrainsOutname=0
+MergeTrainsOutname=""
 OutName=""
 Search=".root"
 OptRunlistName=list
@@ -520,9 +527,9 @@ then
 		echo -e "\e[33m|->\e[0m $Childeone"
 		if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 		then
-			GetFile $AlienDir$Childeone/env.sh $envFile /dev/null
+			GetFile $AlienDir$Childeone/env.sh $envFile $envFile.downlog
 		else
-			GetFile $AlienDir$Childeone/env.sh $envFile /dev/null &> /dev/null
+			GetFile $AlienDir$Childeone/env.sh $envFile $envFile.downlog &> /dev/null
 		fi
 		PERIODNAME=`grep "PERIOD_NAME=" $envFile | awk -F "=" '{print $2}' | awk -F ";" '{print $1}'`
 		echo "PERIODNAME = $PERIODNAME"
@@ -564,9 +571,9 @@ then
 			GlobalVariablesPath="$OUTPUTDIR/.$child/$GlobalVariablesFile"
 			if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 			then
-				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" /dev/null
+				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" $GlobalVariablesPath.downlog
 			else
-				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" /dev/null &> /dev/null
+				GetFile "$AlienDir$child/$GlobalVariablesFile" "$GlobalVariablesPath" $GlobalVariablesPath.downlog &> /dev/null
 			fi
 
 			ChildName=`grep "periodName =" "$GlobalVariablesPath" | awk -F "= " '{print $2}' | awk -F ";" '{print $1}' | awk -F "\"" '{print $2}'`
@@ -950,15 +957,26 @@ then
 															then
 																printf "\t\e[33m|->\e[0m merging subrun to run"  #(log: $logFile)"
 																# echo -e "\e[33m|->\e[0m merging subrun to run $RunlistName $ChildName $runName $subrunname"  #(log: $logFile)"
+																if [[ -f $submergedFile.tmp ]]; then rm $submergedFile.tmp; fi
 																hadd -k $submergedFile.tmp $submergedFile $subrunoutFile  &> $sublogFile
-																wait
-																if [[ $debug = 1 ]] || [[ $debug = 2 ]]
-																then
-																	echo " Log:"
-																	cat $sublogFile
-																	echo;echo;
+																tmp=1
+																if [[ `wc -l $sublogFile` > 6 ]]; then
+																	printf "  \e[33m|->\e[0m Retry "
 																fi
-																if [[ `wc -l $sublogFile` > 9 ]]
+																while [[ `wc -l $sublogFile` > 6 ]]; do
+																	if [[ $tmp = 11 ]]; then
+																		echo "."
+																		break
+																	fi
+																	printf "${tmp} "
+																	if [[ -f $submergedFile.tmp ]]; then rm $submergedFile.tmp; fi
+																	if [[ -f $subrunoutFile ]]; then rm $subrunoutFile; fi
+																	GetFile $subruninFile $subrunoutFile $subrundownlogFile
+																	printf "  \e[33m|->\e[0m mergeing "
+																	hadd -k $submergedFile.tmp $submergedFile $subrunoutFile  &> $sublogFile
+																	((tmp++))
+																done
+																if [[ `wc -l $sublogFile` > 6 ]]
 																then
 																	echo -e "\t\e[31mError\e[0m $RunlistName $ChildName $runName $subrunname not merged correctly" | tee -a $ErrorLog
 																	cat $sublogFile >> $ErrorLog
@@ -968,6 +986,12 @@ then
 																	rm $submergedFile
 																	mv $submergedFile.tmp $submergedFile
 																	touch $subalreadyMerged
+																fi
+																if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+																then
+																	echo " Log:"
+																	cat $sublogFile
+																	echo;echo;
 																fi
 															else
 																printf "\t\e[33m|->\e[0m Copy: is first\n"
@@ -988,11 +1012,12 @@ then
 												done
 											done
 
-											echo -e "merge from higher stages.. done, removing downloads" | tee -a $WARNINGLog
+											echo -e "merge from higher stages.. done" | tee -a $WARNINGLog
+											# echo -e "merge from higher stages.. done, removing downloads" | tee -a $WARNINGLog
 										else
 											echo -e "was merged from higher stages" | tee -a $WARNINGLog
 										fi
-										rm -r $runDir/[0-9][0-9]*
+										# rm -r $runDir/[0-9][0-9]*
 									else
 										for path2 in `cat $RunPathList`
 										do
@@ -1068,8 +1093,8 @@ then
 														else
 															printf "\t\e[33m|->\e[0m merging run to period"
 														fi
+														if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 														hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
-														wait
 														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 														then
 															echo " Log:"
@@ -1080,20 +1105,37 @@ then
 														then
 															echo "rm $mergedFile"
 														fi
-														if [[ `wc -l $logFile` > 9 ]]
+														if [[ `wc -l $logFile` > 6 ]]; then
+															printf "  \e[33m|->\e[0m Retry "
+														fi
+														while [[ `wc -l $logFile` > 6 ]]; do
+															if [[ $tmp = 11 ]]; then
+																echo "."
+																break
+															fi
+															printf "${tmp} "
+															if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+															if [[ -f $runoutFile ]]; then rm $runoutFile; fi
+															GetFile $runinFile $runoutFile $rundownlogFile
+															printf "  \e[33m|->\e[0m merging "
+															hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
+															((tmp++))
+														done
+														if [[ `wc -l $logFile` > 6 ]]
 														then
 															echo -e "\e[31mError\e[0m $RunlistName $ChildName $runName not merged correctly" | tee -a $ErrorLog
 															cat $logFile >> $ErrorLog
 															rm $mergedFile.tmp
-															rm $runoutFile
+															if [[ -f $runoutFile ]]; then rm $runoutFile; fi
 														else
-															rm $mergedFile
+															if [[ -f $mergedFile ]]; then rm $mergedFile; fi
 															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 															then
 																echo "mv $mergedFile.tmp $mergedFile "
 															fi
 															mv $mergedFile.tmp $mergedFile
 															touch $alreadyMerged
+															printf "was merged" >> $rundownlogFile
 															printf "\t\e[33m|->\e[0m successful\n"
 														fi
 													else
@@ -1119,7 +1161,7 @@ then
 									# ###################################
 								done
 								if [[ $MergeRuns = 1 ]]; then
-									echo -e "merge from runwise.. done" | tee -a $ErrorLog
+									echo -e "merge from runwise.. done" | tee -a $WARNINGLog
 								fi
 							fi
 
@@ -1154,8 +1196,8 @@ then
 											if [[ -f $mergedFile ]]
 											then
 												printf "\e[33m|->\e[0m merging childs \n"  #(log: $logFile)"
+												if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 												hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
-												wait
 												if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 												then
 													echo " Log:"
@@ -1166,14 +1208,30 @@ then
 												then
 													echo "rm $mergedFile"
 												fi
-												if [[ `wc -l $logFile` > 9 ]]
+												if [[ `wc -l $logFile` > 6 ]]; then
+													printf "  \e[33m|->\e[0m Retry "
+												fi
+												while [[ `wc -l $logFile` > 6 ]]; do
+													if [[ $tmp = 11 ]]; then
+														echo "."
+														break
+													fi
+													printf "${tmp} "
+													if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+													if [[ -f $outFile ]]; then rm $outFile; fi
+													GetFile $inFile $outFile $downlogFile
+													printf "  \e[33m|->\e[0m mergeing "
+													hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+													((tmp++))
+												done
+												if [[ `wc -l $logFile` > 6 ]]
 												then
 													echo -e "\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 													cat $logFile >> $ErrorLog
-													rm $mergedFile.tmp
+													if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 													# rm $outFile
 												else
-													rm $mergedFile
+													if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 													if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 													then
 														echo "mv $mergedFile.tmp $mergedFile "
@@ -1223,7 +1281,7 @@ then
 fi
 
 
-if [[ $NTrainFile = 1 ]] #&& [[ ! $TrainNumber = *"+"* ]]
+if [[ $MultiTrains = 0 ]] #&& [[ ! $TrainNumber = *"+"* ]]
 then
 	ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName
 	# cmd="ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName"
@@ -1350,8 +1408,8 @@ then
 							if [[ -f $mergedFile ]]
 							then
 								printf "\t\e[33m|->\e[0m merging trains $RunlistName $Periodname $runname $filename"  #(log: $logFile)"
+								if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 								hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
-								wait
 								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 								then
 									echo " Log:"
@@ -1362,7 +1420,20 @@ then
 								then
 									echo "rm $mergedFile"
 								fi
-								if [[ `wc -l $logFile` > 9 ]]
+								if [[ `wc -l $logFile` > 6 ]]; then
+									printf "  \e[33m|->\e[0m Failed! Retry "
+								fi
+								while [[ `wc -l $logFile` > 6 ]]; do
+									if [[ $tmp = 11 ]]; then
+										echo "."
+										break
+									fi
+									printf "${tmp} "
+									if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+									((tmp++))
+								done
+								if [[ `wc -l $logFile` > 6 ]]
 								then
 									echo -e "\t\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 									cat $logFile >> $ErrorLog
@@ -1470,8 +1541,8 @@ then
 								if [[ -f $mergedFile ]]
 								then
 									printf "\t\e[33m|->\e[0m merging trains"  #(log: $logFile)"
+									if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
-									wait
 									if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 									then
 										echo " Log:"
@@ -1482,7 +1553,20 @@ then
 									then
 										echo "rm $mergedFile"
 									fi
-									if [[ `wc -l $logFile` > 9 ]]
+									if [[ `wc -l $logFile` > 6 ]]; then
+										printf "  \e[33m|->\e[0m Retry "
+									fi
+									while [[ `wc -l $logFile` > 6 ]]; do
+										if [[ $tmp = 11 ]]; then
+											echo "."
+											break
+										fi
+										printf "${tmp} "
+										if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+										hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+										((tmp++))
+									done
+									if [[ `wc -l $logFile` > 6 ]]
 									then
 										echo -e "\t\e[31mError\e[0m not merged correctly" | tee -a $ErrorLog
 										cat $logFile >> $ErrorLog
