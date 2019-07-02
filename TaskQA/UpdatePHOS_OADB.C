@@ -366,7 +366,7 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp, "additional bad channels LHC16p - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16p_pass1.log", 264076, 264347, 1);*/
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //LHC16 13 TeV Periods: e, g, h, i, j, k, l, o, p //Good Runs (taken from old OADB File)
+    /*//LHC16 13 TeV Periods: e, g, h, i, j, k, l, o, p //Good Runs (taken from old OADB File) with Parts in Log Name
     //OADB File: 252613-253591
     updateFile(fileNameOADBtemp, "additional bad channels LHC16e - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16e_pass1.log", 252613, 253591, 1);
 
@@ -400,7 +400,44 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp, "additional bad channels LHC16o Part 2 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16o_pass1_Part2.log", 262636, 264035, 1);
 
     //OADB File: 262636-264347, where as real LHC16p=>264076-264347
-    updateFile(fileNameOADBtemp, "additional bad channels LHC16p - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16p_pass1.log", 264076, 264347, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16p - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16p_pass1.log", 264076, 264347, 1);*/
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    /*//LHC16 13 TeV Periods: e, g, h, i, j, k, l, o, p //Good Runs (taken from old OADB File)
+    //OADB File: 252613-253591
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16e - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16e_pass1.log", 252613, 253591, 1);
+
+    //OADB File: 254128-254332
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16g - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16g_pass1.log", 254128, 254332, 1);
+
+    //OADB File: 254378-255467
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16h - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16h_pass1.log", 254378, 255467, 1);
+
+    //OADB File: 255539-255618
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16i - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16i_pass1.log", 255539, 255618, 1);
+
+    //OADB File: 256203-256420
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16j - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16j_pass1.log", 256203, 256420, 1);
+
+    //OADB File: 256512-257011; 257012-257145; 257146-258537
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 1 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_256512_257011.log", 256512, 257011, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 2 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_257012_257145.log", 257012, 257145, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 3 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_257146_257433.log", 257146, 257433, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 4 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_257487_257604.log", 257487, 257604, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 5 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_257605_258393.log", 257605, 258393, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16k Part 6 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16k_pass1_258452_258537.log", 258452, 258537, 1);
+
+    //OADB File: 258883-260014
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16l - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16l_pass1.log", 258883, 260014, 1);
+
+    //real runranges are: 16o=>262395-264035; LHC16p=>264076-264347
+    //my split of 16o was: 262424-262428 and 262705-264035
+    //OADB File: 262395-262635; 262636-264347
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16o Part 1 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16o_pass1_262395_262635.log", 262395, 262635, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16o Part 2 - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16o_pass1_262636_264035.log", 262636, 264035, 1);
+
+    //OADB File: 262636-264347, where as real LHC16p=>264076-264347
+    updateFile(fileNameOADBtemp, "additional bad channels LHC16p - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC16p_pass1.log", 264076, 264347, 1);*/
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //=======================================================================================================================================================================
@@ -431,7 +468,7 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp, "additional bad channels LHC17r - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC17r_pass1.log", 282528, 282704, 1);*/
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //LHC17 13 TeV Periods: c, e, f, h, i, j, k, l, m, o, r //Good Runs (taken from old OADB File)
+    /*//LHC17 13 TeV Periods: c, e, f, h, i, j, k, l, m, o, r //Good Runs (taken from old OADB File)
     //OADB File: 270531-270667
     updateFile(fileNameOADBtemp, "additional bad channels LHC17c - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC17c_pass1.log", 270531, 270667, 1);
 
@@ -466,7 +503,7 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp, "additional bad channels LHC17o - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC17o_pass1.log", 280282, 281961, 1);
 
     //OADB File: 282504-282704
-    updateFile(fileNameOADBtemp, "additional bad channels LHC17r - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC17r_pass1.log", 282504, 282704, 1);
+    updateFile(fileNameOADBtemp, "additional bad channels LHC17r - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC17r_pass1.log", 282504, 282704, 1);*/
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //=======================================================================================================================================================================
