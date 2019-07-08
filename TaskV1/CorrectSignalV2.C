@@ -3558,7 +3558,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             Double_t rangeSecRatio[2]   = {0, 0.30};
             if (mode == 0){
                 if(kCollisionSystem==1) rangeSecRatio[1]        = 0.07;
-                else if(optionEnergy.CompareTo("5TeV2017") == 0) rangeSecRatio[1]        = 0.06;
+                else if(optionEnergy.Contains("5TeV2017")) rangeSecRatio[1]        = 0.06;
                 else if( (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVRBins") == 0) ) rangeSecRatio[1]        = 0.06;
                 else rangeSecRatio[1]        = 0.05;
             } else if (mode == 2 || mode == 13){

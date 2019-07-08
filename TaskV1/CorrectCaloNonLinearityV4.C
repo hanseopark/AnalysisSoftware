@@ -785,7 +785,7 @@ void CorrectCaloNonLinearityV4(
     if (select.Contains("LHC10-Calo"))      minPlotY = 0.9;
     if (select.Contains("LHC12-JetJet"))    minPlotY = 0.93;
     if (select.Contains("LHC16"))           minPlotY = 0.89;
-    if (select.Contains("LHC15o"))           minPlotY = 0.8;
+    if (select.Contains("LHC15o") || select.Contains("LHC18qr"))           minPlotY = 0.8;
     if (select.Contains("LHC11cd") && mode==2)           minPlotY = 0.89;
 
     Double_t minMass  = 0.89;
@@ -1133,7 +1133,7 @@ void CorrectCaloNonLinearityV4(
     canvasMassRatioMCData->SetLogy(0);
 
     Double_t maxPlotY = 1.05;
-    if (select.Contains("LHC15o"))           maxPlotY = 1.2;
+    if (select.Contains("LHC15o") || select.Contains("LHC18qr"))           maxPlotY = 1.2;
     if (select.Contains("LHC11cd") && mode==2)           maxPlotY = 1.03;
 
     TH2F * histoDummyDataMCRatio;

@@ -295,7 +295,7 @@ void ComputeCorrelationFactors(
           minCorrYaxis = 0.2;
           maxCorrYaxis = 0.82;
         }
-    } else if (combMode.CompareTo("triggers") == 0 && (energy.CompareTo("2.76TeV") == 0  || energy.CompareTo("5TeV2017") == 0 )&& ( mode == 2 || mode == 4 ) ){
+    } else if (combMode.CompareTo("triggers") == 0 && (energy.CompareTo("2.76TeV") == 0  || energy.Contains("5TeV2017") )&& ( mode == 2 || mode == 4 ) ){
         minCorrYaxis            = 0.15;
     }
     Double_t maxPt              = 0;

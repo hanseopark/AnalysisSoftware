@@ -2512,14 +2512,13 @@
                 corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EGA_INT7-EGA");
                 corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EMC7_EMC7-EGA");
                 corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", "Pi0EtaBinning", "EGA_EMC7-EGA");
-            } else if (mode == 4 && energy.CompareTo("5TeV2017") == 0 ){
+            } else if (mode == 4 && energy.Contains("5TeV2017") ){
                 corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "INT7_INT7-EMC7");
                 corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EMC7_INT7-EMC7");
-                corrFracINT7_INT7_EG1       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "INT7_INT7-EG1");
-                corrFracEG1_INT7_EG1        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG1_INT7-EG1");
-                corrFracEMC7_EMC7_EG1       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EMC7_EMC7-EG1");
-                corrFracEG1_EMC7_EG1        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG1_EMC7-EG1");
-
+                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "INT7_INT7-EG2");
+                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG2_INT7-EG2");
+                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EMC7_EMC7-EG2");
+                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG2_EMC7-EG2");
             } else if (mode == 10 && energy.CompareTo("8TeV") == 0 ){
                 corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10", meson, "INT7_INT7-EMC7");
                 corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10", meson, "EMC7_INT7-EMC7");

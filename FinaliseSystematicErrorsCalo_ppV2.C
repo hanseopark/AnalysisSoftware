@@ -138,21 +138,21 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
     Bool_t bsmoothEMC7Pi0[13]               = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEMC7Eta[13]               = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Eta[13]               = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEMC7EtaToPi0[13]          = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7EtaToPi0[13]          = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };                           
-    Bool_t bsmoothEG2Pi0[13]                = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Pi0[13]                = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEG2Eta[13]                = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Eta[13]                = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEG2EtaToPi0[13]           = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG2EtaToPi0[13]           = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
-                                                1, 1, 1 };
+                                                1, 1, 0 };
     Bool_t bsmoothEG1Pi0[13]                = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
@@ -392,7 +392,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                     } else if ( meson.CompareTo("Eta") == 0 ){
                         error   = 0.;
                     }
-                    if(energy.CompareTo("5TeV2017") == 0){
+                    if(energy.Contains("5TeV2017")){
 //                       error = 1.5;
 //                       if (ptBins[k] > 12.0 && meson.Contains("Pi0")) error = 1.5 + 0.4*(ptBins[k]-12)*(ptBins[k]-12);
                       error =  5.32285e-01 + -2.01078e-01*ptBins[k] + 2.37952e-02*ptBins[k]*ptBins[k];
@@ -408,7 +408,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
             // manual smoothing for minimum cluster energy errors - variation 2
             if (nameCutVariationSC[i].CompareTo("ClusterMinEnergy")==0  ){
                 cout << "Cluster minimum energy smoothing" << endl;
-                if(energy.CompareTo("5TeV2017") == 0){
+                if(energy.Contains("5TeV2017")){
                       Double_t error = 0;
                       for (Int_t k = 0;k < nPtBins;k++){
                         error = 2;
@@ -502,7 +502,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                     if (meson.CompareTo("EtaToPi0") == 0)
                         error   = 2* error;
 
-                    if(energy.CompareTo("5TeV2017") == 0){
+                    if(energy.Contains("5TeV2017") ){
                       error = 1.42;
 //                       if (ptBins[k] > 8.0) error = 1.08108 + 0.08*(ptBins[k]-8)*(ptBins[k]-8);
                       if(meson.Contains("Eta")) error = error * 1.2;
@@ -531,7 +531,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                         ){
                           error   = 1.8+(-0.01)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k];
                         }
-                        if(energy.CompareTo("5TeV2017") == 0){
+                        if(energy.Contains("5TeV2017") ){
                           error = 1.32874;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                           if(additionalName.CompareTo("calofastEMC7") == 0 || additionalName.CompareTo("calofastEG2") == 0) error = 1.32874;
@@ -553,7 +553,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                         ){
                           error   = 6+(-0.)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k];
                         }
-                        if(energy.CompareTo("5TeV2017") == 0){
+                        if(energy.Contains("5TeV2017") ){
                           error = 1.32874 * 2.;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                           if(additionalName.CompareTo("calofastEMC7") == 0 || additionalName.CompareTo("calofastEG2") == 0) error = 1.32874;
@@ -570,7 +570,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                 cout << "Cluster M02 smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 0.8+(-0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
-                    if(energy.CompareTo("5TeV2017") == 0){
+                    if(energy.Contains("5TeV2017") ){
                       error = 2.4+(0.01)*ptBins[k]*ptBins[k];
                       if((additionalName.CompareTo("calofastEMC7") == 0 || additionalName.CompareTo("calofastEG2") == 0) && ptBins[k] >20. ) error = 2.4+(0.01)*20*20;
                       if(meson.Contains("Eta")) error = error * 1.2;
@@ -618,7 +618,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                         error   = 2* error;
                     if (meson.CompareTo("EtaToPi0") == 0)
                         error   = 2* error;
-                    if(energy.CompareTo("5TeV2017") == 0) error = 0;
+                    if(energy.Contains("5TeV2017") ) error = 0;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -668,10 +668,10 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                         error   = TMath::Sqrt(4.755*4.755+2*2);
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
                         error   = TMath::Sqrt(4.208*4.208+2*2);
-                        if(energy.CompareTo("5TeV2017") == 0) error = 5.722;
+                        if(energy.Contains("5TeV2017") ) error = 5.722;
                     } else if (additionalNameOutput.CompareTo("EG2")==0){
                         error   = TMath::Sqrt(7.37*7.37+2*2);
-                        if(energy.CompareTo("5TeV2017") == 0) error = 2.676;
+                        if(energy.Contains("5TeV2017") ) error = 2.676;
                     } else if (additionalNameOutput.CompareTo("EG1")==0){
                         error   = TMath::Sqrt(10.59*10.59+2*2);
                     }    
@@ -896,7 +896,15 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
         } else if (additionalNameOutput.CompareTo("EG1")==0){
             labelTrig= new TLatex(0.75,0.84,Form("EG1 LHC13g"));
         }
-        if(energy.CompareTo("5TeV2017") == 0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
+        if(energy.Contains("5TeV2017") ){
+          if (additionalNameOutput.CompareTo("INT7")==0){
+            labelTrig= new TLatex(0.75,0.84,Form("INT7"));
+          } else if (additionalNameOutput.CompareTo("EMC7")==0){
+            labelTrig= new TLatex(0.75,0.84,Form("EMC7"));
+          } else if (additionalNameOutput.CompareTo("EG2")==0){
+            labelTrig= new TLatex(0.75,0.84,Form("EG2"));
+          }
+        }
         SetStyleTLatex( labelTrig, 0.038,4);
         labelTrig->Draw();
         

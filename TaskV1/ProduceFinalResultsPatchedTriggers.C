@@ -155,7 +155,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 10){
             maxPtGlobalCluster          = 50;
         }
-    } else if (optionEnergy.CompareTo("5TeV2017")==0){
+    } else if (optionEnergy.Contains("5TeV2017")){
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
       }
@@ -198,7 +198,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     if(optionEnergy.CompareTo("8TeV")==0)
         strEG2_A = "EGA";
     TString strINT7NLM1 = "INT7_NLM1";
-    if (optionEnergy.CompareTo("5TeV2017")==0)
+    if (optionEnergy.Contains("5TeV2017"))
         strINT7NLM1 = "INT7_CF";
     TString nameTriggerWeighted[MaxNumberOfFiles]  = {  "INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                                         "INT1_NLM1", strINT7NLM1, "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
@@ -254,7 +254,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                             { 0.001, 0.3 , 0.00010, 0.04, 0.0050, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.002,  0.15, 0.12, 0.04},
                                                             { 0.001, 0.3 , 0.00006, 0.04, 0.0003, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.000003,  0.15, 0.12, 0.04},
                                                             { 0.030, 0.3 , 0.01800, 0.04, 0.0300, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.06,   0.15, 0.12, 0.04} };
-    if (optionEnergy.CompareTo("5TeV2017")== 0)
+    if (optionEnergy.Contains("5TeV2017"))
         maxYEffSecCorr[0][4]                            = 0.100;
 
     Color_t colorSec[4]                                 = {kRed+2, kCyan+2, 807, kBlue};
@@ -576,11 +576,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
             fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
         }
-        if(!fitBinShiftPi0 || optionEnergy.CompareTo("5TeV2017")==0){
+        if(!fitBinShiftPi0 || optionEnergy.Contains("5TeV2017")){
             fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("Pi05TeV/TsallisFitPi0");
             fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("Pi05TeV/TwoComponentModelFitPi0");
         }
-        if(!fitBinShiftEta || optionEnergy.CompareTo("5TeV2017")==0){
+        if(!fitBinShiftEta || optionEnergy.Contains("5TeV2017")){
             fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta5TeV/TsallisFitEta");
             fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta5TeV/TwoComponentModelFitEta");
         }
@@ -904,7 +904,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (optionEnergy.CompareTo("7TeV") == 0){
             minTriggReject = 0.01;
             maxTriggReject = 110000;
-        }else if (optionEnergy.CompareTo("5TeV2017") == 0){
+        }else if (optionEnergy.Contains("5TeV2017")){
             minTriggReject = 0.07;
             maxTriggReject = 8200;
         } else if (mode == 10)
@@ -917,7 +917,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DTriggReject->DrawCopy();
 
         Double_t minXLegendTriggRejec = 0.33;
-        if (optionEnergy.CompareTo("5TeV2017") == 0)
+        if (optionEnergy.Contains("5TeV2017"))
             minXLegendTriggRejec = 0.27;
 
         TLegend* legendTriggReject = GetAndSetLegend2(minXLegendTriggRejec, 0.12, 0.92, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2),textPixelPP);
@@ -1096,7 +1096,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggRejectLin = 2000;
         if (mode == 10)
             maxTriggRejectLin = 3000;
-        if (mode == 4 && optionEnergy.CompareTo("5TeV2017") == 0)
+        if (mode == 4 && optionEnergy.Contains("5TeV2017"))
             maxTriggRejectLin = 4000;
 
         if( optionEnergy.CompareTo("8TeV")==0 ){
@@ -1164,10 +1164,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                     else if (triggerName[i].Contains("EG1"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
-                } else if (optionEnergy.CompareTo("5TeV2017")==0){
+                } else if (optionEnergy.Contains("5TeV2017")){
                     if (triggerName[i].Contains("EMC7"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,4000);
-                    else if (triggerName[i].Contains("EG1"))
+                    else if (triggerName[i].Contains("EG1") || triggerName[i].Contains("EG2"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,2500);
                 } else if (optionEnergy.CompareTo("8TeV")==0){
                     if (triggerName[i].Contains("EMC7"))
@@ -1280,10 +1280,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                     else if (triggerName[i].Contains("EG1"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
-                } else if (optionEnergy.CompareTo("5TeV2017")==0){
+                } else if (optionEnergy.Contains("5TeV2017")){
                     if (triggerName[i].Contains("EMC7"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,4000);
-                    else if (triggerName[i].Contains("EG1"))
+                    else if (triggerName[i].Contains("EG1") || triggerName[i].Contains("EG2"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,2500);
                 } else if (optionEnergy.CompareTo("8TeV")==0){
                     if (triggerName[i].Contains("EMC7"))
@@ -1772,7 +1772,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         maxAccPi0       = 0.3;
         if(optionEnergy.CompareTo("8TeV")==0){
             maxAccPi0 = 0.26;
-        } else if(optionEnergy.CompareTo("5TeV2017")==0){
+        } else if(optionEnergy.Contains("5TeV2017")){
             minAccPi0 = 0.25;
             maxAccPi0 = 0.45;
         }
@@ -1893,14 +1893,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Double_t minYLegendMassRed  = 0.84;
     Double_t minYLegendWidth    = 0.83;
     Double_t minYLegendWidthRed = 0.83;
-    if (optionEnergy.CompareTo("2.76TeV")){
+    if (optionEnergy.CompareTo("2.76TeV") == 0){
         rowsLegendMass          = 4;
         rowsLegendMassRed       = 4;
         minYLegendMass          = 0.88;
         minYLegendMassRed       = 0.88;
         minYLegendWidth         = 0.87;
         minYLegendWidthRed      = 0.87;
-    } else if (optionEnergy.CompareTo("5TeV2017")){
+    } else if (optionEnergy.Contains("5TeV2017")){
         rowsLegendMass          = 8;
         rowsLegendMassRed       = 6;
         minYLegendMass          = 0.81;
@@ -1955,7 +1955,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                (optionEnergy.CompareTo("8TeV")==0) ||
                (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
                (optionEnergy.CompareTo("XeXe_5.44TeV")==0) ||
-               (optionEnergy.CompareTo("5TeV2017")==0)
+               (optionEnergy.Contains("5TeV2017"))
                ){
                 DrawGammaSetMarker(histoMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassPi0Data[i]->DrawCopy("e1,same");
@@ -2015,7 +2015,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
              (optionEnergy.CompareTo("XeXe_5.44TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 DrawGammaSetMarker(histoWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthPi0Data[i]->DrawCopy("e1,same");
@@ -3381,7 +3381,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
              (optionEnergy.CompareTo("XeXe_5.44TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 if (graphMassPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
@@ -3506,7 +3506,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
              (optionEnergy.CompareTo("XeXe_5.44TeV")==0 ) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 if (graphWidthPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
@@ -4674,7 +4674,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 4){
             minAccEta = 0.05;
             maxAccEta = 0.3;
-            if (optionEnergy.CompareTo("5TeV2017") == 0){
+            if (optionEnergy.Contains("5TeV2017") ){
                 minAccEta = 0.15;
                 maxAccEta = 0.45;
             }
@@ -4731,7 +4731,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassEtaData[i]->DrawCopy("e1,same");
@@ -4801,7 +4801,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthEtaData[i]->DrawCopy("e1,same");
@@ -5342,10 +5342,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }
                 }
             }
-            if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
+            if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)){
               offSetsEtaSys[1]+=0; //INT7
               offSetsEtaSys[3]+=0; //EMC7
               offSetsEtaSys[4]+=3; //EGA
+            }
         }
 
 
@@ -5862,7 +5863,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 if (graphMassEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
@@ -6045,7 +6046,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
              (optionEnergy.CompareTo("8TeV")==0) ||
              (optionEnergy.CompareTo("pPb_5.023TeV")==0) ||
-             (optionEnergy.CompareTo("5TeV2017")==0)
+             (optionEnergy.Contains("5TeV2017"))
              ){
                 if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
@@ -6587,7 +6588,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         graphsEtaToPi0SysShrunk[i]->GetX()[graphsEtaToPi0SysShrunk[i]->GetN()-1] > ptFromSpecPi0[i][1] )
                     graphsEtaToPi0SysShrunk[i]->RemovePoint(graphsEtaToPi0SysShrunk[i]->GetN()-1);
 
-                if(optionEnergy.CompareTo("5TeV2017")==0 && mode == 4){
+                if(optionEnergy.Contains("5TeV2017") && mode == 4){
                   cout << "GOING TO REMOVE : " << graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] << " > 20 ? " << endl;
                   while (graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] > 20){
                     cout << "GOING TO REMOVE : " << graphsEtaToPi0Shrunk[i]->GetX()[graphsEtaToPi0Shrunk[i]->GetN()-1] << " > 20 " << endl;
@@ -6658,7 +6659,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
                   maxNAllowedEtaToPi0 -= 3;
                   maxPtGlobalEtaToPi0 = 20;
-                } else if(optionEnergy.CompareTo("5TeV2017")==0 && mode==4){
+                } else if(optionEnergy.Contains("5TeV2017") && mode==4){
                   maxNAllowedEtaToPi0 -= 2;
                   maxPtGlobalEtaToPi0 = 20;
                 }

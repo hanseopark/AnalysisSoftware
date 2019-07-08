@@ -54,14 +54,19 @@ Bool_t readin(TString fileRuns, std::vector<TString> &vec, Bool_t output)
         if(output) cout << "\"" << endl;
     }
     file.close();
-    if(output) cout << "...done!\n\nIn total " << totalN << " bad cells were read in!\n" << endl;
-    else return kTRUE;
+    if(output){
+      cout << "...done!\n\nIn total " << totalN << " bad cells were read in!\n" << endl;
+      return kTRUE;
+    }
+    return kFALSE;
 }
+void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t lowRun, Int_t highRun, Int_t updateExistingMap);
+void sortOutput(const char *fileNameOADB="");
 
 /*******************************************************************
  *  NOTE: Main function which needs to be adjusted for new BC maps *
  *******************************************************************/
-void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadMaps.root")
+void UpdatePHOS_OADB(const char *fileNameOADB="/home/mike/alice/AliPhysics/OADB/PHOS/PHOSBadMaps.root")
 {
     gSystem->Load("libOADB");
     const char *fileNameOADBtemp                ="PHOSBadMaps_temp.root";
@@ -95,6 +100,9 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
 //     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull2.log",280234,280235,1);
 //     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/badChannelsPHOSAdditional_LHC17n.txt",280234,280235,1);
     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_Additional.log",280234,280235,1);
+
+    updateFile(fileNameOADBtemp,"additional bad channels LHC18q - Mike","BadChannelsLHC18q_295581_296623.log",295581,296623,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC18r - Mike","BadChannelsLHC18r_296690_297624.log",296690,297624,1);
 
     // add completely new bad channels, replacing existing map in range (last argument == 0)
     //     updateFile(fileNameOADBtemp,"BadChannelsLHC10c_20171213Update","LHC10c/LHC10c_addCells.log",138125,139517,0);
@@ -149,6 +157,8 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
     // define bad channel map histogram array
     TH2I * hBadMap[nSM];
     TH2I * hBadMapOverhead[nSM];
+    TCanvas* c = new TCanvas("c","",800,800);
+    gStyle->SetOptStat(0);
 
     // initialize histograms in array - either load existing map or create new, empty map
     for(int i=0;i<nSM;i++){
@@ -164,6 +174,12 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
                 hBadMap[i]                      = (TH2I*)arrayBChigh->FindObject(Form("PHOS_BadMap_mod%d",i));
                 if(hBadMap[i])
                     hBadMapOverhead[i]          = (TH2I*)hBadMap[i]->Clone(Form("PHOS_BadMap_mod%d",i));
+            }
+            if(hBadMap[i]){
+              c->cd();
+              hBadMap[i]->SetTitle(Form("mod%d_%d_%d_PHOS_BadMap_old",i,lowRun,highRun));
+              hBadMap[i]->Draw("colz");
+              c->SaveAs(Form("mod%d_%d_%d_PHOS_BadMap_old.pdf",i,lowRun,highRun));
             }
         }
         if(!hBadMap[i]){
@@ -200,6 +216,14 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
         arrayAdd.AddAt(hBadMap[mod],mod);
         arrayAddOverheadLow.AddAt(hBadMapOverhead[mod],mod);
         arrayAddOverheadHigh.AddAt(hBadMapOverhead[mod],mod);
+    }
+    for(int i=0;i<nSM;i++){
+        if(hBadMap[i]){
+          c->cd();
+          hBadMap[i]->SetTitle(Form("mod%d_%d_%d_PHOS_BadMap_new",i,lowRun,highRun));
+          hBadMap[i]->Draw("colz");
+          c->SaveAs(Form("mod%d_%d_%d_PHOS_BadMap_new.pdf",i,lowRun,highRun));
+        }
     }
     Int_t replacedContainerLowLimit             = -1;
     Int_t replacedContainerHighLimit            = -1;
