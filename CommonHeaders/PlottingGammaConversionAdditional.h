@@ -3110,7 +3110,7 @@
                     return 807;
                 } else if (generator.Contains("LHC13b2_efix") || !generator.CompareTo("LHC18j5")){
                     return 418;
-                } else if (generator.Contains("LHC13e7")){
+                } else if (generator.Contains("LHC13e7") || generator.Contains("LHC19a4")){
                     return 601;
                 } else if (!generator.CompareTo("HijingAddSig")){
                     return kViolet-3;
@@ -3563,7 +3563,7 @@
                 return 20;
             } else if (generator.Contains("LHC13b2_efix") || !generator.CompareTo("LHC18j5")){
                 return 26;
-            } else if (generator.Contains("LHC13e7")){
+            } else if (generator.Contains("LHC13e7") || generator.Contains("LHC19a4")){
                 return 28;
             } else if (generator.Contains("LHC16q")){
                 return 20;
@@ -4472,6 +4472,8 @@
             return kBlue-7;
         if ( variationName.CompareTo("SPD") == 0 )
             return kCyan+4;
+        if ( variationName.CompareTo("DistanceBadChannel") == 0 )
+            return kGreen-1;
         if ( variationName.CompareTo("Purity") == 0 )
             return kBlue+2;
         if ( variationName.CompareTo("CosPoint") == 0 )
@@ -4565,6 +4567,8 @@
         if ( variationName.Contains("Periods") )
             return 33;
         if ( variationName.CompareTo("SPD") == 0 )
+            return 29;
+        if ( variationName.CompareTo("DistanceBadChannel") == 0 )
             return 29;
         if ( variationName.CompareTo("Purity") == 0 )
             return 27;
@@ -4666,6 +4670,8 @@
             return "periods";
         if ( variationName.CompareTo("SPD") == 0 )
             return "IB pileup";
+        if ( variationName.CompareTo("DistanceBadChannel") == 0 )
+            return "Dist. BC";
         if ( variationName.CompareTo("CosPoint") == 0 )
             return "cos(#Theta_{point})";
         if ( variationName.CompareTo("Eta") == 0 )

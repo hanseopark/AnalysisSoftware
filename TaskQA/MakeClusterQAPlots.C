@@ -93,7 +93,17 @@ void MakeClusterQAPlots(
     Double_t maxEPlot          = 100.,
     Int_t minSM             = 0,
     Int_t maxSM             = 20,
-    Int_t rebinFac             = 2
+    Int_t rebinFac             = 2,
+    TString labelMC1 = "JJ+GJ std",
+    TString labelMC2 = "JJ+GJ XTalk"
+    // TString labelMC1 = "JJ XTalk";
+    // TString labelMC2 = "JJ+GJ XTalk";
+    // TString labelMC1 = "MC";
+    // TString labelMC2 = "MC + XTalk";
+    // TString labelMC1 = "GJ std";
+    // TString labelMC2 = "GJ XTalk";
+    // TString labelMC1 = "JJ std";
+    // TString labelMC2 = "JJ XTalk";
 ){
 
     gROOT->Reset();
@@ -167,6 +177,7 @@ void MakeClusterQAPlots(
         100., 125., 150., 200.};
 
     TH1F* histoM02allSM[3]              = {NULL};
+    TH1F* histoM02allSMPlot[3]              = {NULL};
     TH1F* histoM02RatioallSM[2]         = {NULL};
     TH1F* histoM02RatioallSMMC         = NULL;
     TH1D* histoM02perSM[20][3]          = {{NULL}};
@@ -233,8 +244,10 @@ void MakeClusterQAPlots(
             histoM02perSM[iSM][kMC]->Rebin(rebinFac);
             if(iSM==minSM){
                 histoM02allSM[kMC] = (TH1F*)histoM02perSM[iSM][kMC]->Clone(Form("histoM02allSM_%d",kMC));
+                histoM02allSMPlot[kMC] = (TH1F*)histoM02perSM[iSM][kMC]->Clone(Form("histoM02allSMPlot_%d",kMC));
             } else {
                 histoM02allSM[kMC]->Add(histoM02perSM[iSM][kMC]);
+                histoM02allSMPlot[kMC]->Add(histoM02perSM[iSM][kMC]);
             }
             histoM02perSM[iSM][kMC]->Scale(1/histoM02perSM[iSM][kMC]->Integral());
             if(kMC>0){
@@ -332,6 +345,8 @@ void MakeClusterQAPlots(
     
     
 
+
+
     TLatex* labelpTrange;
 
 
@@ -339,10 +354,11 @@ void MakeClusterQAPlots(
 
     TCanvas* canvasM02Plots = new TCanvas("canvasM02Plots","",200,10,1350,1200);  // gives the page size
     DrawGammaCanvasSettings( canvasM02Plots, 0.08, 0.02, 0.02, 0.09);
-    canvasM02Plots->SetLogy();
+    // canvasM02Plots->SetLogy();
     canvasM02Plots->SetLogz();
 
-    TH2F * histo2DM02Dummy = new TH2F("histo2DM02Dummy","histo2DM02Dummy",220,0.0, 1.25, 500,0.0008,0.12*rebinFac);
+    // TH2F * histo2DM02Dummy = new TH2F("histo2DM02Dummy","histo2DM02Dummy",220,0.0, 1.25, 500,0.0008,0.06*rebinFac);
+    TH2F * histo2DM02Dummy = new TH2F("histo2DM02Dummy","histo2DM02Dummy",250,0.0, 1.25, 500,-0.0001,0.06*rebinFac);
     // TH2F * histo2DM02Dummy = new TH2F("histo2DM02Dummy","histo2DM02Dummy",220,0.0, 1.5, 500,-0.1,2.0);
     SetStyleHistoTH2ForGraphs(histo2DM02Dummy, "M_{02}","norm. counts",0.035,0.04, 0.035,0.04, 0.98,0.9);
     TLegend* legendM02Dummy;
@@ -363,8 +379,8 @@ void MakeClusterQAPlots(
 
         legendM02Dummy  = GetAndSetLegend2(0.70, 0.84-(0.035*3*1.35), 0.98, 0.84, 0.85*textSizeLabelsPixel);
         legendM02Dummy->AddEntry(histoM02perSM[iSM][0], "data","pe");
-        legendM02Dummy->AddEntry(histoM02perSM[iSM][1], "MC","pe");
-        legendM02Dummy->AddEntry(histoM02perSM[iSM][2], "MC + xtalk","pe");
+        legendM02Dummy->AddEntry(histoM02perSM[iSM][1], labelMC1.Data(),"pe");
+        legendM02Dummy->AddEntry(histoM02perSM[iSM][2], labelMC2.Data(),"pe");
         legendM02Dummy->Draw();
         labelEnergy->Draw();
         labelClusterE->Draw();
@@ -380,24 +396,79 @@ void MakeClusterQAPlots(
     histoM02allSM[0]->Scale(1/histoM02allSM[0]->Integral());
     histoM02allSM[0]->Draw("p,same,e");
     DrawGammaSetMarker(histoM02allSM[1], markerSMMC[0], 2.0, colorSMMC[0] , colorSMMC[0]);
+    DrawGammaSetMarker(histoM02allSMPlot[1], markerSMMC[0], 2.0, colorSMMC[0] , colorSMMC[0]);
     Double_t MCscalingForTrue[2] = {histoM02allSM[1]->Integral(),histoM02allSM[2]->Integral()};
     histoM02allSM[1]->Scale(1/MCscalingForTrue[0]);
+    histoM02allSMPlot[1]->Scale(1/MCscalingForTrue[0]);
     histoM02allSM[1]->Draw("p,same,e");
     DrawGammaSetMarker(histoM02allSM[2], markerSMMCXT[0], 2.0, colorSMMCXT[0] , colorSMMCXT[0]);
-    histoM02allSM[2]->Scale(1/MCscalingForTrue[1]);
+    histoM02allSM[2]->Scale(1/MCscalingForTrue[0]);
+    histoM02allSMPlot[2]->Scale(1/MCscalingForTrue[1]);
     histoM02allSM[2]->Draw("p,same,e");
     legendM02Dummy  = GetAndSetLegend2(0.70, 0.84-(0.035*3*1.35), 0.98, 0.84, 0.85*textSizeLabelsPixel);
     legendM02Dummy->AddEntry(histoM02allSM[0], "data","pe");
-    legendM02Dummy->AddEntry(histoM02allSM[1], "MC","pe");
-    legendM02Dummy->AddEntry(histoM02allSM[2], "MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02allSM[1], labelMC1.Data(),"pe");
+    legendM02Dummy->AddEntry(histoM02allSM[2], labelMC2.Data(),"pe");
     legendM02Dummy->Draw();
     labelEnergy->Draw();
-    labelSupMod = new TLatex(0.94,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.94,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,31);
     labelSupMod->Draw();
     labelClusterE->Draw();
     histo2DM02Dummy->Draw("axis,same");
     canvasM02Plots->SaveAs(Form("%s/M02allSM.%s",outputDir.Data(),suffix.Data()));
+
+    histo2DM02Dummy->Draw("copy");
+    histoM02allSM[0]->Draw("p,same,e");
+    histoM02allSM[1]->Draw("p,same,e");
+    histoM02allSM[2]->Draw("p,same,e");
+    legendM02Dummy->Draw();
+    labelEnergy->Draw();
+    Double_t integratedCounts[2] = {histoM02allSM[1]->Integral(20/rebinFac,60/rebinFac),histoM02allSM[2]->Integral(20/rebinFac,60/rebinFac)};
+    // Double_t integratedCounts[2] = {histoM02allSM[1]->Integral(54/rebinFac,300/rebinFac),histoM02allSM[2]->Integral(54/rebinFac,300/rebinFac)};
+    // histoM02allSM[1]->SetBinContent(20/rebinFac,0.1);
+    // histoM02allSM[1]->SetBinContent(60/rebinFac,0.1);
+    DrawGammaLines( 0.1, 0.1, 0.0, 0.1, 3, kGray+1, 9);
+    DrawGammaLines( 0.3, 0.3, 0.0, 0.1, 3, kGray+1, 9);
+    TLatex* labelIntegralMC1 = new TLatex(0.94,0.60,Form("%s: #sum_{M_{0}^{2} = 0.1}^{0.3}=%1.3f",labelMC1.Data(), integratedCounts[0]));
+    SetStyleTLatex( labelIntegralMC1, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC1->Draw();
+    TLatex* labelIntegralMC2 = new TLatex(0.94,0.50,Form("%s: #sum_{M_{0}^{2} = 0.1}^{0.3}=%1.3f",labelMC2.Data(), integratedCounts[1]));
+    SetStyleTLatex( labelIntegralMC2, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC2->Draw();
+    // TLatex* labelIntegralMC3 = new TLatex(0.94,0.40,Form("Ratio of MCs: %1.3f", integratedCounts[0]/integratedCounts[1]));
+    TLatex* labelIntegralMC3 = new TLatex(0.94,0.40,Form("Ratio of sums: %1.2f %%", (1-(integratedCounts[0]/integratedCounts[1]))*100));
+    SetStyleTLatex( labelIntegralMC3, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC3->Draw();
+    labelSupMod->Draw();
+    labelClusterE->Draw();
+    histo2DM02Dummy->Draw("axis,same");
+    canvasM02Plots->SaveAs(Form("%s/M02allSM_withLowIntegral.%s",outputDir.Data(),suffix.Data()));
+
+    histo2DM02Dummy->Draw("copy");
+    histoM02allSM[0]->Draw("p,same,e");
+    histoM02allSM[1]->Draw("p,same,e");
+    histoM02allSM[2]->Draw("p,same,e");
+    legendM02Dummy->Draw();
+    labelEnergy->Draw();
+    Double_t integratedCounts2[2] = {histoM02allSM[1]->Integral(54/rebinFac,240/rebinFac),histoM02allSM[2]->Integral(54/rebinFac,240/rebinFac)};
+    // histoM02allSM[1]->SetBinContent(54/rebinFac,0.1);
+    // histoM02allSM[1]->SetBinContent(240/rebinFac,0.1);
+    DrawGammaLines( 0.27, 0.27, 0.0, 0.1, 3, kGray+1, 9);
+    DrawGammaLines( 1.2, 1.2, 0.0, 0.03, 3, kGray+1, 9);
+    labelIntegralMC1 = new TLatex(0.94,0.60,Form("%s: #sum_{M_{0}^{2} = 0.27}^{1.2}=%1.3f",labelMC1.Data(), integratedCounts2[0]));
+    SetStyleTLatex( labelIntegralMC1, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC1->Draw();
+    labelIntegralMC2 = new TLatex(0.94,0.50,Form("%s: #sum_{M_{0}^{2} = 0.27}^{1.2}=%1.3f",labelMC2.Data(), integratedCounts2[1]));
+    SetStyleTLatex( labelIntegralMC2, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC2->Draw();
+    labelIntegralMC3 = new TLatex(0.94,0.40,Form("Ratio of sums: %1.2f %%", (1-(integratedCounts2[0]/integratedCounts2[1]))*100));
+    SetStyleTLatex( labelIntegralMC3, 0.85*textSizeLabelsPixel,4,1,43,kTRUE,31);
+    labelIntegralMC3->Draw();
+    labelSupMod->Draw();
+    labelClusterE->Draw();
+    histo2DM02Dummy->Draw("axis,same");
+    canvasM02Plots->SaveAs(Form("%s/M02allSM_withHighIntegral.%s",outputDir.Data(),suffix.Data()));
 
 
     DrawGammaSetMarker(histoM02allSM[1], markerSMMC[0], 2.0, kGray+1 , kGray+1);
@@ -425,7 +496,7 @@ void MakeClusterQAPlots(
     // histoM02TrueMergedEtaallSM[0]->Draw("p,same,e");
     legendM02Dummy  = GetAndSetLegend2(0.60, 0.84-(0.035*5*1.35), 0.88, 0.84, 0.85*textSizeLabelsPixel);
     legendM02Dummy->AddEntry(histoM02allSM[0], "data","pe");
-    legendM02Dummy->AddEntry(histoM02allSM[1], "MC","pe");
+    legendM02Dummy->AddEntry(histoM02allSM[1], labelMC1.Data(),"pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPi0allSM[0], "merged #pi^{0}","pe");
     // legendM02Dummy->AddEntry(histoM02TrueMergedEtaallSM[0], "merged #eta","pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPartConvPi0allSM[0], "merged #pi^{0} part. conv.","pe");
@@ -433,7 +504,7 @@ void MakeClusterQAPlots(
     legendM02Dummy->AddEntry(histoM02TrueElectronFromPi0allSM[0], "e^{#pm} from #pi^{0}","pe");
     legendM02Dummy->Draw();
     labelEnergy->Draw();
-    labelSupMod = new TLatex(0.94,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.94,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,31);
     labelSupMod->Draw();
     labelClusterE->Draw();
@@ -460,7 +531,7 @@ void MakeClusterQAPlots(
     // histoM02TrueMergedEtaallSM[1]->Draw("p,same,e");
     legendM02Dummy  = GetAndSetLegend2(0.60, 0.84-(0.035*5*1.35), 0.88, 0.84, 0.85*textSizeLabelsPixel);
     legendM02Dummy->AddEntry(histoM02allSM[0], "data","pe");
-    legendM02Dummy->AddEntry(histoM02allSM[2], "MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02allSM[2], labelMC2.Data(),"pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPi0allSM[1], "merged #pi^{0}","pe");
     // legendM02Dummy->AddEntry(histoM02TrueMergedEtaallSM[1], "merged #eta","pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPartConvPi0allSM[1], "merged #pi^{0} part. conv.","pe");
@@ -468,7 +539,7 @@ void MakeClusterQAPlots(
     legendM02Dummy->AddEntry(histoM02TrueElectronFromPi0allSM[1], "e^{#pm} from #pi^{0}","pe");
     legendM02Dummy->Draw();
     labelEnergy->Draw();
-    labelSupMod = new TLatex(0.94,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.94,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,31);
     labelSupMod->Draw();
     labelClusterE->Draw();
@@ -492,8 +563,8 @@ void MakeClusterQAPlots(
     legendM02Dummy  = GetAndSetLegend2(0.47, 0.84-(0.035*5*1.35), 0.95, 0.84, 0.85*textSizeLabelsPixel,2);
     legendM02Dummy->AddEntry(histoM02allSM[0], "data","pe");
     legendM02Dummy->AddEntry((TObject*)0, "","");
-    legendM02Dummy->AddEntry(histoM02allSM[1], "MC","pe");
-    legendM02Dummy->AddEntry(histoM02allSM[2], "MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02allSM[1], labelMC1.Data(),"pe");
+    legendM02Dummy->AddEntry(histoM02allSM[2], labelMC2.Data(),"pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPi0allSM[0], "merged #pi^{0}","pe");
     legendM02Dummy->AddEntry(histoM02TrueMergedPi0allSM[1], "merged #pi^{0}","pe");
     // legendM02Dummy->AddEntry(histoM02TrueMergedEtaallSM[1], "merged #eta","pe");
@@ -505,7 +576,7 @@ void MakeClusterQAPlots(
     legendM02Dummy->AddEntry(histoM02TrueElectronFromPi0allSM[1], "e^{#pm} from #pi^{0}","pe");
     legendM02Dummy->Draw();
     labelEnergy->Draw();
-    labelSupMod = new TLatex(0.94,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.94,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,31);
     labelSupMod->Draw();
     labelClusterE->Draw();
@@ -522,7 +593,7 @@ void MakeClusterQAPlots(
     // canvasM02RatioPlots->SetLogy();
     canvasM02RatioPlots->SetLogz();
 
-    TH2F * histo2DM02RatioDummy = new TH2F("histo2DM02RatioDummy","histo2DM02RatioDummy",220,0.0, 1.5, 500,-0.1,3.0);
+    TH2F * histo2DM02RatioDummy = new TH2F("histo2DM02RatioDummy","histo2DM02RatioDummy",250,0.0, 1.25, 500,-0.1,3.0);
     SetStyleHistoTH2ForGraphs(histo2DM02RatioDummy, "M_{02}","ratio",0.035,0.04, 0.035,0.04, 0.98,0.9);
     // histo2DM02RatioDummy->GetZaxis()->SetRangeUser(6,6e2);
     labelEnergy                  = new TLatex(0.25,0.90,Form("%s, %s",labelALICEforPlots.Data(),collisionSystem.Data()));
@@ -542,8 +613,8 @@ void MakeClusterQAPlots(
         labelSupMod->Draw();
         labelClusterE->Draw();
         legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][0], "data / MC","pe");
-        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][1], "data / MC + xtalk","pe");
+        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][0], Form("data / %s", labelMC1.Data()),"pe");
+        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][1], Form("data / %s", labelMC2.Data()),"pe");
         legendM02Dummy->Draw();
         histo2DM02RatioDummy->Draw("axis,same");
         canvasM02RatioPlots->SaveAs(Form("%s/Ratios/M02RatioinSM%d.%s",outputDir.Data(),iSM,suffix.Data()));
@@ -554,19 +625,21 @@ void MakeClusterQAPlots(
     histoM02RatioallSM[0] = (TH1F*)histoM02allSM[0]->Clone(Form("histoM02RatioallSM_MC%d",0));
     histoM02RatioallSM[0]->Sumw2();
     histoM02RatioallSM[0]->Divide(histoM02allSM[1]);
+    // histoM02RatioallSM[0]->Divide(histoM02RatioallSM[0],histoM02allSM[1],1,1,"B");
     DrawGammaSetMarker(histoM02RatioallSM[0], markerSMMC[0], 2.0, colorSMMC[0] , colorSMMC[0]);
     histoM02RatioallSM[1] = (TH1F*)histoM02allSM[0]->Clone(Form("histoM02RatioallSM_MC%d",0));
     histoM02RatioallSM[1]->Sumw2();
     histoM02RatioallSM[1]->Divide(histoM02allSM[2]);
+    // histoM02RatioallSM[1]->Divide(histoM02RatioallSM[1],histoM02allSM[2],1,1,"B");
     DrawGammaSetMarker(histoM02RatioallSM[1], markerSMMCXT[0], 2.0, colorSMMCXT[0] , colorSMMCXT[0]);
     labelEnergy->Draw();
-    labelSupMod = new TLatex(0.25,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.25,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
     labelSupMod->Draw();
     labelClusterE->Draw();
     legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    legendM02Dummy->AddEntry(histoM02RatioallSM[0], "data / MC","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSM[1], "data / MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[0], Form("data / %s", labelMC1.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[1], Form("data / %s", labelMC2.Data()),"pe");
     legendM02Dummy->Draw();
     histoM02RatioallSM[0]->Draw("p,same,e");
     histoM02RatioallSM[1]->Draw("p,same,e");
@@ -578,15 +651,16 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     histoM02RatioallSMMC = (TH1F*)histoM02allSM[1]->Clone(Form("histoM02RatioallSMMC%d",0));
     histoM02RatioallSMMC->Sumw2();
-    histoM02RatioallSMMC->Divide(histoM02allSM[2]);
+    // histoM02RatioallSMMC->Divide(histoM02allSM[2]);
+    histoM02RatioallSMMC->Divide(histoM02RatioallSMMC,histoM02allSM[2],1,1,"B");
     DrawGammaSetMarker(histoM02RatioallSMMC, markerSMdata[0], 2.0, kBlue+2 , kBlue+2);
     labelEnergy->Draw();
     labelSupMod->Draw();
     labelClusterE->Draw();
     legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*3*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    legendM02Dummy->AddEntry(histoM02RatioallSM[0], "data / MC","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSM[1], "data / MC + xtalk","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSMMC, "MC / MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[0], Form("data / %s", labelMC1.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[1], Form("data / %s", labelMC2.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSMMC, Form("%s / %s", labelMC1.Data(),labelMC2.Data()),"pe");
     legendM02Dummy->Draw();
     histoM02RatioallSM[0]->Draw("p,same,e");
     histoM02RatioallSM[1]->Draw("p,same,e");
@@ -627,8 +701,8 @@ void MakeClusterQAPlots(
         SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
         labelSupMod->Draw();
         legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][0], "MC","pe");
-        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][1], "MC + xtalk","pe");
+        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][0], labelMC1.Data(),"pe");
+        legendM02Dummy->AddEntry(histoM02RatioperSM[iSM][1], labelMC2.Data(),"pe");
         legendM02Dummy->Draw();
         histo2DM02RatioDummy->Draw("axis,same");
         canvasM02RatioPlots->SaveAs(Form("%s/Ratios/withFits/fittedM02RatioinSM%d.%s",outputDir.Data(),iSM,suffix.Data()));
@@ -652,10 +726,10 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    legendM02Dummy->AddEntry(histoM02RatioallSM[0], "data / MC","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSM[1], "data / MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[0], Form("data / %s", labelMC1.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[1], Form("data / %s", labelMC2.Data()),"pe");
     legendM02Dummy->Draw();
-    labelSupMod = new TLatex(0.25,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.25,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");
@@ -672,9 +746,9 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*3*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    legendM02Dummy->AddEntry(histoM02RatioallSM[0], "data / MC","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSM[1], "data / MC + xtalk","pe");
-    legendM02Dummy->AddEntry(histoM02RatioallSMMC, "MC / MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[0], Form("data / %s", labelMC1.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSM[1], Form("data / %s", labelMC2.Data()),"pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSMMC, Form("%s / %s", labelMC1.Data(),labelMC2.Data()),"pe");
     legendM02Dummy->Draw();
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");
@@ -692,7 +766,7 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*1*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    legendM02Dummy->AddEntry(histoM02RatioallSMMC, "MC / MC + xtalk","pe");
+    legendM02Dummy->AddEntry(histoM02RatioallSMMC, Form("%s / %s", labelMC1.Data(),labelMC2.Data()),"pe");
     legendM02Dummy->Draw();
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");
@@ -732,10 +806,10 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     // legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], "MC","pe");
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], "MC + xtalk","pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], labelMC1.Data(),"pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], labelMC2.Data(),"pe");
     // legendM02Dummy->Draw();
-    labelSupMod = new TLatex(0.25,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.25,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");
@@ -768,10 +842,10 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     // legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], "MC","pe");
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], "MC + xtalk","pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], labelMC1.Data(),"pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], labelMC2.Data(),"pe");
     // legendM02Dummy->Draw();
-    labelSupMod = new TLatex(0.25,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.25,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");
@@ -801,10 +875,10 @@ void MakeClusterQAPlots(
     labelEnergy->Draw();
     labelClusterE->Draw();
     // legendM02Dummy  = GetAndSetLegend2(0.24, 0.85-(0.035*2*1.35), 0.52, 0.85, 0.85*textSizeLabelsPixel);
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], "MC","pe");
-    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], "MC + xtalk","pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[0], labelMC1.Data(),"pe");
+    // legendM02Dummy->AddEntry(histoM02RatioallSM[1], labelMC2.Data(),"pe");
     // legendM02Dummy->Draw();
-    labelSupMod = new TLatex(0.25,0.86,Form("All Supermodules"));
+    labelSupMod = new TLatex(0.25,0.86,Form("Supermodules %d-%d",minSM,maxSM-1));
     SetStyleTLatex( labelSupMod, 0.95*textSizeLabelsPixel,4,1,43,kTRUE,11);
     labelSupMod->Draw();
     histo2DM02RatioDummy->Draw("axis,same");

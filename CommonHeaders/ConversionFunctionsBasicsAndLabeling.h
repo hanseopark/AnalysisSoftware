@@ -1172,9 +1172,9 @@
         } else if( fEnergyFlagOpt.CompareTo("13TeVRBins") == 0) {
             return  "pp, #sqrt{#it{s}} = 13TeV (RBins)";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("5.02TeV") == 0 ) {
-            return  "pp, #sqrt{#it{s}} = 5.02TeV";
+            return  "pp, #sqrt{#it{s}} = 5.02 TeV";
         } else if( fEnergyFlagOpt.Contains("5TeV2017") || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0) {
-            return  "pp, #sqrt{#it{s}} = 5.02TeV";
+            return  "pp, #sqrt{#it{s}} = 5.02 TeV";
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 900 GeV";
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {

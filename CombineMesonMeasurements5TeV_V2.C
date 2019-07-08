@@ -2775,7 +2775,7 @@ cout << __LINE__ << endl;
   cout << textsizeLabelsPP << endl;
 
   TH2F * histo2DPi0RatioToCombFit;
-  histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,minPtPi0, 200,1000,0.2,3.0);
+  histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,minPtPi0, 300,1000,0.2,3.0);
   SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/TCM fit", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                     0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
   histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
@@ -3379,11 +3379,11 @@ cout << __LINE__ << endl;
   // **********************************************************************************************************************
 
   canvasRatioToCombFit->cd();
-  minycomparison = 0.61;
+  minycomparison = 0.55;
   maxycomparison = 2.19;
   // histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
   histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(minycomparison,maxycomparison);
-  histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(minPtPi0,150);
+  histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(minPtPi0,250);
   histo2DPi0RatioToCombFit->Draw("copy");
 
 
@@ -3430,7 +3430,8 @@ cout << __LINE__ << endl;
 
 
   // TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_04_08/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
-  TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
+  // TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
+  TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_06_19/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
   // TFile* inputFile8TeVmergedNew = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_06/FinalResultsTriggersPatchedLM1EMC-merged_65/data_EMC-mergedResultsFullCorrection_PP.root");
   TDirectory* directory8TeVmergedNew  = (TDirectory*)inputFile8TeVmergedNew->Get("Pi08TeV");
 
@@ -3469,11 +3470,12 @@ cout << __LINE__ << endl;
 
   canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfNewMergedAnaToCombFit_PP8TeV.%s",outputDir.Data(),suffix.Data()));
 
+  histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,1.6);
   histo2DPi0RatioToCombFit->Draw("copy");
 
-  DrawGammaLines(minPtPi0,150 , 1., 1.,1, kGray+2);
-  DrawGammaLines(minPtPi0,150 , 1.1, 1.1,1, kGray, 7);
-  DrawGammaLines(minPtPi0,150 , 0.9, 0.9,1, kGray, 7);
+  DrawGammaLines(minPtPi0,250 , 1., 1.,1, kGray+2);
+  DrawGammaLines(minPtPi0,250 , 1.1, 1.1,1, kGray, 7);
+  DrawGammaLines(minPtPi0,250 , 0.9, 0.9,1, kGray, 7);
 
       graphRatioCombFitSys8TeV->Draw("E2same");
       graphRatioCombFitStat8TeV_WOXErr->Draw("p,same,z");

@@ -351,9 +351,25 @@
             } else if (energy.CompareTo("7TeV") == 0) {
                 if ( mode == 0 )
                     return 4;
-                else if ( mode == 2 )
-                    return 5;
-                else if ( mode == 1 )
+                else if ( mode == 2 ){
+                   switch (trigger){
+                        case 52:
+                            return 11;      // EMC triggers
+                            break;
+                        default:
+                            return 5;
+                            break;
+                    }
+                } else if ( mode == 4 ){
+                   switch (trigger){
+                        case 52:
+                            return 36;      // EMC triggers
+                            break;
+                        default:
+                            return 3;
+                            break;
+                    }
+                } else if ( mode == 1 )
                     return 5;
                 else if ( mode == 3 )
                     return 4;
@@ -861,7 +877,25 @@
             } else if (energy.CompareTo("7TeV") == 0) {
                 if (mode == 1 )
                     return 4;
-                if (mode == 3 ){
+                if (mode == 2 ){
+                    switch (trigger){
+                        case 52:
+                            return 16;      // EMC triggers
+                            break;
+                        default:
+                            return 3;
+                            break;
+                    }
+                } else if (mode == 4 ){
+                    switch (trigger){
+                        case 52:
+                            return 18;      // EMC triggers
+                            break;
+                        default:
+                            return 3;
+                            break;
+                    }
+                } else if (mode == 3 ){
                     return 2;
                 } else if(mode == 40 || mode == 60){
                     scaleFac        = 1.;

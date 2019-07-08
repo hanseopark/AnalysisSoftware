@@ -453,7 +453,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     gSystem->Exec(Form("cp %s %s/configurationFile.txt", fileListNamePi0.Data(), outputDir.Data()));
 
-    TString nameFinalResDat                     = Form("%s/FitResults.dat",outputDir.Data());
+    TString nameFinalResDat                     = Form("%s/FitResults%s.dat",outputDir.Data(),isMC.Data());
     fstream  fileFitsOutput;
     fileFitsOutput.open(nameFinalResDat.Data(), ios::out);
     TString sysStringComb = "PCM";

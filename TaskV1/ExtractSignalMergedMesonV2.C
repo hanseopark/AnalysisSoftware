@@ -204,8 +204,35 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if(HistosGammaConversion == NULL){
-        cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
-        return;
+        //******************************************************************************************************
+        //Check whether MC would contain a different time cut as timing cuts aren't implemented for EMC in MC **
+        //******************************************************************************************************
+        if ( optionMC){
+            cout << "testing whether output with diff time cut exists in file for MC" << endl;
+            fEventCutSelectionRead          = fEventCutSelection;
+            fClusterCutSelectionRead        = fClusterCutSelection;
+            fClusterMergedCutSelectionRead  = fClusterMergedCutSelection;
+            fMesonCutSelectionRead          = fMesonCutSelection;
+            // Alternative time cuts for EMC
+            TString mostProbableTimeCuts[11]= {"5", "6", "0", "1", "2", "3", "4", "7", "8", "9", "a"};
+            Int_t i = 0;
+            while (HistosGammaConversion == NULL && i < 11){
+                // replace time cut
+                fClusterCutSelection.Replace(GetClusterTimingCutPosition(fClusterCutSelectionRead),1,mostProbableTimeCuts[i].Data());
+                fClusterMergedCutSelection.Replace(GetClusterTimingCutPosition(fClusterMergedCutSelectionRead),1,mostProbableTimeCuts[i].Data());
+                fClusterCutSelectionRead= fClusterCutSelection;
+                fClusterMergedCutSelectionRead= fClusterMergedCutSelection;
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fClusterMergedCutSelection.Data(), fMesonCutSelection.Data());
+
+                cout << "testing cutnumber:" << fCutSelectionRead.Data() << endl;
+                HistosGammaConversion   = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+                i++;
+            }
+            if (HistosGammaConversion == NULL){
+                cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
+                return;
+            }
+        }
     }
 
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));

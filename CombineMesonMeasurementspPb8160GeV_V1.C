@@ -647,7 +647,7 @@ cout << __LINE__ << endl;
   // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match
   //                                                 PCM,PHOS,EMC,PCMPHOS,PCMEMC,        mEMC
   Int_t offSets[13]                               = { 0,    2,  7,     2,     5, 0,0,0,   8,3,0,0,0};
-  Int_t offSetsSys[13]                            = { 1,    2,  9,     3,     6, 0,0,0,   9,31,0,0,0};
+  Int_t offSetsSys[13]                            = { 1,    2,  9,     3,     6, 0,0,0,   9,36,0,0,0};
 
   Int_t offSetPi0Shifting[13]                     = { 0,  0,  0,  0,  0,
                                                       0,  0,  0,  0,  0,
@@ -5271,7 +5271,7 @@ canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper_LIN.%s",outputDir.Dat
 // ************************* VERY CRUDE RPA CALCULATION *****************************************************************
 // **********************************************************************************************************************
 
-  Double_t NcollpPb8TeV                           = 7.09;
+  Double_t NcollpPb8TeV                           = 5.37; //=NColl*INEL/V0AND //7.09=NColl;
   Double_t NcollpPb8TeVErr                        = 0.22;
 
   TF1* funcCMSscaling = new  TF1("funcCMSscaling","1/([0]+[1]*x)");

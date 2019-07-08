@@ -824,7 +824,7 @@ void NeutralMesonDecay_Threaded(
    //*************************************************************************************************
    //********************** Write histograms to file *************************************************
    //*************************************************************************************************
-   TFile* fileOutput = new TFile(Form("%s/ToyMCOutput_%s.root",fCollisionSystenWrite.Data(), outputlabel.Data()),"RECREATE");
+   TFile* fileOutput = new TFile(Form("%s/ToyMCOutput_%s_%s.root",fOutputDir.Data(), outputlabel.Data(),fCollisionSystenWrite.Data()),"RECREATE");
 
    h1_ptdistribution->Write();
    h1_phidistribution->Write();
