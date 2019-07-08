@@ -54,15 +54,16 @@ TF1*     fGaus       = NULL;
 Double_t Mean=0.0;
 Double_t Width=0.0;
 Double_t Chi2=0.0;
-Double_t meanElectron[2][4][14][20];//eta pt
-Double_t meanPositron[2][4][14][20];//eta pt
-Double_t meanErrElectron[2][4][14][20];//eta pt
-Double_t meanErrPositron[2][4][14][20];//eta pt
-Double_t widthElectron[2][4][14][20];
-Double_t widthPositron[2][4][14][20];
-Double_t widthErrElectron[2][4][14][20];
-Double_t widthErrPositron[2][4][14][20];
+Double_t meanElectron[2][4][14][20];//type r pt eta
+Double_t meanPositron[2][4][14][20];//type r pt eta
+Double_t meanErrElectron[2][4][14][20];//type r pt eta
+Double_t meanErrPositron[2][4][14][20];//type r pt eta
+Double_t widthElectron[2][4][14][20]; //type r pt eta
+Double_t widthPositron[2][4][14][20]; //type r pt eta
+Double_t widthErrElectron[2][4][14][20]; //type r pt eta
+Double_t widthErrPositron[2][4][14][20]; //type r pt eta
 Double_t chi[20][20];
+Bool_t doFitting[2][4][14][20]; //type r pt eta
 
 void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                         TString cutSelection        = "",
@@ -144,6 +145,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         scalWidthFit       = 1.5;
         maxChi2            = 20;
     }
+
     Color_t colorR[4]           = { kBlack, kBlue+2, kRed+2, kGreen+2};
     Color_t colorEta[18]        = { kBlack, kGray+2, kBlue-7, kBlue-4, kBlue+2, kCyan+2, kCyan-5, kGreen-7, kGreen+2, kYellow+1,
                                     kOrange-5, kOrange-3, kRed+2, kRed-4, kRed-6, kMagenta-5, kMagenta-2, kViolet-7};
@@ -193,11 +195,31 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         cout << "TPC Cl bins:: " << i << " " << arrTPCClBinningOut[i] << endl;
     }
 
+    // enable fitting
+    for (Int_t r = 0; r < 4; r++){
+        for (Int_t j = 0; j < nPBins; j++){
+            for (Int_t i = 0; i < nEtaBinsOut; i++){
+                doFitting[0][r][j][i] = kTRUE;
+                doFitting[1][r][j][i] = kTRUE;
+            }
+        }
+    }
+
+
+    if (fEnergy.Contains("XeXe")) {
+        for (Int_t i = 0; i < nEtaBinsOut; i++){
+            doFitting[1][0][3][i] = kFALSE;
+            doFitting[1][0][4][i] = kFALSE;
+        }
+    }
 
     TH2F* fhistoMeanPositron[2][4]     = {{NULL}};
     TH2F* fhistoMeanElectron[2][4]     = {{NULL}};
     TH2F* fhistoWidthElectron[2][4]    = {{NULL}};
     TH2F* fhistoWidthPositron[2][4]    = {{NULL}};
+
+    TH2S* fhistoRecalibPositron[2][4]     = {{NULL}};
+    TH2S* fhistoRecalibElectron[2][4]     = {{NULL}};
 
     for (Int_t r = 0; r<4; r++){
         fhistoMeanPositron[0][r]       = new TH2F(Form("MeanPosiR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
@@ -216,6 +238,16 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         fhistoWidthPositron[1][r]->Sumw2();
         fhistoWidthElectron[1][r]      = new TH2F(Form("WidthElecCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
         fhistoWidthElectron[1][r]->Sumw2();
+        fhistoRecalibPositron[0][r]       = new TH2S(Form("RecalibPosiR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoRecalibPositron[0][r]->Sumw2();
+        fhistoRecalibPositron[1][r]       = new TH2S(Form("RecalibPosiCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoRecalibPositron[1][r]->Sumw2();
+        fhistoRecalibElectron[0][r]       = new TH2S(Form("RecalibElecR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoRecalibElectron[0][r]->Sumw2();
+        fhistoRecalibElectron[1][r]       = new TH2S(Form("RecalibElecCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoRecalibElectron[1][r]->Sumw2();
+
+
     }
 
     TH1D* histoPositronDeDx[2][4][14][20]  = {{{{NULL}}}};
@@ -271,21 +303,22 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 meanErrPositron[1][r][i][j]     = 0.2;
                 widthErrPositron[1][r][i][j]    = 0.1;
 
+                cout << r << "\t" << i << "\t" << j << "\t" << doFitting[0][r][i][j] << "\t"<< doFitting[1][r][i][j] << endl;
                 // Electron, different R bins
                 histoElectronDeDx[0][r][i][j]  = (TH1D*)histoElectronDeDxPEta[0][r]->ProjectionX(Form("R%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
                 if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 200) histoElectronDeDx[0][r][i][j]->Rebin(2);
                 if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 100) histoElectronDeDx[0][r][i][j]->Rebin(2);
 //                 fitElectronDeDx[0][r][i][j]    = FitSignal(histoElectronDeDx[0][r][i][j],kBlue);
-                if (histoElectronDeDx[0][r][i][j]->GetMaximum() > 10)
+                if (doFitting[0][r][i][j] && histoElectronDeDx[0][r][i][j]->GetMaximum() > 10)
                     fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
 //                     fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25);
 
-                if (fitElectronDeDx[0][r][i][j]){
+                if ( fitElectronDeDx[0][r][i][j]){
                     meanElectron[0][r][i][j]       = fitElectronDeDx[0][r][i][j]->GetParameter(1);
                     widthElectron[0][r][i][j]      = fitElectronDeDx[0][r][i][j]->GetParameter(2);
                     meanErrElectron[0][r][i][j]    = fitElectronDeDx[0][r][i][j]->GetParError(1);
                     widthErrElectron[0][r][i][j]   = fitElectronDeDx[0][r][i][j]->GetParError(2);
-                } else if (histoElectronDeDx[0][r][i][j]->GetMaximum() > 5){
+                } else if (doFitting[0][r][i][j] && histoElectronDeDx[0][r][i][j]->GetMaximum() > 5){
                     meanElectron[0][r][i][j]       = histoElectronDeDx[0][r][i][j]->GetMean();
                     widthElectron[0][r][i][j]      = histoElectronDeDx[0][r][i][j]->GetRMS();
                 }
@@ -294,6 +327,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     fhistoMeanElectron[0][r]->SetBinError(i+1,j+1-etaOff, meanErrElectron[0][r][i][j]);
                     fhistoWidthElectron[0][r]->SetBinContent(i+1,j+1-etaOff, widthElectron[0][r][i][j]);
                     fhistoWidthElectron[0][r]->SetBinError(i+1,j+1-etaOff, widthErrElectron[0][r][i][j]);
+                    fhistoRecalibElectron[0][r]->SetBinContent(i+1,j+1-etaOff, (Short_t)(meanElectron[0][r][i][j]*1000));
+                    fhistoRecalibElectron[0][r]->SetBinError(i+1,j+1-etaOff, (Short_t)(widthElectron[0][r][i][j]*1000));
                 }
 
                 // Positron, different R bins
@@ -301,7 +336,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 200) histoPositronDeDx[0][r][i][j]->Rebin(2);
                 if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 100) histoPositronDeDx[0][r][i][j]->Rebin(2);
 //                 fitPositronDeDx[0][r][i][j]    = FitSignal(histoPositronDeDx[0][r][i][j],kBlue);
-                if (histoPositronDeDx[0][r][i][j]->GetMaximum() > 10)
+                if (doFitting[0][r][i][j] &&histoPositronDeDx[0][r][i][j]->GetMaximum() > 10)
                     fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
 //                     fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
@@ -310,7 +345,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     widthPositron[0][r][i][j]      = fitPositronDeDx[0][r][i][j]->GetParameter(2);
                     meanErrPositron[0][r][i][j]    = fitPositronDeDx[0][r][i][j]->GetParError(1);
                     widthErrPositron[0][r][i][j]   = fitPositronDeDx[0][r][i][j]->GetParError(2);
-                } else if (histoPositronDeDx[0][r][i][j]->GetMaximum() > 5){
+                } else if (doFitting[0][r][i][j] && histoPositronDeDx[0][r][i][j]->GetMaximum() > 5){
                     meanPositron[0][r][i][j]        = histoPositronDeDx[0][r][i][j]->GetMean();
                     widthPositron[0][r][i][j]       = histoPositronDeDx[0][r][i][j]->GetRMS();
                 }
@@ -319,6 +354,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     fhistoMeanPositron[0][r]->SetBinError(i+1,j+1-etaOff, meanErrPositron[0][r][i][j]);
                     fhistoWidthPositron[0][r]->SetBinContent(i+1,j+1-etaOff, widthPositron[0][r][i][j]);
                     fhistoWidthPositron[0][r]->SetBinError(i+1,j+1-etaOff, widthErrPositron[0][r][i][j]);
+                    fhistoRecalibPositron[0][r]->SetBinContent(i+1,j+1-etaOff, (Short_t)(meanPositron[0][r][i][j]*1000));
+                    fhistoRecalibPositron[0][r]->SetBinError(i+1,j+1-etaOff, (Short_t)(widthPositron[0][r][i][j]*1000));
                 }
 
 
@@ -327,7 +364,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 200) histoElectronDeDx[1][r][i][j]->Rebin(2);
                 if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 100) histoElectronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitElectronDeDx[1][r][i][j]    = FitSignal(histoElectronDeDx[1][r][i][j],kBlue);
-                if (histoElectronDeDx[1][r][i][j]->GetMaximum() > 10)
+                if (doFitting[1][r][i][j] && histoElectronDeDx[1][r][i][j]->GetMaximum() > 10)
                     fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
 //                     fitElectronDe[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25);
 
@@ -336,7 +373,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     widthElectron[1][r][i][j]      = fitElectronDeDx[1][r][i][j]->GetParameter(2);
                     meanErrElectron[1][r][i][j]    = fitElectronDeDx[1][r][i][j]->GetParError(1);
                     widthErrElectron[1][r][i][j]   = fitElectronDeDx[1][r][i][j]->GetParError(2);
-                } else if (histoElectronDeDx[1][r][i][j]->GetMaximum() > 5){
+                } else if (doFitting[1][r][i][j] && histoElectronDeDx[1][r][i][j]->GetMaximum() > 5){
                     meanElectron[1][r][i][j]       = histoElectronDeDx[1][r][i][j]->GetMean();
                     widthElectron[1][r][i][j]      = histoElectronDeDx[1][r][i][j]->GetRMS();
                 }
@@ -345,6 +382,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     fhistoMeanElectron[1][r]->SetBinError(i+1,j+1-etaOff, meanErrElectron[1][r][i][j]);
                     fhistoWidthElectron[1][r]->SetBinContent(i+1,j+1-etaOff, widthElectron[1][r][i][j]);
                     fhistoWidthElectron[1][r]->SetBinError(i+1,j+1-etaOff, widthErrElectron[1][r][i][j]);
+                    fhistoRecalibElectron[1][r]->SetBinContent(i+1,j+1-etaOff, (Short_t)(meanElectron[1][r][i][j]*1000));
+                    fhistoRecalibElectron[1][r]->SetBinError(i+1,j+1-etaOff,(Short_t)( widthElectron[1][r][i][j]*1000));
                 }
 
                 // Positron, different TPC Cl bins
@@ -352,7 +391,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 200) histoPositronDeDx[1][r][i][j]->Rebin(2);
                 if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 100) histoPositronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitPositronDeDx[1][r][i][j]    = FitSignal(histoPositronDeDx[1][r][i][j],kBlue);
-                if (histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
+                if (doFitting[1][r][i][j] && histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit);
 //                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
@@ -361,7 +400,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     widthPositron[1][r][i][j]       = fitPositronDeDx[1][r][i][j]->GetParameter(2);
                     meanErrPositron[1][r][i][j]     = fitPositronDeDx[1][r][i][j]->GetParError(1);
                     widthErrPositron[1][r][i][j]    = fitPositronDeDx[1][r][i][j]->GetParError(2);
-                } else if (histoPositronDeDx[1][r][i][j]->GetMaximum() > 5){
+                } else if (doFitting[1][r][i][j] && histoPositronDeDx[1][r][i][j]->GetMaximum() > 5){
                     meanPositron[1][r][i][j]        = histoPositronDeDx[1][r][i][j]->GetMean();
                     widthPositron[1][r][i][j]       = histoPositronDeDx[1][r][i][j]->GetRMS();
                 }
@@ -370,6 +409,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                     fhistoMeanPositron[1][r]->SetBinError(i+1,j+1-etaOff, meanErrPositron[1][r][i][j]);
                     fhistoWidthPositron[1][r]->SetBinContent(i+1,j+1-etaOff, widthPositron[1][r][i][j]);
                     fhistoWidthPositron[1][r]->SetBinError(i+1,j+1-etaOff, widthErrPositron[1][r][i][j]);
+                    fhistoRecalibPositron[1][r]->SetBinContent(i+1,j+1-etaOff, (Short_t)(meanPositron[1][r][i][j]*1000));
+                    fhistoRecalibPositron[1][r]->SetBinError(i+1,j+1-etaOff, (Short_t)(widthPositron[1][r][i][j]*1000));
                 }
 
             }
@@ -1234,6 +1275,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         fhistoMeanElectron[1][r]->Write(Form("Ele_Cl%d_mean",r));
         fhistoWidthPositron[1][r]->Write(Form("Pos_Cl%d_width",r));
         fhistoWidthElectron[1][r]->Write(Form("Ele_Cl%d_width",r));
+
+        fhistoRecalibPositron[0][r]->Write(Form("Pos_R%d_recalib",r));
+        fhistoRecalibElectron[0][r]->Write(Form("Ele_R%d_recalib",r));
+        fhistoRecalibPositron[1][r]->Write(Form("Pos_Cl%d_recalib",r));
+        fhistoRecalibElectron[1][r]->Write(Form("Ele_Cl%d_recalib",r));
     }
     outFileMaps.Close();
  }

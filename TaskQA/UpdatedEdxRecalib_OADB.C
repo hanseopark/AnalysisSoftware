@@ -29,8 +29,13 @@ void rebuildContainer(const char *fileNameOADB="");
     if(addOldMaps){
     }
 
-    updateFile(fileNameOADB,"TPCRecalib_LHC13d","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195681, 195873); // 
-    updateFile(fileNameOADB,"TPCRecalib_LHC1Xx","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195874, 999999); // 
+//     updateFile(fileNameOADB,"TPCRecalib_LHC13d","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195681, 195873); //
+//     updateFile(fileNameOADB,"TPCRecalib_LHC1Xx","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195874, 999999); //
+    updateFile(fileNameOADB,"TPCRecalib_LHC16f","TaskQA/OADB_inputs/LHC16f/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 253660, 253834);
+    updateFile(fileNameOADB,"TPCRecalib_LHC17g_1","TaskQA/OADB_inputs/LHC17g/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202_1.root", 270882, 270940);
+    updateFile(fileNameOADB,"TPCRecalib_LHC17g_2","TaskQA/OADB_inputs/LHC17g/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202_2.root", 270941, 271776);
+    updateFile(fileNameOADB,"TPCRecalib_LHC17n","TaskQA/OADB_inputs/LHC17n/DeDxMaps_14810013_00200009327000000000000000_0053b1f1202.root", 280234, 280235); //
+    updateFile(fileNameOADB,"TPCRecalib_LHC18c","TaskQA/OADB_inputs/LHC18c/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 285466, 285958);
 
     // the final output will be sorted by runnumber
     sortOutput(fileNameOADB);
@@ -74,27 +79,19 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileNameInput,
     TObjArray arrayAdd(16);
     arrayAdd.SetName(arrName.Data());
 
-    TH2F *hdEdxRecalibElecMean[nRBins];
-    TH2F *hdEdxRecalibElecWidth[nRBins];
-    TH2F *hdEdxRecalibPosiMean[nRBins];
-    TH2F *hdEdxRecalibPosiWidth[nRBins];
+    TH2S *hdEdxRecalibElecRecalib[nRBins];
+    TH2S *hdEdxRecalibPosiRecalib[nRBins];
 
     // initialize histograms in array - either load existing map or create new, empty map
     for(int i=0;i<nRBins;i++){
-        hdEdxRecalibElecMean[i] = NULL;
-        hdEdxRecalibElecWidth[i] = NULL;
-        hdEdxRecalibPosiMean[i] = NULL;
-        hdEdxRecalibPosiWidth[i] = NULL;
+        hdEdxRecalibElecRecalib[i] = NULL;
+        hdEdxRecalibPosiRecalib[i] = NULL;
 
-        hdEdxRecalibElecMean[i] = (TH2F*)fInput->Get(Form("Ele_R%d_mean",i));
-        hdEdxRecalibElecMean[i]->SetName(Form("Ele_R%d_mean",i));
-        hdEdxRecalibElecWidth[i] = (TH2F*)fInput->Get(Form("Ele_R%d_width",i));
-        hdEdxRecalibElecWidth[i]->SetName(Form("Ele_R%d_width",i));
-        hdEdxRecalibPosiMean[i] = (TH2F*)fInput->Get(Form("Pos_R%d_mean",i));
-        hdEdxRecalibPosiMean[i]->SetName(Form("Pos_R%d_mean",i));
-        hdEdxRecalibPosiWidth[i] = (TH2F*)fInput->Get(Form("Pos_R%d_width",i));
-        hdEdxRecalibPosiWidth[i]->SetName(Form("Pos_R%d_width",i));
-        if(!hdEdxRecalibElecMean[i] || !hdEdxRecalibElecWidth[i] || !hdEdxRecalibPosiMean[i] || !hdEdxRecalibPosiWidth[i] ){
+        hdEdxRecalibElecRecalib[i] = (TH2S*)fInput->Get(Form("Ele_Cl%d_recalib",i));
+        hdEdxRecalibElecRecalib[i]->SetName(Form("Ele_Cl%d_recalib",i));
+        hdEdxRecalibPosiRecalib[i] = (TH2S*)fInput->Get(Form("Pos_Cl%d_recalib",i));
+        hdEdxRecalibPosiRecalib[i]->SetName(Form("Pos_Cl%d_recalib",i));
+        if(!hdEdxRecalibElecRecalib[i] || !hdEdxRecalibPosiRecalib[i] ){
             cout << "Input histogram not found for bin " << i << "! returning...." <<  endl;
             return;
         }
@@ -102,10 +99,8 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileNameInput,
 
     // add histograms to a new array
     for (Int_t i=0;i<nRBins;i++){
-        arrayAdd.Add(hdEdxRecalibElecMean[i]);
-        arrayAdd.Add(hdEdxRecalibElecWidth[i]);
-        arrayAdd.Add(hdEdxRecalibPosiMean[i]);
-        arrayAdd.Add(hdEdxRecalibPosiWidth[i]);
+        arrayAdd.Add(hdEdxRecalibElecRecalib[i]);
+        arrayAdd.Add(hdEdxRecalibPosiRecalib[i]);
     }
 
     // check old OADB file for existing BC maps in given run range and remove that old BC map
@@ -141,9 +136,9 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileNameInput,
     gSystem->Exec(Form("mv tempCalib.root %s",fileNameOADB));
 
     printf("\n%s Maps have been successfully added!\n\n",arrName.Data());
-    
+
 //     plotBadChannelMapUpdate(hdEdxRecalib,arrName);
-    
+
 //     printf("...and also plotted!!\n");
 
 }
@@ -152,12 +147,12 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileNameInput,
  *  NOTE: Sorting function to sort the final OADB file             *
  *                  by ascending runnumber                         *
  *******************************************************************/
-void sortOutput(const char *fileNameOADB=""){
+void sortOutput(const char *fileNameOADB){
 
     TFile *f                                    = TFile::Open(fileNameOADB);
     f->ls();
     AliOADBContainer *con                       =(AliOADBContainer*)f->Get("AliTPCdEdxRecalib");
-    con->SetName("Old"); 
+    con->SetName("Old");
 
     Int_t indexAdd                              = 0;
     Int_t largerthan                            = 0;
@@ -175,7 +170,7 @@ void sortOutput(const char *fileNameOADB=""){
         currentvalue                            = -1;
         indexAdd                                = 0;
         for(int j=0;j<con->GetNumberOfEntries();j++){
-            if(con->UpperLimit(j)<=largerthan) 
+            if(con->UpperLimit(j)<=largerthan)
                 continue;
             if(currentvalue < 0){
                 currentvalue                    = con->UpperLimit(j);
@@ -215,7 +210,7 @@ TObjArray *CreatePeriodContainer(TObjArray *inputcont){
  *        NOTE: Function required to fix OADB ownership            *
  *                                                                 *
  *******************************************************************/
-void rebuildContainer(const char *fileNameOADB=""){
+void rebuildContainer(const char *fileNameOADB){
   TFile *reader = TFile::Open(fileNameOADB);
   AliOADBContainer *cont = static_cast<AliOADBContainer *>(reader->Get("AliTPCdEdxRecalib"));
   delete reader;
