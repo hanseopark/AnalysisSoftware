@@ -54,14 +54,14 @@ TF1*     fGaus       = NULL;
 Double_t Mean=0.0;
 Double_t Width=0.0;
 Double_t Chi2=0.0;
-Double_t meanElectron[4][12][20];//eta pt
-Double_t meanPositron[4][12][20];//eta pt
-Double_t meanErrElectron[4][12][20];//eta pt
-Double_t meanErrPositron[4][12][20];//eta pt
-Double_t widthElectron[4][12][20];
-Double_t widthPositron[4][12][20];
-Double_t widthErrElectron[4][12][20];
-Double_t widthErrPositron[4][12][20];
+Double_t meanElectron[2][4][14][20];//eta pt
+Double_t meanPositron[2][4][14][20];//eta pt
+Double_t meanErrElectron[2][4][14][20];//eta pt
+Double_t meanErrPositron[2][4][14][20];//eta pt
+Double_t widthElectron[2][4][14][20];
+Double_t widthPositron[2][4][14][20];
+Double_t widthErrElectron[2][4][14][20];
+Double_t widthErrPositron[2][4][14][20];
 Double_t chi[20][20];
 
 void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
@@ -69,7 +69,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                         TString optionMC            = "Data",
                         TString fEnergy             = "",
                         TString suffix              = "pdf",
-                        TString period              = ""
+                        TString period              = "",
+                        Bool_t isLowStat            = kFALSE
 )
 {
     gROOT->Reset();
@@ -82,10 +83,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     if(optionMC.CompareTo("Data")==0)    outputDir = "DeDxMapsData/";
     else if(optionMC.CompareTo("MC")==0) outputDir = "DeDxMapsMC/";
     if (period.CompareTo("") != 0) outputDir = outputDir+period+"/";
-    gSystem->Exec(Form("mkdir -p %s/%s",outputDir.Data(),"DetailedFits"));
+    gSystem->Exec(Form("mkdir -p %s/%s/%s",outputDir.Data(),"RConv","DetailedFits"));
+    gSystem->Exec(Form("mkdir -p %s/%s/%s",outputDir.Data(),"TPCCl","DetailedFits"));
 
-    TH3F *histoPositronDeDxPEta[4] = {NULL};
-    TH3F *histoElectronDeDxPEta[4] = {NULL};
+    TH3F *histoPositronDeDxPEta[2][4] = {NULL};
+    TH3F *histoElectronDeDxPEta[2][4] = {NULL};
 
     TFile* fileMaterialHistos = new TFile(fileNameWithMaps.Data());
     TString fCutSelectionRead = cutSelection;
@@ -95,6 +97,10 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     if (fCollisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
         return;
+    }
+    TString centralityString    = GetCentralityString(cutSelection);
+    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
+        fCollisionSystem    = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
     }
 
     TList *TopDir =(TList*)fileMaterialHistos->Get(nameMainDir.Data());
@@ -107,8 +113,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
         TList *MapsContainer           = (TList*)HistosGammaConversion->FindObject(Form("%s  dEdx Maps",fCutSelectionRead.Data()));
         for (Int_t i = 0; i<4; i++){
-            histoPositronDeDxPEta[i] = (TH3F*)MapsContainer->FindObject(Form("R%d positron sigma dEdx P Eta",i));
-            histoElectronDeDxPEta[i] = (TH3F*)MapsContainer->FindObject(Form("R%d electron sigma dEdx P Eta",i));
+            histoPositronDeDxPEta[0][i] = (TH3F*)MapsContainer->FindObject(Form("R%d positron sigma dEdx P Eta",i));
+            histoElectronDeDxPEta[0][i] = (TH3F*)MapsContainer->FindObject(Form("R%d electron sigma dEdx P Eta",i));
         }
     } else if (TopDir == NULL){
         cout<<"WARNING: TopDir " << nameMainDir.Data() << " not Found... checking for PhotonQA output"<<endl;
@@ -121,35 +127,49 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         } else {
             cout<<"INFO: PhotonQA directory " << nameDirectory.Data() << " found!"<<endl;
         }
-        for (Int_t i = 0; i<4; i++){
-            histoPositronDeDxPEta[i] = (TH3F*)directoryConv->Get(Form("R%d positron sigma dEdx P Eta",i));
-            histoElectronDeDxPEta[i] = (TH3F*)directoryConv->Get(Form("R%d electron sigma dEdx P Eta",i));
+        for (Int_t r = 0; r<4; r++){
+            histoPositronDeDxPEta[0][r] = (TH3F*)directoryConv->Get(Form("R%d positron sigma dEdx P Eta",r));
+            histoElectronDeDxPEta[0][r] = (TH3F*)directoryConv->Get(Form("R%d electron sigma dEdx P Eta",r));
+            histoPositronDeDxPEta[1][r] = (TH3F*)directoryConv->Get(Form("Cl%d positron sigma dEdx P Eta",r));
+            histoElectronDeDxPEta[1][r] = (TH3F*)directoryConv->Get(Form("Cl%d electron sigma dEdx P Eta",r));
         }
     }
 
+    Double_t scalWidthFit       = 3;
+    Double_t maxChi2            = 200;
+    if (fEnergy.Contains("XeXe") && period.Contains("Peri")){
+        scalWidthFit       = 2;
+        maxChi2            = 20;
+    } else if (fEnergy.Contains("XeXe") && period.Contains("Cent")){
+        scalWidthFit       = 1.5;
+        maxChi2            = 20;
+    }
     Color_t colorR[4]           = { kBlack, kBlue+2, kRed+2, kGreen+2};
     Color_t colorEta[18]        = { kBlack, kGray+2, kBlue-7, kBlue-4, kBlue+2, kCyan+2, kCyan-5, kGreen-7, kGreen+2, kYellow+1,
                                     kOrange-5, kOrange-3, kRed+2, kRed-4, kRed-6, kMagenta-5, kMagenta-2, kViolet-7};
-    Color_t colorPt[12]         = { kBlack, kGray+2, kBlue-7, kBlue+2, kCyan+2, kCyan-5, kGreen-7, kGreen+2, kOrange-3, kRed+2,
-                                    kRed-6, kMagenta-2};
+    Color_t colorPt[14]         = { kBlack, kGray+2, kBlue-7, kBlue+2, kCyan+2, kCyan-5, kGreen-7, kGreen+2, kOrange-3, kRed+2,
+                                    kRed-6, kMagenta-5, kMagenta-2, kViolet-7};
     Marker_t markerR[8]         = { 20, 21, 33, 34, 24, 25, 27, 28};
     Marker_t markerEta[18]      = { 24, 25, 27, 28, 30, 29, 34, 33, 21, 20,
                                     42, 46, 40, 41, 27, 43, 24, 25};
-    Marker_t markerPt[12]       = { 24, 25, 27, 28, 30, 29, 34, 33, 21, 20,
-                                    42, 46};
+    Marker_t markerPt[14]       = { 24, 25, 27, 28, 30, 29, 34, 33, 21, 20,
+                                    42, 46, 40, 41};
 
-    Int_t nPBins   = 12;
-    Double_t *arrPBinning = new Double_t[13];
-    for( Int_t i=0;i<nPBins+1;i++){
-        if(i==0){
-            arrPBinning[i]= 0.05;
-        } else if(i>0 && i<11){
-            arrPBinning[i]= 0.1*i;
-        } else if(i==11){
-            arrPBinning[i]= 2.0;
-        } else if(i==12){
-            arrPBinning[i]= 10.0;
-        }
+    Int_t nPBins   = 14;
+    Double_t arrPBinning[15]    = { 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,
+                                    2.0, 5.0, 10.0};
+    if (isLowStat){
+        arrPBinning[6]  = 0.6;
+        arrPBinning[7]  = 0.8;
+        arrPBinning[8]  = 1.0;
+        arrPBinning[9]  = 2.0;
+        arrPBinning[10] = 10.0;
+        nPBins          = 10;
+    }
+
+    Int_t startBinP = 1;
+    if (fEnergy.Contains("LowB") ) startBinP = 0;
+    for( Int_t i=startBinP;i<nPBins+1;i++){
         cout << "p bins:: "<< i << " " <<  arrPBinning[i]<< endl;
     }
 
@@ -167,104 +187,205 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         cout << "R bins:: " << i << " " << arrRBinningOut[i] << endl;
     }
 
-    TH2F* fhistoMeanPositron[4]     = {NULL};
-    TH2F* fhistoMeanElectron[4]     = {NULL};
-    TH2F* fhistoWidthElectron[4]    = {NULL};
-    TH2F* fhistoWidthPositron[4]    = {NULL};
-
-    for (Int_t i = 0; i<4; i++){
-        fhistoMeanPositron[i]       = new TH2F(Form("MeanPosiR%d",i),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
-        fhistoMeanPositron[i]->Sumw2();
-        fhistoMeanElectron[i]       = new TH2F(Form("MeanElecR%d",i),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
-        fhistoMeanElectron[i]->Sumw2();
-        fhistoWidthPositron[i]      = new TH2F(Form("WidthPosiR%d",i),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
-        fhistoWidthPositron[i]->Sumw2();
-        fhistoWidthElectron[i]      = new TH2F(Form("WidthElecR%d",i),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
-        fhistoWidthElectron[i]->Sumw2();
+    Int_t nBinsTPCCl        = 4;
+    Int_t arrTPCClBinningOut[5] = {0, 60, 100, 150, 180};
+    for (Int_t i=0;i<nBinsTPCCl+1;i++){
+        cout << "TPC Cl bins:: " << i << " " << arrTPCClBinningOut[i] << endl;
     }
 
-    TH1D* histoPositronDeDx[4][12][20]  = {{{NULL}}};
-    TH1D* histoElectronDeDx[4][12][20]  = {{{NULL}}};
-    TF1* fitPositronDeDx[4][12][20]     = {{{NULL}}};
-    TF1* fitElectronDeDx[4][12][20]     = {{{NULL}}};
+
+    TH2F* fhistoMeanPositron[2][4]     = {{NULL}};
+    TH2F* fhistoMeanElectron[2][4]     = {{NULL}};
+    TH2F* fhistoWidthElectron[2][4]    = {{NULL}};
+    TH2F* fhistoWidthPositron[2][4]    = {{NULL}};
+
+    for (Int_t r = 0; r<4; r++){
+        fhistoMeanPositron[0][r]       = new TH2F(Form("MeanPosiR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoMeanPositron[0][r]->Sumw2();
+        fhistoMeanElectron[0][r]       = new TH2F(Form("MeanElecR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoMeanElectron[0][r]->Sumw2();
+        fhistoWidthPositron[0][r]      = new TH2F(Form("WidthPosiR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoWidthPositron[0][r]->Sumw2();
+        fhistoWidthElectron[0][r]      = new TH2F(Form("WidthElecR%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoWidthElectron[0][r]->Sumw2();
+        fhistoMeanPositron[1][r]       = new TH2F(Form("MeanPosiCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoMeanPositron[1][r]->Sumw2();
+        fhistoMeanElectron[1][r]       = new TH2F(Form("MeanElecCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoMeanElectron[1][r]->Sumw2();
+        fhistoWidthPositron[1][r]      = new TH2F(Form("WidthPosiCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoWidthPositron[1][r]->Sumw2();
+        fhistoWidthElectron[1][r]      = new TH2F(Form("WidthElecCl%d",r),"",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+        fhistoWidthElectron[1][r]->Sumw2();
+    }
+
+    TH1D* histoPositronDeDx[2][4][14][20]  = {{{{NULL}}}};
+    TH1D* histoElectronDeDx[2][4][14][20]  = {{{{NULL}}}};
+    TF1* fitPositronDeDx[2][4][14][20]     = {{{{NULL}}}};
+    TF1* fitElectronDeDx[2][4][14][20]     = {{{{NULL}}}};
+
+    for (Int_t pt = 1; pt < histoElectronDeDxPEta[0][0]->GetNbinsZ()+1; pt++){
+        cout << histoElectronDeDxPEta[0][0]->GetZaxis()->GetBinCenter(pt) << "; "  ;
+    }
+    cout << endl;
+
+    for(Int_t i=startBinP;i<nPBins;i++){
+        Int_t minBinPt    = histoElectronDeDxPEta[0][0]->GetZaxis()->FindBin(arrPBinning[i]);
+        Int_t maxBinPt    = histoElectronDeDxPEta[0][0]->GetZaxis()->FindBin(arrPBinning[i+1]-0.001);
+        cout << "*****************\np = " << arrPBinning[i] << " GeV/c" << "< pT < " << arrPBinning[i+1] << " GeV/c"<< endl;
+        cout << minBinPt << "\t" << maxBinPt << endl;
+    }
 
     Int_t etaOff = 0;
 //     if(fEnergy.CompareTo("5TeV2017")==0) etaOff = 0;
 
     //    cout<< histoPositronDeDxPEta0->GetNbinsY()<< " " << histoPositronDeDxPEta0->GetNbinsZ() << endl;
-    for(Int_t i=0;i<nPBins;i++){
+    for(Int_t i=startBinP;i<nPBins;i++){
 
-        Int_t minBinPt    = histoElectronDeDxPEta[0]->GetZaxis()->FindBin(arrPBinning[i]);
-        Int_t maxBinPt    = histoElectronDeDxPEta[0]->GetZaxis()->FindBin(arrPBinning[i+1]-0.001);
+        Int_t minBinPt    = histoElectronDeDxPEta[0][0]->GetZaxis()->FindBin(arrPBinning[i]);
+        Int_t maxBinPt    = histoElectronDeDxPEta[0][0]->GetZaxis()->FindBin(arrPBinning[i+1]-0.001);
         cout << "*****************\np = " << arrPBinning[i] << " GeV/c" << "< pT < " << arrPBinning[i+1] << " GeV/c"<< endl;
         cout << minBinPt << "\t" << maxBinPt << endl;
         for(Int_t j=0;j<nEtaBins;j++){
 //             cout << "-> eta " << arrEtaBinningOut[j] << endl;
 //             cout << "offset " << arrEtaBinningOut[j-etaOff] << endl;
 //             cout << " j-etaOff " << j-etaOff << endl;
-            Int_t minBinEta    = histoElectronDeDxPEta[0]->GetYaxis()->FindBin(arrEtaBinningOut[j]);
-            Int_t maxBinEta    = histoElectronDeDxPEta[0]->GetYaxis()->FindBin(arrEtaBinningOut[j+1]-0.001);
+            Int_t minBinEta    = histoElectronDeDxPEta[0][0]->GetYaxis()->FindBin(arrEtaBinningOut[j]);
+            Int_t maxBinEta    = histoElectronDeDxPEta[0][0]->GetYaxis()->FindBin(arrEtaBinningOut[j+1]-0.001);
 
             for (Int_t r = 0; r < 4; r++){
-                // Electron, R bin 0
-                histoElectronDeDx[r][i][j]  = (TH1D*)histoElectronDeDxPEta[r]->ProjectionX(Form("R%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoElectronDeDx[r][i][j]->GetMaximum() < 200) histoElectronDeDx[r][i][j]->Rebin(2);
-                if (histoElectronDeDx[r][i][j]->GetMaximum() < 100) histoElectronDeDx[r][i][j]->Rebin(2);
-//                 fitElectronDeDx[r][i][j]    = FitSignal(histoElectronDeDx[r][i][j],kBlue);
+                // initialize default values
+                meanElectron[0][r][i][j]        = 0;
+                widthElectron[0][r][i][j]       = 1;
+                meanPositron[0][r][i][j]        = 0;
+                widthPositron[0][r][i][j]       = 1;
+                meanErrElectron[0][r][i][j]     = 0.2;
+                widthErrElectron[0][r][i][j]    = 0.1;
+                meanErrPositron[0][r][i][j]     = 0.2;
+                widthErrPositron[0][r][i][j]    = 0.1;
+                meanElectron[1][r][i][j]        = 0;
+                widthElectron[1][r][i][j]       = 1;
+                meanPositron[1][r][i][j]        = 0;
+                widthPositron[1][r][i][j]       = 1;
+                meanErrElectron[1][r][i][j]     = 0.2;
+                widthErrElectron[1][r][i][j]    = 0.1;
+                meanErrPositron[1][r][i][j]     = 0.2;
+                widthErrPositron[1][r][i][j]    = 0.1;
 
-                fitElectronDeDx[r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[r][i][j], 0.02, -3, 3, 2, 1.25);
-                if (fitElectronDeDx[r][i][j]){
-                    meanElectron[r][i][j]       = fitElectronDeDx[r][i][j]->GetParameter(1);
-                    widthElectron[r][i][j]      = fitElectronDeDx[r][i][j]->GetParameter(2);
-                    meanErrElectron[r][i][j]    = fitElectronDeDx[r][i][j]->GetParError(1);
-                    widthErrElectron[r][i][j]   = fitElectronDeDx[r][i][j]->GetParError(2);
-                } else {
-                    meanElectron[r][i][j]       = 0;
-                    widthElectron[r][i][j]      = 1;
-                    meanErrElectron[r][i][j]    = 1;
-                    widthErrElectron[r][i][j]   = 0.5;
+                // Electron, different R bins
+                histoElectronDeDx[0][r][i][j]  = (TH1D*)histoElectronDeDxPEta[0][r]->ProjectionX(Form("R%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
+                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 200) histoElectronDeDx[0][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 100) histoElectronDeDx[0][r][i][j]->Rebin(2);
+//                 fitElectronDeDx[0][r][i][j]    = FitSignal(histoElectronDeDx[0][r][i][j],kBlue);
+                if (histoElectronDeDx[0][r][i][j]->GetMaximum() > 10)
+                    fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+//                     fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25);
+
+                if (fitElectronDeDx[0][r][i][j]){
+                    meanElectron[0][r][i][j]       = fitElectronDeDx[0][r][i][j]->GetParameter(1);
+                    widthElectron[0][r][i][j]      = fitElectronDeDx[0][r][i][j]->GetParameter(2);
+                    meanErrElectron[0][r][i][j]    = fitElectronDeDx[0][r][i][j]->GetParError(1);
+                    widthErrElectron[0][r][i][j]   = fitElectronDeDx[0][r][i][j]->GetParError(2);
+                } else if (histoElectronDeDx[0][r][i][j]->GetMaximum() > 5){
+                    meanElectron[0][r][i][j]       = histoElectronDeDx[0][r][i][j]->GetMean();
+                    widthElectron[0][r][i][j]      = histoElectronDeDx[0][r][i][j]->GetRMS();
                 }
                 if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
-                    fhistoMeanElectron[r]->SetBinContent(i+1,j+1-etaOff, meanElectron[r][i][j]);
-                    fhistoMeanElectron[r]->SetBinError(i+1,j+1-etaOff, meanErrElectron[r][i][j]);
-                    fhistoWidthElectron[r]->SetBinContent(i+1,j+1-etaOff, widthElectron[r][i][j]);
-                    fhistoWidthElectron[r]->SetBinError(i+1,j+1-etaOff, widthErrElectron[r][i][j]);
+                    fhistoMeanElectron[0][r]->SetBinContent(i+1,j+1-etaOff, meanElectron[0][r][i][j]);
+                    fhistoMeanElectron[0][r]->SetBinError(i+1,j+1-etaOff, meanErrElectron[0][r][i][j]);
+                    fhistoWidthElectron[0][r]->SetBinContent(i+1,j+1-etaOff, widthElectron[0][r][i][j]);
+                    fhistoWidthElectron[0][r]->SetBinError(i+1,j+1-etaOff, widthErrElectron[0][r][i][j]);
                 }
 
-                // Positron, R bin 0
-                histoPositronDeDx[r][i][j] = (TH1D*)histoPositronDeDxPEta[r]->ProjectionX(Form("R%dPosiSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoPositronDeDx[r][i][j]->GetMaximum() < 200) histoPositronDeDx[r][i][j]->Rebin(2);
-                if (histoPositronDeDx[r][i][j]->GetMaximum() < 100) histoPositronDeDx[r][i][j]->Rebin(2);
-//                 fitPositronDeDx[r][i][j]    = FitSignal(histoPositronDeDx[r][i][j],kBlue);
-                fitPositronDeDx[r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[r][i][j], 0.02, -3, 3, 2, 1.25 );
-                if (fitElectronDeDx[r][i][j]){
-                    meanPositron[r][i][j]       = fitPositronDeDx[r][i][j]->GetParameter(1);
-                    widthPositron[r][i][j]      = fitPositronDeDx[r][i][j]->GetParameter(2);
-                    meanErrPositron[r][i][j]    = fitPositronDeDx[r][i][j]->GetParError(1);
-                    widthErrPositron[r][i][j]   = fitPositronDeDx[r][i][j]->GetParError(2);
-                } else {
-                    meanPositron[r][i][j]   = 0;
-                    widthPositron[r][i][j]  = 1;
-                    meanErrPositron[r][i][j]    = 1;
-                    widthErrPositron[r][i][j]   = 0.5;
+                // Positron, different R bins
+                histoPositronDeDx[0][r][i][j] = (TH1D*)histoPositronDeDxPEta[0][r]->ProjectionX(Form("R%dPosiSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
+                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 200) histoPositronDeDx[0][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 100) histoPositronDeDx[0][r][i][j]->Rebin(2);
+//                 fitPositronDeDx[0][r][i][j]    = FitSignal(histoPositronDeDx[0][r][i][j],kBlue);
+                if (histoPositronDeDx[0][r][i][j]->GetMaximum() > 10)
+                    fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+//                     fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25 );
+
+                if (fitPositronDeDx[0][r][i][j]){
+                    meanPositron[0][r][i][j]       = fitPositronDeDx[0][r][i][j]->GetParameter(1);
+                    widthPositron[0][r][i][j]      = fitPositronDeDx[0][r][i][j]->GetParameter(2);
+                    meanErrPositron[0][r][i][j]    = fitPositronDeDx[0][r][i][j]->GetParError(1);
+                    widthErrPositron[0][r][i][j]   = fitPositronDeDx[0][r][i][j]->GetParError(2);
+                } else if (histoPositronDeDx[0][r][i][j]->GetMaximum() > 5){
+                    meanPositron[0][r][i][j]        = histoPositronDeDx[0][r][i][j]->GetMean();
+                    widthPositron[0][r][i][j]       = histoPositronDeDx[0][r][i][j]->GetRMS();
                 }
                 if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
-                    fhistoMeanPositron[r]->SetBinContent(i+1,j+1-etaOff, meanPositron[r][i][j]);
-                    fhistoMeanPositron[r]->SetBinError(i+1,j+1-etaOff, meanErrPositron[r][i][j]);
-                    fhistoWidthPositron[r]->SetBinContent(i+1,j+1-etaOff, widthPositron[r][i][j]);
-                    fhistoWidthPositron[r]->SetBinError(i+1,j+1-etaOff, widthErrPositron[r][i][j]);
+                    fhistoMeanPositron[0][r]->SetBinContent(i+1,j+1-etaOff, meanPositron[0][r][i][j]);
+                    fhistoMeanPositron[0][r]->SetBinError(i+1,j+1-etaOff, meanErrPositron[0][r][i][j]);
+                    fhistoWidthPositron[0][r]->SetBinContent(i+1,j+1-etaOff, widthPositron[0][r][i][j]);
+                    fhistoWidthPositron[0][r]->SetBinError(i+1,j+1-etaOff, widthErrPositron[0][r][i][j]);
                 }
+
+
+                // Electron, different TPC Cl bins
+                histoElectronDeDx[1][r][i][j]  = (TH1D*)histoElectronDeDxPEta[1][r]->ProjectionX(Form("Cl%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
+                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 200) histoElectronDeDx[1][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 100) histoElectronDeDx[1][r][i][j]->Rebin(2);
+                //                 fitElectronDeDx[1][r][i][j]    = FitSignal(histoElectronDeDx[1][r][i][j],kBlue);
+                if (histoElectronDeDx[1][r][i][j]->GetMaximum() > 10)
+                    fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+//                     fitElectronDe[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25);
+
+                if (fitElectronDeDx[1][r][i][j]){
+                    meanElectron[1][r][i][j]       = fitElectronDeDx[1][r][i][j]->GetParameter(1);
+                    widthElectron[1][r][i][j]      = fitElectronDeDx[1][r][i][j]->GetParameter(2);
+                    meanErrElectron[1][r][i][j]    = fitElectronDeDx[1][r][i][j]->GetParError(1);
+                    widthErrElectron[1][r][i][j]   = fitElectronDeDx[1][r][i][j]->GetParError(2);
+                } else if (histoElectronDeDx[1][r][i][j]->GetMaximum() > 5){
+                    meanElectron[1][r][i][j]       = histoElectronDeDx[1][r][i][j]->GetMean();
+                    widthElectron[1][r][i][j]      = histoElectronDeDx[1][r][i][j]->GetRMS();
+                }
+                if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+                    fhistoMeanElectron[1][r]->SetBinContent(i+1,j+1-etaOff, meanElectron[1][r][i][j]);
+                    fhistoMeanElectron[1][r]->SetBinError(i+1,j+1-etaOff, meanErrElectron[1][r][i][j]);
+                    fhistoWidthElectron[1][r]->SetBinContent(i+1,j+1-etaOff, widthElectron[1][r][i][j]);
+                    fhistoWidthElectron[1][r]->SetBinError(i+1,j+1-etaOff, widthErrElectron[1][r][i][j]);
+                }
+
+                // Positron, different TPC Cl bins
+                histoPositronDeDx[1][r][i][j] = (TH1D*)histoPositronDeDxPEta[1][r]->ProjectionX(Form("Cl%dPosiSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
+                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 200) histoPositronDeDx[1][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 100) histoPositronDeDx[1][r][i][j]->Rebin(2);
+                //                 fitPositronDeDx[1][r][i][j]    = FitSignal(histoPositronDeDx[1][r][i][j],kBlue);
+                if (histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
+                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit);
+//                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
+
+                if (fitPositronDeDx[1][r][i][j]){
+                    meanPositron[1][r][i][j]        = fitPositronDeDx[1][r][i][j]->GetParameter(1);
+                    widthPositron[1][r][i][j]       = fitPositronDeDx[1][r][i][j]->GetParameter(2);
+                    meanErrPositron[1][r][i][j]     = fitPositronDeDx[1][r][i][j]->GetParError(1);
+                    widthErrPositron[1][r][i][j]    = fitPositronDeDx[1][r][i][j]->GetParError(2);
+                } else if (histoPositronDeDx[1][r][i][j]->GetMaximum() > 5){
+                    meanPositron[1][r][i][j]        = histoPositronDeDx[1][r][i][j]->GetMean();
+                    widthPositron[1][r][i][j]       = histoPositronDeDx[1][r][i][j]->GetRMS();
+                }
+                if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+                    fhistoMeanPositron[1][r]->SetBinContent(i+1,j+1-etaOff, meanPositron[1][r][i][j]);
+                    fhistoMeanPositron[1][r]->SetBinError(i+1,j+1-etaOff, meanErrPositron[1][r][i][j]);
+                    fhistoWidthPositron[1][r]->SetBinContent(i+1,j+1-etaOff, widthPositron[1][r][i][j]);
+                    fhistoWidthPositron[1][r]->SetBinError(i+1,j+1-etaOff, widthErrPositron[1][r][i][j]);
+                }
+
             }
         }
     }
-
-
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "STARTED PLOTTING" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
 
     Int_t textSizeLabelsPixel                   = 1000*0.04;
     TCanvas* canvasdEdxMeanStudies = new TCanvas("canvasdEdxMeanStudies","",200,10,1350,1000);  // gives the page size
     DrawGammaCanvasSettings( canvasdEdxMeanStudies, 0.08, 0.02, 0.02, 0.09);
     canvasdEdxMeanStudies->SetLogx();
-    TH2F * histo2DdEdxMeanStudies = new TH2F("histo2DdEdxMeanStudies","histo2DdEdxMeanStudies", 100, 0.04, 20, 200, -1.5, 1.5);
+    TH2F * histo2DdEdxMeanStudies = new TH2F("histo2DdEdxMeanStudies","histo2DdEdxMeanStudies", 100, 0.01, 20, 200, -1.5, 1.5);
     SetStyleHistoTH2ForGraphs(histo2DdEdxMeanStudies, "#it{p} (GeV/#it{c})", "<n#sigma_{e}>", 0.035,0.04, 0.035,0.04, 0.98,1.0);
 
     TLegend* legendMeanEta  = GetAndSetLegend2(0.3, 0.11, 0.95, 0.11+(0.035*nEtaBinsOut/4.*1.05), 0.75*textSizeLabelsPixel,4,"",43,0.1);
@@ -272,7 +393,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     TCanvas* canvasdEdxWidthStudies = new TCanvas("canvasdEdxWidthStudies","",200,10,1350,1000);  // gives the page size
     DrawGammaCanvasSettings( canvasdEdxWidthStudies, 0.08, 0.02, 0.02, 0.09);
     canvasdEdxWidthStudies->SetLogx();
-    TH2F * histo2DdEdxWidthStudies = new TH2F("histo2DdEdxWidthStudies","histo2DdEdxWidthStudies", 100, 0.04, 20, 200, 0, 2);
+    TH2F * histo2DdEdxWidthStudies = new TH2F("histo2DdEdxWidthStudies","histo2DdEdxWidthStudies", 100, 0.01, 20, 200, 0, 2);
     SetStyleHistoTH2ForGraphs(histo2DdEdxWidthStudies, "#it{p} (GeV/#it{c})", "#sigma(n#sigma_{e})", 0.035,0.04, 0.035,0.04, 0.98,1.0);
 
     TLegend* legendWidthEta  = GetAndSetLegend2(0.3, 0.11, 0.95, 0.11+(0.035*nEtaBinsOut/4.*1.05), 0.75*textSizeLabelsPixel,4,"",43,0.1);
@@ -291,7 +412,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         histo2DdEdxMeanStudies->DrawCopy();
         legendMeanEta->Clear();
         for (Int_t j = 0; j < nEtaBinsOut; j++){
-            TH1D* histoProjection       = fhistoMeanElectron[r]->ProjectionX(Form("%sEta%d",fhistoMeanElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoMeanElectron[0][r]->ProjectionX(Form("%sEta%d",fhistoMeanElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
             histoProjection->Draw("same,p,e");
             legendMeanEta->AddEntry(histoProjection,Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]),"p");
@@ -301,28 +422,32 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
 
-        canvasdEdxMeanStudies->SaveAs(Form("%sElectronMeanNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/ElectronMeanNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
 
         canvasdEdxMeanStudies->cd();
         histo2DdEdxMeanStudies->DrawCopy();
         for (Int_t j = 0; j < nEtaBinsOut; j++){
-            TH1D* histoProjection       = fhistoMeanPositron[r]->ProjectionX(Form("%sEta%d",fhistoMeanPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoMeanPositron[0][r]->ProjectionX(Form("%sEta%d",fhistoMeanPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
             histoProjection->Draw("same,p,e");
         }
         legendMeanEta->Draw();
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
 
-        canvasdEdxMeanStudies->SaveAs(Form("%sPositronMeanNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/PositronMeanNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
     }
+
 
     for (Int_t r = 0; r < 4; r++){
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudies->DrawCopy();
         legendWidthEta->Clear();
         for (Int_t j = 0; j < nEtaBinsOut; j++){
-            TH1D* histoProjection       = fhistoWidthElectron[r]->ProjectionX(Form("%sEta%d",fhistoWidthElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoWidthElectron[0][r]->ProjectionX(Form("%sEta%d",fhistoWidthElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
             histoProjection->Draw("same,p,e");
             legendWidthEta->AddEntry(histoProjection,Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]),"p");
@@ -331,22 +456,231 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
 
-        canvasdEdxWidthStudies->SaveAs(Form("%sElectronWidthNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/ElectronWidthNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
 
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudies->DrawCopy();
         for (Int_t j = 0; j < nEtaBinsOut; j++){
-            TH1D* histoProjection       = fhistoWidthPositron[r]->ProjectionX(Form("%sEta%d",fhistoWidthPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoWidthPositron[0][r]->ProjectionX(Form("%sEta%d",fhistoWidthPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
             histoProjection->Draw("same,p,e");
         }
         legendWidthEta->Draw();
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sPositronWidthNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/PositronWidthNSigma_SummaryPtDepInEtaBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
     }
+
+    //   _____ _______                 ____ _
+    //  |  ___|__   __|  /\           / ___| |
+    //  | |_     | |    /  \         | /   | |
+    //  |  _|    | |   / /\ \        | |   | |
+    //  | |___   | |  / ___- \       | \___| |___
+    //  |_____|  |_| /_/    \_\       \____|_____|
+
+
+    for (Int_t r = 0; r < 4; r++){
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudies->DrawCopy();
+        legendMeanEta->Clear();
+        for (Int_t j = 0; j < nEtaBinsOut; j++){
+            TH1D* histoProjection       = fhistoMeanElectron[1][r]->ProjectionX(Form("%sEta%d",fhistoMeanElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
+            histoProjection->Draw("same,p,e");
+            legendMeanEta->AddEntry(histoProjection,Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]),"p");
+        }
+        legendMeanEta->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/ElectronMeanNSigma_SummaryPtDepInEtaBinsTPCCl%d.%s", outputDir.Data(), r, suffix.Data()));
+
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudies->DrawCopy();
+        for (Int_t j = 0; j < nEtaBinsOut; j++){
+            TH1D* histoProjection       = fhistoMeanPositron[1][r]->ProjectionX(Form("%sEta%d",fhistoMeanPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
+            histoProjection->Draw("same,p,e");
+        }
+        legendMeanEta->Draw();
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/PositronMeanNSigma_SummaryPtDepInEtaBinsTPCCl%d.%s", outputDir.Data(), r, suffix.Data()));
+    }
+
+    for (Int_t r = 0; r < 4; r++){
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudies->DrawCopy();
+        legendWidthEta->Clear();
+        for (Int_t j = 0; j < nEtaBinsOut; j++){
+            TH1D* histoProjection       = fhistoWidthElectron[1][r]->ProjectionX(Form("%sEta%d",fhistoWidthElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
+            histoProjection->Draw("same,p,e");
+            legendWidthEta->AddEntry(histoProjection,Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]),"p");
+        }
+        legendWidthEta->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/ElectronWidthNSigma_SummaryPtDepInEtaBinsTPCCl%d.%s", outputDir.Data(), r, suffix.Data()));
+
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudies->DrawCopy();
+        for (Int_t j = 0; j < nEtaBinsOut; j++){
+            TH1D* histoProjection       = fhistoWidthPositron[1][r]->ProjectionX(Form("%sEta%d",fhistoWidthPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerEta[j], 1.5, colorEta[j], colorEta[j]);
+            histoProjection->Draw("same,p,e");
+        }
+        legendWidthEta->Draw();
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/PositronWidthNSigma_SummaryPtDepInEtaBinsTPCCl%d.%s", outputDir.Data(), r, suffix.Data()));
+    }
+
+    //    ____ _        _____ _______
+    //   / ___| |      |  ___|__   __|  /\
+    //  | /   |        | |_     | |    /  \
+    //  | |   | |      |  _|    | |   / /\ \
+    //  | \___| |___   | |___   | |  / ___- \
+    //   \____|_____|  |_____|  |_| /_/    \_\
+
+    for (Int_t j = 0; j< nEtaBinsOut; j++){
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudies->DrawCopy();
+        legendMeanR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoMeanElectron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendMeanR->AddEntry(histoProjection,Form("e^{-}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoMeanPositron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendMeanR->AddEntry(histoProjection2,Form("e^{+}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendMeanR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]), fCollisionSystem, "", "", "",0, 31);
+
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/MeanNSigma_SummaryPtDepInTPCClBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+    }
+    for (Int_t j = 0; j< nEtaBinsOut; j++){
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudies->DrawCopy();
+        legendWidthR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoWidthElectron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendWidthR->AddEntry(histoProjection,Form("e^{-}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoWidthPositron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendWidthR->AddEntry(histoProjection2,Form("e^{+}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendWidthR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]), fCollisionSystem, "", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/WidthNSigma_SummaryPtDepInTPCClBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+    }
+
+    for (Int_t j = 0; j< nEtaBinsOut/2; j++){
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudies->DrawCopy();
+        legendMeanR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoMeanElectron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendMeanR->AddEntry(histoProjection,Form("%d < N TPC Cl < %d, #eta < 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoMeanElectron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[1][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendMeanR->AddEntry(histoProjection2,Form("%d < N TPC Cl < %d, #eta > 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendMeanR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/ElectronMeanNSigma_SummaryPtDepInTPCClBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+
+        histo2DdEdxMeanStudies->DrawCopy();
+        legendMeanR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoMeanPositron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendMeanR->AddEntry(histoProjection,Form("%d < N TPC Cl < %d, #eta < 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoMeanPositron[1][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[1][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendMeanR->AddEntry(histoProjection2,Form("%d < N TPC Cl < %d, #eta > 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendMeanR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/PositronMeanNSigma_SummaryPtDepInTPCClBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+    }
+
+    for (Int_t j = 0; j< nEtaBinsOut/2; j++){
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudies->DrawCopy();
+        legendWidthR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoWidthElectron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendWidthR->AddEntry(histoProjection,Form("%d < N TPC Cl < %d, #eta < 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoWidthElectron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[1][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendWidthR->AddEntry(histoProjection2,Form("%d < N TPC Cl < %d, #eta > 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendWidthR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/ElectronWidthNSigma_SummaryPtDepInTPCClBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+
+        histo2DdEdxWidthStudies->DrawCopy();
+        legendWidthR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoWidthPositron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[1][r]->GetName(),j),j+1,j+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendWidthR->AddEntry(histoProjection,Form("%d < N TPC Cl < %d, #eta < 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoWidthPositron[1][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[1][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendWidthR->AddEntry(histoProjection2,Form("%d < N TPC Cl < %d, #eta > 0", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendWidthR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/PositronWidthNSigma_SummaryPtDepInTPCClBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+    }
+
 
     //   ____         _____ _______
     //  |  _ \       |  ___|__   __|  /\
@@ -355,17 +689,16 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     //  | |\ \       | |___   | |  / ___- \
     //  |_| \_\      |_____|  |_| /_/    \_\
 
-
     for (Int_t j = 0; j< nEtaBinsOut; j++){
         canvasdEdxMeanStudies->cd();
         histo2DdEdxMeanStudies->DrawCopy();
         legendMeanR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoMeanElectron[r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoMeanElectron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendMeanR->AddEntry(histoProjection,Form("e^{-}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoMeanPositron[r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection2       = fhistoMeanPositron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendMeanR->AddEntry(histoProjection2,Form("e^{+}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -374,19 +707,19 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]), fCollisionSystem, "", "", "",0, 31);
-
-        canvasdEdxMeanStudies->SaveAs(Form("%sMeanNSigma_SummaryPtDepInRBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/MeanNSigma_SummaryPtDepInRBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
     }
     for (Int_t j = 0; j< nEtaBinsOut; j++){
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudies->DrawCopy();
         legendWidthR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoWidthElectron[r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoWidthElectron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendWidthR->AddEntry(histoProjection,Form("e^{-}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoWidthPositron[r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection2       = fhistoWidthPositron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendWidthR->AddEntry(histoProjection2,Form("e^{+}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -395,8 +728,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #eta < %2.1f", arrEtaBinningOut[j], arrEtaBinningOut[j+1]), fCollisionSystem, "", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sWidthNSigma_SummaryPtDepInRBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/WidthNSigma_SummaryPtDepInRBinsEta%d.%s", outputDir.Data(), j, suffix.Data()));
     }
 
     for (Int_t j = 0; j< nEtaBinsOut/2; j++){
@@ -404,11 +737,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         histo2DdEdxMeanStudies->DrawCopy();
         legendMeanR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoMeanElectron[r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoMeanElectron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendMeanR->AddEntry(histoProjection,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta < 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoMeanElectron[r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            TH1D* histoProjection2       = fhistoMeanElectron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanElectron[0][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendMeanR->AddEntry(histoProjection2,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta > 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -417,17 +750,18 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/ElectronMeanNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
 
-        canvasdEdxMeanStudies->SaveAs(Form("%sElectronMeanNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
 
         histo2DdEdxMeanStudies->DrawCopy();
         legendMeanR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoMeanPositron[r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoMeanPositron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendMeanR->AddEntry(histoProjection,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta < 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoMeanPositron[r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            TH1D* histoProjection2       = fhistoMeanPositron[0][r]->ProjectionX(Form("%sR%d",fhistoMeanPositron[0][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendMeanR->AddEntry(histoProjection2,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta > 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -436,8 +770,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{+}", "", "",0, 31);
-
-        canvasdEdxMeanStudies->SaveAs(Form("%sPositronMeanNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+        DrawGammaLines(0.01, 20, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/PositronMeanNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
     }
 
     for (Int_t j = 0; j< nEtaBinsOut/2; j++){
@@ -445,11 +779,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         histo2DdEdxWidthStudies->DrawCopy();
         legendWidthR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoWidthElectron[r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoWidthElectron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendWidthR->AddEntry(histoProjection,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta < 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoWidthElectron[r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            TH1D* histoProjection2       = fhistoWidthElectron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthElectron[0][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendWidthR->AddEntry(histoProjection2,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta > 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -458,17 +792,17 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{-}", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sElectronWidthNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/ElectronWidthNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
 
         histo2DdEdxWidthStudies->DrawCopy();
         legendWidthR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoWidthPositron[r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[r]->GetName(),j),j+1,j+1);
+            TH1D* histoProjection       = fhistoWidthPositron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[0][r]->GetName(),j),j+1,j+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendWidthR->AddEntry(histoProjection,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta < 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoWidthPositron[r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
+            TH1D* histoProjection2       = fhistoWidthPositron[0][r]->ProjectionX(Form("%sR%d",fhistoWidthPositron[0][r]->GetName(),nEtaBinsOut-j),nEtaBinsOut-j,nEtaBinsOut-j);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendWidthR->AddEntry(histoProjection2,Form("%2.1f < #it{R}_{conv} (cm) < %2.1f, #eta > 0", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -477,8 +811,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < |#eta| < %2.1f", arrEtaBinningOut[nEtaBinsOut-j-1], arrEtaBinningOut[nEtaBinsOut-j]), fCollisionSystem, "e^{+}", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sPositronWidthNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
+        DrawGammaLines(0.01, 20, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/PositronWidthNSigma_SummaryPtDepInRBinsAbsEta%d.%s", outputDir.Data(), j, suffix.Data()));
     }
 
     //   ____       ____
@@ -496,36 +830,41 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     TLegend* legendMeanPt  = GetAndSetLegend2(0.12, 0.11, 0.95, 0.11+(0.035*nPBins/3.*1.05), 0.75*textSizeLabelsPixel,3,"",43,0.1);
     TLegend* legendWidthPt  = GetAndSetLegend2(0.12, 0.11, 0.95, 0.11+(0.035*nPBins/3.*1.05), 0.75*textSizeLabelsPixel,3,"",43,0.1);
 
+    cout << "-----------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------" << endl;
+    cout << " started with eta projections in " << nPBins << " P bins"<< endl;
+    cout << "-----------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------" << endl;
     canvasdEdxMeanStudies->SetLogx(kFALSE);
     for (Int_t r = 0; r < 4; r++){
         canvasdEdxMeanStudies->cd();
         histo2DdEdxMeanStudiesEta->DrawCopy();
         legendMeanPt->Clear();
-        for (Int_t i = 0; i < nPBins; i++){
-            TH1D* histoProjection       = fhistoMeanElectron[r]->ProjectionY(Form("%sPt%d",fhistoMeanElectron[r]->GetName(),i),i+1,i+1);
-            DrawGammaSetMarker(  histoProjection, markerPt[i], 1.5, colorPt[i], colorPt[i]);
+        for(Int_t k=startBinP;k<nPBins;k++){
+            TH1D* histoProjection       = fhistoMeanElectron[0][r]->ProjectionY(Form("%sPt%d",fhistoMeanElectron[0][r]->GetName(),k),k+1,k+1);
+            DrawGammaSetMarker(  histoProjection, markerPt[k], 1.5, colorPt[k], colorPt[k]);
             histoProjection->Draw("same,p,e");
-            legendMeanPt->AddEntry(histoProjection,Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),"p");
+            legendMeanPt->AddEntry(histoProjection,Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[k], arrPBinning[k+1]),"p");
         }
         legendMeanPt->Draw();
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
 
-        canvasdEdxMeanStudies->SaveAs(Form("%sElectronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/ElectronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
 
         canvasdEdxMeanStudies->cd();
         histo2DdEdxMeanStudiesEta->DrawCopy();
-        for (Int_t i = 0; i < nPBins; i++){
-            TH1D* histoProjection       = fhistoMeanPositron[r]->ProjectionY(Form("%sPt%d",fhistoMeanPositron[r]->GetName(),i),i+1,i+1);
+        for(Int_t i=startBinP;i<nPBins;i++){
+            TH1D* histoProjection       = fhistoMeanPositron[0][r]->ProjectionY(Form("%sPt%d",fhistoMeanPositron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection,  markerPt[i], 1.5, colorPt[i], colorPt[i]);
             histoProjection->Draw("same,p,e");
         }
         legendMeanPt->Draw();
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
-
-        canvasdEdxMeanStudies->SaveAs(Form("%sPositronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        DrawGammaLines( -1, 1, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/PositronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
     }
 
     canvasdEdxWidthStudies->SetLogx(kFALSE);
@@ -533,8 +872,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudiesEta->DrawCopy();
         legendWidthPt->Clear();
-        for (Int_t i = 0; i < nPBins; i++){
-            TH1D* histoProjection       = fhistoWidthElectron[r]->ProjectionY(Form("%sPt%d",fhistoWidthElectron[r]->GetName(),i),i+1,i+1);
+        for (Int_t i = startBinP; i < nPBins; i++){
+            TH1D* histoProjection       = fhistoWidthElectron[0][r]->ProjectionY(Form("%sPt%d",fhistoWidthElectron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection, markerPt[i], 1.5, colorPt[i], colorPt[i]);
             histoProjection->Draw("same,p,e");
             legendWidthPt->AddEntry(histoProjection,Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),"p");
@@ -543,21 +882,90 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sElectronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/ElectronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
 
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudiesEta->DrawCopy();
-        for (Int_t i = 0; i < nPBins; i++){
-            TH1D* histoProjection       = fhistoWidthPositron[r]->ProjectionY(Form("%sPt%d",fhistoWidthPositron[r]->GetName(),i),i+1,i+1);
+        for (Int_t i = startBinP; i < nPBins; i++){
+            TH1D* histoProjection       = fhistoWidthPositron[0][r]->ProjectionY(Form("%sPt%d",fhistoWidthPositron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection,  markerPt[i], 1.5, colorPt[i], colorPt[i]);
             histoProjection->Draw("same,p,e");
         }
         legendWidthPt->Draw();
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/PositronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+    }
 
-        canvasdEdxWidthStudies->SaveAs(Form("%sPositronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+    //   ____        ____ _
+    //  |  _ \      / ___| |
+    //  | |_| |    | /   | |
+    //  |  __/     | |   | |
+    //  | |        | \___| |___
+    //  |_|         \____|_____|
+
+    for (Int_t r = 0; r < 4; r++){
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudiesEta->DrawCopy();
+        legendMeanPt->Clear();
+        for(Int_t k=startBinP;k<nPBins;k++){
+            TH1D* histoProjection       = fhistoMeanElectron[1][r]->ProjectionY(Form("%sPt%d",fhistoMeanElectron[1][r]->GetName(),k),k+1,k+1);
+            DrawGammaSetMarker(  histoProjection, markerPt[k], 1.5, colorPt[k], colorPt[k]);
+            histoProjection->Draw("same,p,e");
+            legendMeanPt->AddEntry(histoProjection,Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[k], arrPBinning[k+1]),"p");
+        }
+        legendMeanPt->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines( -1, 1, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/ElectronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudiesEta->DrawCopy();
+        for(Int_t i=startBinP;i<nPBins;i++){
+            TH1D* histoProjection       = fhistoMeanPositron[1][r]->ProjectionY(Form("%sPt%d",fhistoMeanPositron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection,  markerPt[i], 1.5, colorPt[i], colorPt[i]);
+            histoProjection->Draw("same,p,e");
+        }
+        legendMeanPt->Draw();
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines( -1, 1, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/PositronMeanNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+    }
+
+    for (Int_t r = 0; r < 4; r++){
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudiesEta->DrawCopy();
+        legendWidthPt->Clear();
+        for (Int_t i = startBinP; i < nPBins; i++){
+            TH1D* histoProjection       = fhistoWidthElectron[1][r]->ProjectionY(Form("%sPt%d",fhistoWidthElectron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection, markerPt[i], 1.5, colorPt[i], colorPt[i]);
+            histoProjection->Draw("same,p,e");
+            legendWidthPt->AddEntry(histoProjection,Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),"p");
+        }
+        legendWidthPt->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/ElectronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
+
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudiesEta->DrawCopy();
+        for (Int_t i = startBinP; i < nPBins; i++){
+            TH1D* histoProjection       = fhistoWidthPositron[1][r]->ProjectionY(Form("%sPt%d",fhistoWidthPositron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection,  markerPt[i], 1.5, colorPt[i], colorPt[i]);
+            histoProjection->Draw("same,p,e");
+        }
+        legendWidthPt->Draw();
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/PositronWidthNSigma_SummaryEtaDepInPtBinsR%d.%s", outputDir.Data(), r, suffix.Data()));
     }
 
     //   ____         _____ _______
@@ -567,16 +975,16 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     //  | |          | |___   | |  / ___- \
     //  |_|          |_____|  |_| /_/    \_\
 
-    for (Int_t i = 0; i< nPBins; i++){
+    for(Int_t i=startBinP;i<nPBins;i++){
         canvasdEdxMeanStudies->cd();
         histo2DdEdxMeanStudiesEta->DrawCopy();
         legendMeanR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoMeanElectron[r]->ProjectionY(Form("%sR%d",fhistoMeanElectron[r]->GetName(),i),i+1,i+1);
+            TH1D* histoProjection       = fhistoMeanElectron[0][r]->ProjectionY(Form("%sR%d",fhistoMeanElectron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendMeanR->AddEntry(histoProjection,Form("e^{-}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoMeanPositron[r]->ProjectionY(Form("%sR%d",fhistoMeanPositron[r]->GetName(),i),i+1,i+1);
+            TH1D* histoProjection2       = fhistoMeanPositron[0][r]->ProjectionY(Form("%sR%d",fhistoMeanPositron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendMeanR->AddEntry(histoProjection2,Form("e^{+}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -585,20 +993,20 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]), fCollisionSystem, "", "", "",0, 31);
-
-        canvasdEdxMeanStudies->SaveAs(Form("%sMeanNSigma_SummaryEtaDepInRBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
+        DrawGammaLines( -1, 1, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sRConv/MeanNSigma_SummaryEtaDepInRBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
     }
 
-    for (Int_t i = 0; i< nPBins; i++){
+    for (Int_t i = startBinP; i< nPBins; i++){
         canvasdEdxWidthStudies->cd();
         histo2DdEdxWidthStudiesEta->DrawCopy();
         legendWidthR->Clear();
         for (Int_t r = 0; r < 4; r++){
-            TH1D* histoProjection       = fhistoWidthElectron[r]->ProjectionY(Form("%sR%d",fhistoWidthElectron[r]->GetName(),i),i+1,i+1);
+            TH1D* histoProjection       = fhistoWidthElectron[0][r]->ProjectionY(Form("%sR%d",fhistoWidthElectron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
             histoProjection->Draw("same,p,e");
             legendWidthR->AddEntry(histoProjection,Form("e^{-}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
-            TH1D* histoProjection2       = fhistoWidthPositron[r]->ProjectionY(Form("%sR%d",fhistoWidthPositron[r]->GetName(),i),i+1,i+1);
+            TH1D* histoProjection2       = fhistoWidthPositron[0][r]->ProjectionY(Form("%sR%d",fhistoWidthPositron[0][r]->GetName(),i),i+1,i+1);
             DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
             legendWidthR->AddEntry(histoProjection2,Form("e^{+}, %2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]),"p");
             histoProjection2->Draw("same,p,e");
@@ -607,9 +1015,160 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         // plot labels
         PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
                                      Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]), fCollisionSystem, "", "", "",0, 31);
-
-        canvasdEdxWidthStudies->SaveAs(Form("%sWidthNSigma_SummaryEtaDepInRBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sRConv/WidthNSigma_SummaryEtaDepInRBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
     }
+
+
+    for(Int_t i=startBinP;i<nPBins;i++){
+        canvasdEdxMeanStudies->cd();
+        histo2DdEdxMeanStudiesEta->DrawCopy();
+        legendMeanR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoMeanElectron[1][r]->ProjectionY(Form("%sR%d",fhistoMeanElectron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendMeanR->AddEntry(histoProjection,Form("e^{-}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoMeanPositron[1][r]->ProjectionY(Form("%sR%d",fhistoMeanPositron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendMeanR->AddEntry(histoProjection2,Form("e^{+}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendMeanR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]), fCollisionSystem, "", "", "",0, 31);
+        DrawGammaLines( -1, 1, 0.0,0.0, 1, kGray+2 ,7);
+        canvasdEdxMeanStudies->SaveAs(Form("%sTPCCl/MeanNSigma_SummaryEtaDepInTPClBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
+    }
+
+    for (Int_t i = startBinP; i< nPBins; i++){
+        canvasdEdxWidthStudies->cd();
+        histo2DdEdxWidthStudiesEta->DrawCopy();
+        legendWidthR->Clear();
+        for (Int_t r = 0; r < 4; r++){
+            TH1D* histoProjection       = fhistoWidthElectron[1][r]->ProjectionY(Form("%sR%d",fhistoWidthElectron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection, markerR[r], 1.5, colorR[r], colorR[r]);
+            histoProjection->Draw("same,p,e");
+            legendWidthR->AddEntry(histoProjection,Form("e^{-}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            TH1D* histoProjection2       = fhistoWidthPositron[1][r]->ProjectionY(Form("%sR%d",fhistoWidthPositron[1][r]->GetName(),i),i+1,i+1);
+            DrawGammaSetMarker(  histoProjection2, markerR[r+4], 1.5, colorR[r], colorR[r]);
+            legendWidthR->AddEntry(histoProjection2,Form("e^{+}, %d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]),"p");
+            histoProjection2->Draw("same,p,e");
+        }
+        legendWidthR->Draw();
+        // plot labels
+        PlotLabelsInvMassInPtPlots ( 0.95, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.2f < #it{p}_{e} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]), fCollisionSystem, "", "", "",0, 31);
+        DrawGammaLines( -1, 1, 1.0,1.0, 1, kGray+2 ,7);
+        canvasdEdxWidthStudies->SaveAs(Form("%sTPCCl/WidthNSigma_SummaryEtaDepInTPCClBinsPt%d.%s", outputDir.Data(), i, suffix.Data()));
+    }
+
+    TCanvas* canvas2DStudies = new TCanvas("canvas2DStudies","",200,10,1350,1000);  // gives the page size
+    DrawGammaCanvasSettings( canvas2DStudies, 0.08, 0.1, 0.02, 0.09);
+    canvas2DStudies->SetLogx();
+
+    TCanvas* canvas2DStudiesdEdx = new TCanvas("canvas2DStudiesdEdx","",200,10,1000,1000);  // gives the page size
+    DrawGammaCanvasSettings( canvas2DStudiesdEdx, 0.08, 0.1, 0.02, 0.09);
+    canvas2DStudiesdEdx->SetLogx();
+    canvas2DStudiesdEdx->SetLogz();
+
+    for (Int_t r = 0; r < 4; r++){
+        canvas2DStudies->cd();
+            SetStyleHistoTH2ForGraphs(fhistoMeanElectron[0][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoMeanElectron[0][r]->GetZaxis()->SetRangeUser(-1.5,1.5);
+            fhistoMeanElectron[0][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "<n#sigma_{e}>, e^{-}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sRConv/Electron_MeanNSigma_2DMap_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoMeanPositron[0][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoMeanPositron[0][r]->GetZaxis()->SetRangeUser(-1.5,1.5);
+            fhistoMeanPositron[0][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "<n#sigma_{e}>. e^{+}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sRConv/Positron_MeanNSigma_2DMap_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoWidthElectron[0][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoWidthElectron[0][r]->GetZaxis()->SetRangeUser(0,1.8);
+            fhistoWidthElectron[0][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                        Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "#sigma(n#sigma_{e}), e^{-}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sRConv/Electron_WidthNSigma_2DMap_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoWidthPositron[0][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoWidthPositron[0][r]->GetZaxis()->SetRangeUser(0,1.8);
+            fhistoWidthPositron[0][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "#sigma(n#sigma_{e}), e^{+}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sRConv/Positron_WidthNSigma_2DMap_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+
+            SetStyleHistoTH2ForGraphs(fhistoMeanElectron[1][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoMeanElectron[1][r]->GetZaxis()->SetRangeUser(-1.5,1.5);
+            fhistoMeanElectron[1][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "<n#sigma_{e}>, e^{-}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sTPCCl/Electron_MeanNSigma_2DMap_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoMeanPositron[1][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoMeanPositron[1][r]->GetZaxis()->SetRangeUser(-1.5,1.5);
+            fhistoMeanPositron[1][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "<n#sigma_{e}>. e^{+}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sTPCCl/Positron_MeanNSigma_2DMap_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoWidthElectron[1][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoWidthElectron[1][r]->GetZaxis()->SetRangeUser(0,1.8);
+            fhistoWidthElectron[1][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "#sigma(n#sigma_{e}), e^{-}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sTPCCl/Electron_WidthNSigma_2DMap_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+            SetStyleHistoTH2ForGraphs(fhistoWidthPositron[1][r], "#it{p} (GeV/#it{c})", "#eta", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+            fhistoWidthPositron[1][r]->GetZaxis()->SetRangeUser(0,1.8);
+            fhistoWidthPositron[1][r]->Draw("colz");
+            PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                         Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "#sigma(n#sigma_{e}), e^{+}", "", "",0, 31);
+        canvas2DStudies->SaveAs(Form("%sTPCCl/Positron_WidthNSigma_2DMap_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+
+        canvas2DStudiesdEdx->cd();
+
+        TH2D* histoElectronSigmadEdxP_R   = (TH2D*)histoElectronDeDxPEta[1][r]->Project3D("xz");
+        SetStyleHistoTH2ForGraphs(histoElectronSigmadEdxP_R, "#it{p} (GeV/#it{c})", "n#sigma_{e} d#it{E}/d#it{x}", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+        histoElectronSigmadEdxP_R->Draw("colz");
+        PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+
+        canvas2DStudiesdEdx->SaveAs(Form("%sRConv/Electron_TPCNSigmadEdx_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+        delete histoElectronSigmadEdxP_R;
+        TH2D* histoPositronSigmadEdxP_R   = (TH2D*)histoPositronDeDxPEta[1][r]->Project3D("xz");
+        SetStyleHistoTH2ForGraphs(histoPositronSigmadEdxP_R, "#it{p} (GeV/#it{c})", "n#sigma_{e} d#it{E}/d#it{x}", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+        histoPositronSigmadEdxP_R->Draw("colz");
+        PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+
+        canvas2DStudiesdEdx->SaveAs(Form("%sRConv/Positron_TPCNSigmadEdx_RBin%d.%s", outputDir.Data(), r, suffix.Data()));
+        delete histoPositronSigmadEdxP_R;
+
+        TH2D* histoElectronSigmadEdxP_Cl   = (TH2D*)histoElectronDeDxPEta[1][r]->Project3D("xz");
+        SetStyleHistoTH2ForGraphs(histoElectronSigmadEdxP_Cl, "#it{p} (GeV/#it{c})", "n#sigma_{e} d#it{E}/d#it{x}", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+        histoElectronSigmadEdxP_Cl->Draw("colz");
+        PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{-}", "", "",0, 31);
+
+        canvas2DStudiesdEdx->SaveAs(Form("%sTPCCl/Electron_TPCNSigmadEdx_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+        delete histoElectronSigmadEdxP_Cl;
+        TH2D* histoPositronSigmadEdxP_Cl   = (TH2D*)histoPositronDeDxPEta[1][r]->Project3D("xz");
+        SetStyleHistoTH2ForGraphs(histoPositronSigmadEdxP_Cl, "#it{p} (GeV/#it{c})", "n#sigma_{e} d#it{E}/d#it{x}", 0.035,0.04, 0.035,0.04, 0.98,1.0);
+        histoPositronSigmadEdxP_Cl->Draw("colz");
+        PlotLabelsInvMassInPtPlots ( 0.85, 0.9, 0.035, 0.04*1.05, "ALICE performance",
+                                     Form("%d < N TPC Cl < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1]), fCollisionSystem, "e^{+}", "", "",0, 31);
+
+        canvas2DStudiesdEdx->SaveAs(Form("%sTPCCl/Positron_TPCNSigmadEdx_ClBin%d.%s", outputDir.Data(), r, suffix.Data()));
+        delete histoPositronSigmadEdxP_Cl;
+
+    }
+
+
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "Finished with SUMMARY PLOTS, STARTED PLOTTING detailed fits" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------------------------------------------------------" << endl;
 
     Int_t fColumnPlot = 5;
     Int_t fRowPlot    = 4;
@@ -617,45 +1176,64 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
     TString namePadElec    = "";
     TString nameCanvasPosit  = "";
     TString namePadPosit     = "";
-    for(Int_t i=0;i<nPBins;i++){
+    for(Int_t i=startBinP;i<nPBins;i++){
         for (Int_t r = 0; r< 4; r++){
+            cout << i << "\t" << r << endl;
             // Plotting Electron
             nameCanvasElec = Form("Rbin%d_ElecNSigmaDeDx_Pbin%d",r,i);
             namePadElec    = Form("Rbin%d_ElecNSigmaDeDx_Pbin%d",r,i);
-            PlotdEdxSlices( histoElectronDeDx[r][i],fitElectronDeDx[r][i],meanElectron[r][i],Form("%sDetailedFits/MapsElec_R%d_P%d.%s",outputDir.Data(),r,i,suffix.Data()),
+            PlotdEdxSlices( histoElectronDeDx[0][r][i],fitElectronDeDx[0][r][i],meanElectron[0][r][i],Form("%sRConv/DetailedFits/MapsElec_R%02d_P%02d.%s",outputDir.Data(),r,i,suffix.Data()),
                             nameCanvasElec,namePadElec,arrEtaBinningOut,optionMC.Data(),fCollisionSystem,nEtaBins,fColumnPlot,fRowPlot,
                             Form("%2.2f < #it{p}_{e^{-}} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),
                             Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1])
                           );
+            nameCanvasElec = Form("Clbin%d_ElecNSigmaDeDx_Pbin%d",r,i);
+            namePadElec    = Form("Clbin%d_ElecNSigmaDeDx_Pbin%d",r,i);
+            PlotdEdxSlices( histoElectronDeDx[1][r][i],fitElectronDeDx[1][r][i],meanElectron[1][r][i],Form("%sTPCCl/DetailedFits/MapsElec_Cl%02d_P%02d.%s",outputDir.Data(),r,i,suffix.Data()),
+                            nameCanvasElec,namePadElec,arrEtaBinningOut,optionMC.Data(),fCollisionSystem,nEtaBins,fColumnPlot,fRowPlot,
+                            Form("%2.2f < #it{p}_{e^{-}} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),
+                            Form("%d < N TPC cl. < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1])
+            );
 
             // Ploting Positron
             nameCanvasPosit  = Form("Rbin%d_PositNSigmaDeDx_Pbin%d",r,i);
             namePadPosit     = Form("Rbin%d_PositNSigmaDeDx_Pbin%d",r,i);
-            PlotdEdxSlices( histoPositronDeDx[r][i],fitElectronDeDx[r][i],meanPositron[r][i],Form("%sDetailedFits/MapsPos_R%d_P%d.%s",outputDir.Data(),r,i,suffix.Data()),
+            PlotdEdxSlices( histoPositronDeDx[0][r][i],fitPositronDeDx[0][r][i],meanPositron[0][r][i],Form("%sRConv/DetailedFits/MapsPos_R%02d_P%02d.%s",outputDir.Data(),r,i,suffix.Data()),
                             nameCanvasPosit,namePadPosit,arrEtaBinningOut,optionMC.Data(),fCollisionSystem,nEtaBins,fColumnPlot,fRowPlot,
                             Form("%2.2f < #it{p}_{e^{+}} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),
                             Form("%2.1f < #it{R}_{conv} (cm) < %2.1f", arrRBinningOut[r], arrRBinningOut[r+1])
                           );
+            nameCanvasPosit  = Form("Clbin%d_PositNSigmaDeDx_Pbin%d",r,i);
+            namePadPosit     = Form("Clbin%d_PositNSigmaDeDx_Pbin%d",r,i);
+            PlotdEdxSlices( histoPositronDeDx[1][r][i],fitPositronDeDx[1][r][i],meanPositron[1][r][i],Form("%sTPCCl/DetailedFits/MapsPos_Cl%02d_P%02d.%s",outputDir.Data(),r,i,suffix.Data()),
+                            nameCanvasPosit,namePadPosit,arrEtaBinningOut,optionMC.Data(),fCollisionSystem,nEtaBins,fColumnPlot,fRowPlot,
+                            Form("%2.2f < #it{p}_{e^{+}} (GeV/#it{c}) < %2.2f", arrPBinning[i], arrPBinning[i+1]),
+                            Form("%d < N TPC cl. < %d", arrTPCClBinningOut[r], arrTPCClBinningOut[r+1])
+            );
         }
     }
 
-    TFile outFileMonitoring(Form("%sDetailedFits/MonitoringDeDxMaps_%s.root",outputDir.Data(),fCutSelectionRead.Data()) ,"RECREATE");
-        for(Int_t i=0;i<nPBins;i++){
+    TFile outFileMonitoring(Form("%sMonitoringDeDxMaps_%s.root",outputDir.Data(),fCutSelectionRead.Data()) ,"RECREATE");
+        for(Int_t i=startBinP;i<nPBins;i++){
             for(Int_t j=0;j<nEtaBins;j++){
                 for (Int_t r = 0; r< 4; r++){
-                    histoElectronDeDx[r][i][j]->Write();
-                    histoPositronDeDx[r][i][j]->Write();
+                    histoElectronDeDx[0][r][i][j]->Write();
+                    histoPositronDeDx[0][r][i][j]->Write();
                 }
             }
         }
     outFileMonitoring.Close();
 
-    TFile outFileMaps(Form("%sDetailedFits/DeDxMaps_%s.root",outputDir.Data(),fCutSelectionRead.Data()) ,"RECREATE");
+    TFile outFileMaps(Form("%sDeDxMaps_%s.root",outputDir.Data(),fCutSelectionRead.Data()) ,"RECREATE");
     for (Int_t r = 0; r< 4; r++){
-        fhistoMeanPositron[r]->Write(Form("Pos_R%d_mean",r));
-        fhistoMeanElectron[r]->Write(Form("Ele_R%d_mean",r));
-        fhistoWidthPositron[r]->Write(Form("Pos_R%d_width",r));
-        fhistoWidthElectron[r]->Write(Form("Ele_R%d_width",r));
+        fhistoMeanPositron[0][r]->Write(Form("Pos_R%d_mean",r));
+        fhistoMeanElectron[0][r]->Write(Form("Ele_R%d_mean",r));
+        fhistoWidthPositron[0][r]->Write(Form("Pos_R%d_width",r));
+        fhistoWidthElectron[0][r]->Write(Form("Ele_R%d_width",r));
+        fhistoMeanPositron[1][r]->Write(Form("Pos_Cl%d_mean",r));
+        fhistoMeanElectron[1][r]->Write(Form("Ele_Cl%d_mean",r));
+        fhistoWidthPositron[1][r]->Write(Form("Pos_Cl%d_width",r));
+        fhistoWidthElectron[1][r]->Write(Form("Ele_Cl%d_width",r));
     }
     outFileMaps.Close();
  }
@@ -740,12 +1318,10 @@ void PlotdEdxSlices(TH1D** fHistoMapsPlot,
             else padDataSpectra->cd(place)->SetLeftMargin(0.11);
 
             TString title = Form("%3.2f < | #eta | < %3.2f",startEta,endEta);
-            DrawGammaHisto( fHistoMapsPlot[j],title,"n#sigma","Counts",-6.,6.,0.5,kBlack);
+            DrawGammaHisto( fHistoMapsPlot[j],title,"n#sigma","Counts",-6.,6.,0,0.7);
             DrawGammaLines(0.,0.,0.,fHistoMapsPlot[j]->GetMaximum(), 1, kGray+2, 7);
             DrawGammaLines(fHistoMeanPlot[j], fHistoMeanPlot[j],0.,fHistoMapsPlot[j]->GetMaximum(), 1, kBlue+2, 2);
-            TLatex *meantext           = new TLatex(0.2, 0.75, Form("#chi^{2}/ndf = %2.2f",fFitMapsPlot[j]->GetChisquare()/fFitMapsPlot[j]->GetNDF()));
-            SetStyleTLatex( meantext, 0.075, 1, 1, 42, kTRUE, 11);
-            meantext->Draw();
+
 
             if (fFitMapsPlot[j]){
                 fFitMapsPlot[j]->SetLineColor(kCyan+3);

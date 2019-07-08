@@ -1088,10 +1088,13 @@
     //*****************************************************************************************************
     //*****************************************************************************************************
     //*****************************************************************************************************
-    Double_t FindLargestBin1DHistX(TH1* hist ){
+    Double_t FindLargestBin1DHistX(TH1* hist, Double_t rangeMin = -10000, Double_t rangeMax = -10000 ){
         Double_t largestContent     = 0;
         Double_t largestBinX        = -1;
         for (Int_t i= 1; i < hist->GetNbinsX()+1; i++){
+            if (rangeMin != -10000 && rangeMax != -10000)
+                if (hist->GetBinCenter(i) < rangeMin || hist->GetBinCenter(i) > rangeMax )
+                    continue;
             if (largestContent < hist->GetBinContent(i)){
                 largestContent  = hist->GetBinContent(i);
                 largestBinX     = hist->GetBinCenter(i);
@@ -1103,9 +1106,12 @@
     //*****************************************************************************************************
     //*****************************************************************************************************
     //*****************************************************************************************************
-    Double_t FindLargestBin1DHistFit(TH1* hist ){
+    Double_t FindLargestBin1DHistFit(TH1* hist, Double_t rangeMin = -10000, Double_t rangeMax = -10000  ){
         Double_t largestContent     = 0;
         for (Int_t i= 0; i < hist->GetNbinsX(); i++){
+            if (rangeMin != -10000 && rangeMax != -10000)
+                if (hist->GetBinCenter(i) < rangeMin || hist->GetBinCenter(i) > rangeMax )
+                    continue;
             if (largestContent < hist->GetBinContent(i)){
                 largestContent = hist->GetBinContent(i);
             }
@@ -1120,10 +1126,10 @@
     TF1* FitTH1DRecursivelyGaussian (TH1D* histo, Double_t precision, Double_t fitRangeMin, Double_t fitRangeMax, Int_t useMeanHist = 0, Double_t multWidth = 2. ){
         TF1 *f0 = new TF1("f0", "gaus", fitRangeMin,fitRangeMax);
         if (useMeanHist>0){
-            f0->SetParameter(0,FindLargestBin1DHistFit(histo));
-            f0->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
-            f0->SetParameter(1,FindLargestBin1DHistX (histo));
-            f0->SetParLimits(1,FindLargestBin1DHistX (histo)-histo->GetRMS(),FindLargestBin1DHistX (histo)+histo->GetRMS());
+            f0->SetParameter(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax));
+            f0->SetParLimits(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*0.5,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*1.2);
+            f0->SetParameter(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax));
+            f0->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(2*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(2*histo->GetRMS()));
         }
         histo->Fit(f0,"0RMEQ");
         Double_t rp = f0->GetParameter(2);
@@ -1137,10 +1143,10 @@
         Int_t counter = 0;
         TF1* f1 = new TF1 ("f1", "gaus", ymin, ymax);
         if (useMeanHist>0){
-            f1->SetParameter(0,FindLargestBin1DHistFit(histo));
-            f1->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
-            f1->SetParameter(1,FindLargestBin1DHistX (histo));
-            f1->SetParLimits(1,FindLargestBin1DHistX (histo)-histo->GetRMS(),FindLargestBin1DHistX (histo)+histo->GetRMS());
+            f1->SetParameter(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax));
+            f1->SetParLimits(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*0.5,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*1.2);
+            f1->SetParameter(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax));
+            f1->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(2*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(2*histo->GetRMS()));
         }
         while(deviation > precision && counter < 100){
             f1->SetRange(ymin,ymax);
@@ -1156,6 +1162,66 @@
             else
                 ymax = mp +(rp * multWidth);
             counter++;
+        }
+        delete f0;
+        return f1;
+    }
+
+
+
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1* FitTH1DRecursivelyGaussianWExp (   TH1D* histo,
+                                            Double_t precision,
+                                            Double_t fitRangeMin,
+                                            Double_t fitRangeMax,
+                                            Double_t multWidth = 2.,
+                                            Double_t maxChi2 = 200.
+                                        ){
+        TF1 *f0 = new TF1("f0", "[0]*( (((x-[1])/[2])<[3])*(TMath::Exp(-TMath::Power((x-[1])/[2],2)/2.)) + (((x-[1])/[2])>=[3])*(TMath::Exp(TMath::Power([3],2)/2. - [3]*(x-[1])/[2])) )", fitRangeMin,fitRangeMax);
+
+        f0->SetParameter(0,FindLargestBin1DHistFit(histo));
+        f0->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.7,FindLargestBin1DHistFit(histo)*1.1);
+        f0->SetParameter(1,FindLargestBin1DHistX (histo));
+        f0->SetParLimits(1,-2,2);
+        f0->SetParameter(2,1);
+        f0->SetParLimits(2,0.5,2);
+        f0->SetParameter(3,0);
+
+        histo->Fit(f0,"0RMEQ");
+        Double_t rp = f0->GetParameter(2);
+        Double_t mp = f0->GetParameter(1);
+        Double_t ymin = mp -(rp * multWidth);
+        Double_t ymax = mp + (rp * multWidth);
+        ymax = mp +(rp * multWidth*0.75);
+
+        Double_t deviation = 100;
+        Int_t counter = 0;
+        TF1* f1 = new TF1 ("f1", "[0]*( (((x-[1])/[2])<=-[3])*(TMath::Exp(-TMath::Power((x-[1])/[2],2)/2.)) + (((x-[1])/[2])>-[3])*(TMath::Exp(TMath::Power([3],2)/2. + [3]*(x-[1])/[2])) )", ymin, ymax);
+        f1->SetParameter(0,FindLargestBin1DHistFit(histo));
+        f1->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
+        f1->SetParameter(1,FindLargestBin1DHistX (histo));
+        f1->SetParLimits(1,-2,2 );
+        f1->SetParameter(2,1);
+        f1->SetParLimits(2,0.5,2);
+        f1->SetParameter(3,0);
+
+        while(deviation > precision && counter < 100){
+            f1->SetRange(ymin,ymax);
+            histo->Fit(f1,"0RMEQ");
+            Double_t rp2 = f1->GetParameter(2);
+            if (rp2>rp){ deviation = rp2-rp;}
+            else {deviation = rp -rp2 ;}
+            rp = rp2 ;
+            mp = f1->GetParameter(1);
+            ymin = mp -(rp * multWidth);
+            ymax = mp +(rp * multWidth);
+            counter++;
+        }
+        if (f1->GetChisquare()/f1->GetNDF() > maxChi2){
+            delete f1;
+            return NULL;
         }
         delete f0;
         return f1;

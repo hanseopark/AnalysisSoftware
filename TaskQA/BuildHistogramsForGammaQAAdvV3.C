@@ -540,17 +540,21 @@ void BuildHistogramsForGammaQAAdvV3(
     Double_t lastBinInvMass         = 0.2;
 
 
-    Int_t nPBins =12;
-    Double_t *arrPBinning = new Double_t[13];
+    Int_t nPBins =22;
+    Double_t *arrPBinning = new Double_t[23];
     for( Int_t i=0;i<nPBins+1;i++){
       if(i==0){
-	    arrPBinning[i]= 0.05;
-      }else if(i>0 && i<11){
-	    arrPBinning[i]= 0.1*i;
-      }else if(i==11){
-	    arrPBinning[i]= 2.0;
-      }else if(i==12){
-	    arrPBinning[i]= 10.0;
+        arrPBinning[i]= 0.02;
+      } else if(i==1){
+        arrPBinning[i]= 0.05;
+      }else if(i>1 && i<12){
+        arrPBinning[i]= 0.1*(i-1);
+      } else if (i == 12){
+        arrPBinning[i]= 1.5;
+      } else if(i>12 && i < 22){
+        arrPBinning[i]= 2.0 + 1*(i-13);
+      }else if(i==22){
+        arrPBinning[i]= 20.0;
       }
     }
     Int_t nEtaBins =20;
@@ -570,8 +574,10 @@ void BuildHistogramsForGammaQAAdvV3(
     TH3F* histoPositrondEdxEtaP                 = NULL;
     TH3F* histoElectronNSigmadEdxEtaP           = NULL;
     TH3F* histoPositronNSigmadEdxEtaP           = NULL;
-    TH3F* histoConvRadiusElectronNSigmadEdxEtaP[4]           = {NULL};
-    TH3F* histoConvRadiusPositronNSigmadEdxEtaP[4]           = {NULL};
+    TH3F* histoConvRadiusElectronNSigmadEdxEtaP[4]  = {NULL};
+    TH3F* histoConvRadiusPositronNSigmadEdxEtaP[4]  = {NULL};
+    TH3F* histoTPCClElectronNSigmadEdxEtaP[4]       = {NULL};
+    TH3F* histoTPCClPositronNSigmadEdxEtaP[4]       = {NULL};
     TH3F* histoElectronTOFEtaP                  = NULL;
     TH3F* histoPositronTOFEtaP                  = NULL;
     TH3F* histoElectronNSigmaTOFEtaP            = NULL;
@@ -696,6 +702,10 @@ void BuildHistogramsForGammaQAAdvV3(
         for(Int_t iRad=0; iRad<4; iRad++){
             histoConvRadiusElectronNSigmadEdxEtaP[iRad]             =  new TH3F(Form("R%d electron sigma dEdx P Eta",iRad),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
             histoConvRadiusPositronNSigmadEdxEtaP[iRad]             =  new TH3F(Form("R%d positron sigma dEdx P Eta",iRad),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
+        }
+        for(Int_t iCl=0; iCl<4; iCl++){
+            histoTPCClElectronNSigmadEdxEtaP[iCl]             =  new TH3F(Form("Cl%d electron sigma dEdx P Eta",iCl),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
+            histoTPCClPositronNSigmadEdxEtaP[iCl]             =  new TH3F(Form("Cl%d positron sigma dEdx P Eta",iCl),"", nSigmaDeDxBins, arrSigmaDeDxBinning, nEtaBins,arrEtaBinning, nPBins, arrPBinning);
         }
         histoElectronTOFEtaP                    = new TH3F("histoElectronTOFEtaP","", nBinsTOFsignal, firstBinTOFsignal, lastBinTOFsignal,nBinsEtaTOF, firstBinEtaTOF, lastBinEtaTOF,
                                                         nBinsP, firstBinP, lastBinP);
@@ -873,6 +883,10 @@ void BuildHistogramsForGammaQAAdvV3(
             histoConvRadiusElectronNSigmadEdxEtaP[iRad]             = (TH3F*)directoryConv->Get(Form("R%d electron sigma dEdx P Eta",iRad));
             histoConvRadiusPositronNSigmadEdxEtaP[iRad]             = (TH3F*)directoryConv->Get(Form("R%d positron sigma dEdx P Eta",iRad));
         }
+        for(Int_t iCl=0; iCl<4; iCl++){
+            histoTPCClElectronNSigmadEdxEtaP[iCl]             = (TH3F*)directoryConv->Get(Form("Cl%d electron sigma dEdx P Eta",iCl));
+            histoTPCClPositronNSigmadEdxEtaP[iCl]             = (TH3F*)directoryConv->Get(Form("Cl%d positron sigma dEdx P Eta",iCl));
+        }
         histoElectronTOFEtaP                    = (TH3F*)directoryConv->Get("histoElectronTOFEtaP");
         histoPositronTOFEtaP                    = (TH3F*)directoryConv->Get("histoPositronTOFEtaP");
         histoElectronNSigmaTOFEtaP              = (TH3F*)directoryConv->Get("histoElectronNSigmaTOFEtaP");
@@ -975,6 +989,10 @@ void BuildHistogramsForGammaQAAdvV3(
         for(Int_t iRad=0; iRad<4; iRad++){
             histoConvRadiusElectronNSigmadEdxEtaP[iRad]->Sumw2();
             histoConvRadiusPositronNSigmadEdxEtaP[iRad]->Sumw2();
+        }
+        for(Int_t iCl=0; iCl<4; iCl++){
+            histoTPCClElectronNSigmadEdxEtaP[iCl]->Sumw2();
+            histoTPCClPositronNSigmadEdxEtaP[iCl]->Sumw2();
         }
         histoElectronTOFEtaP->Sumw2();
         histoPositronTOFEtaP->Sumw2();
@@ -1235,6 +1253,27 @@ void BuildHistogramsForGammaQAAdvV3(
                     }
                     if(pPositron<0.26){histoPositronNSigmadEdxCut->Fill(nSigmaTPCPositron);}
 
+                    if(clsTPCElectron < 60){
+                        histoTPCClElectronNSigmadEdxEtaP[0]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                    } else if( clsTPCElectron < 100.0 ){
+                        histoTPCClElectronNSigmadEdxEtaP[1]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                    } else if( clsTPCElectron < 150. ){
+                        histoTPCClElectronNSigmadEdxEtaP[2]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                    } else {
+                        histoTPCClElectronNSigmadEdxEtaP[3]->Fill(nSigmaTPCElectron,photonEta,pElectron);
+                    }
+
+                    if(clsTPCPositron < 60){
+                        histoTPCClPositronNSigmadEdxEtaP[0]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else if( clsTPCPositron < 100.0 ){
+                        histoTPCClPositronNSigmadEdxEtaP[1]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else if( clsTPCPositron < 150. ){
+                        histoTPCClPositronNSigmadEdxEtaP[2]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    } else {
+                        histoTPCClPositronNSigmadEdxEtaP[3]->Fill(nSigmaTPCPositron,photonEta,pPositron);
+                    }
+
+
                     histoPositronNSigmadEdxPhi->Fill(nSigmaTPCPositron,photonPhi);  //dedx photon phi
                     if(etaPositron < 0.) {histoPositronNSigmadEdxPhiEtaNeg->Fill(nSigmaTPCPositron,photonPhi); }
                     if(etaPositron > 0.) {histoPositronNSigmadEdxPhiEtaPos->Fill(nSigmaTPCPositron,photonPhi); }
@@ -1431,6 +1470,10 @@ void BuildHistogramsForGammaQAAdvV3(
         for(Int_t iRad=0; iRad<4; iRad++){
             histoConvRadiusElectronNSigmadEdxEtaP[iRad]->Write(Form("R%d electron sigma dEdx P Eta",iRad),TObject::kWriteDelete);
             histoConvRadiusPositronNSigmadEdxEtaP[iRad]->Write(Form("R%d positron sigma dEdx P Eta",iRad),TObject::kWriteDelete);
+        }
+        for(Int_t iCl=0; iCl<4; iCl++){
+            histoTPCClElectronNSigmadEdxEtaP[iCl]->Write(Form("Cl%d electron sigma dEdx P Eta",iCl),TObject::kWriteDelete);
+            histoTPCClPositronNSigmadEdxEtaP[iCl]->Write(Form("Cl%d positron sigma dEdx P Eta",iCl),TObject::kWriteDelete);
         }
         histoElectronTOFEtaP->Write("histoElectronTOFEtaP",TObject::kWriteDelete);
         histoPositronTOFEtaP->Write("histoPositronTOFEtaP",TObject::kWriteDelete);
