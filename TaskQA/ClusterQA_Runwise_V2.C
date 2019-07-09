@@ -36,38 +36,7 @@ void ClusterQA_Runwise_V2(
     Bool_t onlytrending                  = kFALSE           // Maximum of Runs to be analysed at once (depending on availible RAM)
 )
 {
-    cout << endl << endl << endl << endl;
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<< endl;
-    cout << "ClusterQA_Runwise_V2("<< endl;
-    cout << "nSetsIn:               \t" << nSetsIn << endl;
-    cout << "nDataIn:               \t" << nDataIn << endl;
-    cout << "fEnergyFlag:           \t" << fEnergyFlag << endl;
-    cout << "filePath:              \t" << filePath << endl;
-    cout << "fileName:              \t" << fileName << endl;
-    cout << "fileNameMC:            \t" << fileNameMC << endl;
-    cout << "DataSets:              \t" << DataSets << endl;
-    cout << "plotDataSets:          \t" << plotDataSets << endl;
-    cout << "mode:                  \t" << mode << endl;
-    cout << "cutNr:                 \t" << cutNr << endl;
-    cout << "doExtQA:               \t" << doExtQA << endl;
-    cout << "doEquidistantXaxis:    \t" << doEquidistantXaxis << endl;
-    cout << "kFALSE:                \t" << kFALSE << endl;
-    cout << "doTrigger:             \t" << doTrigger << endl;
-    cout << "doHistsForEverySet:    \t" << doHistsForEverySet << endl;
-    cout << "kFALSE:                \t" << kFALSE << endl;
-    cout << "addSubFolder:          \t" << addSubFolder << endl;
-    cout << "kFALSE:                \t" << kFALSE << endl;
-    cout << "useDataRunListForMC:   \t" << useDataRunListForMC << endl;
-    cout << "kFALSE:                \t" << kFALSE << endl;
-    cout << "markerSize:            \t" << markerSize << endl;
-    cout << "suffix:                \t" << suffix << endl;
-    cout << "folderRunlists:        \t" << folderRunlists << endl;
-    cout << "addLabelRunList:       \t" << addLabelRunList << endl;
-    cout << "runMergedClust:        \t" << runMergedClust << endl;
-    cout << "NMaxRuns:              \t" << NMaxRuns << endl;
-    cout << "onlytrending:              \t" << NMaxRuns << endl;
-    cout << ")"<< endl;
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<< endl;
+
 
     // **************************************************************************************************************
     // **************************** Setting general plotting style **************************************************
@@ -145,7 +114,7 @@ void ClusterQA_Runwise_V2(
         }
         // printf("trying to read: " << fileRunstmp.Data() << endl;
         vecRuns.clear();
-        if(!readin(fileRunstmp, vecRuns, kFALSE)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+        if(!readin(fileRunstmp, vecRuns, kFALSE)) {printf("\033[0;31mERROR 02\033[0m, no Run Numbers could be found at %s! Returning...\n",fileRunstmp.Data() ); return;}
         Int_t NRuns=vecRuns.size();
         Int_t NSplits = (Int_t)ceil(((Double_t)(NRuns))/((Double_t)NMaxRuns));
         nSetsInTmp += (NSplits-1);
@@ -186,7 +155,7 @@ void ClusterQA_Runwise_V2(
     UInt_t ActualRunIndexInVector=0;
     TFile* fCutFile             = NULL;
     vecRuns.clear();
-    if(!readin(fileRuns.at(0), vecRuns, kFALSE)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+    if(!readin(fileRuns.at(0), vecRuns, kFALSE)) {printf("\033[0;31mERROR 03\033[0m, no Run Numbers could be found! Returning...\n"); return;}
     while ( (fCutFile==NULL)&&(ActualRunIndexInVector<vecRuns.size()) ){
         fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSetIn.at(0)).Data(), ((TString)vecRuns.at(ActualRunIndexInVector)).Data(), fileName.Data()));
         if(fCutFile->IsZombie()) {
@@ -365,7 +334,7 @@ void ClusterQA_Runwise_V2(
 
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
-        if(!readin(fileRuns.at(i), vecRuns, kFALSE)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+        if(!readin(fileRuns.at(i), vecRuns, kFALSE)) {printf("\033[0;31mERROR 04\033[0m, no Run Numbers could be found! Returning...\n"); return;}
         for(Int_t j=0; j<(Int_t) vecRuns.size();j++) {
 
             if( i==0 )
@@ -449,16 +418,18 @@ void ClusterQA_Runwise_V2(
 
     std::vector<TString>* vecMissingRuns = new std::vector<TString>[nSets];
 
-    Int_t width = (Int_t)((Double_t)vecRuns.size()*2.);
+    Int_t width = (Int_t)((Double_t)vecRuns.size()*100.);
+    printf("\n ++++++++++++ \n %i\n ++++++++++++ \n ", width);
     TCanvas* canvas                 = new TCanvas("canvas","",10,10,750,500);  // gives the page size
     TCanvas* canvaswide                 = new TCanvas("canvaswide","",10,10,width,500);  // gives the page size
+    canvaswide->SetGrid();
     TCanvas* canvaslarge                 = new TCanvas("canvaslarge","",10,10,4000,2666);  // gives the page size
     Double_t leftMar                = 0.09;
     Double_t rightMar               = 0.025;
     Double_t topMargin              = 0.04;
     Double_t bottomMargin           = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
-    DrawGammaCanvasSettings(canvaswide, 0.04, 0.01, topMargin, bottomMargin);
+    DrawGammaCanvasSettings(canvaswide, 750*leftMar/width, 750*rightMar/width, topMargin, bottomMargin);
 
     TBox *boxLabel              = new TBox(1.37,0.7,1.78,0.83);
     boxLabel->SetFillStyle(0);boxLabel->SetFillColor(0);boxLabel->SetLineColor(1);boxLabel->SetLineWidth(1);
@@ -477,8 +448,7 @@ void ClusterQA_Runwise_V2(
     // *****************************************************************************************************
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
-        if(!readin(fileRuns.at(i), vecRuns, kTRUE, kFALSE, NMaxRuns*vecSubRunlists.at(i), NMaxRuns*(vecSubRunlists.at(i)+1))){printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
-        // if(!readin(fileRuns.at(i), vecRuns)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+        if(!readin(fileRuns.at(i), vecRuns, kTRUE, kFALSE, NMaxRuns*vecSubRunlists.at(i), NMaxRuns*(vecSubRunlists.at(i)+1))){printf("\033[0;31mERROR 05\033[0m, no Run Numbers could be found! Returning...\n"); return;}
 
         // *****************************************************************************************************
         // ******************************* create log files *****************************************************
@@ -1557,8 +1527,7 @@ void ClusterQA_Runwise_V2(
                 printf("Drawing Runwise Histograms\n");
 
                 vecRuns.clear();
-                // if(!readin(fileRuns.at(i), vecRuns, kFALSE)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
-                if(!readin(fileRuns.at(i), vecRuns, kTRUE, kFALSE, NMaxRuns*vecSubRunlists.at(i), NMaxRuns*(vecSubRunlists.at(i)+1))){printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+                if(!readin(fileRuns.at(i), vecRuns, kTRUE, kFALSE, NMaxRuns*vecSubRunlists.at(i), NMaxRuns*(vecSubRunlists.at(i)+1))){printf("\033[0;31mERROR 06\033[0m, no Run Numbers could be found! Returning...\n"); return;}
 
                 for(Int_t iRun=0; iRun<(Int_t)vecMissingRuns[i].size(); iRun++){
                     vecRuns.erase(std::remove(vecRuns.begin(), vecRuns.end(), vecMissingRuns[i].at(iRun)), vecRuns.end());
@@ -1844,7 +1813,7 @@ void ClusterQA_Runwise_V2(
             fOutput->cd();
             TString dir = "ClusterFiredCellIDs";
             TDirectory *tmpDir = (TDirectory *)fOutput->Get(dir.Data());
-            if(!readin(fileRuns.at(i), vecRuns)) {printf("\033[0;31mERROR\033[0m, no Run Numbers could be found! Returning...\n"); return;}
+            if(!readin(fileRuns.at(i), vecRuns)) {printf("\033[0;31mERROR 01\033[0m, no Run Numbers could be found! Returning...\n"); return;}
             for(Int_t j=0; j<(Int_t) vecRuns.size(); j++) {
                 TH2D* tmpDeadCellsRunwise = (TH2D*)tmpDir->Get(Form("%s_ClusterIncludedCells_%s",vecRuns.at(j).Data(),vecDataSet.at(i).Data()));
                 vecTMParr[i].push_back(tmpDeadCellsRunwise);
@@ -1928,7 +1897,10 @@ void ClusterQA_Runwise_V2(
                 else draw = (i==(nSets)-1)?"px0e1":"px0e1, same";
                 ((TH1D*) vecHTMP.at(i))->SetTitle("");
                 canvaswide->cd();
-                ((TH1D*) vecHTMP.at(i))->Draw(draw.Data());
+                Float_t ticksizeTMP = ((TGaxis*)((TH1D*) vecHTMP.at(i))->GetYaxis())->GetTickSize();
+                ((TGaxis*)((TH1D*) vecHTMP.at(i))->GetYaxis())->SetTickLength(750*ticksizeTMP/width);
+                ((TH1D*) vecHTMP.at(i))->DrawCopy(draw.Data());
+                ((TGaxis*)((TH1D*) vecHTMP.at(i))->GetYaxis())->SetTickLength(ticksizeTMP);
                 canvas->cd();
                 ((TH1D*) vecHTMP.at(i))->Draw(draw.Data());
             }
