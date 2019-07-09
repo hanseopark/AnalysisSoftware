@@ -6,7 +6,7 @@ WARNINGLog=""
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V4.3"
+echo "DownScript.sh Version: V5"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -50,7 +50,8 @@ BASEDIR=${PWD}
 thisuser=`echo ${USER}`
 if [[ $thisuser = "adrian" || $thisuser = "amechler" ]]
 then
-	BASEDIR="/media/adrian/Elements/grid_data"
+	BASEDIR="/home/adrian/grid_data"
+	# BASEDIR="/media/adrian/Elements/grid_data"
 	FrameworkDir="/home/adrian/git/AnalysisSoftware"
 	UserName="Adrian Mechler";
 	pathtocert="~/.globus"
@@ -79,6 +80,26 @@ function usecmd()
 	then
 		echo $1
 	fi
+}
+
+function MergeFiles()
+{
+	for file in "$@"; do
+		if [[ ! $file = $1 ]]; then
+			echo $file >> ListOfFiles.txt
+		fi
+	done
+	root -l -q -b "$BASEDIR/merge.C+(\"ListOfFiles.txt\", \"$1\")" &> tmpmerge.log
+
+	if [[ `grep "Merging was NOT successful" tmpmerge.log | wc -l` > 0 ]]; then
+		exit 1
+	elif [[ `grep "Merging was successful" tmpmerge.log | wc -l` > 0 ]]; then
+		exit 0
+	else
+		exit 2
+	fi
+	cat tmpmerge.log
+	rm ListOfFiles.txt
 }
 
 
@@ -124,7 +145,7 @@ function GetWebpage()
 		then
 			rm $1
 		fi
-		if [ "$(( $(date +"%s") - $(stat -c "%Y" $1) ))" -gt "86400" ]
+		if [ "$(( $(date +"%s") - $(stat -c "%Y" $1) ))" -gt "604800" ]  # 86400 = 1 Day
 		then
 			echo -e "\e[33m|-> \e[0mFile $1 exists. \e[33m|-> \e[0mbut is older then 1 Day! download new one from alien:/$1"
 			# cmd="curl -s '${Webpage}' --key $certpath/$key --cacert $certpath/$cacert --cert $certpath/$clientca &> $1"
@@ -181,18 +202,20 @@ function GetFile()
 				printf "\e[33m|-> \e[0mDownloading file"
 				alien_cp -o  alien:/$1 file:/$2 &> $3
 			fi
-			tmp=1
-			if [[ ! -f $2 ]] || [[ ! `grep "100.00 %" $3 | wc -l` > 0 ]]; then
+			downexitstatus=$?
+			tmpdowncount=1
+			if [[ ! -f $2 ]] || [[ ! "$downexitstatus" = "0" ]]; then
 				printf "  \e[33m|->\e[0m Retry "
 			fi
-			while [[ ! -f $2 ]] || [[ ! `grep "100.00 %" $3 | wc -l` > 0 ]]; do
-				if [[ $tmp = 11 ]]; then
+			while [[ ! -f $2 ]] || [[ ! "$downexitstatus" = "0" ]]; do
+				if [[ $tmpdowncount = 6 ]]; then
 					echo "."
 					break
 				fi
-				printf "${tmp} "
+				printf "${tmpdowncount} "
 				alien_cp -o  alien:/$1 file:/$2 &> $3
-				((tmp++))
+				downexitstatus=$?
+				((tmpdowncount++))
 			done
 			if [[ -f $2 ]] && [[ `grep "100.00 %" $3 | wc -l` > 0 ]] ; then
 				printf "  \e[33m|->\e[0m successful"
@@ -249,10 +272,13 @@ echo  -e "\e[36m------------------------------------\e[0m"
 if [[ `alien-token-info` =~ "No Token found!" ]]
 then
 	echo -e "\e[31mWARNING:\e[0m No alien token"
+	# alien-token-init $alienUserName
+	echo;echo;
 	alien-token-init $alienUserName
 	echo  -e "\e[36m------------------------------------\e[0m"
 	echo;echo;
 fi
+
 
 
 ################
@@ -282,6 +308,7 @@ while [[ -f OptRunlistNames_$RunningScripts.txt ]]; do
 	((RunningScripts++))
 done
 OptRunlistNamefile=OptRunlistNames_$RunningScripts.txt
+useSpecificRunlistfile=useSpecificRunlist_$RunningScripts.txt
 TrainNumberFile=TrainNumberFile_$RunningScripts.txt
 Searchfile=Searchfile_$RunningScripts.txt
 
@@ -314,6 +341,10 @@ fi
 if [[ -f $OptRunlistNamefile ]]
 then
 	rm $OptRunlistNamefile
+fi
+if [[ -f $useSpecificRunlistfile ]]
+then
+	rm $useSpecificRunlistfile
 fi
 
 for setting in "$@"
@@ -369,6 +400,30 @@ do
 	elif [[ $setting = "-childsareperiods" ]]
 	then
 		Usechildsareperiods=1
+elif [[ $setting = "-uSR_"* ]]
+	then
+		useSpecificRunlist=1
+		SearchSpecificRunlist=${setting#*-uSR_}
+		OptRunlistNametmp="useSpecificRunlist_${SearchSpecificRunlist}"
+		echo "$OptRunlistNametmp" | tee -a $useSpecificRunlistfile
+		if [[ $OptRunlistName = "list" ]]
+		then
+			OptRunlistName=*$OptRunlistNametmp*
+		else
+			OptRunlistName=$OptRunlistName'|'*$OptRunlistNametmp*
+		fi
+elif [[ $setting = "-useSpecificRunlist_"* ]]
+	then
+
+		SearchSpecificRunlist=${setting#*-useSpecificRunlist_}
+		OptRunlistNametmp="useSpecificRunlist_${SearchSpecificRunlist}"
+		echo "$OptRunlistNametmp" | tee -a $useSpecificRunlistfile
+		if [[ $OptRunlistName = "list" ]]
+		then
+			OptRunlistName=*$OptRunlistNametmp*
+		else
+			OptRunlistName=$OptRunlistName'|'*$OptRunlistNametmp*
+		fi
 	elif [[ $setting = "-noDown" ]]
 	then
 		DoDown=0
@@ -383,6 +438,8 @@ do
 		newfiles=1
 	fi
 done
+
+cat $useSpecificRunlistfile >> $OptRunlistNamefile
 
 if [[ ! -f $OptRunlistNamefile ]]
 then
@@ -563,6 +620,7 @@ then
 			RunlistID=0
 			ChildName=""
 			Runlist=""
+			RunlistOnTrainpage=""
 
 			# prepare directory
 			mkdir -p "$OUTPUTDIR/.$child"
@@ -656,8 +714,16 @@ then
 							readRuns=0
 							if [[ $line = *"<br>"* ]] && [[ ! $line = "<br>" ]]; then
 								readrun=${line%<*}
+
+								if [[ $readrun = *","* ]]; then
+									readrun2=`echo $readrun | cut -d "," -f 1`
+									readrun=`echo $readrun | cut -d "," -f 2`
+									printf "$readrun2, "
+									printf "$readrun2\n" >> $RunlistOnTrainpage
+									((NumberOfRuns++))
+								fi
 								printf "$readrun"
-								printf "$readrun\n" >> $Runlist
+								printf "$readrun\n" >> $RunlistOnTrainpage
 								((NumberOfRuns++))
 							fi
 							printf "\n $NumberOfRuns Runs found \n"
@@ -665,8 +731,15 @@ then
 
 						else
 							readrun=${line%,}
+							if [[ $readrun = *","* ]]; then
+								readrun2=`echo $readrun | cut -d "," -f 1`
+								readrun=`echo $readrun | cut -d "," -f 2`
+								printf "$readrun2, "
+								printf "$readrun2\n" >> $RunlistOnTrainpage
+								((NumberOfRuns++))
+							fi
 							printf "$readrun, "
-							printf "$readrun\n" >> $Runlist
+							printf "$readrun\n" >> $RunlistOnTrainpage
 							((NumberOfRuns++))
 						fi
 					fi
@@ -678,12 +751,13 @@ then
 						foundRunlists=0
 						readRuns=1
 						NumberOfRuns=0
-						Runlist="$FrameworkDir/DownloadAndDataPrep/runlists/runNumbers$ChildName-$RunlistName.txt"
+						mkdir -p "$FrameworkDir/DownloadAndDataPrep/runlistsOnTrainpage"
+						RunlistOnTrainpage="$FrameworkDir/DownloadAndDataPrep/runlistsOnTrainpage/runNumbers$ChildName-$RunlistName.txt"
 						echo;
 						echo  -e "\e[36m------------------------------------\e[0m"
 						echo -e "\e[36m|-> Runlist $RunlistID\tName = $RunlistName \e[0m"
 
-						if [[ -f $Runlist ]]; then rm $Runlist; fi
+						if [[ -f $RunlistOnTrainpage ]]; then rm $RunlistOnTrainpage; fi
 					fi
 
 					if [[ $lastRun = 1 ]]
@@ -717,16 +791,21 @@ then
 						fi
 
 						AddToList $foundRunlistNamefile.tmp $foundRunlistNamefile
+						useSpecificRunlist=0
 
 						for OptRunlistName in `cat $OptRunlistNamefile`
 						do
-							if [[ ! "$RunlistName" = "$OptRunlistName" ]]
+							if [[ ! "$RunlistName" = "$OptRunlistName" ]] && [[ ! "$OptRunlistName" = "useSpecificRunlist_"* ]]
 							then
 								continue
 							fi
-							if [[ $NumberOfRuns = 0 ]]; then
-								echo  -e "\e[33mWARNING:  No runs in Runlist\e[0m: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
-								continue
+
+							if [[ ! "$OptRunlistName" = "useSpecificRunlist_"* ]]; then
+								Runlist="$RunlistOnTrainpage"
+								if [[ $NumberOfRuns = 0 ]]; then
+									echo  -e "\e[33mWARNING:  No runs in Runlist\e[0m: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
+									continue
+								fi
 							fi
 							if [[ $Usechildsareperiods = 1 ]]; then
 								ChildName=`grep "export ALIEN_JDL_child_${childID}_LPMPRODUCTIONTAG" $envFile | cut -d "'" -f 2`
@@ -738,6 +817,34 @@ then
 								Type='sim'
 							fi
 							Year="20${ChildName:3:2}"
+							if [[ "$OptRunlistName" = "useSpecificRunlist_"* ]]; then
+								if [[ ! $RunlistID = "1" ]]; then continue; fi
+								useSpecificRunlist=1
+								SearchSpecificRunlist=${OptRunlistName#useSpecificRunlist_}
+								if [[ $Type = "data" ]]; then
+									Runlist="${FrameworkDir}/DownloadAndDataPrep/runlists/runNumbers${ChildName}${SearchSpecificRunlist}.txt"
+								else
+									AnchorChildName=`grep "export ALIEN_JDL_child_${childID}_LPMANCHORPRODUCTION" $envFile | cut -d "'" -f 2`
+									Runlist="${FrameworkDir}/DownloadAndDataPrep/runlists/runNumbers${AnchorChildName}${SearchSpecificRunlist}.txt"
+								fi
+								# grep -v $OptRunlistName $OptRunlistNamefile >> $OptRunlistNamefile.tmp
+								# rm $OptRunlistNamefile
+								# mv $OptRunlistNamefile.tmp $OptRunlistNamefile
+								RunlistName="$SearchSpecificRunlist"
+								# RunlistID="specific"
+								echo -e "\e[36m|-> useing specific runlist ${Runlist#*runlists/} \e[0m"
+								if [[ ! -f $Runlist ]]; then
+									echo  -e "\e[33mWARNING: ${Runlist} not found \e[0m" | tee -a $WARNINGLog
+									continue
+								fi
+								if [[ -f $Runlist ]]; then
+									for run in `cat $Runlist`; do
+										printf "$run, "
+									done
+								fi
+								echo;
+							fi
+
 
 							# prepare directory
 							mkdir -p "$OUTPUTDIR/.$child/$RunlistName"
@@ -745,14 +852,16 @@ then
 							FileList="$OUTPUTDIR/.$child/$RunlistName/FileList.txt"
 
 							# look for availible Files
-							if [ $newfiles = 1 ] || [ ! -f $FileList ]; then
-								for Search in `cat $Searchfile`
-								do
-									cmd="alien_ls $AlienDir$child/merge_runlist_$RunlistID/ 2> /dev/null | grep "$Search" > $FileList.tmp"
-									eval $cmd
-									usecmd $cmd
-									AddToList $FileList.tmp $FileList
-								done
+							if [[ ! $useSpecificRunlist = 1 ]]; then
+								if [ $newfiles = 1 ] || [ ! -f $FileList ]; then
+									for Search in `cat $Searchfile`
+									do
+										cmd="alien_ls $AlienDir$child/merge_runlist_$RunlistID/ 2> /dev/null | grep "$Search" > $FileList.tmp"
+										eval $cmd
+										usecmd $cmd
+										AddToList $FileList.tmp $FileList
+									done
+								fi
 							fi
 
 							mkdir -p $OUTPUTDIR/$RunlistName
@@ -760,27 +869,32 @@ then
 
 							# check if merging was successful
 							MergeRuns=0
-							test=".err.log"
-							if [[ -f $test ]]; then rm $test; fi
-							tmp=`alien_ls $AlienDir$child/merge_runlist_${RunlistID}/ 2> $test | grep "AnalysisResults.root" | wc -l`
-							if [[ `grep "FATAL" $test | wc -l` > 0 ]]; then
-								printf "alien connection lost Retry  "
-							fi
-							count=1
-							while [[ `grep "FATAL" $test | wc -l` > 0 ]]; do
-								printf "$count.."
-								((count++))
-								sleep 1
+							if [[ ! $useSpecificRunlist = 1 ]]; then
+								test=".err.log"
+								if [[ -f $test ]]; then rm $test; fi
 								tmp=`alien_ls $AlienDir$child/merge_runlist_${RunlistID}/ 2> $test | grep "AnalysisResults.root" | wc -l`
-							done
-							printf "\n"
+								if [[ `grep "FATAL" $test | wc -l` > 0 ]]; then
+									printf "alien connection lost Retry  "
+								fi
+								count=1
+								while [[ `grep "FATAL" $test | wc -l` > 0 ]]; do
+									printf "$count.."
+									((count++))
+									sleep 1
+									tmp=`alien_ls $AlienDir$child/merge_runlist_${RunlistID}/ 2> $test | grep "AnalysisResults.root" | wc -l`
+								done
+								printf "\n"
 
-							rm $test
-							if [[ $tmp < 1 ]]; then
+								rm $test
+								if [[ $tmp < 1 ]]; then
+									MergeRuns=1
+									echo  -e "\e[33mWARNING:  No files found\e[0m, trying to merge from runwise output: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
+									echo  -e "\e[36m------------------------------------\e[0m"
+								fi
+							else
 								MergeRuns=1
-								echo  -e "\e[33mWARNING:  No files found\e[0m, trying to merge from runwise output: ChildName = $ChildName, childID = $childID, Runlist $RunlistID, Name = $RunlistName" | tee -a $WARNINGLog
-								echo  -e "\e[36m------------------------------------\e[0m"
 							fi
+
 
 
 							if [[ $Userunwise = 1 ]] || [[ $MergeRuns = 1 ]]; then
@@ -800,9 +914,10 @@ then
 
 									mkdir -p $runDir &> /dev/null
 									if [[ -d $runDir ]]; then
-										ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName
-										# cmd="ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName"
-										# eval $cmd
+										# ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName
+										cmd="ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName"
+										eval $cmd
+										echo "001 $cmd"
 										# usecmd $cmd
 									fi
 
@@ -814,6 +929,13 @@ then
 											cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber | grep _$childID/AnalysisResults.root  > $RunPathList.tmp"
 										fi
 										eval $cmd
+										tmpcouuntnew=0
+										while [[ ! $? = "0" ]]; do
+											if [[ $tmpcouuntnew > 5 ]]; then break; fi
+											((tmpcouuntnew++))
+											# printf "  \e[33m|->\e[0m Retry "
+											eval $cmd
+										done
 										usecmd $cmd
 										AddToList $RunPathList.tmp $RunPathList
 									fi
@@ -832,6 +954,13 @@ then
 												cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber  > $RunPathList.tmp"
 											fi
 											eval $cmd
+											tmpcouuntnew=0
+											while [[ ! $? = "0" ]]; do
+												if [[ $tmpcouuntnew > 5 ]]; then break; fi
+												((tmpcouuntnew++))
+												# printf "  \e[33m|->\e[0m Retry "
+												eval $cmd
+											done
 											usecmd $cmd
 											AddToList $RunPathList.tmp $RunPathList
 										fi
@@ -843,12 +972,29 @@ then
 											printf "  \e[33m|->\e[0m Run $runName wasn't found! Retry "
 										fi
 										while [[ ! -f $RunPathList ]]; do
-											if [[ $tmp = 11 ]]; then
+											if [[ $tmp = 6 ]]; then
 												break
 											fi
 											printf "${tmp} "
-											alien_cp -o  alien:/$1 file:/$2 &> $3
+											cmd=""
+											if [[ $Type = "sim" ]]; then
+												cmd="alien_find /alice/$Type/$Year/$ChildName/$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber > $RunPathList.tmp"
+											else
+												cmd="alien_find /alice/$Type/$Year/$ChildName/000$runName/ AnalysisResults.root 2> /dev/null | grep $TrainPage/$TrainNumber  > $RunPathList.tmp"
+											fi
+											eval $cmd
+											tmpcouuntnew=0
+											while [[ ! $? = "0" ]]; do
+												if [[ $tmpcouuntnew > 5 ]]; then break; fi
+												((tmpcouuntnew++))
+												# printf "  \e[33m|->\e[0m Retry "
+												eval $cmd
+											done
+											usecmd $cmd
+											AddToList $RunPathList.tmp $RunPathList;
+
 											((tmp++))
+
 										done
 
 
@@ -873,6 +1019,13 @@ then
 											do
 												cmd="alien_ls $subpath 2> /dev/null | grep "$Search" > $SubRunFileList.tmp"
 												eval $cmd
+												tmpcouuntnew=0
+												while [[ ! $? = "0" ]]; do
+													if [[ $tmpcouuntnew > 5 ]]; then break; fi
+													((tmpcouuntnew++))
+													# printf "  \e[33m|->\e[0m Retry "
+													eval $cmd
+												done
 												usecmd $cmd
 												if [[ -f $SubRunFileList.tmp ]]; then
 													for tmp in `cat $SubRunFileList.tmp`
@@ -894,7 +1047,7 @@ then
 
 										tmpsubruncount=0
 										if [[ -f $SubRunFileList ]]; then
-											echo  -e "\e[33mWARNING:  No files found \e[0m, trying to merge from higher stages" | tee -a $WARNINGLog
+											echo  -e "\t\e[33mWARNING:  No files found \e[0m, trying to merge from higher stages" | tee -a $WARNINGLog
 											for path2 in `cat $RunPathList `
 											do
 												subpath=${path2%%AnalysisResults.root}
@@ -912,7 +1065,7 @@ then
 												do
 													if [[ $isfirsttmp = 1 ]] ; then
 														isfirsttmp=0
-														printf "\tDownload SubRun\t$tmpsubruncount/$maxcount\t$runName|$subrunname\t$subrunfilename "
+														printf "\tProcessing SubRun\t$tmpsubruncount/$maxcount\t$runName|$subrunname\t$subrunfilename "
 													else
 														printf "\t\t\t\t\t\t$subrunfilename "
 													fi
@@ -959,12 +1112,13 @@ then
 																# echo -e "\e[33m|->\e[0m merging subrun to run $RunlistName $ChildName $runName $subrunname"  #(log: $logFile)"
 																if [[ -f $submergedFile.tmp ]]; then rm $submergedFile.tmp; fi
 																hadd -k $submergedFile.tmp $submergedFile $subrunoutFile  &> $sublogFile
+																exitstatus=$?
 																tmp=1
-																if [[ `wc -l $sublogFile` > 6 ]]; then
+																if [[ ! "$exitstatus" = "0" ]]; then
 																	printf "  \e[33m|->\e[0m Retry "
 																fi
-																while [[ `wc -l $sublogFile` > 6 ]]; do
-																	if [[ $tmp = 11 ]]; then
+																while [[ ! "$exitstatus" = "0" ]]; do
+																	if [[ $tmp = 6 ]]; then
 																		echo "."
 																		break
 																	fi
@@ -974,9 +1128,10 @@ then
 																	GetFile $subruninFile $subrunoutFile $subrundownlogFile
 																	printf "  \e[33m|->\e[0m mergeing "
 																	hadd -k $submergedFile.tmp $submergedFile $subrunoutFile  &> $sublogFile
+																	exitstatus=$?
 																	((tmp++))
 																done
-																if [[ `wc -l $sublogFile` > 6 ]]
+																if [[ ! "$exitstatus" = "0" ]]
 																then
 																	echo -e "\t\e[31mError\e[0m $RunlistName $ChildName $runName $subrunname not merged correctly" | tee -a $ErrorLog
 																	cat $sublogFile >> $ErrorLog
@@ -1012,10 +1167,10 @@ then
 												done
 											done
 
-											echo -e "merge from higher stages.. done" | tee -a $WARNINGLog
+											echo -e "\t\e[33m|->\e[0m merge from higher stages.. done" | tee -a $WARNINGLog
 											# echo -e "merge from higher stages.. done, removing downloads" | tee -a $WARNINGLog
 										else
-											echo -e "was merged from higher stages" | tee -a $WARNINGLog
+											echo -e "\t\e[33m|->\e[0m was merged from higher stages" | tee -a $WARNINGLog
 										fi
 										# rm -r $runDir/[0-9][0-9]*
 									else
@@ -1057,7 +1212,7 @@ then
 										if [[ $merginghigher = 0 ]] || [[ $MergeRuns = 1 ]]; then
 											if [[ $isfirsttmp = 1 ]] ; then
 												isfirsttmp=0
-												printf "Download Run\t$tmpruncount/$NumberOfRuns\t$runName\t$runfilename "
+												printf "Processing Run\t$tmpruncount/$NumberOfRuns\t$runName\t$runfilename "
 											else
 												printf "\t\t\t\t$runfilename "
 											fi
@@ -1095,6 +1250,7 @@ then
 														fi
 														if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 														hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
+														exitstatus=$?
 														if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 														then
 															echo " Log:"
@@ -1105,28 +1261,30 @@ then
 														then
 															echo "rm $mergedFile"
 														fi
-														if [[ `wc -l $logFile` > 6 ]]; then
+														if [[ ! "$exitstatus" = "0" ]]; then
 															printf "  \e[33m|->\e[0m Retry "
 														fi
-														while [[ `wc -l $logFile` > 6 ]]; do
-															if [[ $tmp = 11 ]]; then
-																echo "."
+														tmp=1
+														while [[ ! "$exitstatus" = "0" ]]; do
+															if [[ $tmp = 6 ]]; then
+																cat $logFile
 																break
 															fi
-															printf "${tmp} "
+															printf "${tmp} ";
+															((tmp++))
 															if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 															if [[ -f $runoutFile ]]; then rm $runoutFile; fi
 															GetFile $runinFile $runoutFile $rundownlogFile
 															printf "  \e[33m|->\e[0m merging "
 															hadd -k $mergedFile.tmp $mergedFile $runoutFile  &> $logFile
-															((tmp++))
+															exitstatus=$?
 														done
-														if [[ `wc -l $logFile` > 6 ]]
+														if [[ ! "$exitstatus" = "0" ]]
 														then
 															echo -e "\e[31mError\e[0m $RunlistName $ChildName $runName not merged correctly" | tee -a $ErrorLog
 															cat $logFile >> $ErrorLog
 															rm $mergedFile.tmp
-															if [[ -f $runoutFile ]]; then rm $runoutFile; fi
+															# if [[ -f $runoutFile ]]; then rm $runoutFile; fi
 														else
 															if [[ -f $mergedFile ]]; then rm $mergedFile; fi
 															if [[ $debug = 1 ]] || [[ $debug = 2 ]]
@@ -1161,7 +1319,7 @@ then
 									# ###################################
 								done
 								if [[ $MergeRuns = 1 ]]; then
-									echo -e "merge from runwise.. done" | tee -a $WARNINGLog
+									echo -e "\t\e[33m|->\e[0m merge from runwise.. done" | tee -a $WARNINGLog
 								fi
 							fi
 
@@ -1176,7 +1334,11 @@ then
 								inFile="$AlienDir$child/merge_runlist_$RunlistID/$filename"
 								downlogFile="$OUTPUTDIR/$RunlistName/$ChildName/.${filename%%.root}.downlog"
 
-								GetFile $inFile $outFile $downlogFile
+								if [[ ! $useSpecificRunlist = 1 ]]; then
+									GetFile $inFile $outFile $downlogFile
+								else
+									printf "\e[33m|-> is specific Runlist"
+								fi
 
 								if [[ $UseMerge = 1 ]]
 								then
@@ -1198,6 +1360,7 @@ then
 												printf "\e[33m|->\e[0m merging childs \n"  #(log: $logFile)"
 												if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 												hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+												exitstatus=$?
 												if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 												then
 													echo " Log:"
@@ -1208,11 +1371,12 @@ then
 												then
 													echo "rm $mergedFile"
 												fi
-												if [[ `wc -l $logFile` > 6 ]]; then
+												if [[ ! "$exitstatus" = "0" ]]; then
 													printf "  \e[33m|->\e[0m Retry "
 												fi
-												while [[ `wc -l $logFile` > 6 ]]; do
-													if [[ $tmp = 11 ]]; then
+												tmp=1
+												while [[ ! "$exitstatus" = "0" ]]; do
+													if [[ $tmp = 6 ]]; then
 														echo "."
 														break
 													fi
@@ -1222,16 +1386,17 @@ then
 													GetFile $inFile $outFile $downlogFile
 													printf "  \e[33m|->\e[0m mergeing "
 													hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+													exitstatus=$?
 													((tmp++))
 												done
-												if [[ `wc -l $logFile` > 6 ]]
+												if [[ ! "$exitstatus" = "0" ]]
 												then
 													echo -e "\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 													cat $logFile >> $ErrorLog
 													if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 													# rm $outFile
 												else
-													if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+													if [[ -f $mergedFile ]]; then rm $mergedFile; fi
 													if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 													then
 														echo "mv $mergedFile.tmp $mergedFile "
@@ -1240,7 +1405,7 @@ then
 													touch $alreadyMerged
 												fi
 											else
-												echo -e "\e[33m|->\e[0m Copy: $outFile is first"
+												echo -e "\e[33m|->\e[0m Copy: is first"
 												echo "Copyed to $mergedFile" > $logFile
 												cp $outFile $mergedFile
 												touch $alreadyMerged
@@ -1281,13 +1446,29 @@ then
 fi
 
 
-if [[ $MultiTrains = 0 ]] #&& [[ ! $TrainNumber = *"+"* ]]
-then
-	ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName
-	# cmd="ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName"
-	# eval $cmd
-	# usecmd $cmd
+if [[ $MultiTrains = 0 ]]; then
+	if [[ ! $OutName = $SetOutName ]]; then
+		# ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName
+		cmd="ln -sf $BASEDIR/$OutName $BASEDIR/$SetOutName"
+		eval $cmd
+		echo "002 $cmd"
+		usecmd $cmd
+	fi
 fi
+
+for RunlistName in `cat $OptRunlistNamefile`
+do
+	if [[ $RunlistName = "useSpecificRunlist_"* ]]
+	then
+		SpecificRunlist=${RunlistName#*useSpecificRunlist_}
+		echo $SpecificRunlist  | tee -a $OptRunlistNamefile.tmp
+	else
+		echo $RunlistName  | tee -a $OptRunlistNamefile.tmp
+	fi
+done
+rm $OptRunlistNamefile
+mv $OptRunlistNamefile.tmp $OptRunlistNamefile
+
 
 if [[ $MultiTrains = 1 ]] && [[ $MergeTrains = 0 ]]
 then
@@ -1307,8 +1488,12 @@ then
 				continue
 			fi
 			mkdir -p $MergeTrainsOutname/$RunlistName
-			ln -sf $BASEDIR/$singletrainDir/$RunlistName/*.* $MergeTrainsOutname/$RunlistName/.
-
+			if [[ ! "$BASEDIR/$singletrainDir" = "$MergeTrainsOutname" ]]; then
+				# ln -sf $BASEDIR/$singletrainDir/$RunlistName/* $MergeTrainsOutname/$RunlistName/
+				cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/* $MergeTrainsOutname/$RunlistName/"
+				eval $cmd
+				echo "003 $cmd"
+			fi
 			# look for availible periods
 			periodList="$MergeTrainsOutname/$RunlistName/.periodList.txt"
 			if [[ -f $periodList ]]; then rm $periodList; fi
@@ -1322,7 +1507,12 @@ then
 				Periodname=${Periodname2%/*}
 				printf  "\t\t\e[36m|-> \e[0m $Periodname \n\n"
 				mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname
-				ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/*.* $MergeTrainsOutname/$RunlistName/$Periodname/.
+				if [[ ! "$BASEDIR/$singletrainDir/$RunlistName" = "$MergeTrainsOutname/$RunlistName" ]]; then
+					# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/
+					cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/"
+					eval $cmd
+					echo "004 $cmd"
+				fi
 
 				if [[ $Userunwise = 1 ]]; then
 					# look for availible periods
@@ -1339,7 +1529,10 @@ then
 						runname=${runname2%/*}
 						printf "\e[36m$runname, \e[0m"
 						mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname/$runname
-						ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/*.* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/.
+						# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/
+						cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/"
+						eval $cmd
+						echo "005 $cmd"
 					done
 					printf "\n\n\n"
 				fi
@@ -1410,6 +1603,7 @@ then
 								printf "\t\e[33m|->\e[0m merging trains $RunlistName $Periodname $runname $filename"  #(log: $logFile)"
 								if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 								hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+								exitstatus=$?
 								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 								then
 									echo " Log:"
@@ -1420,20 +1614,22 @@ then
 								then
 									echo "rm $mergedFile"
 								fi
-								if [[ `wc -l $logFile` > 6 ]]; then
+								if [[ ! "$exitstatus" = "0" ]]; then
 									printf "  \e[33m|->\e[0m Failed! Retry "
 								fi
-								while [[ `wc -l $logFile` > 6 ]]; do
-									if [[ $tmp = 11 ]]; then
+								tmp=1
+								while [[ ! "$exitstatus" = "0" ]]; do
+									if [[ $tmp = 6 ]]; then
 										echo "."
 										break
 									fi
 									printf "${tmp} "
 									if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+									exitstatus=$?
 									((tmp++))
 								done
-								if [[ `wc -l $logFile` > 6 ]]
+								if [[ ! "$exitstatus" = "0" ]]
 								then
 									echo -e "\t\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
 									cat $logFile >> $ErrorLog
@@ -1543,6 +1739,7 @@ then
 									printf "\t\e[33m|->\e[0m merging trains"  #(log: $logFile)"
 									if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+									exitstatus=$?
 									if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 									then
 										echo " Log:"
@@ -1553,20 +1750,22 @@ then
 									then
 										echo "rm $mergedFile"
 									fi
-									if [[ `wc -l $logFile` > 6 ]]; then
+									if [[ ! "$exitstatus" = "0" ]]; then
 										printf "  \e[33m|->\e[0m Retry "
 									fi
-									while [[ `wc -l $logFile` > 6 ]]; do
-										if [[ $tmp = 11 ]]; then
+									tmp=1
+									while [[ ! "$exitstatus" = "0" ]]; do
+										if [[ $tmp = 6 ]]; then
 											echo "."
 											break
 										fi
 										printf "${tmp} "
 										if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 										hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+										exitstatus=$?
 										((tmp++))
 									done
-									if [[ `wc -l $logFile` > 6 ]]
+									if [[ ! "$exitstatus" = "0" ]]
 									then
 										echo -e "\t\e[31mError\e[0m not merged correctly" | tee -a $ErrorLog
 										cat $logFile >> $ErrorLog
