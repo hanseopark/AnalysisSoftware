@@ -423,6 +423,9 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     if (optionEnergy.CompareTo("8TeV") == 0){
         isV0AND             = 1;
     }
+    if (optionEnergy.CompareTo("13TeV") == 0){
+        isV0AND             = 1;
+    }
     xSection                = ReturnCorrectXSection( optionEnergy, isV0AND);
 
 

@@ -72,7 +72,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
     TString     folderRunlists          = "DownloadAndDataPrep/runlists";
-    const Int_t maxSets                 = 40;
+    const Int_t maxSets                 = 100;
     Int_t       cutNr                   = -1;               // if -1 & not overwritten in configFile: you have to choose number at runtime
     Int_t       mode                    = -1;               // will abort if not set in file
 
