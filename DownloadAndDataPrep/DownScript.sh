@@ -6,7 +6,7 @@ WARNINGLog=""
 
 # Version: V3.3
 echo  -e "\e[36m+++++++++++++++++++++++++++++++++++++\e[0m"
-echo "DownScript.sh Version: V5"
+echo "DownScript.sh Version: V5.1"
 
 # Author: Adrian Mechler (mechler@ikf.uni-frankfurt.de)
 
@@ -912,14 +912,16 @@ then
 									RunPathList="$runDir/PathList.txt"
 									SubRunFileList="$runDir/subFileList.txt"
 
+									cmd="ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName"
 									mkdir -p $runDir &> /dev/null
-									if [[ -d $runDir ]]; then
+									if [[ -d $runDir ]] && [[ ! -L $OUTPUTDIR/$RunlistName/$ChildName/$runName ]] ; then
 										# ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName
-										cmd="ln -sf $runDir $OUTPUTDIR/$RunlistName/$ChildName/$runName"
 										eval $cmd
-										echo "001 $cmd"
 										# usecmd $cmd
+									# else
+										# echo "hier"
 									fi
+									# echo "001 $cmd"
 
 									if [ $newfiles = 1 ] || [ ! -f $RunPathList ]; then
 										cmd=""
@@ -1067,7 +1069,7 @@ then
 														isfirsttmp=0
 														printf "\tProcessing SubRun\t$tmpsubruncount/$maxcount\t$runName|$subrunname\t$subrunfilename "
 													else
-														printf "\t\t\t\t\t\t$subrunfilename "
+														printf "\t\t\t\t\t\t\t$subrunfilename "
 													fi
 													if [[ -f $RunFileList ]]; then
 														if [[ `grep $subrunfilename $RunFileList | wc -c` -eq 0 ]]; then
@@ -1470,78 +1472,79 @@ rm $OptRunlistNamefile
 mv $OptRunlistNamefile.tmp $OptRunlistNamefile
 
 
-if [[ $MultiTrains = 1 ]] && [[ $MergeTrains = 0 ]]
-then
-	echo  -e "\e[36m------------------------------------\e[0m"
-	echo "Start merging trains: $MergeTrainsOutname"
-	echo  -e "\e[36m------------------------------------\e[0m"
-	for TrainNumber in `cat $TrainNumberFile`
-	do
-		echo;echo;
-		echo  -e "\e[36m|-> \e[0m $TrainNumber"
-		singletrainDir=.$TrainPage-$TrainNumber
-		for RunlistName in `cat $OptRunlistNamefile`
-		do
-			echo  -e "\t\e[36m|-> \e[0m $RunlistName"
-			if [[ ! -e $BASEDIR/$singletrainDir/$RunlistName ]]; then
-				echo  -e "\t\e[33mWARNING: $singletrainDir $RunlistName Not found \e[0m " | tee -a $WARNINGLog
-				continue
-			fi
-			mkdir -p $MergeTrainsOutname/$RunlistName
-			if [[ ! "$BASEDIR/$singletrainDir" = "$MergeTrainsOutname" ]]; then
-				# ln -sf $BASEDIR/$singletrainDir/$RunlistName/* $MergeTrainsOutname/$RunlistName/
-				cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/* $MergeTrainsOutname/$RunlistName/"
-				eval $cmd
-				echo "003 $cmd"
-			fi
-			# look for availible periods
-			periodList="$MergeTrainsOutname/$RunlistName/.periodList.txt"
-			if [[ -f $periodList ]]; then rm $periodList; fi
-			cmd="ls $BASEDIR/$singletrainDir/$RunlistName/ | grep 'LHC' >>  $periodList"
-			eval $cmd
-			usecmd $cmd
-
-			for periodnametmp in `cat $periodList`
-			do
-				Periodname2=${periodnametmp#*$RunlistName/}
-				Periodname=${Periodname2%/*}
-				printf  "\t\t\e[36m|-> \e[0m $Periodname \n\n"
-				mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname
-				if [[ ! "$BASEDIR/$singletrainDir/$RunlistName" = "$MergeTrainsOutname/$RunlistName" ]]; then
-					# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/
-					cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/"
-					eval $cmd
-					echo "004 $cmd"
-				fi
-
-				if [[ $Userunwise = 1 ]]; then
-					# look for availible periods
-					Runlist="$MergeTrainsOutname/$RunlistName/.$Periodname-Runlist.txt"
-					if [[ ! -f $Runlist ]]; then
-						cmd="ls -d $BASEDIR/$singletrainDir/$RunlistName/$Periodname/[0-9]* >>  $Runlist"
-						eval $cmd
-						usecmd $cmd
-					fi
-
-					for runnametmp in `cat $Runlist`
-					do
-						runname2=${runnametmp#*$Periodname/}
-						runname=${runname2%/*}
-						printf "\e[36m$runname, \e[0m"
-						mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname/$runname
-						# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/
-						cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/"
-						eval $cmd
-						echo "005 $cmd"
-					done
-					printf "\n\n\n"
-				fi
-			done
-		done
-	done
-fi
-
-
+# if [[ $MultiTrains = 1 ]] && [[ $MergeTrains = 0 ]]
+# then
+# 	echo  -e "\e[36m------------------------------------\e[0m"
+# 	echo "Start merging trains: $MergeTrainsOutname"
+# 	echo  -e "\e[36m------------------------------------\e[0m"
+# 	for TrainNumber in `cat $TrainNumberFile`
+# 	do
+# 		echo;echo;
+# 		echo  -e "\e[36m|-> \e[0m $TrainNumber"
+# 		singletrainDir=.$TrainPage-$TrainNumber
+# 		for RunlistName in `cat $OptRunlistNamefile`
+# 		do
+# 			echo  -e "\t\e[36m|-> \e[0m $RunlistName"
+# 			if [[ ! -e $BASEDIR/$singletrainDir/$RunlistName ]]; then
+# 				echo  -e "\t\e[33mWARNING: $singletrainDir $RunlistName Not found \e[0m " | tee -a $WARNINGLog
+# 				continue
+# 			fi
+# 			mkdir -p $MergeTrainsOutname/$RunlistName
+# 			if [[ ! "$BASEDIR/$singletrainDir" = "$MergeTrainsOutname" ]]; then
+# 				# ln -sf $BASEDIR/$singletrainDir/$RunlistName/* $MergeTrainsOutname/$RunlistName/
+# 				cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName $MergeTrainsOutname/$RunlistName"
+# 				eval $cmd
+# 				echo "003 $cmd"
+# 			fi
+# 			# look for availible periods
+# 			periodList="$MergeTrainsOutname/$RunlistName/.periodList.txt"
+# 			if [[ -f $periodList ]]; then rm $periodList; fi
+# 			cmd="ls $BASEDIR/$singletrainDir/$RunlistName/ | grep 'LHC' >>  $periodList"
+# 			eval $cmd
+# 			usecmd $cmd
+#
+# 			for periodnametmp in `cat $periodList`
+# 			do
+# 				Periodname2=${periodnametmp#*$RunlistName/}
+# 				Periodname=${Periodname2%/*}
+# 				printf  "\t\t\e[36m|-> \e[0m $Periodname \n\n"
+# 				mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname
+# 				if [[ ! "$BASEDIR/$singletrainDir/$RunlistName" = "$MergeTrainsOutname/$RunlistName" ]]; then
+# 					# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/
+# 					cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/* $MergeTrainsOutname/$RunlistName/$Periodname/"
+# 					eval $cmd
+# 					echo "004 $cmd"
+# 				fi
+#
+# 				if [[ $Userunwise = 1 ]]; then
+# 					# look for availible periods
+# 					Runlist="$MergeTrainsOutname/$RunlistName/.$Periodname-Runlist.txt"
+# 					if [[ ! -f $Runlist ]]; then
+# 						cmd="ls -d $BASEDIR/$singletrainDir/$RunlistName/$Periodname/[0-9]* >>  $Runlist"
+# 						eval $cmd
+# 						usecmd $cmd
+# 					fi
+#
+# 					for runnametmp in `cat $Runlist`
+# 					do
+# 						runname2=${runnametmp#*$Periodname/}
+# 						runname=${runname2%/*}
+# 						printf "\e[36m$runname, \e[0m"
+# 						# ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/* $MergeTrainsOutname/$RunlistName/$Periodname/$runname/
+# 						if [[ ! "$BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname" = "$MergeTrainsOutname/$RunlistName/$Periodname/$runname" ]]; then
+# 							cmd="ln -sf $BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname $MergeTrainsOutname/$RunlistName/$Periodname/$runname"
+# 							eval $cmd
+# 							echo "005 $cmd"
+# 						fi
+# 						mkdir -p ${MergeTrainsOutname}/${RunlistName}/${Periodname}/${runname}
+# 					done
+# 					printf "\n\n\n"
+# 				fi
+# 			done
+# 		done
+# 	done
+# fi
+echo;echo;echo;
 if [[ $MergeTrains = 1 ]]
 then
 	echo  -e "\e[36m------------------------------------\e[0m"
@@ -1554,6 +1557,119 @@ then
 		singletrainDir=.$TrainPage-$TrainNumber
 		for RunlistName in `cat $OptRunlistNamefile`
 		do
+			echo  -e "\t\e[36m|-> \e[0m $RunlistName "
+			mkdir -p $MergeTrainsOutname/$RunlistName
+
+			# look for availible Files
+			FileList="$MergeTrainsOutname/$RunlistName/.FileList.txt"
+			if [ -f $FileList ]; then rm $FileList; fi
+			for Search in `cat $Searchfile`
+			do
+				cmd="ls $BASEDIR/$singletrainDir/$RunlistName/ | grep "$Search" | grep ".root" >> $FileList"
+				eval $cmd
+				usecmd $cmd
+			done
+			for filenametmp in `cat $FileList`
+			do
+				if [[ $filenametmp = *".root.tmp" ]]; then
+					rm $filenametmp
+					continue
+				fi
+				filename=${filenametmp#*/$RunlistName/*/}
+				printf "\t\t\e[33m|-> \e[0m $filename"
+				outFile=$BASEDIR/$singletrainDir/$RunlistName/$filename
+				alreadyMerged=$MergeTrainsOutname/$RunlistName/.$TrainNumber-${filename%%.root}.merged
+				logFile=$MergeTrainsOutname/$RunlistName/.$TrainNumber-${filename%%.root}.log
+				mergedFile=$MergeTrainsOutname/$RunlistName/$filename
+				if [[ -f $alreadyMerged ]]
+				then
+					printf "\t\e[33m|-> \e[0malready merged (${outFile}) \n"
+				else
+					if [[ -f $logFile ]]
+					then
+						rm $logFile
+					fi
+					if [[ -f $outFile ]]
+					then
+						if [[ -f $mergedFile ]]
+						then
+							printf "\t\e[33m|->\e[0m merging trains "  #(log: $logFile)"
+							if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+							hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+							exitstatus=$?
+							if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+							then
+								echo " Log:"
+								cat $logFile
+								echo;echo;
+							fi
+							if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+							then
+								echo "rm $mergedFile"
+							fi
+							if [[ ! "$exitstatus" = "0" ]]; then
+								printf "  \e[33m|->\e[0m Failed! Retry "
+							fi
+							tmp=1
+							while [[ ! "$exitstatus" = "0" ]]; do
+								if [[ $tmp = 6 ]]; then
+									echo "."
+									break
+								fi
+								printf "${tmp} "
+								if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
+								hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
+								exitstatus=$?
+								((tmp++))
+							done
+							if [[ ! "$exitstatus" = "0" ]]
+							then
+								echo -e "\t\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
+								cat $logFile >> $ErrorLog
+								rm $mergedFile.tmp
+								# rm $outFile
+							else
+								rm $mergedFile
+								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+								then
+									echo "mv $mergedFile.tmp $mergedFile "
+								fi
+								mv $mergedFile.tmp $mergedFile
+								touch $alreadyMerged
+								printf "\n"
+							fi
+						else
+							printf "\t\e[33m|->\e[0m Copy first ($outFile) \n"
+							echo "Copyed to $mergedFile" > $logFile
+							cp $outFile $mergedFile
+							touch $alreadyMerged
+						fi
+					else
+						if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+						then
+							echo -e "\t\e[31m|->\e[0m missing ($outFile)"  | tee -a $ErrorLog
+						else
+							echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
+						fi
+					fi
+				fi
+			done
+		done
+	done
+fi
+echo;echo;echo;
+if [[ $MergeTrains = 1 ]]
+then
+	echo  -e "\e[36m------------------------------------\e[0m"
+	echo "Start merging periods from trains: $MergeTrainsOutname"
+	echo  -e "\e[36m------------------------------------\e[0m"
+	for TrainNumber in `cat $TrainNumberFile`
+	do
+		echo;echo;
+		echo  -e "\e[36m|-> \e[0m $TrainNumber"
+		singletrainDir=.$TrainPage-$TrainNumber
+		for RunlistName in `cat $OptRunlistNamefile`
+		do
 			echo  -e "\t\e[36m|-> \e[0m $RunlistName"
 			mkdir -p $MergeTrainsOutname/$RunlistName
 
@@ -1568,8 +1684,9 @@ then
 			do
 				Periodname2=${periodnametmp#*$RunlistName/}
 				Periodname=${Periodname2%/*}
+				PeriodnameWOextra=${Periodname2%_extra*}
 				echo  -e "\t\t\e[36m|-> \e[0m $Periodname"
-				mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname
+				mkdir -p $MergeTrainsOutname/$RunlistName/$PeriodnameWOextra
 
 				# look for availible Files
 				FileList="$MergeTrainsOutname/$RunlistName/.FileList.txt"
@@ -1583,11 +1700,11 @@ then
 				for filenametmp in `cat $FileList`
 				do
 					filename=${filenametmp#*/$RunlistName/*/}
-					printf "\t\t\t\e[36m|-> \e[0m $filename"
+					printf "\t\t\t\e[33m|-> \e[0m $filename"
 					outFile=$BASEDIR/$singletrainDir/$RunlistName/$Periodname/$filename
-					alreadyMerged=$MergeTrainsOutname/$RunlistName/$Periodname/.$TrainNumber-${filename%%.root}.merged
-					logFile=$MergeTrainsOutname/$RunlistName/$Periodname/.$TrainNumber-${filename%%.root}.log
-					mergedFile=$MergeTrainsOutname/$RunlistName/$Periodname/$filename
+					alreadyMerged=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/.$TrainNumber-${filename%%.root}.merged
+					logFile=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/.$TrainNumber-${filename%%.root}.log
+					mergedFile=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/$filename
 					if [[ -f $alreadyMerged ]]
 					then
 						printf "\t\e[33m|-> \e[0malready merged (${outFile}) \n"
@@ -1600,7 +1717,7 @@ then
 						then
 							if [[ -f $mergedFile ]]
 							then
-								printf "\t\e[33m|->\e[0m merging trains $RunlistName $Periodname $runname $filename"  #(log: $logFile)"
+								printf "\t\e[33m|->\e[0m merging periods"  #(log: $logFile)"
 								if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 								hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
 								exitstatus=$?
@@ -1666,6 +1783,7 @@ then
 		done
 	done
 fi
+echo;echo;echo;
 if [[ $MergeTrains = 1 ]] && [[ $Userunwise = 1 ]]
 then
 	echo  -e "\e[36m------------------------------------\e[0m"
@@ -1691,6 +1809,7 @@ then
 			do
 				Periodname2=${periodnametmp#*$RunlistName/}
 				Periodname=${Periodname2%/*}
+				PeriodnameWOextra=${Periodname2%_extra*}
 				echo  -e "\t\t\e[36m|-> \e[0m $Periodname \n"
 
 
@@ -1705,8 +1824,8 @@ then
 				do
 					runname2=${runnametmp#*$Periodname/}
 					runname=${runname2%/*}
-					printf "\t\t\t\e[36m|-> \e[0m $runname"
-					mkdir -p $MergeTrainsOutname/$RunlistName/$Periodname/$runname
+					printf "\t\t\t\e[36m|-> \e[0m $runname \n"
+					mkdir -p $MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/$runname
 					# look for availible Files
 					FileList="$MergeTrainsOutname/$RunlistName/.FileList.txt"
 					if [ -f $FileList ]; then rm $FileList; fi
@@ -1719,11 +1838,11 @@ then
 					for filenametmp in `cat $FileList`
 					do
 						filename=${filenametmp#*/$runname/}
-						printf "\t\e[36m|-> \e[0m $filename"
+						printf "\t\t\t\t\e[33m|-> \e[0m $filename"
 						outFile=$BASEDIR/$singletrainDir/$RunlistName/$Periodname/$runname/$filename
-						alreadyMerged=$MergeTrainsOutname/$RunlistName/$Periodname/$runname/.$TrainNumber-${filename%%.root}.merged
-						logFile=$MergeTrainsOutname/$RunlistName/$Periodname/$runname/.$TrainNumber-${filename%%.root}.log
-						mergedFile=$MergeTrainsOutname/$RunlistName/$Periodname/$runname/$filename
+						alreadyMerged=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/$runname/.$TrainNumber-${filename%%.root}.merged
+						logFile=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/$runname/.$TrainNumber-${filename%%.root}.log
+						mergedFile=$MergeTrainsOutname/$RunlistName/$PeriodnameWOextra/$runname/$filename
 						if [[ -f $alreadyMerged ]]
 						then
 							printf "\t\e[33m|-> \e[0malready merged\n"
@@ -1736,7 +1855,7 @@ then
 							then
 								if [[ -f $mergedFile ]]
 								then
-									printf "\t\e[33m|->\e[0m merging trains"  #(log: $logFile)"
+									printf "\t\e[33m|->\e[0m merging runs"  #(log: $logFile)"
 									if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
 									hadd -k $mergedFile.tmp $mergedFile $outFile  &> $logFile
 									exitstatus=$?
