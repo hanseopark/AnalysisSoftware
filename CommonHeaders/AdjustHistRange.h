@@ -59,7 +59,7 @@ void AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, B
     if(fixRange==0) histogram->GetYaxis()->SetRangeUser(A, B);
     else if(fixRange==1) histogram->GetYaxis()->SetRangeUser(range, B);
     else if(fixRange==2) histogram->GetYaxis()->SetRangeUser(A, range);
-    else cout << "ERROR: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
+    else cout << "ERROR*03: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
 
     return;
 }
@@ -73,7 +73,7 @@ void AdjustHistRange(TH2D* histogram, Double_t factorLow, Double_t factorHigh, B
     if(fixRange==0) histogram->GetYaxis()->SetRangeUser(min, max);
     else if(fixRange==1) histogram->GetYaxis()->SetRangeUser(range, max);
     else if(fixRange==2) histogram->GetYaxis()->SetRangeUser(min, range);
-    else cout << "ERROR: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
+    else cout << "ERROR*01: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
 
     return;
 }
@@ -125,7 +125,7 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t
 
         if(fixRange==1) Min_global=range;
         else if(fixRange==2) Max_global=range;
-        else if(fixRange!=0) cout << "ERROR: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
+        else if(fixRange!=0) cout << "ERROR*02: AdjustRange.h wrong value of parameter fixRange given (valid 0,1 or 2): " << fixRange << endl;
 
         for(Int_t i=0; i<(Int_t) vectorhist.size(); i++) vectorhist.at(i)->GetYaxis()->SetRangeUser(Min_global, Max_global);
     }
@@ -168,6 +168,39 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Double
 
 //overloaded function for AdjustHistRange
 //This function calls AdjustHistRange for all histograms in the same vector
+void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t factorHigh, Int_t nSets, Bool_t useBinError){
+
+    Double_t Max_global,Min_global;
+    Double_t A,B;
+
+    Bool_t successRange = AdjustHistRange((TH1D*)vectorhist.at(0),factorLow,factorHigh, useBinError, &A, &B);
+
+    Int_t iRange = 1;
+    if(!successRange){
+        while(!successRange && iRange<nSets) successRange = AdjustHistRange(vectorhist.at(iRange++),factorLow,factorHigh, useBinError, &A, &B);
+    }
+
+    if(iRange>nSets){
+        cout << "ERROR in AdjustHistRange, iRange>nSets, returning..." << endl;
+        return;
+    }
+
+    Min_global = A;
+    Max_global = B;
+
+    for(Int_t i=iRange; i<nSets; i++){
+        if(!AdjustHistRange(vectorhist.at(i),factorLow,factorHigh, useBinError, &A, &B)) continue;
+        if(A<Min_global) Min_global=A;
+        if(B>Max_global) Max_global=B;
+    }
+
+    for(Int_t i=0; i<nSets; i++) vectorhist.at(i)->GetYaxis()->SetRangeUser(Min_global, Max_global);
+
+    return;
+}
+
+//overloaded function for AdjustHistRange
+//This function calls AdjustHistRange for all histograms in the same vector
 //and returns the global max and min
 //The return value is true if the range was successfully adjusted
 Bool_t AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Double_t factorHigh, Int_t h, Int_t nSets, Bool_t useBinError, Double_t *min, Double_t *max){
@@ -203,4 +236,3 @@ Bool_t AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Doub
 
     return kTRUE;
 }
-

@@ -524,6 +524,13 @@ echo  -e "\e[36m------------------------------------\e[0m"
 echo ""
 echo ""
 echo ""
+echo ""
+ErrorLog="$BASEDIR/Errors.log"
+WARNINGLog="$BASEDIR/Warnings.log"
+echo -e "ErrorLog = $ErrorLog \e[36m | \e[0m WARNINGLog = $WARNINGLog"
+echo ""
+if [[ -f $ErrorLog ]]; then rm $ErrorLog; fi
+if [[ -f $WARNINGLog ]]; then rm $WARNINGLog; fi
 
 echo ""
 
@@ -844,6 +851,11 @@ then
 								fi
 								echo;
 							fi
+							if [[ ! -f $outFile ]]; then
+								for runName in `cat $Runlist`
+								do
+										# runfilename=`grep "$runName" $PathtoRuns | awk -F "/" '{print $8}'`
+
 
 
 							# prepare directory
@@ -1591,7 +1603,9 @@ then
 					fi
 					if [[ -f $outFile ]]
 					then
-						if [[ -f $mergedFile ]]
+						printf "\t\e[33m|-> \e[0malready merged (${outFile}) \n"
+					else
+						if [[ -f $logFile ]]
 						then
 							printf "\t\e[33m|->\e[0m merging trains "  #(log: $logFile)"
 							if [[ -f $mergedFile.tmp ]]; then rm $mergedFile.tmp; fi
@@ -1632,9 +1646,33 @@ then
 								rm $mergedFile
 								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
 								then
-									echo "mv $mergedFile.tmp $mergedFile "
+									echo " Log:"
+									cat $logFile
+									echo;echo;
 								fi
-								mv $mergedFile.tmp $mergedFile
+								if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+								then
+									echo "rm $mergedFile"
+								fi
+								if [[ `wc -l $logFile` > 9 ]]
+								then
+									echo -e "\t\e[31mError\e[0m $outFile not merged correctly" | tee -a $ErrorLog
+									cat $logFile >> $ErrorLog
+									rm $mergedFile.tmp
+								else
+									rm $mergedFile
+									if [[ $debug = 1 ]] || [[ $debug = 2 ]]
+									then
+										echo "mv $mergedFile.tmp $mergedFile "
+									fi
+									mv $mergedFile.tmp $mergedFile
+									touch $alreadyMerged
+									printf "\n"
+								fi
+							else
+								printf "\t\e[33m|->\e[0m Copy first ($outFile) \n"
+								echo "Copyed to $mergedFile" > $logFile
+								cp $outFile $mergedFile
 								touch $alreadyMerged
 								printf "\n"
 							fi
@@ -1652,7 +1690,7 @@ then
 							echo -e "\t\e[31m|->\e[0m missing "  | tee -a $ErrorLog
 						fi
 					fi
-				fi
+				done
 			done
 		done
 	done

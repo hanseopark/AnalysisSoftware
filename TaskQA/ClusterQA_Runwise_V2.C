@@ -112,7 +112,6 @@ void ClusterQA_Runwise_V2(
             fileRunstmp         = Form("%s/runNumbers%s%s-%s.txt", folderRunlists.Data(), DataSets[i].Data(), addLabelRunList.Data(),DataSets[0].Data());
             printf("Switch useDataRunListForMC is true, reading runs from: %s\n", fileRunstmp.Data());
         }
-        // printf("trying to read: " << fileRunstmp.Data() << endl;
         vecRuns.clear();
         if(!readin(fileRunstmp, vecRuns, kFALSE)) {printf("\033[0;31mERROR 02\033[0m, no Run Numbers could be found at %s! Returning...\n",fileRunstmp.Data() ); return;}
         Int_t NRuns=vecRuns.size();
@@ -175,7 +174,7 @@ void ClusterQA_Runwise_V2(
     while ((key=(TKey*)next())){
         cout << Form("Found TopDir: '%s' ",key->GetName())<<endl;
         nameMainDir             = key->GetName();
-        if (nameMainDir.Contains("Gamma")) break;
+        if (nameMainDir.Contains("Gamma") || nameMainDir.Contains("HeavyNeutralMeson")) break;
 
     }
     nameMainDirData=nameMainDir;
@@ -205,7 +204,7 @@ void ClusterQA_Runwise_V2(
         while ((keyMC=(TKey*)nextMC())){
             cout << Form("Found TopDir for MC: '%s' ",keyMC->GetName())<<endl;
             nameMainDirMC             = keyMC->GetName();
-            if (nameMainDirMC.Contains("Gamma")) break;
+            if (nameMainDirMC.Contains("Gamma") || nameMainDir.Contains("HeavyNeutralMeson")) break;
         }
         cout<<"nameMainDirMC changed to: "<<nameMainDirMC.Data()<<endl;
         delete keyMC;
