@@ -12,7 +12,7 @@ void rebuildContainer(const char *fileNameOADB="");
 /*******************************************************************
  *  NOTE: Main function which needs to be adjusted for new dEdx maps *
  *******************************************************************/
- void UpdatedEdxRecalib_OADB(const char *fileNameOADBAli="$ALICE_DATA/OADB/PWG/Conversions/TPCdEdxRecalib.root", Bool_t addOldMaps = kFALSE)
+ void UpdatedEdxRecalib_OADB(const char *fileNameOADBAli="$ALICE_DATA/OADB/PWGGA/TPCdEdxRecalibOADB.root", Bool_t addOldMaps = kFALSE)
 {
     gSystem->Load("libOADB");
 
@@ -31,12 +31,17 @@ void rebuildContainer(const char *fileNameOADB="");
 
 //     updateFile(fileNameOADB,"TPCRecalib_LHC13d","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195681, 195873); //
 //     updateFile(fileNameOADB,"TPCRecalib_LHC1Xx","TaskQA/OADB_inputs/LHC13d/DeDxMaps_80010113_00200009327000000000000000_0005314140.root",195874, 999999); //
-    updateFile(fileNameOADB,"TPCRecalib_LHC16f","TaskQA/OADB_inputs/LHC16f/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 253660, 253834);
+    updateFile(fileNameOADB,"TPCRecalib_LHC13b","TaskQA/OADB_inputs/LHC13b/DeDxMaps_80010113_00200009327000000000000000_000481b1202.root", 195344, 195484);
+    updateFile(fileNameOADB,"TPCRecalib_LHC13c","TaskQA/OADB_inputs/LHC13c/DeDxMaps_80010113_00200009327000000000000000_000481b1202.root", 195529, 195678);
+    updateFile(fileNameOADB,"TPCRecalib_LHC15n","TaskQA/OADB_inputs/LHC15n/DeDxMaps_00010113_00200009227300000000000000_000481b1202.root",244340, 244628); //
+    updateFile(fileNameOADB,"TPCRecalib_LHC16f","TaskQA/OADB_inputs/LHC16f/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 253659, 253834);
+    updateFile(fileNameOADB,"TPCRecalib_LHC16r","TaskQA/OADB_inputs/LHC16r/DeDxMaps_80010113_00200009327000000000000000_000481b1202.root",265588, 266319); //
+    updateFile(fileNameOADB,"TPCRecalib_LHC16s","TaskQA/OADB_inputs/LHC16s/DeDxMaps_80010113_00200009327000000000000000_000481b1202.root",266404, 267111); //
     updateFile(fileNameOADB,"TPCRecalib_LHC17g_1","TaskQA/OADB_inputs/LHC17g/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202_1.root", 270882, 270940);
-    updateFile(fileNameOADB,"TPCRecalib_LHC17g_2","TaskQA/OADB_inputs/LHC17g/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202_2.root", 270941, 271776);
+    updateFile(fileNameOADB,"TPCRecalib_LHC17g_2","TaskQA/OADB_inputs/LHC17g/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202_2.root", 270941, 271777);
     updateFile(fileNameOADB,"TPCRecalib_LHC17n","TaskQA/OADB_inputs/LHC17n/DeDxMaps_14810013_00200009327000000000000000_0053b1f1202.root", 280234, 280235); //
+    updateFile(fileNameOADB,"TPCRecalib_LHC17pq","TaskQA/OADB_inputs/LHC17pq/DeDxMaps_00010113_00200009327000000000000000_000481b1202.root",282008, 282441); //
     updateFile(fileNameOADB,"TPCRecalib_LHC18c","TaskQA/OADB_inputs/LHC18c/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 285466, 285958);
-
     // the final output will be sorted by runnumber
     sortOutput(fileNameOADB);
     // the OADB container is additionally checked for ownership
