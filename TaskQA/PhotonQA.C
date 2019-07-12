@@ -38,7 +38,8 @@ void PhotonQA(
                 TString suffix                  = "eps",
                 TString labelData               = "Data",
                 Bool_t addSubfolder             = kFALSE,
-                TString cutTreeProjection       = ""
+                TString cutTreeProjection       = "",
+                Bool_t useConsistentCut         = kFALSE
             )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -114,16 +115,22 @@ void PhotonQA(
                 do{ cin >> cutNr;}
                 while( (cutNr < 0) || (cutNr > (Int_t) cutsPQA[i].size()) );
             }
-            cout << "Processing Cut Number: " << cutNr << endl;
-            nameMainDir[i]      = mainDir[i].at(cutNr);
-            nameCutsPQA[i]      = cutsPQA[i].at(cutNr);
-            nameCutsPQAEvent[i] = Form("%s",nameMainDir[i].Data());
-            nameCutsPQAEvent[i].Replace(0,15,"");
-            nameCutsPQAEvent[i].Replace(8,39,"");
-            nameCutsPQAmain[i] = Form("%s",nameMainDir[i].Data());
-            nameCutsPQAmain[i].Replace(0,15,"");
-            nameCutsPQAmain[i].Replace(35,12,"");
-
+            if (i == 0 || !useConsistentCut){
+              cout << "Processing Cut Number: " << cutNr << endl;
+              nameMainDir[i]      = mainDir[i].at(cutNr);
+              nameCutsPQA[i]      = cutsPQA[i].at(cutNr);
+              nameCutsPQAEvent[i] = Form("%s",nameMainDir[i].Data());
+              nameCutsPQAEvent[i].Replace(0,15,"");
+              nameCutsPQAEvent[i].Replace(8,39,"");
+              nameCutsPQAmain[i] = Form("%s",nameMainDir[i].Data());
+              nameCutsPQAmain[i].Replace(0,15,"");
+              nameCutsPQAmain[i].Replace(35,12,"");
+            } else {
+              nameMainDir[i]      = nameMainDir[0];
+              nameCutsPQA[i]      = nameCutsPQA[0];
+              nameCutsPQAEvent[i] = nameCutsPQAEvent[0];
+              nameCutsPQAmain[i]  = nameCutsPQAmain[0];
+            }
             cout << endl;
             cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
             cout << "nameMainDir:" << nameMainDir[i].Data() << endl;

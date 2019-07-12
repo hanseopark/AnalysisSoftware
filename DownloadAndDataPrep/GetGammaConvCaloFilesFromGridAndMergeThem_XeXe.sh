@@ -64,16 +64,20 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC18d2MCc="child_3";
 # LHC18d2MCd="child_4";
 
-TRAINDIR=20190618-CaloQARecheck
-ISAOD=1
+# TRAINDIR=20190618-CaloQARecheck
+# ISAOD=1
 # LHC17nData="519"; #EMC
-LHC17nData="520"; #PHOS
+# LHC17nData="520"; #PHOS
 # LHC18d2MC="1344"; #EMC
-LHC18d2MC="1342"; #PHOS
-LHC18d2MCa="child_1";
-LHC18d2MCb="child_2";
-LHC18d2MCc="child_3";
-LHC18d2MCd="child_4";
+# LHC18d2MC="1342"; #PHOS
+# LHC18d2MCa="child_1";
+# LHC18d2MCb="child_2";
+# LHC18d2MCc="child_3";
+# LHC18d2MCd="child_4";
+
+TRAINDIR=20190711-CaloPCMdEdxRecalib
+ISAOD=1
+LHC17nData="523"; #PHOS
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections

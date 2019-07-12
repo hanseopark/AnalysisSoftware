@@ -120,6 +120,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     Int_t CellCompareNSets          = 0;
     Bool_t doCellCleaning           = kFALSE;
     Bool_t doCellCleaningTemp       = kFALSE;
+    Bool_t useConsistentCut         = kTRUE;
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -180,6 +181,8 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             mode            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("addPhotonCutNr",TString::kIgnoreCase)){
             addPhotonCutNr  = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("useConsistentCut",TString::kIgnoreCase)){
+            useConsistentCut = kTRUE;
         } else if (tempValue.BeginsWith("enableSubfolder",TString::kIgnoreCase)){
             addSubfolder    = kTRUE;
         } else if (tempValue.BeginsWith("pathDataSets",TString::kIgnoreCase)){
@@ -355,7 +358,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, fixedCutSelections, mode, cutNr, suffix, labelData, addSubfolder);
-    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder, addPhotonCutNr);
+    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder, addPhotonCutNr, useConsistentCut);
     if ( doClusterQA){
         if(fuseClusterQAValues==1)
             ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kFALSE, fuseClusterQAValues, arrQAEnergy, arrQATime, arrQAHotCells1D, arrmin2D, arrmax2D);
