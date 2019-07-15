@@ -96,6 +96,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
     } else {
         prefix2                                                 = "data";
     }
+    Bool_t isEDC        = kFALSE;
 
     // Set collisions system
     TString collisionSystem     = ReturnFullCollisionsSystem(optionEnergy);
@@ -174,6 +175,9 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         cout << cutNumber[i].Data() << endl;
         ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
 
+        if (mode == 4 || mode == 2){
+            if (fClusterCutSelection.BeginsWith("4")) isEDC = kTRUE;
+        }
         // read file with corrections
         if(setFullPathInInputFile)
             FileNameCorrected[i] = Form("%s/%s_%s_GammaConvV1Correction_%s.root", fileDirectory[i].Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
@@ -668,6 +672,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
             if(i == 0){
                 Double_t minY = 0.0001;
                 Double_t maxY = 0.04;
+                if (isEDC && mode == 4) maxY = 0.6;
                 DrawGammaSetMarker(histoAcceptanceCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoAcceptanceCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("A_{%s}",textMeson.Data()),

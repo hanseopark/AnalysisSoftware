@@ -1,1489 +1,2163 @@
 #! /bin/bash
 
-# switches to enable/disable certain procedures
-DOWNLOADON=1
-MERGEONDATA=0
-MERGEONMC=0
-MERGEONMCJJ=0
-MERGEONBINSSingle=1
-MERGEONBINS=1
-
-# check if train configuration has actually been given
-
-
-HAVELHC15n=1
-HAVELHC16d=1
-HAVELHC16e=1
-HAVELHC16f=1
-HAVELHC16g=1
-HAVELHC16h=1
-HAVELHC16i=1
-HAVELHC16j=1
-HAVELHC16k=1
-HAVELHC16l=1
-HAVELHC16o=1
-HAVELHC16p=1
-
-HAVELHC15n=0
-HAVELHC16d=0
-HAVELHC16e=0
-HAVELHC16f=0
-HAVELHC16g=0
-HAVELHC16h=0
-HAVELHC16i=0
-HAVELHC16j=0
-HAVELHC16k=0
-HAVELHC16l=0
-HAVELHC16o=0
-HAVELHC16p=0
-
-#########################-----MonteCarlo files----------------################
-#15n
-HAVELHC17e2MC=1
-#16d
-HAVELHC17f6MC=1
-#16e
-HAVELHC17f9MC=1
-#16f-lowB
-HAVELHC17d12MC=1
-#16f
-HAVELHC17d1MC=1
-#16g
-HAVELHC17d17MC=1
-#16h
-HAVELHC17f5MC=1
-#16i
-HAVELHC17d3MC=1
-#16j
-HAVELHC17e5MC=1
-#16k
-HAVELHC17d20a1MC=1
-HAVELHC17d20a1_extraMC=1
-#16l?
-HAVELHC17d20a2MC=1
-HAVELHC17d20a2_extraMC=1
-#16o
-HAVELHC17d16MC=1
-#16p
-HAVELHC17d18MC=1
-
-HAVELHC17f8bJJMC=1
-HAVELHC17f8cJJMC=1
-HAVELHC17f8dJJMC=1
-HAVELHC17f8aJJMC=1
-HAVELHC17f8eJJMC=1
-
-
-#15n
-HAVELHC17e2MC=0
-#16d
-HAVELHC17f6MC=0
-#16e
-HAVELHC17f9MC=0
-#16f-lowB
-HAVELHC17d12MC=0
-#16f
-HAVELHC17d1MC=0
-#16g
-HAVELHC17d17MC=0
-#16h
-HAVELHC17f5MC=0
-#16i
-HAVELHC17d3MC=0
-#16j
-HAVELHC17e5MC=0
-#16k
-HAVELHC17d20a1MC=0
-HAVELHC17d20a1_extraMC=0
-#16l?
-HAVELHC17d20a2MC=0
-HAVELHC17d20a2_extraMC=0
-#16o
-HAVELHC17d16MC=0
-#16p
-HAVELHC17d18MC=0
-
-#HAVELHC17f8bJJMC=0
-#HAVELHC17f8cJJMC=0
-HAVELHC17f8dJJMC=0
-HAVELHC17f8aJJMC=0
-HAVELHC17f8eJJMC=0
-
-# default trainconfigurations
-
-
-LHC15nData="";
-LHC16dData="";
-LHC16eData="";
-LHC16fData="";
-LHC16gData="";
-LHC16hData="";
-LHC16iData="";
-LHC16jData="";
-LHC16kData="";
-LHC16lData="";
-LHC16oData="";
-LHC16pData="";
-
-
-LHC17f6MC="";
-LHC17f9MC="";
-LHC17d12MC="";
-LHC17d1MC="";
-LHC17d17MC="";
-LHC17f5MC="";
-LHC17d3MC="";
-LHC17e5MC="";
-LHC17d20a1MC="";
-LHC17d20a1_extraMC="";
-LHC17d20a2MC="";
-LHC17d20a2_extraMC="";
-LHC17d16MC="";
-LHC17d18MC="";
-LHC17f8bJJMC="";
-LHC17f8cJJMC="";
-LHC17f8dJJMC="";
-LHC17f8aJJMC="";
-LHC17f8eJJMC="";
-
-
 
 # copies files from grid
 # creates directory
 # changes internal structure
-# merges files according to the pp2760GeV needs
-#NSlashes=9
-#NSlashes2=11
+# merges files according to the pPb needs
 
-NSlashes=11
-NSlashes2=10
-NSlashes3=11
 
+source basicFunction.sh
+
+DOWNLOADON=1
+MERGEON=0
+SINGLERUN=1
+SEPARATEON=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=1
+CLEANUP=1
+CLEANUPMAYOR=$2
+number=""
+
+
+echo $1
+echo $2
+# echo $PATH
+
+
+# default trainconfigurations
+LHC16Data="";
+    LHC16dData="";
+    LHC16eData="";
+    LHC16fData="";
+    LHC16gData="";
+    LHC16hData="";
+    LHC16iData="";
+    LHC16jData="";
+    LHC16kData="";
+    LHC16lData="";
+    LHC16oData="";
+    LHC16pData="";
+
+LHC17Data="";
+    LHC17cData="";
+    LHC17eData="";
+    LHC17fData="";
+    LHC17hData="";
+    LHC17iData="";
+    LHC17jData="";
+    LHC17kData="";
+    LHC17lData="";
+    LHC17mData="";
+    LHC17oData="";
+    LHC17rData="";
+
+LHC18Data="";
+    LHC18bData="";
+    LHC18dData="";
+    LHC18eData="";
+    LHC18fData="";
+    LHC18gData="";
+    LHC18hData="";
+    LHC18iData="";
+    LHC18jData="";
+    LHC18kData="";
+    LHC18lData="";
+    LHC18mData="";
+    LHC18nData="";
+    LHC18oData="";
+    LHC18pData="";
+LHC17MCEPOS="";
+
+LHC16xMCPHY="";
+    LHC17f6MC="";
+    LHC17f9MC="";
+    LHC17d17MC="";
+    LHC17f5MC="";
+    LHC17d3MC="";
+    LHC17e5MC="";
+    LHC18f1MC="";
+    LHC18d8MC="";
+    LHC17d16MC="";
+    LHC17d18MC="";
+    LHC17d1MC="";
+
+LHC16xMCPHY_extra="";
+    LHC17f6MC_extra="";
+    LHC17f9MC_extra="";
+    LHC17d17MC_extra="";
+    LHC17f5MC_extra="";
+    LHC17d3MC_extra="";
+    LHC17e5MC_extra="";
+    LHC18f1MC_extra="";
+    LHC18d8MC_extra="";
+    LHC17d16MC_extra="";
+    LHC17d18MC_extra="";
+    LHC17d1MC_extra="";
+
+LHC16xMCPHY_extra2="";
+    LHC17f6MC_extra2="";
+    LHC17f9MC_extra2="";
+    LHC17d17MC_extra2="";
+    LHC17f5MC_extra2="";
+    LHC17d3MC_extra2="";
+    LHC17e5MC_extra2="";
+    LHC17d16MC_extra2="";
+    LHC17d18MC_extra2="";
+    LHC17d1MC_extra2="";
+
+LHC17xMCPHY="";
+    LHC18d3=""
+    LHC17k4=""
+    LHC17k4=""
+    LHC17h11=""
+    LHC18c13=""
+    LHC18a8=""
+    LHC17l5=""
+    LHC18a9=""
+    LHC18a1=""
+
+LHC17xMCPHY_extra="";
+    LHC18d3_extra=""
+    LHC18c12_extra=""
+    LHC17k4_extra=""
+    LHC17h11_extra=""
+    LHC18c13_extra=""
+    LHC18a8_extra=""
+    LHC17l5_extra=""
+    LHC18a9_extra=""
+    LHC18a1_extra=""
+
+LHC18xMCPHY="";
+    LHC18g4MC=""
+    LHC18g5MC=""
+    LHC18g6MC=""
+    LHC18h2MC=""
+    LHC18h4MC=""
+    LHC18j1MC=""
+    LHC18j4MC=""
+    LHC18k1MC=""
+    LHC18k2MC=""
+    LHC18k3MC=""
+LHC18xMCPHY_extra="";
+    LHC18g4MC_extra=""
+    LHC18g5MC_extra=""
+    LHC18g6MC_extra=""
+    LHC18h2MC_extra=""
+    LHC18h4MC_extra=""
+    LHC18j1MC_extra=""
+    LHC18j4MC_extra=""
+    LHC18k1MC_extra=""
+    LHC18k2MC_extra=""
+    LHC18k3MC_extra=""
+
+LHC17xJJMC="";
+  LHC18f5_1="";
+  LHC18f5_2="";
+
+passNr="1";
 if [ $1 = "fbock" ]; then
-    BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pp
-    NSlashes=8
-    NSlashes2=7
-elif [ $1 = "fbockGSI" ]; then
-	BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pp
-elif [ $1 = "leardini" ]; then
-	BASEDIR=/Users/lucy/
-elif [ $1 = "leardiniALICESERV1" ]; then
-	BASEDIR=/alidata50/alice_u/leardini/GridOutput/pp/
-elif [ $1 = "leardiniGSI" ]; then
-	BASEDIR=/hera/alice/leardini/Grid/OutputLegoTrains/pp
-elif [ $1 = "passfeld" ]; then
-	BASEDIR=~/work/Gridoutput/pp
-elif [ $1 = "passfeldMAF" ]; then
-	BASEDIR=/data9/a_pass02/gamma_test/AnalysisSoftware/LegoTrain/
-elif [ $1 = "passfeldGSI" ]; then
-	BASEDIR=/hera/alice/passfeld/Grid/OutputLegoTrains/pp
-elif [ $1 = "amarin" ]; then
-	BASEDIR=/Users/marin/analysis/2017/Grid/OutputLegoTrains/pp
-elif [ $1 = "amarinGSI" ]; then
-	BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/pp
-elif [ $1 = "amarinALICESERV1" ]; then
-	BASEDIR=/alidata50/alice_u/amarin/GridOutput/pp/
-elif [ $1 = "mwilde" ]; then
-	BASEDIR=~/work/GridOutput
-elif [ $1 = "mwildeGSI" ]; then
-	BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/pp
-elif [ $1 = "pgonzales" ]; then
-	BASEDIR=~/work/GridOutput
-elif [ $1 = "pgonzalesGSI" ]; then
-	BASEDIR=/hera/alice/pgonzales/Grid/OutputLegoTrains/pp
+    BASEDIR=/media/fbock/Elements/OutputLegoTrains/pp13TeV
+elif [ $1 = "hannahbossi" ]; then
+    BASEDIR=/Volumes/external_memory/CERN_data/QA
+elif [ $1 = "dmuhlhei" ]; then
+    BASEDIR=~/data/work/Grid
+elif [ $1 = "jlueh" ]; then
+    BASEDIR=~/Daten/GridDownload
+elif [ $1 = "jokonig" ]; then
+    BASEDIR=/media/gustav/external_drive/Data
 fi
 
-# TRAINDIR=Legotrain-vAN-20151025-MultiplicityDependence
+if [ $3 = "AOD" ]; then
+    baseLegoData=GA_pp_AOD
+    baseLegoMC=GA_pp_MC_AOD
+    pathData=pass$passNr/AOD208/PWGGA/GA_pp_AOD
+    pathData3=pass$passNr\_withTRDtracking/AOD208/PWGGA/GA_pp_AOD
+    pathData2=pass2/AOD208/PWGGA/GA_pp_AOD
+    pathMC=AOD209/PWGGA/GA_pp_MC_AOD
+    pathMC2=PWGGA/GA_pp_MC_AOD
+elif [ $3 = "AOD_JJ" ]; then
+    baseLegoData=GA_pp_AOD
+    baseLegoMC=GA_pp_MC_AOD
+    pathData=pass$passNr/AOD208/PWGGA/GA_pp_AOD
+    pathData3=pass$passNr\_withTRDtracking/AOD208/PWGGA/GA_pp_AOD
+    pathData2=pass2/AOD208/PWGGA/GA_pp_AOD
+    pathMC=PWGGA/GA_pp_MC_AOD
+    pathMC2=PWGGA/GA_pp_MC_AOD
+else
+    baseLegoData=GA_pp
+    baseLegoMC=GA_pp_MC
+    pathData=pass$passNr/PWGGA/GA_pp
+    pathData3=pass$passNr\_withTRDtracking/PWGGA/GA_pp
+    pathData2=pass2/PWGGA/GA_pp
+    pathMC=PWGGA/GA_pp_MC
+fi
 
-#TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
-#LHC11aData="1782_20160813-2128";
-#LHC12f1aMC="2426_20160813-2128";
-#LHC12f1bMC="2427_20160813-2129";
+# Definitition of number of slashes in your path to different depths
+NSlashesBASE=`tr -dc '/' <<<"$BASEDIR" | wc -c`
+NSlashes=`expr $NSlashesBASE + 4`
+NSlashes2=`expr $NSlashes - 1`
+NSlashes3=`expr $NSlashes + 1`
+NSlashes4=`expr $NSlashes + 2`
+echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
-#TRAINDIR=Legotrain-vAN-20170426-1-FirstLook
-#LHC16fData="2060_20170426-1817";
-#LHC16iData="2059_20170426-1819";
-#LHC16kData="2058_20170426-1819";
-#LHC16lData="2057_20170426-1819";
-#LHC16oData="2056_20170426-1819";
+TRAINDIR=Legotrain-QA20190610
+# LHC18 data
+# LHC18Data="846";
+# LHC18bData="child_1";
+# LHC18dData="child_2";
+# LHC18eData="child_3";
+# LHC18fData="child_4";
+# LHC18gData="child_5";
+# LHC18hData="child_6";
+# LHC18iData="child_7";
+# LHC18jData="child_8";
+# LHC18kData="child_9";
+# LHC18lData="child_10";
+# LHC18mData="child_11";
+# LHC18nData="child_12";
+# LHC18oData="child_13";
+# LHC18pData="child_14";
 
+# LHC18 MC
+LHC18xMCPHY="1574";
+# LHC18g4MC="child_1"
+# LHC18g5MC="child_2"
+# LHC18g6MC="child_3"
+# LHC18h2MC="child_4"
+# LHC18h4MC="child_5"
+# LHC18j1MC="child_6"
+# LHC18j4MC="child_7"
+LHC18k1MC="child_8"
+# LHC18k2MC="child_9"
+# LHC18k3MC="child_10"
 
-TRAINDIR=Legotrain-vAN-20170710-13TeV
-#LHC16fData="2060_20170426-1817";
-#LHC16iData="2059_20170426-1819";
-#LHC16kData="2058_20170426-1819";
-#LHC16lData="2057_20170426-1819";
-#LHC16oData="2056_20170426-1819";
-
-LHC15nData="2184_20170711-2100";
-#LHC15nDatapass3="2185_20170711-2100";
-LHC16dData="2183_20170711-2100";
-LHC16eData="2182_20170711-2059";
-LHC16fData="2181_20170711-2059";
-LHC16gData="2180_20170711-2059";
-LHC16hData="2179_20170711-2059";
-LHC16iData="2178_20170711-2059";
-LHC16jData="2176_20170711-2058";
-LHC16kData="2175_20170711-2058";
-LHC16lData="2174_20170711-2058";
-LHC16oData="2173_20170711-2058";
-LHC16pData="2172_20170711-2100";
-
-#15n-pass4
-LHC17e2MC="3057_20170714-1443";
-LHC17f6MC="3054_20170714-1442";
-#LHC17f9MC="";
-#lowBfield
-#LHC17d12MC="";
-LHC17d1MC="3063_20170714-1444";
-LHC17d17MC="3064_20170714-1444";
-LHC17f5MC="3055_20170714-1443";
-LHC17d3MC="3058_20170714-1444";
-LHC17e5MC="3056_20170714-1443";
-LHC17d20a1MC="3061_20170714-1444";
-LHC17d20a1_extraMC="3062_20170714-1444";
-LHC17d20a2MC="3059_20170714-1444";
-LHC17d20a2_extraMC="3060_20170714-1444";
-LHC17d16MC="3065_20170714-1445";
-LHC17d18MC="3066_20170714-1445";
-
-
-#LHC17f8bJJMC="3052_20170714-1643";
-#LHC17f8cJJMC="3051_20170714-1643";
-#LHC17f8dJJMC="3050_20170714-1643";
-#LHC17f8aJJMC="3053_20170714-1642";
-#LHC17f8eJJMC="3049_20170714-1643";
-#-----JetJet Slow train for ntrials
-LHC17f8bJJMC="3079_20170725-1138";
-LHC17f8cJJMC="3078_20170725-1138";
-LHC17f8dJJMC="3077_20170725-1138";
-LHC17f8aJJMC="3080_20170725-1138";
-LHC17f8eJJMC="3076_20170725-1138";
-
-
-
-#DATAADD=""
+LHC18xMCPHY_extra="1575";
+# LHC18g4MC_extra="child_1"
+# LHC18g5MC_extra="child_2"
+# LHC18g6MC_extra="child_3"
+# LHC18h2MC_extra="child_4"
+LHC18h4MC_extra="child_5"
+# LHC18j1MC_extra="child_6"
+# LHC18j4MC_extra="child_7"
+# LHC18k1MC_extra="child_8"
+LHC18k2MC_extra="child_9"
+# LHC18k3MC_extra="child_10"
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
-if [ $2 == "LHC16f" ]; then
+ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoData/"
+OUTPUTDIRData=$BASEDIR/$TRAINDIR/$baseLegoData
+ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoMC/"
+OUTPUTDIRMC=$BASEDIR/$TRAINDIR/$baseLegoMC
+mkdir -p $OUTPUTDIR/CutSelections
 
-#    if [ "$LHC16fData" == "" ]; then
-#        HAVELHC16f=0;
-#    fi
+FindCorrectTrainDirectory $LHC16dData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16d=$tempBool
+LHC16dData=$tempDir
+OUTPUTDIR_LHC16d=$tempPath
+echo "16d: $HAVELHC16d $LHC16dData $OUTPUTDIR_LHC16d"
 
-    if [ $HAVELHC15n == 1 ]; then
-	echo "outputdir LHC15n"
-        OUTPUTDIR_LHC15n=$BASEDIR/$TRAINDIR/GA_pp-$LHC15nData
-        mkdir -p $OUTPUTDIR_LHC15n
-    fi
+FindCorrectTrainDirectory $LHC16eData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16e=$tempBool
+LHC16eData=$tempDir
+OUTPUTDIR_LHC16e=$tempPath
+echo "16e: $HAVELHC16e $LHC16eData $OUTPUTDIR_LHC16e"
 
+FindCorrectTrainDirectory $LHC16fData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16f=$tempBool
+LHC16fData=$tempDir
+OUTPUTDIR_LHC16f=$tempPath
+echo "16f: $HAVELHC16f $LHC16fData $OUTPUTDIR_LHC16f"
 
-    if [ $HAVELHC16d == 1 ]; then
-	echo "outputdir LHC16d"
-        OUTPUTDIR_LHC16d=$BASEDIR/$TRAINDIR/GA_pp-$LHC16dData
-        mkdir -p $OUTPUTDIR_LHC16d
-    fi
+FindCorrectTrainDirectory $LHC16gData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16g=$tempBool
+LHC16gData=$tempDir
+OUTPUTDIR_LHC16g=$tempPath
+echo "16g: $HAVELHC16g $LHC16gData $OUTPUTDIR_LHC16g"
 
-    if [ $HAVELHC16e == 1 ]; then
-	echo "outputdir LHC16e"
-        OUTPUTDIR_LHC16e=$BASEDIR/$TRAINDIR/GA_pp-$LHC16eData
-        mkdir -p $OUTPUTDIR_LHC16e
-    fi
+FindCorrectTrainDirectory $LHC16hData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16h=$tempBool
+LHC16hData=$tempDir
+OUTPUTDIR_LHC16h=$tempPath
+echo "16h: $HAVELHC16h $LHC16hData $OUTPUTDIR_LHC16h"
 
-    if [ $HAVELHC16f == 1 ]; then
-	echo "outputdir LHC16f"
-        OUTPUTDIR_LHC16f=$BASEDIR/$TRAINDIR/GA_pp-$LHC16fData
-        mkdir -p $OUTPUTDIR_LHC16f
-    fi
+FindCorrectTrainDirectory $LHC16iData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16i=$tempBool
+LHC16iData=$tempDir
+OUTPUTDIR_LHC16i=$tempPath
+echo "16i: $HAVELHC16i $LHC16iData $OUTPUTDIR_LHC16i"
 
-    if [ $HAVELHC16g == 1 ]; then
-	echo "outputdir LHC16g"
-        OUTPUTDIR_LHC16g=$BASEDIR/$TRAINDIR/GA_pp-$LHC16gData
-        mkdir -p $OUTPUTDIR_LHC16g
-    fi
+FindCorrectTrainDirectory $LHC16jData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16j=$tempBool
+LHC16jData=$tempDir
+OUTPUTDIR_LHC16j=$tempPath
+echo "16j: $HAVELHC16j $LHC16jData $OUTPUTDIR_LHC16j"
 
-    if [ $HAVELHC16h == 1 ]; then
-	echo "outputdir LHC16h"
-        OUTPUTDIR_LHC16h=$BASEDIR/$TRAINDIR/GA_pp-$LHC16hData
-        mkdir -p $OUTPUTDIR_LHC16h
-    fi
+FindCorrectTrainDirectory $LHC16kData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16k=$tempBool
+LHC16kData=$tempDir
+OUTPUTDIR_LHC16k=$tempPath
+echo "16k: $HAVELHC16k $LHC16kData $OUTPUTDIR_LHC16k"
 
+FindCorrectTrainDirectory $LHC16lData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16l=$tempBool
+LHC16lData=$tempDir
+OUTPUTDIR_LHC16l=$tempPath
+echo "16l: $HAVELHC16l $LHC16lData $OUTPUTDIR_LHC16l"
 
-    if [ $HAVELHC16i == 1 ]; then
-	echo "outputdir LHC16i"
-        OUTPUTDIR_LHC16i=$BASEDIR/$TRAINDIR/GA_pp-$LHC16iData
-        mkdir -p $OUTPUTDIR_LHC16i
-    fi
+FindCorrectTrainDirectory $LHC16oData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16o=$tempBool
+LHC16oData=$tempDir
+OUTPUTDIR_LHC16o=$tempPath
+echo "16o: $HAVELHC16o $LHC16oData $OUTPUTDIR_LHC16o"
 
-    if [ $HAVELHC16j == 1 ]; then
-	echo "outputdir LHC16j"
-        OUTPUTDIR_LHC16j=$BASEDIR/$TRAINDIR/GA_pp-$LHC16jData
-        mkdir -p $OUTPUTDIR_LHC16j
-    fi
+FindCorrectTrainDirectory $LHC16pData $OUTPUTDIRData $ALIENDIRData $LHC16Data
+HAVELHC16p=$tempBool
+LHC16pData=$tempDir
+OUTPUTDIR_LHC16p=$tempPath
+echo "16p: $HAVELHC16p $LHC16pData $OUTPUTDIR_LHC16p"
 
-    if [ $HAVELHC16k == 1 ]; then
-	echo "outputdir LHC16k"
-        OUTPUTDIR_LHC16k=$BASEDIR/$TRAINDIR/GA_pp-$LHC16kData
-        mkdir -p $OUTPUTDIR_LHC16k
-    fi
+FindCorrectTrainDirectory $LHC17cData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17c=$tempBool
+LHC17cData=$tempDir
+OUTPUTDIR_LHC17c=$tempPath
+echo "17c: $HAVELHC17c $LHC17cData $OUTPUTDIR_LHC17c"
 
-    if [ $HAVELHC16l == 1 ]; then
-	echo "outputdir LHC16l"
-        OUTPUTDIR_LHC16l=$BASEDIR/$TRAINDIR/GA_pp-$LHC16lData
-        mkdir -p $OUTPUTDIR_LHC16l
-    fi
+FindCorrectTrainDirectory $LHC17eData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17e=$tempBool
+LHC17eData=$tempDir
+OUTPUTDIR_LHC17e=$tempPath
+echo "17e: $HAVELHC17e $LHC17eData $OUTPUTDIR_LHC17e"
 
-    if [ $HAVELHC16o == 1 ]; then
-	echo "outputdir LHC16o"
-        OUTPUTDIR_LHC16o=$BASEDIR/$TRAINDIR/GA_pp-$LHC16oData
-        mkdir -p $OUTPUTDIR_LHC16o
-    fi
+FindCorrectTrainDirectory $LHC17fData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17f=$tempBool
+LHC17fData=$tempDir
+OUTPUTDIR_LHC17f=$tempPath
+echo "17f: $HAVELHC17f $LHC17fData $OUTPUTDIR_LHC17f"
 
-    if [ $HAVELHC16p == 1 ]; then
-	echo "outputdir LHC16p"
-        OUTPUTDIR_LHC16p=$BASEDIR/$TRAINDIR/GA_pp-$LHC16pData
-        mkdir -p $OUTPUTDIR_LHC16p
-    fi
+FindCorrectTrainDirectory $LHC17hData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17h=$tempBool
+LHC17hData=$tempDir
+OUTPUTDIR_LHC17h=$tempPath
+echo "17h: $HAVELHC17h $LHC17hData $OUTPUTDIR_LHC17h"
 
+FindCorrectTrainDirectory $LHC17iData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17i=$tempBool
+LHC17iData=$tempDir
+OUTPUTDIR_LHC17i=$tempPath
+echo "17i: $HAVELHC17i $LHC17iData $OUTPUTDIR_LHC17i"
 
-########################################################
-############going to create directories for MC##########
-########################################################
+FindCorrectTrainDirectory $LHC17jData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17j=$tempBool
+LHC17jData=$tempDir
+OUTPUTDIR_LHC17j=$tempPath
+echo "17j: $HAVELHC17j $LHC17jData $OUTPUTDIR_LHC17j"
 
-    if [ $HAVELHC17e2MC == 1 ]; then
-	echo "outputdir LHC17e2MC"
-        OUTPUTDIR_LHC17e2MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17e2MC
-	mkdir -p $OUTPUTDIR_LHC17e2MC
-    fi
+FindCorrectTrainDirectory $LHC17kData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17k=$tempBool
+LHC17kData=$tempDir
+OUTPUTDIR_LHC17k=$tempPath
+echo "17k: $HAVELHC17k $LHC17kData $OUTPUTDIR_LHC17k"
 
+FindCorrectTrainDirectory $LHC17lData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17l=$tempBool
+LHC17lData=$tempDir
+OUTPUTDIR_LHC17l=$tempPath
+echo "17l: $HAVELHC17l $LHC17lData $OUTPUTDIR_LHC17l"
 
-    if [ $HAVELHC17f6MC == 1 ]; then
-	echo "outputdir LHC17f6MC"
-        OUTPUTDIR_LHC17f6MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f6MC
-	mkdir -p $OUTPUTDIR_LHC17f6MC
-    fi
+FindCorrectTrainDirectory $LHC17mData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17m=$tempBool
+LHC17mData=$tempDir
+OUTPUTDIR_LHC17m=$tempPath
+echo "17m: $HAVELHC17m $LHC17mData $OUTPUTDIR_LHC17m"
 
-    if [ $HAVELHC17d1MC == 1 ]; then
-	echo "outputdir LHC17d1MC"
-        OUTPUTDIR_LHC17d1MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d1MC
-	mkdir -p $OUTPUTDIR_LHC17d1MC
-    fi
+FindCorrectTrainDirectory $LHC17oData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17o=$tempBool
+LHC17oData=$tempDir
+OUTPUTDIR_LHC17o=$tempPath
+echo "17o: $HAVELHC17o $LHC17oData $OUTPUTDIR_LHC17o"
 
-    if [ $HAVELHC17d17MC == 1 ]; then
-	echo "outputdir LHC17d17MC"
-        OUTPUTDIR_LHC17d17MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d17MC
-	mkdir -p $OUTPUTDIR_LHC17d17MC
-    fi
-
-    if [ $HAVELHC17f5MC == 1 ]; then
-	echo "outputdir LHC17f5MC"
-        OUTPUTDIR_LHC17f5MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f5MC
-	mkdir -p $OUTPUTDIR_LHC17f5MC
-    fi
-
-    if [ $HAVELHC17d3MC == 1 ]; then
-	echo "outputdir LHC17d3MC"
-        OUTPUTDIR_LHC17d3MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d3MC
-	mkdir -p $OUTPUTDIR_LHC17d3MC
-    fi
-
-
-    if [ $HAVELHC17e5MC == 1 ]; then
-	echo "outputdir LHC17e5MC"
-        OUTPUTDIR_LHC17e5MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17e5MC
-	mkdir -p $OUTPUTDIR_LHC17e5MC
-    fi
-
-    if [ $HAVELHC17d20a1MC == 1 ]; then
-	echo "outputdir LHC17d20a1MC"
-        OUTPUTDIR_LHC17d20a1MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d20a1MC
-	mkdir -p $OUTPUTDIR_LHC17d20a1MC
-    fi
-
-    if [ $HAVELHC17d20a2MC == 1 ]; then
-	echo "outputdir LHC17d20a2MC"
-        OUTPUTDIR_LHC17d20a2MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d20a2MC
-	mkdir -p $OUTPUTDIR_LHC17d20a2MC
-    fi
-
-    if [ $HAVELHC17d20a1_extraMC == 1 ]; then
-	echo "outputdir LHC17d20a1_extraMC"
-        OUTPUTDIR_LHC17d20a1_extraMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d20a1_extraMC
-	mkdir -p $OUTPUTDIR_LHC17d20a1_extraMC
-    fi
-
-    if [ $HAVELHC17d20a2_extraMC == 1 ]; then
-	echo "outputdir LHC17d20a2_extraMC"
-        OUTPUTDIR_LHC17d20a2_extraMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d20a2_extraMC
-	mkdir -p $OUTPUTDIR_LHC17d20a2_extraMC
-    fi
+FindCorrectTrainDirectory $LHC17rData $OUTPUTDIRData $ALIENDIRData $LHC17Data
+HAVELHC17r=$tempBool
+LHC17rData=$tempDir
+OUTPUTDIR_LHC17r=$tempPath
+echo "17r: $HAVELHC17r $LHC17rData $OUTPUTDIR_LHC17r"
 
 
-    if [ $HAVELHC17d16MC == 1 ]; then
-	echo "outputdir LHC17d16MC"
-        OUTPUTDIR_LHC17d16MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d16MC
-	mkdir -p $OUTPUTDIR_LHC17d16MC
-    fi
+FindCorrectTrainDirectory $LHC18bData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18b=$tempBool
+LHC18bData=$tempDir
+OUTPUTDIR_LHC18b=$tempPath
+echo "18b: $HAVELHC18b $LHC18bData $OUTPUTDIR_LHC18b"
 
-    if [ $HAVELHC17d18MC == 1 ]; then
-	echo "outputdir LHC17d18MC"
-        OUTPUTDIR_LHC17d18MC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d18MC
-	mkdir -p $OUTPUTDIR_LHC17d18MC
-    fi
+FindCorrectTrainDirectory $LHC18dData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18d=$tempBool
+LHC18dData=$tempDir
+OUTPUTDIR_LHC18d=$tempPath
+echo "18d: $HAVELHC18d $LHC18dData $OUTPUTDIR_LHC18d"
 
-    if [ $HAVELHC17f8bJJMC == 1 ]; then
-	echo "outputdir LHC17f8bJJMC"
-        OUTPUTDIR_LHC17f8bJJMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f8bJJMC
-	mkdir -p $OUTPUTDIR_LHC17f8bJJMC
-    fi
+FindCorrectTrainDirectory $LHC18eData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18e=$tempBool
+LHC18eData=$tempDir
+OUTPUTDIR_LHC18e=$tempPath
+echo "18e: $HAVELHC18e $LHC18eData $OUTPUTDIR_LHC18e"
 
-    if [ $HAVELHC17f8cJJMC == 1 ]; then
-	echo "outputdir LHC17f8cJJMC"
-        OUTPUTDIR_LHC17f8cJJMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f8cJJMC
-	mkdir -p $OUTPUTDIR_LHC17f8cJJMC
-    fi
+FindCorrectTrainDirectory $LHC18fData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18f=$tempBool
+LHC18fData=$tempDir
+OUTPUTDIR_LHC18f=$tempPath
+echo "18f: $HAVELHC18f $LHC18fData $OUTPUTDIR_LHC18f"
 
-    if [ $HAVELHC17f8dJJMC == 1 ]; then
-	echo "outputdir LHC17f8dJJMC"
-        OUTPUTDIR_LHC17f8dJJMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f8dJJMC
-	mkdir -p $OUTPUTDIR_LHC17f8dJJMC
-    fi
+FindCorrectTrainDirectory $LHC18gData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18g=$tempBool
+LHC18gData=$tempDir
+OUTPUTDIR_LHC18g=$tempPath
+echo "18g: $HAVELHC18g $LHC18gData $OUTPUTDIR_LHC18g"
 
-    if [ $HAVELHC17f8aJJMC == 1 ]; then
-	echo "outputdir LHC17f8aJJMC"
-        OUTPUTDIR_LHC17f8aJJMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f8aJJMC
-	mkdir -p $OUTPUTDIR_LHC17f8aJJMC
-    fi
+FindCorrectTrainDirectory $LHC18hData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18h=$tempBool
+LHC18hData=$tempDir
+OUTPUTDIR_LHC18h=$tempPath
+echo "18h: $HAVELHC18h $LHC18hData $OUTPUTDIR_LHC18h"
 
-    if [ $HAVELHC17f8eJJMC == 1 ]; then
-	echo "outputdir LHC17f8eJJMC"
-        OUTPUTDIR_LHC17f8eJJMC=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f8eJJMC
-	mkdir -p $OUTPUTDIR_LHC17f8eJJMC
-    fi
+FindCorrectTrainDirectory $LHC18iData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18i=$tempBool
+LHC18iData=$tempDir
+OUTPUTDIR_LHC18i=$tempPath
+echo "18i: $HAVELHC18i $LHC18iData $OUTPUTDIR_LHC18i"
+
+FindCorrectTrainDirectory $LHC18jData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18j=$tempBool
+LHC18jData=$tempDir
+OUTPUTDIR_LHC18j=$tempPath
+echo "18j: $HAVELHC18j $LHC18jData $OUTPUTDIR_LHC18j"
+
+FindCorrectTrainDirectory $LHC18kData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18k=$tempBool
+LHC18kData=$tempDir
+OUTPUTDIR_LHC18k=$tempPath
+echo "18k: $HAVELHC18k $LHC18kData $OUTPUTDIR_LHC18k"
+
+FindCorrectTrainDirectory $LHC18lData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18l=$tempBool
+LHC18lData=$tempDir
+OUTPUTDIR_LHC18l=$tempPath
+echo "18l: $HAVELHC18l $LHC18lData $OUTPUTDIR_LHC18l"
+
+FindCorrectTrainDirectory $LHC18mData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18m=$tempBool
+LHC18mData=$tempDir
+OUTPUTDIR_LHC18m=$tempPath
+echo "18m: $HAVELHC18m $LHC18mData $OUTPUTDIR_LHC18m"
+
+FindCorrectTrainDirectory $LHC18nData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18n=$tempBool
+LHC18nData=$tempDir
+OUTPUTDIR_LHC18n=$tempPath
+echo "18n: $HAVELHC18n $LHC18nData $OUTPUTDIR_LHC18n"
+
+FindCorrectTrainDirectory $LHC18oData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18o=$tempBool
+LHC18oData=$tempDir
+OUTPUTDIR_LHC18o=$tempPath
+echo "18o: $HAVELHC18o $LHC18oData $OUTPUTDIR_LHC18o"
+
+FindCorrectTrainDirectory $LHC18pData $OUTPUTDIRData $ALIENDIRData $LHC18Data
+HAVELHC18p=$tempBool
+LHC18pData=$tempDir
+OUTPUTDIR_LHC18p=$tempPath
+echo "18p: $HAVELHC18p $LHC18pData $OUTPUTDIR_LHC18p"
+
+# start with finding MC directories
+FindCorrectTrainDirectory $LHC17f6MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f6=$tempBool
+LHC17f6MC=$tempDir
+OUTPUTDIR_LHC17f6=$tempPath
+echo "17f6 anchored to 16d: $HAVELHC17f6 $LHC17f6MC $OUTPUTDIR_LHC17f6"
+
+FindCorrectTrainDirectory $LHC17f9MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f9=$tempBool
+LHC17f9MC=$tempDir
+OUTPUTDIR_LHC17f9=$tempPath
+echo "17f9 anchored to 16e: $HAVELHC17f9 $LHC17f9MC $OUTPUTDIR_LHC17f9"
+
+FindCorrectTrainDirectory $LHC17d1MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d1=$tempBool
+LHC17d1MC=$tempDir
+OUTPUTDIR_LHC17d1=$tempPath
+echo "17d1 anchored to 16f: $HAVELHC17d1 $LHC17d1MC $OUTPUTDIR_LHC17d1"
+
+FindCorrectTrainDirectory $LHC17d17MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d17=$tempBool
+LHC17d17MC=$tempDir
+OUTPUTDIR_LHC17d17=$tempPath
+echo "17d17 anchored to 16g: $HAVELHC17d17 $LHC17d17MC $OUTPUTDIR_LHC17d17"
+
+FindCorrectTrainDirectory $LHC17f5MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f5=$tempBool
+LHC17f5MC=$tempDir
+OUTPUTDIR_LHC17f5=$tempPath
+echo "17f5 anchored to 16h: $HAVELHC17f5 $LHC17f5MC $OUTPUTDIR_LHC17f5"
+
+FindCorrectTrainDirectory $LHC17d3MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d3=$tempBool
+LHC17d3MC=$tempDir
+OUTPUTDIR_LHC17d3=$tempPath
+echo "17d3 anchored to 16i: $HAVELHC17d3 $LHC17d3MC $OUTPUTDIR_LHC17d3"
+
+FindCorrectTrainDirectory $LHC17e5MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17e5=$tempBool
+LHC17e5MC=$tempDir
+OUTPUTDIR_LHC17e5=$tempPath
+echo "17e5 anchored to 16j: $HAVELHC17e5 $LHC17e5MC $OUTPUTDIR_LHC17e5"
+
+FindCorrectTrainDirectory $LHC18f1MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC18f1=$tempBool
+LHC18f1MC=$tempDir
+OUTPUTDIR_LHC18f1=$tempPath
+echo "18f1 anchored to 16k: $HAVELHC18f1 $LHC18f1MC $OUTPUTDIR_LHC18f1"
+
+FindCorrectTrainDirectory $LHC18d8MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC18d8=$tempBool
+LHC18d8MC=$tempDir
+OUTPUTDIR_LHC18d8=$tempPath
+echo "18d8 anchored to 16l: $HAVELHC18d8 $LHC18d8MC $OUTPUTDIR_LHC18d8"
+
+FindCorrectTrainDirectory $LHC17d16MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d16=$tempBool
+LHC17d16MC=$tempDir
+OUTPUTDIR_LHC17d16=$tempPath
+echo "17d16 anchored to 16o: $HAVELHC17d16 $LHC17d16MC $OUTPUTDIR_LHC17d16"
+
+FindCorrectTrainDirectory $LHC17d18MC $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d18=$tempBool
+LHC17d18MC=$tempDir
+OUTPUTDIR_LHC17d18=$tempPath
+echo "17d18 anchored to 16p: $HAVELHC17d18 $LHC17d18MC $OUTPUTDIR_LHC17d18"
+
+######### 16 extra MCs
+
+FindCorrectTrainDirectory $LHC17f6MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f6_extra=$tempBool
+LHC17f6MC_extra=$tempDir
+OUTPUTDIR_LHC17f6_extra=$tempPath
+echo "17f6_extra anchored to 16d: $HAVELHC17f6_extra $LHC17f6MC_extra $OUTPUTDIR_LHC17f6_extra"
+
+FindCorrectTrainDirectory $LHC17f9MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f9_extra=$tempBool
+LHC17f9MC_extra=$tempDir
+OUTPUTDIR_LHC17f9_extra=$tempPath
+echo "17f9_extra anchored to 16e: $HAVELHC17f9_extra $LHC17f9MC_extra $OUTPUTDIR_LHC17f9_extra"
+
+FindCorrectTrainDirectory $LHC17d1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d1_extra=$tempBool
+LHC17d1MC_extra=$tempDir
+OUTPUTDIR_LHC17d1_extra=$tempPath
+echo "17d1_extra anchored to 16f: $HAVELHC17d1_extra $LHC17d1MC_extra $OUTPUTDIR_LHC17d1_extra"
+
+FindCorrectTrainDirectory $LHC17d17MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d17_extra=$tempBool
+LHC17d17MC_extra=$tempDir
+OUTPUTDIR_LHC17d17_extra=$tempPath
+echo "17d17_extra anchored to 16g: $HAVELHC17d17_extra $LHC17d17MC_extra $OUTPUTDIR_LHC17d17_extra"
+
+FindCorrectTrainDirectory $LHC17f5MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f5_extra=$tempBool
+LHC17f5MC_extra=$tempDir
+OUTPUTDIR_LHC17f5_extra=$tempPath
+echo "17f5_extra anchored to 16h: $HAVELHC17f5_extra $LHC17f5MC_extra $OUTPUTDIR_LHC17f5_extra"
+
+FindCorrectTrainDirectory $LHC17d3MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d3_extra=$tempBool
+LHC17d3MC_extra=$tempDir
+OUTPUTDIR_LHC17d3_extra=$tempPath
+echo "17d3_extra anchored to 16i: $HAVELHC17d3_extra $LHC17d3MC_extra $OUTPUTDIR_LHC17d3_extra"
+
+FindCorrectTrainDirectory $LHC17e5MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17e5_extra=$tempBool
+LHC17e5MC_extra=$tempDir
+OUTPUTDIR_LHC17e5_extra=$tempPath
+echo "17e5_extra anchored to 16j: $HAVELHC17e5_extra $LHC17e5MC_extra $OUTPUTDIR_LHC17e5_extra"
+
+FindCorrectTrainDirectory $LHC18f1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC18f1_extra=$tempBool
+LHC18f1MC_extra=$tempDir
+OUTPUTDIR_LHC18f1_extra=$tempPath
+echo "18f1_extra anchored to 16k: $HAVELHC18f1_extra $LHC18f1MC_extra $OUTPUTDIR_LHC18f1_extra"
+
+FindCorrectTrainDirectory $LHC18d8MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC18d8_extra=$tempBool
+LHC18d8MC_extra=$tempDir
+OUTPUTDIR_LHC18d8_extra=$tempPath
+echo "18d8_extra anchored to 16l: $HAVELHC18d8_extra $LHC18d8MC_extra $OUTPUTDIR_LHC18d8_extra"
+
+FindCorrectTrainDirectory $LHC17d16MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d16_extra=$tempBool
+LHC17d16MC_extra=$tempDir
+OUTPUTDIR_LHC17d16_extra=$tempPath
+echo "17d16_extra anchored to 16o: $HAVELHC17d16_extra $LHC17d16MC_extra $OUTPUTDIR_LHC17d16_extra"
+
+FindCorrectTrainDirectory $LHC17d18MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d18_extra=$tempBool
+LHC17d18MC_extra=$tempDir
+OUTPUTDIR_LHC17d18_extra=$tempPath
+echo "17d18_extra anchored to 16p: $HAVELHC17d18_extra $LHC17d18MC_extra $OUTPUTDIR_LHC17d18_extra"
 
 
-    if [ $DOWNLOADON == 1 ]; then
+############ 16 extra2 MCs
 
-        if [ $HAVELHC15n == 1 ]; then
-            echo "downloading LHC15n"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC15nData/merge_runlist_3/root_archive.zip file:$OUTPUTDIR_LHC15n/
-            unzip -u $OUTPUTDIR_LHC15n/root_archive.zip -d $OUTPUTDIR_LHC15n/
-        fi
 
+FindCorrectTrainDirectory $LHC17f6MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f6_extra2=$tempBool
+LHC17f6MC_extra2=$tempDir
+OUTPUTDIR_LHC17f6_extra2=$tempPath
+echo "17f6_extra2 anchored to 16d: $HAVELHC17f6_extra2 $LHC17f6MC_extra2 $OUTPUTDIR_LHC17f6_extra2"
+
+FindCorrectTrainDirectory $LHC17f9MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f9_extra2=$tempBool
+LHC17f9MC_extra2=$tempDir
+OUTPUTDIR_LHC17f9_extra2=$tempPath
+echo "17f9_extra2 anchored to 16e: $HAVELHC17f9_extra2 $LHC17f9MC_extra2 $OUTPUTDIR_LHC17f9_extra2"
+
+FindCorrectTrainDirectory $LHC17d1MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d1_extra2=$tempBool
+LHC17d1MC_extra2=$tempDir
+OUTPUTDIR_LHC17d1_extra2=$tempPath
+echo "17d1_extra2 anchored to 16f: $HAVELHC17d1_extra2 $LHC17d1MC_extra2 $OUTPUTDIR_LHC17d1_extra2"
+
+FindCorrectTrainDirectory $LHC17d17MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d17_extra2=$tempBool
+LHC17d17MC_extra2=$tempDir
+OUTPUTDIR_LHC17d17_extra2=$tempPath
+echo "17d17_extra2 anchored to 16g: $HAVELHC17d17_extra2 $LHC17d17MC_extra2 $OUTPUTDIR_LHC17d17_extra2"
+
+FindCorrectTrainDirectory $LHC17f5MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17f5_extra2=$tempBool
+LHC17f5MC_extra2=$tempDir
+OUTPUTDIR_LHC17f5_extra2=$tempPath
+echo "17f5_extra2 anchored to 16h: $HAVELHC17f5_extra2 $LHC17f5MC_extra2 $OUTPUTDIR_LHC17f5_extra2"
+
+FindCorrectTrainDirectory $LHC17d3MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d3_extra2=$tempBool
+LHC17d3MC_extra2=$tempDir
+OUTPUTDIR_LHC17d3_extra2=$tempPath
+echo "17d3_extra2 anchored to 16i: $HAVELHC17d3_extra2 $LHC17d3MC_extra2 $OUTPUTDIR_LHC17d3_extra2"
+
+FindCorrectTrainDirectory $LHC17e5MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17e5_extra2=$tempBool
+LHC17e5MC_extra2=$tempDir
+OUTPUTDIR_LHC17e5_extra2=$tempPath
+echo "17e5_extra2 anchored to 16j: $HAVELHC17e5_extra2 $LHC17e5MC_extra2 $OUTPUTDIR_LHC17e5_extra2"
+
+FindCorrectTrainDirectory $LHC17d16MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d16_extra2=$tempBool
+LHC17d16MC_extra2=$tempDir
+OUTPUTDIR_LHC17d16_extra2=$tempPath
+echo "17d16_extra2 anchored to 16o: $HAVELHC17d16_extra2 $LHC17d16MC_extra2 $OUTPUTDIR_LHC17d16_extra2"
+
+FindCorrectTrainDirectory $LHC17d18MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
+HAVELHC17d18_extra2=$tempBool
+LHC17d18MC_extra2=$tempDir
+OUTPUTDIR_LHC17d18_extra2=$tempPath
+echo "17d18_extra2 anchored to 16p: $HAVELHC17d18_extra2 $LHC17d18MC_extra2 $OUTPUTDIR_LHC17d18_extra2"
+
+
+
+
+############# 17 MCs
+
+FindCorrectTrainDirectory $LHC18d3 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18d3=$tempBool
+LHC18d3=$tempDir
+OUTPUTDIR_LHC18d3=$tempPath
+echo "LHC18d3 anchored to 17c,e,f: $HAVELHC18d3 $LHC18d3MC $OUTPUTDIR_LHC18d3"
+
+FindCorrectTrainDirectory $LHC18c12 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18c12=$tempBool
+LHC18c12=$tempDir
+OUTPUTDIR_LHC18c12=$tempPath
+echo "LHC18c12 anchored to 17h: $HAVELHC18c12 $LHC18c12MC $OUTPUTDIR_LHC18c12"
+
+FindCorrectTrainDirectory $LHC17k4 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC17k4=$tempBool
+LHC17k4=$tempDir
+OUTPUTDIR_LHC17k4=$tempPath
+echo "LHC17k4 anchored to 17i: $HAVELHC17k4 $LHC17k4MC $OUTPUTDIR_LHC17k4"
+
+FindCorrectTrainDirectory $LHC17h11 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC17h11=$tempBool
+LHC17h11=$tempDir
+OUTPUTDIR_LHC17h11=$tempPath
+echo "LHC17h11 anchored to 17j: $HAVELHC17h11 $LHC17h11MC $OUTPUTDIR_LHC17h11"
+
+FindCorrectTrainDirectory $LHC18c13 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18c13=$tempBool
+LHC18c13=$tempDir
+OUTPUTDIR_LHC18c13=$tempPath
+echo "LHC18c13 anchored to 17k: $HAVELHC18c13 $LHC18c13MC $OUTPUTDIR_LHC18c13"
+
+FindCorrectTrainDirectory $LHC18a8 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18a8=$tempBool
+LHC18a8=$tempDir
+OUTPUTDIR_LHC18a8=$tempPath
+echo "LHC18a8 anchored to 17l: $HAVELHC18a8 $LHC18a8MC $OUTPUTDIR_LHC18a8"
+
+FindCorrectTrainDirectory $LHC17l5 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC17l5=$tempBool
+LHC17l5=$tempDir
+OUTPUTDIR_LHC17l5=$tempPath
+echo "LHC17l5 anchored to 17m: $HAVELHC17l5 $LHC17l5MC $OUTPUTDIR_LHC17l5"
+
+FindCorrectTrainDirectory $LHC18a9 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18a9=$tempBool
+LHC18a9=$tempDir
+OUTPUTDIR_LHC18a9=$tempPath
+echo "LHC18a9 anchored to 17o: $HAVELHC18a9 $LHC18a9MC $OUTPUTDIR_LHC18a9"
+
+FindCorrectTrainDirectory $LHC18a1 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC18a1=$tempBool
+LHC18a1=$tempDir
+OUTPUTDIR_LHC18a1=$tempPath
+echo "LHC18a1 anchored to 17r: $HAVELHC18a1 $LHC18a1MC $OUTPUTDIR_LHC18a1"
+
+
+##### extra MCs
+
+FindCorrectTrainDirectory $LHC18d3_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18d3_extra=$tempBool
+LHC18d3_extra=$tempDir
+OUTPUTDIR_LHC18d3_extra=$tempPath
+echo "LHC18d3_extra anchored to 17c,e,f: $HAVELHC18d3_extra $LHC18d3MC_extra $OUTPUTDIR_LHC18d3_extra"
+
+FindCorrectTrainDirectory $LHC18c12_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18c12_extra=$tempBool
+LHC18c12_extra=$tempDir
+OUTPUTDIR_LHC18c12_extra=$tempPath
+echo "LHC18c12_extra anchored to 17h: $HAVELHC18c12_extra $LHC18c12MC_extra $OUTPUTDIR_LHC18c12_extra"
+
+FindCorrectTrainDirectory $LHC17k4_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC17k4_extra=$tempBool
+LHC17k4_extra=$tempDir
+OUTPUTDIR_LHC17k4_extra=$tempPath
+echo "LHC17k4_extra anchored to 17i: $HAVELHC17k4_extra $LHC17k4MC_extra $OUTPUTDIR_LHC17k4_extra"
+
+FindCorrectTrainDirectory $LHC17h11_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC17h11_extra=$tempBool
+LHC17h11_extra=$tempDir
+OUTPUTDIR_LHC17h11_extra=$tempPath
+echo "LHC17h11_extra anchored to 17j: $HAVELHC17h11_extra $LHC17h11MC_extra $OUTPUTDIR_LHC17h11_extra"
+
+FindCorrectTrainDirectory $LHC18c13_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18c13_extra=$tempBool
+LHC18c13_extra=$tempDir
+OUTPUTDIR_LHC18c13_extra=$tempPath
+echo "LHC18c13_extra anchored to 17k: $HAVELHC18c13_extra $LHC18c13MC_extra $OUTPUTDIR_LHC18c13_extra"
+
+FindCorrectTrainDirectory $LHC18a8_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18a8_extra=$tempBool
+LHC18a8_extra=$tempDir
+OUTPUTDIR_LHC18a8_extra=$tempPath
+echo "LHC18a8_extra anchored to 17l: $HAVELHC18a8_extra $LHC18a8MC_extra $OUTPUTDIR_LHC18a8_extra"
+
+FindCorrectTrainDirectory $LHC17l5_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
+HAVELHC17l5_extra=$tempBool
+LHC17l5_extra=$tempDir
+OUTPUTDIR_LHC17l5_extra=$tempPath
+echo "LHC17l5_extra anchored to 17m: $HAVELHC17l5_extra $LHC17l5MC_extra $OUTPUTDIR_LHC17l5_extra"
+
+FindCorrectTrainDirectory $LHC18a9_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18a9_extra=$tempBool
+LHC18a9_extra=$tempDir
+OUTPUTDIR_LHC18a9_extra=$tempPath
+echo "LHC18a9_extra anchored to 17o: $HAVELHC18a9_extra $LHC18a9MC_extra $OUTPUTDIR_LHC18a9_extra"
+
+FindCorrectTrainDirectory $LHC18a1_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
+HAVELHC18a1_extra=$tempBool
+LHC18a1_extra=$tempDir
+OUTPUTDIR_LHC18a1_extra=$tempPath
+echo "LHC18a1_extra anchored to 17r: $HAVELHC18a1_extra $LHC18a1MC_extra $OUTPUTDIR_LHC18a1_extra"
+
+
+# JJ MC anchored to LHC17x
+FindCorrectTrainDirectory $LHC18f5_1 $OUTPUTDIRMC $ALIENDIRMC $LHC17xJJMC
+HAVELHC18f5_1=$tempBool
+LHC18f5_1=$tempDir
+OUTPUTDIR_LHC18f5_1=$tempPath
+echo "LHC18f5_1 anchored to 17x: $HAVELHC18f5_1 $LHC18f5_1 $OUTPUTDIR_LHC18f5_1"
+
+FindCorrectTrainDirectory $LHC18f5_2 $OUTPUTDIRMC $ALIENDIRMC $LHC17xJJMC
+HAVELHC18f5_2=$tempBool
+LHC18f5_2=$tempDir
+OUTPUTDIR_LHC18f5_2=$tempPath
+echo "LHC18f5_2 anchored to 17x: $HAVELHC18f5_2 $LHC18f5_2 $OUTPUTDIR_LHC18f5_2"
+
+
+
+# LHC18x MCs
+FindCorrectTrainDirectory $LHC18g4MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18g4=$tempBool
+LHC18g4MC=$tempDir
+OUTPUTDIR_LHC18g4=$tempPath
+echo "18g4 anchored to 18b: $HAVELHC18g4 $LHC18g4MC $OUTPUTDIR_LHC18g4"
+
+FindCorrectTrainDirectory $LHC18g5MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18g5=$tempBool
+LHC18g5MC=$tempDir
+OUTPUTDIR_LHC18g5=$tempPath
+echo "18g5 anchored to 18d: $HAVELHC18g5 $LHC18g5MC $OUTPUTDIR_LHC18g5"
+
+FindCorrectTrainDirectory $LHC18g6MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18g6=$tempBool
+LHC18g6MC=$tempDir
+OUTPUTDIR_LHC18g6=$tempPath
+echo "18g6 anchored to 18e: $HAVELHC18g6 $LHC18g6MC $OUTPUTDIR_LHC18g6"
+
+FindCorrectTrainDirectory $LHC18h2MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18h2=$tempBool
+LHC18h2MC=$tempDir
+OUTPUTDIR_LHC18h2=$tempPath
+echo "18h2 anchored to 18f: $HAVELHC18h2 $LHC18h2MC $OUTPUTDIR_LHC18h2"
+
+FindCorrectTrainDirectory $LHC18h4MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18h4=$tempBool
+LHC18h4MC=$tempDir
+OUTPUTDIR_LHC18h4=$tempPath
+echo "18h4 anchored to 18g,h,i,j,k: $HAVELHC18h4 $LHC18h4MC $OUTPUTDIR_LHC18h4"
+
+FindCorrectTrainDirectory $LHC18j1MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18j1=$tempBool
+LHC18j1MC=$tempDir
+OUTPUTDIR_LHC18j1=$tempPath
+echo "18j1 anchored to 18l: $HAVELHC18j1 $LHC18j1MC $OUTPUTDIR_LHC18j1"
+
+FindCorrectTrainDirectory $LHC18j4MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18j4=$tempBool
+LHC18j4MC=$tempDir
+OUTPUTDIR_LHC18j4=$tempPath
+echo "18j4 anchored to 18m: $HAVELHC18j4 $LHC18j4MC $OUTPUTDIR_LHC18j4"
+
+FindCorrectTrainDirectory $LHC18k1MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18k1=$tempBool
+LHC18k1MC=$tempDir
+OUTPUTDIR_LHC18k1=$tempPath
+echo "18k1 anchored to 18n: $HAVELHC18k1 $LHC18k1MC $OUTPUTDIR_LHC18k1"
+
+FindCorrectTrainDirectory $LHC18k2MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18k2=$tempBool
+LHC18k2MC=$tempDir
+OUTPUTDIR_LHC18k2=$tempPath
+echo "18k2 anchored to 18o: $HAVELHC18k2 $LHC18k2MC $OUTPUTDIR_LHC18k2"
+
+FindCorrectTrainDirectory $LHC18k3MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
+HAVELHC18k3=$tempBool
+LHC18k3MC=$tempDir
+OUTPUTDIR_LHC18k3=$tempPath
+echo "18k3 anchored to 18p: $HAVELHC18k3 $LHC18k3MC $OUTPUTDIR_LHC18k3"
+
+# LHC18x extra MCs
+FindCorrectTrainDirectory $LHC18g4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g4_extra=$tempBool
+LHC18g4MC_extra=$tempDir
+OUTPUTDIR_LHC18g4_extra=$tempPath
+echo "18g4_extra anchored to 18b: $HAVELHC18g4_extra $LHC18g4MC_extra $OUTPUTDIR_LHC18g4_extra"
+
+FindCorrectTrainDirectory $LHC18g5MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g5_extra=$tempBool
+LHC18g5MC_extra=$tempDir
+OUTPUTDIR_LHC18g5_extra=$tempPath
+echo "18g5_extra anchored to 18d: $HAVELHC18g5_extra $LHC18g5MC_extra $OUTPUTDIR_LHC18g5_extra"
+
+FindCorrectTrainDirectory $LHC18g6MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g6_extra=$tempBool
+LHC18g6MC_extra=$tempDir
+OUTPUTDIR_LHC18g6_extra=$tempPath
+echo "18g6_extra anchored to 18e: $HAVELHC18g6_extra $LHC18g6MC_extra $OUTPUTDIR_LHC18g6_extra"
+
+FindCorrectTrainDirectory $LHC18h2MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18h2_extra=$tempBool
+LHC18h2MC_extra=$tempDir
+OUTPUTDIR_LHC18h2_extra=$tempPath
+echo "18h2_extra anchored to 18f: $HAVELHC18h2_extra $LHC18h2MC_extra $OUTPUTDIR_LHC18h2_extra"
+
+FindCorrectTrainDirectory $LHC18h4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18h4_extra=$tempBool
+LHC18h4MC_extra=$tempDir
+OUTPUTDIR_LHC18h4_extra=$tempPath
+echo "18h4_extra anchored to 18g,h,i,j,k: $HAVELHC18h4_extra $LHC18h4MC_extra $OUTPUTDIR_LHC18h4_extra"
+
+FindCorrectTrainDirectory $LHC18j1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18j1_extra=$tempBool
+LHC18j1MC_extra=$tempDir
+OUTPUTDIR_LHC18j1_extra=$tempPath
+echo "18j1_extra anchored to 18l: $HAVELHC18j1_extra $LHC18j1MC_extra $OUTPUTDIR_LHC18j1_extra"
+
+FindCorrectTrainDirectory $LHC18j4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18j4_extra=$tempBool
+LHC18j4MC_extra=$tempDir
+OUTPUTDIR_LHC18j4_extra=$tempPath
+echo "18j4_extra anchored to 18m: $HAVELHC18j4_extra $LHC18j4MC_extra $OUTPUTDIR_LHC18j4_extra"
+
+FindCorrectTrainDirectory $LHC18k1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k1_extra=$tempBool
+LHC18k1MC_extra=$tempDir
+OUTPUTDIR_LHC18k1_extra=$tempPath
+echo "18k1_extra anchored to 18n: $HAVELHC18k1_extra $LHC18k1MC_extra $OUTPUTDIR_LHC18k1_extra"
+
+FindCorrectTrainDirectory $LHC18k2MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k2_extra=$tempBool
+LHC18k2MC_extra=$tempDir
+OUTPUTDIR_LHC18k2_extra=$tempPath
+echo "18k2_extra anchored to 18o: $HAVELHC18k2_extra $LHC18k2MC_extra $OUTPUTDIR_LHC18k2_extra"
+
+FindCorrectTrainDirectory $LHC18k3MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k3_extra=$tempBool
+LHC18k3MC_extra=$tempDir
+OUTPUTDIR_LHC18k3_extra=$tempPath
+echo "18k3_extra anchored to 18p: $HAVELHC18k3_extra $LHC18k3MC_extra $OUTPUTDIR_LHC18k3_extra"
+
+# exit
+
+
+if [ $CLEANUPMAYOR == 0 ]; then
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16d" $HAVELHC16d $OUTPUTDIR_LHC16d $LHC16dData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16e" $HAVELHC16e $OUTPUTDIR_LHC16e $LHC16eData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16f" $HAVELHC16f $OUTPUTDIR_LHC16f $LHC16fData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16g" $HAVELHC16g $OUTPUTDIR_LHC16g $LHC16gData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16h" $HAVELHC16h $OUTPUTDIR_LHC16h $LHC16hData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16i" $HAVELHC16i $OUTPUTDIR_LHC16i $LHC16iData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16j" $HAVELHC16j $OUTPUTDIR_LHC16j $LHC16jData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16k" $HAVELHC16k $OUTPUTDIR_LHC16k $LHC16kData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16l" $HAVELHC16l $OUTPUTDIR_LHC16l $LHC16lData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16o" $HAVELHC16o $OUTPUTDIR_LHC16o $LHC16oData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16p" $HAVELHC16p $OUTPUTDIR_LHC16p $LHC16pData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17c" $HAVELHC17c $OUTPUTDIR_LHC17c $LHC17cData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17e" $HAVELHC17e $OUTPUTDIR_LHC17e $LHC17eData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17f" $HAVELHC17f $OUTPUTDIR_LHC17f $LHC17fData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17h" $HAVELHC17h $OUTPUTDIR_LHC17h $LHC17hData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17i" $HAVELHC17i $OUTPUTDIR_LHC17i $LHC17iData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17j" $HAVELHC17j $OUTPUTDIR_LHC17j $LHC17jData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17k" $HAVELHC17k $OUTPUTDIR_LHC17k $LHC17kData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17l" $HAVELHC17l $OUTPUTDIR_LHC17l $LHC17lData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17m" $HAVELHC17m $OUTPUTDIR_LHC17m $LHC17mData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17o" $HAVELHC17o $OUTPUTDIR_LHC17o $LHC17oData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17r" $HAVELHC17r $OUTPUTDIR_LHC17r $LHC17rData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18b" $HAVELHC18b $OUTPUTDIR_LHC18b $LHC18bData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18d" $HAVELHC18d $OUTPUTDIR_LHC18d $LHC18dData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18e" $HAVELHC18e $OUTPUTDIR_LHC18e $LHC18eData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18f" $HAVELHC18f $OUTPUTDIR_LHC18f $LHC18fData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18g" $HAVELHC18g $OUTPUTDIR_LHC18g $LHC18gData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18h" $HAVELHC18h $OUTPUTDIR_LHC18h $LHC18hData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18i" $HAVELHC18i $OUTPUTDIR_LHC18i $LHC18iData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+#     echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPC_2\nDPGTrackIncAccTPC_3\nDPGTrackIncAccTPC_4\nDPGTrackIncAccTPC_5\nDPGTrackIncAccTPC_6\nDPGTrackIncAccTPC_7\nDPGTrackAndCalo_2\nDPGTrackAndCalo_3\nDPGTrackAndCalo_4\nDPGTrackAndCalo_5\nDPGTrackAndCalo_6\nDPGTrackAndCalo_7" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5\nDPGTrackIncAccTPCandEMC_6\nDPGTrackIncAccTPCandEMC_7" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1_withTRDtracking" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18n" $HAVELHC18n $OUTPUTDIR_LHC18n $LHC18nData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18o" $HAVELHC18o $OUTPUTDIR_LHC18o $LHC18oData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18p" $HAVELHC18p $OUTPUTDIR_LHC18p $LHC18pData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+
+    currentDir=$PWD
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6" $HAVELHC17f6 $OUTPUTDIR_LHC17f6 $LHC17f6MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9" $HAVELHC17f9 $OUTPUTDIR_LHC17f9 $LHC17f9MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1" $HAVELHC17d1 $OUTPUTDIR_LHC17d1 $LHC17d1MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17" $HAVELHC17d17 $OUTPUTDIR_LHC17d17 $LHC17d17MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5" $HAVELHC17f5 $OUTPUTDIR_LHC17f5 $LHC17f5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3" $HAVELHC17d3 $OUTPUTDIR_LHC17d3 $LHC17d3MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5" $HAVELHC17e5 $OUTPUTDIR_LHC17e5 $LHC17e5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1" $HAVELHC18f1 $OUTPUTDIR_LHC18f1 $LHC18f1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8" $HAVELHC18d8 $OUTPUTDIR_LHC18d8 $LHC18d8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16" $HAVELHC17d16 $OUTPUTDIR_LHC17d16 $LHC17d16MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18" $HAVELHC17d18 $OUTPUTDIR_LHC17d18 $LHC17d18MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra" $HAVELHC17f6_extra $OUTPUTDIR_LHC17f6_extra $LHC17f6MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra" $HAVELHC17d1_extra $OUTPUTDIR_LHC17d1_extra $LHC17d1MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra" $HAVELHC17f9_extra $OUTPUTDIR_LHC17f9_extra $LHC17f9MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra" $HAVELHC17d17_extra $OUTPUTDIR_LHC17d17_extra $LHC17d17MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra" $HAVELHC17f5_extra $OUTPUTDIR_LHC17f5_extra $LHC17f5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra" $HAVELHC17e5_extra $OUTPUTDIR_LHC17e5_extra $LHC17e5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra" $HAVELHC17d3_extra $OUTPUTDIR_LHC17d3_extra $LHC17d3MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1_extra" $HAVELHC18f1_extra $OUTPUTDIR_LHC18f1_extra $LHC18f1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8_extra" $HAVELHC18d8_extra $OUTPUTDIR_LHC18d8_extra $LHC18d8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra" $HAVELHC17d16_extra $OUTPUTDIR_LHC17d16_extra $LHC17d16MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra" $HAVELHC17d18_extra $OUTPUTDIR_LHC17d18_extra $LHC17d18MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra2" $HAVELHC17f6_extra2 $OUTPUTDIR_LHC17f6_extra2 $LHC17f6MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra2" $HAVELHC17d1_extra2 $OUTPUTDIR_LHC17d1_extra2 $LHC17d1MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra2" $HAVELHC17f9_extra2 $OUTPUTDIR_LHC17f9_extra2 $LHC17f9MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra2" $HAVELHC17d17_extra2 $OUTPUTDIR_LHC17d17_extra2 $LHC17d17MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra2" $HAVELHC17f5_extra2 $OUTPUTDIR_LHC17f5_extra2 $LHC17f5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra2" $HAVELHC17e5_extra2 $OUTPUTDIR_LHC17e5_extra2 $LHC17e5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra2" $HAVELHC17d3_extra2 $OUTPUTDIR_LHC17d3_extra2 $LHC17d3MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra2" $HAVELHC17d16_extra2 $OUTPUTDIR_LHC17d16_extra2 $LHC17d16MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra2" $HAVELHC17d18_extra2 $OUTPUTDIR_LHC17d18_extra2 $LHC17d18MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_1" $HAVELHC18f5_1 $OUTPUTDIR_LHC18f5_1 $LHC18f5_1 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_2" $HAVELHC18f5_2 $OUTPUTDIR_LHC18f5_2 $LHC18f5_2 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3" $HAVELHC18d3 $OUTPUTDIR_LHC18d3 $LHC18d3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12" $HAVELHC18c12 $OUTPUTDIR_LHC18c12 $LHC18c12MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4" $HAVELHC17k4 $OUTPUTDIR_LHC17k4 $LHC17k4MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11" $HAVELHC17h11 $OUTPUTDIR_LHC17h11 $LHC17h11MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13" $HAVELHC18c13 $OUTPUTDIR_LHC18c13 $LHC18c13MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8" $HAVELHC18a8 $OUTPUTDIR_LHC18a8 $LHC18a8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5" $HAVELHC17l5 $OUTPUTDIR_LHC17l5 $LHC17l5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9" $HAVELHC18a9 $OUTPUTDIR_LHC18a9 $LHC18a9MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1" $HAVELHC18a1 $OUTPUTDIR_LHC18a1 $LHC18a1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3_extra" $HAVELHC18d3_extra $OUTPUTDIR_LHC18d3_extra $LHC18d3MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12_extra" $HAVELHC18c12_extra $OUTPUTDIR_LHC18c12_extra $LHC18c12MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4_extra" $HAVELHC17k4_extra $OUTPUTDIR_LHC17k4_extra $LHC17k4MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11_extra" $HAVELHC17h11_extra $OUTPUTDIR_LHC17h11_extra $LHC17h11MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13_extra" $HAVELHC18c13_extra $OUTPUTDIR_LHC18c13_extra $LHC18c13MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8_extra" $HAVELHC18a8_extra $OUTPUTDIR_LHC18a8_extra $LHC18a8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5_extra" $HAVELHC17l5_extra $OUTPUTDIR_LHC17l5_extra $LHC17l5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9_extra" $HAVELHC18a9_extra $OUTPUTDIR_LHC18a9_extra $LHC18a9MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1_extra" $HAVELHC18a1_extra $OUTPUTDIR_LHC18a1_extra $LHC18a1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g4" $HAVELHC18g4 $OUTPUTDIR_LHC18g4 $LHC18g4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g4_extra" $HAVELHC18g4_extra $OUTPUTDIR_LHC18g4_extra $LHC18g4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g5" $HAVELHC18g5 $OUTPUTDIR_LHC18g5 $LHC18g5MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g5_extra" $HAVELHC18g5_extra $OUTPUTDIR_LHC18g5_extra $LHC18g5MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g6" $HAVELHC18g6 $OUTPUTDIR_LHC18g6 $LHC18g6MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g6_extra" $HAVELHC18g6_extra $OUTPUTDIR_LHC18g6_extra $LHC18g6MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h2" $HAVELHC18h2 $OUTPUTDIR_LHC18h2 $LHC18h2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h2_extra" $HAVELHC18h2_extra $OUTPUTDIR_LHC18h2_extra $LHC18h2MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h4" $HAVELHC18h4 $OUTPUTDIR_LHC18h4 $LHC18h4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h4_extra" $HAVELHC18h4_extra $OUTPUTDIR_LHC18h4_extra $LHC18h4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+#     echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j1" $HAVELHC18j1 $OUTPUTDIR_LHC18j1 $LHC18j1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j1_extra" $HAVELHC18j1_extra $OUTPUTDIR_LHC18j1_extra $LHC18j1MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPC_2\nDPGTrackIncAccTPC_3\nDPGTrackIncAccTPC_4\nDPGTrackIncAccTPC_5\nDPGTrackIncAccTPC_6\nDPGTrackIncAccTPC_7\nDPGTrackAndCalo_2\nDPGTrackAndCalo_3\nDPGTrackAndCalo_4\nDPGTrackAndCalo_5\nDPGTrackAndCalo_6\nDPGTrackAndCalo_7" > runlistsToMerge.txt
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5\nDPGTrackIncAccTPCandEMC_6\nDPGTrackIncAccTPCandEMC_7" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j4" $HAVELHC18j4 $OUTPUTDIR_LHC18j4 $LHC18j4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j4_extra" $HAVELHC18j4_extra $OUTPUTDIR_LHC18j4_extra $LHC18j4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k1" $HAVELHC18k1 $OUTPUTDIR_LHC18k1 $LHC18k1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k1_extra" $HAVELHC18k1_extra $OUTPUTDIR_LHC18k1_extra $LHC18k1MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k2" $HAVELHC18k2 $OUTPUTDIR_LHC18k2 $LHC18k2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k2_extra" $HAVELHC18k2_extra $OUTPUTDIR_LHC18k2_extra $LHC18k2MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k3" $HAVELHC18k3 $OUTPUTDIR_LHC18k3 $LHC18k3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k3_extra" $HAVELHC18k3_extra $OUTPUTDIR_LHC18k3_extra $LHC18k3MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
+
+    echo "Change Structure If Needed"
+
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    listsToMerge=`cat runlistsToMerge.txt`
+    for runListName in $listsToMerge; do
         if [ $HAVELHC16d == 1 ]; then
-            echo "downloading LHC16d"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16dData/merge/root_archive.zip file:$OUTPUTDIR_LHC16d/
-            unzip -u $OUTPUTDIR_LHC16d/root_archive.zip -d $OUTPUTDIR_LHC16d/
+            ls $OUTPUTDIR_LHC16d/GammaConvV1-$runListName\_*.root > fileLHC16d.txt
+            fileNumbers=`cat fileLHC16d.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16e == 1 ]; then
-            echo "downloading LHC16e"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16eData/merge/root_archive.zip file:$OUTPUTDIR_LHC16e/
-            unzip -u $OUTPUTDIR_LHC16e/root_archive.zip -d $OUTPUTDIR_LHC16e/
+            ls $OUTPUTDIR_LHC16e/GammaConvV1-$runListName\_*.root > fileLHC16e.txt
+            fileNumbers=`cat fileLHC16e.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
-
         if [ $HAVELHC16f == 1 ]; then
-            echo "downloading LHC16f"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16fData/merge/root_archive.zip file:$OUTPUTDIR_LHC16f/
-            unzip -u $OUTPUTDIR_LHC16f/root_archive.zip -d $OUTPUTDIR_LHC16f/
+            ls $OUTPUTDIR_LHC16f/GammaConvV1-$runListName\_*.root > fileLHC16f.txt
+            fileNumbers=`cat fileLHC16f.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16f $NSlashes "LHC16f-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16g == 1 ]; then
-            echo "downloading LHC16g"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16gData/merge/root_archive.zip file:$OUTPUTDIR_LHC16g/
-            unzip -u $OUTPUTDIR_LHC16g/root_archive.zip -d $OUTPUTDIR_LHC16g/
+            ls $OUTPUTDIR_LHC16g/GammaConvV1-$runListName\_*.root > fileLHC16g.txt
+            fileNumbers=`cat fileLHC16g.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16h == 1 ]; then
-            echo "downloading LHC16h"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16hData/merge/root_archive.zip file:$OUTPUTDIR_LHC16h/
-            unzip -u $OUTPUTDIR_LHC16h/root_archive.zip -d $OUTPUTDIR_LHC16h/
+            ls $OUTPUTDIR_LHC16h/GammaConvV1-$runListName\_*.root > fileLHC16h.txt
+            fileNumbers=`cat fileLHC16h.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16i == 1 ]; then
-            echo "downloading LHC16i"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16iData/merge/root_archive.zip file:$OUTPUTDIR_LHC16i/
-            unzip -u $OUTPUTDIR_LHC16i/root_archive.zip -d $OUTPUTDIR_LHC16i/
+            ls $OUTPUTDIR_LHC16i/GammaConvV1-$runListName\_*.root > fileLHC16i.txt
+            fileNumbers=`cat fileLHC16i.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16j == 1 ]; then
-            echo "downloading LHC16j"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16jData/merge/root_archive.zip file:$OUTPUTDIR_LHC16j/
-            unzip -u $OUTPUTDIR_LHC16j/root_archive.zip -d $OUTPUTDIR_LHC16j/
+            ls $OUTPUTDIR_LHC16j/GammaConvV1-$runListName\_*.root > fileLHC16j.txt
+            fileNumbers=`cat fileLHC16j.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
-
-
-	if [ $HAVELHC16k == 1 ]; then
-            echo "downloading LHC16k"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16kData/merge/root_archive.zip file:$OUTPUTDIR_LHC16k/
-            unzip -u $OUTPUTDIR_LHC16k/root_archive.zip -d $OUTPUTDIR_LHC16k/
+        if [ $HAVELHC16k == 1 ]; then
+            ls $OUTPUTDIR_LHC16k/GammaConvV1-$runListName\_*.root > fileLHC16k.txt
+            fileNumbers=`cat fileLHC16k.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16k-pass2-$runListName" "-$runListName"
+            done;
         fi
-
-	if [ $HAVELHC16l == 1 ]; then
-            echo "downloading LHC16l"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16lData/merge_runlist_3/root_archive.zip file:$OUTPUTDIR_LHC16l/
-            unzip -u $OUTPUTDIR_LHC16l/root_archive.zip -d $OUTPUTDIR_LHC16l/
+        if [ $HAVELHC16l == 1 ]; then
+            ls $OUTPUTDIR_LHC16l/GammaConvV1-$runListName\_*.root > fileLHC16l.txt
+            fileNumbers=`cat fileLHC16l.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16l-pass2-$runListName" "-$runListName"
+            done;
         fi
-
-	if [ $HAVELHC16o == 1 ]; then
-            echo "downloading LHC16o"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16oData/merge/root_archive.zip file:$OUTPUTDIR_LHC16o/
-            unzip -u $OUTPUTDIR_LHC16o/root_archive.zip -d $OUTPUTDIR_LHC16o/
+        if [ $HAVELHC16o == 1 ]; then
+            ls $OUTPUTDIR_LHC16o/GammaConvV1-$runListName\_*.root > fileLHC16o.txt
+            fileNumbers=`cat fileLHC16o.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
-
         if [ $HAVELHC16p == 1 ]; then
-            echo "downloading LHC16p"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC16pData/merge/root_archive.zip file:$OUTPUTDIR_LHC16p/
-            unzip -u $OUTPUTDIR_LHC16p/root_archive.zip -d $OUTPUTDIR_LHC16p/
-        fi
-        ########--------MC outputs--------#
-
-	if [ $HAVELHC17e2MC == 1 ]; then
-            echo "downloading LHC17e2"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17e2MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17e2MC/
-            unzip -u $OUTPUTDIR_LHC17e2MC/root_archive.zip -d $OUTPUTDIR_LHC17e2MC/
+            ls $OUTPUTDIR_LHC16p/GammaConvV1-$runListName\_*.root > fileLHC16p.txt
+            fileNumbers=`cat fileLHC16p.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
 
 
-	if [ $HAVELHC17f6MC == 1 ]; then
-            echo "downloading LHC17f6"
-#            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f6MC/
-	    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/GammaConvV1_300.root file:$OUTPUTDIR_LHC17f6MC/
-	    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/GammaConvV1_301.root file:$OUTPUTDIR_LHC17f6MC/
-	    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/GammaConvV1_302.root file:$OUTPUTDIR_LHC17f6MC/
-	    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/GammaConv_Material_21.root file:$OUTPUTDIR_LHC17f6MC/
-	    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f6MC/merge/GammaConv_Material_121.root file:$OUTPUTDIR_LHC17f6MC/
-#            unzip -u $OUTPUTDIR_LHC17f6MC/root_archive.zip -d $OUTPUTDIR_LHC17f6MC/
+        if [ $HAVELHC17c == 1 ]; then
+            ls $OUTPUTDIR_LHC17c/GammaConvV1-$runListName\_*.root > fileLHC17c.txt
+            fileNumbers=`cat fileLHC17c.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17c $NSlashes "LHC17c-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17e == 1 ]; then
+            ls $OUTPUTDIR_LHC17e/GammaConvV1-$runListName\_*.root > fileLHC17e.txt
+            fileNumbers=`cat fileLHC17e.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17e $NSlashes "LHC17e-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17f == 1 ]; then
+            ls $OUTPUTDIR_LHC17f/GammaConvV1-$runListName\_*.root > fileLHC17f.txt
+            fileNumbers=`cat fileLHC17f.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f $NSlashes "LHC17f-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17h == 1 ]; then
+            ls $OUTPUTDIR_LHC17h/GammaConvV1-$runListName\_*.root > fileLHC17h.txt
+            fileNumbers=`cat fileLHC17h.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17h $NSlashes "LHC17h-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17i == 1 ]; then
+            ls $OUTPUTDIR_LHC17i/GammaConvV1-$runListName\_*.root > fileLHC17i.txt
+            fileNumbers=`cat fileLHC17i.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17i $NSlashes "LHC17i-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17j == 1 ]; then
+            ls $OUTPUTDIR_LHC17j/GammaConvV1-$runListName\_*.root > fileLHC17j.txt
+            fileNumbers=`cat fileLHC17j.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17j $NSlashes "LHC17j-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17k == 1 ]; then
+            ls $OUTPUTDIR_LHC17k/GammaConvV1-$runListName\_*.root > fileLHC17k.txt
+            fileNumbers=`cat fileLHC17k.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17k $NSlashes "LHC17k-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17l == 1 ]; then
+            ls $OUTPUTDIR_LHC17l/GammaConvV1-$runListName\_*.root > fileLHC17l.txt
+            fileNumbers=`cat fileLHC17l.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17l $NSlashes "LHC17l-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17m == 1 ]; then
+            ls $OUTPUTDIR_LHC17m/GammaConvV1-$runListName\_*.root > fileLHC17m.txt
+            fileNumbers=`cat fileLHC17m.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17m $NSlashes "LHC17m-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17o == 1 ]; then
+            ls $OUTPUTDIR_LHC17o/GammaConvV1-$runListName\_*.root > fileLHC17o.txt
+            fileNumbers=`cat fileLHC17o.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17o $NSlashes "LHC17o-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC17r == 1 ]; then
+            ls $OUTPUTDIR_LHC17r/GammaConvV1-$runListName\_*.root > fileLHC17r.txt
+            fileNumbers=`cat fileLHC17r.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17r $NSlashes "LHC17r-pass$passNr-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17d1MC == 1 ]; then
-            echo "downloading LHC17d1"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d1MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d1MC/
-            unzip -u $OUTPUTDIR_LHC17d1MC/root_archive.zip -d $OUTPUTDIR_LHC17d1MC/
+
+
+        if [ $HAVELHC18b == 1 ]; then
+            ls $OUTPUTDIR_LHC18b/GammaConvV1-$runListName\_*.root > fileLHC18b.txt
+            fileNumbers=`cat fileLHC18b.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18b $NSlashes "LHC18b-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18d == 1 ]; then
+            ls $OUTPUTDIR_LHC18d/GammaConvV1-$runListName\_*.root > fileLHC18d.txt
+            fileNumbers=`cat fileLHC18d.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18d $NSlashes "LHC18d-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18e == 1 ]; then
+            ls $OUTPUTDIR_LHC18e/GammaConvV1-$runListName\_*.root > fileLHC18e.txt
+            fileNumbers=`cat fileLHC18e.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18e $NSlashes "LHC18e-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18f == 1 ]; then
+            ls $OUTPUTDIR_LHC18f/GammaConvV1-$runListName\_*.root > fileLHC18f.txt
+            fileNumbers=`cat fileLHC18f.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18f $NSlashes "LHC18f-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g == 1 ]; then
+            ls $OUTPUTDIR_LHC18g/GammaConvV1-$runListName\_*.root > fileLHC18g.txt
+            fileNumbers=`cat fileLHC18g.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g $NSlashes "LHC18g-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h == 1 ]; then
+            ls $OUTPUTDIR_LHC18h/GammaConvV1-$runListName\_*.root > fileLHC18h.txt
+            fileNumbers=`cat fileLHC18h.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18h $NSlashes "LHC18h-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18i == 1 ]; then
+            ls $OUTPUTDIR_LHC18i/GammaConvV1-$runListName\_*.root > fileLHC18i.txt
+            fileNumbers=`cat fileLHC18i.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18i $NSlashes "LHC18i-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j == 1 ]; then
+            ls $OUTPUTDIR_LHC18j/GammaConvV1-$runListName\_*.root > fileLHC18j.txt
+            fileNumbers=`cat fileLHC18j.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18j $NSlashes "LHC18j-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k == 1 ]; then
+            ls $OUTPUTDIR_LHC18k/GammaConvV1-$runListName\_*.root > fileLHC18k.txt
+            fileNumbers=`cat fileLHC18k.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k $NSlashes "LHC18k-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18l == 1 ]; then
+            ls $OUTPUTDIR_LHC18l/GammaConvV1-$runListName\_*.root > fileLHC18l.txt
+            fileNumbers=`cat fileLHC18l.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18l $NSlashes "LHC18l-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18m == 1 ]; then
+            ls $OUTPUTDIR_LHC18m/GammaConvV1-$runListName\_*.root > fileLHC18m.txt
+            fileNumbers=`cat fileLHC18m.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18m $NSlashes "LHC18m-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18n == 1 ]; then
+            ls $OUTPUTDIR_LHC18n/GammaConvV1-$runListName\_*.root > fileLHC18n.txt
+            fileNumbers=`cat fileLHC18n.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18n $NSlashes "LHC18n-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18o == 1 ]; then
+            ls $OUTPUTDIR_LHC18o/GammaConvV1-$runListName\_*.root > fileLHC18o.txt
+            fileNumbers=`cat fileLHC18o.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18o $NSlashes "LHC18o-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18p == 1 ]; then
+            ls $OUTPUTDIR_LHC18p/GammaConvV1-$runListName\_*.root > fileLHC18p.txt
+            fileNumbers=`cat fileLHC18p.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18p $NSlashes "LHC18p-pass$passNr-$runListName" "-$runListName"
+            done;
+        fi
+    done
+
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+#         echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    listsToMerge=`cat runlistsToMerge.txt`
+    for runListName in $listsToMerge; do
+        # MC for LHC16d
+        if [ $HAVELHC17f6 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f6/GammaConvV1-$runListName\_*.root > fileLHC17f6.txt
+            fileNumbers=`cat fileLHC17f6.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16e
+        if [ $HAVELHC17f9 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f9/GammaConvV1-$runListName\_*.root > fileLHC17f9.txt
+            fileNumbers=`cat fileLHC17f9.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16f
+        if [ $HAVELHC17d1 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d1/GammaConvV1-$runListName\_*.root > fileLHC17d1.txt
+            fileNumbers=`cat fileLHC17d1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d1 $NSlashes "MC_LHC17d1-anchor16f-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16g
+        if [ $HAVELHC17d17 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d17/GammaConvV1-$runListName\_*.root > fileLHC17d17.txt
+            fileNumbers=`cat fileLHC17d17.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16h
+        if [ $HAVELHC17f5 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f5/GammaConvV1-$runListName\_*.root > fileLHC17f5.txt
+            fileNumbers=`cat fileLHC17f5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16i
+        if [ $HAVELHC17d3 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d3/GammaConvV1-$runListName\_*.root > fileLHC17d3.txt
+            fileNumbers=`cat fileLHC17d3.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16j
+        if [ $HAVELHC17e5 == 1 ]; then
+            ls $OUTPUTDIR_LHC17e5/GammaConvV1-$runListName\_*.root > fileLHC17e5.txt
+            fileNumbers=`cat fileLHC17e5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17e5-anchor16j-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16k
+        if [ $HAVELHC18f1 == 1 ]; then
+            ls $OUTPUTDIR_LHC18f1/GammaConvV1-$runListName\_*.root > fileLHC18f1.txt
+            fileNumbers=`cat fileLHC18f1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18f1 $NSlashes "MC_LHC18f1-anchor16k-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16l
+        if [ $HAVELHC18d8 == 1 ]; then
+            ls $OUTPUTDIR_LHC18d8/GammaConvV1-$runListName\_*.root > fileLHC18d8.txt
+            fileNumbers=`cat fileLHC18d8.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18d8 $NSlashes "MC_LHC18d8-anchor16l-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16o
+        if [ $HAVELHC17d16 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d16/GammaConvV1-$runListName\_*.root > fileLHC17d16.txt
+            fileNumbers=`cat fileLHC17d16.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16p
+        if [ $HAVELHC17d18 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d18/GammaConvV1-$runListName\_*.root > fileLHC17d18.txt
+            fileNumbers=`cat fileLHC17d18.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17d17MC == 1 ]; then
-            echo "downloading LHC17d17"
- #           alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d17MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/GammaConvV1_300.root file:$OUTPUTDIR_LHC17d17MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/GammaConvV1_301.root file:$OUTPUTDIR_LHC17d17MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/GammaConvV1_302.root file:$OUTPUTDIR_LHC17d17MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/GammaConv_Material_21.root file:$OUTPUTDIR_LHC17d17MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d17MC/merge/GammaConv_Material_121.root file:$OUTPUTDIR_LHC17d17MC/
- #           unzip -u $OUTPUTDIR_LHC17d17MC/root_archive.zip -d $OUTPUTDIR_LHC17d17MC/
+        #extra MC for LHC16d
+        if [ $HAVELHC17f6_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17f6_extra/GammaConvV1-$runListName\_*.root > fileLHC17f6_extra.txt
+            fileNumbers=`cat fileLHC17f6_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f6_extra $NSlashes "MC_LHC17f6_extra-anchor16d-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16e
+        if [ $HAVELHC17f9_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17f9_extra/GammaConvV1-$runListName\_*.root > fileLHC17f9_extra.txt
+            fileNumbers=`cat fileLHC17f9_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f9_extra $NSlashes "MC_LHC17f9_extra-anchor16e-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16f
+        if [ $HAVELHC17d1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17d1_extra/GammaConvV1-$runListName\_*.root > fileLHC17d1_extra.txt
+            fileNumbers=`cat fileLHC17d1_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d1_extra $NSlashes "MC_LHC17d1_extra-anchor16f-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16g
+        if [ $HAVELHC17d17_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17d17_extra/GammaConvV1-$runListName\_*.root > fileLHC17d17_extra.txt
+            fileNumbers=`cat fileLHC17d17_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d17_extra $NSlashes "MC_LHC17d17-anchor16g_extra-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16h
+        if [ $HAVELHC17f5_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17f5_extra/GammaConvV1-$runListName\_*.root > fileLHC17f5_extra.txt
+            fileNumbers=`cat fileLHC17f5_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5_extra-anchor16h-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16i
+        if [ $HAVELHC17d3_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17d3_extra/GammaConvV1-$runListName\_*.root > fileLHC17d3_extra.txt
+            fileNumbers=`cat fileLHC17d3_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d3_extra $NSlashes "MC_LHC17d3_extra-anchor16i-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16j
+        if [ $HAVELHC17e5_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17e5_extra/GammaConvV1-$runListName\_*.root > fileLHC17e5_extra.txt
+            fileNumbers=`cat fileLHC17e5_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17e5_extra $NSlashes "MC_LHC17e5_extra-anchor16j-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16k
+        if [ $HAVELHC18f1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18f1_extra/GammaConvV1-$runListName\_*.root > fileLHC18f1_extra.txt
+            fileNumbers=`cat fileLHC18f1_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18f1_extra $NSlashes "MC_LHC18f1-anchor16k-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16l
+        if [ $HAVELHC18d8_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18d8_extra/GammaConvV1-$runListName\_*.root > fileLHC18d8_extra.txt
+            fileNumbers=`cat fileLHC18d8_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18d8_extra $NSlashes "MC_LHC18d8_extra-anchor16l-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16o
+        if [ $HAVELHC17d16_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17d16_extra/GammaConvV1-$runListName\_*.root > fileLHC17d16_extra.txt
+            fileNumbers=`cat fileLHC17d16_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d16_extra $NSlashes "MC_LHC17d16_extra-anchor16o-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16p
+        if [ $HAVELHC17d18_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17d18_extra/GammaConvV1-$runListName\_*.root > fileLHC17d18_extra.txt
+            fileNumbers=`cat fileLHC17d18_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d18_extra $NSlashes "MC_LHC17d18_extra-anchor16p-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17f5MC == 1 ]; then
-            echo "downloading LHC17f5"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f5MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f5MC/
-            unzip -u $OUTPUTDIR_LHC17f5MC/root_archive.zip -d $OUTPUTDIR_LHC17f5MC/
+        #extra2 MC for LHC16d
+        if [ $HAVELHC17f6_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f6_extra2/GammaConvV1-$runListName\_*.root > fileLHC17f6_extra2.txt
+            fileNumbers=`cat fileLHC17f6_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f6_extra2 $NSlashes "MC_LHC17f6_extra2-anchor16d-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16e
+        if [ $HAVELHC17f9_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f9_extra2/GammaConvV1-$runListName\_*.root > fileLHC17f9_extra2.txt
+            fileNumbers=`cat fileLHC17f9_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f9_extra2 $NSlashes "MC_LHC17f9_extra2-anchor16e-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16f
+        if [ $HAVELHC17d1_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d1_extra2/GammaConvV1-$runListName\_*.root > fileLHC17d1_extra2.txt
+            fileNumbers=`cat fileLHC17d1_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d1_extra2 $NSlashes "MC_LHC17d1_extra2-anchor16f-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16g
+        if [ $HAVELHC17d17_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d17_extra2/GammaConvV1-$runListName\_*.root > fileLHC17d17_extra2.txt
+            fileNumbers=`cat fileLHC17d17_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d17_extra2 $NSlashes "MC_LHC17d17-anchor16g_extra2-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16h
+        if [ $HAVELHC17f5_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17f5_extra2/GammaConvV1-$runListName\_*.root > fileLHC17f5_extra2.txt
+            fileNumbers=`cat fileLHC17f5_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5_extra2-anchor16h-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16i
+        if [ $HAVELHC17d3_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d3_extra2/GammaConvV1-$runListName\_*.root > fileLHC17d3_extra2.txt
+            fileNumbers=`cat fileLHC17d3_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d3_extra2 $NSlashes "MC_LHC17d3_extra2-anchor16i-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16j
+        if [ $HAVELHC17e5_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17e5_extra2/GammaConvV1-$runListName\_*.root > fileLHC17e5_extra2.txt
+            fileNumbers=`cat fileLHC17e5_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17e5_extra2 $NSlashes "MC_LHC17e5_extra2-anchor16j-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16o
+        if [ $HAVELHC17d16_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d16_extra2/GammaConvV1-$runListName\_*.root > fileLHC17d16_extra2.txt
+            fileNumbers=`cat fileLHC17d16_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d16_extra2 $NSlashes "MC_LHC17d16_extra2-anchor16o-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC16p
+        if [ $HAVELHC17d18_extra2 == 1 ]; then
+            ls $OUTPUTDIR_LHC17d18_extra2/GammaConvV1-$runListName\_*.root > fileLHC17d18_extra2.txt
+            fileNumbers=`cat fileLHC17d18_extra2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17d18_extra2 $NSlashes "MC_LHC17d18_extra2-anchor16p-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17d3MC == 1 ]; then
-            echo "downloading LHC17d3"
- #           alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d3MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/GammaConvV1_300.root file:$OUTPUTDIR_LHC17d3MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/GammaConvV1_301.root file:$OUTPUTDIR_LHC17d3MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/GammaConvV1_302.root file:$OUTPUTDIR_LHC17d3MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/GammaConv_Material_21.root file:$OUTPUTDIR_LHC17d3MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d3MC/merge/GammaConv_Material_121.root file:$OUTPUTDIR_LHC17d3MC/
- #           unzip -u $OUTPUTDIR_LHC17d3MC/root_archive.zip -d $OUTPUTDIR_LHC17d3MC/
+        # MC for LHC17c,e,f
+        if [ $HAVELHC18d3 == 1 ]; then
+            ls $OUTPUTDIR_LHC18d3/GammaConvV1-$runListName\_*.root > fileLHC18d3.txt
+            fileNumbers=`cat fileLHC18d3.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18d3 $NSlashes "MC_LHC18d3-anchor17c-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC17h
+        if [ $HAVELHC18c12 == 1 ]; then
+            ls $OUTPUTDIR_LHC18c12/GammaConvV1-$runListName\_*.root > fileLHC18c12.txt
+            fileNumbers=`cat fileLHC18c12.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18c12 $NSlashes "MC_LHC18c12-anchor17h-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17i
+        if [ $HAVELHC17k4 == 1 ]; then
+            ls $OUTPUTDIR_LHC17k4/GammaConvV1-$runListName\_*.root > fileLHC17k4.txt
+            fileNumbers=`cat fileLHC17k4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17k4 $NSlashes "MC_LHC17k4-anchor17i-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17j
+        if [ $HAVELHC17h11 == 1 ]; then
+            ls $OUTPUTDIR_LHC17h11/GammaConvV1-$runListName\_*.root > fileLHC17h11.txt
+            fileNumbers=`cat fileLHC17h11.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17h11 $NSlashes "MC_LHC17h11-anchor17j-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17k
+        if [ $HAVELHC18c13 == 1 ]; then
+            ls $OUTPUTDIR_LHC18c13/GammaConvV1-$runListName\_*.root > fileLHC18c13.txt
+            fileNumbers=`cat fileLHC18c13.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18c13 $NSlashes "MC_LHC18c13-anchor17k-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17l
+        if [ $HAVELHC18a8 == 1 ]; then
+            ls $OUTPUTDIR_LHC18a8/GammaConvV1-$runListName\_*.root > fileLHC18a8.txt
+            fileNumbers=`cat fileLHC18a8.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a8 $NSlashes "MC_LHC18a8-anchor17l-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17m
+        if [ $HAVELHC17l5 == 1 ]; then
+            ls $OUTPUTDIR_LHC17l5/GammaConvV1-$runListName\_*.root > fileLHC17l5.txt
+            fileNumbers=`cat fileLHC17l5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17l5 $NSlashes "MC_LHC17l5-anchor17m-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17o
+        if [ $HAVELHC18a9 == 1 ]; then
+            ls $OUTPUTDIR_LHC18a9/GammaConvV1-$runListName\_*.root > fileLHC18a9.txt
+            fileNumbers=`cat fileLHC18a9.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a9 $NSlashes "MC_LHC18a9-anchor17r-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17r
+        if [ $HAVELHC18a1 == 1 ]; then
+            ls $OUTPUTDIR_LHC18a1/GammaConvV1-$runListName\_*.root > fileLHC18a1.txt
+            fileNumbers=`cat fileLHC18a1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a1 $NSlashes "MC_LHC18a1-anchor17r-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17e5MC == 1 ]; then
-            echo "downloading LHC17e5"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17e5MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17e5MC/
-            unzip -u $OUTPUTDIR_LHC17e5MC/root_archive.zip -d $OUTPUTDIR_LHC17e5MC/
+
+
+        # MC for LHC17c,e,f
+        if [ $HAVELHC18d3_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18d3_extra/GammaConvV1-$runListName\_*.root > fileLHC18d3_extra.txt
+            fileNumbers=`cat fileLHC18d3_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18d3 $NSlashes "MC_LHC18d3_extra-anchor17c-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC17h
+        if [ $HAVELHC18c12_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18c12_extra/GammaConvV1-$runListName\_*.root > fileLHC18c12_extra.txt
+            fileNumbers=`cat fileLHC18c12_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18c12_extra $NSlashes "MC_LHC18c12_extra-anchor17h-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17i
+        if [ $HAVELHC17k4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17k4_extra/GammaConvV1-$runListName\_*.root > fileLHC17k4_extra.txt
+            fileNumbers=`cat fileLHC17k4_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17k4_extra $NSlashes "MC_LHC17k4_extra-anchor17i-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17j
+        if [ $HAVELHC17h11_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17h11_extra/GammaConvV1-$runListName\_*.root > fileLHC17h11_extra.txt
+            fileNumbers=`cat fileLHC17h11_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17h11_extra $NSlashes "MC_LHC17h11_extra-anchor17j-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17k
+        if [ $HAVELHC18c13_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18c13_extra/GammaConvV1-$runListName\_*.root > fileLHC18c13_extra.txt
+            fileNumbers=`cat fileLHC18c13_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18c13_extra $NSlashes "MC_LHC18c13_extra-anchor17k-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17l
+        if [ $HAVELHC18a8_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18a8_extra/GammaConvV1-$runListName\_*.root > fileLHC18a8_extra.txt
+            fileNumbers=`cat fileLHC18a8_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a8_extra $NSlashes "MC_LHC18a8_extra-anchor17l-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17m
+        if [ $HAVELHC17l5_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC17l5_extra/GammaConvV1-$runListName\_*.root > fileLHC17l5_extra.txt
+            fileNumbers=`cat fileLHC17l5_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17l5_extra $NSlashes "MC_LHC17l5_extra-anchor17m-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17o
+        if [ $HAVELHC18a9_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18a9_extra/GammaConvV1-$runListName\_*.root > fileLHC18a9_extra.txt
+            fileNumbers=`cat fileLHC18a9_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a9_extra $NSlashes "MC_LHC18a9_extra-anchor17r-$runListName" "-$runListName"
+            done;
+        fi
+        #MC for LHC17r
+        if [ $HAVELHC18a1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18a1_extra/GammaConvV1-$runListName\_*.root > fileLHC18a1_extra.txt
+            fileNumbers=`cat fileLHC18a1_extra.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18a1_extra $NSlashes "MC_LHC18a1_extra-anchor17r-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17d20a1MC == 1 ]; then
-            echo "downloading LHC17d20a1"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d20a1MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d20a1MC/
-            unzip -u $OUTPUTDIR_LHC17d20a1MC/root_archive.zip -d $OUTPUTDIR_LHC17d20a1MC/
+        # JJ MC anch to LHC17x
+        if [ $HAVELHC18f5_1 == 1 ]; then
+            ls $OUTPUTDIR_LHC18f5_1/GammaConvV1-$runListName\_*.root > fileLHC18f5_1.txt
+            fileNumbers=`cat fileLHC18f5_1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18f5_1 $NSlashes "MC_LHC18f5_1-anchor17r-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18f5_2 == 1 ]; then
+            ls $OUTPUTDIR_LHC18f5_2/GammaConvV1-$runListName\_*.root > fileLHC18f5_2.txt
+            fileNumbers=`cat fileLHC18f5_2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18f5_2 $NSlashes "MC_LHC18f5_2-anchor17r-$runListName" "-$runListName"
+            done;
         fi
 
-	if [ $HAVELHC17d20a1_extraMC == 1 ]; then
-            echo "downloading LHC17d20a1_extra"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d20a1_extraMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d20a1_extraMC/
-            unzip -u $OUTPUTDIR_LHC17d20a1_extraMC/root_archive.zip -d $OUTPUTDIR_LHC17d20a1_extraMC/
+
+        # MC for LHC18b
+        if [ $HAVELHC18g4 == 1 ]; then
+            ls $OUTPUTDIR_LHC18g4/GammaConvV1-$runListName\_*.root > fileLHC18g4.txt
+            fileNumbers=`cat fileLHC18g4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g4 $NSlashes "MC_LHC18g4-anchor18b-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g4_extra/GammaConvV1-$runListName\_*.root > fileLHC18g4.txt
+            fileNumbers=`cat fileLHC18g4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g4_extra $NSlashes "MC_LHC18g4_extra-anchor18b-$runListName" "-$runListName"
+            done;
+        fi
+        # MC for LHC18d
+        if [ $HAVELHC18g5 == 1 ]; then
+            ls $OUTPUTDIR_LHC18g5/GammaConvV1-$runListName\_*.root > fileLHC18g5.txt
+            fileNumbers=`cat fileLHC18g5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g5 $NSlashes "MC_LHC18g5-anchor18d-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g5_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g5_extra/GammaConvV1-$runListName\_*.root > fileLHC18g5.txt
+            fileNumbers=`cat fileLHC18g5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g5_extra $NSlashes "MC_LHC18g5_extra-anchor18d-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g6 == 1 ]; then
+            ls $OUTPUTDIR_LHC18g6/GammaConvV1-$runListName\_*.root > fileLHC18g6.txt
+            fileNumbers=`cat fileLHC18g6.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g6 $NSlashes "MC_LHC18g6-anchor18e-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g6_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g6_extra/GammaConvV1-$runListName\_*.root > fileLHC18g6.txt
+            fileNumbers=`cat fileLHC18g6.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18g6_extra $NSlashes "MC_LHC18g6_extra-anchor18e-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h2 == 1 ]; then
+            ls $OUTPUTDIR_LHC18h2/GammaConvV1-$runListName\_*.root > fileLHC18h2.txt
+            fileNumbers=`cat fileLHC18h2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18h2 $NSlashes "MC_LHC18h2-anchor18f-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h2_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18h2_extra/GammaConvV1-$runListName\_*.root > fileLHC18h2.txt
+            fileNumbers=`cat fileLHC18h2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18h2_extra $NSlashes "MC_LHC18h2_extra-anchor18f-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h4 == 1 ]; then
+            ls $OUTPUTDIR_LHC18h4/GammaConvV1-$runListName\_*.root > fileLHC18h4.txt
+            fileNumbers=`cat fileLHC18h4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18h4 $NSlashes "MC_LHC18h4-anchor18ghijk-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18h4_extra/GammaConvV1-$runListName\_*.root > fileLHC18h4.txt
+            fileNumbers=`cat fileLHC18h4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18h4_extra $NSlashes "MC_LHC18h4_extra-anchor18ghijk-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j1 == 1 ]; then
+            ls $OUTPUTDIR_LHC18j1/GammaConvV1-$runListName\_*.root > fileLHC18j1.txt
+            fileNumbers=`cat fileLHC18j1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18j1 $NSlashes "MC_LHC18j1-anchor18l-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18j1_extra/GammaConvV1-$runListName\_*.root > fileLHC18j1.txt
+            fileNumbers=`cat fileLHC18j1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18j1_extra $NSlashes "MC_LHC18j1_extra-anchor18l-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j4 == 1 ]; then
+            ls $OUTPUTDIR_LHC18j4/GammaConvV1-$runListName\_*.root > fileLHC18j4.txt
+            fileNumbers=`cat fileLHC18j4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18j4 $NSlashes "MC_LHC18j4-anchor18m-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18j4_extra/GammaConvV1-$runListName\_*.root > fileLHC18j4.txt
+            fileNumbers=`cat fileLHC18j4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18j4_extra $NSlashes "MC_LHC18j4_extra-anchor18m-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k1 == 1 ]; then
+            ls $OUTPUTDIR_LHC18k1/GammaConvV1-$runListName\_*.root > fileLHC18k1.txt
+            fileNumbers=`cat fileLHC18k1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k1 $NSlashes "MC_LHC18k1-anchor18n-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k1_extra/GammaConvV1-$runListName\_*.root > fileLHC18k1.txt
+            fileNumbers=`cat fileLHC18k1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k1_extra $NSlashes "MC_LHC18k1_extra-anchor18n-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k2 == 1 ]; then
+            ls $OUTPUTDIR_LHC18k2/GammaConvV1-$runListName\_*.root > fileLHC18k2.txt
+            fileNumbers=`cat fileLHC18k2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k2_extra $NSlashes "MC_LHC18k2_extra-anchor18o-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k2_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k2_extra/GammaConvV1-$runListName\_*.root > fileLHC18k2.txt
+            fileNumbers=`cat fileLHC18k2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k2 $NSlashes "MC_LHC18k2-anchor18o-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k3 == 1 ]; then
+            ls $OUTPUTDIR_LHC18k3/GammaConvV1-$runListName\_*.root > fileLHC18k3.txt
+            fileNumbers=`cat fileLHC18k3.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k3 $NSlashes "MC_LHC18k3-anchor18p-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k3_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k3_extra/GammaConvV1-$runListName\_*.root > fileLHC18k3.txt
+            fileNumbers=`cat fileLHC18k3.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC18k3_extra $NSlashes "MC_LHC18k3_extra-anchor18p-$runListName" "-$runListName"
+            done;
+        fi
+    done
+
+    echo "Download Done"
+
+    if [ $MERGEON == 1 ]; then
+        echo "Starting Merging"
+
+        if [ $MERGEONData == 1 ]; then
+            echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+            listsToMerge=`cat runlistsToMerge.txt`
+            for runListName in $listsToMerge; do
+                ls $OUTPUTDIR/GammaConvV1_LHC16o-pass$passNr-$runListName\_*.root > filesForMerging.txt
+                filesForMerging=`cat filesForMerging.txt`
+                #16er daten
+                periodList=`echo -e "d-pass1\ne-pass1\nf-pass1\ng-pass1\nh-pass1\ni-pass1\nj-pass1\nk-pass2\nl-pass2\no-pass1\np-pass1"`
+
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvV1_LHC16$periodID-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                            nameOut+=$outAdd
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        else
+                            echo $currFile " does not exist"
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvV1_LHC16$nameOut-pass$passNr-2-$runListName\_$number.root
+                done
+                #17er daten
+                ls $OUTPUTDIR/GammaConvV1_LHC17o-pass$passNr-$runListName\_*.root > filesForMerging.txt
+                filesForMerging=`cat filesForMerging.txt`
+                periodList=`echo -e "c-pass1\ne-pass1\nf-pass1\nh-pass1\ni-pass1\nj-pass1\nk-pass1\nl-pass1\nm-pass1\no-pass1\nr-pass1"`
+
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvV1_LHC17$periodID-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                            nameOut+=$outAdd
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        else
+                            echo $currFile " does not exist"
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvV1_LHC17$nameOut-pass$passNr-2-$runListName\_$number.root
+                done
+                #18er daten
+                ls $OUTPUTDIR/GammaConvV1_LHC18m-pass$passNr-$runListName\_*.root > filesForMerging.txt
+                filesForMerging=`cat filesForMerging.txt`
+                periodList=`echo -e "b-pass1\nd-pass1\ne-pass1\nf-pass1\ng-pass1\nh-pass1\ni-pass1\nj-pass1\nk-pass1\nl-pass1\nm-pass1\nm-pass1\no-pass1\np-pass1"`
+
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvV1_LHC18$periodID-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                            nameOut+=$outAdd
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        else
+                            echo $currFile " does not exist"
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvV1_LHC18$nameOut-pass$passNr-2-$runListName\_$number.root
+                done
+            done
         fi
 
-	if [ $HAVELHC17d20a2MC == 1 ]; then
-            echo "downloading LHC17d20a2"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d20a2MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d20a2MC/
-            unzip -u $OUTPUTDIR_LHC17d20a2MC/root_archive.zip -d $OUTPUTDIR_LHC17d20a2MC/
-        fi
-
-	if [ $HAVELHC17d20a2_extraMC == 1 ]; then
-            echo "downloading LHC17d20a2_extra"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d20a2_extraMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d20a2_extraMC/
-            unzip -u $OUTPUTDIR_LHC17d20a2_extraMC/root_archive.zip -d $OUTPUTDIR_LHC17d20a2_extraMC/
-        fi
-
-	if [ $HAVELHC17d16MC == 1 ]; then
-            echo "downloading LHC17d16"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d16MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d16MC/
-            unzip -u $OUTPUTDIR_LHC17d16MC/root_archive.zip -d $OUTPUTDIR_LHC17d16MC/
-        fi
-
-	if [ $HAVELHC17d18MC == 1 ]; then
-            echo "downloading LHC17d18"
- #           alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/root_archive.zip file:$OUTPUTDIR_LHC17d18MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/GammaConvV1_300.root file:$OUTPUTDIR_LHC17d18MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/GammaConvV1_301.root file:$OUTPUTDIR_LHC17d18MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/GammaConvV1_302.root file:$OUTPUTDIR_LHC17d18MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/GammaConv_Material_21.root file:$OUTPUTDIR_LHC17d18MC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17d18MC/merge/GammaConv_Material_121.root file:$OUTPUTDIR_LHC17d18MC/
- #           unzip -u $OUTPUTDIR_LHC17d18MC/root_archive.zip -d $OUTPUTDIR_LHC17d18MC/
-        fi
-
-	if [ $HAVELHC17f8bJJMC == 1 ]; then
-            echo "downloading LHC17f8bJJ"
- #           alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f8bJJMC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/GammaConvV1_300.root  file:$OUTPUTDIR_LHC17f8bJJMC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/GammaConvV1_301.root  file:$OUTPUTDIR_LHC17f8bJJMC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/GammaConvV1_302.root  file:$OUTPUTDIR_LHC17f8bJJMC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/GammaConv_Material_21.root  file:$OUTPUTDIR_LHC17f8bJJMC/
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8bJJMC/merge/GammaConv_Material_121.root  file:$OUTPUTDIR_LHC17f8bJJMC/
- #           unzip -u $OUTPUTDIR_LHC17f8bJJMC/root_archive.zip -d $OUTPUTDIR_LHC17f8bJJMC/
-        fi
-
-	if [ $HAVELHC17f8cJJMC == 1 ]; then
-            echo "downloading LHC17f8cJJ"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8cJJMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f8cJJMC/
-            unzip -u $OUTPUTDIR_LHC17f8cJJMC/root_archive.zip -d $OUTPUTDIR_LHC17f8cJJMC/
-        fi
-
-	if [ $HAVELHC17f8dJJMC == 1 ]; then
-            echo "downloading LHC17f8dJJ"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8dJJMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f8dJJMC/
-            unzip -u $OUTPUTDIR_LHC17f8dJJMC/root_archive.zip -d $OUTPUTDIR_LHC17f8dJJMC/
-        fi
-
-	if [ $HAVELHC17f8aJJMC == 1 ]; then
-            echo "downloading LHC17f8aJJ"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8aJJMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f8aJJMC/
-            unzip -u $OUTPUTDIR_LHC17f8aJJMC/root_archive.zip -d $OUTPUTDIR_LHC17f8aJJMC/
-        fi
-
-	if [ $HAVELHC17f8eJJMC == 1 ]; then
-            echo "downloading LHC17f8eJJ"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC17f8eJJMC/merge/root_archive.zip file:$OUTPUTDIR_LHC17f8eJJMC/
-            unzip -u $OUTPUTDIR_LHC17f8eJJMC/root_archive.zip -d $OUTPUTDIR_LHC17f8eJJMC/
-        fi
-
-        echo "copying LHC17f8cJJ MC bins (16f)"
-        runNumbers=`cat runlists/runNumbersLHC17f8cJJ.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-            if [ $DOWNLOADON = 1 ]; then
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    if [ $HAVELHC17f8cJJMC == 1 ]; then
-                        mkdir -p $OUTPUTDIR_LHC17f8cJJMC/$binNumber/$runNumber
-                        alien_cp alien:/alice/sim/2017/LHC17f8c/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC17f8cJJMC/root_archive.zip file:$OUTPUTDIR_LHC17f8cJJMC/$binNumber/$runNumber/
-                        unzip -u $OUTPUTDIR_LHC17f8cJJMC/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC17f8cJJMC/$binNumber/$runNumber/
-                    fi
-                done;
-            fi
-        done;
-
-
-        echo "copying LHC17f8bJJ MC bins (16f)"
-        runNumbers=`cat runlists/runNumbersLHC17f8bJJ.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-            if [ $DOWNLOADON = 1 ]; then
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    if [ $HAVELHC17f8bJJMC == 1 ]; then
-                        mkdir -p $OUTPUTDIR_LHC17f8bJJMC/$binNumber/$runNumber
-                        alien_cp alien:/alice/sim/2017/LHC17f8b/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC17f8bJJMC/root_archive.zip file:$OUTPUTDIR_LHC17f8bJJMC/$binNumber/$runNumber/
-                        unzip -u $OUTPUTDIR_LHC17f8bJJMC/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC17f8bJJMC/$binNumber/$runNumber/
-                    fi
-                done;
-            fi
-        done;
-
-
-       echo "copying LHC17f8dJJ MC bins (16)"
-        runNumbers=`cat runlists/runNumbersLHC17f8dJJ.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-            if [ $DOWNLOADON = 1 ]; then
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    if [ $HAVELHC17f8dJJMC == 1 ]; then
-                        mkdir -p $OUTPUTDIR_LHC17f8dJJMC/$binNumber/$runNumber
-                        alien_cp alien:/alice/sim/2017/LHC17f8d/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC17f8dJJMC/root_archive.zip file:$OUTPUTDIR_LHC17f8dJJMC/$binNumber/$runNumber/
-                        unzip -u $OUTPUTDIR_LHC17f8dJJMC/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC17f8dJJMC/$binNumber/$runNumber/
-                    fi
-                done;
-            fi
-        done;
-
-
-      echo "copying LHC17f8aJJ MC bins (16)"
-        runNumbers=`cat runlists/runNumbersLHC17f8aJJ.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-            if [ $DOWNLOADON = 1 ]; then
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    if [ $HAVELHC17f8aJJMC == 1 ]; then
-                        mkdir -p $OUTPUTDIR_LHC17f8aJJMC/$binNumber/$runNumber
-                        alien_cp alien:/alice/sim/2017/LHC17f8d/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC17f8aJJMC/root_archive.zip file:$OUTPUTDIR_LHC17f8aJJMC/$binNumber/$runNumber/
-                        unzip -u $OUTPUTDIR_LHC17f8aJJMC/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC17f8aJJMC/$binNumber/$runNumber/
-                    fi
-                done;
-            fi
-        done;
-
-      echo "copying LHC17f8eJJ MC bins (16)"
-        runNumbers=`cat runlists/runNumbersLHC17f8eJJ.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-            if [ $DOWNLOADON = 1 ]; then
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    if [ $HAVELHC17f8eJJMC == 1 ]; then
-                        mkdir -p $OUTPUTDIR_LHC17f8eJJMC/$binNumber/$runNumber
-                        alien_cp alien:/alice/sim/2017/LHC17f8d/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC17f8eJJMC/root_archive.zip file:$OUTPUTDIR_LHC17f8eJJMC/$binNumber/$runNumber/
-                        unzip -u $OUTPUTDIR_LHC17f8eJJMC/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC17f8eJJMC/$binNumber/$runNumber/
-                    fi
-                done;
-            fi
-        done;
-
-
-
+        echo "Merging Done"
     fi
-#################
-    if [ $HAVELHC15n == 1 ]; then
-        ls $OUTPUTDIR_LHC15n/GammaConvV1_*.root > fileLHC15n.txt
-        fileNumbers=`cat fileLHC15n.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC15n/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC15n\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC15n\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC15n_$number.log\"\)
-        done;
-    fi
-
+else
     if [ $HAVELHC16d == 1 ]; then
-        ls $OUTPUTDIR_LHC16d/GammaConvV1_*.root > fileLHC16d.txt
-        fileNumbers=`cat fileLHC16d.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16d/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16d\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16d\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16d_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16d";
+        rm $OUTPUTDIR_LHC16d/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16d/*/*/*GammaConvV1_*.root
     fi
-
-    if [ $HAVELHC16e == 1 ]; then
-        ls $OUTPUTDIR_LHC16e/GammaConvV1_*.root > fileLHC16e.txt
-        fileNumbers=`cat fileLHC16e.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16e/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16e\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16e\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16e_$number.log\"\)
-        done;
-    fi
-
-
-    if [ $HAVELHC16f == 1 ]; then
-        ls $OUTPUTDIR_LHC16f/GammaConvV1_*.root > fileLHC16f.txt
-        fileNumbers=`cat fileLHC16f.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16f/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16f\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16f\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16f_$number.log\"\)
-        done;
-    fi
-
-
     if [ $HAVELHC16g == 1 ]; then
-        ls $OUTPUTDIR_LHC16f/GammaConvV1_*.root > fileLHC16g.txt
-        fileNumbers=`cat fileLHC16g.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16f/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16g\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16g\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16g_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16g";
+        rm $OUTPUTDIR_LHC16g/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16g/*/*/*GammaConvV1_*.root
     fi
-
     if [ $HAVELHC16h == 1 ]; then
-        ls $OUTPUTDIR_LHC16h/GammaConvV1_*.root > fileLHC16h.txt
-        fileNumbers=`cat fileLHC16h.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16h/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16h\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16h\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16h_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16h";
+        rm $OUTPUTDIR_LHC16h/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16h/*/*/*GammaConvV1_*.root
     fi
-
-
     if [ $HAVELHC16i == 1 ]; then
-        ls $OUTPUTDIR_LHC16i/GammaConvV1_*.root > fileLHC16i.txt
-        fileNumbers=`cat fileLHC16i.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16i/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16i\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16i\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16i_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16i";
+        rm $OUTPUTDIR_LHC16i/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16i/*/*/*GammaConvV1_*.root
     fi
-
     if [ $HAVELHC16j == 1 ]; then
-        ls $OUTPUTDIR_LHC16j/GammaConvV1_*.root > fileLHC16j.txt
-        fileNumbers=`cat fileLHC16j.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16j/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16j\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16j\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16j_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16j";
+        rm $OUTPUTDIR_LHC16j/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16j/*/*/*GammaConvV1_*.root
     fi
-
-
-
-
     if [ $HAVELHC16k == 1 ]; then
-        ls $OUTPUTDIR_LHC16k/GammaConvV1_*.root > fileLHC16k.txt
-        fileNumbers=`cat fileLHC16k.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16k/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16k\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16k\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16k_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16k";
+        rm $OUTPUTDIR_LHC16k/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16k/*/*/*GammaConvV1_*.root
     fi
-
-
-
-
     if [ $HAVELHC16l == 1 ]; then
-        ls $OUTPUTDIR_LHC16l/GammaConvV1_*.root > fileLHC16l.txt
-        fileNumbers=`cat fileLHC16l.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16l/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16l\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16l\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16l_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16l";
+        rm $OUTPUTDIR_LHC16l/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16l/*/*/*GammaConvV1_*.root
     fi
-
-#    if [ $HAVELHC16m == 1 ]; then
-#        ls $OUTPUTDIR_LHC16m/GammaConvV1_*.root > fileLHC16m.txt
-#        fileNumbers=`cat fileLHC16m.txt`
-#        for fileName in $fileNumbers; do
-#            echo $fileName
-#            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-#            echo $number
-#            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16m/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16m\_$number.root\"\,\"GammaConvV1_$number\"\)
-#            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16m\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16m_$number.log\"\)
-#        done;
-#    fi
-
-
-
     if [ $HAVELHC16o == 1 ]; then
-        ls $OUTPUTDIR_LHC16o/GammaConvV1_*.root > fileLHC16o.txt
-        fileNumbers=`cat fileLHC16o.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16o/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16o\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16o\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16o_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16o";
+        rm $OUTPUTDIR_LHC16o/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16o/*/*/*GammaConvV1_*.root
     fi
-
     if [ $HAVELHC16p == 1 ]; then
-        ls $OUTPUTDIR_LHC16p/GammaConvV1_*.root > fileLHC16p.txt
-        fileNumbers=`cat fileLHC16i.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC16p/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC16p\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC16p\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC16p_$number.log\"\)
-        done;
+        echo "removing all GammaConv files in runFolders for LHC16p";
+        rm $OUTPUTDIR_LHC16p/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16p/*/*/*GammaConvV1_*.root
     fi
-
-#############################################
-
-   if [ $HAVELHC17e2MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17e2MC/GammaConvV1_*.root > fileLHC17e2MC.txt
-        fileNumbers=`cat fileLHC17e2MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17e2MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17e2_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17e2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17e2_$number.log\"\)
-        done;
+    if [ $HAVELHC16e == 1 ]; then
+        echo "removing all GammaConv files in runFolders for LHC16e";
+        rm $OUTPUTDIR_LHC16e/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC16e/*/*/*GammaConvV1_*.root
     fi
-
-    if [ $HAVELHC17f6MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f6MC/GammaConvV1_*.root > fileLHC17f6MC.txt
-        fileNumbers=`cat fileLHC17f6MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f6MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f6_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f6_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f6_$number.log\"\)
-        done;
+    if [ $HAVELHC18f1 == 1 ]; then
+        echo "removing all GammaConv files in runFolders for LHC18f1";
+        rm $OUTPUTDIR_LHC18f1/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC18f1/*/*/*GammaConvV1_*.root
     fi
-
-    if [ $HAVELHC17d1MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d1MC/GammaConvV1_*.root > fileLHC17d1MC.txt
-        fileNumbers=`cat fileLHC17d1MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d1MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d1_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d1_$number.log\"\)
-        done;
+    if [ $HAVELHC18d8 == 1 ]; then
+        echo "removing all GammaConv files in runFolders for LHC18d8";
+        rm $OUTPUTDIR_LHC18d8/*/GammaConvV1_*.root
+        rm $OUTPUTDIR_LHC18d8/*/*/*GammaConvV1_*.root
     fi
-
-    if [ $HAVELHC17d17MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d17MC/GammaConvV1_*.root > fileLHC17d17MC.txt
-        fileNumbers=`cat fileLHC17d17MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d17MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d17_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d17_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d17_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17f5MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f5MC/GammaConvV1_*.root > fileLHC17f5MC.txt
-        fileNumbers=`cat fileLHC17f5MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f5MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f5_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f5_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f5_$number.log\"\)
-        done;
-    fi
-
-
-    if [ $HAVELHC17d3MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d3MC/GammaConvV1_*.root > fileLHC17d3MC.txt
-        fileNumbers=`cat fileLHC17d3MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d3MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d3_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d3_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d3_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17e5MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17e5MC/GammaConvV1_*.root > fileLHC17e5MC.txt
-        fileNumbers=`cat fileLHC17e5MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17e5MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17e5_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17e5_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17e5_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17d20a1MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d20a1MC/GammaConvV1_*.root > fileLHC17d20a1MC.txt
-        fileNumbers=`cat fileLHC17d20a1MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d20a1MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d20a1_$number.log\"\)
-        done;
-    fi
-    if [ $HAVELHC17d20a1_extraMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d20a1_extraMC/GammaConvV1_*.root > fileLHC17d20a1_extraMC.txt
-        fileNumbers=`cat fileLHC17d20a1_extraMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d20a1_extraMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_extra_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_extra_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d20a1_extra_$number.log\"\)
-        done;
-    fi
-
-   if [ $HAVELHC17d20a2MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d20a2MC/GammaConvV1_*.root > fileLHC17d20a2MC.txt
-        fileNumbers=`cat fileLHC17d20a2MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d20a2MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d20a2_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17d20a2_extraMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d20a2_extraMC/GammaConvV1_*.root > fileLHC17d20a2_extraMC.txt
-        fileNumbers=`cat fileLHC17d20a2_extraMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d20a2_extraMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_extra_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_extra_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d20a2_extra_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17d16MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d16MC/GammaConvV1_*.root > fileLHC17d16MC.txt
-        fileNumbers=`cat fileLHC17d16MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d16MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d16_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d16_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d16_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17d18MC == 1 ]; then
-        ls $OUTPUTDIR_LHC17d18MC/GammaConvV1_*.root > fileLHC17d18MC.txt
-        fileNumbers=`cat fileLHC17d18MC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17d18MC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17d18_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17d18_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17d18_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17f8bJJMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f8bJJMC/GammaConvV1_*.root > fileLHC17f8bJJMC.txt
-        fileNumbers=`cat fileLHC17f8bJJMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8bJJMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f8bJJ_$number.log\"\)
-        done;
-    fi
-
-    if [ $HAVELHC17f8cJJMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f8cJJMC/GammaConvV1_*.root > fileLHC17f8cJJMC.txt
-        fileNumbers=`cat fileLHC17f8cJJMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8cJJMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f8cJJ_$number.log\"\)
-        done;
-    fi
-
-
-   if [ $HAVELHC17f8dJJMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f8dJJMC/GammaConvV1_*.root > fileLHC17f8dJJMC.txt
-        fileNumbers=`cat fileLHC17f8dJJMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8dJJMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f8dJJ_$number.log\"\)
-        done;
-    fi
-
-
-   if [ $HAVELHC17f8aJJMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f8aJJMC/GammaConvV1_*.root > fileLHC17f8aJJMC.txt
-        fileNumbers=`cat fileLHC17f8aJJMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8aJJMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f8aJJ_$number.log\"\)
-        done;
-    fi
-
-
-   if [ $HAVELHC17f8eJJMC == 1 ]; then
-        ls $OUTPUTDIR_LHC17f8eJJMC/GammaConvV1_*.root > fileLHC17f8eJJMC.txt
-        fileNumbers=`cat fileLHC17f8cJJMC.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8eJJMC/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17f8eJJ_$number.log\"\)
-        done;
-    fi
-
-######---------JetJet MonteCarlos----------------######
-
-    if [ $MERGEONBINSSingle = 1 ]; then
-        binNumbersJJ=`cat runlists/binNumbersJJ_13TeV.txt`
-        echo $binNumbersJJ
-        ls $OUTPUTDIR_LHC17f8bJJMC/GammaConvV1_*.root > filetemp.txt
-        for binNumber in $binNumbersJJ; do
-            echo $binNumber
-            fileNumbers=`cat filetemp.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                if [ $HAVELHC17f8bJJMC == 1 ]; then
-                    hadd -f $OUTPUTDIR_LHC17f8bJJMC/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC17f8bJJMC/$binNumber/*/GammaConvV1_$number.root
-                    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8bJJMC/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
-                fi
-            done;
-        done;
-
-
-	ls $OUTPUTDIR_LHC17f8cJJMC/GammaConvV1_*.root > filetemp.txt
-        for binNumber in $binNumbersJJ; do
-            echo $binNumber
-            fileNumbers=`cat filetemp.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                if [ $HAVELHC17f8cJJMC == 1 ]; then
-                    hadd -f $OUTPUTDIR_LHC17f8cJJMC/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC17f8cJJMC/$binNumber/*/GammaConvV1_$number.root
-                    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8cJJMC/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
-                fi
-            done;
-        done;
-
-
-       ls $OUTPUTDIR_LHC17f8dJJMC/GammaConvV1_*.root > filetemp.txt
-        for binNumber in $binNumbersJJ; do
-            echo $binNumber
-            fileNumbers=`cat filetemp.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                if [ $HAVELHC17f8dJJMC == 1 ]; then
-                    hadd -f $OUTPUTDIR_LHC17f8dJJMC/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC17f8dJJMC/$binNumber/*/GammaConvV1_$number.root
-                    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8dJJMC/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
-                fi
-            done;
-        done;
-
-
-
-       ls $OUTPUTDIR_LHC17f8aJJMC/GammaConvV1_*.root > filetemp.txt
-        for binNumber in $binNumbersJJ; do
-            echo $binNumber
-            fileNumbers=`cat filetemp.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                if [ $HAVELHC17f8aJJMC == 1 ]; then
-                    hadd -f $OUTPUTDIR_LHC17f8aJJMC/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC17f8aJJMC/$binNumber/*/GammaConvV1_$number.root
-                    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8aJJMC/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
-                fi
-            done;
-        done;
-
-
-
-       ls $OUTPUTDIR_LHC17f8eJJMC/GammaConvV1_*.root > filetemp.txt
-        for binNumber in $binNumbersJJ; do
-            echo $binNumber
-            fileNumbers=`cat filetemp.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                if [ $HAVELHC17f8eJJMC == 1 ]; then
-                    hadd -f $OUTPUTDIR_LHC17f8eJJMC/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC17f8eJJMC/$binNumber/*/GammaConvV1_$number.root
-                    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17f8eJJMC/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
-                fi
-            done;
-        done;
-    fi
-
-
-
-    ################################# Merging files###############
-
-    if [ $MERGEONDATA == 1 ]; then
-	echo " Merging files"
-#	rm $OUTPUTDIR/GammaConvV1_LHC16defghijklop_*.root
-	ls $OUTPUTDIR/GammaConvV1_LHC16d_*.root  > filesForMerging.txt
-	filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-            echo $number
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16d_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16e_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16de_$number.root $OUTPUTDIR/GammaConvV1_LHC16d_$number.root $OUTPUTDIR/GammaConvV1_LHC16e_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16f_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16g_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16fg_$number.root $OUTPUTDIR/GammaConvV1_LHC16f_$number.root $OUTPUTDIR/GammaConvV1_LHC16g_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16h_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16i_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16hi_$number.root $OUTPUTDIR/GammaConvV1_LHC16h_$number.root $OUTPUTDIR/GammaConvV1_LHC16i_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16j_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16k_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16jk_$number.root $OUTPUTDIR/GammaConvV1_LHC16j_$number.root $OUTPUTDIR/GammaConvV1_LHC16k_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16l_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16o_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16lo_$number.root $OUTPUTDIR/GammaConvV1_LHC16l_$number.root $OUTPUTDIR/GammaConvV1_LHC16o_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_LHC16de_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16fg_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16defg_$number.root $OUTPUTDIR/GammaConvV1_LHC16de_$number.root $OUTPUTDIR/GammaConvV1_LHC16fg_$number.root
-            fi
-
-	    if [ -f $OUTPUTDIR/GammaConvV1_LHC16hi_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16jk_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16hijk_$number.root $OUTPUTDIR/GammaConvV1_LHC16hi_$number.root $OUTPUTDIR/GammaConvV1_LHC16jk_$number.root
-            fi
-
-	    if [ -f $OUTPUTDIR/GammaConvV1_LHC16lo_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16p_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16lop_$number.root $OUTPUTDIR/GammaConvV1_LHC16lo_$number.root $OUTPUTDIR/GammaConvV1_LHC16p_$number.root
-            fi
-
-	    if [ -f $OUTPUTDIR/GammaConvV1_LHC16defg_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16hijk_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16defghijk_$number.root $OUTPUTDIR/GammaConvV1_LHC16defg_$number.root $OUTPUTDIR/GammaConvV1_LHC16hijk_$number.root
-            fi
-
-	    if [ -f $OUTPUTDIR/GammaConvV1_LHC16defghijk_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC16lop_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_LHC16defghijklop_$number.root $OUTPUTDIR/GammaConvV1_LHC16defghijk_$number.root $OUTPUTDIR/GammaConvV1_LHC16lop_$number.root
-            fi
-        done
-    fi
-###################---------MonteCarlos------------############
-
-    if [ $MERGEONMC == 1 ]; then
-#	rm $OUTPUTDIR/GammaConvV1_MC_LHC17f6_LHC17d1_d17_f5_d3_e5_d20a1_d20a1ex_d20a2_d20a2ex_d16_d18_*.root
-
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f6_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            echo $number
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d1_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f6_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d1_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d3_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17e5_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17d3_e5_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d3_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17e5_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_extra_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_extra_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_extra_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_a2ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_extra_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d16_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d18_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17d16_d18_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d16_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d18_$number.root
-            fi
-##-------------------------------------------#
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d3_e5_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d3_e5_$number.root
-            fi
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_a2ex_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_a2_a2ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a2_a2ex_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_a2_a2ex_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_a1_a1ex_a2_a2ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d20a1_a1ex_a2_a2ex_$number.root
-            fi
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_a1_a1ex_a2_a2ex_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17d16_d18_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_a1_a1ex_a2_a2ex_d16_d18_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f6_d1_d3_e5_a1_a1ex_a2_a2ex_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17d16_d18_$number.root
-            fi
-
-
-       done
-
-
-    fi
-
-
-   if [ $MERGEONMCJJ == 1 ]; then
-#	rm $OUTPUTDIR/GammaConvV1_MC_LHC17f6_LHC17d1_d17_f5_d3_e5_d20a1_d20a1ex_d20a2_d20a2ex_d16_d18_*.root
-
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            echo $number
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_f8aJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_f8aJJ_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_f8dJJ_f8aJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_f8aJJ_$number.root
-            fi
-
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_f8dJJ_f8aJJ_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_f8dJJ_f8aJJ_f8eJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_f8cJJ_f8dJJ_f8aJJ_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ_$number.root
-            fi
-	done
-   fi
-
-
-    if [ $MERGEONBINS == 1 ]; then
-        echo "entered single bin merging LHC17f8bJJ"
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            TOMERGE="";
-            for bin in $binsForMerging; do
-                echo $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ$bin\_$number.root
-		if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ$bin\_$number.root ]; then
-                    TOMERGE="$TOMERGE $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ$bin"
-                    TOMERGE+="_$number.root"
-                else
-                    echo "I couldn't find the file for bin $bin, number $number, $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJ$bin\_$number.root";
-                fi
-            done;
-            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8bJJFinerPtHardBins_$number.root $TOMERGE
-        done;
-
-
-        echo "entered single bin merging LHC17f8c"
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            TOMERGE="";
-            for bin in $binsForMerging; do
-                echo $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ$bin\_$number.root
-		if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ$bin\_$number.root ]; then
-                    TOMERGE="$TOMERGE $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ$bin"
-                    TOMERGE+="_$number.root"
-                else
-                    echo "I couldn't find the file for bin $bin, number $number, $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJ$bin\_$number.root";
-                fi
-            done;
-            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8cJJFinerPtHardBins_$number.root $TOMERGE
-        done;
-
-
-
-        echo "entered single bin merging LHC17f8dJJ"
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            TOMERGE="";
-            for bin in $binsForMerging; do
-                echo $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ$bin\_$number.root
-		if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ$bin\_$number.root ]; then
-                    TOMERGE="$TOMERGE $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ$bin"
-                    TOMERGE+="_$number.root"
-                else
-                    echo "I couldn't find the file for bin $bin, number $number, $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJ$bin\_$number.root";
-                fi
-            done;
-            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8dJJFinerPtHardBins_$number.root $TOMERGE
-        done;
-
-
-
-
-        echo "entered single bin merging LHC17f8aJJ"
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            TOMERGE="";
-            for bin in $binsForMerging; do
-                echo $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ$bin\_$number.root
-		if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ$bin\_$number.root ]; then
-                    TOMERGE="$TOMERGE $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ$bin"
-                    TOMERGE+="_$number.root"
-                else
-                    echo "I couldn't find the file for bin $bin, number $number, $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJ$bin\_$number.root";
-                fi
-            done;
-            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8aJJFinerPtHardBins_$number.root $TOMERGE
-        done;
-
-
-
-        echo "entered single bin merging LHC17f8eJJ"
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            TOMERGE="";
-            for bin in $binsForMerging; do
-                echo $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ$bin\_$number.root
-		if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ$bin\_$number.root ]; then
-                    TOMERGE="$TOMERGE $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ$bin"
-                    TOMERGE+="_$number.root"
-                else
-                    echo "I couldn't find the file for bin $bin, number $number, $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJ$bin\_$number.root";
-                fi
-            done;
-            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC17f8eJJFinerPtHardBins_$number.root $TOMERGE
-        done;
-    fi
-
 fi

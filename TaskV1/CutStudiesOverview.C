@@ -117,6 +117,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
     }
     TString detectionProcess    = ReturnFullTextReconstructionProcess(mode);
     TString process             = Form("%s #rightarrow #gamma#gamma", textMeson.Data());
+    Bool_t isEDC                = kFALSE;
 
     // Define colors for differnt cuts
     Color_t color[20]                                           = { kBlack, kAzure, kGreen+2,kOrange+2,kRed, kViolet,  kBlue-9, kMagenta+4,
@@ -227,6 +228,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         } else {
             ReturnSeparatedCutNumberAdvanced(cutNumberAdv[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
         }
+        if (mode == 4 || mode == 2){
+            if (fClusterCutSelection.BeginsWith("4")) isEDC = kTRUE;
+        }
+
         // Check if there was a special trigger among the cuts
         TString fTrigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),1);
         if (CutNumberToInteger(fTrigger)>3 && cutVariationName.CompareTo("") == 0){
@@ -1755,8 +1760,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                                         kFALSE, -0.1, 0.00030,
                                         kFALSE, 0., 10.);
                 if (mode == 9 || mode == 0 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0.0,1.1);
-                if (mode == 2 || mode == 3 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0,0.6);
-                if (mode == 4 || mode == 5 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0,0.4);
+                else if (mode == 2 || mode == 3 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                else if ((mode == 4 || mode == 5 ) && !isEDC)histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0,0.4);
+                else if ( mode == 4  && isEDC ) histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0,0.7);
                 histoAcceptanceCut[i]->DrawCopy("e1,p");
                 legendAcceptMeson->AddEntry(histoAcceptanceCut[i],Form("standard: %s",cutStringsName[i].Data()));
             } else {

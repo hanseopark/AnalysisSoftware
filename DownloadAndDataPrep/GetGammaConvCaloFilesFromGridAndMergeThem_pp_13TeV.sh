@@ -30,13 +30,13 @@ then
     # bash DownScript.sh 774 -Name_Data_pp13TeV_17 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC #-runwise
 
     # ### Daten LHC18Data="753"
-    # bash DownScript.sh 753 -Name_Data_pp13TeV_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC -RL_listDPGEDC -runwise
+    # bash DownScript.sh 753 -Name_Data_pp13TeV_18 GA_pp_AOD ?_GammaConvCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC -RL_listDPGEDC -runwise
 
     ### merging 16 + 17
     # bash DownScript.sh 773 774 -Name_Data_pp13TeV_16_17_v0 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDC -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC -noDown #-runwise
 
     # ### merging 16 + 17 + 18
-    # bash DownScript.sh 773 774 753 -Name_Data_pp13TeV_16_17_18 GA_pp_AOD ?_GammaCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC -RL_listDPGEDC -noDown #-runwise
+    # bash DownScript.sh 773 774 753 -Name_Data_pp13TeV_16_17_18 GA_pp_AOD ?_GammaConvCalo_ -mergechilds -childsareperiods  -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC -RL_listDPGEDC -noDown #-runwise
 
     # ### Daten LHC16Data_triggered="775"
     # bash DownScript.sh 775 -Name_Skim_Data_pp13TeV_16 GA_pp_AOD ?_GammaConvCalo -mergechilds -childsareperiods  -RL_listDPGEDCtrigger -RL_listDPGCalo -RL_listDPGalo -RL_listDPCIncAccTPC -RL_listDPGIncAccTPC -RL_listDPGIncTPC -RL_listDPGEMC #-runwise
@@ -130,14 +130,15 @@ then
 fi
 
 
+
 # copies files from grid
 # creates directory
 # changes internal structure
 # merges files according to the pPb needs
 
+
 source basicFunction.sh
 
-REMERGE=1
 DOWNLOADON=1
 MERGEON=0
 SINGLERUN=1
@@ -152,115 +153,6 @@ number=""
 echo $1
 echo $2
 # echo $PATH
-
-# check if train configuration has actually been given
-HAVELHC16d=0
-HAVELHC16e=0
-HAVELHC16f=0
-HAVELHC16g=0
-HAVELHC16h=0
-HAVELHC16i=0
-HAVELHC16j=0
-HAVELHC16k=0
-HAVELHC16l=0
-HAVELHC16o=0
-HAVELHC16p=0
-
-HAVELHC17c=0
-HAVELHC17e=0
-HAVELHC17f=0
-HAVELHC17h=0
-HAVELHC17i=0
-HAVELHC17j=0
-HAVELHC17k=0
-HAVELHC17l=0
-HAVELHC17m=0
-HAVELHC17o=0
-HAVELHC17r=0
-
-HAVELHC18b=0
-HAVELHC18d=0
-HAVELHC18e=0
-HAVELHC18f=0
-HAVELHC18g=0
-HAVELHC18h=0
-HAVELHC18i=0
-HAVELHC18j=0
-HAVELHC18k=0
-HAVELHC18l=0
-HAVELHC18m=0
-HAVELHC18n=0
-HAVELHC18o=0
-HAVELHC18p=0
-
-HAVELHC17f6=0
-HAVELHC17f9=0
-HAVELHC17d17=0
-HAVELHC17f5=0
-HAVELHC17d3=0
-HAVELHC17e5=0
-HAVELHC18f1=0
-HAVELHC18d8=0
-HAVELHC17d16=0
-HAVELHC17d18=0
-HAVELHC17d1=0
-
-HAVELHC17f6_extra=0
-HAVELHC17f9_extra=0
-HAVELHC17d17_extra=0
-HAVELHC17f5_extra=0
-HAVELHC17d3_extra=0
-HAVELHC17e5_extra=0
-HAVELHC18f1_extra=0
-HAVELHC18d8_extra=0
-HAVELHC17d16_extra=0
-HAVELHC17d18_extra=0
-HAVELHC17d1_extra=0
-
-HAVELHC17f6_extra2=0
-HAVELHC17f9_extra2=0
-HAVELHC17d17_extra2=0
-HAVELHC17f5_extra2=0
-HAVELHC17d3_extra2=0
-HAVELHC17e5_extra2=0
-HAVELHC17d16_extra2=0
-HAVELHC17d18_extra2=0
-HAVELHC17d1_extra2=0
-
-HAVELHC18d3=0
-HAVELHC17k4=0
-HAVELHC17k4=0
-HAVELHC17h11=0
-HAVELHC18c13=0
-HAVELHC18a8=0
-HAVELHC17l5=0
-HAVELHC18a9=0
-HAVELHC18a1=0
-
-HAVELHC18d3_extra=0
-HAVELHC17k4_extra=0
-HAVELHC17k4_extra=0
-HAVELHC17h11_extra=0
-HAVELHC18c13_extra=0
-HAVELHC18a8_extra=0
-HAVELHC17l5_extra=0
-HAVELHC18a9_extra=0
-HAVELHC18a1_extra=0
-
-
-HAVELHC18g4=0
-HAVELHC18g5=0
-HAVELHC18g6=0
-HAVELHC18h2=0
-HAVELHC18h4=0
-HAVELHC18j1=1
-HAVELHC18j4=0
-HAVELHC18k1=0
-HAVELHC18k2=0
-HAVELHC18k3=0
-
-HAVELHC18f5_1=1       #JJ MC anch to 17x
-HAVELHC18f5_2=1
 
 
 # default trainconfigurations
@@ -355,7 +247,7 @@ LHC17xMCPHY="";
     LHC18a9=""
     LHC18a1=""
 
-LHC17xMCPHY_extra="1408";
+LHC17xMCPHY_extra="";
     LHC18d3_extra=""
     LHC18c12_extra=""
     LHC17k4_extra=""
@@ -377,8 +269,19 @@ LHC18xMCPHY="";
     LHC18k1MC=""
     LHC18k2MC=""
     LHC18k3MC=""
+LHC18xMCPHY_extra="";
+    LHC18g4MC_extra=""
+    LHC18g5MC_extra=""
+    LHC18g6MC_extra=""
+    LHC18h2MC_extra=""
+    LHC18h4MC_extra=""
+    LHC18j1MC_extra=""
+    LHC18j4MC_extra=""
+    LHC18k1MC_extra=""
+    LHC18k2MC_extra=""
+    LHC18k3MC_extra=""
 
-LHC17xJJMC="1393";
+LHC17xJJMC="";
   LHC18f5_1="";
   LHC18f5_2="";
 
@@ -402,6 +305,7 @@ if [ $3 = "AOD" ]; then
     pathData3=pass$passNr\_withTRDtracking/AOD208/PWGGA/GA_pp_AOD
     pathData2=pass2/AOD208/PWGGA/GA_pp_AOD
     pathMC=AOD209/PWGGA/GA_pp_MC_AOD
+    pathMC2=PWGGA/GA_pp_MC_AOD
 elif [ $3 = "AOD_JJ" ]; then
     baseLegoData=GA_pp_AOD
     baseLegoMC=GA_pp_MC_AOD
@@ -409,6 +313,7 @@ elif [ $3 = "AOD_JJ" ]; then
     pathData3=pass$passNr\_withTRDtracking/AOD208/PWGGA/GA_pp_AOD
     pathData2=pass2/AOD208/PWGGA/GA_pp_AOD
     pathMC=PWGGA/GA_pp_MC_AOD
+    pathMC2=PWGGA/GA_pp_MC_AOD
 else
     baseLegoData=GA_pp
     baseLegoMC=GA_pp_MC
@@ -552,7 +457,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC18k2MC="child_9"
 # LHC18k3MC="child_10"
 
-TRAINDIR=Legotrain-QA20190403 # SECOND TRAIN RUN
+# TRAINDIR=Legotrain-QA20190403 # SECOND TRAIN RUN
 # LHC18 data
 # LHC18Data="753"; #pass 1 SECOND TRAIN RUN
 # LHC18bData="child_1";
@@ -571,18 +476,60 @@ TRAINDIR=Legotrain-QA20190403 # SECOND TRAIN RUN
 # LHC18pData="child_14";
 
 # LHC18 MC
-LHC18xMCPHY="1415"; #pass 1 FIRST TRAIN RUN
+# LHC18xMCPHY="1415"; #pass 1 FIRST TRAIN RUN
 # LHC18g4MC="child_1"
 # LHC18g5MC="child_2"
 # LHC18g6MC="child_3"
-LHC18h2MC="child_4"
-LHC18h4MC="child_5"
-LHC18j1MC="child_6"
-LHC18j4MC="child_7"
-LHC18k1MC="child_8"
-LHC18k2MC="child_9"
-LHC18k3MC="child_10"
+# LHC18h2MC="child_4"
+# LHC18h4MC="child_5"
+# LHC18j1MC="child_6"
+# LHC18j4MC="child_7"
+# LHC18k1MC="child_8"
+# LHC18k2MC="child_9"
+# LHC18k3MC="child_10"
 
+TRAINDIR=Legotrain-QA20190610 # THIRD TRAIN RUN
+# LHC18 data
+# LHC18Data="846";
+# LHC18bData="child_1";
+# LHC18dData="child_2";
+# LHC18eData="child_3";
+# LHC18fData="child_4";
+# LHC18gData="child_5";
+# LHC18hData="child_6";
+# LHC18iData="child_7";
+# LHC18jData="child_8";
+# LHC18kData="child_9";
+# LHC18lData="child_10";
+# LHC18mData="child_11";
+# LHC18nData="child_12";
+# LHC18oData="child_13";
+# LHC18pData="child_14";
+
+# LHC18 MC
+LHC18xMCPHY="1574";
+# LHC18g4MC="child_1"
+# LHC18g5MC="child_2"
+# LHC18g6MC="child_3"
+# LHC18h2MC="child_4"
+# LHC18h4MC="child_5"
+# LHC18j1MC="child_6"
+# LHC18j4MC="child_7"
+LHC18k1MC="child_8"
+# LHC18k2MC="child_9"
+# LHC18k3MC="child_10"
+
+LHC18xMCPHY_extra="1575";
+# LHC18g4MC_extra="child_1"
+# LHC18g5MC_extra="child_2"
+# LHC18g6MC_extra="child_3"
+# LHC18h2MC_extra="child_4"
+LHC18h4MC_extra="child_5"
+# LHC18j1MC_extra="child_6"
+# LHC18j4MC_extra="child_7"
+# LHC18k1MC_extra="child_8"
+LHC18k2MC_extra="child_9"
+# LHC18k3MC_extra="child_10"
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -876,7 +823,7 @@ LHC17d18MC=$tempDir
 OUTPUTDIR_LHC17d18=$tempPath
 echo "17d18 anchored to 16p: $HAVELHC17d18 $LHC17d18MC $OUTPUTDIR_LHC17d18"
 
-####### 16 extra MCs
+######### 16 extra MCs
 
 FindCorrectTrainDirectory $LHC17f6MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
 HAVELHC17f6_extra=$tempBool
@@ -945,7 +892,7 @@ OUTPUTDIR_LHC17d18_extra=$tempPath
 echo "17d18_extra anchored to 16p: $HAVELHC17d18_extra $LHC17d18MC_extra $OUTPUTDIR_LHC17d18_extra"
 
 
-######### 16 extra2 MCs
+############ 16 extra2 MCs
 
 
 FindCorrectTrainDirectory $LHC17f6MC_extra2 $OUTPUTDIRMC $ALIENDIRMC $LHC16xMCPHY
@@ -1005,7 +952,7 @@ echo "17d18_extra2 anchored to 16p: $HAVELHC17d18_extra2 $LHC17d18MC_extra2 $OUT
 
 
 
-########## 17 MCs
+############# 17 MCs
 
 FindCorrectTrainDirectory $LHC18d3 $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY
 HAVELHC18d3=$tempBool
@@ -1062,7 +1009,7 @@ OUTPUTDIR_LHC18a1=$tempPath
 echo "LHC18a1 anchored to 17r: $HAVELHC18a1 $LHC18a1MC $OUTPUTDIR_LHC18a1"
 
 
-#### extra MCs
+##### extra MCs
 
 FindCorrectTrainDirectory $LHC18d3_extra $OUTPUTDIRMC $ALIENDIRMC $LHC17xMCPHY_extra
 HAVELHC18d3_extra=$tempBool
@@ -1133,6 +1080,7 @@ OUTPUTDIR_LHC18f5_2=$tempPath
 echo "LHC18f5_2 anchored to 17x: $HAVELHC18f5_2 $LHC18f5_2 $OUTPUTDIR_LHC18f5_2"
 
 
+
 # LHC18x MCs
 FindCorrectTrainDirectory $LHC18g4MC $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY
 HAVELHC18g4=$tempBool
@@ -1194,124 +1142,225 @@ LHC18k3MC=$tempDir
 OUTPUTDIR_LHC18k3=$tempPath
 echo "18k3 anchored to 18p: $HAVELHC18k3 $LHC18k3MC $OUTPUTDIR_LHC18k3"
 
+# LHC18x extra MCs
+FindCorrectTrainDirectory $LHC18g4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g4_extra=$tempBool
+LHC18g4MC_extra=$tempDir
+OUTPUTDIR_LHC18g4_extra=$tempPath
+echo "18g4_extra anchored to 18b: $HAVELHC18g4_extra $LHC18g4MC_extra $OUTPUTDIR_LHC18g4_extra"
+
+FindCorrectTrainDirectory $LHC18g5MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g5_extra=$tempBool
+LHC18g5MC_extra=$tempDir
+OUTPUTDIR_LHC18g5_extra=$tempPath
+echo "18g5_extra anchored to 18d: $HAVELHC18g5_extra $LHC18g5MC_extra $OUTPUTDIR_LHC18g5_extra"
+
+FindCorrectTrainDirectory $LHC18g6MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18g6_extra=$tempBool
+LHC18g6MC_extra=$tempDir
+OUTPUTDIR_LHC18g6_extra=$tempPath
+echo "18g6_extra anchored to 18e: $HAVELHC18g6_extra $LHC18g6MC_extra $OUTPUTDIR_LHC18g6_extra"
+
+FindCorrectTrainDirectory $LHC18h2MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18h2_extra=$tempBool
+LHC18h2MC_extra=$tempDir
+OUTPUTDIR_LHC18h2_extra=$tempPath
+echo "18h2_extra anchored to 18f: $HAVELHC18h2_extra $LHC18h2MC_extra $OUTPUTDIR_LHC18h2_extra"
+
+FindCorrectTrainDirectory $LHC18h4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18h4_extra=$tempBool
+LHC18h4MC_extra=$tempDir
+OUTPUTDIR_LHC18h4_extra=$tempPath
+echo "18h4_extra anchored to 18g,h,i,j,k: $HAVELHC18h4_extra $LHC18h4MC_extra $OUTPUTDIR_LHC18h4_extra"
+
+FindCorrectTrainDirectory $LHC18j1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18j1_extra=$tempBool
+LHC18j1MC_extra=$tempDir
+OUTPUTDIR_LHC18j1_extra=$tempPath
+echo "18j1_extra anchored to 18l: $HAVELHC18j1_extra $LHC18j1MC_extra $OUTPUTDIR_LHC18j1_extra"
+
+FindCorrectTrainDirectory $LHC18j4MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18j4_extra=$tempBool
+LHC18j4MC_extra=$tempDir
+OUTPUTDIR_LHC18j4_extra=$tempPath
+echo "18j4_extra anchored to 18m: $HAVELHC18j4_extra $LHC18j4MC_extra $OUTPUTDIR_LHC18j4_extra"
+
+FindCorrectTrainDirectory $LHC18k1MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k1_extra=$tempBool
+LHC18k1MC_extra=$tempDir
+OUTPUTDIR_LHC18k1_extra=$tempPath
+echo "18k1_extra anchored to 18n: $HAVELHC18k1_extra $LHC18k1MC_extra $OUTPUTDIR_LHC18k1_extra"
+
+FindCorrectTrainDirectory $LHC18k2MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k2_extra=$tempBool
+LHC18k2MC_extra=$tempDir
+OUTPUTDIR_LHC18k2_extra=$tempPath
+echo "18k2_extra anchored to 18o: $HAVELHC18k2_extra $LHC18k2MC_extra $OUTPUTDIR_LHC18k2_extra"
+
+FindCorrectTrainDirectory $LHC18k3MC_extra $OUTPUTDIRMC $ALIENDIRMC $LHC18xMCPHY_extra
+HAVELHC18k3_extra=$tempBool
+LHC18k3MC_extra=$tempDir
+OUTPUTDIR_LHC18k3_extra=$tempPath
+echo "18k3_extra anchored to 18p: $HAVELHC18k3_extra $LHC18k3MC_extra $OUTPUTDIR_LHC18k3_extra"
+
 # exit
 
 
 if [ $CLEANUPMAYOR == 0 ]; then
-    if [ $REMERGE == 1 ]; then
-        echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16d" $HAVELHC16d $OUTPUTDIR_LHC16d $LHC16dData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16e" $HAVELHC16e $OUTPUTDIR_LHC16e $LHC16eData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16f" $HAVELHC16f $OUTPUTDIR_LHC16f $LHC16fData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16g" $HAVELHC16g $OUTPUTDIR_LHC16g $LHC16gData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16h" $HAVELHC16h $OUTPUTDIR_LHC16h $LHC16hData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16i" $HAVELHC16i $OUTPUTDIR_LHC16i $LHC16iData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16j" $HAVELHC16j $OUTPUTDIR_LHC16j $LHC16jData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16k" $HAVELHC16k $OUTPUTDIR_LHC16k $LHC16kData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16l" $HAVELHC16l $OUTPUTDIR_LHC16l $LHC16lData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16o" $HAVELHC16o $OUTPUTDIR_LHC16o $LHC16oData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC16p" $HAVELHC16p $OUTPUTDIR_LHC16p $LHC16pData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
 
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17c" $HAVELHC17c $OUTPUTDIR_LHC17c $LHC17cData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17e" $HAVELHC17e $OUTPUTDIR_LHC17e $LHC17eData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17f" $HAVELHC17f $OUTPUTDIR_LHC17f $LHC17fData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17h" $HAVELHC17h $OUTPUTDIR_LHC17h $LHC17hData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17i" $HAVELHC17i $OUTPUTDIR_LHC17i $LHC17iData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17j" $HAVELHC17j $OUTPUTDIR_LHC17j $LHC17jData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17k" $HAVELHC17k $OUTPUTDIR_LHC17k $LHC17kData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17l" $HAVELHC17l $OUTPUTDIR_LHC17l $LHC17lData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17m" $HAVELHC17m $OUTPUTDIR_LHC17m $LHC17mData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17o" $HAVELHC17o $OUTPUTDIR_LHC17o $LHC17oData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC17r" $HAVELHC17r $OUTPUTDIR_LHC17r $LHC17rData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16d" $HAVELHC16d $OUTPUTDIR_LHC16d $LHC16dData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16e" $HAVELHC16e $OUTPUTDIR_LHC16e $LHC16eData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16f" $HAVELHC16f $OUTPUTDIR_LHC16f $LHC16fData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16g" $HAVELHC16g $OUTPUTDIR_LHC16g $LHC16gData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16h" $HAVELHC16h $OUTPUTDIR_LHC16h $LHC16hData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16i" $HAVELHC16i $OUTPUTDIR_LHC16i $LHC16iData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16j" $HAVELHC16j $OUTPUTDIR_LHC16j $LHC16jData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16k" $HAVELHC16k $OUTPUTDIR_LHC16k $LHC16kData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16l" $HAVELHC16l $OUTPUTDIR_LHC16l $LHC16lData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass2" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16o" $HAVELHC16o $OUTPUTDIR_LHC16o $LHC16oData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16p" $HAVELHC16p $OUTPUTDIR_LHC16p $LHC16pData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
 
-        echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18b" $HAVELHC18b $OUTPUTDIR_LHC18b $LHC18bData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18d" $HAVELHC18d $OUTPUTDIR_LHC18d $LHC18dData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18e" $HAVELHC18e $OUTPUTDIR_LHC18e $LHC18eData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18f" $HAVELHC18f $OUTPUTDIR_LHC18f $LHC18fData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18g" $HAVELHC18g $OUTPUTDIR_LHC18g $LHC18gData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18h" $HAVELHC18h $OUTPUTDIR_LHC18h $LHC18hData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18i" $HAVELHC18i $OUTPUTDIR_LHC18i $LHC18iData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1_withTRDtracking" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18n" $HAVELHC18n $OUTPUTDIR_LHC18n $LHC18nData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18o" $HAVELHC18o $OUTPUTDIR_LHC18o $LHC18oData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistData "LHC18p" $HAVELHC18p $OUTPUTDIR_LHC18p $LHC18pData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17c" $HAVELHC17c $OUTPUTDIR_LHC17c $LHC17cData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17e" $HAVELHC17e $OUTPUTDIR_LHC17e $LHC17eData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17f" $HAVELHC17f $OUTPUTDIR_LHC17f $LHC17fData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17h" $HAVELHC17h $OUTPUTDIR_LHC17h $LHC17hData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17i" $HAVELHC17i $OUTPUTDIR_LHC17i $LHC17iData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17j" $HAVELHC17j $OUTPUTDIR_LHC17j $LHC17jData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17k" $HAVELHC17k $OUTPUTDIR_LHC17k $LHC17kData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17l" $HAVELHC17l $OUTPUTDIR_LHC17l $LHC17lData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17m" $HAVELHC17m $OUTPUTDIR_LHC17m $LHC17mData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17o" $HAVELHC17o $OUTPUTDIR_LHC17o $LHC17oData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC17r" $HAVELHC17r $OUTPUTDIR_LHC17r $LHC17rData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
 
-        currentDir=$PWD
-        echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6" $HAVELHC17f6 $OUTPUTDIR_LHC17f6 $LHC17f6MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9" $HAVELHC17f9 $OUTPUTDIR_LHC17f9 $LHC17f9MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1" $HAVELHC17d1 $OUTPUTDIR_LHC17d1 $LHC17d1MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17" $HAVELHC17d17 $OUTPUTDIR_LHC17d17 $LHC17d17MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5" $HAVELHC17f5 $OUTPUTDIR_LHC17f5 $LHC17f5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3" $HAVELHC17d3 $OUTPUTDIR_LHC17d3 $LHC17d3MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5" $HAVELHC17e5 $OUTPUTDIR_LHC17e5 $LHC17e5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1" $HAVELHC18f1 $OUTPUTDIR_LHC18f1 $LHC18f1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8" $HAVELHC18d8 $OUTPUTDIR_LHC18d8 $LHC18d8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16" $HAVELHC17d16 $OUTPUTDIR_LHC17d16 $LHC17d16MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18" $HAVELHC17d18 $OUTPUTDIR_LHC17d18 $LHC17d18MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18b" $HAVELHC18b $OUTPUTDIR_LHC18b $LHC18bData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18d" $HAVELHC18d $OUTPUTDIR_LHC18d $LHC18dData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18e" $HAVELHC18e $OUTPUTDIR_LHC18e $LHC18eData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18f" $HAVELHC18f $OUTPUTDIR_LHC18f $LHC18fData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18g" $HAVELHC18g $OUTPUTDIR_LHC18g $LHC18gData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18h" $HAVELHC18h $OUTPUTDIR_LHC18h $LHC18hData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18i" $HAVELHC18i $OUTPUTDIR_LHC18i $LHC18iData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18j" $HAVELHC18j $OUTPUTDIR_LHC18j $LHC18jData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18k" $HAVELHC18k $OUTPUTDIR_LHC18k $LHC18kData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+#     echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18l" $HAVELHC18l $OUTPUTDIR_LHC18l $LHC18lData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPC_2\nDPGTrackIncAccTPC_3\nDPGTrackIncAccTPC_4\nDPGTrackIncAccTPC_5\nDPGTrackIncAccTPC_6\nDPGTrackIncAccTPC_7\nDPGTrackAndCalo_2\nDPGTrackAndCalo_3\nDPGTrackAndCalo_4\nDPGTrackAndCalo_5\nDPGTrackAndCalo_6\nDPGTrackAndCalo_7" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5\nDPGTrackIncAccTPCandEMC_6\nDPGTrackIncAccTPCandEMC_7" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18m" $HAVELHC18m $OUTPUTDIR_LHC18m $LHC18mData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1_withTRDtracking" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18n" $HAVELHC18n $OUTPUTDIR_LHC18n $LHC18nData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18o" $HAVELHC18o $OUTPUTDIR_LHC18o $LHC18oData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC18p" $HAVELHC18p $OUTPUTDIR_LHC18p $LHC18pData $pathData $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvCalo
 
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra" $HAVELHC17f6_extra $OUTPUTDIR_LHC17f6_extra $LHC17f6MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra" $HAVELHC17d1_extra $OUTPUTDIR_LHC17d1_extra $LHC17d1MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra" $HAVELHC17f9_extra $OUTPUTDIR_LHC17f9_extra $LHC17f9MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra" $HAVELHC17d17_extra $OUTPUTDIR_LHC17d17_extra $LHC17d17MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra" $HAVELHC17f5_extra $OUTPUTDIR_LHC17f5_extra $LHC17f5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra" $HAVELHC17e5_extra $OUTPUTDIR_LHC17e5_extra $LHC17e5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra" $HAVELHC17d3_extra $OUTPUTDIR_LHC17d3_extra $LHC17d3MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1_extra" $HAVELHC18f1_extra $OUTPUTDIR_LHC18f1_extra $LHC18f1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8_extra" $HAVELHC18d8_extra $OUTPUTDIR_LHC18d8_extra $LHC18d8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra" $HAVELHC17d16_extra $OUTPUTDIR_LHC17d16_extra $LHC17d16MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra" $HAVELHC17d18_extra $OUTPUTDIR_LHC17d18_extra $LHC17d18MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    currentDir=$PWD
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6" $HAVELHC17f6 $OUTPUTDIR_LHC17f6 $LHC17f6MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9" $HAVELHC17f9 $OUTPUTDIR_LHC17f9 $LHC17f9MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1" $HAVELHC17d1 $OUTPUTDIR_LHC17d1 $LHC17d1MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17" $HAVELHC17d17 $OUTPUTDIR_LHC17d17 $LHC17d17MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5" $HAVELHC17f5 $OUTPUTDIR_LHC17f5 $LHC17f5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3" $HAVELHC17d3 $OUTPUTDIR_LHC17d3 $LHC17d3MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5" $HAVELHC17e5 $OUTPUTDIR_LHC17e5 $LHC17e5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1" $HAVELHC18f1 $OUTPUTDIR_LHC18f1 $LHC18f1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8" $HAVELHC18d8 $OUTPUTDIR_LHC18d8 $LHC18d8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16" $HAVELHC17d16 $OUTPUTDIR_LHC17d16 $LHC17d16MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18" $HAVELHC17d18 $OUTPUTDIR_LHC17d18 $LHC17d18MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra2" $HAVELHC17f6_extra2 $OUTPUTDIR_LHC17f6_extra2 $LHC17f6MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra2" $HAVELHC17d1_extra2 $OUTPUTDIR_LHC17d1_extra2 $LHC17d1MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra2" $HAVELHC17f9_extra2 $OUTPUTDIR_LHC17f9_extra2 $LHC17f9MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra2" $HAVELHC17d17_extra2 $OUTPUTDIR_LHC17d17_extra2 $LHC17d17MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra2" $HAVELHC17f5_extra2 $OUTPUTDIR_LHC17f5_extra2 $LHC17f5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra2" $HAVELHC17e5_extra2 $OUTPUTDIR_LHC17e5_extra2 $LHC17e5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra2" $HAVELHC17d3_extra2 $OUTPUTDIR_LHC17d3_extra2 $LHC17d3MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra2" $HAVELHC17d16_extra2 $OUTPUTDIR_LHC17d16_extra2 $LHC17d16MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra2" $HAVELHC17d18_extra2 $OUTPUTDIR_LHC17d18_extra2 $LHC17d18MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra" $HAVELHC17f6_extra $OUTPUTDIR_LHC17f6_extra $LHC17f6MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra" $HAVELHC17d1_extra $OUTPUTDIR_LHC17d1_extra $LHC17d1MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra" $HAVELHC17f9_extra $OUTPUTDIR_LHC17f9_extra $LHC17f9MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra" $HAVELHC17d17_extra $OUTPUTDIR_LHC17d17_extra $LHC17d17MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra" $HAVELHC17f5_extra $OUTPUTDIR_LHC17f5_extra $LHC17f5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra" $HAVELHC17e5_extra $OUTPUTDIR_LHC17e5_extra $LHC17e5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra" $HAVELHC17d3_extra $OUTPUTDIR_LHC17d3_extra $LHC17d3MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18f1_extra" $HAVELHC18f1_extra $OUTPUTDIR_LHC18f1_extra $LHC18f1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d8_extra" $HAVELHC18d8_extra $OUTPUTDIR_LHC18d8_extra $LHC18d8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra" $HAVELHC17d16_extra $OUTPUTDIR_LHC17d16_extra $LHC17d16MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra" $HAVELHC17d18_extra $OUTPUTDIR_LHC17d18_extra $LHC17d18MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
-        CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_1" $HAVELHC18f5_1 $OUTPUTDIR_LHC18f5_1 $LHC18f5_1 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_2" $HAVELHC18f5_2 $OUTPUTDIR_LHC18f5_2 $LHC18f5_2 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f6_extra2" $HAVELHC17f6_extra2 $OUTPUTDIR_LHC17f6_extra2 $LHC17f6MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1_extra2" $HAVELHC17d1_extra2 $OUTPUTDIR_LHC17d1_extra2 $LHC17d1MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f9_extra2" $HAVELHC17f9_extra2 $OUTPUTDIR_LHC17f9_extra2 $LHC17f9MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d17_extra2" $HAVELHC17d17_extra2 $OUTPUTDIR_LHC17d17_extra2 $LHC17d17MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f5_extra2" $HAVELHC17f5_extra2 $OUTPUTDIR_LHC17f5_extra2 $LHC17f5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17e5_extra2" $HAVELHC17e5_extra2 $OUTPUTDIR_LHC17e5_extra2 $LHC17e5MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d3_extra2" $HAVELHC17d3_extra2 $OUTPUTDIR_LHC17d3_extra2 $LHC17d3MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d16_extra2" $HAVELHC17d16_extra2 $OUTPUTDIR_LHC17d16_extra2 $LHC17d16MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d18_extra2" $HAVELHC17d18_extra2 $OUTPUTDIR_LHC17d18_extra2 $LHC17d18MC_extra2 $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3" $HAVELHC18d3 $OUTPUTDIR_LHC18d3 $LHC18d3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12" $HAVELHC18c12 $OUTPUTDIR_LHC18c12 $LHC18c12MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4" $HAVELHC17k4 $OUTPUTDIR_LHC17k4 $LHC17k4MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11" $HAVELHC17h11 $OUTPUTDIR_LHC17h11 $LHC17h11MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13" $HAVELHC18c13 $OUTPUTDIR_LHC18c13 $LHC18c13MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8" $HAVELHC18a8 $OUTPUTDIR_LHC18a8 $LHC18a8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5" $HAVELHC17l5 $OUTPUTDIR_LHC17l5 $LHC17l5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9" $HAVELHC18a9 $OUTPUTDIR_LHC18a9 $LHC18a9MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1" $HAVELHC18a1 $OUTPUTDIR_LHC18a1 $LHC18a1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_1" $HAVELHC18f5_1 $OUTPUTDIR_LHC18f5_1 $LHC18f5_1 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC18f5_2" $HAVELHC18f5_2 $OUTPUTDIR_LHC18f5_2 $LHC18f5_2 $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3_extra" $HAVELHC18d3_extra $OUTPUTDIR_LHC18d3_extra $LHC18d3MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12_extra" $HAVELHC18c12_extra $OUTPUTDIR_LHC18c12_extra $LHC18c12MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4_extra" $HAVELHC17k4_extra $OUTPUTDIR_LHC17k4_extra $LHC17k4MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11_extra" $HAVELHC17h11_extra $OUTPUTDIR_LHC17h11_extra $LHC17h11MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13_extra" $HAVELHC18c13_extra $OUTPUTDIR_LHC18c13_extra $LHC18c13MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8_extra" $HAVELHC18a8_extra $OUTPUTDIR_LHC18a8_extra $LHC18a8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5_extra" $HAVELHC17l5_extra $OUTPUTDIR_LHC17l5_extra $LHC17l5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9_extra" $HAVELHC18a9_extra $OUTPUTDIR_LHC18a9_extra $LHC18a9MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1_extra" $HAVELHC18a1_extra $OUTPUTDIR_LHC18a1_extra $LHC18a1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3" $HAVELHC18d3 $OUTPUTDIR_LHC18d3 $LHC18d3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12" $HAVELHC18c12 $OUTPUTDIR_LHC18c12 $LHC18c12MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4" $HAVELHC17k4 $OUTPUTDIR_LHC17k4 $LHC17k4MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11" $HAVELHC17h11 $OUTPUTDIR_LHC17h11 $LHC17h11MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13" $HAVELHC18c13 $OUTPUTDIR_LHC18c13 $LHC18c13MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8" $HAVELHC18a8 $OUTPUTDIR_LHC18a8 $LHC18a8MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5" $HAVELHC17l5 $OUTPUTDIR_LHC17l5 $LHC17l5MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9" $HAVELHC18a9 $OUTPUTDIR_LHC18a9 $LHC18a9MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1" $HAVELHC18a1 $OUTPUTDIR_LHC18a1 $LHC18a1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
-#         echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
-        echo -e "DPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g4" $HAVELHC18g4 $OUTPUTDIR_LHC18g4 $LHC18g4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g5" $HAVELHC18g5 $OUTPUTDIR_LHC18g5 $LHC18g5MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g6" $HAVELHC18g6 $OUTPUTDIR_LHC18g6 $LHC18g6MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h2" $HAVELHC18h2 $OUTPUTDIR_LHC18h2 $LHC18h2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h4" $HAVELHC18h4 $OUTPUTDIR_LHC18h4 $LHC18h4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j1" $HAVELHC18j1 $OUTPUTDIR_LHC18j1 $LHC18j1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j4" $HAVELHC18j4 $OUTPUTDIR_LHC18j4 $LHC18j4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k1" $HAVELHC18k1 $OUTPUTDIR_LHC18k1 $LHC18k1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k2" $HAVELHC18k2 $OUTPUTDIR_LHC18k2 $LHC18k2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-        CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k3" $HAVELHC18k3 $OUTPUTDIR_LHC18k3 $LHC18k3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
-    fi
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18d3_extra" $HAVELHC18d3_extra $OUTPUTDIR_LHC18d3_extra $LHC18d3MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c12_extra" $HAVELHC18c12_extra $OUTPUTDIR_LHC18c12_extra $LHC18c12MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17k4_extra" $HAVELHC17k4_extra $OUTPUTDIR_LHC17k4_extra $LHC17k4MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h11_extra" $HAVELHC17h11_extra $OUTPUTDIR_LHC17h11_extra $LHC17h11MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18c13_extra" $HAVELHC18c13_extra $OUTPUTDIR_LHC18c13_extra $LHC18c13MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a8_extra" $HAVELHC18a8_extra $OUTPUTDIR_LHC18a8_extra $LHC18a8MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC17l5_extra" $HAVELHC17l5_extra $OUTPUTDIR_LHC17l5_extra $LHC17l5MC_extra $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a9_extra" $HAVELHC18a9_extra $OUTPUTDIR_LHC18a9_extra $LHC18a9MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18a1_extra" $HAVELHC18a1_extra $OUTPUTDIR_LHC18a1_extra $LHC18a1MC_extra $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g4" $HAVELHC18g4 $OUTPUTDIR_LHC18g4 $LHC18g4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g4_extra" $HAVELHC18g4_extra $OUTPUTDIR_LHC18g4_extra $LHC18g4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g5" $HAVELHC18g5 $OUTPUTDIR_LHC18g5 $LHC18g5MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g5_extra" $HAVELHC18g5_extra $OUTPUTDIR_LHC18g5_extra $LHC18g5MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g6" $HAVELHC18g6 $OUTPUTDIR_LHC18g6 $LHC18g6MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18g6_extra" $HAVELHC18g6_extra $OUTPUTDIR_LHC18g6_extra $LHC18g6MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h2" $HAVELHC18h2 $OUTPUTDIR_LHC18h2 $LHC18h2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h2_extra" $HAVELHC18h2_extra $OUTPUTDIR_LHC18h2_extra $LHC18h2MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h4" $HAVELHC18h4 $OUTPUTDIR_LHC18h4 $LHC18h4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h4_extra" $HAVELHC18h4_extra $OUTPUTDIR_LHC18h4_extra $LHC18h4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC" > runlistsToMerge.txt
+#     echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_5" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j1" $HAVELHC18j1 $OUTPUTDIR_LHC18j1 $LHC18j1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j1_extra" $HAVELHC18j1_extra $OUTPUTDIR_LHC18j1_extra $LHC18j1MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPC_2\nDPGTrackIncAccTPC_3\nDPGTrackIncAccTPC_4\nDPGTrackIncAccTPC_5\nDPGTrackIncAccTPC_6\nDPGTrackIncAccTPC_7\nDPGTrackAndCalo_2\nDPGTrackAndCalo_3\nDPGTrackAndCalo_4\nDPGTrackAndCalo_5\nDPGTrackAndCalo_6\nDPGTrackAndCalo_7" > runlistsToMerge.txt
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4\nDPGTrackIncAccTPCandEMC_5\nDPGTrackIncAccTPCandEMC_6\nDPGTrackIncAccTPCandEMC_7" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j4" $HAVELHC18j4 $OUTPUTDIR_LHC18j4 $LHC18j4MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j4_extra" $HAVELHC18j4_extra $OUTPUTDIR_LHC18j4_extra $LHC18j4MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k1" $HAVELHC18k1 $OUTPUTDIR_LHC18k1 $LHC18k1MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k1_extra" $HAVELHC18k1_extra $OUTPUTDIR_LHC18k1_extra $LHC18k1MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackAndCalo\nDPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k2" $HAVELHC18k2 $OUTPUTDIR_LHC18k2 $LHC18k2MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k2_extra" $HAVELHC18k2_extra $OUTPUTDIR_LHC18k2_extra $LHC18k2MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    echo -e "DPGTrackIncAccTPCandEMC\nDPGTrackIncAccTPCandEMC_1\nDPGTrackIncAccTPCandEMC_2\nDPGTrackIncAccTPCandEMC_3\nDPGTrackIncAccTPCandEMC_4" > runlistsToMerge.txt
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k3" $HAVELHC18k3 $OUTPUTDIR_LHC18k3 $LHC18k3MC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistMC "LHC18k3_extra" $HAVELHC18k3_extra $OUTPUTDIR_LHC18k3_extra $LHC18k3MC_extra $pathMC2 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
 
     echo "Change Structure If Needed"
 
@@ -2093,6 +2142,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g4 $NSlashes "MC_LHC18g4-anchor18b-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC18g4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g4_extra/GammaConvCalo-$runListName\_*.root > fileLHC18g4.txt
+            fileNumbers=`cat fileLHC18g4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g4_extra $NSlashes "MC_LHC18g4_extra-anchor18b-$runListName" "-$runListName"
+            done;
+        fi
         # MC for LHC18d
         if [ $HAVELHC18g5 == 1 ]; then
             ls $OUTPUTDIR_LHC18g5/GammaConvCalo-$runListName\_*.root > fileLHC18g5.txt
@@ -2100,6 +2157,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for fileName in $fileNumbers; do
                 echo $fileName
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g5 $NSlashes "MC_LHC18g5-anchor18d-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18g5_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g5_extra/GammaConvCalo-$runListName\_*.root > fileLHC18g5.txt
+            fileNumbers=`cat fileLHC18g5.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g5_extra $NSlashes "MC_LHC18g5_extra-anchor18d-$runListName" "-$runListName"
             done;
         fi
         if [ $HAVELHC18g6 == 1 ]; then
@@ -2110,12 +2175,28 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g6 $NSlashes "MC_LHC18g6-anchor18e-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC18g6_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18g6_extra/GammaConvCalo-$runListName\_*.root > fileLHC18g6.txt
+            fileNumbers=`cat fileLHC18g6.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18g6_extra $NSlashes "MC_LHC18g6_extra-anchor18e-$runListName" "-$runListName"
+            done;
+        fi
         if [ $HAVELHC18h2 == 1 ]; then
             ls $OUTPUTDIR_LHC18h2/GammaConvCalo-$runListName\_*.root > fileLHC18h2.txt
             fileNumbers=`cat fileLHC18h2.txt`
             for fileName in $fileNumbers; do
                 echo $fileName
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18h2 $NSlashes "MC_LHC18h2-anchor18f-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18h2_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18h2_extra/GammaConvCalo-$runListName\_*.root > fileLHC18h2.txt
+            fileNumbers=`cat fileLHC18h2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18h2_extra $NSlashes "MC_LHC18h2_extra-anchor18f-$runListName" "-$runListName"
             done;
         fi
         if [ $HAVELHC18h4 == 1 ]; then
@@ -2126,12 +2207,28 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18h4 $NSlashes "MC_LHC18h4-anchor18ghijk-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC18h4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18h4_extra/GammaConvCalo-$runListName\_*.root > fileLHC18h4.txt
+            fileNumbers=`cat fileLHC18h4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18h4_extra $NSlashes "MC_LHC18h4_extra-anchor18ghijk-$runListName" "-$runListName"
+            done;
+        fi
         if [ $HAVELHC18j1 == 1 ]; then
             ls $OUTPUTDIR_LHC18j1/GammaConvCalo-$runListName\_*.root > fileLHC18j1.txt
             fileNumbers=`cat fileLHC18j1.txt`
             for fileName in $fileNumbers; do
                 echo $fileName
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18j1 $NSlashes "MC_LHC18j1-anchor18l-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18j1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18j1_extra/GammaConvCalo-$runListName\_*.root > fileLHC18j1.txt
+            fileNumbers=`cat fileLHC18j1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18j1_extra $NSlashes "MC_LHC18j1_extra-anchor18l-$runListName" "-$runListName"
             done;
         fi
         if [ $HAVELHC18j4 == 1 ]; then
@@ -2142,6 +2239,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18j4 $NSlashes "MC_LHC18j4-anchor18m-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC18j4_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18j4_extra/GammaConvCalo-$runListName\_*.root > fileLHC18j4.txt
+            fileNumbers=`cat fileLHC18j4.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18j4_extra $NSlashes "MC_LHC18j4_extra-anchor18m-$runListName" "-$runListName"
+            done;
+        fi
         if [ $HAVELHC18k1 == 1 ]; then
             ls $OUTPUTDIR_LHC18k1/GammaConvCalo-$runListName\_*.root > fileLHC18k1.txt
             fileNumbers=`cat fileLHC18k1.txt`
@@ -2150,8 +2255,24 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18k1 $NSlashes "MC_LHC18k1-anchor18n-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC18k1_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k1_extra/GammaConvCalo-$runListName\_*.root > fileLHC18k1.txt
+            fileNumbers=`cat fileLHC18k1.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18k1_extra $NSlashes "MC_LHC18k1_extra-anchor18n-$runListName" "-$runListName"
+            done;
+        fi
         if [ $HAVELHC18k2 == 1 ]; then
             ls $OUTPUTDIR_LHC18k2/GammaConvCalo-$runListName\_*.root > fileLHC18k2.txt
+            fileNumbers=`cat fileLHC18k2.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18k2_extra $NSlashes "MC_LHC18k2_extra-anchor18o-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k2_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k2_extra/GammaConvCalo-$runListName\_*.root > fileLHC18k2.txt
             fileNumbers=`cat fileLHC18k2.txt`
             for fileName in $fileNumbers; do
                 echo $fileName
@@ -2164,6 +2285,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for fileName in $fileNumbers; do
                 echo $fileName
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18k3 $NSlashes "MC_LHC18k3-anchor18p-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC18k3_extra == 1 ]; then
+            ls $OUTPUTDIR_LHC18k3_extra/GammaConvCalo-$runListName\_*.root > fileLHC18k3.txt
+            fileNumbers=`cat fileLHC18k3.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC18k3_extra $NSlashes "MC_LHC18k3_extra-anchor18p-$runListName" "-$runListName"
             done;
         fi
     done
