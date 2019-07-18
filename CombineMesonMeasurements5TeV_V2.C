@@ -3405,7 +3405,8 @@ cout << __LINE__ << endl;
       graphRatioCombFitSys8TeV->Draw("E2same");
       graphRatioCombFitStat8TeV_WOXErr->Draw("p,same,z");
 
-  TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC_noXTalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
+  // TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC_noXTalk/pdf/8TeV/2019_05_22/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root");
+  TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC_pTweights/pdf/8TeV/2019_07_16/FinalResultsTriggersPatchedLM1EMC-merged/data_EMC-mergedResultsFullCorrection_PP.root"); // with pT weights
   // TFile* inputFile8TeVmergedOld = new TFile("/media/nschmidt/local/ANALYSIS/pp_8TeV_mEMC-xtalk/pdf/8TeV/2019_05_06/FinalResultsTriggersPatchedLM1EMC-merged_11/data_EMC-mergedResultsFullCorrection_PP.root");
   TDirectory* directory8TeVmergedOld  = (TDirectory*)inputFile8TeVmergedOld->Get("Pi08TeV");
 
@@ -3457,7 +3458,7 @@ cout << __LINE__ << endl;
         legendSpecial8TeVPlot->SetNColumns(1);
         // legendPlot->SetMargin(0.2);
         legendSpecial8TeVPlot->AddEntry(graphRatioCombFitSys8TeV,"pub. spectrum","pf");
-        legendSpecial8TeVPlot->AddEntry(graphRatioCombFitStat8TeVmEMCOld_WOXErr,"mEMC","pe");
+        legendSpecial8TeVPlot->AddEntry(graphRatioCombFitStat8TeVmEMCOld_WOXErr,"mEMC w/ pT weights","pe");
         legendSpecial8TeVPlot->AddEntry(graphRatioCombFitStat8TeVmEMCNew_WOXErr,"mEMC w/ x-talk","pe");
         legendSpecial8TeVPlot->Draw();
   TLatex *labelRatioToFitEnergySpecialPlot   = new TLatex(0.955, 0.847, Form("pp, #sqrt{#it{s}} = 8 TeV"));

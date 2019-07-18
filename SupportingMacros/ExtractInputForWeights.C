@@ -43,16 +43,34 @@
 #include "TMarker.h"
 #include "Math/WrappedTF1.h"
 #include "Math/BrentRootFinder.h"
-#include "CommonHeaders/PlottingGammaConversionHistos.h"
-#include "CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "CommonHeaders/FittingGammaConversion.h"
-#include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-#include "CommonHeaders/ConversionFunctions.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ConversionFunctions.h"
 
 extern TRandom* gRandom;
 extern TBenchmark* gBenchmark;
 extern TSystem* gSystem;
 extern TMinuit* gMinuit;
+
+TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
+	TGraphAsymmErrors* dummyGraph = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
+	Double_t * xValue         = dummyGraph->GetX();
+	Double_t * yValue         = dummyGraph->GetY();
+	Double_t* xErrorLow       = dummyGraph->GetEXlow();
+	Double_t* xErrorHigh      = dummyGraph->GetEXhigh();
+	Double_t* yErrorLow       = dummyGraph->GetEYlow();
+	Double_t* yErrorHigh      = dummyGraph->GetEYhigh();
+	Int_t nPoints             = dummyGraph->GetN();
+	for (Int_t i = 0; i < nPoints; i++){
+		yValue[i]               = yValue[i]*scaleFac;
+		yErrorLow[i]            = yErrorLow[i]*scaleFac;
+		yErrorHigh[i]           = yErrorHigh[i]*scaleFac;
+	}
+	TGraphAsymmErrors* returnGraph =  new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+	return returnGraph;
+}
 
 //**********************************************************************************************************************
 //***************************** Main function **************************************************************************
@@ -115,7 +133,17 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     TString nameHistoEta                            = "CorrectedYieldEta";
     TString nameFitPi0                              = "TwoComponentModelFitYieldPi0";
     TString nameFitEta                              = "TwoComponentModelFitYieldEta";
-    if (combinedSpectrum){
+    if (combinedSpectrum && !fOptEnergy.CompareTo("8TeV")){
+        nameHistoPi0                                = "graphInvCrossSectionPi0Comb8TeVA";
+        nameHistoEta                                = "graphInvCrossSectionEtaComb8TeVA";
+        nameFitPi0                              = "TwoComponentModelFitPi0";
+        nameFitEta                              = "TwoComponentModelFitEta";
+    } else if (combinedSpectrum && !fOptEnergy.CompareTo("pPb_8TeV")){
+        nameHistoPi0                                = "graphInvCrossSectionPi0CombpPb8TeVATotErr";
+        nameHistoEta                                = "graphInvCrossSectionEtaCombpPb8TeVATotErr";
+        nameFitPi0                              = "TwoComponentModelFitPi0";
+        nameFitEta                              = "TwoComponentModelFitEta";
+    } else if (combinedSpectrum){
         nameHistoPi0                                = "graphInvYieldINELPi0Comb2760GeVATotErr";
         nameHistoEta                                = "graphInvYieldINELEtaComb2760GeVATotErr";
     }
@@ -127,7 +155,10 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     
     TDirectory* directoryPi0                        = (TDirectory*)fileDataInput->Get(Form("Pi0%s",fOptEnergy.Data())); 
     TDirectory* directoryEta                        = (TDirectory*)fileDataInput->Get(Form("Eta%s",fOptEnergy.Data()));
-    
+     if (!fOptEnergy.CompareTo("pPb_8TeV")){
+        directoryPi0                        = (TDirectory*)fileDataInput->Get(Form("Pi0%s","pPb8TeV")); 
+        directoryEta                        = (TDirectory*)fileDataInput->Get(Form("Eta%s","pPb8TeV"));
+     }
     TGraphAsymmErrors* graphYieldPi0                = NULL;
     TGraphAsymmErrors* graphYieldEta                = NULL;
     TF1* fitPi0Yield                                = NULL;
@@ -145,6 +176,12 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         graphYieldEta                               = (TGraphAsymmErrors*)directoryEta->Get(nameHistoEta.Data());
         fitPi0Yield                                 = (TF1*)directoryPi0->Get(nameFitPi0.Data());
         fitEtaYield                                 = (TF1*)directoryEta->Get(nameFitEta.Data());
+        if (!fOptEnergy.CompareTo("8TeV")){
+            // graphYieldPi0 = ScaleGraphAsym(graphYieldPi0, ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+            // graphYieldEta = ScaleGraphAsym(graphYieldPi0, ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+            // fitPi0Yield = ScaleTF1(fitPi0Yield, 1/(ReturnCorrectXSection( "8TeV", 1)*recalcBarn), "fitPi0Yield_scaled");
+            // fitEtaYield = ScaleTF1(fitPi0Yield, 1/(ReturnCorrectXSection( "8TeV", 1)*recalcBarn), "fitEtaYield_scaled");
+        }
     }
     
     //**********************************************************************************************************************
@@ -183,6 +220,8 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         cout << fileNameMCPi0[i].Data() << "\t" << fileNameMCEta[i].Data() << endl;
         filePi0MCInput[i]                           = new TFile(fileNameMCPi0[i]);
         histoPi0InputMCWOWeights[i]                 = (TH1D*)filePi0MCInput[i]->Get("MCYield_Meson_oldBinWOWeights");
+        if (!fOptEnergy.CompareTo("8TeV") || !fOptEnergy.CompareTo("pPb_8TeV"))
+            histoPi0InputMCWOWeights[i]                 = (TH1D*)filePi0MCInput[i]->Get("MCYield_Meson_oldBin");
         histoPi0InputMCWWeights[i]                 = (TH1D*)filePi0MCInput[i]->Get("MCYield_Meson_oldBin");
         
         histoPi0Efficiency[i]                       = (TH1D*)filePi0MCInput[i]->Get("TrueMesonEffiPt");
@@ -190,6 +229,12 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         histoEtaInputMCWOWeights[i]                 = (TH1D*)fileEtaMCInput[i]->Get("MCYield_Meson_oldBinWOWeights");
         histoEtaInputMCWWeights[i]                  = (TH1D*)fileEtaMCInput[i]->Get("MCYield_Meson_oldBin");
         histoEtaEfficiency[i]                       = (TH1D*)fileEtaMCInput[i]->Get("TrueMesonEffiPt");
+        if (!fOptEnergy.CompareTo("8TeV")){
+            histoPi0InputMCWOWeights[i]->Scale(ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+            // histoPi0InputMCWWeights[i]->Scale(ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+            histoEtaInputMCWOWeights[i]->Scale(ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+            // histoEtaInputMCWWeights[i]->Scale(ReturnCorrectXSection( "8TeV", 1)*recalcBarn);
+        }
     }    
     
     //**********************************************************************************************************************
@@ -435,9 +480,11 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
 
         TLegend* legendEfficiencyPi0 =  GetAndSetLegend2(0.56, 0.12, 0.93, 0.12+0.035*(nGenerators)*1.15, 0.035, 1, "", 42, 0.2); 
         for (Int_t i = 0; i < nGenerators; i++){
+            if(histoPi0Efficiency[i]){
             DrawGammaSetMarker(histoPi0Efficiency[i], markerStyleMC[i], markerSizeSpectrum, colorMC[i] , colorMC[i]);
             histoPi0Efficiency[i]->Draw("p,same,e1");
             legendEfficiencyPi0->AddEntry(histoPi0Efficiency[i],generatorName[i].Data(),"p");
+            }
         }    
         legendEfficiencyPi0->Draw();
     
@@ -453,9 +500,11 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
 
         TLegend* legendEfficiencyEta =  GetAndSetLegend2(0.56, 0.12, 0.93, 0.12+0.035*(nGenerators)*1.15, 0.035, 1, "", 42, 0.2); 
         for (Int_t i = 0; i < nGenerators; i++){
+            if(histoEtaEfficiency[i]){
             DrawGammaSetMarker(histoEtaEfficiency[i], markerStyleMC[i], markerSizeSpectrum, colorMC[i] , colorMC[i]);
             histoEtaEfficiency[i]->Draw("p,same,e1");
             legendEfficiencyEta->AddEntry(histoEtaEfficiency[i],generatorName[i].Data(),"p");
+            }
         }    
         legendEfficiencyEta->Draw();
     
@@ -469,7 +518,7 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         histo2DPi0Effi->DrawCopy(); 
 
         for (Int_t i = 0; i < nGenerators; i++){
-            histoPi0Efficiency[i]->Draw("p,same,e1");
+            if(histoPi0Efficiency[i])histoPi0Efficiency[i]->Draw("p,same,e1");
         }    
         legendEfficiencyPi0->Draw();
     
@@ -480,7 +529,7 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         histo2DEtaEffi->DrawCopy(); 
 
         for (Int_t i = 0; i < nGenerators; i++){
-            histoEtaEfficiency[i]->Draw("p,same,e1");
+            if(histoEtaEfficiency[i])histoEtaEfficiency[i]->Draw("p,same,e1");
         }    
         legendEfficiencyEta->Draw();
     
@@ -493,7 +542,11 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     TFile fMCSpectraInput("MCSpectraInputpp.root","UPDATE");
         if (fitPi0Yield){
             fitPi0Yield->SetRange(0,100);
-            fitPi0Yield->Write(Form("Pi0_Fit_Data_%s",collisionSystemForWriting.Data()),TObject::kOverwrite);
+            if (!fOptEnergy.CompareTo("pPb_8TeV")){
+                fitPi0Yield->Write(Form("Pi0_Fit_Data_%s","8.16TeV"),TObject::kOverwrite);
+            } else {
+                fitPi0Yield->Write(Form("Pi0_Fit_Data_%s",collisionSystemForWriting.Data()),TObject::kOverwrite);
+            }
         }
         if (fitEtaYield){
             fitEtaYield->SetRange(0,100);
@@ -502,10 +555,22 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
         
         for (Int_t i = 0; i < nGenerators; i++){
             cout << "writing everything for " << generatorName[i].Data() << endl;
-            histoPi0InputMCWOWeights[i]->SetTitle(Form("Pi0_%s",outputString[i].Data()));
-            histoPi0InputMCWOWeights[i]->Write(Form("Pi0_%s",outputString[i].Data()),TObject::kOverwrite);
-            histoEtaInputMCWOWeights[i]->SetTitle(Form("Eta_%s",outputString[i].Data()));
-            histoEtaInputMCWOWeights[i]->Write(Form("Eta_%s",outputString[i].Data()),TObject::kOverwrite);
+            if (!fOptEnergy.CompareTo("8TeV")){
+                histoPi0InputMCWOWeights[i]->SetTitle(Form("Pi0_%s_%s",outputString[i].Data(),fOptEnergy.Data()));
+                histoPi0InputMCWOWeights[i]->Write(Form("Pi0_%s_%s",outputString[i].Data(),fOptEnergy.Data()),TObject::kOverwrite);
+                histoEtaInputMCWOWeights[i]->SetTitle(Form("Eta_%s_%s",outputString[i].Data(),fOptEnergy.Data()));
+                histoEtaInputMCWOWeights[i]->Write(Form("Eta_%s_%s",outputString[i].Data(),fOptEnergy.Data()),TObject::kOverwrite);
+            }else if (!fOptEnergy.CompareTo("pPb_8TeV")){
+                histoPi0InputMCWOWeights[i]->SetTitle(Form("Pi0_%s_%s",outputString[i].Data(),"8.16TeV"));
+                histoPi0InputMCWOWeights[i]->Write(Form("Pi0_%s_%s",outputString[i].Data(),"8.16TeV"),TObject::kOverwrite);
+                histoEtaInputMCWOWeights[i]->SetTitle(Form("Eta_%s_%s",outputString[i].Data(),"8.16TeV"));
+                histoEtaInputMCWOWeights[i]->Write(Form("Eta_%s_%s",outputString[i].Data(),"8.16TeV"),TObject::kOverwrite);
+            } else {
+                histoPi0InputMCWOWeights[i]->SetTitle(Form("Pi0_%s",outputString[i].Data()));
+                histoPi0InputMCWOWeights[i]->Write(Form("Pi0_%s",outputString[i].Data()),TObject::kOverwrite);
+                histoEtaInputMCWOWeights[i]->SetTitle(Form("Eta_%s",outputString[i].Data()));
+                histoEtaInputMCWOWeights[i]->Write(Form("Eta_%s",outputString[i].Data()),TObject::kOverwrite);
+            }
         }
     fMCSpectraInput.Close();
             
