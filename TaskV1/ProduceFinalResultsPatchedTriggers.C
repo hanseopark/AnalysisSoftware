@@ -354,6 +354,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString fCent           = "";
     TString fCentOutput     = "";
     TString centEstimator   = "";
+    TString fSphericityCut                      = "";
     // put correct color setting for different triggers
     for (Int_t i = 0; i < numberOfTrigg; i++){
         colorTrigg[i]       = GetDefaultTriggerColorName(triggerName[i], 0, optionEnergy);
@@ -365,14 +366,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         triggerNameLabel[i].ReplaceAll("_"," ");
         triggerNameLabel[i].ReplaceAll("NLM","LM=");
 
+        TString fEventCutSelection                  = "";
+        TString fClusterCutSelection                = "";
+        TString fClusterMergedCutSelection          = "";
+        TString dummyString                         = "";
+        TString fMesonCutSelection                  = "";
+        ReturnSeparatedCutNumberAdvanced( cutNumber[i].Data(), fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
+
         // put correct labels if only 1 set of NLM is used for merged ana
         if (mode == 10){
-            TString fEventCutSelection                  = "";
-            TString fClusterCutSelection                = "";
-            TString fClusterMergedCutSelection          = "";
-            TString dummyString                         = "";
-            TString fMesonCutSelection                  = "";
-            ReturnSeparatedCutNumberAdvanced( cutNumber[i].Data(), fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
             if (i == 0){
                 fMergedClusterCutNrExampl = fClusterMergedCutSelection;
                 fNLMmin = ReturnClusterNLM(fClusterMergedCutSelection);
@@ -403,6 +405,25 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 centEstimator                           = GetCentralityEstimatorString(cutNumber[i]);
                 fCentOutput                             = GetCentralityStringOutput(cutNumber[i]);
                 collisionSystem                         = fCent+ " "+collisionSystem;
+            }
+            fSphericityCut = fEventCutSelection(0,1);
+            if (optionEnergy.Contains("5TeV2017") && i == 0 && (fSphericityCut.CompareTo("0") != 0 ) ){
+              if(fSphericityCut.CompareTo("h") == 0){
+                fCentOutput = "S0005";
+                centEstimator = "S0005";
+              } else if(fSphericityCut.CompareTo("i") == 0){
+                fCentOutput = "S0510";
+                centEstimator = "S0510";
+              } else if(fSphericityCut.CompareTo("j") == 0){
+                fCentOutput = "S0010";
+                centEstimator = "S0010";
+              } else if(fSphericityCut.CompareTo("q") == 0){
+                fCentOutput = "S0003";
+                centEstimator = "S0003";
+              } else if(fSphericityCut.CompareTo("r") == 0){
+                fCentOutput = "S0710";
+                centEstimator = "S0710";
+              }
             }
         }
     }
@@ -447,6 +468,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
     }
     if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+        outputDir       = outputDir+"_"+fCentOutput;
+    }
+    if (optionEnergy.Contains("5TeV2017") && (fSphericityCut.CompareTo("0") != 0 ) ){
         outputDir       = outputDir+"_"+fCentOutput;
     }
     gSystem->Exec("mkdir -p "+outputDir);

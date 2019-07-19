@@ -536,8 +536,6 @@ void ExtractSignalV2(
         fHistEtaPhiPi0inJet->Sumw2();
         fHistFragmFunct                 = (TH2D*)JetContainer->FindObject("ESD_Pi0inJetPt_FragmentationFunc");
         fHistFragmFunct->Sumw2();
-        fHistFragmFunctChargedPart      = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_FragmentationFunc_ChargPart");
-        fHistFragmFunctChargedPart->Sumw2();
     }
     // enter pure simulation routines
     if(fIsMC){
@@ -666,12 +664,8 @@ void ExtractSignalV2(
           fHistoJetUnfold->Sumw2();
           fHistoTruePi0FragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TruePi0inJetPt_FragmentationFunc");
           fHistoTruePi0FragmFunc->Sumw2();
-          fHistoTruePi0FragmFuncChargPart             = (TH2D*)TrueJetContainer->FindObject("ESD_TruePi0inJet_FragmentationFunc_ChargPart");
-          fHistoTruePi0FragmFuncChargPart->Sumw2();
           fHistoTrueEtaFragmFunc                      = (TH2D*)TrueJetContainer->FindObject("ESD_TrueEtainJet_FragmentationFunc");
           fHistoTrueEtaFragmFunc->Sumw2();
-          fHistoTrueEtaFragmFuncChargPart             = (TH2D*)TrueJetContainer->FindObject("ESD_TrueEtainJet_FragmentationFunc_ChargPart");
-          fHistoTrueEtaFragmFuncChargPart->Sumw2();
         }
         cout << ObjectNameTrue.Data() << endl;
         FillMassMCTrueMesonHistosArray(fHistoTrueMesonInvMassVSPt);

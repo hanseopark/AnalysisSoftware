@@ -1135,6 +1135,7 @@ void CorrectCaloNonLinearityV4(
     Double_t maxPlotY = 1.05;
     if (select.Contains("LHC15o") || select.Contains("LHC18qr"))           maxPlotY = 1.2;
     if (select.Contains("LHC11cd") && mode==2)           maxPlotY = 1.03;
+    if (mode==3 || mode==5)   {   minPlotY = 0.9;     maxPlotY = 1.2; }
 
     TH2F * histoDummyDataMCRatio;
     histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minPlotY, maxPlotY);
@@ -1331,7 +1332,11 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
 //*******************************************************************************
 TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax, Int_t mode, Double_t ptcenter ){
 
-    Double_t mesonAmplitude =histo->GetMaximum();
+    Double_t mesonAmplitude = 0;
+    for(Int_t i = histo->FindBin(0.07); i < histo->FindBin(0.2) ; i++ ){
+      if(histo->GetBinContent(i) > mesonAmplitude) mesonAmplitude = histo->GetBinContent(i);
+    }
+    cout << "mesonAmplitude = " << mesonAmplitude << endl;
     Double_t mesonAmplitudeMin;
     Double_t mesonAmplitudeMax;
 
@@ -1344,24 +1349,33 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     // special setting for PCM-PHOS
     } else if (mode == 3){
         if (ptcenter > 1.)
-            mesonAmplitudeMin = mesonAmplitude*95./100.;
+            mesonAmplitudeMin = mesonAmplitude*20./100.;
         else
-            mesonAmplitudeMin = mesonAmplitude*90./100.;
+            mesonAmplitudeMin = mesonAmplitude*10./100.;
+
+          fitRangeMin = 0.09;
+          fitRangeMax = 0.19;
     // special setting for EMC
     } else if (mode == 4 || mode == 12 || mode == 15){
         mesonAmplitudeMin = mesonAmplitude*20./100.;
         fitRangeMin = 0.08;
     // special setting for PHOS
     } else if (mode == 5){
+      fitRangeMin = 0.09;
+      fitRangeMax = 0.25;
         if (ptcenter > 1.)
             mesonAmplitudeMin = mesonAmplitude*80./100.;
         else
-            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMin = mesonAmplitude*1./100.;
+
+        if(ptcenter < 0.35) fitRangeMax = 0.2;
     } else {
         mesonAmplitudeMin = mesonAmplitude*50./100.;
     }
-    mesonAmplitudeMax = mesonAmplitude*400./100.;
+    mesonAmplitudeMax = mesonAmplitude*110./100.;
 
+    cout << "mesonAmplitudeMin = " << mesonAmplitudeMin << endl;
+    cout << "mesonAmplitudeMax = " << mesonAmplitudeMax << endl;
 
     TF1* fFitReco    = new TF1("fGaussExp","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                                fitRangeMin, fitRangeMax);
@@ -1373,13 +1387,17 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     fFitReco->SetParameter(3, 0.012);
 
     fFitReco->SetParLimits(0, mesonAmplitudeMin, mesonAmplitudeMax);
-    if (mode == 4 || mode == 5 || mode == 12 || mode == 15){
-        fFitReco->SetParLimits(1, fMesonMassExpect*0.65, fMesonMassExpect*1.45);
+    if (mode == 4 || mode == 12 || mode == 15){
+        fFitReco->SetParLimits(1, fMesonMassExpect*0.65, fMesonMassExpect*1.6);
     } else {
         fFitReco->SetParLimits(1, fMesonMassExpect*0.9, fMesonMassExpect*1.1);
     }
     fFitReco->SetParLimits(2, 0.001, 0.1);
     fFitReco->SetParLimits(3, 0.001, 0.09);
+    if (mode == 5){
+      fFitReco->SetParLimits(1, fMesonMassExpect*0.8, fMesonMassExpect*1.8);
+      fFitReco->SetParLimits(2, 0.001, 0.01);
+    }
 
     histo->Fit(fFitReco,"QRME0");
 

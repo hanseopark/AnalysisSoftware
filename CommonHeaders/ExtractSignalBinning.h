@@ -1319,7 +1319,7 @@
                         else startPtBin = 6;
                       }
                     } else if ( mode == 5){
-                      startPtBin = 1;
+                      startPtBin = 2;
                     } else if ( mode == 10){
                         startPtBin = 29;
                     } else if ( mode == 12){
@@ -1702,7 +1702,7 @@
                       else startPtBin = 6;
                     }
                   } else if ( mode == 5 ){
-                    startPtBin = 1;
+                    startPtBin = 6;
                   } else if ( mode == 13 ){
                       startPtBin = 1;
                   } else if ( mode == 12 ){
