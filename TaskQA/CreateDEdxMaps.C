@@ -138,7 +138,12 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
     Double_t scalWidthFit       = 3;
     Double_t maxChi2            = 200;
-    if (fEnergy.Contains("XeXe") && period.Contains("Peri")){
+    Bool_t fixSearchRange       = kFALSE;  // in case there is another, higher peak in the nSigma histos, should fix the range to search for bin with maximum content before fitting
+    if(fEnergy.Contains("PbPb")){
+        scalWidthFit       = 1.5;
+        maxChi2            = 20;
+        fixSearchRange     = kTRUE;
+    } else if ((fEnergy.Contains("XeXe")) && period.Contains("Peri")){
         scalWidthFit       = 2;
         maxChi2            = 20;
     } else if (fEnergy.Contains("XeXe") && period.Contains("Cent")){
@@ -195,6 +200,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         cout << "TPC Cl bins:: " << i << " " << arrTPCClBinningOut[i] << endl;
     }
 
+
     // enable fitting
     for (Int_t r = 0; r < 4; r++){
         for (Int_t j = 0; j < nPBins; j++){
@@ -210,6 +216,39 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         for (Int_t i = 0; i < nEtaBinsOut; i++){
             doFitting[1][0][3][i] = kFALSE;
             doFitting[1][0][4][i] = kFALSE;
+        }
+    } else if(fEnergy.Contains("PbPb")){
+
+        for (Int_t i = 0; i < nEtaBinsOut; i++){
+
+            //  [0][R][Pt][Eta]
+            doFitting[0][0][1][i]  = kFALSE;
+            doFitting[0][0][13][i] = kFALSE;
+            if( i < 3 || i > 15 ) doFitting[0][1][1][i] = kFALSE;
+            doFitting[0][1][13][i] = kFALSE;
+            doFitting[0][2][13][i] = kFALSE;
+            doFitting[0][3][10][i] = kFALSE;
+            doFitting[0][3][11][i] = kFALSE;
+            doFitting[0][3][12][i] = kFALSE;
+            doFitting[0][3][13][i] = kFALSE;
+
+            //  [1][TPCCl][Pt][Eta]
+            doFitting[1][0][9][i]  = kFALSE;
+            doFitting[1][0][10][i] = kFALSE;
+            doFitting[1][0][11][i] = kFALSE;
+            doFitting[1][0][12][i] = kFALSE;
+            doFitting[1][0][13][i] = kFALSE;
+            doFitting[1][1][9][i]  = kFALSE;
+            doFitting[1][1][10][i] = kFALSE;
+            doFitting[1][1][12][i] = kFALSE;
+            doFitting[1][1][13][i] = kFALSE;
+            doFitting[1][2][1][i]  = kFALSE;
+            doFitting[1][2][13][i] = kFALSE;
+            doFitting[1][3][1][i]  = kFALSE;
+            if( i < 3 || i > 15 ) doFitting[1][3][2][i]  = kFALSE;
+            if( i < 2 || i > 16 ) doFitting[1][3][3][i]  = kFALSE;
+            if( i < 1 || i > 16 ) doFitting[1][3][4][i]  = kFALSE;
+            doFitting[1][3][13][i] = kFALSE;
         }
     }
 
@@ -249,6 +288,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
 
     }
+
 
     TH1D* histoPositronDeDx[2][4][14][20]  = {{{{NULL}}}};
     TH1D* histoElectronDeDx[2][4][14][20]  = {{{{NULL}}}};
@@ -310,7 +350,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 100) histoElectronDeDx[0][r][i][j]->Rebin(2);
 //                 fitElectronDeDx[0][r][i][j]    = FitSignal(histoElectronDeDx[0][r][i][j],kBlue);
                 if (doFitting[0][r][i][j] && histoElectronDeDx[0][r][i][j]->GetMaximum() > 10)
-                    fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+                    fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
 //                     fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25);
 
                 if ( fitElectronDeDx[0][r][i][j]){
@@ -337,7 +377,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 100) histoPositronDeDx[0][r][i][j]->Rebin(2);
 //                 fitPositronDeDx[0][r][i][j]    = FitSignal(histoPositronDeDx[0][r][i][j],kBlue);
                 if (doFitting[0][r][i][j] &&histoPositronDeDx[0][r][i][j]->GetMaximum() > 10)
-                    fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+                    fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
 //                     fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
                 if (fitPositronDeDx[0][r][i][j]){
@@ -365,7 +405,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 100) histoElectronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitElectronDeDx[1][r][i][j]    = FitSignal(histoElectronDeDx[1][r][i][j],kBlue);
                 if (doFitting[1][r][i][j] && histoElectronDeDx[1][r][i][j]->GetMaximum() > 10)
-                    fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2);
+                    fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
 //                     fitElectronDe[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25);
 
                 if (fitElectronDeDx[1][r][i][j]){
@@ -392,7 +432,7 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 100) histoPositronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitPositronDeDx[1][r][i][j]    = FitSignal(histoPositronDeDx[1][r][i][j],kBlue);
                 if (doFitting[1][r][i][j] && histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
-                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit);
+                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, fixSearchRange);
 //                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
                 if (fitPositronDeDx[1][r][i][j]){

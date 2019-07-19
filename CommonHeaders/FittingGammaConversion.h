@@ -1177,13 +1177,16 @@
                                             Double_t fitRangeMin,
                                             Double_t fitRangeMax,
                                             Double_t multWidth = 2.,
-                                            Double_t maxChi2 = 200.
+                                            Double_t maxChi2 = 200.,
+                                            Bool_t fixSearchRange = kFALSE  // search for maximum bin content only within fitRangeMin, fitRangeMax for f0 and ymin, ymax for f1
                                         ){
         TF1 *f0 = new TF1("f0", "[0]*( (((x-[1])/[2])<[3])*(TMath::Exp(-TMath::Power((x-[1])/[2],2)/2.)) + (((x-[1])/[2])>=[3])*(TMath::Exp(TMath::Power([3],2)/2. - [3]*(x-[1])/[2])) )", fitRangeMin,fitRangeMax);
 
-        f0->SetParameter(0,FindLargestBin1DHistFit(histo));
-        f0->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.7,FindLargestBin1DHistFit(histo)*1.1);
-        f0->SetParameter(1,FindLargestBin1DHistX (histo));
+        Double_t searchRangeMin = -10000; Double_t searchRangeMax = -10000;
+        if(fixSearchRange) searchRangeMin = fitRangeMin; searchRangeMax = fitRangeMax;
+        f0->SetParameter(0,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax));
+        f0->SetParLimits(0,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax)*0.7,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax)*1.1);
+        f0->SetParameter(1,FindLargestBin1DHistX(histo,searchRangeMin,searchRangeMax));
         f0->SetParLimits(1,-2,2);
         f0->SetParameter(2,1);
         f0->SetParLimits(2,0.5,2);
@@ -1199,9 +1202,11 @@
         Double_t deviation = 100;
         Int_t counter = 0;
         TF1* f1 = new TF1 ("f1", "[0]*( (((x-[1])/[2])<=-[3])*(TMath::Exp(-TMath::Power((x-[1])/[2],2)/2.)) + (((x-[1])/[2])>-[3])*(TMath::Exp(TMath::Power([3],2)/2. + [3]*(x-[1])/[2])) )", ymin, ymax);
-        f1->SetParameter(0,FindLargestBin1DHistFit(histo));
-        f1->SetParLimits(0,FindLargestBin1DHistFit(histo)*0.9,FindLargestBin1DHistFit(histo)*1.2);
-        f1->SetParameter(1,FindLargestBin1DHistX (histo));
+
+        if(fixSearchRange) searchRangeMin = ymin; searchRangeMax = ymax;
+        f1->SetParameter(0,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax));
+        f1->SetParLimits(0,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax)*0.9,FindLargestBin1DHistFit(histo,searchRangeMin,searchRangeMax)*1.2);
+        f1->SetParameter(1,FindLargestBin1DHistX(histo,searchRangeMin,searchRangeMax));
         f1->SetParLimits(1,-2,2 );
         f1->SetParameter(2,1);
         f1->SetParLimits(2,0.5,2);
