@@ -81,8 +81,8 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins                        = 0;
     Double_t* ptBinsErr                     = 0;
-    TString nameCutVariationSC[19];
-    TString nameCutVariationSCCurrent[19]   = { "RemovePileUp",                    // 0
+    TString nameCutVariationSC[18];
+    TString nameCutVariationSCCurrent[18]   = { "RemovePileUp",                    // 0
                                                 "Conversion_SinglePtCut",          // 1
                                                 "Conversion_ClsTPCCut",            // 2
                                                 "Conversion_TPCdEdxCutElectron",   // 3
@@ -90,19 +90,18 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                                                 "Conversion_QtMaxCut",             // 5
                                                 "Conversion_Chi2GammaCut",         // 6
                                                 "Conversion_PsiPair",              // 7
-                                                "Conversion_CosinePointingAngle",  // 8
+                                                "ChargedPion_ITSRequirement",      // 8
                                                 "ChargedPion_ClsTPCCut",           // 9
-                                                "ChargedPion_DCACut",              // 10
-                                                "ChargedPion_pTCut",               // 11
-                                                "ChargedPion_TPCdEdxCutPion",      // 12
-                                                "ChargedPion_MassCut",             // 13
-                                                "NeutralPion_SelectionWindows",    // 14
-                                                "Omega_BackgroundScheme",          // 15
-                                                "Omega_RecoEfficiency",            // 16
-                                                "Omega_BranchingRatio",            // 17
-                                                "YieldExtraction"};                // 18
-    TString nameCutVariation[19] = {"pileup","#gamma_{conv} track p_{T}","#gamma_{conv} track N_{cls,TPC}","#gamma_{conv} e^{#pm} PID","#gamma_{conv} #pi rej.","#gamma_{conv} q_{T}","#gamma_{conv} #chi^{2}","#gamma_{conv} #psi_{pair}","#gamma_{conv} cos #theta_{PA}",
-                                   "#pi^{#pm} rec. N_{cls,TPC}","#pi^{#pm} rec. DCA","#pi^{#pm}  rec.min p_{T}","#pi^{#pm} rec. PID","M_{#pi^{+}#pi^{-}} cut","#pi^{0} rec. M_{#gamma#gamma} cut","background description",
+                                                "ChargedPion_pTCut",               // 10
+                                                "ChargedPion_TPCdEdxCutPion",      // 11
+                                                "ChargedPion_MassCut",             // 12
+                                                "NeutralPion_SelectionWindows",    // 13
+                                                "Omega_BackgroundScheme",          // 14
+                                                "Omega_RecoEfficiency",            // 15
+                                                "Omega_BranchingRatio",            // 16
+                                                "YieldExtraction"};                // 17
+    TString nameCutVariation[18] = {"pileup","#gamma_{conv} track p_{T}","#gamma_{conv} track N_{cls,TPC}","#gamma_{conv} e^{#pm} PID","#gamma_{conv} #pi rej.","#gamma_{conv} q_{T}","#gamma_{conv} #chi^{2}","#gamma_{conv} #psi_{pair}",
+                                   "#pi^{#pm} rec. N_{cls,ITS}","#pi^{#pm} rec. N_{cls,TPC}","#pi^{#pm}  rec.min p_{T}","#pi^{#pm} rec. PID","M_{#pi^{+}#pi^{-}} cut","#pi^{0} rec. M_{#gamma#gamma} cut","background description",
                                     "reco. efficiency","branching ratio","yield extraction"};
     Color_t color[34] = {kTeal+3,
                          kTeal-5,800,kBlue-7,kCyan+4,kSpring+2,kTeal-7,kAzure-5,kRed-2,
@@ -135,14 +134,14 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
     // ***************************************************************************************************
     Bool_t bsmooth[17]                      = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0,
                                                 0,  0, 0, 0 ,0};
-    Bool_t bsmoothMBOmega07TeV[19]             = { 1,                           // pileup
-                                                   1, 1, 1, 1, 1, 1, 1, 0,      // conversion cuts
+    Bool_t bsmoothMBOmega07TeV[18]             = { 1,                           // pileup
+                                                   1, 1, 1, 1, 1, 1, 1,         // conversion cuts
                                                    1, 1, 1, 1, 1,               // charged pion
                                                    1,                           // neutral pion
-                                                   1, 1, 1,                       // omega
+                                                   1, 1, 1,                     // omega
                                                    0};                          // yield extraction
-    Bool_t bsmoothMBEta07TeV[19]             = { 1,                           // pileup
-                                                   1, 1, 1, 1, 1, 1, 1, 1,      // conversion cuts
+    Bool_t bsmoothMBEta07TeV[18]             = { 1,                             // pileup
+                                                   1, 1, 1, 1, 1, 1, 1,         // conversion cuts
                                                    1, 1, 1, 1, 1,               // charged pion
                                                    1,                           // neutral pion
                                                    1, 1, 1,                     // omega
@@ -247,10 +246,9 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
              || nameCutVariationSC[i].CompareTo("Conversion_QtMaxCut")==0
              || nameCutVariationSC[i].CompareTo("Conversion_Chi2GammaCut")==0
              || nameCutVariationSC[i].CompareTo("Conversion_PsiPair")==0
-             || nameCutVariationSC[i].CompareTo("Conversion_CosinePointingAngle")==0
              || nameCutVariationSC[i].CompareTo("ChargedPionEtaCut")==0
+             || nameCutVariationSC[i].CompareTo("ChargedPion_ITSRequirement")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_ClsTPCCut")==0
-             || nameCutVariationSC[i].CompareTo("ChargedPion_DCACut")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_pTCut")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_TPCdEdxCutPion")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_MassCut")==0
@@ -444,7 +442,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       =startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.5;
+                        errorReset = 2.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -469,12 +467,12 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
-            // conversion cosine pointing angle
-            } else if (nameCutVariationSC[i].CompareTo("Conversion_CosinePointingAngle")==0 ){
+            // charged pion track cls in TPC
+            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_ITSRequirement")==0 ){
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.0;
+                        errorReset = 4.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -508,7 +506,7 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 3.0;
+                        errorReset = 10.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -518,20 +516,6 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                     }
                 }
 
-            // charged pion PID
-            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_DCACut")==0 ){
-                minPt       = startPtSys;
-                for (Int_t k = 0; k < nPtBins; k++){
-                    if (!energy.CompareTo("7TeV")){
-                        errorReset = 4.5;
-                    }
-                    if (ptBins[k] > minPt){
-                        errorsMean[i][k]            = errorReset;
-                        errorsMeanErr[i][k]         = errorReset*0.01;
-                        errorsMeanCorr[i][k]        = errorReset;
-                        errorsMeanErrCorr[i][k]     = errorReset*0.01;
-                    }
-                }
             // charged pion PID
             } else if (nameCutVariationSC[i].CompareTo("ChargedPion_pTCut")==0 ){
                 minPt       = startPtSys;
@@ -975,17 +959,17 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
 
         // Signal extraction: Yield extraction, Alpha ,BG, YieldExtraction, , "ChargedPion_MassCut"
 
-        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[13][l],2)+    // charged pion mass cut
-                                                            pow(errorsMeanCorr[15][l],2)+    // background
-                                                            pow(errorsMeanCorr[16][l],2)+    // reco efficiency
-                                                            pow(errorsMeanCorr[17][l],2)+    // branching ratio
-                                                            pow(errorsMeanCorr[18][l],2));   // YieldExtraction
+        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[12][l],2)+    // charged pion mass cut
+                                                            pow(errorsMeanCorr[14][l],2)+    // background
+                                                            pow(errorsMeanCorr[15][l],2)+    // reco efficiency
+                                                            pow(errorsMeanCorr[16][l],2)+    // branching ratio
+                                                            pow(errorsMeanCorr[17][l],2));   // YieldExtraction
 
         // charged pion cuts: "ChargedPion_ClsTPCCut","ChargedPion_TPCdEdxCutPion"
-        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[9][l],2)   +    // ClsTPC
-                                                                        pow(errorsMeanCorr[10][l],2)  +    // DCA
-                                                                        pow(errorsMeanCorr[11][l],2)  +    // pT
-                                                                        pow(errorsMeanCorr[12][l],2));   // dEdxPi
+        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[8][l],2)   +    // ClsITS
+                                                                        pow(errorsMeanCorr[9][l],2)  +    // ClsTPC
+                                                                        pow(errorsMeanCorr[10][l],2)  +    // pT
+                                                                        pow(errorsMeanCorr[11][l],2));   // dEdxPi
 
 
         // photon reco: SinglePtCut, ClsTPCCut, TPCdEdxCutElectron, TPCdEdxCutPion, Conversion_QtMaxCut, Chi2GammaCut, PsiPair, CosinePointingAngle
@@ -995,11 +979,10 @@ void FinaliseSystematicErrorsConv_omega_pp( TString nameDataFileErrors      = ""
                                                             pow(errorsMeanCorr[4][l],2)+    // TPCdEdxPion
                                                             pow(errorsMeanCorr[5][l],2)+    // Qt
                                                             pow(errorsMeanCorr[6][l],2)+    // Chi2
-                                                            pow(errorsMeanCorr[7][l],2)+    // PsiPair
-                                                            pow(errorsMeanCorr[8][l],2));   // CosineAngle
+                                                            pow(errorsMeanCorr[7][l],2));   // PsiPair
 
         // pi0 reco: pT, alpha, mass window
-        errorsMeanCorrPi0Reco[l]           =   errorsMeanCorr[14][l];
+        errorsMeanCorrPi0Reco[l]           =   errorsMeanCorr[13][l];
 
 
         // pileup

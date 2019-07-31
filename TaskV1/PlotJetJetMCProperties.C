@@ -260,6 +260,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         maxPt           = 50;
     } else if (period.Contains("LHC18b9") ){
         maxPt           = 50;
+    } else if (period.Contains("LHC18l6b1") || period.Contains("LHC18l6c1") ){
+        maxPt           = 50;
     }
     cout << "going to maxPt: " << maxPt << endl;
 
@@ -326,6 +328,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         anchoredTo                      = "LHC17pq";
     else if (period.Contains("LHC18b9"))
         anchoredTo                      = "LHC16rs";
+    else if (period.Contains("LHC18l6b1") || period.Contains("LHC18l6c1"))
+        anchoredTo                      = "LHC17";
 
     TString acceptanceOf = "";
     if (mode == 0) acceptanceOf     = "|#eta_{#gamma}| < 0.9 (PCM acc.)";

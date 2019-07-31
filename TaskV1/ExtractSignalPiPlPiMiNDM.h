@@ -2,8 +2,9 @@
 
 // Double, Int, etc.
 TDatime	now;
-fstream fFileErrLog;
-fstream	fFileDataLog;
+std::fstream fFileErrLog;
+std::fstream fFileDataLog;
+std::fstream fFileDataTestLog;
 
 TString fTypeCutSelection                                   = "";
 TString fEventCutSelection                                  = "";
@@ -113,6 +114,9 @@ TH1D*   fHistoYieldMesonPerEvent_FixedPzPiZero[6]           = {NULL, NULL, NULL,
 TH1D*   fHistoYieldMesonPerEventBackFit[3]                  = {NULL, NULL, NULL};
 TH1D*   fHistoYieldMesonPerEventBackFit_SubPiZero[3]        = {NULL, NULL, NULL};
 TH1D*   fHistoYieldMesonPerEventBackFit_FixedPzPiZero[3]    = {NULL, NULL, NULL};
+
+TH1D*   fHistoClustersPt    = NULL;
+TH1D*   fHistoClustersE     = NULL;
 
 // True Yield histos for BG Analysis
 TH1D*   fHistoYieldsMappingGGInvMass                           = NULL;
@@ -458,9 +462,15 @@ Double_t* fMesonTrueSign_FixedPzPiZero[3]                   = { NULL, NULL, NULL
 Double_t* fMesonFWHM= 										NULL;
 Double_t* fMesonFWHM_SubPiZero= 							NULL;
 Double_t* fMesonFWHM_FixedPzPiZero= 						NULL;
+Double_t* fMesonFWHMBackFit= 								NULL;
+Double_t* fMesonFWHMBackFit_SubPiZero=						NULL;
+Double_t* fMesonFWHMBackFit_FixedPzPiZero=					NULL;
 Double_t* fMesonTrueMass= 									NULL;
 Double_t* fMesonTrueMass_SubPiZero=							NULL;
 Double_t* fMesonTrueMass_FixedPzPiZero=						NULL;
+Double_t* fMesonTrueMassBackFit=							NULL;
+Double_t* fMesonTrueMassBackFit_SubPiZero=					NULL;
+Double_t* fMesonTrueMassBackFit_FixedPzPiZero=				NULL;
 Double_t* fMesonTrueMassCaloPhoton= 						NULL;
 Double_t* fMesonTrueMassCaloElectron= 						NULL;
 Double_t* fMesonTrueMassCaloConvPhoton=						NULL;
@@ -473,6 +483,9 @@ Double_t* fMesonTrueMassReweighted_FixedPzPiZero=			NULL;
 Double_t* fMesonTrueFWHM= 									NULL;
 Double_t* fMesonTrueFWHM_SubPiZero= 						NULL;
 Double_t* fMesonTrueFWHM_FixedPzPiZero=  					NULL;
+Double_t* fMesonTrueFWHMBackFit= 							NULL;
+Double_t* fMesonTrueFWHMBackFit_SubPiZero= 			     	NULL;
+Double_t* fMesonTrueFWHMBackFit_FixedPzPiZero=  			NULL;
 Double_t* fMesonTrueFWHMCaloPhoton= 						NULL;
 Double_t* fMesonTrueFWHMCaloElectron= 						NULL;
 Double_t* fMesonTrueFWHMCaloConvPhoton=						NULL;
@@ -558,6 +571,9 @@ Double_t* fMesonWidthBackFitError_FixedPzPiZero=      		NULL;
 Double_t* fMesonTrueMassError=								NULL;
 Double_t* fMesonTrueMassError_SubPiZero=					NULL;
 Double_t* fMesonTrueMassError_FixedPzPiZero=				NULL;
+Double_t* fMesonTrueMassBackFitError=						NULL;
+Double_t* fMesonTrueMassBackFitError_SubPiZero=				NULL;
+Double_t* fMesonTrueMassBackFitError_FixedPzPiZero=			NULL;
 Double_t* fMesonTrueMassReweightedError=					NULL;
 Double_t* fMesonTrueMassReweightedError_SubPiZero=			NULL;
 Double_t* fMesonTrueMassReweightedError_FixedPzPiZero=		NULL;
@@ -567,6 +583,9 @@ Double_t* fMesonTrueFWHMReweightedError_FixedPzPiZero=		NULL;
 Double_t* fMesonTrueFWHMError=								NULL;
 Double_t* fMesonTrueFWHMError_SubPiZero=					NULL;
 Double_t* fMesonTrueFWHMError_FixedPzPiZero=				NULL;
+Double_t* fMesonTrueFWHMBackFitError=						NULL;
+Double_t* fMesonTrueFWHMBackFitError_SubPiZero=				NULL;
+Double_t* fMesonTrueFWHMBackFitError_FixedPzPiZero=			NULL;
 
 Double_t* fMesonSBError=									NULL;
 Double_t* fMesonSignError=									NULL;
@@ -579,6 +598,9 @@ Double_t* fMesonTrueSignError_FixedPzPiZero[3]				= {NULL,NULL,NULL};
 Double_t* fMesonFWHMError=									NULL;
 Double_t* fMesonFWHMError_SubPiZero=						NULL;
 Double_t* fMesonFWHMError_FixedPzPiZero=   					NULL;
+Double_t* fMesonFWHMBackFitError=							NULL;
+Double_t* fMesonFWHMBackFitError_SubPiZero=					NULL;
+Double_t* fMesonFWHMBackFitError_FixedPzPiZero=   			NULL;
 
 Double_t* fTotalBckYieldsError[6]=							{NULL, NULL, NULL, NULL, NULL, NULL};
 Double_t* fTotalBckYieldsError_SubPiZero[6]=				{NULL, NULL, NULL, NULL, NULL, NULL};
@@ -618,8 +640,14 @@ TF1** 	fFitBckInvMassLeftPtBin_SubPiZero=              	NULL;
 TF1** 	fFitBckInvMassLeftPtBin_FixedPzPiZero=				NULL;
 
 TH2D* 	fHistoTrueMesonInvMassVSPt=							NULL;
+TH2D* 	fHistoTrueMesonInvMassVSPt_SubNDM=				    NULL;
+TH2D* 	fHistoTrueMesonInvMassVSPt_FixedPzNDM=	  		    NULL;
 TH2D*	fHistoTrueMesonInvMassVSPtWOWeights=				NULL;
+TH2D*	fHistoTrueMesonInvMassVSPtWOWeights_SubNDM=			NULL;
+TH2D*	fHistoTrueMesonInvMassVSPtWOWeights_FixedPzNDM=		NULL;
 TH2D*	fHistoTrueMesonInvMassVSPtReweighted=				NULL;
+TH2D*	fHistoTrueMesonInvMassVSPtReweighted_SubNDM=		NULL;
+TH2D*	fHistoTrueMesonInvMassVSPtReweighted_FixedPzNDM=	NULL;
 TProfile2D*	fProfileTrueMesonInvMassVSPtWeights=		 	NULL;
 
 TH2D*	fGammaGammaInvMassVSPt=								NULL;

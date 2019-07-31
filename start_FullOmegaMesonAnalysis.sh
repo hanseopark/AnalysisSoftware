@@ -9,11 +9,8 @@
 #Input 1: Root file to analyze Default: AnalyisResults
 #Input 2: Input directory  Default:$PWD
 #Input 3: Output directory Default: $PWD/Results  (directory will be created if it does not exist)
-#
-
 PROGNAME=$0
 AdvMesonQA=""
-
 ONLYCORRECTION=0
 ONLYETA=0
 ONLYOMEGA=0
@@ -29,6 +26,7 @@ NAMECUTSTUDIES="none"
 PERIOD=""
 NORMALCUTS=0
 dataFileOK=0
+altAccFileGiven=0
 
 function GiveBinning7TeVOmega()
 {
@@ -75,13 +73,13 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiNDM.C\+\($1\)
+    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiNDM.C\($1\)
     #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
 function CorrectSignal()
 {
-    root -x -l -b -q TaskV1/CorrectSignalPiPlPiMiPiZero.C\+\($1\)
+    root -x -l -b -q TaskV1/CorrectSignalPiPlPiMiPiZero.C\($1\)
 }
 
 
@@ -169,6 +167,7 @@ elif [[ "$1" == "-omegaOnly" ]] ; then
     DataRootFile=$2
     MCRootFile=$3
     Suffix=$4;
+    AltCorrFile=$5
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
@@ -183,17 +182,27 @@ elif [[ "$1" == "-omegaOnly" ]] ; then
         PARTLY=1
         MCFILE=0
     fi
+
+    if [ -f $AltCorrFile ]; then
+        altAccFileGiven=1
+        echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
+    fi
 elif [[ "$1" == "-etaOnly" ]] ; then
     ONLYETA=1
     DataRootFile=$2
     MCRootFile=$3
     Suffix=$4;
+    AltCorrFile=$5
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
     else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
+    fi
+    if [ -f $AltCorrFile ]; then
+        altAccFileGiven=1
+        echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
 if [ -f $MCRootFile ]; then
     echo "The MC file specified is $MCRootFile"
@@ -208,6 +217,11 @@ elif [[ "$1" == -d* ]] ; then
     DataRootFile=$2
     MCRootFile=$3
     Suffix=$4;
+    AltCorrFile=$5
+    if [ -f $AltCorrFile ]; then
+        altAccFileGiven=1
+        echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
+    fi
 elif [[ "$1" == *-r* ]] ; then
     ONLYCORRECTION=1
     ONLYRESULTS=1
@@ -236,6 +250,7 @@ else
     DataRootFile=$1
     MCRootFile=$2
     Suffix=$3;
+    AltCorrFile=$4
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
@@ -249,6 +264,10 @@ else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
         PARTLY=1
         MCFILE=0
+    fi
+    if [ -f $AltCorrFile ]; then
+        altAccFileGiven=1
+        echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
 fi
 
@@ -435,6 +454,8 @@ do
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
+    elif [ $answer = "7TeVSys" ] || [ $answer = "7Sys" ]; then
+        energy="7TeVSys";
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
         energy="8TeV";
     elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
@@ -494,6 +515,22 @@ do
     #    fi
 
     elif [ $energy = "7TeV" ] ; then
+        if [ $ONLYCORRECTION -eq 0 ]; then
+            GiveBinning7TeVOmega
+            GiveBinning7TeVEta
+        else
+            correctOmega=1
+        fi
+        if [ $correctOmega -eq 0 ]; then
+            correct=0
+        else
+            correct=1
+        fi
+
+        if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            AdvMesonQA="AdvancedMesonQA"
+        fi
+    elif [ $energy = "7TeVSys" ] ; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning7TeVOmega
             GiveBinning7TeVEta
@@ -683,12 +720,19 @@ if [ $ONLYRESULTS = 0 ] ; then
             OmegaMCcorrectionFullFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
             EtaMCcorrectionFullFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
 
+            if [ $altAccFileGiven -eq 1 ]; then
+                optionsOmegaCorrection=\"$OmegadataRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode\,kTRUE\,\"$AltCorrFile\"
+                optionsOmegaCorrectionMC=\"$OmegaMCRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode\,kTRUE\,\"$AltCorrFile\"
 
-            optionsOmegaCorrection=\"$OmegadataRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
-            optionsOmegaCorrectionMC=\"$OmegaMCRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
+                optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode\,kTRUE\,\"$AltCorrFile\"
+                optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode\,kTRUE\,\"$AltCorrFile\"
+            else 
+                optionsOmegaCorrection=\"$OmegadataRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
+                optionsOmegaCorrectionMC=\"$OmegaMCRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
 
-            optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
-            optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
+                optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
+                optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
+            fi
 
             if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
             echo "Correct Signal Data omega"
@@ -722,15 +766,15 @@ if [ $ONLYRESULTS = 0 ] ; then
     done
 
     if [ $ONLYOMEGA -eq 1 ]; then
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
     elif [ $ONLYETA -eq 1 ]; then
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
     else
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
-        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
+        root -x -q -l -b TaskV1/CutStudiesOverviewOmega.C\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,kFALSE\,\"\"\,\"$PERIODNAME\"\,$mode\,kFALSE\)
     fi
 fi

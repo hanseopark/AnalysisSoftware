@@ -194,6 +194,104 @@ void CompareAODandESD(TString nameFileESDInput                = "/media/florianj
             }
         }
 
+        TString outputDir;
+
+        cout << "Plotting container " << SubDirName.Data();
+        // Plot preselection histos
+
+        if(isMC){
+            outputDir       = Form("AODandESDComparison/MC_%s/%s",CutNumber.Data(),SubDirName.Data());
+        } else{
+            outputDir       = Form("AODandESDComparison/%s/%s",CutNumber.Data(),SubDirName.Data());
+        }
+        gSystem->Exec("mkdir -p "+outputDir);
+
+        for(Int_t hist = 0; hist < SubDirESD->GetEntries();hist++){
+                    TString histName = SubDirESD->At(hist)->GetName();
+                    cout << "Reading ESD histo " << histName.Data()<< endl;
+                    if( histName.CompareTo(SubDirAOD->At(hist)->GetName()) != 0){
+                        cout << "Error names not identical" << endl;
+                        printf("ESDName = %s \t AODName = %s \n",histName.Data(),SubDirAOD->At(hist)->GetName());
+                        return;
+                    }
+
+                    canvasTH1->SetLogz();
+                    canvasTH2->SetLogz();
+                    canvasTH1->SetLeftMargin(0.13);
+                    canvasTH2->SetLeftMargin(0.13);
+                    canvasTH1->SetRightMargin(0.12);
+                    canvasTH2->SetRightMargin(0.12);
+                    canvasTH1->SetTopMargin(0.05);
+                    canvasTH2->SetTopMargin(0.05);
+                    canvasTH1->SetBottomMargin(0.1);
+                    canvasTH2->SetBottomMargin(0.1);
+
+                    canvasTH2->Divide(2,1);
+
+                    TString ESDClassName(SubDirESD->At(hist)->ClassName());
+                    TString AODClassName(SubDirAOD->At(hist)->ClassName());
+
+                    if(ESDClassName.CompareTo(AODClassName) != 0){
+                        printf("ERROR: classes are not identical \n");
+                        break;
+                    }
+
+                    if  (ESDClassName.Contains("TH1")){
+
+                        ESDHistTH1 = (TH1F*) SubDirESD->At(hist)->Clone();
+                        AODHistTH1 = (TH1F*) SubDirAOD->At(hist)->Clone();
+                        AODHistTH1->SetLineColor(kRed);
+
+                        rp = new TRatioPlot(ESDHistTH1,AODHistTH1,"divsym");
+
+                        canvasTH1->cd();
+                        rp->Draw("");
+                        legend = new TLegend(0.8, 0.8, .9, .9);
+                        legend->AddEntry(ESDHistTH1, "ESD", "l");
+                        legend->AddEntry(AODHistTH1, "AOD", "l");
+                        legend->Draw();
+                        canvasTH1->Update();
+                        canvasTH1->Print(Form("%s/%s.%s",outputDir.Data(),histName.Data(),fileType.Data()),fileType.Data());
+                        canvasTH1->Clear();
+                    } else if (ESDClassName.Contains("TH2")){
+
+                        if(!compareTH2){
+                            printf("TH2 processing disabled, continuing ->\n");
+                            continue;
+                        }
+                        ESDHistTH2 = (TH2F*) SubDirESD->At(hist)->Clone();
+                        AODHistTH2 = (TH2F*) SubDirAOD->At(hist)->Clone();
+
+                        canvasTH2->cd(1);
+                        tESD = new TText(.8,.9,"ESD");
+                        tESD->SetNDC(kTRUE);
+                        ESDHistTH2->Draw("colz");
+                        tESD->SetTextAlign(22);
+                        tESD->SetTextColor(kBlack);
+                        tESD->SetTextFont(43);
+                        tESD->SetTextSize(30);
+                        tESD->Draw();
+
+                        canvasTH2->cd(2);
+                        tAOD = new TText(.8,.9,"AOD");
+                        tAOD->SetNDC(kTRUE);
+                        AODHistTH2->Draw("colz");
+                        tAOD->SetTextAlign(22);
+                        tAOD->SetTextColor(kBlack);
+                        tAOD->SetTextFont(43);
+                        tAOD->SetTextSize(30);
+                        tAOD->Draw();
+                        canvasTH2->Update();
+                        canvasTH2->Print(Form("%s/%s.%s",outputDir.Data(),histName.Data(),fileType.Data()),fileType.Data());
+                        canvasTH2->Clear();
+                    } else {
+                        // TF1 is for now ignored.
+                        printf("Error: unknwon object type %s -> continuing ...\n",ESDClassName.Data());
+                        continue;
+                    }
+            }
+        
+
     }
 
 }

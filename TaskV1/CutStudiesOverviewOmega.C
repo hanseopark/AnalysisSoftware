@@ -57,7 +57,7 @@ struct SysErrorConversion {
 void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineCuts.dat",
                         TString suffix                          = "gif",
                         TString meson                           = "",
-                        TString isMC                            = "",
+                        Bool_t isMC                             = kFALSE,
                         TString optionMult                      = "",
                         TString optionEnergy                    = "",
                         TString cutVariationName                = "",
@@ -93,6 +93,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     // Define Output Directory
     TString outputDir                                           = Form("CutStudies/%s",optionEnergy.Data());
     if (cutVariationName.CompareTo("None")!=0) outputDir        = Form("CutStudies/%s/%s",optionEnergy.Data(),cutVariationName.Data());
+    if (cutVariationName.Contains("AODvsESD")) outputDir        = Form("CutStudies/%s/%s/%i",optionEnergy.Data(),cutVariationName.Data(),mode);
     TString outputDirRootFile                                   = Form("CutStudies/%s",optionEnergy.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
@@ -107,7 +108,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     }
 
     // Define input and output MC/data
-    if (isMC.CompareTo("kTRUE") ==0){
+    if (isMC){
         prefix2                                                 = "MC";
     } else {
         prefix2                                                 = "data";
@@ -163,6 +164,9 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         cout << "Too many cuts, beware!" << endl;
         return;
     }
+    TString nameCurrentCorrectedFile = "";
+    TString folderName[50];
+    TString specialString[50];
     TString FileNameCorrected           [MaxNumberOfCuts];
     TString FileNameUnCorrected         [MaxNumberOfCuts];
     TFile*  Cutcorrfile                 [ConstNumberOfCuts];
@@ -239,22 +243,6 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             cutVariationName                                  ="SpecialTrigg";
             kSpecialTrigger                                   = kTRUE;
         }
-        // only read corrected file if "Special trigger was used"
-
-        FileNameCorrected[i]                                = Form( "%s/%s/%s_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),
-                                                                    fDalitz.Data(), cutNumber[i].Data());
-        cout<< FileNameCorrected[i] << endl;
-        Cutcorrfile[i]                                      = new TFile(FileNameCorrected[i]);
-        if (Cutcorrfile[i]->IsZombie()){
-            correctionFilesAvail                            = kFALSE;
-        }
-
-        // read uncorrected file
-        FileNameUnCorrected[i]                                  = Form("%s/%s/%s_%s_GammaConvV1%sWithoutCorrection_%s.root",cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),
-                                                                       fDalitz.Data(), cutNumber[i].Data());
-        cout<< FileNameUnCorrected[i] << endl;
-        Cutuncorrfile[i]                                        = new TFile(FileNameUnCorrected[i]);
-        if (Cutuncorrfile[i]->IsZombie()) return;
 
         // put proper cutvariation labeling for plots
         if (cutVariationName.Contains("SpecialTrigg")){
@@ -291,10 +279,10 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         } else if (cutVariationName.Contains("Conversion_ClsTPCCut")){
             TString fClusterCut                                 = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
-        } else if (cutVariationName.Contains("TPCdEdxCutElectron")){
+        } else if (cutVariationName.Contains("Conversion_TPCdEdxCutElectron")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
-        } else if (cutVariationName.Contains("TPCdEdxCutPion")){
+        } else if (cutVariationName.Contains("Conversion_TPCdEdxCutPion")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
             cutStringsName[i]                                   = fdEdxCut.Data();
             cout << fdEdxCut.Data() << "\t" << cutStringsName[i].Data() << endl;
@@ -352,7 +340,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
             TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
-        } else if (cutVariationName.Contains("ClusterTrackMatching")){
+        } else if (cutVariationName.Contains("ClusterTrackMatching") || cutVariationName.Contains("Calo_TrackMatching")){
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
             TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseTrackMatchingCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
@@ -360,39 +348,83 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             TString fMinPhi                                     = fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1);
             TString fMaxPhi                                     = fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseAcceptanceCutPhiCluster(CutNumberToInteger(fMinPhi), CutNumberToInteger(fMaxPhi));
-        } else if (cutVariationName.Contains("ClusterM02")){
+        } else if (cutVariationName.Contains("ClusterM02") || cutVariationName.Contains("Calo_MinMaxM02")){
             TString fMinM02Cut                                  = fClusterCutSelection(GetClusterMinM02CutPosition(fClusterCutSelection),1);
             TString fMaxM02Cut                                  = fClusterCutSelection(GetClusterMaxM02CutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseM02Cut(CutNumberToInteger(fMinM02Cut), CutNumberToInteger(fMaxM02Cut));
-        } else if (cutVariationName.Contains("ClusterNCells")){
+        } else if (cutVariationName.Contains("ClusterNCells") || cutVariationName.Contains("Calo_MinNCells")){
             TString fNCellsCut                                  = fClusterCutSelection(GetClusterMinNCellsCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseNCellsCut(CutNumberToInteger(fNCellsCut));
-        } else if (cutVariationName.Contains("ClusterMinEnergy")){
+        } else if (cutVariationName.Contains("ClusterMinEnergy") || cutVariationName.Contains("Calo_MinEnergy")){
             TString fMinEnergyCut                               = fClusterCutSelection(GetClusterMinEnergyCutPosition(fClusterCutSelection),1);
             cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
-            cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut));
-        } else if (cutVariationName.Contains("ClusterTiming")){
+            cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut),1);
+        } else if (cutVariationName.Contains("ClusterTiming") || cutVariationName.Contains("Calo_Timing")  ){
             TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
-        } else if (cutVariationName.Contains("ClusterNonLinearity")){
+        } else if (cutVariationName.Contains("ClusterNonLinearity")
+                   || cutVariationName.Contains("Calo_NonLin") ){
             TString fClusterNonLinearity                          = fClusterCutSelection(GetClusterNonLinearityCutPosition(fClusterCutSelection),2);
             cutStringsName[i]                                     = AnalyseClusterNonLinearityCut(CutNumberToInteger(fClusterNonLinearity));
         } else if (cutVariationName.Contains("PhotonAsymmetry")){
             TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fPhotonAsymmetry));
+        // Neutral Pion Cuts
         } else if (cutVariationName.Contains("SelectionWindows")){
-            cout << "GetMesonSelectionWindowCutPosition()" << GetMesonSelectionWindowCutPosition() << endl;
-            TString fMesonSelectionWindowCut                         = fNeutralPionCutSelection(GetMesonSelectionWindowCutPosition(),1);
-            cout << "fMesonSelectionWindowCut" << fMesonSelectionWindowCut << endl;
-            cout << "fNeutralPionCutSelection" << fNeutralPionCutSelection << endl;
-            cutStringsName[i]                                     = AnalyseMesonSelectionWindowCut(CutNumberToInteger(fMesonSelectionWindowCut));
+            TString fNeutralPionSelectionWindowCut                = fNeutralPionCutSelection(GetMesonSelectionWindowCutPosition(),1);
+            cutStringsName[i]                                     = AnalyseMesonSelectionWindowCut(CutNumberToInteger(fNeutralPionSelectionWindowCut));
+        } else if (cutVariationName.Contains("NeutralPion_pTCut")){
+            TString fNeutralPionPtCut                             = fNeutralPionCutSelection(GetMesonPtCutPosition(),1);
+            cutStringsName[i]                                     = AnalyseMesonPtCut(CutNumberToInteger(fNeutralPionPtCut));
+        } else if (cutVariationName.Contains("Omega_BackgroundScheme") || cutVariationName.Contains("Omega_NmbBckEvents") ){
+            TString fMesonBackgroundScheme                        = fMesonCutSelection(GetMesonBGSchemeCutPosition(),3);
+            cutStringsName[i]                                     = AnalyseBackgroundScheme(fMesonBackgroundScheme);
+        
         // Charged Pion cuts
         } else if (cutVariationName.Contains("ChargedPion_ClsTPCCut")){
             TString fChargedPionClsTPC                            = fPionCutSelection(GetPionClsTPCCut(),1);
-            cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fChargedPionClsTPC));
+            cutStringsName[i]                                   = AnalysePionClsTPCCut(CutNumberToInteger(fChargedPionClsTPC));
+        } else if (cutVariationName.Contains("ChargedPion_DCACut")){
+            TString fChargedPionDCACut                           = fPionCutSelection(GetPionDCACut(),1);
+            cutStringsName[i]                                   = AnalysePionDCACut(CutNumberToInteger(fChargedPionDCACut));
+        } else if (cutVariationName.Contains("ChargedPion_pTCut")){
+            TString fChargedPionPt                              = fPionCutSelection(GetPionPtCut(),1);
+            cutStringsName[i]                                   = AnalysePionPtCut(CutNumberToInteger(fChargedPionPt));
+        } else if (cutVariationName.Contains("ChargedPion_TPCdEdxCutPion")){
+            TString fChargedPiondEdxTPC                         = fPionCutSelection(GetPiondEdxSigmaTPCCut(),1);
+            cutStringsName[i]                                   = AnalysePiondEdxTPCCut(CutNumberToInteger(fChargedPiondEdxTPC));
+        } else if (cutVariationName.Contains("ChargedPion_MassCut")){
+            TString fChargedPionMass                            = fPionCutSelection(GetPionMassCut(),1);
+            cutStringsName[i]                                   = AnalysePionMassCut(CutNumberToInteger(fChargedPionMass));
+        } else if (cutVariationName.Contains("AODvsESD")){
+            if (i==0) cutStringsName[i] = "ESD";
+            if (i==1) cutStringsName[i] = "AOD";
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }
+
+                // only read corrected file if "Special trigger was used"
+        FileNameCorrected[i]                                = Form( "%s/%s/%s_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),
+                                                                    fDalitz.Data(), cutNumber[i].Data());
+               // read uncorrected file
+        FileNameUnCorrected[i]                                  = Form("%s/%s/%s_%s_GammaConvV1%sWithoutCorrection_%s.root",cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),  
+                                                                          fDalitz.Data(), cutNumber[i].Data());                                                          
+        
+        if (cutVariationName.Contains("AODvsESD")){
+            FileNameCorrected[i] = Form("%s/%s",cutStringsName[i].Data(),FileNameCorrected[i].Data());
+            FileNameUnCorrected[i] = Form("%s/%s",cutStringsName[i].Data(),FileNameUnCorrected[i].Data());          
+        }
+        
+        cout<< FileNameCorrected[i] << endl;
+        Cutcorrfile[i]                                      = new TFile(FileNameCorrected[i]);
+        if (Cutcorrfile[i]->IsZombie()){
+            correctionFilesAvail                            = kFALSE;
+        }
+
+                                                                       
+        cout<< FileNameUnCorrected[i] << endl;
+        Cutuncorrfile[i]                                        = new TFile(FileNameUnCorrected[i]);
+        if (Cutuncorrfile[i]->IsZombie()) return;
 
         // read histograms from corrected file
         if (correctionFilesAvail){

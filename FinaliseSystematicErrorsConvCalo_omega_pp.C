@@ -39,7 +39,11 @@
 #include "CommonHeaders/FittingGammaConversion.h"
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
-
+Float_t CalculatePi0Pt(Float_t omegaPt){
+    // Function extraction from gen level simulations
+    Float_t pi0pt = 0.015899 + 0.326616*omegaPt;
+    return pi0pt; 
+}
 void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      = "",
                                         TString energy                  = "",
                                         TString meson                   = "",
@@ -87,8 +91,8 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins                        = 0;
     Double_t* ptBinsErr                     = 0;
-    TString nameCutVariationSC[27];
-    TString nameCutVariationSCCurrent[27]   = { "RemovePileUp",                    // 0
+    TString nameCutVariationSC[26];
+    TString nameCutVariationSCCurrent[26]   = { "RemovePileUp",                    // 0
                                                 "Conversion_SinglePtCut",          // 1
                                                 "Conversion_ClsTPCCut",            // 2
                                                 "Conversion_TPCdEdxCutElectron",   // 3
@@ -96,27 +100,26 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                                                 "Conversion_QtMaxCut",             // 5
                                                 "Conversion_Chi2GammaCut",         // 6
                                                 "Conversion_PsiPair",              // 7
-                                                "Conversion_CosinePointingAngle",  // 8
-                                                "Calo_NonLin",                     // 9
-                                                "Calo_Timing",                     // 10
-                                                "Calo_TrackMatching",              // 11
-                                                "Calo_MinEnergy",                  // 12
-                                                "Calo_MinNCells",                  // 13
-                                                "Calo_MinMaxM02",                  // 14
-                                                "Calo_ClusterEnergyScale",         // 15
-                                                "Clusterizer",                     // 16
+                                                "Calo_NonLin",                     // 8
+                                                "Calo_Timing",                     // 9
+                                                "Calo_TrackMatching",              // 10
+                                                "Calo_MinEnergy",                  // 11
+                                                "Calo_MinNCells",                  // 12
+                                                "Calo_MinMaxM02",                  // 13
+                                                "Calo_ClusterEnergyScale",         // 14
+                                                "Clusterizer",                     // 15
+                                                "ChargedPion_ITSRequirement",      // 16
                                                 "ChargedPion_ClsTPCCut",           // 17
-                                                "ChargedPion_DCACut",              // 18
-                                                "ChargedPion_pTCut",               // 19
-                                                "ChargedPion_TPCdEdxCutPion",      // 20
-                                                "ChargedPion_MassCut",             // 21
-                                                "NeutralPion_SelectionWindows",    // 22
-                                                "Omega_BackgroundScheme",          // 23
-                                                "Omega_RecoEfficiency",            // 24
-                                                "Omega_BranchingRatio",            // 25
-                                                "YieldExtraction"};                // 26
-    TString nameCutVariation[27] = {"pileup","conv. track p_{T}","conv. track N_{cls,TPC}","conv. electron PID","conv. pion rej.","conv. photon q_{T}","conv. photon #chi^{2}","conv. photon #psi_{pair}","conv. cosine pointing angle","cluster non-linearity","cluster timing","cluster trackmatching","cluster min. energy","cluster N_{cells,min}","cluster shape",
-                                    "cluster energy scale","clusterizer algorithm","charged pion N_{cls,TPC}","charged pion DCA","charged pion min p_{T}","charged pion PID","M_{#pi^{+}#pi^{-}} cut"
+                                                "ChargedPion_pTCut",               // 18
+                                                "ChargedPion_TPCdEdxCutPion",      // 19
+                                                "ChargedPion_MassCut",             // 20
+                                                "NeutralPion_SelectionWindows",    // 21
+                                                "Omega_BackgroundScheme",          // 22
+                                                "Omega_RecoEfficiency",            // 23
+                                                "Omega_BranchingRatio",            // 24
+                                                "YieldExtraction"};                // 25
+    TString nameCutVariation[26] = {"pileup","conv. track p_{T}","conv. track N_{cls,TPC}","conv. electron PID","conv. pion rej.","conv. photon q_{T}","conv. photon #chi^{2}","conv. photon #psi_{pair}","cluster non-linearity","cluster timing","cluster trackmatching","cluster min. energy","cluster N_{cells,min}","cluster shape",
+                                    "cluster energy scale","clusterizer algorithm","charged pion N_{cls,ITS}","charged pion N_{cls,TPC}","charged pion min p_{T}","charged pion PID","M_{#pi^{+}#pi^{-}} cut"
                                     ,"M_{#gamma#gamma} cut","background description",
                                     "reco. efficiency","branching ratio","yield extraction"};
 
@@ -131,7 +134,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                          kPink-3
                          };
     Color_t markerStyle[27]={25,
-                             24,28,33,29,24,30,21,23,
+                             24,28,33,29,24,30,28,
                              27,26,28,30,31,33,23,
                              24,21,22,23,20,
                              26,26,27,
@@ -153,17 +156,17 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[27]                         = { 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                   0, 0, 0, 0,0 , 0 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    Bool_t bsmoothMBOmega07TeV[27]             = { 1,                           // pileup
-                                                   1, 1, 1, 1, 1, 1, 1, 1,      // conv. cuts
+    Bool_t bsmooth[26]                         = { 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    Bool_t bsmoothMBOmega07TeV[26]             = { 1,                           // pileup
+                                                   1, 1, 1, 1, 1, 1, 1,         // conv. cuts
                                                    1, 1, 1, 1, 1, 1, 1, 1,      // calo cuts
                                                    1, 1, 1, 1, 1,               // charged pion cuts
                                                    1,                           // neutral pion cuts
                                                    1, 1, 1,                     // omega cuts
                                                    0};                          // yield extraction
-    Bool_t bsmoothMBEta07TeV[27]             = { 1,                             // pileup
-                                                   1, 1, 1, 1, 1, 1, 1, 1,      // conv. cuts
+    Bool_t bsmoothMBEta07TeV[26]             = { 1,                             // pileup
+                                                   1, 1, 1, 1, 1, 1, 1,         // conv. cuts
                                                    1, 1, 1, 1, 1, 1, 1, 1,      // calo cuts
                                                    1, 1, 1, 1, 1,               // charged pion cuts
                                                    1,                           // neutral pion cuts
@@ -270,15 +273,14 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
              || nameCutVariationSC[i].CompareTo("Conversion_QtMaxCut")==0
              || nameCutVariationSC[i].CompareTo("Conversion_Chi2GammaCut")==0
              || nameCutVariationSC[i].CompareTo("Conversion_PsiPair")==0
-             || nameCutVariationSC[i].CompareTo("Conversion_CosinePointingAngle")==0
              || nameCutVariationSC[i].CompareTo("Calo_NonLin")==0
              || nameCutVariationSC[i].CompareTo("Calo_Timing")==0
              || nameCutVariationSC[i].CompareTo("Calo_TrackMatching")==0
              || nameCutVariationSC[i].CompareTo("Calo_MinEnergy")==0
              || nameCutVariationSC[i].CompareTo("Calo_MinNCells")==0
              || nameCutVariationSC[i].CompareTo("Calo_MinMaxM02")==0
+             || nameCutVariationSC[i].CompareTo("ChargedPion_ITSRequirement")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_ClsTPCCut")==0
-             || nameCutVariationSC[i].CompareTo("ChargedPion_DCACut")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_pTCut")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_TPCdEdxCutPion")==0
              || nameCutVariationSC[i].CompareTo("ChargedPion_MassCut")==0
@@ -398,7 +400,9 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
 
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 0.7;
+                        //errorReset = 0.5;
+                        Float_t pi0Pt = CalculatePi0Pt(ptBins[k]);
+                        errorReset= 0.8+40/pow(100,pi0Pt); // parametrisation
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -429,7 +433,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.5;
+                        errorReset = 1.;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -443,7 +447,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
             } else if (nameCutVariationSC[i].CompareTo("Conversion_TPCdEdxCutPion")==0 ){
                 minPt       = startPtSys;
                 if (!energy.CompareTo("7TeV"))
-                    errorReset  = 1.2; //
+                    errorReset  = 1.; //
 
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (ptBins[k] > minPt){
@@ -459,7 +463,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 4.;
+                        errorReset = 2.;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -474,7 +478,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       =startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 2.0;
+                        errorReset = 2.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -489,7 +493,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 2.0;
+                        errorReset = 2.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -499,20 +503,6 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                     }
                 }
 
-                // conversion cosine pointing angle
-            } else if (nameCutVariationSC[i].CompareTo("Conversion_CosinePointingAngle")==0 ){
-                minPt       = startPtSys;
-                for (Int_t k = 0; k < nPtBins; k++){
-                    if (!energy.CompareTo("7TeV")){
-                        errorReset = 1.0;
-                    }
-                    if (ptBins[k] > minPt){
-                        errorsMean[i][k]            = errorReset;
-                        errorsMeanErr[i][k]         = errorReset*0.01;
-                        errorsMeanCorr[i][k]        = errorReset;
-                        errorsMeanErrCorr[i][k]     = errorReset*0.01;
-                    }
-                }
                 // calo photon nonlin
             } else if (nameCutVariationSC[i].CompareTo("Calo_NonLin")==0 ){
                 minPt       = startPtSys;
@@ -547,7 +537,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){ // taken from pi0
-                        Double_t errorReset          = 0.2+40/pow(100,ptBins[k]);
+                        errorReset          = 1.0+40/pow(100,ptBins[k]);
                         if(ptBins[k]>=4) errorReset += 2E-3*(ptBins[k]-4)*(ptBins[k]-4)+0.2*(ptBins[k]-4);
                     }
                     if (ptBins[k] > minPt){
@@ -593,7 +583,9 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 0.5+(-0.007)*ptBins[k]+(0.008)*ptBins[k]*ptBins[k];
+                    Float_t pi0Pt = CalculatePi0Pt(ptBins[k]);
+                    errorReset              =  0.9;
+                    if(pi0Pt>=5.) errorReset+= 0.15*(pi0Pt-5);
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -632,11 +624,11 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                     }
                 }
                 // charged pion track cls in TPC
-            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_ClsTPCCut")==0 ){
+            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_ITSRequirement")==0 ){
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 5.5;
+                        errorReset = 4.;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -645,12 +637,13 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                         errorsMeanErrCorr[i][k]     = errorReset*0.01;
                     }
                 }
-                // charged pion DCA cut
-            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_DCACut")==0 ){
+
+                // charged pion track cls in TPC
+            } else if (nameCutVariationSC[i].CompareTo("ChargedPion_ClsTPCCut")==0 ){
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 4.5;
+                        errorReset = 5.5;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -678,7 +671,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 4.0;
+                        errorReset = 10.0;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -693,7 +686,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                 minPt       = startPtSys;
                 for (Int_t k = 0; k < nPtBins; k++){
                     if (!energy.CompareTo("7TeV")){
-                        errorReset = 9.;
+                        errorReset = 4.;
                     }
                     if (ptBins[k] > minPt){
                         errorsMean[i][k]            = errorReset;
@@ -928,12 +921,13 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         histo2DNewSysErrMean->Draw();
 
         // create legend
+        TLegend* legendMeanNew;
         if(meson.Contains("Eta")){
-            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-heightLegend,minXLegend+(0.9*widthLegend),maxYLegend, 30);
+            legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-heightLegend,minXLegend+(0.9*widthLegend),maxYLegend, 30);
             if(mode==42) legendMeanNew = GetAndSetLegend2(minXLegend-0.1,maxYLegend-(0.9*heightLegend),minXLegend+(0.9*widthLegend),maxYLegend, 30);
 
         } else{
-            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+            legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
         }
         legendMeanNew->SetMargin(0.05);
         if (numberCutStudies> 7) legendMeanNew->SetNColumns(2);
@@ -1109,28 +1103,28 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
 
 
         // Signal extraction:
-        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[21][l],2)+    // charged pion mass
-                                                            pow(errorsMeanCorr[23][l],2)+    // BG description
-                                                            pow(errorsMeanCorr[24][l],2)+    // reco efficiency
-                                                            pow(errorsMeanCorr[25][l],2)+    // branching ratio
-                                                            pow(errorsMeanCorr[26][l],2));   // YieldExtraction
+        errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[20][l],2)+    // charged pion mass
+                                                            pow(errorsMeanCorr[22][l],2)+    // BG description
+                                                            pow(errorsMeanCorr[23][l],2)+    // reco efficiency
+                                                            pow(errorsMeanCorr[24][l],2)+    // branching ratio
+                                                            pow(errorsMeanCorr[25][l],2));   // YieldExtraction
 
         // charged pion cuts:
 
-        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[17][l],2) +   // ClsTPC
-                                                                        pow(errorsMeanCorr[18][l],2) +  // DCA
-                                                                        pow(errorsMeanCorr[19][l],2) +  // pT
-                                                                        pow(errorsMeanCorr[20][l],2));  //PID
+        errorsMeanCorrChargedPionReco[l]                =   TMath::Sqrt(pow(errorsMeanCorr[16][l],2) +  // ClsITS
+                                                                        pow(errorsMeanCorr[17][l],2) +  // ClsTPC
+                                                                        pow(errorsMeanCorr[18][l],2) +  // pT
+                                                                        pow(errorsMeanCorr[19][l],2));  //PID
 
         // photon reco (cluster) :
-        errorsMeanCorrPhotonRecoCalo[l]         =   TMath::Sqrt(pow(errorsMeanCorr[9][l],2)+ // NonLin
-                                                            pow(errorsMeanCorr[10][l],2)+    // Timing
-                                                            pow(errorsMeanCorr[11][l],2)+    // Track Matching
-                                                            pow(errorsMeanCorr[12][l],2)+    // Min Energy
-                                                            pow(errorsMeanCorr[13][l],2)+    // Min N Cells
-                                                            pow(errorsMeanCorr[14][l],2)+    // Min Max M02
-                                                            pow(errorsMeanCorr[15][l],2)+    // Cluster energy scale
-                                                            pow(errorsMeanCorr[16][l],2));   // Clusterizer Min Energy
+        errorsMeanCorrPhotonRecoCalo[l]         =   TMath::Sqrt(pow(errorsMeanCorr[8][l],2)+ // NonLin
+                                                            pow(errorsMeanCorr[9][l],2)+    // Timing
+                                                            pow(errorsMeanCorr[10][l],2)+    // Track Matching
+                                                            pow(errorsMeanCorr[11][l],2)+    // Min Energy
+                                                            pow(errorsMeanCorr[12][l],2)+    // Min N Cells
+                                                            pow(errorsMeanCorr[13][l],2)+    // Min Max M02
+                                                            pow(errorsMeanCorr[14][l],2)+    // Cluster energy scale
+                                                            pow(errorsMeanCorr[15][l],2));   // Clusterizer Min Energy
 
         // photon reco (conv):
         errorsMeanCorrPhotonRecoConv[l]     =   TMath::Sqrt(pow(errorsMeanCorr[1][l],2)+     // SinglePt
@@ -1139,8 +1133,7 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
                                                             pow(errorsMeanCorr[4][l],2)+     // TPCdEdxPion
                                                             pow(errorsMeanCorr[5][l],2)+     // Qt max
                                                             pow(errorsMeanCorr[6][l],2)+     // chi2 gamma
-                                                            pow(errorsMeanCorr[7][l],2)+     // psi pair
-                                                            pow(errorsMeanCorr[8][l],2));    // cosine pointing angle
+                                                            pow(errorsMeanCorr[7][l],2));    // psi pair
 
 
         // pi0 reco: pT, alpha, mass window
@@ -1189,10 +1182,11 @@ void FinaliseSystematicErrorsConvCalo_omega_pp( TString nameDataFileErrors      
         histo2DSummedErrMean->Draw();
 
         // create legend
+        TLegend* legendSummedMeanNew;
         if(meson.Contains("Eta")){
-            TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2-0.05,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
+            legendSummedMeanNew = GetAndSetLegend2(minXLegend2-0.05,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
         } else{
-            TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
+            legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
         }
         legendSummedMeanNew->SetNColumns(2);
         legendSummedMeanNew->SetMargin(0.1);

@@ -121,8 +121,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                                             Bool_t  pileUpApplied       = kTRUE,
                                             Float_t maxPtGlobalOmega      = 16.,
                                             Bool_t  averagedOmega         = kFALSE,
-                                            Bool_t  enableEta           = kTRUE,
-                                            Float_t maxPtGlobalEta      = 14.,
+                                            Bool_t  enablePi0           = kTRUE,
+                                            Float_t maxPtGlobalPi0      = 14.,
                                             Bool_t  averagedEta         = kFALSE,
                                             Bool_t  v2ClusterizerMerged = kFALSE,
                                             TString nameFileFitsShift   = "",
@@ -160,7 +160,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     Int_t maxNBinsEtaAbs            = 0;
     Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode );
     Int_t maxNAllowedEta            = maxNBinsEta;
-    while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
+    while (binningEta[maxNAllowedEta] < maxPtGlobalOmega ) maxNAllowedEta++;
     for (Int_t i= 0; i< maxNAllowedEta+1; i++){
         cout << binningEta[i] << ", ";
     }
@@ -247,18 +247,19 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
 
     TString cutNumber       [MaxNumberOfFiles];
+    TString cutNumberPi0    [MaxNumberOfFiles];
     TString triggerName     [MaxNumberOfFiles];
     TString triggerNameLabel[MaxNumberOfFiles];
     Float_t minPt           [MaxNumberOfFiles];
     Float_t maxPt           [MaxNumberOfFiles];
     Int_t trigSteps         [MaxNumberOfFiles][3];
     Float_t ptFromSpecOmega   [MaxNumberOfFiles][2];
-    Float_t ptFromSpecEta   [MaxNumberOfFiles][2];
+    Float_t ptFromSpecPi0   [MaxNumberOfFiles][2];
     Bool_t maskedFullyOmega   [MaxNumberOfFiles];
     Bool_t maskedFullyEta   [MaxNumberOfFiles];
     TString sysFileOmega      [MaxNumberOfFiles];
     TString sysFileEta      [MaxNumberOfFiles];
-    TString sysFileEtaToOmega [MaxNumberOfFiles];
+    TString sysFileOmegaToPi0 [MaxNumberOfFiles];
     TString cutNumberBaseEff[MaxNumberOfFiles];
     //***************************************************************************************************************
     //*************************** read setting from configuration file **********************************************
@@ -270,13 +271,13 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     // number of triggers which are really used for the respective analysis
     Int_t nrOfTrigToBeCombOmegaRed        = 0;
     Int_t nrOfTrigToBeCombEtaRed        = 0;
-    Int_t nrOfTrigToBeCombEtaToOmegaRed   = 0;
+    Int_t nrOfTrigToBeCombOmegaToPi0Red   = 0;
     while(!in.eof() && nrOfTrigToBeComb<numberOfTrigg ){
-        in >> cutNumber[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
+        in >> cutNumber[nrOfTrigToBeComb] >> cutNumberPi0[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
         >> trigSteps[nrOfTrigToBeComb][0]  >> trigSteps[nrOfTrigToBeComb][1]  >> trigSteps[nrOfTrigToBeComb][2] >> ptFromSpecOmega[nrOfTrigToBeComb][0] >> ptFromSpecOmega[nrOfTrigToBeComb][1]
-        >> ptFromSpecEta[nrOfTrigToBeComb][0] >> ptFromSpecEta[nrOfTrigToBeComb][1] >> sysFileOmega[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileEtaToOmega[nrOfTrigToBeComb] >>
+        >> ptFromSpecPi0[nrOfTrigToBeComb][0] >> ptFromSpecPi0[nrOfTrigToBeComb][1] >> sysFileOmega[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileOmegaToPi0[nrOfTrigToBeComb] >>
         cutNumberBaseEff[nrOfTrigToBeComb];
-        cout<< cutNumber[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
+        cout<< cutNumber[nrOfTrigToBeComb]<<"\t"<< cutNumberPi0[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
         cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
         nrOfTrigToBeComb++;
         cout << cutNumberBaseEff[nrOfTrigToBeComb] << endl;
@@ -290,7 +291,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             maskedFullyOmega[i]       = kFALSE;
         }
         // figure out which triggers are fully masked for the eta
-        if ((ptFromSpecEta[i][1] == -1 && ptFromSpecEta[i][0] == -1 )|| (ptFromSpecEta[i][0] == 0 && ptFromSpecEta[i][1] == 0)){
+        if ((ptFromSpecPi0[i][1] == -1 && ptFromSpecPi0[i][0] == -1 )|| (ptFromSpecPi0[i][0] == 0 && ptFromSpecPi0[i][1] == 0)){
             maskedFullyEta[i]       = kTRUE;
         } else {
             maskedFullyEta[i]       = kFALSE;
@@ -298,26 +299,26 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
 
     Double_t minPtGlobalOmega         = ptFromSpecOmega[0][0];
-    Double_t minPtGlobalEta         = ptFromSpecEta[0][0];
+    Double_t minPtGlobalPi0         = ptFromSpecPi0[0][0];
     if (maskedFullyOmega[0])
         minPtGlobalOmega              = 12;
     if (maskedFullyEta[0])
-        minPtGlobalEta              = 12;
+        minPtGlobalPi0              = 12;
 
 
     for (Int_t j = 1; j < nrOfTrigToBeComb; j++){
         if (minPtGlobalOmega > ptFromSpecOmega[j][0] && !maskedFullyOmega[j] )
             minPtGlobalOmega = ptFromSpecOmega[j][0];
-        if (minPtGlobalEta > ptFromSpecEta[j][0] && !maskedFullyEta[j] )
-            minPtGlobalEta = ptFromSpecEta[j][0];
+        if (minPtGlobalPi0 > ptFromSpecPi0[j][0] && !maskedFullyEta[j] )
+            minPtGlobalPi0 = ptFromSpecPi0[j][0];
     }
     cout << "global minimum pT for Omega: " << minPtGlobalOmega << endl;
-    cout << "global minimum pT for eta: " << minPtGlobalEta << endl;
+    cout << "global minimum pT for eta: " << minPtGlobalPi0 << endl;
 
     // set individual triggers to total number of availabel triggers, will be reduced later according to usage
     nrOfTrigToBeCombOmegaRed      = nrOfTrigToBeComb;
     nrOfTrigToBeCombEtaRed      = nrOfTrigToBeComb;
-    nrOfTrigToBeCombEtaToOmegaRed = nrOfTrigToBeComb;
+    nrOfTrigToBeCombOmegaToPi0Red = nrOfTrigToBeComb;
 
     // variables to keep track of NLM
     TString fNLMString      = "";
@@ -340,7 +341,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
     // defining output directory
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
-    if(optionEnergy.CompareTo("900GeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
+    if(optionEnergy.CompareTo("900GeV") == 0 || optionEnergy.Contains("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
       if(mode == 4) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_EMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
       if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
     }
@@ -368,12 +369,15 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     //***************************************************************************************************************
     //******************************** Load Omega histograms **********************************************************
     //***************************************************************************************************************
-    TString FileNameCorrectedOmega    [MaxNumberOfFiles];
-    TFile*  fileCorrectedOmega        [MaxNumberOfFiles];
+    TString FileNameCorrectedOmega       [MaxNumberOfFiles];
+    TFile*  fileCorrectedOmega           [MaxNumberOfFiles];
     TString FileNameUnCorrectedOmega  [MaxNumberOfFiles];
     TFile*  fileUnCorrectedOmega      [MaxNumberOfFiles];
     TString FileNameUnCorrectedMCOmega[MaxNumberOfFiles];
     TFile*  fileUnCorrectedMCOmega    [MaxNumberOfFiles];
+
+    Bool_t foundPi0OmegaBinFile           [MaxNumberOfFiles];
+    Bool_t doOmegaToPi0 = kFALSE;
 
     TH1D*   histoCorrectedYieldOmega  [MaxNumberOfFiles];
     TH1D*   histoRawClusterPt       [MaxNumberOfFiles];
@@ -434,22 +438,25 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     TH1D* histoTrueOmegaOneGammaM02   [MaxNumberOfFiles];
     TH1D* histoTrueOmegaOneElectronM02[MaxNumberOfFiles];
 
+    // histos for pi0 in heavymesonbinning
+    TH1D* histoCorrectedYieldOmegaBinShift[MaxNumberOfFiles];
+
     // check if fit file for binshifting has to be adjusted for every energy
     TF1* fitBinShiftOmegaTCM                          = 0x0;
     TF1* fitBinShiftOmega                             = 0x0;
     TF1* fitBinShiftEtaTCM                          = 0x0;
     TF1* fitBinShiftEta                             = 0x0;
-    Bool_t doBinShiftForEtaToOmega                    = kFALSE;
+    Bool_t doBinShiftForOmegaToPi0                    = kFALSE;
     TString addNameBinshift                         = "";
     if (nameFileFitsShift.CompareTo("") != 0){
-        doBinShiftForEtaToOmega                       = kTRUE;
+        doBinShiftForOmegaToPi0                       = kTRUE;
         addNameBinshift                             = "YShifted";
     }
 
-    if (doBinShiftForEtaToOmega){
+    if (doBinShiftForOmegaToPi0){
         TFile *fileFitsBinShift                         = new TFile(nameFileFitsShift);
         fitBinShiftOmega                                  = (TF1*)fileFitsBinShift->Get("TsallisFitOmega");
-        if(!fitBinShiftOmega || optionEnergy.CompareTo("7TeV")==0){
+        if(!fitBinShiftOmega || optionEnergy.Contains("7TeV")==0){
             fitBinShiftOmega                              = (TF1*)fileFitsBinShift->Get("Omega7TeV/Fits/fitBinShiftingOmega");
             if(!fitBinShiftOmega) fitBinShiftOmega          = (TF1*)fileFitsBinShift->Get("Omega7TeV/TsallisFitOmega");
             fitBinShiftOmegaTCM                           = (TF1*)fileFitsBinShift->Get("Omega7TeV/Fits/fitBinShiftingOmega");
@@ -646,9 +653,13 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         //***************************************************************************************************************
         //****************************** Calculate trigger rejection factors ********************************************
         //***************************************************************************************************************
-        if ((mode == 0 || mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10) && hasClusterOutput ){
+        if ((mode == 0 || mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10 
+            || (mode >= 41 && mode <= 50) || (mode >= 61 && mode <= 70)) && hasClusterOutput ){
             histoRawClusterPt[i]                        = (TH1D*)fileUnCorrectedOmega[i]->Get("ClusterPtPerEvent");
-            histoRawClusterE[i]                         = (TH1D*)fileUnCorrectedOmega[i]->Get("ClusterEPerEvent");
+
+            // DIRTY FIX SINCE THIS HISTO IS NOT AVAILABLE YET
+            //histoRawClusterE[i]                         = (TH1D*)fileUnCorrectedOmega[i]->Get("ClusterEPerEvent");
+            histoRawClusterE[i]                         = (TH1D*) histoRawClusterPt[i]->Clone("ClusterEPerEvent");
             if (!histoRawClusterPt[i]){
                 cout << "INFO: couldn't find cluster input, disabeling it!" << endl;
                 hasClusterOutput                        = kFALSE;
@@ -727,10 +738,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             isV0AND         = 1;
         }
     }
-    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0 ){
+    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0 || optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVLowB") == 0){
         isV0AND             = 1;
     }
     Double_t xSection       = ReturnCorrectXSection( optionEnergy, isV0AND);
+
     //***************************************************************************************************************
     //*******************************Plotting trigger rejection factors = fits log scale all in one *****************
     //***************************************************************************************************************
@@ -747,6 +759,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             maxTriggReject = 8200;
         else if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
             maxTriggReject = 200;
+        else if (mode == 10 && !optionEnergy.CompareTo("8TeV"))
+            maxTriggReject = 49000;
+        else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV"))
+            maxTriggReject = 9000;
+        else if (optionEnergy.CompareTo("13TeV") == 0)
+            maxTriggReject = 4200;
+        else if (mode == 10)
+            maxTriggReject = 5200;
 
         TH2F * histo2DTriggReject;
         histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject);
@@ -920,7 +940,6 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
         DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.076, 0.015, textSizeSpectra2, 0.08);
         canvasTriggerRejectLinear->SetLogy(0);
-
         Double_t minTriggRejectLin = 0;
         Double_t maxTriggRejectLin = 2000;
         if (isMC.CompareTo("MC")== 0) maxTriggRejectLin = 2500;
@@ -928,10 +947,18 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             maxTriggRejectLin = 100;
         if (mode == 4 && optionEnergy.CompareTo("2.76TeV") == 0)
             maxTriggRejectLin = 2000;
+        if (mode == 10)
+            maxTriggRejectLin = 3000;
 
         if( optionEnergy.CompareTo("8TeV")==0 ){
-        if (mode == 2 || mode == 4 || mode == 10 )
-            maxTriggRejectLin = 310;
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 310;
+        } else if( optionEnergy.CompareTo("13TeV")==0 ){
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 1005;
+        } else if( optionEnergy.CompareTo("pPb_8TeV")==0 ){
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 4005;
         }
 
         TH2F * histo2DTriggRejectLinear;
@@ -989,10 +1016,15 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 if (triggerName[i].Contains("EG1"))
                     histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
                 if (optionEnergy.CompareTo("8TeV")==0){
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
-                if (triggerName[i].Contains("EGA"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                    if (triggerName[i].Contains("EGA"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                } else if (optionEnergy.CompareTo("13TeV")==0){
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
 
                 histo2DTriggRejectLinear->DrawCopy();
@@ -1093,10 +1125,15 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 if (triggerName[i].Contains("EG1"))
                     histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
                 if (optionEnergy.CompareTo("8TeV")==0){
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
-                if (triggerName[i].Contains("EGA"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                    if (triggerName[i].Contains("EGA"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                } else if (optionEnergy.CompareTo("13TeV")==0){
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
 
                 histo2DTriggRejectLinear->DrawCopy();
@@ -3302,6 +3339,44 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
 
     //***************************************************************************************************************
+    //************************************* Efficiency weighted *****************************************************
+    //***************************************************************************************************************
+    if (graphEffTimesAccOmegaWeighted){
+      DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
+      canvasEffi->SetLogy(1);
+      canvasEffi->SetLogx(1);
+      canvasEffi->cd();
+      TH2F * histo2DAccEff;
+      histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  maxPtGlobalOmega*2, 1000, 8e-5, 2e-0 );
+      SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                                 0.85*textSizeSpectra, textSizeSpectra, 0.85*textSizeSpectra, textSizeSpectra, 0.9, 1.04);//(#times #epsilon_{pur})
+      histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
+      histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
+      histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+      histo2DAccEff->DrawCopy();
+
+      DrawGammaSetMarkerTGraphAsym(graphEffTimesAccOmegaWeighted, 20, 1, kGray+2, kGray+2);
+      graphEffTimesAccOmegaWeighted->Draw("p,e1,same");
+
+      TLatex *labelEnergyEffiWOTrigg = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+      SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelEnergyEffiWOTrigg->Draw();
+
+      TLatex *labelPi0EffiWOTrigg = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}");
+      SetStyleTLatex( labelPi0EffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelPi0EffiWOTrigg->Draw();
+
+      TLatex *labelDetProcEffiWOTrigg = new TLatex(0.95, 0.15,detectionProcess.Data());
+      SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelDetProcEffiWOTrigg->Draw();
+
+      canvasEffi->Update();
+      canvasEffi->SaveAs(Form("%s/Omega_EfficiencyTimesAcceptanceW0TriggEff_Weighted.%s",outputDir.Data(),suffix.Data()));
+      canvasEffi->SetLogx(0);
+    }
+
+
+    //***************************************************************************************************************
     //***************************** Secondary corr factors weighted all separate ************************************
     //***************************************************************************************************************
     for (Int_t k = 0; k< 4; k++ ){
@@ -3760,97 +3835,97 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
 
     //***************************************************************************************************************
-    //************************************Loading eta histograms ****************************************************
+    //************************************Loading pi0 histograms ****************************************************
     //***************************************************************************************************************
-    TString FileNameCorrectedEta        [MaxNumberOfFiles];
-    TFile* fileCorrectedEta             [MaxNumberOfFiles];
-    TString FileNameCorrectedOmegaEtaBin  [MaxNumberOfFiles];
-    TFile* fileCorrectedOmegaEtaBin       [MaxNumberOfFiles];
-    Bool_t foundOmegaEtaBinFile           [MaxNumberOfFiles];
-    Bool_t doEtaToOmega                                               = kFALSE;
+    TString FileNameCorrectedPi0        [MaxNumberOfFiles];
+    TFile* fileCorrectedPi0             [MaxNumberOfFiles];
+    TString FileNameCorrectedPi0OmegaBin  [MaxNumberOfFiles];
+    TFile* fileCorrectedPi0OmegaBin       [MaxNumberOfFiles];
+    Bool_t foundPi0OmegaBinFile           [MaxNumberOfFiles];
+    Bool_t doOmegaToPi0            = kFALSE;
 
-    TString FileNameUnCorrectedEta      [MaxNumberOfFiles];
-    TFile* fileUnCorrectedEta           [MaxNumberOfFiles];
+    TString FileNameUnCorrectedPi0      [MaxNumberOfFiles];
+    TFile* fileUnCorrectedPi0           [MaxNumberOfFiles];
 
-    TH1D*   histoCorrectedYieldEta      [MaxNumberOfFiles];
-    TH1D*   histoEfficiencyEta          [MaxNumberOfFiles];
-    TH1D*   histoAcceptanceEta          [MaxNumberOfFiles];
-    TH1D*   histoAcceptanceEtaWOEvtWeights [MaxNumberOfFiles];
-    TH1D*   histoEffTimesAccEta         [MaxNumberOfFiles];
-    TH1D*   histoRawYieldEta            [MaxNumberOfFiles];
-    TH1D*   histoCorrectedYieldOmegaEtaBin[MaxNumberOfFiles];
-    TH1D*   histoEtaToOmega               [MaxNumberOfFiles];
-    TH1D*   histoMassEtaData            [MaxNumberOfFiles];
-    TH1D*   histoMassEtaMC              [MaxNumberOfFiles];
-    TH1D*   histoWidthEtaData           [MaxNumberOfFiles];
-    TH1D*   histoWidthEtaMC             [MaxNumberOfFiles];
-    TH1D*   histoEtaInvMassSigPlusBG    [MaxNumberOfFiles];
-    TH1D*   histoEtaInvMassSig          [MaxNumberOfFiles];
-    TH1D*   histoEtaInvMassBG           [MaxNumberOfFiles];
-    TF1*    fitEtaInvMassSig            [MaxNumberOfFiles];
+    TH1D*   histoCorrectedYieldPi0      [MaxNumberOfFiles];
+    TH1D*   histoEfficiencyPi0          [MaxNumberOfFiles];
+    TH1D*   histoAcceptancePi0          [MaxNumberOfFiles];
+    TH1D*   histoAcceptancePi0WOEvtWeights [MaxNumberOfFiles];
+    TH1D*   histoEffTimesAccPi0         [MaxNumberOfFiles];
+    TH1D*   histoRawYieldPi0            [MaxNumberOfFiles];
+    TH1D*   histoCorrectedYieldPi0OmegaBin[MaxNumberOfFiles];
+    TH1D*   histoOmegaToPi0               [MaxNumberOfFiles];
+    TH1D*   histoMassPi0Data            [MaxNumberOfFiles];
+    TH1D*   histoMassPi0MC              [MaxNumberOfFiles];
+    TH1D*   histoWidthPi0Data           [MaxNumberOfFiles];
+    TH1D*   histoWidthPi0MC             [MaxNumberOfFiles];
+    TH1D*   histoPi0InvMassSigPlusBG    [MaxNumberOfFiles];
+    TH1D*   histoPi0InvMassSig          [MaxNumberOfFiles];
+    TH1D*   histoPi0InvMassBG           [MaxNumberOfFiles];
+    TF1*    fitPi0InvMassSig            [MaxNumberOfFiles];
 
-    TH1D* histoCorrectedYieldOmegaEtaBinBinShift[MaxNumberOfFiles];
-    TH1D* histoCorrectedYieldEtaBinShift[MaxNumberOfFiles];
+    TH1D* histoCorrectedYieldPi0OmegaBinBinShift[MaxNumberOfFiles];
+    TH1D* histoCorrectedYieldPi0BinShift[MaxNumberOfFiles];
 
     // create pointers for weighted graphs and supporting figutes
-    TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaStat    = NULL;
-    TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaSys     = NULL;
-    TGraphAsymmErrors* graphMassEtaDataWeighted                     = NULL;
-    TGraphAsymmErrors* graphMassEtaMCWeighted                       = NULL;
-    TGraphAsymmErrors* graphWidthEtaDataWeighted                    = NULL;
-    TGraphAsymmErrors* graphWidthEtaMCWeighted                      = NULL;
-    TGraphAsymmErrors* graphAcceptanceEtaWeighted                   = NULL;
-    TGraphAsymmErrors* graphEfficiencyEtaWeighted                   = NULL;
-    TGraphAsymmErrors* graphEffTimesAccEtaWeighted                  = NULL;
-    TGraphAsymmErrors* graphEtaToOmegaWeightedAverageStat             = NULL;
-    TGraphAsymmErrors* graphEtaToOmegaWeightedAverageSys              = NULL;
+    TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Stat    = NULL;
+    TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Sys     = NULL;
+    TGraphAsymmErrors* graphMassPi0DataWeighted                     = NULL;
+    TGraphAsymmErrors* graphMassPi0MCWeighted                       = NULL;
+    TGraphAsymmErrors* graphWidthPi0DataWeighted                    = NULL;
+    TGraphAsymmErrors* graphWidthPi0MCWeighted                      = NULL;
+    TGraphAsymmErrors* graphAcceptancePi0Weighted                   = NULL;
+    TGraphAsymmErrors* graphEfficiencyPi0Weighted                   = NULL;
+    TGraphAsymmErrors* graphEffTimesAccPi0Weighted                  = NULL;
+    TGraphAsymmErrors* graphOmegaToPi0WeightedAverageStat             = NULL;
+    TGraphAsymmErrors* graphOmegaToPi0WeightedAverageSys              = NULL;
     // create pointers for shrunk graphs and supporting figures
-    TGraphAsymmErrors* graphsCorrectedYieldRemoved0Eta      [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphsCorrectedYieldSysRemoved0Eta   [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphsEtaToOmegaRemoved0               [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphsEtaToOmegaSysRemoved0            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphMassEtaData                     [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphMassEtaMC                       [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedMassEtaData              [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedMassEtaMC                [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphWidthEtaData                    [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphWidthEtaMC                      [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedWidthEtaData             [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedWidthEtaMC               [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphAcceptanceEta                   [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedAcceptanceEta            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphEfficiencyEta                   [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedEfficiencyEta            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphEffTimesAccEta                  [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedEffTimesAccEta           [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphsCorrectedYieldRemoved0Pi0      [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphsCorrectedYieldSysRemoved0Pi0   [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphsOmegaToPi0Removed0               [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphsOmegaToPi0SysRemoved0            [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphMassPi0Data                     [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphMassPi0MC                       [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedMassPi0Data              [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedMassPi0MC                [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphWidthPi0Data                    [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphWidthPi0MC                      [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedWidthPi0Data             [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedWidthPi0MC               [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphAcceptancePi0                   [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedAcceptancePi0            [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphEfficiencyPi0                   [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedEfficiencyPi0            [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphEffTimesAccPi0                  [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedEffTimesAccPi0           [MaxNumberOfFiles];
 
-    TString FileNameEffBaseEta      [MaxNumberOfFiles];
-    TFile*  fileEffBaseEta          [MaxNumberOfFiles];
-    TH1D*   histoEffBaseEta         [MaxNumberOfFiles];
-    TH1D*   histoTriggerEffEta      [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffEta     [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffEtaAll                                  = kFALSE;
+    TString FileNameEffBasePi0      [MaxNumberOfFiles];
+    TFile*  fileEffBasePi0          [MaxNumberOfFiles];
+    TH1D*   histoEffBasePi0         [MaxNumberOfFiles];
+    TH1D*   histoTriggerEffPi0      [MaxNumberOfFiles];
+    Bool_t  enableTriggerEffPi0     [MaxNumberOfFiles];
+    Bool_t  enableTriggerEffPi0All                                  = kFALSE;
 
-    Int_t nRelSysErrEtaSources          = 0;
-    TGraphAsymmErrors* graphRelSysErrEtaSource              [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedRelSysErrEtaSource       [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphRelSysErrEtaSourceWeighted      [30];
-    Int_t nRelSysErrEtaToOmegaSources     = 0;
-    TGraphAsymmErrors* graphRelSysErrEtaToOmegaSource         [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedRelSysErrEtaToOmegaSource  [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphRelSysErrEtaToOmegaSourceWeighted [30];
+    Int_t nRelSysErrPi0Sources          = 0;
+    TGraphAsymmErrors* graphRelSysErrPi0Source              [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedRelSysErrPi0Source       [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphRelSysErrPi0SourceWeighted      [30];
+    Int_t nRelSysErrOmegaToPi0Sources     = 0;
+    TGraphAsymmErrors* graphRelSysErrOmegaToPi0Source         [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedRelSysErrOmegaToPi0Source  [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphRelSysErrOmegaToPi0SourceWeighted [30];
     for (Int_t j = 0; j< 30; j++){
-        graphRelSysErrEtaSourceWeighted[j]          = NULL;
-        graphRelSysErrEtaToOmegaSourceWeighted[j]     = NULL;
+        graphRelSysErrPi0SourceWeighted[j]          = NULL;
+        graphRelSysErrOmegaToPi0SourceWeighted[j]     = NULL;
         for (Int_t k = 0; k< MaxNumberOfFiles; k++){
-            graphRelSysErrEtaSource[j][k]               = NULL;
-            graphOrderedRelSysErrEtaSource[j][k]        = NULL;
-            graphRelSysErrEtaToOmegaSource[j][k]          = NULL;
-            graphOrderedRelSysErrEtaToOmegaSource[j][k]   = NULL;
+            graphRelSysErrPi0Source[j][k]               = NULL;
+            graphOrderedRelSysErrPi0Source[j][k]        = NULL;
+            graphRelSysErrOmegaToPi0Source[j][k]          = NULL;
+            graphOrderedRelSysErrOmegaToPi0Source[j][k]   = NULL;
         }
     }
-    Bool_t sysAvailSingleEtaToOmega                           [MaxNumberOfFiles];
-    Bool_t sysAvailSingleEta                                [MaxNumberOfFiles];
+    Bool_t sysAvailSingleOmegaToPi0                           [MaxNumberOfFiles];
+    Bool_t sysAvailSinglePi0                                [MaxNumberOfFiles];
 
     if ( mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
         nameCorrectedYield                              = "CorrectedYieldTrueEff";
@@ -3858,187 +3933,94 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         nameMassMC                                      = "histoTrueMassMeson";
         nameWidthMC                                     = "histoTrueFWHMMeson";
     }
-    cout << "reading the following Eta hists: " << nameCorrectedYield.Data() << "\t" << nameEfficiency.Data() << "\t" << nameMassMC.Data() << "\t" << nameWidthMC.Data() << endl;
+    cout << "reading the following Pi0 hists: " << nameCorrectedYield.Data() << "\t" << nameEfficiency.Data() << "\t" << nameMassMC.Data() << "\t" << nameWidthMC.Data() << endl;
 
-    // read eta files if we are not in mode 10
-    if (enableEta && mode != 10){
+    // read Pi0 files if we are not in mode 10
+    if (enablePi0 && mode != 10){
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){
             // Define CutSelections
-            TString fEventCutSelection                      = "";
-            TString fGammaCutSelection                      = "";
-            TString fClusterCutSelection                    = "";
-            TString fElectronCutSelection                   = "";
-            TString fMesonCutSelection                      = "";
+            if (cutNumberBaseEff[i].CompareTo("bla") != 0)
+            TString fEventCutSelectionPi0                          = "";
+            TString fGammaCutSelectionPi0                          = "";
+            TString fClusterCutSelectionPi0                        = "";
+            TString fElectronCutSelectionPi0                       = "";
+            TString fMesonCutSelectionPi0                          = "";
+            // read files for omega to pi0 ratio
+            
+            // Found out what pi0 mode corresponds to omega mode
+            Int_t pi0mode;
+            switch(mode){
+                case 40: case 60: pi0mode = 0; // PCM
+                case 41: case 61: pi0mode = 2; // PCM-EMC
+                case 42: case 62: pi0mode = 3; // PCM-PHOS
+                case 44: case 64: pi0mode = 4; // EMC
+                case 45: case 65: pi0mode = 5; // PHOS
+                default: pi0mode = 0;
+            }
 
             // disentangle cut selection
-            ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
+            ReturnSeparatedCutNumberAdvanced(cutNumberPi0[i].Data(),fEventCutSelectionPi0, fGammaCutSelectionPi0, fClusterCutSelectionPi0, fElectronCutSelectionPi0, fMesonCutSelectionPi0, pi0mode);
 
-            TString trigger                                 = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+            TString trigger                                 = fEventCutSelectionPi0(GetEventSelectSpecialTriggerCutPosition(),2);
             Double_t scaleFacSinBin                         = 1.0;
-            Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Eta", optionEnergy, mode, trigger.Atoi(), scaleFacSinBin);
+            Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Omega", optionEnergy, mode, trigger.Atoi(), scaleFacSinBin);
 
-            FileNameCorrectedEta[i]                         = Form("%s/%s/Eta_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(),
-                                                                        cutNumber[i].Data());
-            cout<< FileNameCorrectedEta[i] << endl;
-            fileCorrectedEta[i]                             = new TFile(FileNameCorrectedEta[i]);
-            if (fileCorrectedEta[i]->IsZombie()) return;
-
-            // read uncorrected file
-            FileNameUnCorrectedEta[i]                       = Form("%s/%s/Eta_%s_GammaConvV1WithoutCorrection_%s.root",cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(),
-                                                                   cutNumber[i].Data());
-            cout<< FileNameUnCorrectedEta[i] << endl;
-            fileUnCorrectedEta[i]                           = new TFile(FileNameUnCorrectedEta[i]);
-            if (fileUnCorrectedEta[i]->IsZombie()) return;
-
-            histoCorrectedYieldEta[i]                       = (TH1D*)fileCorrectedEta[i]->Get(nameCorrectedYield.Data());
-            histoCorrectedYieldEta[i]->SetName(Form("CorrectedYield_%s",cutNumber[i].Data()));
-            histoEfficiencyEta[i]                           = (TH1D*)fileCorrectedEta[i]->Get(nameEfficiency.Data());
-            histoEfficiencyEta[i]->SetName(Form("Efficiency_%s",  cutNumber[i].Data()));
-            histoAcceptanceEta[i]                           = (TH1D*)fileCorrectedEta[i]->Get(nameAcceptance.Data());
-            histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
-            histoAcceptanceEtaWOEvtWeights[i]               = (TH1D*)fileCorrectedEta[i]->Get(nameAcceptanceWOEvtWeights.Data());
-            if(histoAcceptanceEtaWOEvtWeights[i]) histoAcceptanceEtaWOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
-            histoRawYieldEta[i]                             = (TH1D*)fileUnCorrectedEta[i]->Get(Form("histoYieldMesonPerEvent%s",InvMassTypeEnding.Data()));
-            histoRawYieldEta[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
-
-            histoMassEtaData[i]                                 = (TH1D*)fileCorrectedEta[i]->Get(Form("histoMassMeson%s",InvMassTypeEnding.Data()));
-            histoMassEtaData[i]->SetName(Form("Eta_Mass_data_%s",cutNumber[i].Data()));
-            histoMassEtaMC[i]                                   = (TH1D*)fileCorrectedEta[i]->Get(nameMassMC.Data());
-            histoMassEtaMC[i]->SetName(Form("Eta_Mass_MC_%s",cutNumber[i].Data()));
-            histoWidthEtaData[i]                                = (TH1D*)fileCorrectedEta[i]->Get(Form("histoFWHMMeson%s",InvMassTypeEnding.Data()));
-            histoWidthEtaData[i]->SetName(Form("Eta_Width_data_%s",cutNumber[i].Data()));
-            histoWidthEtaMC[i]                                  = (TH1D*)fileCorrectedEta[i]->Get(nameWidthMC.Data());
-            histoWidthEtaMC[i]->SetName(Form("Eta_Width_MC_%s",cutNumber[i].Data()));
-            histoEtaInvMassSig[i]                               = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassSig_PtBin%02d",exampleBin));
-            if (histoEtaInvMassSig[i]) histoEtaInvMassSig[i]->SetName(Form("Eta_InvMassSig_Example_%s",triggerName[i].Data()));
-            histoEtaInvMassSigPlusBG[i]                         = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassSigPlusBG_PtBin%02d",exampleBin));
-            if (histoEtaInvMassSigPlusBG[i]) histoEtaInvMassSigPlusBG[i]->SetName(Form("Eta_InvMassSigPlusBG_Example_%s",triggerName[i].Data()));
-            histoEtaInvMassBG[i]                                = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassBG_PtBin%02d",exampleBin));
-            if (histoEtaInvMassBG[i]) histoEtaInvMassBG[i]->SetName(Form("Eta_InvMassBG_Example_%s",triggerName[i].Data()));
-            fitEtaInvMassSig[i]                                 = (TF1*)fileCorrectedEta[i]->Get(Form("FitInvMassSig_PtBin%02d",exampleBin));
-            if (fitEtaInvMassSig[i]) fitEtaInvMassSig[i]->SetName(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()));
-
-            if (cutNumberBaseEff[i].CompareTo("bla") != 0){
-                FileNameEffBaseEta[i]                           = Form("%s/%s/Eta_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
-                fileEffBaseEta[i]                               = new TFile(FileNameEffBaseEta[i]);
-                if (fileEffBaseEta[i]->IsZombie()){
-                    enableTriggerEffEta[i]                      = kFALSE;
-                    cout << "Didn't find the effi base file for " << triggerName[i].Data() << endl;
-                } else {
-                    enableTriggerEffEta[i]                      = kTRUE;
-                    enableTriggerEffEtaAll                      = kTRUE;
-                }
-                if (enableTriggerEffEta[i]){
-                    TH1D* histoEffiEtaTemp                      = (TH1D*)fileCorrectedEta[i]->Get("TrueMesonEffiPt");
-                    TH1D* histoEffiBaseEtaTemp                  = (TH1D*)fileEffBaseEta[i]->Get("TrueMesonEffiPt");
-                    histoEffBaseEta[i]                          = (TH1D*)fileEffBaseEta[i]->Get(nameEfficiency.Data());
-                    histoEffBaseEta[i]->SetName(Form("EfficiencyBase_%s",  cutNumber[i].Data()));
-                    histoTriggerEffEta[i]                       = (TH1D*)histoEffiEtaTemp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
-                    histoTriggerEffEta[i]->Divide(histoTriggerEffEta[i],histoEffiBaseEtaTemp,1.,1.,"B");
-
-//                    //limit trigger efficiency to 1
-                    if(optionEnergy.CompareTo("8TeV") == 0){
-                      for(Int_t j = 1; j<histoTriggerEffEta[i]->GetNbinsX()+1; j++){
-                        Double_t binC = histoTriggerEffEta[i]->GetBinContent(j);
-                        if(binC > 1.){
-                          histoEffBaseEta[i]->SetBinContent(j, histoEffBaseEta[i]->GetBinContent(j)*binC);
-                          histoTriggerEffEta[i]->SetBinContent(j, 1.);
-                        }
-                      }
-                    }
-
-                    histoEffTimesAccEta[i]                      = (TH1D*)histoEffBaseEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-                    if(histoAcceptanceEtaWOEvtWeights[i]){
-                      histoAcceptanceEtaWOEvtWeights[i]->Sumw2();
-                      histoEffTimesAccEta[i]->Multiply(histoAcceptanceEtaWOEvtWeights[i]);
-                      histoEfficiencyEta[i]->Multiply(histoAcceptanceEta[i]);
-                      histoEfficiencyEta[i]->Divide(histoEfficiencyEta[i],histoAcceptanceEtaWOEvtWeights[i],1.,1.,"B");
-                      histoAcceptanceEta[i] = histoAcceptanceEtaWOEvtWeights[i];
-                      histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
-                    }else histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
-                    histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
-                } else {
-                    histoEffBaseEta[i]                          = NULL;
-                    histoTriggerEffEta[i]                       = NULL;
-                }
+            // read files for omega to pi0 ratio
+            FileNameCorrectedPi0OmegaBin[i]                   = Form("%s/%s/Pi0OmegaBinning_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(),
+                                                                        cutNumberPi0[i].Data());
+            cout<< FileNameCorrectedPi0OmegaBin[i] << endl;
+            fileCorrectedPi0OmegaBin[i]                       = new TFile(FileNameCorrectedPi0OmegaBin[i]);
+            if (fileCorrectedPi0OmegaBin[i]->IsZombie()) {
+                foundPi0OmegaBinFile[i]                        = kFALSE;
             } else {
-                histoEffTimesAccEta[i]                          = (TH1D*)histoEfficiencyEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-                if(histoAcceptanceEtaWOEvtWeights[i]){
-                  histoAcceptanceEtaWOEvtWeights[i]->Sumw2();
-                  histoEffTimesAccEta[i]->Multiply(histoAcceptanceEtaWOEvtWeights[i]);
-                  histoEfficiencyEta[i]->Multiply(histoAcceptanceEta[i]);
-                  histoEfficiencyEta[i]->Divide(histoEfficiencyEta[i],histoAcceptanceEtaWOEvtWeights[i],1.,1.,"B");
-                  histoAcceptanceEta[i] = histoAcceptanceEtaWOEvtWeights[i];
-                  histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
-                }else histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
-                histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
-
+                foundPi0OmegaBinFile[i]                        = kTRUE;
+                doOmegaToPi0                                   = kTRUE;
             }
 
-            // read files for eta to Omega ratio
-            FileNameCorrectedOmegaEtaBin[i]                   = Form("%s/%s/OmegaEtaBinning_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(),
-                                                                        cutNumber[i].Data());
-            cout<< FileNameCorrectedOmegaEtaBin[i] << endl;
-            fileCorrectedOmegaEtaBin[i]                       = new TFile(FileNameCorrectedOmegaEtaBin[i]);
-            if (fileCorrectedOmegaEtaBin[i]->IsZombie()) {
-                foundOmegaEtaBinFile[i]                        = kFALSE;
-            } else {
-                foundOmegaEtaBinFile[i]                        = kTRUE;
-                doEtaToOmega                                   = kTRUE;
-            }
+            if (foundPi0OmegaBinFile[i]){
 
-            if (foundOmegaEtaBinFile[i]){
-
-                if (! doBinShiftForEtaToOmega){
-                    histoCorrectedYieldOmegaEtaBin[i]             = (TH1D*)fileCorrectedOmegaEtaBin[i]->Get(nameCorrectedYield.Data());
-                    histoCorrectedYieldOmegaEtaBin[i]->SetName(Form("CorrectedYieldOmegaEtaBin_%s",cutNumber[i].Data()));
+                if (! doBinShiftForOmegaToPi0){
+                    histoCorrectedYieldPi0OmegaBin[i]             = (TH1D*)fileCorrectedPi0OmegaBin[i]->Get(nameCorrectedYield.Data());
+                    histoCorrectedYieldPi0OmegaBin[i]->SetName(Form("CorrectedYieldPi0OmegaBin_%s",cutNumberPi0[i].Data()));
                     if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-                      histoEtaToOmega[i]                            = (TH1D*)histoCorrectedYieldOmegaEtaBin[i]->Clone(Form("EtaToOmega_%s", cutNumber[i].Data()));
-                      for(Int_t iB=1; iB<=histoCorrectedYieldOmegaEtaBin[i]->GetNbinsX(); iB++){histoEtaToOmega[i]->SetBinContent(iB,histoCorrectedYieldEta[i]->GetBinContent(iB));}
-                      histoEtaToOmega[i]->Divide(histoEtaToOmega[i],histoCorrectedYieldOmegaEtaBin[i],1.,1.,"");
+                      histoOmegaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0OmegaBin[i]->Clone(Form("OmegaToPi0_%s", cutNumber[i].Data()));
+                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0OmegaBin[i]->GetNbinsX(); iB++){histoOmegaToPi0[i]->SetBinContent(iB,histoCorrectedYieldOmega[i]->GetBinContent(iB));}
+                      histoOmegaToPi0[i]->Divide(histoOmegaToPi0[i],histoCorrectedYieldPi0OmegaBin[i],1.,1.,"");
                     }else{
-                      histoEtaToOmega[i]                            = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("EtaToOmega_%s", cutNumber[i].Data()));
-                      histoEtaToOmega[i]->Divide(histoEtaToOmega[i],histoCorrectedYieldOmegaEtaBin[i],1.,1.,"");
+                      histoOmegaToPi0[i]                            = (TH1D*)histoCorrectedYieldOmega[i]->Clone(Form("OmegaToPi0_%s", cutNumber[i].Data()));
+                      histoOmegaToPi0[i]->Divide(histoOmegaToPi0[i],histoCorrectedYieldPi0OmegaBin[i],1.,1.,"");
                     }
                 } else {
                     cout << fitBinShiftOmega << " - " << fitBinShiftEta << endl;
-                    histoCorrectedYieldOmegaEtaBin[i]             = (TH1D*)fileCorrectedOmegaEtaBin[i]->Get(nameCorrectedYield.Data());
-                    histoCorrectedYieldOmegaEtaBin[i]->SetName(Form("CorrectedYieldOmegaEtaBin_%s",cutNumber[i].Data()));
-                    cout << "shifting Omega in eta binning: " <<  cutNumber[i].Data() << endl;
-                    histoCorrectedYieldOmegaEtaBinBinShift[i]     = (TH1D*)histoCorrectedYieldOmegaEtaBin[i]->Clone(Form("CorrectedYieldOmegaEtaBinBinShifted_%s",cutNumber[i].Data()));
-                    histoCorrectedYieldOmegaEtaBinBinShift[i]     = ApplyYshiftIndividualSpectra( histoCorrectedYieldOmegaEtaBinBinShift[i], fitBinShiftOmega);
-                    cout << "shifting eta: " <<  cutNumber[i].Data() << endl;
-                    histoCorrectedYieldEtaBinShift[i]           = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaBinShifted_%s",cutNumber[i].Data()));
-                    histoCorrectedYieldEtaBinShift[i]           = ApplyYshiftIndividualSpectra( histoCorrectedYieldEtaBinShift[i], fitBinShiftEta);
+                    histoCorrectedYieldPi0OmegaBin[i]             = (TH1D*)fileCorrectedPi0OmegaBin[i]->Get(nameCorrectedYield.Data());
+                    histoCorrectedYieldPi0OmegaBin[i]->SetName(Form("CorrectedYieldPi0OmegaBin_%s",cutNumberPi0[i].Data()));
+                    cout << "shifting pi0 in omega binning: " <<  cutNumberPi0[i].Data() << endl;
+                    histoCorrectedYieldPi0OmegaBinBinShift[i]     = (TH1D*)histoCorrectedYieldPi0OmegaBin[i]->Clone(Form("CorrectedYieldPi0OmegaBinBinShifted_%s",cutNumberPi0[i].Data()));
+                    histoCorrectedYieldPi0OmegaBinBinShift[i]     = ApplyYshiftIndividualSpectra( histoCorrectedYieldPi0OmegaBinBinShift[i], fitBinShiftOmega);
+                    cout << "shifting omega: " <<  cutNumber[i].Data() << endl;
+                    histoCorrectedYieldOmegaBinShift[i]           = (TH1D*)histoCorrectedYieldOmega[i]->Clone(Form("CorrectedYieldOmegaBinShifted_%s",cutNumber[i].Data()));
+                    histoCorrectedYieldOmegaBinShift[i]           = ApplyYshiftIndividualSpectra( histoCorrectedYieldOmegaBinShift[i], fitBinShiftOmega);
 
                     if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-                      histoEtaToOmega[i]                            = (TH1D*)histoCorrectedYieldOmegaEtaBinBinShift[i]->Clone(Form("EtaToOmega_%s", cutNumber[i].Data()));
-                      for(Int_t iB=1; iB<=histoCorrectedYieldOmegaEtaBinBinShift[i]->GetNbinsX(); iB++){histoEtaToOmega[i]->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
-                      histoEtaToOmega[i]->Divide(histoEtaToOmega[i],histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"");
+                      histoOmegaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0OmegaBinBinShift[i]->Clone(Form("OmegaToPi0_%s", cutNumber[i].Data()));
+                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0OmegaBinBinShift[i]->GetNbinsX(); iB++){histoOmegaToPi0[i]->SetBinContent(iB,histoCorrectedYieldOmegaBinShift[i]->GetBinContent(iB));}
+                      histoOmegaToPi0[i]->Divide(histoOmegaToPi0[i],histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"");
                     }else{
-                      histoEtaToOmega[i]                            = (TH1D*)histoCorrectedYieldEtaBinShift[i]->Clone(Form("EtaToOmega%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
-                      histoEtaToOmega[i]->Divide(histoEtaToOmega[i],histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"");
+                      histoOmegaToPi0[i]                            = (TH1D*)histoCorrectedYieldOmegaBinShift[i]->Clone(Form("OmegaToPi0%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
+                      histoOmegaToPi0[i]->Divide(histoOmegaToPi0[i],histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"");
                     }
                 }
             } else {
-                doBinShiftForEtaToOmega   = kFALSE;
+                doBinShiftForOmegaToPi0   = kFALSE;
             }
 
-            //Scale spectrum to MBOR
-            if (optionEnergy.CompareTo("2.76TeV")==0 &&
-                (triggerName[i].Contains("INT7")|| triggerName[i].Contains("EMC7") || triggerName[i].Contains("EG1") || triggerName[i].Contains("EG2")) ){
-                // &&
-                // isMC.CompareTo("data") == 0){
-                histoCorrectedYieldEta[i]->Scale(0.8613) ;
-                histoRawYieldEta[i]->Scale(0.8613) ;
-            }
         }
 
         //***************************************************************************************************************
         //************************************Plotting binshift corrections *********************************************
         //***************************************************************************************************************
 
-        if(doBinShiftForEtaToOmega){
+        if(doBinShiftForOmegaToPi0){
           canvasEffi->cd();
           canvasEffi->SetLeftMargin(0.1);
           canvasEffi->SetBottomMargin(0.1);
@@ -4055,10 +4037,10 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
           TLegend* legendBinShift = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
           legendBinShift->SetNColumns(2);
           for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-              histoCorrectedYieldOmegaEtaBinBinShift[i]->Divide(histoCorrectedYieldOmegaEtaBinBinShift[i],histoCorrectedYieldOmegaEtaBin[i],1.,1.,"B");
-              DrawGammaSetMarker(histoCorrectedYieldOmegaEtaBinBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-              histoCorrectedYieldOmegaEtaBinBinShift[i]->DrawCopy("hist p same");
-              legendBinShift->AddEntry(histoCorrectedYieldOmegaEtaBinBinShift[i],triggerNameLabel[i].Data(),"p");
+              histoCorrectedYieldPi0OmegaBinBinShift[i]->Divide(histoCorrectedYieldPi0OmegaBinBinShift[i],histoCorrectedYieldPi0OmegaBin[i],1.,1.,"B");
+              DrawGammaSetMarker(histoCorrectedYieldPi0OmegaBinBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldPi0OmegaBinBinShift[i]->DrawCopy("hist p same");
+              legendBinShift->AddEntry(histoCorrectedYieldPi0OmegaBinBinShift[i],triggerNameLabel[i].Data(),"p");
           }
           legendBinShift->Draw();
 
@@ -4070,34 +4052,34 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
           canvasEffi->RedrawAxis();
           canvasEffi->Update();
-          canvasEffi->SaveAs(Form("%s/OmegaEtaBinning_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+          canvasEffi->SaveAs(Form("%s/Pi0OmegaBinning_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
+          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalOmega,maxPtGlobalOmega);
           histoBinShift->DrawCopy();
 
           TLegend* legendBinShift2 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
           legendBinShift2->SetNColumns(2);
           for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-              histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldEta[i],1.,1.,"B");
-              DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-              histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
-              legendBinShift2->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
+              histoCorrectedYieldOmegaBinShift[i]->Divide(histoCorrectedYieldOmegaBinShift[i],histoCorrectedYieldOmega[i],1.,1.,"B");
+              DrawGammaSetMarker(histoCorrectedYieldOmegaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldOmegaBinShift[i]->DrawCopy("hist p same");
+              legendBinShift2->AddEntry(histoCorrectedYieldOmegaBinShift[i],triggerNameLabel[i].Data(),"p");
           }
           legendBinShift2->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftEta = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-          SetStyleTLatex( labelBinShiftEta, 0.85*textSizeSpectra,4);
-          labelBinShiftEta->Draw();
+          TLatex *labelBinShiftOmega = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}");
+          SetStyleTLatex( labelBinShiftOmega, 0.85*textSizeSpectra,4);
+          labelBinShiftOmega->Draw();
           labelDetProcEffi->Draw();
 
           canvasEffi->RedrawAxis();
           canvasEffi->Update();
-          canvasEffi->SaveAs(Form("%s/Eta_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+          canvasEffi->SaveAs(Form("%s/Omega_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
+          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalOmega,maxPtGlobalOmega);
           if(optionEnergy.CompareTo("8TeV")==0 && mode==4)
-              histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,20.);
+              histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalPi0,20.);
           histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
           if(!optionEnergy.CompareTo("8TeV") && mode==0)
               histoBinShift->GetYaxis()->SetRangeUser(0.8,1.2);
@@ -4107,28 +4089,28 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
           legendBinShift3->SetNColumns(2);
           for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
               if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-                TH1D* histoCorrectedYieldEtaBinShiftTEMP = (TH1D*)histoCorrectedYieldOmegaEtaBinBinShift[i]->Clone(Form("OmegaEtaBinning_%i", i));
-                for(Int_t iB=1; iB<=histoCorrectedYieldOmegaEtaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldEtaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
-                histoCorrectedYieldEtaBinShiftTEMP->Divide(histoCorrectedYieldEtaBinShiftTEMP,histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"B");
-                histoCorrectedYieldEtaBinShift[i] = histoCorrectedYieldEtaBinShiftTEMP;
+                TH1D* histoCorrectedYieldOmegaBinShiftTEMP = (TH1D*)histoCorrectedYieldPi0OmegaBinBinShift[i]->Clone(Form("Pi0OmegaBinning_%i", i));
+                for(Int_t iB=1; iB<=histoCorrectedYieldPi0OmegaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldOmegaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldOmegaBinShift[i]->GetBinContent(iB));}
+                histoCorrectedYieldOmegaBinShiftTEMP->Divide(histoCorrectedYieldOmegaBinShiftTEMP,histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"B");
+                histoCorrectedYieldOmegaBinShift[i] = histoCorrectedYieldOmegaBinShiftTEMP;
               }else{
-                histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"B");
+                histoCorrectedYieldOmegaBinShift[i]->Divide(histoCorrectedYieldOmegaBinShift[i],histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"B");
               }
-              DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-              histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
-              legendBinShift3->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
+              DrawGammaSetMarker(histoCorrectedYieldOmegaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldOmegaBinShift[i]->DrawCopy("hist p same");
+              legendBinShift3->AddEntry(histoCorrectedYieldOmegaBinShift[i],triggerNameLabel[i].Data(),"p");
           }
           legendBinShift3->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftEtaToOmega = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#omega");
-          SetStyleTLatex( labelBinShiftEtaToOmega, 0.85*textSizeSpectra,4);
-          labelBinShiftEtaToOmega->Draw();
+          TLatex *labelBinShiftOmegaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#omega/#pi^{0}");
+          SetStyleTLatex( labelBinShiftOmegaToPi0, 0.85*textSizeSpectra,4);
+          labelBinShiftOmegaToPi0->Draw();
           labelDetProcEffi->Draw();
 
           canvasEffi->RedrawAxis();
           canvasEffi->Update();
-          canvasEffi->SaveAs(Form("%s/EtaToOmega_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+          canvasEffi->SaveAs(Form("%s/OmegaToPi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
           canvasEffi->SetLogy(1);
           canvasEffi->SetLogx(0);
           canvasEffi->SetLeftMargin(0.09);
@@ -4136,1918 +4118,113 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         }
 
         //***************************************************************************************************************
-        //************************************Plotting efficiencies Eta *************************************************
+        //************************************ Omega ratio for different triggers **********************************
         //***************************************************************************************************************
-        Double_t minEffiEta     = 1e-5;
-        Double_t maxEffiEta     = 1e-1;
-        if (mode == 4){
-            maxEffiEta          = 5e0;
-        } else if (mode == 0) {
-            maxEffiEta          = 8e-3;
-            minEffiEta          = 1e-4;
-        }
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-          if(mode == 2){
-            minEffiEta        = 1e-3;
-            maxEffiEta        = 2e-1;
-          }else if(mode == 4){
-            minEffiEta        = 8e-3;
-            maxEffiEta        = 1;
-          }
-        }
-
-        canvasEffi->cd();
-        TH2F * histo2DEffiEta;
-        histo2DEffiEta = new TH2F("histo2DEffiEta","histo2DEffiEta",1000,0., maxPtGlobalEta,10000,minEffiEta, maxEffiEta);
-        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{#eta}#upoint#it{#kappa}_{trigg}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
-        histo2DEffiEta->DrawCopy();
-        histo2DEffiEta->SetYTitle("#it{#varepsilon}_{#eta}");
-
-        TLegend* legendEffiEta = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
-        legendEffiEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            DrawGammaSetMarker(histoEfficiencyEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoEfficiencyEta[i]->DrawCopy("e1,same");
-            legendEffiEta->AddEntry(histoEfficiencyEta[i],triggerNameLabel[i].Data(),"p");
-        }
-        legendEffiEta->Draw();
-
-        labelEnergyEffi->Draw();
-        TLatex *labelEtaEffi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaEffi, 0.85*textSizeSpectra,4);
-        labelEtaEffi->Draw();
-        labelDetProcEffi->Draw();
-
-        canvasEffi->Update();
-        canvasEffi->SaveAs(Form("%s/Eta_Efficiency_%i.%s",outputDir.Data(),mode,suffix.Data()));
-
-        //***************************************************************************************************************
-        //************************************ Plotting trigger efficiencies Eta ****************************************
-        //***************************************************************************************************************
-        if (enableTriggerEffEtaAll){
-            TCanvas* canvasTriggerEffi = new TCanvas("canvasTriggerEffi","",0,0,1000,900);// gives the page size
-            DrawGammaCanvasSettings( canvasTriggerEffi, 0.09, 0.017, 0.015, 0.08);
-            canvasTriggerEffi->SetLogy(0);
-
-            Double_t minEffiTrigEta         = 0;
-            Double_t maxEffiTrigEta         = 1.1;
-            //if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigEta = 1.5;
-
-            TH2F * histo2DTriggerEffiEta;
-            histo2DTriggerEffiEta = new TH2F("histo2DTriggerEffiEta","histo2DTriggerEffiEta",1000,0., maxPtGlobalEta,10000,minEffiTrigEta, maxEffiTrigEta);
-            SetStyleHistoTH2ForGraphs(histo2DTriggerEffiEta, "#it{p}_{T} (GeV/#it{c})","#it{#kappa}_{trigg, #eta}",
-                                        0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
-            histo2DTriggerEffiEta->DrawCopy();
-
-            TLegend* legendTriggerEffiEta = GetAndSetLegend2(0.62, 0.165, 0.95, 0.165+(1.05*nRealTriggers/2*0.85*textSizeSpectra),28);
-            legendTriggerEffiEta->SetNColumns(2);
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if (enableTriggerEffEta[i]){
-                    DrawGammaSetMarker(histoTriggerEffEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    histoTriggerEffEta[i]->DrawCopy("e1,same");
-                    legendTriggerEffiEta->AddEntry(histoTriggerEffEta[i],triggerNameLabel[i].Data(),"p");
-                }
-            }
-            legendTriggerEffiEta->Draw();
-
-            labelEnergyEffi->Draw();
-            labelEtaEffi->Draw();
-            labelDetProcEffi->Draw();
-
-            canvasTriggerEffi->Update();
-            canvasTriggerEffi->SaveAs(Form("%s/Eta_TriggerEfficiency.%s",outputDir.Data(),suffix.Data()));
-            delete canvasTriggerEffi;
-
-            //***************************************************************************************************************
-            //************************************ Plotting standalone efficiencies for eta *********************************
-            //***************************************************************************************************************
-
-            canvasEffi->cd();
-            histo2DEffiEta->DrawCopy();
-
-            TLegend* legendEffiEtaW0TriggEff = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
-            legendEffiEtaW0TriggEff->SetNColumns(2);
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if ( triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1") ){
-                    DrawGammaSetMarker(histoEfficiencyEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    histoEfficiencyEta[i]->DrawCopy("e1,same");
-                    legendEffiEtaW0TriggEff->AddEntry(histoEfficiencyEta[i],triggerNameLabel[i].Data(),"p");
-                } else {
-                    if (enableTriggerEffEta[i]){
-                        DrawGammaSetMarker(histoEffBaseEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                        histoEffBaseEta[i]->DrawCopy("e1,same");
-                        legendEffiEtaW0TriggEff->AddEntry(histoEffBaseEta[i],triggerNameLabel[i].Data(),"p");
-                    }
-                }
-            }
-            legendEffiEtaW0TriggEff->Draw();
-
-            labelEnergyEffi->Draw();
-            labelEtaEffi->Draw();
-            labelDetProcEffi->Draw();
-
-            canvasEffi->Update();
-            canvasEffi->SaveAs(Form("%s/Eta_EfficiencyW0TriggEff_%i.%s",outputDir.Data(),mode,suffix.Data()));
-        }
-
-
-        //***************************************************************************************************************
-        //************************************Plotting acceptance Eta *************************************************
-        //***************************************************************************************************************
-        canvasAcc->cd();
-        Double_t minAccEta = 0.05;
-        Double_t maxAccEta = 0.3;
-        if (mode == 0){
-            maxAccEta       = 1.05;
-            minAccEta       = 0.5;
-        }
-
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-            if(mode == 2){
-              minAccEta   = 0.2;
-              maxAccEta   = 0.31;
-            }else if(mode == 4){
-              minAccEta = 0.05;
-              maxAccEta = 0.3;
-            }
-        }
-
-
-        TH2F * histo2DAccEta;
-        histo2DAccEta = new TH2F("histo2DAccEta","histo2DAccEta",1000,0., maxPtGlobalEta,10000,minAccEta, maxAccEta);
-        SetStyleHistoTH2ForGraphs(histo2DAccEta, "#it{p}_{T} (GeV/#it{c})","A_{#eta}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
-        histo2DAccEta->DrawCopy();
-
-        TLegend* legendAccEta = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
-        legendAccEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            DrawGammaSetMarker(histoAcceptanceEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoAcceptanceEta[i]->DrawCopy("e1,same");
-            legendAccEta->AddEntry(histoAcceptanceEta[i],triggerNameLabel[i].Data(),"p");
-        }
-        legendAccEta->Draw();
-
-        labelEnergyEffi->Draw();
-        labelEtaEffi->Draw();
-        labelDetProcEffi->Draw();
-
-        canvasAcc->Update();
-        canvasAcc->SaveAs(Form("%s/Eta_Acceptance.%s",outputDir.Data(),suffix.Data()));
-
-        //***************************************************************************************************************
-        //************************************Plotting Mass Eta *********************************************************
-        //***************************************************************************************************************
-        canvasMass->cd();
-
-        Double_t minMassEta = 0.500;
-        Double_t maxMassEta = 0.600;
-
-        if (mode == 0){
-            minMassEta      = 0.54;
-            maxMassEta      = 0.56;
-        }
-
-        TH2F * histo2DMassEta;
-        histo2DMassEta = new TH2F("histo2DMassEta","histo2DMassEta",1000,0., maxPtGlobalEta,10000,minMassEta, maxMassEta);
-        SetStyleHistoTH2ForGraphs(histo2DMassEta, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#eta} (Mev/#it{c}^{2})",
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
-        histo2DMassEta->DrawCopy();
-
-        TLegend* legendMassEta = GetAndSetLegend2(0.52, 0.88, 0.95, 0.88+(1.05*4/2*0.85*textSizeSpectra),28);
-        legendMassEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
-             (optionEnergy.CompareTo("8TeV")==0) ||
-             (optionEnergy.CompareTo("pPb_5.023TeV")==0)
-             ){
-                DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoMassEtaData[i]->DrawCopy("e1,same");
-                legendMassEta->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                DrawGammaSetMarker(histoMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoMassEtaMC[i]->DrawCopy("e1,same");
-                legendMassEta->AddEntry(histoMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-            }
-        }
-        legendMassEta->Draw();
-        labelEnergyMass->Draw();
-
-        TLatex *labelEtaMass = new TLatex(0.14, 0.85+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaMass, 0.85*textSizeSpectra,4);
-        labelEtaMass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Eta_%s_Mass1_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        histo2DMassEta->DrawCopy();
-
-        TLegend* legendMassEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
-        legendMassEta2->SetNColumns(2);
-
-        if (optionEnergy.CompareTo("2.76TeV")==0 ){
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if( i==1 || i==3 || i==4 || i==5 ){
-                    DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    histoMassEtaData[i]->DrawCopy("e1,same");
-                    legendMassEta2->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                    DrawGammaSetMarker(histoMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    histoMassEtaMC[i]->DrawCopy("e1,same");
-                    legendMassEta2->AddEntry(histoMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                }
-            }
-            legendMassEta2->Draw();
-            labelEnergyMass->Draw();
-            labelEtaMass->Draw();
-            labelDetProcMass->Draw();
-
-            canvasMass->Update();
-            canvasMass->SaveAs(Form("%s/Eta_%s_Mass2_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        }
-
-        //***************************************************************************************************************
-        //************************************Plotting Width Eta *********************************************************
-        //***************************************************************************************************************
-        canvasWidth->cd();
-
-        Double_t minWidthEta    = 0.0;
-        Double_t maxWidthEta    = 0.060;
-        if (mode == 0){
-            minWidthEta         = 0.0;
-            maxWidthEta         = 0.012;
-        }
-
-        TH2F * histo2DWidthEta;
-        histo2DWidthEta = new TH2F("histo2DWidthEta","histo2DWidthEta",1000,0., maxPtGlobalEta,10000,minWidthEta, maxWidthEta);
-        SetStyleHistoTH2ForGraphs(histo2DWidthEta, "#it{p}_{T} (GeV/#it{c})","#sigma_{#eta} (Mev/#it{c}^{2})",
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
-        histo2DWidthEta->DrawCopy();
-
-        TLegend* legendWidthEta = GetAndSetLegend2(0.52, 0.87, 0.95, 0.87+(1.05*4/2*0.85*textSizeSpectra),28);
-        legendWidthEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
-             (optionEnergy.CompareTo("8TeV")==0) ||
-             (optionEnergy.CompareTo("pPb_5.023TeV")==0)
-             ){
-                DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoWidthEtaData[i]->DrawCopy("e1,same");
-                legendWidthEta->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                DrawGammaSetMarker(histoWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoWidthEtaMC[i]->DrawCopy("e1,same");
-                legendWidthEta->AddEntry(histoWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-            }
-        }
-        legendWidthEta->Draw();
-        labelEnergyWidth->Draw();
-
-        TLatex *labelEtaWidth = new TLatex(0.14, 0.84+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaWidth, 0.85*textSizeSpectra,4);
-        labelEtaWidth->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Eta_%s_Width1_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        histo2DWidthEta->DrawCopy();
-
-        TLegend* legendWidthEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
-        legendWidthEta2->SetNColumns(2);
-
-        if (optionEnergy.CompareTo("2.76TeV")==0 ){
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if( i==1 || i==3 || i==4 || i==5 ){
-                    DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    histoWidthEtaData[i]->DrawCopy("e1,same");
-                    legendWidthEta2->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                    DrawGammaSetMarker(histoWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    histoWidthEtaMC[i]->DrawCopy("e1,same");
-                    legendWidthEta2->AddEntry(histoWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                }
-            }
-            legendWidthEta2->Draw();
-            labelEnergyWidth->Draw();
-            labelEtaWidth->Draw();
-            labelDetProcWidth->Draw();
-
-            canvasWidth->Update();
-            canvasWidth->SaveAs(Form("%s/Eta_%s_Width2_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        }
-        //***************************************************************************************************************
-        //************************************Plotting unscaled invariant raw-yield Eta *********************************
-        //***************************************************************************************************************
-        canvasRawUnscaled->cd();
-
-        Double_t minCorrYieldRawUnscaledEta     = 7e-8;
-        Double_t maxCorrYieldRawUnscaledEta     = 4e-3;
-        if (mode == 4) {
-            minCorrYieldRawUnscaledEta          = 7e-8;
-            maxCorrYieldRawUnscaledEta          = 1e-1;
-        } else if (mode == 0) {
-            minCorrYieldRawUnscaledEta          = 7e-8;
-            maxCorrYieldRawUnscaledEta          = 1e-4;
-        }
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-          if(mode == 2){
-            minCorrYieldRawUnscaledEta        = 7e-8;
-            maxCorrYieldRawUnscaledEta        = 8e-4;
-          }else if(mode == 4){
-            minCorrYieldRawUnscaledEta        = 2e-8;
-            maxCorrYieldRawUnscaledEta        = 8e-3;
-          }
-        }
-        if(optionEnergy.CompareTo("pPb_5.023TeV")==0){
-            if(mode == 2){
-                minCorrYieldRawUnscaledEta    = 2e-8;
-                maxCorrYieldRawUnscaledEta    = 8e-4;
-            }
-        }
-
-
-        TH2F * histo2DRawUnscaledEta       = new TH2F("histo2DRawUnscaledEta", "histo2DRawUnscaledEta", 1000, 0., maxPtGlobalEta, 10000, minCorrYieldRawUnscaledEta, maxCorrYieldRawUnscaledEta);
-        SetStyleHistoTH2ForGraphs(histo2DRawUnscaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}",
-                                0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
-        histo2DRawUnscaledEta->GetXaxis()->SetLabelOffset(-0.005);
-        histo2DRawUnscaledEta->DrawCopy();
-
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            DrawGammaSetMarker(histoRawYieldEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoRawYieldEta[i]->DrawCopy("e1,same");
-        }
-        legendRawUnscaled->Draw();
-        labelEnergyRawUnscaled->Draw();
-        TLatex *labelEtaRawUnscaled     = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaRawUnscaled, 0.85*textSizeSpectra,4);
-        labelEtaRawUnscaled->Draw();
-        labelDetProcRawUnscaled->Draw();
-
-        canvasRawUnscaled->Update();
-        canvasRawUnscaled->SaveAs(Form("%s/Eta_%s_RawYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        delete canvasRawUnscaled;
-
-        //***************************************************************************************************************
-        //************************************Plotting unscaled invariant yield Eta *************************************
-        //***************************************************************************************************************
-        canvasCorrUnscaled->cd();
-
-        Double_t minCorrYieldUnscaledEta    = 2e-10;
-        Double_t maxCorrYieldUnscaledEta    = 1e2;
-        if (mode == 0){
-            minCorrYieldUnscaledEta         = 1e-7;
-            maxCorrYieldUnscaledEta         = 5e-1;
-        }
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-            if(mode == 2){
-                minCorrYieldUnscaledEta         = 1e-7;
-                maxCorrYieldUnscaledEta         = 4e-2;
-            }else if(mode == 4){
-                minCorrYieldUnscaledEta         = 9e-10;
-                maxCorrYieldUnscaledEta         = 5e-2;
-            }
-        }
-
-        if(optionEnergy.CompareTo("pPb_5.023TeV")==0){
-            if(mode == 2){
-                minCorrYieldUnscaledEta         = 1e-8;
-                maxCorrYieldUnscaledEta         = 1e-1;
-            }else if(mode == 4){
-                minCorrYieldUnscaledEta         = 9e-9;
-                maxCorrYieldUnscaledEta         = 5e-2;
-            }
-        }
-
-        TH2F * histo2DInvYieldUnscaledEta;
-        histo2DInvYieldUnscaledEta = new TH2F("histo2DInvYieldUnscaledEta","histo2DInvYieldUnscaledEta",1000,0., maxPtGlobalEta,10000,minCorrYieldUnscaledEta,maxCorrYieldUnscaledEta);
-        SetStyleHistoTH2ForGraphs(histo2DInvYieldUnscaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.55);
-        histo2DInvYieldUnscaledEta->DrawCopy();
-
-        TLegend* legendUnscaledEta = GetAndSetLegend2(0.72, 0.95-(1.15*nrOfTrigToBeComb*0.85*textSizeSpectra), 0.95, 0.95,32);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            DrawGammaSetMarker(histoCorrectedYieldEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoCorrectedYieldEta[i]->DrawCopy("e1,same");
-            legendUnscaledEta->AddEntry(histoCorrectedYieldEta[i],triggerNameLabel[i].Data(),"p");
-        }
-        legendUnscaledEta->Draw();
-
-        labelEnergyUnscaled->Draw();
-        TLatex *labelEtaUnscaled = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaUnscaled, 0.85*textSizeSpectra,4);
-        labelEtaUnscaled->Draw();
-        labelDetProcUnscaled->Draw();
-
-
-        canvasCorrUnscaled->Update();
-        canvasCorrUnscaled->SaveAs(Form("%s/Eta_%s_CorrectedYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        delete canvasCorrUnscaled;
-
-        //***************************************************************************************************************
-        //******************************* Scaling corrected yield by trigger rejection factors Eta **********************
-        //***************************************************************************************************************
-
-        cout << "**************************************************************************************************" << endl;
-        cout << "******************************* Combining different triggers for eta *****************************" << endl;
-        cout << "**************************************************************************************************" << endl;
-
-        TH1D*     histoCorrectedYieldEtaScaled                  [MaxNumberOfFiles];
-        TH1D*     histoCorrectedYieldEtaScaledMasked            [MaxNumberOfFiles];
-        histoCorrectedYieldEtaScaled[0]                         = (TH1D*)histoCorrectedYieldEta[0]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[0].Data()));
-        for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
-            fileFitsOutput << triggerName[i].Data() << endl;
-            histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
-            histoCorrectedYieldEtaScaled[i]->Sumw2();
-            histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[i][trigSteps[i][0]]);
-            if (trigSteps[i][1]!= trigSteps[i][0]){
-                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
-                histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][0]][trigSteps[i][1]]);
-            }
-            if (trigSteps[i][2]!= trigSteps[i][1]){
-                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
-                histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][1]][trigSteps[i][2]]);
-            }
-        }
-
-        // prepare arrays for systematics
-        Double_t xValueFinalEta                                 [100];
-        Double_t xErrorLowFinalEta                              [100];
-        Double_t xErrorHighFinalEta                             [100];
-        Double_t yValueFinalEta                                 [100];
-        Double_t yErrorLowFinalEta                              [100];
-        Double_t yErrorHighFinalEta                             [100];
-        Int_t nPointFinalEta                                         = 0;
-
-        Double_t yErrorSysLowFinalEta                           [100];
-        Double_t yErrorSysHighFinalEta                          [100];
-
-        Double_t ptSysRelEta                                    [MaxNumberOfFiles][100];
-        Double_t yErrorSysLowRelEta                             [MaxNumberOfFiles][100];
-        Double_t yErrorSysHighRelEta                            [MaxNumberOfFiles][100];
-        Bool_t     sysAvailEta                                  [MaxNumberOfFiles];
-
-        Int_t numberBinsSysAvailSingleEta                       [MaxNumberOfFiles];
-
-        // create graphs for shrunk spectrum
-        TGraphAsymmErrors* graphsCorrectedYieldShrunkEta        [MaxNumberOfFiles];
-        TGraphAsymmErrors* graphsCorrectedYieldSysShrunkEta     [MaxNumberOfFiles];
-
-        // create inputs for combination function
-        TH1D*               histoStatEta    [12];
-        TGraphAsymmErrors*  graphSystEta    [12];
-        TH1D*               histoRelStatEta [12];
-        TGraphAsymmErrors*  graphRelSystEta [12];
-
-        Int_t offSetsEta[12]            = { 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0 };
-        Int_t offSetsEtaSys[12]         = { 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0 };
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-          if(mode == 2){
-            offSetsEta[1] = 0; //INT7
-            offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 3; //EGA
-          }else if(mode == 4){
-            offSetsEta[1] = 0; //INT7
-            offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 3; //EGA
-          }
-        }
-
-        Bool_t hasSysEta                = kFALSE;
-        for (Int_t j = 0; j<12; j++){
-            histoStatEta[j]                 = NULL;
-            graphSystEta[j]                 = NULL;
-            histoRelStatEta[j]              = NULL;
-            graphRelSystEta[j]              = NULL;
-            graphOrderedMassEtaData[j]      = NULL;
-            graphOrderedMassEtaMC[j]        = NULL;
-            graphOrderedWidthEtaData[j]     = NULL;
-            graphOrderedWidthEtaMC[j]       = NULL;
-            graphOrderedAcceptanceEta[j]    = NULL;
-            graphOrderedEfficiencyEta[j]    = NULL;
-            graphOrderedEffTimesAccEta[j]   = NULL;
-        }
-
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            // Read systematics file and fill arrays
-            cout << triggerName[i].Data() << endl;
-            if (sysFileEta[i].CompareTo("bla") != 0){
-                sysAvailEta[i]              = kTRUE;
-                ifstream  fileSysErrEta;
-                fileSysErrEta.open(sysFileEta[i].Data(),ios_base::in);
-                cout << sysFileEta[i].Data() << endl;
-                Int_t counter = 0;
-                while(!fileSysErrEta.eof() && counter < 100){
-                    Double_t garbage = 0;
-                    fileSysErrEta >>ptSysRelEta[i][counter] >> yErrorSysLowRelEta[i][counter] >> yErrorSysHighRelEta[i][counter]>>    garbage >> garbage;
-                    cout << counter << "\t"<< ptSysRelEta[i][counter]<< "\t"  << yErrorSysLowRelEta[i][counter] << "\t"  <<yErrorSysHighRelEta[i][counter] << "\t"  << endl;;
-                    counter++;
-                }
-                fileSysErrEta.close();
-                hasSysEta                   = kTRUE;
-             // read in detailed systematics
-                string sysFileEtaDet = sysFileEta[i].Data();
-                if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){
-                  cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl;
-                  sysAvailSingleEta[i] = kFALSE;
-                }else{
-                  ifstream fileSysErrDetailedEta;
-                  fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
-                  if(fileSysErrDetailedEta.is_open())
-                      sysAvailSingleEta[i] = kTRUE;
-                  else{
-                      sysAvailSingleEta[i] = kFALSE;
-                      cout << "couldn't find single errors for eta, jumping" << endl;
-                  }
-
-                  if (sysAvailSingleEta[i]){
-                      cout << sysFileEtaDet << endl;
-                      counter = 0;
-                      string line;
-                      Int_t counterColumn = 0;
-                      while (getline(fileSysErrDetailedEta, line) && counter < 100) {
-                          istringstream ss(line);
-                          TString temp="";
-                          counterColumn = 0;
-                          while(ss && counterColumn < 100){
-                              ss >> temp;
-                              if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                              ptSysDetail[i][counter].push_back(temp);
-                              counterColumn++;
-                              }
-                          }
-                          if(counter == 0){
-                              ptSysDetail[i][counter++].push_back("TotalError");
-                              counterColumn++;
-                          }else counter++;
-                      }
-                      numberBinsSysAvailSingleEta[i] = counter;
-                      fileSysErrDetailedEta.close();
-                  }
-                }
-            } else {
-                sysAvailEta[i]              = kFALSE;
-                sysAvailSingleEta[i]        = kTRUE;
-            }
-
-            cout << "step 1" << endl;
-            // intialize graphs for individual triggers to be shrunk
-            graphsCorrectedYieldShrunkEta[i]        = new TGraphAsymmErrors(histoCorrectedYieldEtaScaled[i]);
-            graphsCorrectedYieldRemoved0Eta[i]      = new TGraphAsymmErrors(histoCorrectedYieldEtaScaled[i]);
-            graphsCorrectedYieldSysShrunkEta[i]     = new TGraphAsymmErrors(histoCorrectedYieldEtaScaled[i]);
-            graphsCorrectedYieldSysRemoved0Eta[i]   = new TGraphAsymmErrors(histoCorrectedYieldEtaScaled[i]);
-            graphMassEtaData[i]                     = new TGraphAsymmErrors(histoMassEtaData[i]);
-            graphMassEtaMC[i]                       = new TGraphAsymmErrors(histoMassEtaMC[i]);
-            graphWidthEtaData[i]                    = new TGraphAsymmErrors(histoWidthEtaData[i]);
-            graphWidthEtaMC[i]                      = new TGraphAsymmErrors(histoWidthEtaMC[i]);
-            graphAcceptanceEta[i]                   = new TGraphAsymmErrors(histoAcceptanceEta[i]);
-            graphEffTimesAccEta[i]                  = new TGraphAsymmErrors(histoEffTimesAccEta[i]);
-            if ( triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1") ){
-                graphEfficiencyEta[i]               = new TGraphAsymmErrors(histoEfficiencyEta[i]);
-            } else {
-                if (enableTriggerEffEta[i]){
-                    graphEfficiencyEta[i]           = new TGraphAsymmErrors(histoEffBaseEta[i]);
-                } else {
-                    graphEfficiencyEta[i]           = NULL;
-                }
-            }
-
-            histoCorrectedYieldEtaScaledMasked[i]   = (TH1D*)histoCorrectedYieldEtaScaled[i]->Clone(Form("Eta_ScaledMasked_%s",triggerName[i].Data()));
-
-            // remove points at beginning according to ranges set
-            Int_t binsToMask = 1;
-            while (histoCorrectedYieldEtaScaledMasked[i]->GetBinCenter(binsToMask) < ptFromSpecEta[i][0] ){
-                histoCorrectedYieldEtaScaledMasked[i]->SetBinContent(binsToMask,0.);
-                histoCorrectedYieldEtaScaledMasked[i]->SetBinError(binsToMask,0.);
-                binsToMask++;
-            }
-            while (graphMassEtaData[i]->GetX()[0] < ptFromSpecEta[i][0] ){
-                graphMassEtaData[i]->RemovePoint(0);
-                graphMassEtaMC[i]->RemovePoint(0);
-                graphWidthEtaData[i]->RemovePoint(0);
-                graphWidthEtaMC[i]->RemovePoint(0);
-                graphAcceptanceEta[i]->RemovePoint(0);
-                graphEffTimesAccEta[i]->RemovePoint(0);
-                if (enableTriggerEffEta[i] || (triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1"))){
-                    graphEfficiencyEta[i]->RemovePoint(0);
-                }
-            }
-
-            // mask unused triggers completely
-            if ( maskedFullyEta[i] ){
-              graphMassEtaData[i]     = NULL;
-              graphMassEtaMC[i]       = NULL;
-              graphWidthEtaData[i]    = NULL;
-              graphWidthEtaMC[i]      = NULL;
-              graphAcceptanceEta[i]   = NULL;
-              graphEffTimesAccEta[i]  = NULL;
-              graphEfficiencyEta[i]   = NULL;
-              graphsCorrectedYieldShrunkEta[i]    = NULL;
-              graphsCorrectedYieldRemoved0Eta[i]  = NULL;
-              graphsCorrectedYieldSysShrunkEta[i] = NULL;
-              graphsCorrectedYieldSysRemoved0Eta[i]   = NULL;
-              sysAvailEta[i]          = kFALSE;
-              for (Int_t f = 1; f < histoCorrectedYieldOmegaScaledMasked[i]->GetNbinsX()+1; f++ ){
-                  histoCorrectedYieldOmegaScaledMasked[i]->SetBinContent(f,0.);
-                  histoCorrectedYieldOmegaScaledMasked[i]->SetBinError(f,0.);
-              }
-              nrOfTrigToBeCombEtaRed--;
-              cout << "trigger " << triggerName[i] << " was masked for Eta" << endl;
-              continue;
-            // shorten graphs at the end according to range set in ptFromSpecEta
-            } else if (ptFromSpecEta[i][1] > -1) {
-
-                for (Int_t f = histoCorrectedYieldEtaScaledMasked[i]->GetXaxis()->FindBin(ptFromSpecEta[i][1]); f < histoCorrectedYieldEtaScaledMasked[i]->GetNbinsX()+1; f++ ){
-                    histoCorrectedYieldEtaScaledMasked[i]->SetBinContent(f,0.);
-                    histoCorrectedYieldEtaScaledMasked[i]->SetBinError(f,0.);
-                }
-                while (graphMassEtaData[i]->GetX()[graphMassEtaData[i]->GetN()-1] > ptFromSpecEta[i][1] ){
-                    graphMassEtaData[i]->RemovePoint(graphMassEtaData[i]->GetN()-1);
-                    graphMassEtaMC[i]->RemovePoint(graphMassEtaMC[i]->GetN()-1);
-                    graphWidthEtaData[i]->RemovePoint(graphWidthEtaData[i]->GetN()-1);
-                    graphWidthEtaMC[i]->RemovePoint(graphWidthEtaMC[i]->GetN()-1);
-                    graphAcceptanceEta[i]->RemovePoint(graphAcceptanceEta[i]->GetN()-1);
-                    graphEffTimesAccEta[i]->RemovePoint(graphEffTimesAccEta[i]->GetN()-1);
-                    if (enableTriggerEffEta[i] || (triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1"))){
-                        graphEfficiencyEta[i]->RemovePoint(graphEfficiencyEta[i]->GetN()-1);
-                    }
-                }
-            }
-            // check if any points are still in graphs, if not put to NULL
-            if (graphMassEtaData[i]->GetN() == 0){
-                graphMassEtaData[i]     = NULL;
-                graphMassEtaMC[i]       = NULL;
-                graphWidthEtaData[i]    = NULL;
-                graphWidthEtaMC[i]      = NULL;
-                graphAcceptanceEta[i]   = NULL;
-                graphEfficiencyEta[i]   = NULL;
-                graphEffTimesAccEta[i]  = NULL;
-            }
-
-            // Remove 0 at beginning of the graphs
-//             graphsCorrectedYieldShrunkEta[i]->Print();
-            cout << "step 2" << endl;
-            while (graphsCorrectedYieldShrunkEta[i]->GetY()[0] == 0) graphsCorrectedYieldShrunkEta[i]->RemovePoint(0);
-//             graphsCorrectedYieldShrunkEta[i]->Print();
-            while (graphsCorrectedYieldRemoved0Eta[i]->GetY()[0] == 0) graphsCorrectedYieldRemoved0Eta[i]->RemovePoint(0);
-//             graphsCorrectedYieldRemoved0Eta[i]->Print();
-            cout << "sys shrunk" << endl;
-            while (graphsCorrectedYieldSysShrunkEta[i]->GetY()[0] == 0) graphsCorrectedYieldSysShrunkEta[i]->RemovePoint(0);
-//             graphsCorrectedYieldSysShrunkEta[i]->Print();
-            cout << "sys shrunk 2" << endl;
-            while (graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[0] == 0) graphsCorrectedYieldSysRemoved0Eta[i]->RemovePoint(0);
-//             graphsCorrectedYieldSysRemoved0Eta[i]->Print();
-
-            if (graphsCorrectedYieldSysRemoved0Eta[i]){
-                if (sysAvailSingleEta[i]){
-                    nRelSysErrEtaSources                    = (Int_t)ptSysDetail[i][0].size()-1;
-                    for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                        graphRelSysErrEtaSource[k][i]       = (TGraphAsymmErrors*) graphsCorrectedYieldSysRemoved0Eta[i]->Clone(Form("RelSysErrEtaSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
-                        cout << Form("RelSysErrSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
-                    }
-                }
-            }
-            // shrink systematics graphs at the end & fill systematics
-            for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Eta[i]->GetN(); j++){
-                if (sysAvailEta[i]){
-                    Int_t counter2 = 0;
-                    while(counter2 < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] - ptSysRelEta[i][counter2])> 0.001) counter2++;
-                    if (counter2 < 100){
-                        cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
-                        Double_t yErrorSysLowDummy = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j]);
-                        Double_t yErrorSysHighDummy = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j];
-                        graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,yErrorSysLowDummy);
-                        graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,yErrorSysHighDummy);
-                        if (sysAvailSingleEta[i]){
-                            for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,((TString)ptSysDetail[i][counter2+1].at(k+1)).Atof());
-                                graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
-                                graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
-                            }
-                        }
-                    } else {
-                        graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,0);
-                        graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,0);
-                        if (sysAvailSingleEta[i]){
-                            for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,0);
-                                graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
-                                graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
-                            }
-                        }
-                    }
-                } else {
-                    graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,0);
-                    graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,0);
-                    averagedEta = kFALSE;
-                    if (sysAvailSingleEta[i]){
-                        for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                            graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,0);
-                            graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
-                            graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
-                        }
-                    }
-                }
-            }
-
-            // Shrink graphs to desired range from below
-            cout << "step 3" << endl;
-            while (graphsCorrectedYieldShrunkEta[i]->GetX()[0] < ptFromSpecEta[i][0])
-                graphsCorrectedYieldShrunkEta[i]->RemovePoint(0);
-            while (graphsCorrectedYieldSysShrunkEta[i]->GetX()[0] < ptFromSpecEta[i][0])
-                graphsCorrectedYieldSysShrunkEta[i]->RemovePoint(0);
-            while (graphsCorrectedYieldShrunkEta[i]->GetX()[graphsCorrectedYieldShrunkEta[i]->GetN()-1] > ptFromSpecEta[i][1])
-                graphsCorrectedYieldShrunkEta[i]->RemovePoint(graphsCorrectedYieldShrunkEta[i]->GetN()-1);
-            graphsCorrectedYieldShrunkEta[i]->Print();
-            while (graphsCorrectedYieldSysShrunkEta[i]->GetX()[graphsCorrectedYieldSysShrunkEta[i]->GetN()-1] > ptFromSpecEta[i][1])
-                graphsCorrectedYieldSysShrunkEta[i]->RemovePoint(graphsCorrectedYieldSysShrunkEta[i]->GetN()-1);
-
-            // Shrink graphs to desired range from above and fill systematics
-            for (Int_t j = 0; j< graphsCorrectedYieldShrunkEta[i]->GetN(); j++){
-                xValueFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetX()[j];
-                xErrorHighFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEXhigh()[j];
-                xErrorLowFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEXlow()[j];
-                yValueFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetY()[j];
-                yErrorHighFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEYhigh()[j];
-                yErrorLowFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEYlow()[j];
-                if (sysAvailEta[i]){
-                    Int_t counter2 = 0;
-                    while(counter2 < 100 && TMath::Abs(xValueFinalEta[nPointFinalEta] - ptSysRelEta[i][counter2])> 0.001) counter2++;
-                    if (counter2 < 100){
-                        cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
-                        yErrorSysLowFinalEta[nPointFinalEta] = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j]);
-                        yErrorSysHighFinalEta[nPointFinalEta] = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j];
-
-                    } else {
-                        yErrorSysLowFinalEta[nPointFinalEta] = 0;
-                        yErrorSysHighFinalEta[nPointFinalEta] = 0;
-
-                    }
-                } else {
-                    yErrorSysLowFinalEta[nPointFinalEta] = 0;
-                    yErrorSysHighFinalEta[nPointFinalEta] = 0;
-                }
-                graphsCorrectedYieldSysShrunkEta[i]->SetPointEYlow(j,yErrorSysLowFinalEta[nPointFinalEta]);
-                graphsCorrectedYieldSysShrunkEta[i]->SetPointEYhigh(j,yErrorSysHighFinalEta[nPointFinalEta]);
-                nPointFinalEta++;
-            }
-
-            // Set correct trigger order for combination function
-            Int_t nCorrOrder    = GetOrderedTrigger(triggerName[i]);
-            if (nCorrOrder == -1){
-                cout << "ERROR: trigger name not defined" << endl;
-                return;
-            }
-
-            // fill inputs for combinations function in correct order
-            if ( graphsCorrectedYieldShrunkEta[i]){
-                histoStatEta[nCorrOrder]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[nCorrOrder]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[nCorrOrder]    = histoStatEta[nCorrOrder]->GetXaxis()->FindBin(graphSystEta[nCorrOrder]->GetX()[0])-1;
-                if (graphMassEtaData[i])
-                    graphOrderedMassEtaData[nCorrOrder]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i])
-                    graphOrderedMassEtaMC[nCorrOrder]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i])
-                    graphOrderedWidthEtaData[nCorrOrder]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i])
-                    graphOrderedWidthEtaMC[nCorrOrder]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[nCorrOrder]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[nCorrOrder]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[nCorrOrder]   = graphEffTimesAccEta[i];
-                if (sysAvailSingleEta[i]){
-                    for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                        if (graphRelSysErrEtaSource[k][i])
-                            graphOrderedRelSysErrEtaSource[k][nCorrOrder]    = graphRelSysErrEtaSource[k][i];
-                    }
-                }
-            }
-            if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
-              offSetsEtaSys[1]+=0; //INT7
-              offSetsEtaSys[3]+=0; //EMC7
-              offSetsEtaSys[4]+=3; //EGA
-        }
-
-
-        TString nameWeightsLogFileEta =     Form("%s/weightsEta_%s.dat",outputDir.Data(),isMC.Data());
-        TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaTot     = NULL;
-        // Calculate averaged eta spectrum & respective supporting graphs according to statistical and systematic errors taking correctly into account the cross correlations
-        if (averagedEta){
-            // Calculate averaged eta spectrum
-            graphCorrectedYieldWeightedAverageEtaTot        = CombinePtPointsSpectraTriggerCorrMat( histoStatEta, graphSystEta,
-                                                                                                    binningEta,  maxNAllowedEta,
-                                                                                                    offSetsEta ,offSetsEtaSys,
-                                                                                                    graphCorrectedYieldWeightedAverageEtaStat, graphCorrectedYieldWeightedAverageEtaSys,
-                                                                                                    nameWeightsLogFileEta.Data(),
-                                                                                                    mode, optionEnergy, "Eta", v2ClusterizerMerged,
-                                                                                                    fileInputCorrFactors
-                                                                                                  );
-
-            // Prepare arrays for reading weighting numbers
-            Double_t xValuesReadEta[100];
-            Double_t weightsReadEta[12][100];
-            Int_t availableMeasEta[12]  = { -1, -1, -1, -1, -1, -1,
-                                            -1, -1, -1, -1, -1, -1};
-            Int_t nMeasSetEta           = nrOfTrigToBeCombEtaRed;
-            Int_t nPtBinsReadEta        = 0;
-
-            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
-                                                "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
-            Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[2], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[3], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[4], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[5], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[6], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[7], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[8], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[9], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[10], 0),
-                                            GetDefaultTriggerColorName(nameTriggerWeighted[11], 0)
-                                            };
-            Marker_t markerTriggWeighted[12] = {GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[0], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[1], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[2], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[3], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[4], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[5], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[6], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[7], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[8], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[9], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[10], 0),
-                                            GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
-                                            };
-
-
-            // Reading weights from output file for plotting
-            ifstream fileWeightsEta;
-            fileWeightsEta.open(nameWeightsLogFileEta,ios_base::in);
-            cout << "reading" << nameWeightsLogFileEta << endl;
-
-            while(!fileWeightsEta.eof() && nPtBinsReadEta < 100){
-                TString garbage = "";
-                if (nPtBinsReadEta == 0){
-                    fileWeightsEta >> garbage ;
-                    for (Int_t i = 0; i < nMeasSetEta; i++){
-                        fileWeightsEta >> availableMeasEta[i] ;
-                    }
-                    cout << "read following measurements: ";
-                    for (Int_t i = 0; i < nMeasSetEta; i++){
-                        cout << availableMeasEta[i] << "\t" ;
-                    }
-                    cout << endl;
-                } else {
-                    fileWeightsEta >> xValuesReadEta[nPtBinsReadEta-1];
-                    for (Int_t i = 0; i < nMeasSetEta; i++){
-                        fileWeightsEta >> weightsReadEta[availableMeasEta[i]][nPtBinsReadEta-1] ;
-                    }
-                    cout << "read: "<<  nPtBinsReadEta << "\t"<< xValuesReadEta[nPtBinsReadEta-1] << "\t" ;
-                    for (Int_t i = 0; i < nMeasSetEta; i++){
-                        cout << weightsReadEta[availableMeasEta[i]][nPtBinsReadEta-1] << "\t";
-                    }
-                    cout << endl;
-                }
-                nPtBinsReadEta++;
-            }
-            nPtBinsReadEta = nPtBinsReadEta-2 ;
-            fileWeightsEta.close();
-
-            // create and fill weighting graphs
-            TGraph* graphWeightsEta[12];
-            for (Int_t i = 0; i < numberOfTrigg; i++){
-                graphWeightsEta[i]                    = NULL;
-            }
-            for (Int_t i = 0; i < nMeasSetEta; i++){
-                graphWeightsEta[availableMeasEta[i]]  = new TGraph(nPtBinsReadEta,xValuesReadEta,weightsReadEta[availableMeasEta[i]]);
-                Int_t bin = 0;
-                for (Int_t n = 0; n< nPtBinsReadEta; n++){
-                    if (graphWeightsEta[availableMeasEta[i]]->GetY()[bin] == 0) graphWeightsEta[availableMeasEta[i]]->RemovePoint(bin);
-                    else bin++;
-                }
-            }
-
-            //  **********************************************************************************************************************
-            //  ******************************************* Plotting weights method for eta ******************************************
-            //  **********************************************************************************************************************
-            Int_t textSizeLabelsPixel = 900*0.04;
-
-            TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);// gives the page size
-            DrawGammaCanvasSettings( canvasWeights, 0.08, 0.02, 0.035, 0.09);
-
-            TH2F * histo2DWeightsEta;
-            histo2DWeightsEta = new TH2F("histo2DWeightsEta","histo2DWeightsEta",11000,0.,maxPtGlobalEta,1000,-0.5,1.3);
-            SetStyleHistoTH2ForGraphs(histo2DWeightsEta, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
-            histo2DWeightsEta->Draw("copy");
-
-                TLegend* legendWeightsEta = GetAndSetLegend2(0.12, 0.14, 0.55, 0.14+(0.035*nMeasSetEta/2*1.35), 32);
-                legendWeightsEta->SetNColumns(2);
-                for (Int_t i = 0; i < nMeasSetEta; i++){
-                    DrawGammaSetMarkerTGraph(graphWeightsEta[availableMeasEta[i]],  markerTriggWeighted[availableMeasEta[i]], sizeTrigg[availableMeasEta[i]],
-                                            colorTriggWeighted[availableMeasEta[i]], colorTriggWeighted[availableMeasEta[i]]);
-                    graphWeightsEta[availableMeasEta[i]]->Draw("p,same,e1");
-                    legendWeightsEta->AddEntry(graphWeightsEta[availableMeasEta[i]],nameTriggerWeighted[availableMeasEta[i]],"p");
-                }
-                legendWeightsEta->Draw();
-
-                TLatex *labelWeightsEnergy = new TLatex(0.7,0.24,collisionSystem.Data());
-                SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
-                labelWeightsEnergy->SetTextFont(43);
-                labelWeightsEnergy->Draw();
-                TLatex *labelWeightsEta = new TLatex(0.7,0.20,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-                SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4);
-                labelWeightsEta->SetTextFont(43);
-                labelWeightsEta->Draw();
-                TLatex *labelDetProcWeights    = new TLatex(0.7, 0.16,detectionProcess.Data());
-                SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4);
-                labelDetProcWeights->SetTextFont(43);
-                labelDetProcWeights->Draw();
-
-        //      DrawGammaLines(0.23, 70. , 0.8, 0.8,0.1, kGray, 3);
-                DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
-                DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
-                DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
-                DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
-
-            canvasWeights->SaveAs(Form("%s/%s_WeightsEtaTriggers.%s", outputDir.Data(), isMC.Data(), suffix.Data()));
-            delete canvasWeights;
-
-            // Calculating relative error for eta
-            for (Int_t i = 0; i < 12; i++){
-                if (histoStatEta[i])
-                    histoRelStatEta[i]      = CalculateRelErrUpTH1D( histoStatEta[i], Form("relativeStatErrorEta_%s", nameTriggerWeighted[i].Data()));
-                if (graphSystEta[i])
-                    graphRelSystEta[i]      = CalculateRelErrUpAsymmGraph( graphSystEta[i], Form("relativeSysErrorEta_%s", nameTriggerWeighted[i].Data()));
-            }
-            TGraphAsymmErrors* graphRelErrorEtaTot        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaTot, "relativeTotalErrorEta");
-            TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
-            TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
-
-            const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-            fstream SysErrDatAverSingleCheck;
-            SysErrDatAverSingleCheck.precision(4);
-            cout << SysErrDatnameMeanSingleErrCheck << endl;
-            if(sysAvailSingleEta[0]){
-              SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
-              SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
-              for (Int_t i = 0; i < graphRelErrorEtaTot->GetN(); i++){
-                  if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] <<  "\t" << graphRelErrorEtaTot->GetY()[i] << endl;
-              }
-              SysErrDatAverSingleCheck << endl;
-              SysErrDatAverSingleCheck.close();
-            }
-
-            // plot sys relative errors for individual triggers
-            TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
-            DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
-
-            TH2F * histo2DRelSysErr;
-            histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.,maxPtGlobalEta,1000,0,60.5);
-            SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-            histo2DRelSysErr->Draw("copy");
-                TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEta/2), 0.95, 0.92, 32);
-                legendRelSysErr->SetNColumns(2);
-                for (Int_t i = 0; i < nMeasSetEta; i++){
-                    DrawGammaSetMarkerTGraph(graphRelSystEta[availableMeasEta[i]], markerTriggWeighted[availableMeasEta[i]], sizeTrigg[availableMeasEta[i]],
-                                            colorTriggWeighted[availableMeasEta[i]], colorTriggWeighted[availableMeasEta[i]]);
-                    graphRelSystEta[availableMeasEta[i]]->Draw("p,same,z");
-                    legendRelSysErr->AddEntry(graphRelSystEta[availableMeasEta[i]],nameTriggerWeighted[availableMeasEta[i]],"p");
-                }
-                legendRelSysErr->Draw();
-
-                TLatex *labelRelErrEnergy    = new TLatex(0.15,0.89,collisionSystem.Data());
-                SetStyleTLatex( labelRelErrEnergy, 0.85*textSizeLabelsPixel,4);
-                labelRelErrEnergy->SetTextFont(43);
-                labelRelErrEnergy->Draw();
-                TLatex *labelRelErrEta       = new TLatex(0.15,0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-                SetStyleTLatex( labelRelErrEta, 0.85*textSizeLabelsPixel,4);
-                labelRelErrEta->SetTextFont(43);
-                labelRelErrEta->Draw();
-                TLatex *labelDetProcRelErr    = new TLatex(0.15, 0.81,detectionProcess.Data());
-                SetStyleTLatex( labelDetProcRelErr, 0.85*textSizeLabelsPixel,4);
-                labelDetProcRelErr->SetTextFont(43);
-                labelDetProcRelErr->Draw();
-
-            canvasRelSysErr->SaveAs(Form("%s/Eta_RelSysErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
-
-            // plot stat relative errors for individual triggers
-            TCanvas* canvasRelStatErr           = new TCanvas("canvasRelStatErr","",200,10,1350,900);  // gives the page size
-            DrawGammaCanvasSettings( canvasRelStatErr, 0.08, 0.02, 0.035, 0.09);
-
-            TH2F * histo2DRelStatErr;
-            histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.,maxPtGlobalEta,1000,0,60.5);
-            SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-            histo2DRelStatErr->Draw("copy");
-                TLegend* legendRelStatErr       = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEta/2), 0.95, 0.92, 32);
-                legendRelStatErr->SetNColumns(2);
-                for (Int_t i = 0; i < nMeasSetEta; i++){
-    //                 cout << "plotting graph: " << availableMeasEta[i] << "\t" <<histoRelStatEta[availableMeasEta[i]]->GetName() << endl;
-                    if (availableMeasEta[i] == 0 && histoRelStatEta[availableMeasEta[i]] && mode == 2){
-                        TGraphAsymmErrors* dummyGraph = new TGraphAsymmErrors(histoRelStatEta[availableMeasEta[i]]);
-                        dummyGraph->Print();
-                        DrawGammaSetMarkerTGraph(dummyGraph, markerTriggWeighted[availableMeasEta[i]], sizeTrigg[availableMeasEta[i]],
-                                            colorTriggWeighted[availableMeasEta[i]], colorTriggWeighted[availableMeasEta[i]]);
-                        dummyGraph->Draw("pX,same");
-                        legendRelSysErr->AddEntry(dummyGraph,nameTriggerWeighted[availableMeasEta[i]],"p");
-
-    //                     for (Int_t j = 1; j < histoRelStatEta[availableMeasEta[i]]->GetNbinsX()+1; j++){
-    //                        cout << j << ": " << histoRelStatEta[availableMeasEta[i]]->GetBinContent(j) << endl;
-    //                     }
-                    } else {
-                        DrawGammaSetMarker(histoRelStatEta[availableMeasEta[i]],markerTriggWeighted[availableMeasEta[i]], sizeTrigg[availableMeasEta[i]],
-                                            colorTriggWeighted[availableMeasEta[i]], colorTriggWeighted[availableMeasEta[i]]);
-                        histoRelStatEta[availableMeasEta[i]]->Draw("p,same,z");
-                        legendRelStatErr->AddEntry(histoRelStatEta[availableMeasEta[i]],nameTriggerWeighted[availableMeasEta[i]],"p");
-                    }
-                }
-                legendRelStatErr->Draw();
-
-                labelRelErrEnergy->Draw();
-                labelRelErrEta->Draw();
-                labelDetProcRelErr->Draw();
-
-            canvasRelStatErr->SaveAs(Form("%s/Eta_RelStatErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
-
-            // plot full error for final result decomposed
-            TCanvas* canvasRelTotErr            = new TCanvas("canvasRelTotErr","",200,10,1350,900);  // gives the page size
-            DrawGammaCanvasSettings( canvasRelTotErr, 0.08, 0.02, 0.035, 0.09);
-
-            TH2F * histo2DRelTotErrEta;
-            histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.,maxPtGlobalEta,1000,0,60.5);
-            SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-            histo2DRelTotErrEta->Draw("copy");
-
-                DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaTot, 20, 1.5, kBlack , kBlack);
-                graphRelErrorEtaTot->Draw("p,same,z");
-                DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaStat, 24, 1.5, kGray+2 , kGray+2);
-                graphRelErrorEtaStat->Draw("l,x0,same,e1");
-                DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaSys, 24, 1.5, kGray+1 , kGray+1);
-                graphRelErrorEtaSys->SetLineStyle(7);
-                graphRelErrorEtaSys->Draw("l,x0,same,e1");
-
-                TLegend* legendRelTotErr2       = GetAndSetLegend2(0.72, 0.92-(0.035*3), 0.9, 0.92, 32);
-                legendRelTotErr2->AddEntry(graphRelErrorEtaTot,"tot","p");
-                legendRelTotErr2->AddEntry(graphRelErrorEtaStat,"stat","l");
-                legendRelTotErr2->AddEntry(graphRelErrorEtaSys,"sys","l");
-                legendRelTotErr2->Draw();
-
-                labelRelErrEnergy->Draw();
-                labelRelErrEta->Draw();
-                labelDetProcRelErr->Draw();
-
-            canvasRelTotErr->SaveAs(Form("%s/Eta_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
-
-            // Calculate relative sys error weighted
-            if (sysAvailSingleEta[0]){
-                for (Int_t k = 0; k< nRelSysErrEtaSources ; k++ ){
-                    graphRelSysErrEtaSourceWeighted[k]      = CalculateWeightedQuantity(    graphOrderedRelSysErrEtaSource[k],
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                    );
-                    if (!graphRelSysErrEtaSourceWeighted[k]){
-                        cout << "Aborted in CalculateWeightedQuantity for " << endl;
-                        return;
-                    } else {
-                        graphRelSysErrEtaSourceWeighted[k]->SetName(Form("RelSysErrEtaSourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
-                    }
-                }
-            }
-
-
-            // create averaged supporting graphs
-            graphMassEtaDataWeighted                        = CalculateWeightedQuantity(    graphOrderedMassEtaData,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-
-            if (!graphMassEtaDataWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphMassEtaMCWeighted                          = CalculateWeightedQuantity(    graphOrderedMassEtaMC,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphMassEtaMCWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphWidthEtaDataWeighted                       = CalculateWeightedQuantity(    graphOrderedWidthEtaData,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphWidthEtaDataWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphWidthEtaMCWeighted                         = CalculateWeightedQuantity(    graphOrderedWidthEtaMC,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphWidthEtaMCWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphAcceptanceEtaWeighted                      = CalculateWeightedQuantity(    graphOrderedAcceptanceEta,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphAcceptanceEtaWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphEfficiencyEtaWeighted                      = CalculateWeightedQuantity(    graphOrderedEfficiencyEta,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphEfficiencyEtaWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            graphEffTimesAccEtaWeighted                     = CalculateWeightedQuantity(    graphOrderedEffTimesAccEta,
-                                                                                            graphWeightsEta,
-                                                                                            binningEta,  maxNAllowedEta,
-                                                                                            MaxNumberOfFiles
-                                                                                        );
-            if (!graphEffTimesAccEtaWeighted){
-                cout << "Aborted in CalculateWeightedQuantity" << endl;
-                return;
-            }
-            // remove masked bins at beginning
-            while (graphMassEtaDataWeighted->GetY()[0] == -10000)    graphMassEtaDataWeighted->RemovePoint(0);
-            while (graphMassEtaMCWeighted->GetY()[0] == -10000)      graphMassEtaMCWeighted->RemovePoint(0);
-            while (graphWidthEtaDataWeighted->GetY()[0] == -10000)   graphWidthEtaDataWeighted->RemovePoint(0);
-            while (graphWidthEtaMCWeighted->GetY()[0] == -10000)     graphWidthEtaMCWeighted->RemovePoint(0);
-            while (graphAcceptanceEtaWeighted->GetY()[0] == -10000)  graphAcceptanceEtaWeighted->RemovePoint(0);
-            while (graphEfficiencyEtaWeighted->GetY()[0] == -10000)  graphEfficiencyEtaWeighted->RemovePoint(0);
-            while (graphEffTimesAccEtaWeighted->GetY()[0] == -10000) graphEffTimesAccEtaWeighted->RemovePoint(0);
-            if (sysAvailSingleEta[0]){
-                for (Int_t k = 0; k < nRelSysErrEtaSources; k++){
-                    if (graphRelSysErrEtaSourceWeighted[k])
-                        while (graphRelSysErrEtaSourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrEtaSourceWeighted[k]->RemovePoint(0);
-                    else
-                        cout << "I don't have a weighted Eta rel sys err graph for error source: " << k << endl;
-                }
-            }
-
-
-            //  **********************************************************************************************************************
-            //  **************************************** Combine+write detailed Systematics ******************************************
-            //  **********************************************************************************************************************
-
-            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-            fstream SysErrDatAverSingle;
-            SysErrDatAverSingle.precision(4);
-            cout << SysErrDatnameMeanSingleErr << endl;
-            if(sysAvailSingleEta[0] && graphRelSysErrEtaSourceWeighted[0]){
-                SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-                for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
-                SysErrDatAverSingle << endl;
-                for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
-                    if(!sysAvailSingleEta[i]) continue;
-                    for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
-                        if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
-                            cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEta[i] << " & " << availableMeasEta[0] << ", returning!" << endl;
-                            return;
-                        }
-                    }
-                }
-
-                for(Int_t i=0; i<graphRelSysErrEtaSourceWeighted[0]->GetN(); i++){
-                    SysErrDatAverSingle << graphRelSysErrEtaSourceWeighted[0]->GetX()[i] << "\t";
-                    Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
-                    for(Int_t iErr=0; iErr<nColumns-1; iErr++)
-                        SysErrDatAverSingle << graphRelSysErrEtaSourceWeighted[iErr]->GetY()[i] << "\t";
-                    SysErrDatAverSingle << endl;
-
-                }
-            }
-            SysErrDatAverSingle.close();
-
-            // ***************************************************************************************************
-            // ********************* Plot all mean erros separately after smoothing ******************************
-            // ***************************************************************************************************
-            if(sysAvailSingleEta[0] && graphRelSysErrEtaSourceWeighted[0]){
-                TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
-                DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
-
-                    // create dummy histo
-                    TH2D *histo2DNewSysErrMean ;
-                    histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
-                    SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
-                                            1,0.9, 510, 510);
-                    histo2DNewSysErrMean->Draw();
-
-                    // Give legend position for plotting
-                    Double_t minXLegend     = 0.12;
-                    Double_t maxYLegend     = 0.95;
-                    Double_t widthLegend    = 0.25;
-                    if (nRelSysErrEtaSources> 7)
-                        widthLegend         = 0.5;
-                    Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaSources+3);
-                    if (nRelSysErrEtaSources> 7)
-                        heightLegend        = 1.05* 0.035 * (nRelSysErrEtaSources/2+1);
-
-                    // create legend
-                    TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
-                    legendMeanNew->SetMargin(0.1);
-                    if (nRelSysErrEtaSources> 7) legendMeanNew->SetNColumns(2);
-
-                    for(Int_t i = 0;i< nRelSysErrEtaSources-1 ;i++){
-                        DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
-                                                    GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
-                        graphRelSysErrEtaSourceWeighted[i]->Draw("pX0,csame");
-                        legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
-                    }
-
-                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1], 20, 1.,kBlack,kBlack);
-                    graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1]->Draw("p,csame");
-                    legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1],"quad. sum.","p");
-                    legendMeanNew->Draw();
-
-                    // labeling
-                    TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
-                    labelEnergySysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
-                    labelEnergySysDetailed->Draw();
-
-                    TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-                    labelEtaSysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
-                    labelEtaSysDetailed->Draw();
-
-                    TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
-                    labelDetProcSysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
-                    labelDetProcSysDetailed->Draw();
-
-                canvasNewSysErrMean->Update();
-                canvasNewSysErrMean->SaveAs(Form("%s/Eta_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-            }
-
-            // delete detailed sys array
-            for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
-                for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
-            }
-
-        // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")
-        } else {
-            graphCorrectedYieldWeightedAverageEtaStat       = new TGraphAsymmErrors(nPointFinalEta, xValueFinalEta, yValueFinalEta,
-                                                                                        xErrorLowFinalEta, xErrorHighFinalEta,yErrorLowFinalEta, yErrorHighFinalEta);
-            graphCorrectedYieldWeightedAverageEtaSys        = new TGraphAsymmErrors(nPointFinalEta, xValueFinalEta, yValueFinalEta,
-                                                                                    xErrorLowFinalEta, xErrorHighFinalEta,yErrorSysLowFinalEta, yErrorSysHighFinalEta);
-            graphMassEtaDataWeighted                        = graphMassEtaData[0];
-            graphMassEtaMCWeighted                          = graphMassEtaMC[0];
-            graphWidthEtaDataWeighted                       = graphWidthEtaData[0];
-            graphWidthEtaMCWeighted                         = graphWidthEtaMC[0];
-
-            graphAcceptanceEtaWeighted                      = graphAcceptanceEta[0];
-            graphEfficiencyEtaWeighted                      = graphEfficiencyEta[0];
-            graphEffTimesAccEtaWeighted                     = graphEffTimesAccEta[0];
-
-            TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
-            while (graphRelErrorEtaStat->GetY()[0] < 0 ) graphRelErrorEtaStat->RemovePoint(0);
-
-            TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
-            while (graphRelErrorEtaSys->GetY()[0] < 0 ) graphRelErrorEtaSys->RemovePoint(0);
-
-            const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-            fstream SysErrDatAverSingleCheck;
-            SysErrDatAverSingleCheck.precision(4);
-            cout << SysErrDatnameMeanSingleErrCheck << endl;
-
-            SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
-            SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
-            for (Int_t i = 0; i < graphRelErrorEtaStat->GetN(); i++){
-                if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] << endl;
-            }
-            SysErrDatAverSingleCheck << endl;
-            SysErrDatAverSingleCheck.close();
-
-        }
-        // Printing final graphs
-        cout << "stat eta" << endl;
-        if (graphCorrectedYieldWeightedAverageEtaStat) graphCorrectedYieldWeightedAverageEtaStat->Print();
-        cout << "sys eta" << endl;
-        if (graphCorrectedYieldWeightedAverageEtaSys) graphCorrectedYieldWeightedAverageEtaSys->Print();
-
-        if (graphCorrectedYieldWeightedAverageEtaStat){
-            while (graphCorrectedYieldWeightedAverageEtaStat->GetX()[0] < minPtGlobalEta){
-                graphCorrectedYieldWeightedAverageEtaStat->RemovePoint(0);
-            }
-        }
-
-        if (graphCorrectedYieldWeightedAverageEtaSys){
-            while (graphCorrectedYieldWeightedAverageEtaSys->GetX()[0]< minPtGlobalEta){
-                graphCorrectedYieldWeightedAverageEtaSys->RemovePoint(0);
-            }
-        }
-
-        //***************************************************************************************************************
-        //************************************Plotting Mass Eta reduced range  ******************************************
-        //***************************************************************************************************************
-        canvasMass->cd();
-        histo2DMassEta->DrawCopy();
-
-        TLegend* legendMassRedEta = GetAndSetLegend2(0.52, 0.88, 0.95, 0.88+(1.05*4/2*0.85*textSizeSpectra),28);
-        legendMassRedEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
-             (optionEnergy.CompareTo("8TeV")==0) ||
-             (optionEnergy.CompareTo("pPb_5.023TeV")==0)
-             ){
-                if (graphMassEtaData[i] && !maskedFullyEta[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphMassEtaData[i]->Draw("p,e1,same");
-                    legendMassRedEta->AddEntry(graphMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                }
-                if (graphMassEtaMC[i] && !maskedFullyEta[i]){
-                    DrawGammaSetMarkerTGraphAsym(graphMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphMassEtaMC[i]->Draw("p,e1,same");
-                    legendMassRedEta->AddEntry(graphMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                }
-            }
-        }
-        legendMassRedEta->Draw();
-        labelEnergyMass->Draw();
-        labelEtaMass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Eta_%s_Mass1_Reduced_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        canvasMass->cd();
-        histo2DMassEta->DrawCopy();
-        TLegend* legendMassRedEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
-        legendMassRedEta2->SetNColumns(2);
-        if (optionEnergy.CompareTo("2.76TeV")==0){
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if(i==1 || i==3 || i==4 || i==5 ){
-                    if (graphMassEtaData[i] && !maskedFullyEta[i]) {
-                        DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                        graphMassEtaData[i]->Draw("p,e1,same");
-                        legendMassRedEta2->AddEntry(graphMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                    }
-                    if (graphMassEtaMC[i] && !maskedFullyEta[i]) {
-                        DrawGammaSetMarkerTGraphAsym(graphMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                        graphMassEtaMC[i]->Draw("p,e1,same");
-                        legendMassRedEta2->AddEntry(graphMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                    }
-                }
-            }
-            legendMassRedEta2->Draw();
-            labelEnergyMass->Draw();
-            labelEtaMass->Draw();
-            labelDetProcMass->Draw();
-
-            canvasMass->Update();
-            canvasMass->SaveAs(Form("%s/Eta_%s_Mass2_Reduced_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        }
-        //***************************************************************************************************************
-        //********************************* Eta Mass weighted ***********************************************************
-        //***************************************************************************************************************
-        if (graphMassEtaDataWeighted || graphMassEtaMCWeighted){
-            canvasMass->cd();
-            histo2DMassEta->DrawCopy();
-            TLegend* legendMassEtaWeighted = GetAndSetLegend2(0.52, 0.88, 0.75, 0.88+(1.05*2*0.85*textSizeSpectra),28);
-            if (graphMassEtaDataWeighted){
-                DrawGammaSetMarkerTGraphAsym(graphMassEtaDataWeighted, 20, 1, kBlack, kBlack);
-                graphMassEtaDataWeighted->Draw("p,e1,same");
-                legendMassEtaWeighted->AddEntry(graphMassEtaDataWeighted, "Data", "p");
-            }
-            if (graphMassEtaDataWeighted){
-                DrawGammaSetMarkerTGraphAsym(graphMassEtaMCWeighted, 24, 1, kGray+2, kGray+2);
-                graphMassEtaMCWeighted->Draw("p,e1,same");
-                legendMassEtaWeighted->AddEntry(graphMassEtaMCWeighted, "MC", "p");
-            }
-            legendMassEtaWeighted->Draw();
-            labelEnergyMass->Draw();
-            labelEtaMass->Draw();
-            labelDetProcMass->Draw();
-
-            canvasMass->Update();
-            canvasMass->SaveAs(Form("%s/Eta_%s_Mass_Weighted_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-            TGraphAsymmErrors* graphMassDifferenceEtaDatavsMC       = CalculateAsymGraphDifferenceToGraph(graphMassEtaDataWeighted,graphMassEtaMCWeighted);
-            TGraphAsymmErrors* graphMassRelDifferenceEtaDatavsMC    = CalculateAsymGraphRatioToGraph(graphMassDifferenceEtaDatavsMC,graphMassEtaMCWeighted);
-            graphMassRelDifferenceEtaDatavsMC = ScaleGraph(graphMassRelDifferenceEtaDatavsMC, 100.);
-
-            canvasMass->cd();
-            TH2F * histo2DRelMassDiffEta       = new TH2F("histo2DRelMassDiffEta","histo2DRelMassDiffEta",1000,0., maxPtGlobalEta,10000,-5, 5);
-            SetStyleHistoTH2ForGraphs(histo2DRelMassDiffEta, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#eta, data}-#it{M}_{#eta, MC}/ #it{M}_{#eta, MC} (%)",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
-            histo2DRelMassDiffEta->DrawCopy();
-
-            if (graphMassRelDifferenceEtaDatavsMC){
-              TF1 *fitEtaRelMassDiff = new TF1("fitEtaRelMassDiff","[0]",0.,maxPtGlobalEta);
-              fitEtaRelMassDiff->SetParameter(0,0.);
-              graphMassRelDifferenceEtaDatavsMC->Fit(fitEtaRelMassDiff,"QNRMEX0+","",0.,maxPtGlobalEta);
-              fitEtaRelMassDiff->SetLineColor(kRed);
-              fitEtaRelMassDiff->SetLineWidth(0.5);
-              fitEtaRelMassDiff->Draw("same");
-
-              fileFitsOutput << "average rel mass diff: " << fitEtaRelMassDiff->GetParameter(0) << "+-"<< fitEtaRelMassDiff->GetParError(0) << endl;
-
-              TLegend* legendEtaRelMassDiff = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*1), 0.035, 2, "", 42, 0.15);
-              legendEtaRelMassDiff->AddEntry(fitEtaRelMassDiff,"fit with constant");
-              legendEtaRelMassDiff->AddEntry((TObject*)0,Form("%0.4f #pm %0.4f", fitEtaRelMassDiff->GetParameter(0), fitEtaRelMassDiff->GetParError(0)),"");
-              legendEtaRelMassDiff->Draw();
-
-              DrawGammaSetMarkerTGraphAsym(graphMassRelDifferenceEtaDatavsMC, 20, 1, kBlack, kBlack);
-              graphMassRelDifferenceEtaDatavsMC->Draw("p,e1,same");
-            }
-            DrawGammaLines(0., maxPtGlobalEta , 0., 0., 1, kGray+2, 7);
-//             legendMassEtaWeighted->Draw();
-            labelEnergyMass->Draw();
-            labelEtaMass->Draw();
-            labelDetProcMass->Draw();
-
-            canvasMass->Update();
-            canvasMass->SaveAs(Form("%s/Eta_%s_RelMassDiff_Weighted.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
-        }
-        delete canvasMass;
-        //***************************************************************************************************************
-        //************************************* Efficiency weighted *****************************************************
-        //***************************************************************************************************************
-
-        if (graphEfficiencyEtaWeighted){
-            canvasEffi->SetLogy(1);
-            canvasEffi->cd();
-            histo2DEffiEta->DrawCopy();
-
-            DrawGammaSetMarkerTGraphAsym(graphEfficiencyEtaWeighted, 20, 1, kGray+2, kGray+2);
-            graphEfficiencyEtaWeighted->Draw("p,e1,same");
-
-            TLatex *labelEnergyEffiWOTrigg = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4);
-            labelEnergyEffiWOTrigg->Draw();
-
-            TLatex *labelEtaEffiWOTrigg = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-            SetStyleTLatex( labelEtaEffiWOTrigg, 0.85*textSizeSpectra,4);
-            labelEtaEffiWOTrigg->Draw();
-
-            TLatex *labelDetProcEffiWOTrigg = new TLatex(0.62, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4);
-            labelDetProcEffiWOTrigg->Draw();
-
-            canvasEffi->Update();
-            canvasEffi->SaveAs(Form("%s/Eta_EfficiencyW0TriggEff_Weighted_%i.%s",outputDir.Data(),mode,suffix.Data()));
-        }
-        delete histo2DEffiEta;
-
-        //***************************************************************************************************************
-        //************************************* Acceptance weighted *****************************************************
-        //***************************************************************************************************************
-        if (graphAcceptanceEtaWeighted){
-            canvasAcc->cd();
-
-            histo2DAccEta->DrawCopy();
-
-            DrawGammaSetMarkerTGraphAsym(graphAcceptanceEtaWeighted, 20, 1, kGray+2, kGray+2);
-            graphAcceptanceEtaWeighted->Draw("p,e1,same");
-
-            TLatex *labelEnergyAcc = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4);
-            labelEnergyAcc->Draw();
-
-            TLatex *labelEtaAcc = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-            SetStyleTLatex( labelEtaAcc, 0.85*textSizeSpectra,4);
-            labelEtaAcc->Draw();
-
-            TLatex *labelDetProcAcc = new TLatex(0.62, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcAcc, 0.85*textSizeSpectra,4);
-            labelDetProcAcc->Draw();
-
-            canvasAcc->Update();
-            canvasAcc->SaveAs(Form("%s/Eta_Acceptance_weighted_%i.%s",outputDir.Data(),mode,suffix.Data()));
-        }
-        delete canvasAcc;
-
-
-        //***************************************************************************************************************
-        //************************************Plotting Width Eta reduced range  *****************************************
-        //***************************************************************************************************************
-        canvasWidth->cd();
-        histo2DWidthEta->DrawCopy();
-
-        TLegend* legendWidthRedEta = GetAndSetLegend2(0.52, 0.87, 0.95, 0.87+(1.05*4/2*0.85*textSizeSpectra),28);
-        legendWidthRedEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
-             (optionEnergy.CompareTo("8TeV")==0) ||
-             (optionEnergy.CompareTo("pPb_5.023TeV")==0)
-             ){
-                if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphWidthEtaData[i]->Draw("p,e1,same");
-                    legendWidthRedEta->AddEntry(graphWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                }
-                if (graphWidthEtaMC[i] && !maskedFullyEta[i]){
-                    DrawGammaSetMarkerTGraphAsym(graphWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphWidthEtaMC[i]->Draw("p,e1,same");
-                    legendWidthRedEta->AddEntry(graphWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                }
-            }
-        }
-        legendWidthRedEta->Draw();
-        labelEnergyWidth->Draw();
-        labelEtaWidth->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Eta_%s_Width1_Reduced_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        canvasWidth->cd();
-        histo2DWidthEta->DrawCopy();
-        TLegend* legendWidthRedEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
-        legendWidthRedEta2->SetNColumns(2);
-        if (optionEnergy.CompareTo("2.76TeV")==0 ){
-            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if( i==1 || i==3 || i==4 || i==5 ){
-
-                    if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
-                        DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                        graphWidthEtaData[i]->Draw("p,e1,same");
-                        legendWidthRedEta2->AddEntry(graphWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p");
-                    }
-                    if (graphWidthEtaMC[i] && !maskedFullyEta[i]) {
-                        DrawGammaSetMarkerTGraphAsym(graphWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                        graphWidthEtaMC[i]->Draw("p,e1,same");
-                        legendWidthRedEta2->AddEntry(graphWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p");
-                    }
-                }
-            }
-            legendWidthRedEta2->Draw();
-            labelEnergyWidth->Draw();
-            labelEtaWidth->Draw();
-            labelDetProcWidth->Draw();
-
-            canvasWidth->Update();
-            canvasWidth->SaveAs(Form("%s/Eta_%s_Width2_Reduced_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        }
-
-        //***************************************************************************************************************
-        //********************************* Eta Width weighted **********************************************************
-        //***************************************************************************************************************
-        canvasWidth->cd();
-        histo2DWidthEta->DrawCopy();
-        TLegend* legendWidthEtaWeighted = GetAndSetLegend2(0.52, 0.86, 0.75, 0.86+(1.05*2*0.85*textSizeSpectra),28);
-        if (graphWidthEtaDataWeighted){
-            DrawGammaSetMarkerTGraphAsym(graphWidthEtaDataWeighted, 20, 1, kBlack, kBlack);
-            graphWidthEtaDataWeighted->Draw("p,e1,same");
-            legendWidthEtaWeighted->AddEntry(graphWidthEtaDataWeighted, "Data", "p");
-        }
-        if (graphWidthEtaDataWeighted){
-            DrawGammaSetMarkerTGraphAsym(graphWidthEtaMCWeighted, 24, 1, kGray+2, kGray+2);
-            graphWidthEtaMCWeighted->Draw("p,e1,same");
-            legendWidthEtaWeighted->AddEntry(graphWidthEtaMCWeighted, "MC", "p");
-        }
-        legendWidthEtaWeighted->Draw();
-        labelEnergyWidth->Draw();
-        labelEtaWidth->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Eta_%s_Width_Weighted_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-        delete canvasWidth;
-
-        //***************************************************************************************************************
-        //************************************Plotting scaled invariant yield *****************************************
-        //***************************************************************************************************************
-        canvasCorrScaled->cd();
-
-        Double_t minCorrYieldEta    = 2e-11;
-        Double_t maxCorrYieldEta    = 5e-2;
-        if (mode == 0){
-            minCorrYieldEta         = 5e-8;
-            maxCorrYieldEta         = 1e-1;
-        }
-
-        if(optionEnergy.CompareTo("8TeV")==0){
-            if(mode == 2){
-                minCorrYieldEta     = 2e-11;
-                maxCorrYieldEta     = 5e-2;
-            }else if(mode == 4){
-                minCorrYieldEta     = 3e-11;
-                maxCorrYieldEta     = 7e-3;
-            }
-        }
-        if(optionEnergy.CompareTo("pPb_5.023TeV")==0){
-            if(mode == 2){
-                minCorrYieldEta     = 1e-8;
-                maxCorrYieldEta     = 1e-1;
-            }else if(mode == 4){
-                minCorrYieldEta     = 3e-9;
-                maxCorrYieldEta     = 7e-2;
-            }else if(mode == 3){
-                minCorrYieldEta     = 7e-6;
-                maxCorrYieldEta     = 0.3;
-            }
-        }
-
-        TH2F * histo2DInvYieldScaledEta;
-        histo2DInvYieldScaledEta = new TH2F("histo2DInvYieldScaledEta","histo2DInvYieldScaledEta",1000,0., maxPtGlobalEta,10000,minCorrYieldEta,maxCorrYieldEta);
-        SetStyleHistoTH2ForGraphs(histo2DInvYieldScaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.55);
-//         histo2DInvYieldScaledEta->SetRangeUser(2e-11,5e-2);
-        histo2DInvYieldScaledEta->DrawCopy();
-
-        // two component model fit
-        cout << "first point eta" << endl;
-        graphCorrectedYieldWeightedAverageEtaStat->Print();
-        cout << graphCorrectedYieldWeightedAverageEtaStat->GetY()[0] << endl;
-        Double_t paramTCM[5] = {graphCorrectedYieldWeightedAverageEtaStat->GetY()[0],0.3,graphCorrectedYieldWeightedAverageEtaStat->GetY()[0]/1000,0.8,3};
-        TF1* fitInvYieldEta = FitObject("tcm","fitInvYieldEta","Eta",graphCorrectedYieldWeightedAverageEtaStat,minPtGlobalEta,maxPtGlobalEta,paramTCM,"QNRMEX0+");
-        cout << WriteParameterToFile(fitInvYieldEta) << endl;
-
-        // tsallis fit
-    //     Double_t paramGraph[3]                  = {1000, 8., 0.13};
-    //     TF1* fitInvYieldEta                     = FitObject("l","fitInvYieldEta","Eta",graphCorrectedYieldWeightedAverageEtaStat,minPtGlobalEta,maxPtGlobalEta,paramGraph,"QNRME+");
-
-        DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldWeightedAverageEtaSys, 24, 2, kGray+1 , kGray+1, 1, kTRUE);
-        graphCorrectedYieldWeightedAverageEtaSys->Draw("p,E2,same");
-
-        TLegend* legendScaled = GetAndSetLegend2(0.72, 0.95-(1.15*nrOfTrigToBeCombEtaRed*0.85*textSizeSpectra), 0.95, 0.95,32);
-
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (graphsCorrectedYieldSysShrunkEta[i] && !maskedFullyEta[i]) DrawGammaSetMarkerTGraphAsym(graphsCorrectedYieldSysShrunkEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
-            if (graphsCorrectedYieldSysShrunkEta[i] && !maskedFullyEta[i]) DrawGammaSetMarker(histoCorrectedYieldEtaScaled[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            if (graphsCorrectedYieldSysShrunkEta[i] && !maskedFullyEta[i]) histoCorrectedYieldEtaScaled[i]->DrawCopy("e1,same");
-            if (graphsCorrectedYieldSysShrunkEta[i] && !maskedFullyEta[i]) graphsCorrectedYieldSysShrunkEta[i]->Draw("p,E2,same");
-            if (graphsCorrectedYieldSysShrunkEta[i] && !maskedFullyEta[i]) legendScaled->AddEntry(histoCorrectedYieldEtaScaled[i],triggerNameLabel[i].Data(),"p");
-        }
-
-        DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldWeightedAverageEtaStat, 24, 2, kRed , kRed, 1, kTRUE);
-        graphCorrectedYieldWeightedAverageEtaStat->Draw("p,E,same");
-        legendScaled->AddEntry(graphCorrectedYieldWeightedAverageEtaStat,"Final","p");
-        legendScaled->Draw();
-        DrawGammaSetMarkerTF1( fitInvYieldEta, 7, 2, kGray+2);
-        fitInvYieldEta->Draw("same");
-
-        labelEnergyUnscaled->Draw();
-        labelEtaUnscaled->Draw();
-        labelDetProcUnscaled->Draw();
-
-        canvasCorrScaled->Update();
-        canvasCorrScaled->SaveAs(Form("%s/Eta_%s_CorrectedYieldScaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        //***************************************************************************************************************
-        //************************************Plotting final invariant yield *****************************************
-        //***************************************************************************************************************
-
-        histo2DInvYieldScaledEta->DrawCopy();
-
-        graphCorrectedYieldWeightedAverageEtaSys->Draw("p,E2,same");
-        DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldWeightedAverageEtaStat, 24, 2, kBlack , kBlack, 1, kTRUE);
-        graphCorrectedYieldWeightedAverageEtaStat->Draw("p,E,same");
-
-        fitInvYieldEta->Draw("same");
-
-        labelEnergyUnscaled->Draw();
-        labelEtaUnscaled->Draw();
-        labelDetProcUnscaled->Draw();
-
-        canvasCorrScaled->Update();
-        canvasCorrScaled->SaveAs(Form("%s/Eta_%s_CorrectedYieldFinal_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-
-        delete canvasCorrScaled;
-
-        //***************************************************************************************************************
-        //******************************* Ratio to fit for individual spectra full range ********************************
-        //***************************************************************************************************************
-        canvasRatioSpec->cd();
-
-        TH2F * histo2DRatioToFitEta;
-        histo2DRatioToFitEta = new TH2F("histo2DRatioToFitEta","histo2DRatioToFitEta",1000,0., maxPtGlobalEta,1000,0.25, 2.05);
-        SetStyleHistoTH2ForGraphs(histo2DRatioToFitEta, "#it{p}_{T} (GeV/#it{c})","Data/Fit",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.0);
-        histo2DRatioToFitEta->DrawCopy();
-
-        TH1D* histoCorrectedYieldToFitEta[MaxNumberOfFiles];
-        TGraphAsymmErrors* graphCorrectedYieldToFitEta[MaxNumberOfFiles];
-        TLegend* legendRatioSpecEta = GetAndSetLegend2(0.15, 0.95-(1.1*nrOfTrigToBeCombEtaRed/2*0.85*textSizeSpectra), 0.45, 0.95,28);
-        legendRatioSpecEta->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (graphsCorrectedYieldSysRemoved0Eta[i] && !maskedFullyEta[i]){
-              histoCorrectedYieldToFitEta[i] = CalculateHistoRatioToFit (histoCorrectedYieldEtaScaled[i], fitInvYieldEta);
-              graphCorrectedYieldToFitEta[i] = CalculateGraphErrRatioToFit(graphsCorrectedYieldSysRemoved0Eta[i], fitInvYieldEta);
-
-              DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldToFitEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
-              DrawGammaSetMarker(histoCorrectedYieldToFitEta[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-
-              graphCorrectedYieldToFitEta[i]->Draw("p,E2,same");
-              legendRatioSpecEta->AddEntry(histoCorrectedYieldToFitEta[i],triggerNameLabel[i].Data(),"p");
-            }
-            DrawGammaLines(0., maxPtGlobalEta , 1., 1.,0.1, kGray+2);
-            DrawGammaLines(0., maxPtGlobalEta , 1.1, 1.1,0.1, kGray, 7);
-            DrawGammaLines(0., maxPtGlobalEta , 0.9, 0.9,0.1, kGray, 7);
-
-            if (graphsCorrectedYieldSysRemoved0Eta[i]) histoCorrectedYieldToFitEta[i]->DrawCopy("e1,same");
-        }
-        legendRatioSpecEta->Draw();
-
-        labelEnergyRatio->Draw();
-
-        TLatex *labelEtaRatio = new TLatex(0.6, 0.93-textSizeSpectra*0.85*1.04, "#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
-        SetStyleTLatex( labelEtaRatio, 0.85*textSizeSpectra,4);
-        labelEtaRatio->Draw();
-
-        labelDetProcRatio->Draw();
-
-        canvasRatioSpec->Update();
-        canvasRatioSpec->SaveAs(Form("%s/Eta_%s_RatioSpectraToFit.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
-
-        //***************************************************************************************************************
-        //******************************* Ratio to fit for individual spectra used range ********************************
-        //***************************************************************************************************************
-
-        histo2DRatioToFitEta->DrawCopy();
-
-        TGraphAsymmErrors* graphCorrectedYieldToFitEtaUsed[MaxNumberOfFiles];
-        TGraphAsymmErrors* graphCorrectedYieldToFitEtaSysUsed[MaxNumberOfFiles];
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if( !maskedFullyEta[i]){
-                if (graphsCorrectedYieldShrunkEta[i]) graphCorrectedYieldToFitEtaUsed[i] = CalculateGraphErrRatioToFit (graphsCorrectedYieldShrunkEta[i], fitInvYieldEta);
-                if (graphsCorrectedYieldSysShrunkEta[i]) graphCorrectedYieldToFitEtaSysUsed[i] = CalculateGraphErrRatioToFit(graphsCorrectedYieldSysShrunkEta[i], fitInvYieldEta);
-
-                if (graphsCorrectedYieldSysShrunkEta[i]) DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldToFitEtaSysUsed[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
-                if (graphsCorrectedYieldShrunkEta[i])DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldToFitEtaUsed[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-
-                if (graphsCorrectedYieldSysShrunkEta[i]) graphCorrectedYieldToFitEtaSysUsed[i]->Draw("p,E2,same");
-
-                DrawGammaLines(0., maxPtGlobalEta , 1., 1.,0.1, kGray+2);
-                DrawGammaLines(0., maxPtGlobalEta , 1.1, 1.1,0.1, kGray, 7);
-                DrawGammaLines(0., maxPtGlobalEta , 0.9, 0.9,0.1, kGray, 7);
-
-                if (graphsCorrectedYieldShrunkEta[i])graphCorrectedYieldToFitEtaUsed[i]->Draw("e1,same");
-            }
-        }
-        legendRatioSpecEta->Draw();
-
-        labelEnergyRatio->Draw();
-        labelEtaRatio->Draw();
-        labelDetProcRatio->Draw();
-
-        canvasRatioSpec->Update();
-        canvasRatioSpec->SaveAs(Form("%s/Eta_%s_RatioSpectraToFitUsed.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
-
-
-        //***************************************************************************************************************
-        //***************************************** Ratio to fit for final spectrum *************************************
-        //***************************************************************************************************************
-
-        histo2DRatioToFitEta->DrawCopy();
-
-        TGraphAsymmErrors* graphCorrectedYieldFinalStatToFitEta;
-        TGraphAsymmErrors* graphCorrectedYieldFinalSysToFitEta;
-        graphCorrectedYieldFinalStatToFitEta    = CalculateGraphErrRatioToFit (graphCorrectedYieldWeightedAverageEtaStat, fitInvYieldEta);
-        graphCorrectedYieldFinalSysToFitEta     = CalculateGraphErrRatioToFit(graphCorrectedYieldWeightedAverageEtaSys, fitInvYieldEta);
-
-        DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldFinalSysToFitEta, 24, 2, kGray+1 , kGray+1, 1, kTRUE);
-        DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldFinalStatToFitEta, 24, 2, kBlack , kBlack, 1, kTRUE);
-
-        graphCorrectedYieldFinalSysToFitEta->Draw("p,E2,same");
-
-        DrawGammaLines(0., maxPtGlobalEta , 1., 1.,0.1, kGray+2);
-        DrawGammaLines(0., maxPtGlobalEta , 1.1, 1.1,0.1, kGray, 7);
-        DrawGammaLines(0., maxPtGlobalEta , 0.9, 0.9,0.1, kGray, 7);
-
-        graphCorrectedYieldFinalStatToFitEta->Draw("p,E,same");
-
-        labelEnergyRatio->Draw();
-        labelEtaRatio->Draw();
-        labelDetProcRatio->Draw();
-
-        canvasRatioSpec->Update();
-        canvasRatioSpec->SaveAs(Form("%s/Eta_%s_RatioSpectraToFitFinal.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
-
-        delete canvasRatioSpec;
-
-        //***************************************************************************************************************
-        //************************************ Eta to Omega ratio for different triggers **********************************
-        //***************************************************************************************************************
-        if (doEtaToOmega){
+        if (doOmegaToPi0){
             cout << "**************************************************************************************************" << endl;
             cout << "************************ Combining different triggers for eta to Omega *****************************" << endl;
             cout << "**************************************************************************************************" << endl;
 
             // prepare systematics arrays
-            Double_t xValueFinalEtaToOmega                    [100];
-            Double_t xErrorLowFinalEtaToOmega                 [100];
-            Double_t xErrorHighFinalEtaToOmega                [100];
-            Double_t yValueFinalEtaToOmega                    [100];
-            Double_t yErrorLowFinalEtaToOmega                 [100];
-            Double_t yErrorHighFinalEtaToOmega                [100];
-            Int_t nPointFinalEtaToOmega                                         = 0;
+            Double_t xValueFinalOmegaToPi0                   [100];
+            Double_t xErrorLowFinalOmegaToPi0                [100];
+            Double_t xErrorHighFinalOmegaToPi0               [100];
+            Double_t yValueFinalOmegaToPi0                   [100];
+            Double_t yErrorLowFinalOmegaToPi0                [100];
+            Double_t yErrorHighFinalOmegaToPi0               [100];
+            Int_t nPointFinalOmegaToPi0                                        = 0;
 
-            Double_t yErrorSysLowFinalEtaToOmega              [100];
-            Double_t yErrorSysHighFinalEtaToOmega             [100];
+            Double_t yErrorSysLowFinalOmegaToPi0             [100];
+            Double_t yErrorSysHighFinalOmegaToPi0            [100];
 
-            Double_t ptSysRelEtaToOmega                       [MaxNumberOfFiles][100];
-            Int_t ptSysRelEtaToOmegaNBins                     = 0;
-            Double_t yErrorSysLowRelEtaToOmega                [MaxNumberOfFiles][100];
-            Double_t yErrorSysHighRelEtaToOmega               [MaxNumberOfFiles][100];
-            Bool_t   sysAvailEtaToOmega                       [MaxNumberOfFiles];
+            Double_t ptSysRelOmegaToPi0                      [MaxNumberOfFiles][100];
+            Int_t ptSysRelOmegaToPi0NBins                     = 0;
+            Double_t yErrorSysLowRelOmegaToPi0               [MaxNumberOfFiles][100];
+            Double_t yErrorSysHighRelOmegaToPi0              [MaxNumberOfFiles][100];
+            Bool_t   sysAvailOmegaToPi0                      [MaxNumberOfFiles];
 
-            Int_t numberBinsSysAvailSingleEtaToOmega          [MaxNumberOfFiles];
+            Int_t numberBinsSysAvailSingleOmegaToPi0         [MaxNumberOfFiles];
 
-            TGraphAsymmErrors* graphEtaToOmegaBinShiftWeighted = NULL;
-            TGraphAsymmErrors* graphEtaToOmegaBinShift        [MaxNumberOfFiles];
+            TGraphAsymmErrors* graphOmegaToPi0BinShiftWeighted = NULL;
+            TGraphAsymmErrors* graphOmegaToPi0BinShift        [MaxNumberOfFiles];
 
 
             // create graphs for shrunk individual triggers
-            TGraphAsymmErrors* graphsEtaToOmegaShrunk         [MaxNumberOfFiles];
-            TGraphAsymmErrors* graphsEtaToOmegaSysShrunk      [MaxNumberOfFiles];
-            TH1D* histoEtaToOmegaMasked                       [MaxNumberOfFiles];
+            TGraphAsymmErrors* graphsOmegaToPi0Shrunk         [MaxNumberOfFiles];
+            TGraphAsymmErrors* graphsOmegaToPi0SysShrunk      [MaxNumberOfFiles];
+            TH1D* histoOmegaToPi0Masked                       [MaxNumberOfFiles];
 
             // create variables for combination functions
-            TH1D*               histoStatEtaToOmega    [12];
-            TGraphAsymmErrors*  graphSystEtaToOmega    [12];
-            TH1D*               histoRelStatEtaToOmega [12];
-            TGraphAsymmErrors*  graphRelSystEtaToOmega [12];
-            Int_t offSetsEtaToOmega[12]           = { 0, 0, 0, 0, 0, 0,
+            TH1D*               histoStatOmegaToPi0   [12];
+            TGraphAsymmErrors*  graphSystOmegaToPi0   [12];
+            TH1D*               histoRelStatOmegaToPi0[12];
+            TGraphAsymmErrors*  graphRelSystOmegaToPi0[12];
+            Int_t offSetsOmegaToPi0[12]           = { 0, 0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0, 0 };
-            Int_t offSetsEtaToOmegaSys[12]        = { 0, 0, 0, 0, 0, 0,
+            Int_t offSetsOmegaToPi0Sys[12]        = { 0, 0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0, 0 };
 
             if(optionEnergy.CompareTo("8TeV")==0){
               if(mode == 2){
-                offSetsEtaToOmega[1] = 0; //INT7
-                offSetsEtaToOmega[3] = 0; //EMC7
-                offSetsEtaToOmega[4] = 3; //EGA
+                offSetsOmegaToPi0[1] = 0; //INT7
+                offSetsOmegaToPi0[3] = 0; //EMC7
+                offSetsOmegaToPi0[4] = 3; //EGA
               }else if(mode == 4){
-                offSetsEtaToOmega[1] = 0; //INT7
-                offSetsEtaToOmega[3] = 0; //EMC7
-                offSetsEtaToOmega[4] = 3; //EGA
+                offSetsOmegaToPi0[1] = 0; //INT7
+                offSetsOmegaToPi0[3] = 0; //EMC7
+                offSetsOmegaToPi0[4] = 3; //EGA
               }
             }
 
 
-            Bool_t hasSysEtaToOmega            = kFALSE;
+            Bool_t hasSysOmegaToPi0           = kFALSE;
             for (Int_t j = 0; j<12; j++){
-                histoStatEtaToOmega[j]        = NULL;
-                graphSystEtaToOmega[j]        = NULL;
-                histoRelStatEtaToOmega[j]     = NULL;
-                graphRelSystEtaToOmega[j]     = NULL;
-                graphEtaToOmegaBinShift[j]    = NULL;
+                histoStatOmegaToPi0[j]        = NULL;
+                graphSystOmegaToPi0[j]        = NULL;
+                histoRelStatOmegaToPi0[j]     = NULL;
+                graphRelSystOmegaToPi0[j]     = NULL;
+                graphOmegaToPi0BinShift[j]    = NULL;
             }
 
             for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
                 // read systematics file
                 cout << triggerName[i].Data() << endl;
-                if (sysFileEtaToOmega[i].CompareTo("bla") != 0){
-                    sysAvailEtaToOmega[i]              = kTRUE;
-                    ifstream  fileSysErrEtaToOmega;
-                    fileSysErrEtaToOmega.open(sysFileEtaToOmega[i].Data(),ios_base::in);
-                    cout << sysFileEtaToOmega[i].Data() << endl;
+                if (sysFileOmegaToPi0[i].CompareTo("bla") != 0){
+                    sysAvailOmegaToPi0[i]              = kTRUE;
+                    ifstream  fileSysErrOmegaToPi0;
+                    fileSysErrOmegaToPi0.open(sysFileOmegaToPi0[i].Data(),ios_base::in);
+                    cout << sysFileOmegaToPi0[i].Data() << endl;
                     Int_t counter = 0;
-                    while(!fileSysErrEtaToOmega.eof() && counter < 100){
+                    while(!fileSysErrOmegaToPi0.eof() && counter < 100){
                         Double_t garbage = 0;
-                        fileSysErrEtaToOmega >>ptSysRelEtaToOmega[i][counter] >> yErrorSysLowRelEtaToOmega[i][counter] >> yErrorSysHighRelEtaToOmega[i][counter]>>    garbage >> garbage;
-                        cout << counter << "\t"<< ptSysRelEtaToOmega[i][counter]<< "\t"  << yErrorSysLowRelEtaToOmega[i][counter] << "\t"  <<yErrorSysHighRelEtaToOmega[i][counter] << "\t"  << endl;;
+                        fileSysErrOmegaToPi0>>ptSysRelOmegaToPi0[i][counter] >> yErrorSysLowRelOmegaToPi0[i][counter] >> yErrorSysHighRelOmegaToPi0[i][counter]>>    garbage >> garbage;
+                        cout << counter << "\t"<< ptSysRelOmegaToPi0[i][counter]<< "\t"  << yErrorSysLowRelOmegaToPi0[i][counter] << "\t"  <<yErrorSysHighRelOmegaToPi0[i][counter] << "\t"  << endl;;
                         counter++;
                     }
-                    ptSysRelEtaToOmegaNBins = counter;
-                    fileSysErrEtaToOmega.close();
-                    hasSysEtaToOmega              = kTRUE;
+                    ptSysRelOmegaToPi0NBins = counter;
+                    fileSysErrOmegaToPi0.close();
+                    hasSysOmegaToPi0             = kTRUE;
                  // read in detailed systematics
-                    string sysFileEtaToOmegaDet = sysFileEtaToOmega[i].Data();
-                    if(!replace(sysFileEtaToOmegaDet, "Averaged", "AveragedSingle")){
-                      cout << "WARNING: could not find detailed systematics file " << sysFileEtaToOmegaDet << ", skipping... " << endl;
-                      sysAvailSingleEtaToOmega[i] = kFALSE;
+                    string sysFileOmegaToPi0Det = sysFileOmegaToPi0[i].Data();
+                    if(!replace(sysFileOmegaToPi0Det, "Averaged", "AveragedSingle")){
+                      cout << "WARNING: could not find detailed systematics file " << sysFileOmegaToPi0Det << ", skipping... " << endl;
+                      sysAvailSingleOmegaToPi0[i] = kFALSE;
                     }else{
-                      ifstream fileSysErrDetailedEtaToOmega;
-                      fileSysErrDetailedEtaToOmega.open(sysFileEtaToOmegaDet,ios_base::in);
-                      if(fileSysErrDetailedEtaToOmega.is_open())
-                          sysAvailSingleEtaToOmega[i] = kTRUE;
+                      ifstream fileSysErrDetailedOmegaToPi0;
+                      fileSysErrDetailedOmegaToPi0.open(sysFileOmegaToPi0Det,ios_base::in);
+                      if(fileSysErrDetailedOmegaToPi0.is_open())
+                          sysAvailSingleOmegaToPi0[i] = kTRUE;
                       else{
-                          sysAvailSingleEtaToOmega[i] = kFALSE;
-                          cout << "couldn't find single errors for eta/Omega, jumping" << endl;
+                          sysAvailSingleOmegaToPi0[i] = kFALSE;
+                          cout << "couldn't find single errors for omega/pi0, jumping" << endl;
                       }
 
-                      if (sysAvailSingleEtaToOmega[i]){
-                          cout << sysFileEtaToOmegaDet << endl;
+                      if (sysAvailSingleOmegaToPi0[i]){
+                          cout << sysFileOmegaToPi0Det << endl;
                           counter = 0;
                           string line;
                           Int_t counterColumn = 0;
-                          while (getline(fileSysErrDetailedEtaToOmega, line) && counter < 100) {
+                          while (getline(fileSysErrDetailedOmegaToPi0, line) && counter < 100) {
                               istringstream ss(line);
                               TString temp="";
                               counterColumn = 0;
@@ -6063,116 +4240,116 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                                   counterColumn++;
                               }else counter++;
                           }
-                          numberBinsSysAvailSingleEtaToOmega[i] = counter;
-                          fileSysErrDetailedEtaToOmega.close();
+                          numberBinsSysAvailSingleOmegaToPi0[i] = counter;
+                          fileSysErrDetailedOmegaToPi0.close();
                       }
                     }
                 } else {
-                    sysAvailEtaToOmega[i]         = kFALSE;
-                    sysAvailSingleEtaToOmega[i]   = kTRUE;
+                    sysAvailOmegaToPi0[i]         = kFALSE;
+                    sysAvailSingleOmegaToPi0[i]   = kTRUE;
                 }
 
                 // fill graphs to be shrunk later
                 cout << "step 1" << endl;
-                graphsEtaToOmegaShrunk[i]         = new TGraphAsymmErrors(histoEtaToOmega[i]);
-                graphsEtaToOmegaRemoved0[i]       = new TGraphAsymmErrors(histoEtaToOmega[i]);
-                graphsEtaToOmegaSysShrunk[i]      = new TGraphAsymmErrors(histoEtaToOmega[i]);
-                graphsEtaToOmegaSysRemoved0[i]    = new TGraphAsymmErrors(histoEtaToOmega[i]);
-                histoEtaToOmegaMasked[i]          = (TH1D*)histoEtaToOmega[i]->Clone(Form("EtaToOmega%s_Masked_%s",addNameBinshift.Data(), triggerName[i].Data()));
+                graphsOmegaToPi0Shrunk[i]         = new TGraphAsymmErrors(histoOmegaToPi0[i]);
+                graphsOmegaToPi0Removed0[i]       = new TGraphAsymmErrors(histoOmegaToPi0[i]);
+                graphsOmegaToPi0SysShrunk[i]      = new TGraphAsymmErrors(histoOmegaToPi0[i]);
+                graphsOmegaToPi0SysRemoved0[i]    = new TGraphAsymmErrors(histoOmegaToPi0[i]);
+                histoOmegaToPi0Masked[i]          = (TH1D*)histoOmegaToPi0[i]->Clone(Form("OmegaToPi0%s_Masked_%s",addNameBinshift.Data(), triggerName[i].Data()));
 
-                if(optionEnergy.CompareTo("8TeV")==0 && mode==4 && triggerName[i].Contains("EGA")) ptFromSpecEta[i][0] = 16.0;
-                cout << ptFromSpecEta[i][0] << endl;
-                // remove 0 bins at beginning according to ptFromSpecEta[i][0]
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4 && triggerName[i].Contains("EGA")) ptFromSpecPi0[i][0] = 16.0;
+                cout << ptFromSpecPi0[i][0] << endl;
+                // remove 0 bins at beginning according to ptFromSpecPi0[i][0]
                 Int_t binsToMask = 1;
-                while (histoEtaToOmegaMasked[i]->GetBinCenter(binsToMask) < ptFromSpecEta[i][0] ){
-                    histoEtaToOmegaMasked[i]->SetBinContent(binsToMask,0.);
-                    histoEtaToOmegaMasked[i]->SetBinError(binsToMask,0.);
+                while (histoOmegaToPi0Masked[i]->GetBinCenter(binsToMask) < ptFromSpecPi0[i][0] ){
+                    histoOmegaToPi0Masked[i]->SetBinContent(binsToMask,0.);
+                    histoOmegaToPi0Masked[i]->SetBinError(binsToMask,0.);
                     binsToMask++;
                 }
                 // check if trigger needs to be masked completely
                 if ( maskedFullyEta[i] || maskedFullyOmega[i] ){
-                    graphsEtaToOmegaShrunk[i]         = NULL;
-                    graphsEtaToOmegaRemoved0[i]       = NULL;
-                    graphsEtaToOmegaSysShrunk[i]      = NULL;
-                    graphsEtaToOmegaSysRemoved0[i]    = NULL;
-                    for (Int_t f = 1; f < histoEtaToOmegaMasked[i]->GetNbinsX()+1; f++ ){
-                        histoEtaToOmegaMasked[i]->SetBinContent(f,0.);
-                        histoEtaToOmegaMasked[i]->SetBinError(f,0.);
+                    graphsOmegaToPi0Shrunk[i]         = NULL;
+                    graphsOmegaToPi0Removed0[i]       = NULL;
+                    graphsOmegaToPi0SysShrunk[i]      = NULL;
+                    graphsOmegaToPi0SysRemoved0[i]    = NULL;
+                    for (Int_t f = 1; f < histoOmegaToPi0Masked[i]->GetNbinsX()+1; f++ ){
+                        histoOmegaToPi0Masked[i]->SetBinContent(f,0.);
+                        histoOmegaToPi0Masked[i]->SetBinError(f,0.);
                     }
-                    nrOfTrigToBeCombEtaToOmegaRed--;
-                    cout << "trigger " << triggerName[i] << " was masked for Eta/Omega" << endl;
+                    nrOfTrigToBeCombOmegaToPi0Red--;
+                    cout << "trigger " << triggerName[i] << " was masked for omega/pi0" << endl;
                     continue;
                 // remove bins at the end according to set range
-                } else if (ptFromSpecEta[i][1] > -1){
-                    for (Int_t f = histoEtaToOmegaMasked[i]->GetXaxis()->FindBin(ptFromSpecEta[i][1]); f < histoEtaToOmegaMasked[i]->GetNbinsX()+1; f++ ){
-                        histoEtaToOmegaMasked[i]->SetBinContent(f,0.);
-                        histoEtaToOmegaMasked[i]->SetBinError(f,0.);
+                } else if (ptFromSpecPi0[i][1] > -1){
+                    for (Int_t f = histoOmegaToPi0Masked[i]->GetXaxis()->FindBin(ptFromSpecPi0[i][1]); f < histoOmegaToPi0Masked[i]->GetNbinsX()+1; f++ ){
+                        histoOmegaToPi0Masked[i]->SetBinContent(f,0.);
+                        histoOmegaToPi0Masked[i]->SetBinError(f,0.);
                     }
                 }
 
                 // remove 0 bins at beginning
-//                 graphsEtaToOmegaShrunk[i]->Print();
+//                 graphsOmegaToPi0Shrunk[i]->Print();
                 cout << "step 2" << endl;
-                while (graphsEtaToOmegaShrunk[i]->GetY()[0] == 0) graphsEtaToOmegaShrunk[i]->RemovePoint(0);
-//                 graphsEtaToOmegaShrunk[i]->Print();
-                while (graphsEtaToOmegaRemoved0[i]->GetY()[0] == 0) graphsEtaToOmegaRemoved0[i]->RemovePoint(0);
-//                 graphsEtaToOmegaRemoved0[i]->Print();
+                while (graphsOmegaToPi0Shrunk[i]->GetY()[0] == 0) graphsOmegaToPi0Shrunk[i]->RemovePoint(0);
+//                 graphsOmegaToPi0Shrunk[i]->Print();
+                while (graphsOmegaToPi0Removed0[i]->GetY()[0] == 0) graphsOmegaToPi0Removed0[i]->RemovePoint(0);
+//                 graphsOmegaToPi0Removed0[i]->Print();
                 cout << "sys shrunk" << endl;
-                while (graphsEtaToOmegaSysShrunk[i]->GetY()[0] == 0) graphsEtaToOmegaSysShrunk[i]->RemovePoint(0);
-//                 graphsEtaToOmegaSysShrunk[i]->Print();
+                while (graphsOmegaToPi0SysShrunk[i]->GetY()[0] == 0) graphsOmegaToPi0SysShrunk[i]->RemovePoint(0);
+//                 graphsOmegaToPi0SysShrunk[i]->Print();
                 cout << "sys shrunk 2" << endl;
-                while (graphsEtaToOmegaSysRemoved0[i]->GetY()[0] == 0) graphsEtaToOmegaSysRemoved0[i]->RemovePoint(0);
-//                 graphsEtaToOmegaSysRemoved0[i]->Print();
+                while (graphsOmegaToPi0SysRemoved0[i]->GetY()[0] == 0) graphsOmegaToPi0SysRemoved0[i]->RemovePoint(0);
+//                 graphsOmegaToPi0SysRemoved0[i]->Print();
 
-                if (graphsEtaToOmegaSysRemoved0[i]){
-                    if (sysAvailSingleEtaToOmega[i]){
-                        nRelSysErrEtaToOmegaSources                    = (Int_t)ptSysDetail[i][0].size()-1;
-                        for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++ ){
-                            graphRelSysErrEtaToOmegaSource[k][i]       = (TGraphAsymmErrors*) graphsEtaToOmegaSysRemoved0[i]->Clone(Form("RelSysErrEtaToOmegaSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
-                            cout << Form("RelSysErrEtaToOmegaSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
+                if (graphsOmegaToPi0SysRemoved0[i]){
+                    if (sysAvailSingleOmegaToPi0[i]){
+                        nRelSysErrOmegaToPi0Sources                    = (Int_t)ptSysDetail[i][0].size()-1;
+                        for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++ ){
+                            graphRelSysErrOmegaToPi0Source[k][i]       = (TGraphAsymmErrors*) graphsOmegaToPi0SysRemoved0[i]->Clone(Form("RelSysErrOmegaToPi0Source%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
+                            cout << Form("RelSysErrOmegaToPi0Source%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
                         }
                     }
                 }
 
                 // put systematics on graph
-                for (Int_t j = 0; j< graphsEtaToOmegaSysRemoved0[i]->GetN(); j++){
-                    if (sysAvailEtaToOmega[i]){
+                for (Int_t j = 0; j< graphsOmegaToPi0SysRemoved0[i]->GetN(); j++){
+                    if (sysAvailOmegaToPi0[i]){
                         Int_t counter2 = 0;
-                        while(counter2 < 100 && TMath::Abs(graphsEtaToOmegaSysRemoved0[i]->GetX()[j] - ptSysRelEtaToOmega[i][counter2])> 0.001) counter2++;
-                        cout << "counter: " << counter2 << ", NBins read: " << ptSysRelEtaToOmegaNBins << endl;
-                        if (counter2 < 100 && counter2 < ptSysRelEtaToOmegaNBins){
-                            cout << "counter: " << counter2 << ", " << ptSysRelEtaToOmega[i][counter2]<< "\t found it" << endl;
-                            Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelEtaToOmega[i][counter2]/100*graphsEtaToOmegaSysRemoved0[i]->GetY()[j]);
-                            Double_t yErrorSysHighDummy = yErrorSysHighRelEtaToOmega[i][counter2]/100*graphsEtaToOmegaSysRemoved0[i]->GetY()[j];
-                            graphsEtaToOmegaSysRemoved0[i]->SetPointEYlow(j,yErrorSysLowDummy);
-                            graphsEtaToOmegaSysRemoved0[i]->SetPointEYhigh(j,yErrorSysHighDummy);
-                            if (sysAvailSingleEtaToOmega[i]){
-                                for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++ ){
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPoint(j, graphsEtaToOmegaSysRemoved0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter2+1].at(k+1)).Atof());
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYhigh(j,0);
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYlow(j,0);
+                        while(counter2 < 100 && TMath::Abs(graphsOmegaToPi0SysRemoved0[i]->GetX()[j] - ptSysRelOmegaToPi0[i][counter2])> 0.001) counter2++;
+                        cout << "counter: " << counter2 << ", NBins read: " << ptSysRelOmegaToPi0NBins << endl;
+                        if (counter2 < 100 && counter2 < ptSysRelOmegaToPi0NBins){
+                            cout << "counter: " << counter2 << ", " << ptSysRelOmegaToPi0[i][counter2]<< "\t found it" << endl;
+                            Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelOmegaToPi0[i][counter2]/100*graphsOmegaToPi0SysRemoved0[i]->GetY()[j]);
+                            Double_t yErrorSysHighDummy = yErrorSysHighRelOmegaToPi0[i][counter2]/100*graphsOmegaToPi0SysRemoved0[i]->GetY()[j];
+                            graphsOmegaToPi0SysRemoved0[i]->SetPointEYlow(j,yErrorSysLowDummy);
+                            graphsOmegaToPi0SysRemoved0[i]->SetPointEYhigh(j,yErrorSysHighDummy);
+                            if (sysAvailSingleOmegaToPi0[i]){
+                                for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++ ){
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPoint(j, graphsOmegaToPi0SysRemoved0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter2+1].at(k+1)).Atof());
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYlow(j,0);
                                 }
                             }
                         } else {
-                            graphsEtaToOmegaSysRemoved0[i]->SetPointEYlow(j,0);
-                            graphsEtaToOmegaSysRemoved0[i]->SetPointEYhigh(j,0);
-                            if (sysAvailSingleEtaToOmega[i]){
-                                for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++ ){
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPoint(j, graphsEtaToOmegaSysRemoved0[i]->GetX()[j] ,0);
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYhigh(j,0);
-                                    graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYlow(j,0);
+                            graphsOmegaToPi0SysRemoved0[i]->SetPointEYlow(j,0);
+                            graphsOmegaToPi0SysRemoved0[i]->SetPointEYhigh(j,0);
+                            if (sysAvailSingleOmegaToPi0[i]){
+                                for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++ ){
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPoint(j, graphsOmegaToPi0SysRemoved0[i]->GetX()[j] ,0);
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                    graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYlow(j,0);
                                 }
                             }
                         }
                     } else {
-                        graphsEtaToOmegaSysRemoved0[i]->SetPointEYlow(j,0);
-                        graphsEtaToOmegaSysRemoved0[i]->SetPointEYhigh(j,0);
+                        graphsOmegaToPi0SysRemoved0[i]->SetPointEYlow(j,0);
+                        graphsOmegaToPi0SysRemoved0[i]->SetPointEYhigh(j,0);
                         averagedEta = kFALSE;
-                        if (sysAvailSingleEtaToOmega[i]){
-                            for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++ ){
-                                graphRelSysErrEtaToOmegaSource[k][i]->SetPoint(j, graphsEtaToOmegaSysRemoved0[i]->GetX()[j] ,0);
-                                graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYhigh(j,0);
-                                graphRelSysErrEtaToOmegaSource[k][i]->SetPointEYlow(j,0);
+                        if (sysAvailSingleOmegaToPi0[i]){
+                            for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++ ){
+                                graphRelSysErrOmegaToPi0Source[k][i]->SetPoint(j, graphsOmegaToPi0SysRemoved0[i]->GetX()[j] ,0);
+                                graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                graphRelSysErrOmegaToPi0Source[k][i]->SetPointEYlow(j,0);
                             }
                         }
                     }
@@ -6181,47 +4358,47 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 if(optionEnergy.CompareTo("8TeV")==0 && mode == 4) ptFromSpecOmega[i][0]-= 0.5;
                 // remove unused bins at beginning
                 cout << "step 3" << endl;
-                while (graphsEtaToOmegaShrunk[i]->GetX()[0] < ptFromSpecEta[i][0] || graphsEtaToOmegaShrunk[i]->GetX()[0] < ptFromSpecOmega[i][0])
-                    graphsEtaToOmegaShrunk[i]->RemovePoint(0);
-                while (graphsEtaToOmegaSysShrunk[i]->GetX()[0] < ptFromSpecEta[i][0] || graphsEtaToOmegaSysShrunk[i]->GetX()[0] < ptFromSpecOmega[i][0])
-                    graphsEtaToOmegaSysShrunk[i]->RemovePoint(0);
+                while (graphsOmegaToPi0Shrunk[i]->GetX()[0] < ptFromSpecPi0[i][0] || graphsOmegaToPi0Shrunk[i]->GetX()[0] < ptFromSpecOmega[i][0])
+                    graphsOmegaToPi0Shrunk[i]->RemovePoint(0);
+                while (graphsOmegaToPi0SysShrunk[i]->GetX()[0] < ptFromSpecPi0[i][0] || graphsOmegaToPi0SysShrunk[i]->GetX()[0] < ptFromSpecOmega[i][0])
+                    graphsOmegaToPi0SysShrunk[i]->RemovePoint(0);
                 // remove unused bins at end
-                while ( graphsEtaToOmegaShrunk[i]->GetX()[graphsEtaToOmegaShrunk[i]->GetN()-1] > ptFromSpecEta[i][1] ||
-                        graphsEtaToOmegaShrunk[i]->GetX()[graphsEtaToOmegaShrunk[i]->GetN()-1] > ptFromSpecOmega[i][1] )
-                    graphsEtaToOmegaShrunk[i]->RemovePoint(graphsEtaToOmegaShrunk[i]->GetN()-1);
-                graphsEtaToOmegaShrunk[i]->Print();
-                while ( graphsEtaToOmegaSysShrunk[i]->GetX()[graphsEtaToOmegaSysShrunk[i]->GetN()-1] > ptFromSpecEta[i][1] ||
-                        graphsEtaToOmegaSysShrunk[i]->GetX()[graphsEtaToOmegaSysShrunk[i]->GetN()-1] > ptFromSpecOmega[i][1] )
-                    graphsEtaToOmegaSysShrunk[i]->RemovePoint(graphsEtaToOmegaSysShrunk[i]->GetN()-1);
+                while ( graphsOmegaToPi0Shrunk[i]->GetX()[graphsOmegaToPi0Shrunk[i]->GetN()-1] > ptFromSpecPi0[i][1] ||
+                        graphsOmegaToPi0Shrunk[i]->GetX()[graphsOmegaToPi0Shrunk[i]->GetN()-1] > ptFromSpecOmega[i][1] )
+                    graphsOmegaToPi0Shrunk[i]->RemovePoint(graphsOmegaToPi0Shrunk[i]->GetN()-1);
+                graphsOmegaToPi0Shrunk[i]->Print();
+                while ( graphsOmegaToPi0SysShrunk[i]->GetX()[graphsOmegaToPi0SysShrunk[i]->GetN()-1] > ptFromSpecPi0[i][1] ||
+                        graphsOmegaToPi0SysShrunk[i]->GetX()[graphsOmegaToPi0SysShrunk[i]->GetN()-1] > ptFromSpecOmega[i][1] )
+                    graphsOmegaToPi0SysShrunk[i]->RemovePoint(graphsOmegaToPi0SysShrunk[i]->GetN()-1);
 
                 // put systematics on graph
-                for (Int_t j = 0; j< graphsEtaToOmegaShrunk[i]->GetN(); j++){
-                    xValueFinalEtaToOmega[nPointFinalEtaToOmega]        = graphsEtaToOmegaShrunk[i]->GetX()[j];
-                    xErrorHighFinalEtaToOmega[nPointFinalEtaToOmega]    = graphsEtaToOmegaShrunk[i]->GetEXhigh()[j];
-                    xErrorLowFinalEtaToOmega[nPointFinalEtaToOmega]     = graphsEtaToOmegaShrunk[i]->GetEXlow()[j];
-                    yValueFinalEtaToOmega[nPointFinalEtaToOmega]        = graphsEtaToOmegaShrunk[i]->GetY()[j];
-                    yErrorHighFinalEtaToOmega[nPointFinalEtaToOmega]    = graphsEtaToOmegaShrunk[i]->GetEYhigh()[j];
-                    yErrorLowFinalEtaToOmega[nPointFinalEtaToOmega]     = graphsEtaToOmegaShrunk[i]->GetEYlow()[j];
-                    if (sysAvailEtaToOmega[i]){
+                for (Int_t j = 0; j< graphsOmegaToPi0Shrunk[i]->GetN(); j++){
+                    xValueFinalOmegaToPi0[nPointFinalOmegaToPi0]        = graphsOmegaToPi0Shrunk[i]->GetX()[j];
+                    xErrorHighFinalOmegaToPi0[nPointFinalOmegaToPi0]    = graphsOmegaToPi0Shrunk[i]->GetEXhigh()[j];
+                    xErrorLowFinalOmegaToPi0[nPointFinalOmegaToPi0]     = graphsOmegaToPi0Shrunk[i]->GetEXlow()[j];
+                    yValueFinalOmegaToPi0[nPointFinalOmegaToPi0]        = graphsOmegaToPi0Shrunk[i]->GetY()[j];
+                    yErrorHighFinalOmegaToPi0[nPointFinalOmegaToPi0]    = graphsOmegaToPi0Shrunk[i]->GetEYhigh()[j];
+                    yErrorLowFinalOmegaToPi0[nPointFinalOmegaToPi0]     = graphsOmegaToPi0Shrunk[i]->GetEYlow()[j];
+                    if (sysAvailOmegaToPi0[i]){
                         Int_t counter = 0;
-                        while(counter < 100 && TMath::Abs(xValueFinalEtaToOmega[nPointFinalEtaToOmega] - ptSysRelEtaToOmega[i][counter])> 0.001) counter++;
+                        while(counter < 100 && TMath::Abs(xValueFinalOmegaToPi0[nPointFinalOmegaToPi0] - ptSysRelOmegaToPi0[i][counter])> 0.001) counter++;
                         if (counter < 100){
-                            cout << ptSysRelEtaToOmega[i][counter]<< "\t found it" << endl;
-                            yErrorSysLowFinalEtaToOmega[nPointFinalEtaToOmega] = TMath::Abs(yErrorSysLowRelEtaToOmega[i][counter]/100*graphsEtaToOmegaShrunk[i]->GetY()[j]);
-                            yErrorSysHighFinalEtaToOmega[nPointFinalEtaToOmega] = yErrorSysHighRelEtaToOmega[i][counter]/100*graphsEtaToOmegaShrunk[i]->GetY()[j];
+                            cout << ptSysRelOmegaToPi0[i][counter]<< "\t found it" << endl;
+                            yErrorSysLowFinalOmegaToPi0[nPointFinalOmegaToPi0] = TMath::Abs(yErrorSysLowRelOmegaToPi0[i][counter]/100*graphsOmegaToPi0Shrunk[i]->GetY()[j]);
+                            yErrorSysHighFinalOmegaToPi0[nPointFinalOmegaToPi0] = yErrorSysHighRelOmegaToPi0[i][counter]/100*graphsOmegaToPi0Shrunk[i]->GetY()[j];
 
                         } else {
-                            yErrorSysLowFinalEtaToOmega[nPointFinalEtaToOmega]  = 0;
-                            yErrorSysHighFinalEtaToOmega[nPointFinalEtaToOmega] = 0;
+                            yErrorSysLowFinalOmegaToPi0[nPointFinalOmegaToPi0]  = 0;
+                            yErrorSysHighFinalOmegaToPi0[nPointFinalOmegaToPi0] = 0;
 
                         }
                     } else {
-                        yErrorSysLowFinalEtaToOmega[nPointFinalEtaToOmega]  = 0;
-                        yErrorSysHighFinalEtaToOmega[nPointFinalEtaToOmega] = 0;
+                        yErrorSysLowFinalOmegaToPi0[nPointFinalOmegaToPi0]  = 0;
+                        yErrorSysHighFinalOmegaToPi0[nPointFinalOmegaToPi0] = 0;
                     }
-                    graphsEtaToOmegaSysShrunk[i]->SetPointEYlow(j,yErrorSysLowFinalEtaToOmega[nPointFinalEtaToOmega]);
-                    graphsEtaToOmegaSysShrunk[i]->SetPointEYhigh(j,yErrorSysHighFinalEtaToOmega[nPointFinalEtaToOmega]);
-                    nPointFinalEtaToOmega++;
+                    graphsOmegaToPi0SysShrunk[i]->SetPointEYlow(j,yErrorSysLowFinalOmegaToPi0[nPointFinalOmegaToPi0]);
+                    graphsOmegaToPi0SysShrunk[i]->SetPointEYhigh(j,yErrorSysHighFinalOmegaToPi0[nPointFinalOmegaToPi0]);
+                    nPointFinalOmegaToPi0++;
                 }
 
                 // Set correct trigger order for combination function
@@ -6232,51 +4409,51 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 }
 
                 // fill inputs for combinations function in correct order
-                if ( graphsEtaToOmegaShrunk[i]){
-                    histoStatEtaToOmega[nCorrOrder]     = histoEtaToOmegaMasked[i];
-                    graphSystEtaToOmega[nCorrOrder]     = graphsEtaToOmegaSysShrunk[i];
-                    offSetsEtaToOmegaSys[nCorrOrder]    = histoStatEtaToOmega[nCorrOrder]->GetXaxis()->FindBin(graphSystEtaToOmega[nCorrOrder]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToOmegaBinShift[nCorrOrder]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                    if (sysAvailSingleEtaToOmega[i]){
-                        for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++ ){
-                            if (graphRelSysErrEtaToOmegaSource[k][i])
-                                graphOrderedRelSysErrEtaToOmegaSource[k][nCorrOrder]    = graphRelSysErrEtaToOmegaSource[k][i];
+                if ( graphsOmegaToPi0Shrunk[i]){
+                    histoStatOmegaToPi0[nCorrOrder]     = histoOmegaToPi0Masked[i];
+                    graphSystOmegaToPi0[nCorrOrder]     = graphsOmegaToPi0SysShrunk[i];
+                    offSetsOmegaToPi0Sys[nCorrOrder]    = histoStatOmegaToPi0[nCorrOrder]->GetXaxis()->FindBin(graphSystOmegaToPi0[nCorrOrder]->GetX()[0])-1;
+                    if (histoCorrectedYieldOmegaBinShift[i])
+                        graphOmegaToPi0BinShift[nCorrOrder]   = new TGraphAsymmErrors(histoCorrectedYieldOmegaBinShift[i]);
+                    if (sysAvailSingleOmegaToPi0[i]){
+                        for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++ ){
+                            if (graphRelSysErrOmegaToPi0Source[k][i])
+                                graphOrderedRelSysErrOmegaToPi0Source[k][nCorrOrder]    = graphRelSysErrOmegaToPi0Source[k][i];
                         }
                     }
                 }
                 if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
-                  offSetsEtaToOmegaSys[4]+=3; //EGA
+                  offSetsOmegaToPi0Sys[4]+=3; //EGA
             }
 
-            TString nameWeightsLogFileEtaToOmega                  = Form("%s/weightsEtaToOmega_%s.dat",outputDir.Data(),isMC.Data());
-            TGraphAsymmErrors* graphEtaToOmegaWeightedAverageTot  = NULL;
-            // Calculate averaged eta/Omega graphs according to statistical and systematic errors taking correctly into account the cross correlations
+            TString nameWeightsLogFileOmegaToPi0                 = Form("%s/weightsOmegaToPi0_%s.dat",outputDir.Data(),isMC.Data());
+            TGraphAsymmErrors* graphOmegaToPi0WeightedAverageTot  = NULL;
+            // Calculate averaged omega/pi0 graphs according to statistical and systematic errors taking correctly into account the cross correlations
             if (averagedEta){
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
                   maxNAllowedEta -= 3;
-                  maxPtGlobalEta = 20;
+                  maxPtGlobalOmega = 20;
                 }
                 //if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta -= 2;
-                // calculate averaged eta/Omega graphs
-                graphEtaToOmegaWeightedAverageTot         = CombinePtPointsSpectraTriggerCorrMat( histoStatEtaToOmega, graphSystEtaToOmega,
+                // calculate averaged omega/pi0 graphs
+                graphOmegaToPi0WeightedAverageTot         = CombinePtPointsSpectraTriggerCorrMat( histoStatOmegaToPi0, graphSystOmegaToPi0,
                                                                                                 binningEta,  maxNAllowedEta,
-                                                                                                offSetsEtaToOmega ,offSetsEtaToOmegaSys,
-                                                                                                graphEtaToOmegaWeightedAverageStat, graphEtaToOmegaWeightedAverageSys,
-                                                                                                nameWeightsLogFileEtaToOmega.Data(),
-                                                                                                mode, optionEnergy, "EtaToOmega", kFALSE,
+                                                                                                offSetsOmegaToPi0 ,offSetsOmegaToPi0Sys,
+                                                                                                graphOmegaToPi0WeightedAverageStat, graphOmegaToPi0WeightedAverageSys,
+                                                                                                nameWeightsLogFileOmegaToPi0.Data(),
+                                                                                                mode, optionEnergy, "OmegaToPi0", kFALSE,
                                                                                                 fileInputCorrFactors
                                                                                               );
                 // Reading weights from output file for plotting
-                ifstream fileWeightsEtaToOmega;
-                fileWeightsEtaToOmega.open(nameWeightsLogFileEtaToOmega,ios_base::in);
-                cout << "reading" << nameWeightsLogFileEtaToOmega << endl;
-                Double_t xValuesReadEtaToOmega[100];
-                Double_t weightsReadEtaToOmega[12][100];
-                Int_t availableMeasEtaToOmega[12]     = { -1, -1, -1, -1, -1, -1,
+                ifstream fileWeightsOmegaToPi0;
+                fileWeightsOmegaToPi0.open(nameWeightsLogFileOmegaToPi0,ios_base::in);
+                cout << "reading" << nameWeightsLogFileOmegaToPi0 << endl;
+                Double_t xValuesReadOmegaToPi0[100];
+                Double_t weightsReadOmegaToPi0[12][100];
+                Int_t availableMeasOmegaToPi0[12]     = { -1, -1, -1, -1, -1, -1,
                                                         -1, -1, -1, -1, -1, -1};
-                Int_t nMeasSetEtaToOmega              = numberOfTrigg;
-                Int_t nPtBinsReadEtaToOmega           = 0;
+                Int_t nMeasSetOmegaToPi0              = numberOfTrigg;
+                Int_t nPtBinsReadOmegaToPi0           = 0;
 
                 TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                                     "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
@@ -6307,59 +4484,59 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                                                 GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
                                                 };
 
-                while(!fileWeightsEtaToOmega.eof() && nPtBinsReadEtaToOmega < 100){
+                while(!fileWeightsOmegaToPi0.eof() && nPtBinsReadOmegaToPi0 < 100){
                     TString garbage = "";
-                    if (nPtBinsReadEtaToOmega == 0){
-                        fileWeightsEtaToOmega >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];
-                        for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                            fileWeightsEtaToOmega >> availableMeasEtaToOmega[i] ;
+                    if (nPtBinsReadOmegaToPi0 == 0){
+                        fileWeightsOmegaToPi0 >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];
+                        for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                            fileWeightsOmegaToPi0 >> availableMeasOmegaToPi0[i] ;
                         }
                         cout << "read following measurements: ";
-                        for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                            cout << availableMeasEtaToOmega[i] << "\t" ;
+                        for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                            cout << availableMeasOmegaToPi0[i] << "\t" ;
                         }
                         cout << endl;
                     } else {
-                        fileWeightsEtaToOmega >> xValuesReadEtaToOmega[nPtBinsReadEtaToOmega-1];
-                        for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                            fileWeightsEtaToOmega >> weightsReadEtaToOmega[availableMeasEtaToOmega[i]][nPtBinsReadEtaToOmega-1] ;
+                        fileWeightsOmegaToPi0 >> xValuesReadOmegaToPi0[nPtBinsReadOmegaToPi0-1];
+                        for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                            fileWeightsOmegaToPi0 >> weightsReadOmegaToPi0[availableMeasOmegaToPi0[i]][nPtBinsReadOmegaToPi0-1] ;
                         }
-                        cout << "read: "<<  nPtBinsReadEtaToOmega << "\t"<< xValuesReadEtaToOmega[nPtBinsReadEtaToOmega-1] << "\t" ;
-                        for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                            cout << weightsReadEtaToOmega[availableMeasEtaToOmega[i]][nPtBinsReadEtaToOmega-1] << "\t";
+                        cout << "read: "<<  nPtBinsReadOmegaToPi0 << "\t"<< xValuesReadOmegaToPi0[nPtBinsReadOmegaToPi0-1] << "\t" ;
+                        for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                            cout << weightsReadOmegaToPi0[availableMeasOmegaToPi0[i]][nPtBinsReadOmegaToPi0-1] << "\t";
                         }
                         cout << endl;
                     }
-                    nPtBinsReadEtaToOmega++;
+                    nPtBinsReadOmegaToPi0++;
                 }
-                nPtBinsReadEtaToOmega = nPtBinsReadEtaToOmega-2 ;
-                fileWeightsEtaToOmega.close();
+                nPtBinsReadOmegaToPi0 = nPtBinsReadOmegaToPi0-2 ;
+                fileWeightsOmegaToPi0.close();
 
-                TGraph* graphWeightsEtaToOmega[nMeasSetEtaToOmega];
-                for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                    graphWeightsEtaToOmega[availableMeasEtaToOmega[i]] = new TGraph(nPtBinsReadEtaToOmega,xValuesReadEtaToOmega,weightsReadEtaToOmega[availableMeasEtaToOmega[i]]);
+                TGraph* graphWeightsOmegaToPi0[nMeasSetOmegaToPi0];
+                for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                    graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]] = new TGraph(nPtBinsReadOmegaToPi0,xValuesReadOmegaToPi0,weightsReadOmegaToPi0[availableMeasOmegaToPi0[i]]);
                     Int_t bin = 0;
-                    for (Int_t n = 0; n< nPtBinsReadEtaToOmega; n++){
-                        if (graphWeightsEtaToOmega[availableMeasEtaToOmega[i]]->GetY()[bin] == 0) graphWeightsEtaToOmega[availableMeasEtaToOmega[i]]->RemovePoint(bin);
+                    for (Int_t n = 0; n< nPtBinsReadOmegaToPi0; n++){
+                        if (graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]]->GetY()[bin] == 0) graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]]->RemovePoint(bin);
                         else bin++;
                     }
                 }
 
 
-                if(doBinShiftForEtaToOmega){
+                if(doBinShiftForOmegaToPi0){
                     // Calculate relative sys error weighted
-                    if (sysAvailSingleEtaToOmega[0]){
-                        for (Int_t k = 0; k< nRelSysErrEtaToOmegaSources ; k++ ){
-                            graphRelSysErrEtaToOmegaSourceWeighted[k]      = CalculateWeightedQuantity(   graphOrderedRelSysErrEtaToOmegaSource[k],
-                                                                                                        graphWeightsEtaToOmega,
+                    if (sysAvailSingleOmegaToPi0[0]){
+                        for (Int_t k = 0; k< nRelSysErrOmegaToPi0Sources ; k++ ){
+                            graphRelSysErrOmegaToPi0SourceWeighted[k]      = CalculateWeightedQuantity(   graphOrderedRelSysErrOmegaToPi0Source[k],
+                                                                                                        graphWeightsOmegaToPi0,
                                                                                                         binningEta,  maxNAllowedEta,
                                                                                                         MaxNumberOfFiles
                                                                                             );
-                            if (!graphRelSysErrEtaToOmegaSourceWeighted[k]){
+                            if (!graphRelSysErrOmegaToPi0SourceWeighted[k]){
                                 cout << "Aborted in CalculateWeightedQuantity for " << endl;
                                 return;
                             } else {
-                                graphRelSysErrEtaToOmegaSourceWeighted[k]->SetName(Form("RelSysErrEtaToOmegaSourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
+                                graphRelSysErrOmegaToPi0SourceWeighted[k]->SetName(Form("RelSysErrOmegaToPi0SourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
                             }
                         }
 
@@ -6367,24 +4544,24 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
 
                     cout << __LINE__ << endl;
-                    cout << "combine EtaToOmegaBinShift" << endl;
-                    graphEtaToOmegaBinShiftWeighted                     = CalculateWeightedQuantity(  graphEtaToOmegaBinShift,
-                                                                                                    graphWeightsEtaToOmega,
+                    cout << "combine OmegaToPi0BinShift" << endl;
+                    graphOmegaToPi0BinShiftWeighted                     = CalculateWeightedQuantity(  graphOmegaToPi0BinShift,
+                                                                                                    graphWeightsOmegaToPi0,
                                                                                                     binningEta,  maxNAllowedEta,
                                                                                                     MaxNumberOfFiles
                                                                                                   );
-                  if (!graphEtaToOmegaBinShiftWeighted){
+                  if (!graphOmegaToPi0BinShiftWeighted){
                       cout << "Aborted in CalculateWeightedQuantity" << endl;
                       return;
                   }
-                  while (graphEtaToOmegaBinShiftWeighted->GetY()[0] == -10000) graphEtaToOmegaBinShiftWeighted->RemovePoint(0);
+                  while (graphOmegaToPi0BinShiftWeighted->GetY()[0] == -10000) graphOmegaToPi0BinShiftWeighted->RemovePoint(0);
                 }
 
                 //***************************************************************************************************************
                 //************************************Plotting binshift corrections *********************************************
                 //***************************************************************************************************************
 
-                if(doBinShiftForEtaToOmega){
+                if(doBinShiftForOmegaToPi0){
                   canvasEffi->cd();
                   canvasEffi->SetLeftMargin(0.1);
                   canvasEffi->SetBottomMargin(0.1);
@@ -6395,27 +4572,27 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                   SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
                                           0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
                   histoBinShift->GetXaxis()->SetMoreLogLabels();
-                  histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
-                  if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,20.);
+                  histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalPi0,maxPtGlobalOmega);
+                  if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalPi0,20.);
                   histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
                   histoBinShift->DrawCopy();
 
                   TLegend* legendBinShift3 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
                   legendBinShift3->SetNColumns(2);
 
-                  for (Int_t j = 0; j< graphEtaToOmegaBinShiftWeighted->GetN(); j++){
-                    graphEtaToOmegaBinShiftWeighted->GetEYlow()[j]=0;
-                    graphEtaToOmegaBinShiftWeighted->GetEYhigh()[j]=0;
+                  for (Int_t j = 0; j< graphOmegaToPi0BinShiftWeighted->GetN(); j++){
+                    graphOmegaToPi0BinShiftWeighted->GetEYlow()[j]=0;
+                    graphOmegaToPi0BinShiftWeighted->GetEYhigh()[j]=0;
                   }
-                  DrawGammaSetMarkerTGraphAsym(graphEtaToOmegaBinShiftWeighted, 20, 1, kGray+2, kGray+2);
-                  graphEtaToOmegaBinShiftWeighted->Draw("p same");
+                  DrawGammaSetMarkerTGraphAsym(graphOmegaToPi0BinShiftWeighted, 20, 1, kGray+2, kGray+2);
+                  graphOmegaToPi0BinShiftWeighted->Draw("p same");
         //          if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-        //            TH1D* histoCorrectedYieldEtaBinShiftTEMP = (TH1D*)histoCorrectedYieldOmegaEtaBinBinShift[i]->Clone(Form("OmegaEtaBinning_%i", i));
-        //            for(Int_t iB=1; iB<=histoCorrectedYieldOmegaEtaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldEtaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
-        //            histoCorrectedYieldEtaBinShiftTEMP->Divide(histoCorrectedYieldEtaBinShiftTEMP,histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"B");
+        //            TH1D* histoCorrectedYieldEtaBinShiftTEMP = (TH1D*)histoCorrectedYieldPi0OmegaBinBinShift[i]->Clone(Form("Pi0OmegaBinning_%i", i));
+        //            for(Int_t iB=1; iB<=histoCorrectedYieldPi0OmegaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldEtaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
+        //            histoCorrectedYieldEtaBinShiftTEMP->Divide(histoCorrectedYieldEtaBinShiftTEMP,histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"B");
         //            histoCorrectedYieldEtaBinShift[i] = histoCorrectedYieldEtaBinShiftTEMP;
         //          }else{
-        //            histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldOmegaEtaBinBinShift[i],1.,1.,"B");
+        //            histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldPi0OmegaBinBinShift[i],1.,1.,"B");
         //          }
         //          DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
         //          histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
@@ -6423,14 +4600,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         //          legendBinShift3->Draw();
 
                   labelEnergyEffi->Draw();
-                  TLatex *labelBinShiftEtaToOmega = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#omega");
-                  SetStyleTLatex( labelBinShiftEtaToOmega, 0.85*textSizeSpectra,4);
-                  labelBinShiftEtaToOmega->Draw();
+                  TLatex *labelBinShiftOmegaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#omega/#pi^{0}");
+                  SetStyleTLatex( labelBinShiftOmegaToPi0, 0.85*textSizeSpectra,4);
+                  labelBinShiftOmegaToPi0->Draw();
                   labelDetProcEffi->Draw();
 
                   canvasEffi->RedrawAxis();
                   canvasEffi->Update();
-                  canvasEffi->SaveAs(Form("%s/EtaToOmega_%s_CombinedBinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                  canvasEffi->SaveAs(Form("%s/OmegaToPi0_%s_CombinedBinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
                   canvasEffi->SetLogy(1);
                   canvasEffi->SetLogx(0);
                   canvasEffi->SetLeftMargin(0.09);
@@ -6439,36 +4616,36 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 delete canvasEffi;
 
                 //  **********************************************************************************************************************
-                //  ******************************************* Plotting weights for eta/Omega *********************************************
+                //  ******************************************* Plotting weights for omega/pi0********************************************
                 //  **********************************************************************************************************************
                 Int_t textSizeLabelsPixel = 900*0.04;
 
                 TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);// gives the page size
                 DrawGammaCanvasSettings( canvasWeights, 0.08, 0.02, 0.035, 0.09);
 
-                TH2F * histo2DWeightsEtaToOmega;
-                histo2DWeightsEtaToOmega = new TH2F("histo2DWeightsEtaToOmega","histo2DWeightsEtaToOmega",11000,0.,maxPtGlobalEta,1000,-0.5,1.3);
-                SetStyleHistoTH2ForGraphs(histo2DWeightsEtaToOmega, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
-                histo2DWeightsEtaToOmega->Draw("copy");
+                TH2F * histo2DWeightsOmegaToPi0;
+                histo2DWeightsOmegaToPi0 = new TH2F("histo2DWeightsOmegaToPi0","histo2DWeightsOmegaToPi0",11000,0.,maxPtGlobalOmega,1000,-0.5,1.3);
+                SetStyleHistoTH2ForGraphs(histo2DWeightsOmegaToPi0, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
+                histo2DWeightsOmegaToPi0->Draw("copy");
 
-                    TLegend* legendWeightsEtaToOmega = GetAndSetLegend2(0.12, 0.14, 0.55, 0.14+(0.035*nMeasSetEtaToOmega/2*1.35), 32);
-                    legendWeightsEtaToOmega->SetNColumns(2);
-                    for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                        DrawGammaSetMarkerTGraph(graphWeightsEtaToOmega[availableMeasEtaToOmega[i]], markerTriggWeighted[availableMeasEtaToOmega[i]], sizeTrigg[availableMeasEtaToOmega[i]],
-                                                colorTriggWeighted[availableMeasEtaToOmega[i]], colorTriggWeighted[availableMeasEtaToOmega[i]]);
-                        graphWeightsEtaToOmega[availableMeasEtaToOmega[i]]->Draw("p,same,e1");
-                        legendWeightsEtaToOmega->AddEntry(graphWeightsEtaToOmega[availableMeasEtaToOmega[i]],nameTriggerWeighted[availableMeasEtaToOmega[i]],"p");
+                    TLegend* legendWeightsOmegaToPi0 = GetAndSetLegend2(0.12, 0.14, 0.55, 0.14+(0.035*nMeasSetOmegaToPi0/2*1.35), 32);
+                    legendWeightsOmegaToPi0->SetNColumns(2);
+                    for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                        DrawGammaSetMarkerTGraph(graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]], markerTriggWeighted[availableMeasOmegaToPi0[i]], sizeTrigg[availableMeasOmegaToPi0[i]],
+                                                colorTriggWeighted[availableMeasOmegaToPi0[i]], colorTriggWeighted[availableMeasOmegaToPi0[i]]);
+                        graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]]->Draw("p,same,e1");
+                        legendWeightsOmegaToPi0->AddEntry(graphWeightsOmegaToPi0[availableMeasOmegaToPi0[i]],nameTriggerWeighted[availableMeasOmegaToPi0[i]],"p");
                     }
-                    legendWeightsEtaToOmega->Draw();
+                    legendWeightsOmegaToPi0->Draw();
 
                     TLatex *labelWeightsEnergy = new TLatex(0.7,0.24,collisionSystem.Data());
                     SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
                     labelWeightsEnergy->SetTextFont(43);
                     labelWeightsEnergy->Draw();
-                    TLatex *labelWeightsEtaToOmega = new TLatex(0.7,0.20,"#eta/#omega");
-                    SetStyleTLatex( labelWeightsEtaToOmega, 0.85*textSizeLabelsPixel,4);
-                    labelWeightsEtaToOmega->SetTextFont(43);
-                    labelWeightsEtaToOmega->Draw();
+                    TLatex *labelWeightsOmegaToPi0 = new TLatex(0.7,0.20,"#omega/#pi^{0}");
+                    SetStyleTLatex( labelWeightsOmegaToPi0, 0.85*textSizeLabelsPixel,4);
+                    labelWeightsOmegaToPi0->SetTextFont(43);
+                    labelWeightsOmegaToPi0->Draw();
                     TLatex *labelDetProcWeights    = new TLatex(0.7, 0.16,detectionProcess.Data());
                     SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4);
                     labelDetProcWeights->SetTextFont(43);
@@ -6480,29 +4657,29 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                     DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
                     DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
 
-                canvasWeights->SaveAs(Form("%s/%s_WeightsEtaToOmegaTriggers.%s",outputDir.Data(), isMC.Data(), suffix.Data()));
+                canvasWeights->SaveAs(Form("%s/%s_WeightsOmegaToPi0Triggers.%s",outputDir.Data(), isMC.Data(), suffix.Data()));
                 delete canvasWeights;
 
-                // Calculating relative error for eta/Omega
+                // Calculating relative error for omega/pi0
                 for (Int_t i = 0; i < 12; i++){
-                    if (histoStatEtaToOmega[i])
-                        histoRelStatEtaToOmega[i]      = CalculateRelErrUpTH1D( histoStatEtaToOmega[i], Form("relativeStatErrorEtaToOmega_%s", nameTriggerWeighted[i].Data()));
-                    if (graphSystEtaToOmega[i])
-                        graphRelSystEtaToOmega[i]      = CalculateRelErrUpAsymmGraph( graphSystEtaToOmega[i], Form("relativeSysErrorEtaToOmega_%s", nameTriggerWeighted[i].Data()));
+                    if (histoStatOmegaToPi0[i])
+                        histoRelStatOmegaToPi0[i]      = CalculateRelErrUpTH1D( histoStatOmegaToPi0[i], Form("relativeStatErrorOmegaToPi0_%s", nameTriggerWeighted[i].Data()));
+                    if (graphSystOmegaToPi0[i])
+                        graphRelSystOmegaToPi0[i]      = CalculateRelErrUpAsymmGraph( graphSystOmegaToPi0[i], Form("relativeSysErrorOmegaToPi0_%s", nameTriggerWeighted[i].Data()));
                 }
-                TGraphAsymmErrors* graphRelErrorEtaToOmegaTot        = CalculateRelErrUpAsymmGraph( graphEtaToOmegaWeightedAverageTot, "relativeTotalErrorEtaToOmega");
-                TGraphAsymmErrors* graphRelErrorEtaToOmegaStat       = CalculateRelErrUpAsymmGraph( graphEtaToOmegaWeightedAverageStat, "relativeStatErrorEtaToOmega");
-                TGraphAsymmErrors* graphRelErrorEtaToOmegaSys        = CalculateRelErrUpAsymmGraph( graphEtaToOmegaWeightedAverageSys, "relativeSysErrorEtaToOmega");
+                TGraphAsymmErrors* graphRelErrorOmegaToPi0Tot        = CalculateRelErrUpAsymmGraph( graphOmegaToPi0WeightedAverageTot, "relativeTotalErrorOmegaToPi0");
+                TGraphAsymmErrors* graphRelErrorOmegaToPi0Stat       = CalculateRelErrUpAsymmGraph( graphOmegaToPi0WeightedAverageStat, "relativeStatErrorOmegaToPi0");
+                TGraphAsymmErrors* graphRelErrorOmegaToPi0Sys        = CalculateRelErrUpAsymmGraph( graphOmegaToPi0WeightedAverageSys, "relativeSysErrorOmegaToPi0");
 
-                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_EtaToOmega_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_OmegaToPi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
                 fstream SysErrDatAverSingleCheck;
                 SysErrDatAverSingleCheck.precision(4);
                 cout << SysErrDatnameMeanSingleErrCheck << endl;
-                if(sysAvailSingleEtaToOmega[0]){
+                if(sysAvailSingleOmegaToPi0[0]){
                   SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
                   SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
-                  for (Int_t i = 0; i < graphRelErrorEtaToOmegaTot->GetN(); i++){
-                      if (graphRelErrorEtaToOmegaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaToOmegaStat->GetX()[i] << "\t" << graphRelErrorEtaToOmegaStat->GetY()[i] <<"\t" << graphRelErrorEtaToOmegaSys->GetY()[i] <<  "\t" << graphRelErrorEtaToOmegaTot->GetY()[i] << endl;
+                  for (Int_t i = 0; i < graphRelErrorOmegaToPi0Tot->GetN(); i++){
+                      if (graphRelErrorOmegaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorOmegaToPi0Stat->GetX()[i] << "\t" << graphRelErrorOmegaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorOmegaToPi0Sys->GetY()[i] <<  "\t" << graphRelErrorOmegaToPi0Tot->GetY()[i] << endl;
                   }
                   SysErrDatAverSingleCheck << endl;
                   SysErrDatAverSingleCheck.close();
@@ -6514,16 +4691,16 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
 
                 TH2F * histo2DRelSysErr;
-                histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.,maxPtGlobalEta,1000,0,60.5);
+                histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.,maxPtGlobalOmega,1000,0,60.5);
                 SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
                 histo2DRelSysErr->Draw("copy");
-                    TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEtaToOmega/2), 0.95, 0.92, 32);
+                    TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetOmegaToPi0/2), 0.95, 0.92, 32);
                     legendRelSysErr->SetNColumns(2);
-                    for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                        DrawGammaSetMarkerTGraph(graphRelSystEtaToOmega[availableMeasEtaToOmega[i]], markerTriggWeighted[availableMeasEtaToOmega[i]], sizeTrigg[availableMeasEtaToOmega[i]],
-                                                colorTriggWeighted[availableMeasEtaToOmega[i]], colorTriggWeighted[availableMeasEtaToOmega[i]]);
-                        graphRelSystEtaToOmega[availableMeasEtaToOmega[i]]->Draw("p,same,z");
-                        legendRelSysErr->AddEntry(graphRelSystEtaToOmega[availableMeasEtaToOmega[i]],nameTriggerWeighted[availableMeasEtaToOmega[i]],"p");
+                    for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                        DrawGammaSetMarkerTGraph(graphRelSystOmegaToPi0[availableMeasOmegaToPi0[i]], markerTriggWeighted[availableMeasOmegaToPi0[i]], sizeTrigg[availableMeasOmegaToPi0[i]],
+                                                colorTriggWeighted[availableMeasOmegaToPi0[i]], colorTriggWeighted[availableMeasOmegaToPi0[i]]);
+                        graphRelSystOmegaToPi0[availableMeasOmegaToPi0[i]]->Draw("p,same,z");
+                        legendRelSysErr->AddEntry(graphRelSystOmegaToPi0[availableMeasOmegaToPi0[i]],nameTriggerWeighted[availableMeasOmegaToPi0[i]],"p");
                     }
                     legendRelSysErr->Draw();
 
@@ -6531,94 +4708,94 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                     SetStyleTLatex( labelRelErrEnergy, 0.85*textSizeLabelsPixel,4);
                     labelRelErrEnergy->SetTextFont(43);
                     labelRelErrEnergy->Draw();
-                    TLatex *labelRelErrEtaToOmega       = new TLatex(0.15,0.85,"#eta/#omega");
-                    SetStyleTLatex( labelRelErrEtaToOmega, 0.85*textSizeLabelsPixel,4);
-                    labelRelErrEtaToOmega->SetTextFont(43);
-                    labelRelErrEtaToOmega->Draw();
+                    TLatex *labelRelErrOmegaToPi0       = new TLatex(0.15,0.85,"#omega/#pi^{0}");
+                    SetStyleTLatex( labelRelErrOmegaToPi0, 0.85*textSizeLabelsPixel,4);
+                    labelRelErrOmegaToPi0->SetTextFont(43);
+                    labelRelErrOmegaToPi0->Draw();
                     TLatex *labelDetProcRelErr    = new TLatex(0.15, 0.81,detectionProcess.Data());
                     SetStyleTLatex( labelDetProcRelErr, 0.85*textSizeLabelsPixel,4);
                     labelDetProcRelErr->SetTextFont(43);
                     labelDetProcRelErr->Draw();
 
-                canvasRelSysErr->SaveAs(Form("%s/EtaToOmega_RelSysErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
+                canvasRelSysErr->SaveAs(Form("%s/OmegaToPi0_RelSysErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
 
                 // plot stat relative errors for individual triggers
                 TCanvas* canvasRelStatErr           = new TCanvas("canvasRelStatErr","",200,10,1350,900);  // gives the page size
                 DrawGammaCanvasSettings( canvasRelStatErr, 0.08, 0.02, 0.035, 0.09);
 
                 TH2F * histo2DRelStatErr;
-                histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.,maxPtGlobalEta,1000,0,60.5);
+                histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.,maxPtGlobalOmega,1000,0,60.5);
                 SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
                 histo2DRelStatErr->Draw("copy");
-                    TLegend* legendRelStatErr       = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEtaToOmega/2), 0.95, 0.92, 32);
+                    TLegend* legendRelStatErr       = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetOmegaToPi0/2), 0.95, 0.92, 32);
                     legendRelStatErr->SetNColumns(2);
-                    for (Int_t i = 0; i < nMeasSetEtaToOmega; i++){
-                        if (availableMeasEtaToOmega[i] == 0 && histoRelStatEtaToOmega[availableMeasEtaToOmega[i]] && mode == 2){
-                            TGraphAsymmErrors* dummyGraph = new TGraphAsymmErrors(histoRelStatEtaToOmega[availableMeasEtaToOmega[i]]);
+                    for (Int_t i = 0; i < nMeasSetOmegaToPi0; i++){
+                        if (availableMeasOmegaToPi0[i] == 0 && histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]] && mode == 2){
+                            TGraphAsymmErrors* dummyGraph = new TGraphAsymmErrors(histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]]);
                             dummyGraph->Print();
-                            DrawGammaSetMarkerTGraph(dummyGraph, markerTriggWeighted[availableMeasEtaToOmega[i]], sizeTrigg[availableMeasEtaToOmega[i]],
-                                                colorTriggWeighted[availableMeasEtaToOmega[i]], colorTriggWeighted[availableMeasEtaToOmega[i]]);
+                            DrawGammaSetMarkerTGraph(dummyGraph, markerTriggWeighted[availableMeasOmegaToPi0[i]], sizeTrigg[availableMeasOmegaToPi0[i]],
+                                                colorTriggWeighted[availableMeasOmegaToPi0[i]], colorTriggWeighted[availableMeasOmegaToPi0[i]]);
                             dummyGraph->Draw("pX,same");
-                            legendRelSysErr->AddEntry(dummyGraph,nameTriggerWeighted[availableMeasEtaToOmega[i]],"p");
+                            legendRelSysErr->AddEntry(dummyGraph,nameTriggerWeighted[availableMeasOmegaToPi0[i]],"p");
 
-        //                     for (Int_t j = 1; j < histoRelStatEtaToOmega[availableMeasEtaToOmega[i]]->GetNbinsX()+1; j++){
-        //                        cout << j << ": " << histoRelStatEtaToOmega[availableMeasEtaToOmega[i]]->GetBinContent(j) << endl;
+        //                     for (Int_t j = 1; j < histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]]->GetNbinsX()+1; j++){
+        //                        cout << j << ": " << histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]]->GetBinContent(j) << endl;
         //                     }
                         } else {
-                            DrawGammaSetMarker(histoRelStatEtaToOmega[availableMeasEtaToOmega[i]],markerTriggWeighted[availableMeasEtaToOmega[i]], sizeTrigg[availableMeasEtaToOmega[i]],
-                                                colorTriggWeighted[availableMeasEtaToOmega[i]], colorTriggWeighted[availableMeasEtaToOmega[i]]);
-                            histoRelStatEtaToOmega[availableMeasEtaToOmega[i]]->Draw("p,same,z");
-                            legendRelStatErr->AddEntry(histoRelStatEtaToOmega[availableMeasEtaToOmega[i]],nameTriggerWeighted[availableMeasEtaToOmega[i]],"p");
+                            DrawGammaSetMarker(histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]],markerTriggWeighted[availableMeasOmegaToPi0[i]], sizeTrigg[availableMeasOmegaToPi0[i]],
+                                                colorTriggWeighted[availableMeasOmegaToPi0[i]], colorTriggWeighted[availableMeasOmegaToPi0[i]]);
+                            histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]]->Draw("p,same,z");
+                            legendRelStatErr->AddEntry(histoRelStatOmegaToPi0[availableMeasOmegaToPi0[i]],nameTriggerWeighted[availableMeasOmegaToPi0[i]],"p");
                         }
                     }
                     legendRelStatErr->Draw();
 
                     labelRelErrEnergy->Draw();
-                    labelRelErrEtaToOmega->Draw();
+                    labelRelErrOmegaToPi0->Draw();
                     labelDetProcRelErr->Draw();
 
-                canvasRelStatErr->SaveAs(Form("%s/EtaToOmega_RelStatErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
+                canvasRelStatErr->SaveAs(Form("%s/OmegaToPi0_RelStatErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
 
                 // plot full error for final result decomposed
                 TCanvas* canvasRelTotErr            = new TCanvas("canvasRelTotErr","",200,10,1350,900);  // gives the page size
                 DrawGammaCanvasSettings( canvasRelTotErr, 0.08, 0.02, 0.035, 0.09);
 
-                TH2F * histo2DRelTotErrEtaToOmega;
-                histo2DRelTotErrEtaToOmega                 = new TH2F("histo2DRelTotErrEtaToOmega","histo2DRelTotErrEtaToOmega",11000,0.,maxPtGlobalEta,1000,0,60.5);
-                SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToOmega, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-                histo2DRelTotErrEtaToOmega->Draw("copy");
+                TH2F * histo2DRelTotErrOmegaToPi0;
+                histo2DRelTotErrOmegaToPi0                 = new TH2F("histo2DRelTotErrOmegaToPi0","histo2DRelTotErrOmegaToPi0",11000,0.,maxPtGlobalOmega,1000,0,60.5);
+                SetStyleHistoTH2ForGraphs(histo2DRelTotErrOmegaToPi0, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+                histo2DRelTotErrOmegaToPi0->Draw("copy");
 
-                    DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaToOmegaTot, 20, 1.5, kBlack , kBlack);
-                    graphRelErrorEtaToOmegaTot->Draw("p,same,z");
-                    DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaToOmegaStat, 24, 1.5, kGray+2 , kGray+2);
-                    graphRelErrorEtaToOmegaStat->Draw("l,x0,same,e1");
-                    DrawGammaSetMarkerTGraphAsym(graphRelErrorEtaToOmegaSys, 24, 1.5, kGray+1 , kGray+1);
-                    graphRelErrorEtaToOmegaSys->SetLineStyle(7);
-                    graphRelErrorEtaToOmegaSys->Draw("l,x0,same,e1");
+                    DrawGammaSetMarkerTGraphAsym(graphRelErrorOmegaToPi0Tot, 20, 1.5, kBlack , kBlack);
+                    graphRelErrorOmegaToPi0Tot->Draw("p,same,z");
+                    DrawGammaSetMarkerTGraphAsym(graphRelErrorOmegaToPi0Stat, 24, 1.5, kGray+2 , kGray+2);
+                    graphRelErrorOmegaToPi0Stat->Draw("l,x0,same,e1");
+                    DrawGammaSetMarkerTGraphAsym(graphRelErrorOmegaToPi0Sys, 24, 1.5, kGray+1 , kGray+1);
+                    graphRelErrorOmegaToPi0Sys->SetLineStyle(7);
+                    graphRelErrorOmegaToPi0Sys->Draw("l,x0,same,e1");
 
                     TLegend* legendRelTotErr2       = GetAndSetLegend2(0.72, 0.92-(0.035*3), 0.9, 0.92, 32);
-                    legendRelTotErr2->AddEntry(graphRelErrorEtaToOmegaTot,"tot","p");
-                    legendRelTotErr2->AddEntry(graphRelErrorEtaToOmegaStat,"stat","l");
-                    legendRelTotErr2->AddEntry(graphRelErrorEtaToOmegaSys,"sys","l");
+                    legendRelTotErr2->AddEntry(graphRelErrorOmegaToPi0Tot,"tot","p");
+                    legendRelTotErr2->AddEntry(graphRelErrorOmegaToPi0Stat,"stat","l");
+                    legendRelTotErr2->AddEntry(graphRelErrorOmegaToPi0Sys,"sys","l");
                     legendRelTotErr2->Draw();
 
                     labelRelErrEnergy->Draw();
-                    labelRelErrEtaToOmega->Draw();
+                    labelRelErrOmegaToPi0->Draw();
                     labelDetProcRelErr->Draw();
 
-                canvasRelTotErr->SaveAs(Form("%s/EtaToOmega_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
+                canvasRelTotErr->SaveAs(Form("%s/OmegaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
 
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
 
 
 
 
-                if (sysAvailSingleEtaToOmega[0]){
-                    for (Int_t k = 0; k < nRelSysErrEtaToOmegaSources; k++){
-                        if (graphRelSysErrEtaToOmegaSourceWeighted[k])
-                            while (graphRelSysErrEtaToOmegaSourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrEtaToOmegaSourceWeighted[k]->RemovePoint(0);
+                if (sysAvailSingleOmegaToPi0[0]){
+                    for (Int_t k = 0; k < nRelSysErrOmegaToPi0Sources; k++){
+                        if (graphRelSysErrOmegaToPi0SourceWeighted[k])
+                            while (graphRelSysErrOmegaToPi0SourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrOmegaToPi0SourceWeighted[k]->RemovePoint(0);
                         else
-                            cout << "I don't have a weighted EtaToOmega rel sys err graph for error source: " << k << endl;
+                            cout << "I don't have a weighted OmegaToPi0 rel sys err graph for error source: " << k << endl;
                     }
                 }
 
@@ -6627,29 +4804,29 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 //  **************************************** Combine+write detailed Systematics ******************************************
                 //  **********************************************************************************************************************
 
-                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_EtaToOmega_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_OmegaToPi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
                 fstream SysErrDatAverSingle;
                 SysErrDatAverSingle.precision(4);
                 cout << SysErrDatnameMeanSingleErr << endl;
-                if(sysAvailSingleEtaToOmega[0] && graphRelSysErrEtaToOmegaSourceWeighted[0]){
+                if(sysAvailSingleOmegaToPi0[0] && graphRelSysErrOmegaToPi0SourceWeighted[0]){
                     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
                     for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
                     SysErrDatAverSingle << endl;
                     for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
-                        if(!sysAvailSingleEtaToOmega[i]) continue;
+                        if(!sysAvailSingleOmegaToPi0[i]) continue;
                         for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
                             if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
-                                cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEtaToOmega[i] << " & " << availableMeasEtaToOmega[0] << ", returning!" << endl;
+                                cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasOmegaToPi0[i] << " & " << availableMeasOmegaToPi0[0] << ", returning!" << endl;
                                 return;
                             }
                         }
                     }
 
-                    for(Int_t i=0; i<graphRelSysErrEtaToOmegaSourceWeighted[0]->GetN(); i++){
-                        SysErrDatAverSingle << graphRelSysErrEtaToOmegaSourceWeighted[0]->GetX()[i] << "\t";
+                    for(Int_t i=0; i<graphRelSysErrOmegaToPi0SourceWeighted[0]->GetN(); i++){
+                        SysErrDatAverSingle << graphRelSysErrOmegaToPi0SourceWeighted[0]->GetX()[i] << "\t";
                         Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
                         for(Int_t iErr=0; iErr<nColumns-1; iErr++)
-                            SysErrDatAverSingle << graphRelSysErrEtaToOmegaSourceWeighted[iErr]->GetY()[i] << "\t";
+                            SysErrDatAverSingle << graphRelSysErrOmegaToPi0SourceWeighted[iErr]->GetY()[i] << "\t";
                         SysErrDatAverSingle << endl;
 
                     }
@@ -6659,13 +4836,13 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 // ***************************************************************************************************
                 // ********************* Plot all mean erros separately after smoothing ******************************
                 // ***************************************************************************************************
-                if(sysAvailSingleEtaToOmega[0] && graphRelSysErrEtaToOmegaSourceWeighted[0]){
+                if(sysAvailSingleOmegaToPi0[0] && graphRelSysErrOmegaToPi0SourceWeighted[0]){
                   TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
                   DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
 
                       // create dummy histo
                       TH2D *histo2DNewSysErrMean ;
-                      histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
+                      histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalOmega,1000.,-0.5,50.);
                       SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                               1,0.9, 510, 510);
                       histo2DNewSysErrMean->Draw();
@@ -6674,27 +4851,27 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                       Double_t minXLegend     = 0.12;
                       Double_t maxYLegend     = 0.95;
                       Double_t widthLegend    = 0.25;
-                      if (nRelSysErrEtaToOmegaSources> 7)
+                      if (nRelSysErrOmegaToPi0Sources> 7)
                           widthLegend         = 0.5;
-                      Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaToOmegaSources+3);
-                      if (nRelSysErrEtaToOmegaSources> 7)
-                          heightLegend        = 1.05* 0.035 * (nRelSysErrEtaToOmegaSources/2+1);
+                      Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrOmegaToPi0Sources+3);
+                      if (nRelSysErrOmegaToPi0Sources> 7)
+                          heightLegend        = 1.05* 0.035 * (nRelSysErrOmegaToPi0Sources/2+1);
 
                       // create legend
                       TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
                       legendMeanNew->SetMargin(0.1);
-                      if (nRelSysErrEtaToOmegaSources> 7) legendMeanNew->SetNColumns(2);
+                      if (nRelSysErrOmegaToPi0Sources> 7) legendMeanNew->SetNColumns(2);
 
-                      for(Int_t i = 0;i< nRelSysErrEtaToOmegaSources-1 ;i++){
-                          DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToOmegaSourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                      for(Int_t i = 0;i< nRelSysErrOmegaToPi0Sources-1 ;i++){
+                          DrawGammaSetMarkerTGraphAsym(graphRelSysErrOmegaToPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
                                                       GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
-                          graphRelSysErrEtaToOmegaSourceWeighted[i]->Draw("pX0,csame");
-                          legendMeanNew->AddEntry(graphRelSysErrEtaToOmegaSourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                          graphRelSysErrOmegaToPi0SourceWeighted[i]->Draw("pX0,csame");
+                          legendMeanNew->AddEntry(graphRelSysErrOmegaToPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
                       }
 
-                      DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToOmegaSourceWeighted[nRelSysErrEtaToOmegaSources-1], 20, 1.,kBlack,kBlack);
-                      graphRelSysErrEtaToOmegaSourceWeighted[nRelSysErrEtaToOmegaSources-1]->Draw("p,csame");
-                      legendMeanNew->AddEntry(graphRelSysErrEtaToOmegaSourceWeighted[nRelSysErrEtaToOmegaSources-1],"quad. sum.","p");
+                      DrawGammaSetMarkerTGraphAsym(graphRelSysErrOmegaToPi0SourceWeighted[nRelSysErrOmegaToPi0Sources-1], 20, 1.,kBlack,kBlack);
+                      graphRelSysErrOmegaToPi0SourceWeighted[nRelSysErrOmegaToPi0Sources-1]->Draw("p,csame");
+                      legendMeanNew->AddEntry(graphRelSysErrOmegaToPi0SourceWeighted[nRelSysErrOmegaToPi0Sources-1],"quad. sum.","p");
                       legendMeanNew->Draw();
 
                       // labeling
@@ -6703,10 +4880,10 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                       SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
                       labelEnergySysDetailed->Draw();
 
-                      TLatex *labelEtaToOmegaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta/#omega");
-                      labelEtaToOmegaSysDetailed->SetTextAlign(31);
-                      SetStyleTLatex( labelEtaToOmegaSysDetailed, 0.85*textSizeSpectra,4);
-                      labelEtaToOmegaSysDetailed->Draw();
+                      TLatex *labelOmegaToPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#omega/#pi^{0}");
+                      labelOmegaToPi0SysDetailed->SetTextAlign(31);
+                      SetStyleTLatex( labelOmegaToPi0SysDetailed, 0.85*textSizeSpectra,4);
+                      labelOmegaToPi0SysDetailed->Draw();
 
                       TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
                       labelDetProcSysDetailed->SetTextAlign(31);
@@ -6714,7 +4891,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                       labelDetProcSysDetailed->Draw();
 
                   canvasNewSysErrMean->Update();
-                  canvasNewSysErrMean->SaveAs(Form("%s/EtaToOmega_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                  canvasNewSysErrMean->SaveAs(Form("%s/OmegaToPi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
                 }
 
                 // delete detailed sys array
@@ -6724,166 +4901,166 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
             // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")
             } else {
-                graphEtaToOmegaWeightedAverageStat        = new TGraphAsymmErrors(nPointFinalEtaToOmega, xValueFinalEtaToOmega, yValueFinalEtaToOmega,
-                                                                                         xErrorLowFinalEtaToOmega, xErrorHighFinalEtaToOmega,yErrorLowFinalEtaToOmega, yErrorHighFinalEtaToOmega);
-                graphEtaToOmegaWeightedAverageSys         = new TGraphAsymmErrors(nPointFinalEtaToOmega, xValueFinalEtaToOmega, yValueFinalEtaToOmega,
-                                                                                        xErrorLowFinalEtaToOmega, xErrorHighFinalEtaToOmega,yErrorSysLowFinalEtaToOmega, yErrorSysHighFinalEtaToOmega);
-                TGraphAsymmErrors* graphRelErrorEtaToOmegaStat       = CalculateRelErrUpAsymmGraph( graphEtaToOmegaWeightedAverageStat, "relativeStatErrorEtaToOmega");
-                while (graphRelErrorEtaToOmegaStat->GetY()[0] < 0 ) graphRelErrorEtaToOmegaStat->RemovePoint(0);
+                graphOmegaToPi0WeightedAverageStat        = new TGraphAsymmErrors(nPointFinalOmegaToPi0, xValueFinalOmegaToPi0, yValueFinalOmegaToPi0,
+                                                                                         xErrorLowFinalOmegaToPi0, xErrorHighFinalOmegaToPi0,yErrorLowFinalOmegaToPi0, yErrorHighFinalOmegaToPi0);
+                graphOmegaToPi0WeightedAverageSys         = new TGraphAsymmErrors(nPointFinalOmegaToPi0, xValueFinalOmegaToPi0, yValueFinalOmegaToPi0,
+                                                                                        xErrorLowFinalOmegaToPi0, xErrorHighFinalOmegaToPi0,yErrorSysLowFinalOmegaToPi0, yErrorSysHighFinalOmegaToPi0);
+                TGraphAsymmErrors* graphRelErrorOmegaToPi0Stat       = CalculateRelErrUpAsymmGraph( graphOmegaToPi0WeightedAverageStat, "relativeStatErrorOmegaToPi0");
+                while (graphRelErrorOmegaToPi0Stat->GetY()[0] < 0 ) graphRelErrorOmegaToPi0Stat->RemovePoint(0);
 
-                TGraphAsymmErrors* graphRelErrorEtaToOmegaSys        = CalculateRelErrUpAsymmGraph( graphEtaToOmegaWeightedAverageSys, "relativeSysErrorEtaToOmega");
-                while (graphRelErrorEtaToOmegaSys->GetY()[0] < 0 ) graphRelErrorEtaToOmegaSys->RemovePoint(0);
+                TGraphAsymmErrors* graphRelErrorOmegaToPi0Sys        = CalculateRelErrUpAsymmGraph( graphOmegaToPi0WeightedAverageSys, "relativeSysErrorOmegaToPi0");
+                while (graphRelErrorOmegaToPi0Sys->GetY()[0] < 0 ) graphRelErrorOmegaToPi0Sys->RemovePoint(0);
 
-                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_EtaToOmega_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_OmegaToPi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
                 fstream SysErrDatAverSingleCheck;
                 SysErrDatAverSingleCheck.precision(4);
                 cout << SysErrDatnameMeanSingleErrCheck << endl;
 
                 SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
                 SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
-                for (Int_t i = 0; i < graphRelErrorEtaToOmegaStat->GetN(); i++){
-                    if (graphRelErrorEtaToOmegaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaToOmegaStat->GetX()[i] << "\t" << graphRelErrorEtaToOmegaStat->GetY()[i] <<"\t" << graphRelErrorEtaToOmegaSys->GetY()[i]  << endl;
+                for (Int_t i = 0; i < graphRelErrorOmegaToPi0Stat->GetN(); i++){
+                    if (graphRelErrorOmegaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorOmegaToPi0Stat->GetX()[i] << "\t" << graphRelErrorOmegaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorOmegaToPi0Sys->GetY()[i]  << endl;
                 }
                 SysErrDatAverSingleCheck << endl;
                 SysErrDatAverSingleCheck.close();
             }
-            // printing final eta/Omega ratios
-            cout << "stat eta/Omega" << endl;
-            graphEtaToOmegaWeightedAverageStat->Print();
-            cout << "sys eta/Omega" << endl;
-            if (graphEtaToOmegaWeightedAverageSys) graphEtaToOmegaWeightedAverageSys->Print();
+            // printing final omega/pi0 ratios
+            cout << "stat omega/pi0" << endl;
+            graphOmegaToPi0WeightedAverageStat->Print();
+            cout << "sys omega/pi0" << endl;
+            if (graphOmegaToPi0WeightedAverageSys) graphOmegaToPi0WeightedAverageSys->Print();
 
-            if (graphEtaToOmegaWeightedAverageStat){
-                while (graphEtaToOmegaWeightedAverageStat->GetX()[0]< minPtGlobalEta){
-                    graphEtaToOmegaWeightedAverageStat->RemovePoint(0);
+            if (graphOmegaToPi0WeightedAverageStat){
+                while (graphOmegaToPi0WeightedAverageStat->GetX()[0]< minPtGlobalPi0){
+                    graphOmegaToPi0WeightedAverageStat->RemovePoint(0);
                 }
             }
 
-            if (graphEtaToOmegaWeightedAverageSys){
-                while (graphEtaToOmegaWeightedAverageSys->GetX()[0]< minPtGlobalEta){
-                    graphEtaToOmegaWeightedAverageSys->RemovePoint(0);
+            if (graphOmegaToPi0WeightedAverageSys){
+                while (graphOmegaToPi0WeightedAverageSys->GetX()[0]< minPtGlobalPi0){
+                    graphOmegaToPi0WeightedAverageSys->RemovePoint(0);
                 }
             }
 
 
             //***************************************************************************************************************
-            //***************************Plotting individual eta/Omega ratios full range **************************************
+            //***************************Plotting individual omega/pi0 ratios full range **************************************
             //***************************************************************************************************************
 
-            Size_t textSizeEtaToOmega = 0.04;
-            TCanvas* canvasEtatoOmegacombo = new TCanvas("canvasEtatoOmegacombo","",200,10,1200,1100);
-            DrawGammaCanvasSettings( canvasEtatoOmegacombo, 0.09, 0.017, 0.02, 0.1);
+            Size_t textSizeOmegaToPi0 = 0.04;
+            TCanvas* canvasOmegaToPi0combo = new TCanvas("canvasOmegaToPi0combo","",200,10,1200,1100);
+            DrawGammaCanvasSettings( canvasOmegaToPi0combo, 0.09, 0.017, 0.02, 0.1);
 
-            TH2F * histo2DEtatoOmegacombo = new TH2F("histo2DEtatoOmegacombo","histo2DEtatoOmegacombo",11000,0,maxPtGlobalEta,1000,0.01,1.2);
-            SetStyleHistoTH2ForGraphs(histo2DEtatoOmegacombo, "#it{p}_{T} (GeV/#it{c})","#eta/#omega",0.035,0.04, 0.035,0.04, 1.2,1.);
-            histo2DEtatoOmegacombo->GetYaxis()->SetRangeUser(0.01,1.05);
+            TH2F * histo2DOmegaToPi0combo = new TH2F("histo2DOmegaToPi0combo","histo2DOmegaToPi0combo",11000,0,maxPtGlobalOmega,1000,0.01,1.2);
+            SetStyleHistoTH2ForGraphs(histo2DOmegaToPi0combo, "#it{p}_{T} (GeV/#it{c})","#omega/#pi^{0}",0.035,0.04, 0.035,0.04, 1.2,1.);
+            histo2DOmegaToPi0combo->GetYaxis()->SetRangeUser(0.01,1.05);
 
-            histo2DEtatoOmegacombo->DrawCopy();
-            DrawGammaLines(0., maxPtGlobalEta , 0.45, 0.45, 0.3, kGray+2);
-            DrawGammaLines(0., maxPtGlobalEta , 0.4, 0.4, 0.3, kGray, 7);
-            DrawGammaLines(0., maxPtGlobalEta , 0.5, 0.5, 0.3, kGray, 7);
+            histo2DOmegaToPi0combo->DrawCopy();
+            DrawGammaLines(0., maxPtGlobalOmega , 0.45, 0.45, 0.3, kGray+2);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.4, 0.4, 0.3, kGray, 7);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.5, 0.5, 0.3, kGray, 7);
 
 
-            TLegend* legendEtaToOmega = GetAndSetLegend2(0.32, 0.14, 0.6, 0.14+(0.035*(nrOfTrigToBeComb/2+1)*0.9), 32);
-            legendEtaToOmega->SetNColumns(2);
+            TLegend* legendOmegaToPi0 = GetAndSetLegend2(0.32, 0.14, 0.6, 0.14+(0.035*(nrOfTrigToBeComb/2+1)*0.9), 32);
+            legendOmegaToPi0->SetNColumns(2);
 
             for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if (foundOmegaEtaBinFile[i] && !maskedFullyEta[i] && !maskedFullyOmega[i] ){
-                    DrawGammaSetMarker(histoEtaToOmega[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    if (graphsEtaToOmegaSysRemoved0[i]){
-                        DrawGammaSetMarkerTGraphAsym(graphsEtaToOmegaSysRemoved0[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
-                        graphsEtaToOmegaSysRemoved0[i]->Draw("p,E2,same");
+                if (foundPi0OmegaBinFile[i] && !maskedFullyEta[i] && !maskedFullyOmega[i] ){
+                    DrawGammaSetMarker(histoOmegaToPi0[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    if (graphsOmegaToPi0SysRemoved0[i]){
+                        DrawGammaSetMarkerTGraphAsym(graphsOmegaToPi0SysRemoved0[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
+                        graphsOmegaToPi0SysRemoved0[i]->Draw("p,E2,same");
                     }
-                    histoEtaToOmega[i]->Draw("e1,same");
-                    legendEtaToOmega->AddEntry(histoEtaToOmega[i],triggerNameLabel[i],"p");
+                    histoOmegaToPi0[i]->Draw("e1,same");
+                    legendOmegaToPi0->AddEntry(histoOmegaToPi0[i],triggerNameLabel[i],"p");
                 }
             }
-            legendEtaToOmega->Draw();
+            legendOmegaToPi0->Draw();
 
-            TLatex *labelEnergyEtaToOmega = new TLatex(0.65, 0.15+(2*textSizeEtaToOmega*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyEtaToOmega, 0.85*textSizeEtaToOmega,4);
-            labelEnergyEtaToOmega->Draw();
+            TLatex *labelEnergyOmegaToPi0 = new TLatex(0.65, 0.15+(2*textSizeOmegaToPi0*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyOmegaToPi0, 0.85*textSizeOmegaToPi0,4);
+            labelEnergyOmegaToPi0->Draw();
 
-            TLatex *labelOmegaEtaToOmega = new TLatex(0.65, 0.15+textSizeEtaToOmega*0.85,"#eta/#omega");
-            SetStyleTLatex( labelOmegaEtaToOmega, 0.85*textSizeEtaToOmega,4);
-            labelOmegaEtaToOmega->Draw();
+            TLatex *labelOmegaOmegaToPi0 = new TLatex(0.65, 0.15+textSizeOmegaToPi0*0.85,"#omega/#pi^{0}");
+            SetStyleTLatex( labelOmegaOmegaToPi0, 0.85*textSizeOmegaToPi0,4);
+            labelOmegaOmegaToPi0->Draw();
 
-            TLatex *labelDetProcEtaToOmega = new TLatex(0.65, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcEtaToOmega, 0.85*textSizeEtaToOmega,4);
-            labelDetProcEtaToOmega->Draw();
+            TLatex *labelDetProcOmegaToPi0 = new TLatex(0.65, 0.15,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcOmegaToPi0, 0.85*textSizeOmegaToPi0,4);
+            labelDetProcOmegaToPi0->Draw();
 
-            histo2DEtatoOmegacombo->Draw("axis,same");
+            histo2DOmegaToPi0combo->Draw("axis,same");
 
-            canvasEtatoOmegacombo->Update();
-            canvasEtatoOmegacombo->SaveAs(Form("%s/EtaToOmega%s_%s_diffTriggers.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
+            canvasOmegaToPi0combo->Update();
+            canvasOmegaToPi0combo->SaveAs(Form("%s/OmegaToPi0%s_%s_diffTriggers.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
 
             //***************************************************************************************************************
-            //***************************Plotting individual eta/Omega ratios used range with full ****************************
+            //***************************Plotting individual omega/pi0 ratios used range with full ****************************
             //***************************************************************************************************************
 
-            histo2DEtatoOmegacombo->DrawCopy();
-            DrawGammaLines(0., maxPtGlobalEta , 0.45, 0.45, 0.3, kGray+2);
-            DrawGammaLines(0., maxPtGlobalEta , 0.4, 0.4, 0.3, kGray, 7);
-            DrawGammaLines(0., maxPtGlobalEta , 0.5, 0.5, 0.3, kGray, 7);
+            histo2DOmegaToPi0combo->DrawCopy();
+            DrawGammaLines(0., maxPtGlobalOmega , 0.45, 0.45, 0.3, kGray+2);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.4, 0.4, 0.3, kGray, 7);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.5, 0.5, 0.3, kGray, 7);
 
 
             for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-                if (foundOmegaEtaBinFile[i] && !maskedFullyEta[i] && !maskedFullyOmega[i]){
-                    if (graphsEtaToOmegaShrunk[i]) DrawGammaSetMarkerTGraphAsym(graphsEtaToOmegaShrunk[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    if (graphsEtaToOmegaSysShrunk[i]){
-                        DrawGammaSetMarkerTGraphAsym(graphsEtaToOmegaSysShrunk[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
-                        graphsEtaToOmegaSysShrunk[i]->Draw("p,E2,same");
+                if (foundPi0OmegaBinFile[i] && !maskedFullyEta[i] && !maskedFullyOmega[i]){
+                    if (graphsOmegaToPi0Shrunk[i]) DrawGammaSetMarkerTGraphAsym(graphsOmegaToPi0Shrunk[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    if (graphsOmegaToPi0SysShrunk[i]){
+                        DrawGammaSetMarkerTGraphAsym(graphsOmegaToPi0SysShrunk[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i], 1, kTRUE);
+                        graphsOmegaToPi0SysShrunk[i]->Draw("p,E2,same");
                     }
-                    if (graphsEtaToOmegaShrunk[i]) graphsEtaToOmegaShrunk[i]->Draw("e1,same");
+                    if (graphsOmegaToPi0Shrunk[i]) graphsOmegaToPi0Shrunk[i]->Draw("e1,same");
                 }
             }
 
-            if (graphEtaToOmegaWeightedAverageSys){
-                DrawGammaSetMarkerTGraphAsym(graphEtaToOmegaWeightedAverageSys,  24, 2, kRed , kRed, 1, kTRUE);
-                graphEtaToOmegaWeightedAverageSys->Draw("p,E2,same");
+            if (graphOmegaToPi0WeightedAverageSys){
+                DrawGammaSetMarkerTGraphAsym(graphOmegaToPi0WeightedAverageSys,  24, 2, kRed , kRed, 1, kTRUE);
+                graphOmegaToPi0WeightedAverageSys->Draw("p,E2,same");
             }
-            if (graphEtaToOmegaWeightedAverageStat){
-                DrawGammaSetMarkerTGraphAsym(graphEtaToOmegaWeightedAverageStat,  24, 2, kRed , kRed);
-                graphEtaToOmegaWeightedAverageStat->Draw("p,E,same");
-                legendEtaToOmega->AddEntry(graphEtaToOmegaWeightedAverageStat, "final","p");
+            if (graphOmegaToPi0WeightedAverageStat){
+                DrawGammaSetMarkerTGraphAsym(graphOmegaToPi0WeightedAverageStat,  24, 2, kRed , kRed);
+                graphOmegaToPi0WeightedAverageStat->Draw("p,E,same");
+                legendOmegaToPi0->AddEntry(graphOmegaToPi0WeightedAverageStat, "final","p");
             }
-            legendEtaToOmega->Draw();
+            legendOmegaToPi0->Draw();
 
-            labelEnergyEtaToOmega->Draw();
-            labelOmegaEtaToOmega->Draw();
-            labelDetProcEtaToOmega->Draw();
+            labelEnergyOmegaToPi0->Draw();
+            labelOmegaOmegaToPi0->Draw();
+            labelDetProcOmegaToPi0->Draw();
 
-            histo2DEtatoOmegacombo->Draw("axis,same");
+            histo2DOmegaToPi0combo->Draw("axis,same");
 
-            canvasEtatoOmegacombo->Update();
-            canvasEtatoOmegacombo->SaveAs(Form("%s/EtaToOmega%s_%s_diffTriggers_used.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
+            canvasOmegaToPi0combo->Update();
+            canvasOmegaToPi0combo->SaveAs(Form("%s/OmegaToPi0%s_%s_diffTriggers_used.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
 
             //***************************************************************************************************************
-            //**************************************Plotting final eta/Omega ratio ********************************************
+            //**************************************Plotting final omega/pi0 ratio ********************************************
             //***************************************************************************************************************
 
-            histo2DEtatoOmegacombo->DrawCopy();
-            DrawGammaLines(0., maxPtGlobalEta , 0.45, 0.45, 0.3, kGray+2);
-            DrawGammaLines(0., maxPtGlobalEta , 0.4, 0.4, 0.3, kGray, 7);
-            DrawGammaLines(0., maxPtGlobalEta , 0.5, 0.5, 0.3, kGray, 7);
+            histo2DOmegaToPi0combo->DrawCopy();
+            DrawGammaLines(0., maxPtGlobalOmega , 0.45, 0.45, 0.3, kGray+2);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.4, 0.4, 0.3, kGray, 7);
+            DrawGammaLines(0., maxPtGlobalOmega , 0.5, 0.5, 0.3, kGray, 7);
 
-            if (graphEtaToOmegaWeightedAverageSys){
-                DrawGammaSetMarkerTGraphAsym(graphEtaToOmegaWeightedAverageSys,  24, 2, kGray+1 , kGray+1, 1, kTRUE);
-                graphEtaToOmegaWeightedAverageSys->Draw("p,E2,same");
+            if (graphOmegaToPi0WeightedAverageSys){
+                DrawGammaSetMarkerTGraphAsym(graphOmegaToPi0WeightedAverageSys,  24, 2, kGray+1 , kGray+1, 1, kTRUE);
+                graphOmegaToPi0WeightedAverageSys->Draw("p,E2,same");
             }
-            if (graphEtaToOmegaWeightedAverageStat){
-                DrawGammaSetMarkerTGraphAsym(graphEtaToOmegaWeightedAverageStat,  24, 2, kBlack , kBlack);
-                graphEtaToOmegaWeightedAverageStat->Draw("p,E,same");
+            if (graphOmegaToPi0WeightedAverageStat){
+                DrawGammaSetMarkerTGraphAsym(graphOmegaToPi0WeightedAverageStat,  24, 2, kBlack , kBlack);
+                graphOmegaToPi0WeightedAverageStat->Draw("p,E,same");
             }
 
-            labelEnergyEtaToOmega->Draw();
-            labelOmegaEtaToOmega->Draw();
-            labelDetProcEtaToOmega->Draw();
+            labelEnergyOmegaToPi0->Draw();
+            labelOmegaOmegaToPi0->Draw();
+            labelDetProcOmegaToPi0->Draw();
 
-            histo2DEtatoOmegacombo->Draw("axis,same");
+            histo2DOmegaToPi0combo->Draw("axis,same");
 
-            canvasEtatoOmegacombo->Update();
-            canvasEtatoOmegacombo->SaveAs(Form("%s/EtaToOmega%s_%s_Final.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
+            canvasOmegaToPi0combo->Update();
+            canvasOmegaToPi0combo->SaveAs(Form("%s/OmegaToPi0%s_%s_Final.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));
         }
     }
 
@@ -6915,8 +5092,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     TH1D* histoInvXSectionWeightedAverageEtaStat                = NULL;
     TH1D* histoInvYieldWeightedAverageEtaStat                   = NULL;
     TGraphAsymmErrors* graphInvXSectionWeightedAverageEtaSys    = NULL;
-    TH1D* histoEtaToOmegaWeightedAverageStat                      = NULL;
-    TH1D* histoEtaToOmegaExtendedUsingFit                         = NULL;
+    TH1D* histoOmegaToPi0WeightedAverageStat                      = NULL;
+    TH1D* histoOmegaToPi0ExtendedUsingFit                         = NULL;
 
 
     cout << "xSection = " << xSection << endl;
@@ -6948,65 +5125,38 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
 
 
-    if (enableEta && mode != 10){
-        if (graphCorrectedYieldWeightedAverageEtaStat){
-            histoInvYieldWeightedAverageEtaStat                  = new TH1D("histoInvYieldWeightedAverageEtaStat", "", maxNAllowedEta, binningEta);
-            Int_t firstBinEta = 1;
-            while (histoInvYieldWeightedAverageEtaStat->GetBinCenter(firstBinEta) < graphCorrectedYieldWeightedAverageEtaStat->GetX()[0]){
-                histoInvYieldWeightedAverageEtaStat->SetBinContent(firstBinEta, 0);
-                histoInvYieldWeightedAverageEtaStat->SetBinError(firstBinEta, 0);
-                firstBinEta++;
-            }
-            for (Int_t i = 0; i < graphCorrectedYieldWeightedAverageEtaStat->GetN(); i++){
-                histoInvYieldWeightedAverageEtaStat->SetBinContent(i+firstBinEta, graphCorrectedYieldWeightedAverageEtaStat->GetY()[i]);
-                histoInvYieldWeightedAverageEtaStat->SetBinError(i+firstBinEta, graphCorrectedYieldWeightedAverageEtaStat->GetEYlow()[i]);
-            }
-            if (xSection != 0){
-                graphInvXSectionWeightedAverageEtaStat                  = ScaleGraph(graphCorrectedYieldWeightedAverageEtaStat,xSection*recalcBarn);
-                histoInvXSectionWeightedAverageEtaStat                  = new TH1D("histoInvXSectionWeightedAverageEtaStat", "", maxNAllowedEta, binningEta);
-                for (Int_t i = 0; i < graphInvXSectionWeightedAverageEtaStat->GetN(); i++){
-                    histoInvXSectionWeightedAverageEtaStat->SetBinContent(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
-                    histoInvXSectionWeightedAverageEtaStat->SetBinError(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]);
-                }
-                graphInvXSectionWeightedAverageEtaStat->Print();
-                if (graphCorrectedYieldWeightedAverageEtaSys)
-                    graphInvXSectionWeightedAverageEtaSys                   = ScaleGraph(graphCorrectedYieldWeightedAverageEtaSys,xSection*recalcBarn);
-                graphInvXSectionWeightedAverageEtaSys->Print();
-            }
+
+    if (doOmegaToPi0 && graphOmegaToPi0WeightedAverageStat){
+        histoOmegaToPi0WeightedAverageStat                    = new TH1D("histoOmegaToPi0WeightedAverageStat", "", maxNAllowedEta, binningEta);
+        Int_t firstBinOmegaToPi0 = 1;
+        while (histoOmegaToPi0WeightedAverageStat->GetBinCenter(firstBinOmegaToPi0) < graphOmegaToPi0WeightedAverageStat->GetX()[0]){
+            histoOmegaToPi0WeightedAverageStat->SetBinContent(firstBinOmegaToPi0, 0);
+            histoOmegaToPi0WeightedAverageStat->SetBinError(firstBinOmegaToPi0, 0);
+
+            firstBinOmegaToPi0++;
+        }
+        for (Int_t i = 0; i < graphOmegaToPi0WeightedAverageStat->GetN(); i++){
+            histoOmegaToPi0WeightedAverageStat->SetBinContent(i+firstBinOmegaToPi0, graphOmegaToPi0WeightedAverageStat->GetY()[i]);
+            histoOmegaToPi0WeightedAverageStat->SetBinError(i+firstBinOmegaToPi0, graphOmegaToPi0WeightedAverageStat->GetEYlow()[i]);
         }
 
-        if (doEtaToOmega && graphEtaToOmegaWeightedAverageStat){
-            histoEtaToOmegaWeightedAverageStat                    = new TH1D("histoEtaToOmegaWeightedAverageStat", "", maxNAllowedEta, binningEta);
-            Int_t firstBinEtaToOmega = 1;
-            while (histoEtaToOmegaWeightedAverageStat->GetBinCenter(firstBinEtaToOmega) < graphEtaToOmegaWeightedAverageStat->GetX()[0]){
-                histoEtaToOmegaWeightedAverageStat->SetBinContent(firstBinEtaToOmega, 0);
-                histoEtaToOmegaWeightedAverageStat->SetBinError(firstBinEtaToOmega, 0);
-
-                firstBinEtaToOmega++;
+        if(optionEnergy.CompareTo("8TeV") == 0 ){
+            histoOmegaToPi0ExtendedUsingFit = new TH1D("OmegaToPi0_extendedFit","OmegaToPi0_extendedFit",maxNAllowedEta,binningEta);
+            Int_t i = 0;
+            for (; i < graphOmegaToPi0WeightedAverageStat->GetN(); i++){
+            //for (; graphOmegaToPi0WeightedAverageStat->GetX()[i] < 10.; i++){
+            histoOmegaToPi0ExtendedUsingFit->SetBinContent(i+firstBinOmegaToPi0, graphOmegaToPi0WeightedAverageStat->GetY()[i]);
+            histoOmegaToPi0ExtendedUsingFit->SetBinError(i+firstBinOmegaToPi0, graphOmegaToPi0WeightedAverageStat->GetEYlow()[i]);
+            cout << i << ", " << firstBinOmegaToPi0 << ", " << graphOmegaToPi0WeightedAverageStat->GetY()[i] << ", " << graphOmegaToPi0WeightedAverageStat->GetEYlow()[i] << endl;
             }
-            for (Int_t i = 0; i < graphEtaToOmegaWeightedAverageStat->GetN(); i++){
-                histoEtaToOmegaWeightedAverageStat->SetBinContent(i+firstBinEtaToOmega, graphEtaToOmegaWeightedAverageStat->GetY()[i]);
-                histoEtaToOmegaWeightedAverageStat->SetBinError(i+firstBinEtaToOmega, graphEtaToOmegaWeightedAverageStat->GetEYlow()[i]);
-            }
-
-            if(optionEnergy.CompareTo("8TeV") == 0 ){
-              histoEtaToOmegaExtendedUsingFit = new TH1D("EtaToOmega_extendedFit","EtaToOmega_extendedFit",maxNAllowedEta,binningEta);
-              Int_t i = 0;
-              for (; i < graphEtaToOmegaWeightedAverageStat->GetN(); i++){
-              //for (; graphEtaToOmegaWeightedAverageStat->GetX()[i] < 10.; i++){
-                histoEtaToOmegaExtendedUsingFit->SetBinContent(i+firstBinEtaToOmega, graphEtaToOmegaWeightedAverageStat->GetY()[i]);
-                histoEtaToOmegaExtendedUsingFit->SetBinError(i+firstBinEtaToOmega, graphEtaToOmegaWeightedAverageStat->GetEYlow()[i]);
-                cout << i << ", " << firstBinEtaToOmega << ", " << graphEtaToOmegaWeightedAverageStat->GetY()[i] << ", " << graphEtaToOmegaWeightedAverageStat->GetEYlow()[i] << endl;
-              }
-              for (; i+firstBinEtaToOmega <= maxNAllowedEta; i++){
-                histoEtaToOmegaExtendedUsingFit->SetBinContent(i+firstBinEtaToOmega, graphInvXSectionWeightedAverageEtaStat->GetY()[i]/fitBinShiftOmegaTCM->Eval((binningEta[i+firstBinEtaToOmega]+binningEta[i+firstBinEtaToOmega-1])/2));
-                histoEtaToOmegaExtendedUsingFit->SetBinError(i+firstBinEtaToOmega, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]/graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
-                cout << i << ", " << firstBinEtaToOmega << ", " << graphInvXSectionWeightedAverageEtaStat->GetY()[i] << ", " << fitBinShiftOmegaTCM->Eval((binningEta[i+firstBinEtaToOmega]+binningEta[i+firstBinEtaToOmega-1])/2) << endl;
-              }
+            for (; i+firstBinOmegaToPi0 <= maxNAllowedEta; i++){
+            histoOmegaToPi0ExtendedUsingFit->SetBinContent(i+firstBinOmegaToPi0, graphInvXSectionWeightedAverageEtaStat->GetY()[i]/fitBinShiftOmegaTCM->Eval((binningEta[i+firstBinOmegaToPi0]+binningEta[i+firstBinOmegaToPi0-1])/2));
+            histoOmegaToPi0ExtendedUsingFit->SetBinError(i+firstBinOmegaToPi0, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]/graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
+            cout << i << ", " << firstBinOmegaToPi0 << ", " << graphInvXSectionWeightedAverageEtaStat->GetY()[i] << ", " << fitBinShiftOmegaTCM->Eval((binningEta[i+firstBinOmegaToPi0]+binningEta[i+firstBinOmegaToPi0-1])/2) << endl;
             }
         }
-
     }
+
 
     cout << "Writing output file" << endl;
     TString fileNameOutputComp  = Form("%s/%s_%sResultsFullCorrection_PP.root",outputDir.Data(),isMC.Data(),system.Data());
@@ -7093,70 +5243,15 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             }
         }
 
-        if (enableEta && mode != 10){
-            fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s",optionEnergy.Data()));
-            TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s",optionEnergy.Data()));
-            fileOutputForComparisonFullyCorrected->cd(Form("Eta%s",optionEnergy.Data()));
-            if (graphCorrectedYieldWeightedAverageEtaStat)  graphCorrectedYieldWeightedAverageEtaStat->Write("graphCorrectedYieldEta",TObject::kOverwrite);
-            if (histoInvYieldWeightedAverageEtaStat)  histoInvYieldWeightedAverageEtaStat->Write("CorrectedYieldEta",TObject::kOverwrite);
-            if (graphCorrectedYieldWeightedAverageEtaSys)   graphCorrectedYieldWeightedAverageEtaSys->Write("EtaSystError",TObject::kOverwrite);
 
-            if (xSection != 0){
-                if (graphInvXSectionWeightedAverageEtaStat){
-                    graphInvXSectionWeightedAverageEtaStat->Write("graphInvCrossSectionEta",TObject::kOverwrite);
-                    cout << "graph InvSection eta stat" << endl;
-                    graphInvXSectionWeightedAverageEtaStat->Print();
-                }
-                if (histoInvXSectionWeightedAverageEtaStat)     histoInvXSectionWeightedAverageEtaStat->Write("InvCrossSectionEta",TObject::kOverwrite);
-                if (graphInvXSectionWeightedAverageEtaSys){
-                    graphInvXSectionWeightedAverageEtaSys->Write("InvCrossSectionEtaSys",TObject::kOverwrite);
-                    cout << "graph InvSection eta stat" << endl;
-                    graphInvXSectionWeightedAverageEtaSys->Print();
-                }
-            }
-            if (graphAcceptanceEtaWeighted)                 graphAcceptanceEtaWeighted->Write("AcceptanceEta", TObject::kOverwrite);
-            if (graphEfficiencyEtaWeighted)                 graphEfficiencyEtaWeighted->Write("EfficiencyEta", TObject::kOverwrite);
-            if (graphEffTimesAccEtaWeighted)                graphEffTimesAccEtaWeighted->Write("EffTimesAccEta", TObject::kOverwrite);
-            if (graphMassEtaDataWeighted)                   graphMassEtaDataWeighted->Write("Eta_Mass_data", TObject::kOverwrite);
-            if (graphMassEtaMCWeighted)                     graphMassEtaMCWeighted->Write("Eta_Mass_MC", TObject::kOverwrite);
-            if (graphWidthEtaDataWeighted)                  graphWidthEtaDataWeighted->Write("Eta_Width_data", TObject::kOverwrite);
-            if (graphWidthEtaMCWeighted)                    graphWidthEtaMCWeighted->Write("Eta_Width_MC", TObject::kOverwrite);
-            if (sysAvailSingleEta[0]){
-                for (Int_t k = 0; k< nRelSysErrEtaSources ; k++ ){
-                    if (graphRelSysErrEtaSourceWeighted[k]) graphRelSysErrEtaSourceWeighted[k]->Write(graphRelSysErrEtaSourceWeighted[k]->GetName(), TObject::kOverwrite);
-                }
-            }
-
+        if (doOmegaToPi0){
+            if (histoOmegaToPi0WeightedAverageStat)       histoOmegaToPi0WeightedAverageStat->Write(Form("OmegaToPi0%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
+            if (histoOmegaToPi0ExtendedUsingFit)          histoOmegaToPi0ExtendedUsingFit->Write(Form("OmegaToPi0_extendedWithFit%s",addNameBinshift.Data()),TObject::kOverwrite);
+            if (graphOmegaToPi0WeightedAverageStat)       graphOmegaToPi0WeightedAverageStat->Write(Form("graphOmegaToPi0%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
+            if (graphOmegaToPi0WeightedAverageSys )       graphOmegaToPi0WeightedAverageSys->Write(Form("OmegaToPi0%sSystError",addNameBinshift.Data()),TObject::kOverwrite);
             for (Int_t i=0; i< nrOfTrigToBeComb; i++){
-                if (histoAcceptanceEta[i])                  histoAcceptanceEta[i]->Write(Form("AcceptanceEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoEfficiencyEta[i])                  histoEfficiencyEta[i]->Write(Form("EfficiencyEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoRawYieldEta[i])                    histoRawYieldEta[i]->Write(Form("RAWYieldPerEventsEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoEffTimesAccEta[i])                 histoEffTimesAccEta[i]->Write(Form("EffTimesAccEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoMassEtaData[i])                    histoMassEtaData[i]->Write(Form("Eta_Mass_data_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoMassEtaMC[i])                      histoMassEtaMC[i]->Write(Form("Eta_Mass_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoWidthEtaData[i])                   histoWidthEtaData[i]->Write(Form("Eta_Width_data_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoWidthEtaMC[i])                     histoWidthEtaMC[i]->Write(Form("Eta_Width_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoEtaInvMassSig[i])                  histoEtaInvMassSig[i]->Write(Form("Eta_InvMassSig_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoEtaInvMassSigPlusBG[i])            histoEtaInvMassSigPlusBG[i]->Write(Form("Eta_InvMassSigPlusBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (histoEtaInvMassBG[i])                   histoEtaInvMassBG[i]->Write(Form("Eta_InvMassBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (fitEtaInvMassSig[i])                    fitEtaInvMassSig[i]->Write(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
-
-                if (graphsCorrectedYieldRemoved0Eta[i])     graphsCorrectedYieldRemoved0Eta[i]->Write(Form("CorrectedYieldEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (graphsCorrectedYieldSysRemoved0Eta[i])  graphsCorrectedYieldSysRemoved0Eta[i]->Write(Form("EtaSystError_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (enableTriggerEffEta[i]){
-                    if (histoTriggerEffEta[i])              histoTriggerEffEta[i]->Write(Form("TriggerEfficiencyEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                    if (histoEffBaseEta[i])                 histoEffBaseEta[i]->Write(Form("EfficiencyBaseEta_%s",triggerName[i].Data()),TObject::kOverwrite);
-                }
-            }
-            if (doEtaToOmega){
-                if (histoEtaToOmegaWeightedAverageStat)       histoEtaToOmegaWeightedAverageStat->Write(Form("EtaToOmega%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
-                if (histoEtaToOmegaExtendedUsingFit)          histoEtaToOmegaExtendedUsingFit->Write(Form("EtaToOmega_extendedWithFit%s",addNameBinshift.Data()),TObject::kOverwrite);
-                if (graphEtaToOmegaWeightedAverageStat)       graphEtaToOmegaWeightedAverageStat->Write(Form("graphEtaToOmega%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
-                if (graphEtaToOmegaWeightedAverageSys )       graphEtaToOmegaWeightedAverageSys->Write(Form("EtaToOmega%sSystError",addNameBinshift.Data()),TObject::kOverwrite);
-                for (Int_t i=0; i< nrOfTrigToBeComb; i++){
-                    if (graphsEtaToOmegaRemoved0[i])          graphsEtaToOmegaRemoved0[i]->Write(Form("EtaToOmega%sStatError_%s",addNameBinshift.Data(), triggerName[i].Data()),TObject::kOverwrite);
-                    if (graphsEtaToOmegaSysRemoved0[i])       graphsEtaToOmegaSysRemoved0[i]->Write(Form("EtaToOmega%sSystError_%s",addNameBinshift.Data(), triggerName[i].Data()),TObject::kOverwrite);
-                }
+                if (graphsOmegaToPi0Removed0[i])          graphsOmegaToPi0Removed0[i]->Write(Form("OmegaToPi0%sStatError_%s",addNameBinshift.Data(), triggerName[i].Data()),TObject::kOverwrite);
+                if (graphsOmegaToPi0SysRemoved0[i])       graphsOmegaToPi0SysRemoved0[i]->Write(Form("OmegaToPi0%sSystError_%s",addNameBinshift.Data(), triggerName[i].Data()),TObject::kOverwrite);
             }
         }
 

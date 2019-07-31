@@ -1026,25 +1026,25 @@
             case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
-            case 40:
+            case 40: case 60:
                 return "Pi0PCM";
-            case 41:
+            case 41: case 61:
                 return "Pi0PCM-EMC";
-            case 42:
+            case 42: case 62:
                 return "Pi0PCM-PHOS";
-            case 43:
+            case 43: case 63:
                 return "Pi0PCM-DCAL";
-            case 44:
+            case 44: case 64:
                 return "Pi0EMC";
-            case 45:
+            case 45: case 65:
                 return "Pi0PHOS";
-            case 46:
+            case 46: case 66:
                 return "Pi0DCAL";
-            case 47:
+            case 47: case 67:
                 return "Pi0PCM-Dal";
-            case 48:
+            case 48: case 68:
                 return "Pi0EMC-Dal";
-            case 49:
+            case 49: case 69:
                 return "Pi0PHOS-Dal";
             case 50:
                 return "Pi0DCAL-Dal";
@@ -1162,6 +1162,8 @@
     //************************************************************************************
     TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
       if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
+            return  "pp, #sqrt{#it{s}} = 7 TeV";
+        } else if( fEnergyFlagOpt.CompareTo("7TeVSys") == 0) {
             return  "pp, #sqrt{#it{s}} = 7 TeV";
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 8 TeV";
@@ -1498,7 +1500,7 @@
     Int_t GetMesonNumberOfBGEventsCutPosition ()            {return 2;}
     Int_t GetMesonDegreesForRotationMethodCutPosition ()    {return 3;}
     Int_t GetMesonRapidityCutPosition ()                    {return 4;}
-    Int_t GetMesonRCutPosition ()                           {return 5;}
+    Int_t GetMesonPtCutPosition ()                           {return 5;}
     Int_t GetMesonAlphaCutPosition ()                       {return 6;}
     Int_t GetMesonSelectionWindowCutPosition ()             {return 7;}
     Int_t GetMesonSharedElectronCutPosition ()              {return 8;}
@@ -4824,38 +4826,75 @@
     //************************************************************************************
     //***************** Analyzes the min energy cut, return correct cut label ************
     //************************************************************************************
-    TString AnalyseMinEnergyCut(Int_t minEnergyCut){
+    TString AnalyseMinEnergyCut(Int_t minEnergyCut, Int_t clusterType=1){
         Double_t fMinEnergy = 0.;
         switch(minEnergyCut){
-            case 0:
+            case 0:        
                 fMinEnergy = 0;
                 break;
             case 1:
-                fMinEnergy = 0.5;
+                if(clusterType!=2){
+                    fMinEnergy = 0.5;
+                } else{ //PHOS
+                    fMinEnergy = 0.3;
+                }
                 break;
             case 2:
-                fMinEnergy = 0.6;
+                if(clusterType!=2){
+                    fMinEnergy = 0.6;
+                } else{ //PHOS
+                    fMinEnergy = 0.5;
+                }
                 break;
             case 3:
-                fMinEnergy = 0.7;
+                if(clusterType!=2){
+                    fMinEnergy = 0.7;
+                } else{ //PHOS
+                    fMinEnergy = 0.6;
+                }
                 break;
             case 4:
-                fMinEnergy = 0.8;
+                if(clusterType!=2){
+                    fMinEnergy = 0.8;
+                } else{ //PHOS
+                    fMinEnergy = 0.7;
+                }
                 break;
             case 5:
-                fMinEnergy = 0.9;
+                if(clusterType!=2){
+                    fMinEnergy = 0.9;
+                } else{ //PHOS
+                    fMinEnergy = 0.8;
+                }
+                break;
                 break;
             case 6:
-                fMinEnergy = 4.5;
+                if(clusterType!=2){
+                    fMinEnergy = 4.5;
+                } else{ //PHOS
+                    fMinEnergy = 0.9;
+                }
                 break;
             case 7:
-                fMinEnergy = 5.0;
+                if(clusterType!=2){
+                    fMinEnergy = 5.0;
+                } else{ //PHOS
+                    fMinEnergy = 0.2;
+                }
                 break;
             case 8:
-                fMinEnergy = 5.5;
+                if(clusterType!=2){
+                    fMinEnergy = 5.5;
+                } else{ //PHOS
+                    fMinEnergy = 0.4;
+                }
                 break;
             case 9:
-                fMinEnergy = 6.0;
+                if(clusterType!=2){
+                    fMinEnergy = 6.0;
+                } else{ //PHOS
+                    fMinEnergy = -1; // not defined
+                }
                 break;
             default:
                 fMinEnergy = 0;
@@ -4981,6 +5020,14 @@
                 return "-12.5 ns < t_{clus} < 13 ns";
             case 11:
                 return "-130 ns < t_{clus} < 130 ns";
+            case 12:
+                return "-110 ns < t_{clus} < 110 ns";
+            case 13:
+                return "-120 ns < t_{clus} < 120 ns";
+            case 14:
+                return "-90 ns < t_{clus} < 90 ns";
+            case 15:
+                return "-80 ns < t_{clus} < 80 ns";
             default:
                 return "no timing cut defined";
         }
@@ -5153,6 +5200,21 @@
                 break;
             case 8: //Rotation
                 bGScheme="Rotation, new BG handler, with prob. ";
+                break;
+            case 9: // mixed event with PtMax method
+                bGScheme="mixed event, Pt max method ";
+                break;
+            case 10: // likesign mixing
+                bGScheme="likesign mixing";
+                break;
+            case 11: // sideband mixing right side
+                bGScheme="sideband mixing (180-220 MeV)";
+                break;
+            case 12: // sideband mixing left side
+                bGScheme="sideband mixing (10-50 MeV)";
+                break;
+            case 13: // sideband mixing both sides
+                bGScheme="sideband mixing both sides";
                 break;
             default:
                 bGScheme="no BG method selected";
@@ -5355,8 +5417,8 @@
     //******** Analyze neutral meson mass selection window cut *********************
     //************************************************************************************
     TString AnalyseMesonSelectionWindowCut(Int_t SelectionWindowCut){   // Set Cut
-    switch(SelectionWindowCut){
-        case 0:
+        switch(SelectionWindowCut){
+            case 0:
         return "0 MeV < M_{#gamma#gamma} < 4000 MeV";
         case 1:
         return "100 MeV < M_{#gamma#gamma} < 145 MeV";
@@ -5407,9 +5469,158 @@
        return "RBins cut unknown";
 	}
     }
+    //******** Analyze neutral meson pt cut *********************
+    //************************************************************************************
+    TString AnalyseMesonPtCut(Int_t pTCut){   // Set Cut
+        switch(pTCut){
+        case 0:
+        return "no cut";
+        case 1:
+        return "p_{T} > 0.4 GeV/c";
+        case 2:
+        return "p_{T} > 0.7 GeV/c";
+        case 3:
+        return "p_{T} > 0.9 GeV/c";
+        case 4:
+        return "p_{T} > 1.0 GeV/c";
+        case 5:
+        return "p_{T} > 1.2 GeV/c";
+        case 6:
+        return "p_{T} > 1.5 GeV/c";
+        case 7:
+        return "p_{T} > 0.5 GeV/c";
 
+        default:
+        return "cut unknown";
+    }
+    }
+    //************************************************************************************
+    //******** Analyze Charged Pion Cut ClsTPC *********************
+    //************************************************************************************
+    TString AnalysePionClsTPCCut(Int_t clsTPCCut){   // Set Cut
+        switch(clsTPCCut){
+            case 0:
+            return "N_{Cls} > 0";
+            case 1:
+            return "N_{Cls} > 70";
+            case 2:
+            return "N_{Cls} > 80";
+            case 3:
+            return "N_{Cls} > 100";
+            case 4:
+            return "N_{Cls} > 70 and 0 percent of findable clusters";
+            case 5:
+            return "N_{Cls} > 70 and 35 percent of findable clusters";
+            case 6:
+            return "N_{Cls} > 70 and 60 percent of findable clusters";
+            case 7:
+            return "N_{Cls} > 70 and 35 percent of findable clusters";
+            case 8:
+            return "N_{Cls} > 0 and 35 percent of findable clusters";
+            case 9:
+            return "N_{Cls} > 70 and 35 percent of findable clusters (use corrected info)";
+            default:
+            return "cut unknown";
+         }
+    }
 
+    //************************************************************************************
+    //******** Analyze Charged Pion DCA Cut                          *********************
+    //************************************************************************************
+    TString AnalysePionDCACut(Int_t DCACut){   // Set Cut
+        switch(DCACut){
+            case 0:
+            return "open";
+            case 1:
+            return "DCA_{XY} < 0.0182+0.0350/pt^1.01";
+            case 2:
+            return "DCA_{XY} < 1 cm and max DCA_{Z} < 2 cm";
+            case 3:
+            return "DCA_{XY} < 0.0182+0.0350/pt^1.01 cm and max DCA_{Z} < 3 cm";
+            case 4:
+            return "DCA_{XY} < 0.5 cm and max DCA_{Z} < 3 cm";
+            default:
+            return "cut unknown";
+         }
+    }
 
+    //************************************************************************************
+    //******** Analyze Charged Pion Min Pt ***********************************************
+    //************************************************************************************
+    TString AnalysePionPtCut(Int_t minPtCut){   // Set Cut
+        switch(minPtCut){
+            case 0:
+            return "p_{T} > 0.075 GeV/c";
+            case 1:
+            return "p_{T} > 0.1 GeV/c";
+            case 2:
+            return "p_{T} > 0.125 GeV/c";
+            case 3:
+            return "p_{T} > 0.150 GeV/c";
+            case 4:
+            return "p_{T} > 0.400 GeV/c";
+            default:
+            return "cut unknown";
+         }
+    }
+
+    //************************************************************************************
+    //******** Analyze Charged Pion Cut dEdx TPC******************************************
+    //************************************************************************************
+    TString AnalysePiondEdxTPCCut(Int_t dEdxTPCCut){   // Set Cut
+        switch(dEdxTPCCut){
+            case 0:
+            return "no cut";
+            case 1:
+            return "-10 < n #sigma < 10";
+            case 2:
+            return "-6 < n #sigma < 7";
+            case 3:
+            return "-5 < n #sigma < 5";
+            case 4:
+            return "-4 < n #sigma < 5";
+            case 5:
+            return "-4 < n #sigma < 4";
+            case 6:
+            return "-3 < n #sigma < 4";
+            case 7:
+            return "-3 < n #sigma < 3";
+            case 8:
+            return "-2 < n #sigma < 3";
+            default:
+            return "cut unknown";
+         }
+    }
+
+    //************************************************************************************
+    //******** Analyze Charged Pion Cut dEdx TPC******************************************
+    //************************************************************************************
+    TString AnalysePionMassCut(Int_t PionMassCut){   // Set Cut
+        switch(PionMassCut){
+            case 0:
+            return "no cut";
+            case 1:
+            return "N_{#pi #pi} < 1 GeV/c^{2}";
+            case 2:
+            return "N_{#pi #pi} < 0.75 GeV/c^{2}";
+            case 3:
+            return "N_{#pi #pi} < 0.6 GeV/c^{2}";
+            case 4:
+            return "N_{#pi #pi} < 0.547853 GeV/c^{2}";
+            case 5:
+            return "N_{#pi #pi} < 0.5 GeV/c^{2}";
+            case 6:
+            return "N_{#pi #pi} < 0.65 GeV/c^{2}";
+            case 7:
+            return "N_{#pi #pi} < 0.7 GeV/c^{2}";
+            case 8:
+            return "N_{#pi #pi} < 0.85 GeV/c^{2}";
+            case 9:
+            return "N_{#pi #pi} < 1.5 GeV/c^{2}";
+            default:
+            return "cut unknown";
+         }
+    }
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************

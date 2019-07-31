@@ -107,6 +107,10 @@
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.2,1.4,1.5,2,2.5,3,3.5,4,5,6.,8.,12.};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {3,6,6,2,3,2,2,2,2,2,2,2,3};
 
+    // for sys
+    Double_t fBinsEtaPiPlPiMiPiZero7TevSysPtPCM[3]         = {1.8,6.,12.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevSysPtRebinPCM[2]       = {4,4};
+
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[10]         = {0,1,1.5,2,2.5,3,3.5,4,5,8.};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[9]       = {2,2,2,2,2,2,2,2,2};
 
@@ -121,22 +125,37 @@
 
     // omega->pi+pi-pi0
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,4,5,5,5,5,5,10,10};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,5,4,5,5,5,5,5,10,10};
+    Int_t fBinsPi0OmegaBinning7TevPtRebinPCM[13]           = {10,10,7,7,5,4,5,5,5,5,5,10,10};
 
     // for sys
-    //Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[9]         = {0,1,1.4,1.8,2.5,3.5,5,8.,12.};
-    //Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[8]       = {4,4,4,4,4,4,4,8};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevSysPtPCM[3]         = {1.8,6.,12.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevSysPtRebinPCM[2]       = {4,4};
 
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[12]         = {0,1,1.5,2,2.5,3,3.5,4,5.,6.,8.,12.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[11]       = {10,10,10,10,10,10,8,8,8,6,6};
+    Int_t fBinsPi0OmegaBinning7TevPtRebinPCMEMC[11]           = {10,10,10,10,10,10,8,8,8,6,6};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,12.,16};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[12]       = {10,10,10,10,10,10,10,10,4,3,4,6};
-
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[13]         = {0,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12.,16};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[12]       = {10,10,10,10,10,6,6,6,6,6,8,8};
+    Int_t fBinsPi0OmegaBinning7TevPtRebinEMC[12]           = {10,10,10,10,10,6,6,6,6,6,8,8};
+    
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[14]         =  {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,12.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[13]       = {4,4,4,4,5,5, 4,4,4,4,4,5,5};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[13]       = {4,4,4,4,5,5,5,4,4,4,4,4,10};
+    Int_t fBinsPi0OmegaBinning7TevPtRebinPCMPHOS[13]           = {4,4,4,4,5,5,5,4,4,4,4,4,10};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[10]         = {0,1,1.8,2,2.5,3.,3.5,4.,6.,8.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[9]       = {5,5,5,5,4,4,3,3,3};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[10]    = {0,1.8,2,2.5,3.,3.5,4.,6.,8.,10};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[9]   = {5,5,5, 6,6,6,6,6,6};
+    Int_t fBinsPi0OmegaBinning7TevPtRebinPHOS[9]       = {5,5,5, 6,6,6,6,6,6};
+
+    // LHC11
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevLHC11PtPCMEMC[10]    = {0,6.,8.,10.,12.,14.,16,18.,20.,24.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevLHC11PtRebinPCMEMC[9]   = {3,6,3,3,3,3,6,6,6};
+    Int_t fBinsPi0OmegaBinning7TevLHC11PtRebinPCMEMC[9]       = {3,6,3,3,3,3,6,6,6};
+
+
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevLHC11PtEMC[14]         = {0,6.,8.,9.,10.,11.,12,13.,14.,16.,18,20,22,24};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevLHC11PtRebinEMC[13]       = {3,6,6,6,6,6,6,6,6,6,8,8,8};
+    Int_t fBinsPi0OmegaBinning7TevLHC11PtRebinEMC[13]       = {3,6,6,6,6,6,6,6,6,6,8,8,8};
 
 #endif
