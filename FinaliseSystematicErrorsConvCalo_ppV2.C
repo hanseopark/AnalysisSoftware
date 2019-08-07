@@ -307,7 +307,7 @@ void FinaliseSystematicErrorsConvCalo_ppV2(   TString nameDataFileErrors    = ""
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, Trigger - 16, Efficiency - 17
-        if (i == 0 || i == 16 || i == 17 || (mode == 3 && (i <18))){ // special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 16 || i == 17 || (mode == 3 && (i <18)) || (mode == 2 && (i <18))){ // special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){

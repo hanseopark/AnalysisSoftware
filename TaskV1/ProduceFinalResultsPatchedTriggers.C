@@ -355,6 +355,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString fCentOutput     = "";
     TString centEstimator   = "";
     TString fSphericityCut                      = "";
+    TString fMultiplicityCut                    = "";
     // put correct color setting for different triggers
     for (Int_t i = 0; i < numberOfTrigg; i++){
         colorTrigg[i]       = GetDefaultTriggerColorName(triggerName[i], 0, optionEnergy);
@@ -407,22 +408,64 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 collisionSystem                         = fCent+ " "+collisionSystem;
             }
             fSphericityCut = fEventCutSelection(0,1);
-            if (optionEnergy.Contains("5TeV2017") && i == 0 && (fSphericityCut.CompareTo("0") != 0 ) ){
-              if(fSphericityCut.CompareTo("h") == 0){
+            if (optionEnergy.Contains("5TeV2017") && i == 0 && (fSphericityCut.Contains("h") ) ){
+              fSphericityCut = fEventCutSelection(0,3);
+              if(fSphericityCut.CompareTo("h05") == 0){
                 fCentOutput = "S0005";
                 centEstimator = "S0005";
-              } else if(fSphericityCut.CompareTo("i") == 0){
+              } else if(fSphericityCut.CompareTo("h5a") == 0){
                 fCentOutput = "S0510";
                 centEstimator = "S0510";
-              } else if(fSphericityCut.CompareTo("j") == 0){
+              } else if(fSphericityCut.CompareTo("h0a") == 0){
                 fCentOutput = "S0010";
                 centEstimator = "S0010";
-              } else if(fSphericityCut.CompareTo("q") == 0){
+              } else if(fSphericityCut.CompareTo("h03") == 0){
                 fCentOutput = "S0003";
                 centEstimator = "S0003";
-              } else if(fSphericityCut.CompareTo("r") == 0){
+              } else if(fSphericityCut.CompareTo("h7a") == 0){
                 fCentOutput = "S0710";
                 centEstimator = "S0710";
+              }
+            }
+            fMultiplicityCut = fEventCutSelection(0,1);
+            if (optionEnergy.Contains("5TeV2017") && i == 0 && (fMultiplicityCut.Contains("m") || fMultiplicityCut.Contains("n") || fMultiplicityCut.Contains("o") || fMultiplicityCut.Contains("p")) ){
+              fMultiplicityCut = fEventCutSelection(0,3);
+              if(fMultiplicityCut.CompareTo("m01") == 0){
+                fCentOutput = "V0M_0_1";
+                centEstimator = "V0M_0_1";
+              } else if(fMultiplicityCut.CompareTo("m02") == 0){
+                fCentOutput = "V0M_0_2";
+                centEstimator = "V0M_0_2";
+              } else if(fMultiplicityCut.CompareTo("m05") == 0){
+                fCentOutput = "V0M_0_5";
+                centEstimator = "V0M_0_5";
+              } else if(fMultiplicityCut.CompareTo("m5k") == 0){
+                fCentOutput = "V0M_5_20";
+                centEstimator = "V0M_5_20";
+              } else if(fMultiplicityCut.CompareTo("n26") == 0){
+                fCentOutput = "V0M_20_60";
+                centEstimator = "V0M_20_60";
+              } else if(fMultiplicityCut.CompareTo("n6a") == 0){
+                fCentOutput = "V0M_60_100";
+                centEstimator = "V0M_60_100";
+              } else if(fMultiplicityCut.CompareTo("o01") == 0){
+                fCentOutput = "SPD_0_1";
+                centEstimator = "SPD_0_1";
+              } else if(fMultiplicityCut.CompareTo("o02") == 0){
+                fCentOutput = "SPD_0_2";
+                centEstimator = "SPD_0_2";
+              } else if(fMultiplicityCut.CompareTo("o05") == 0){
+                fCentOutput = "SPD_0_5";
+                centEstimator = "SPD_0_5";
+              } else if(fMultiplicityCut.CompareTo("o5k") == 0){
+                fCentOutput = "SPD_5_20";
+                centEstimator = "SPD_5_20";
+              } else if(fMultiplicityCut.CompareTo("p26") == 0){
+                fCentOutput = "SPD_20_60";
+                centEstimator = "SPD_20_60";
+              } else if(fMultiplicityCut.CompareTo("p6a") == 0){
+                fCentOutput = "SPD_60_100";
+                centEstimator = "SPD_60_100";
               }
             }
         }

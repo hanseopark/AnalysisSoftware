@@ -2159,7 +2159,7 @@
                                 binning[i] = fBinsPi05TeV2017PtPbPbRef[i];
                             }
                           } else if(SpecialTrigger == -1 ){
-                              maxNBins = 30; // binning for combination
+                              maxNBins = 31; // binning for combination
                               for(Int_t i = 0; i < maxNBins+1; i++)
                                   binning[i] = fBinsPi05TeV2017PCMCombinationPt[i];
                           } else if(fNBinsPt>15 && fNBinsPt<22){

@@ -4810,6 +4810,11 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       fMesonLambdaTailRange[0]    = 0.015;
                       fMesonLambdaTailRange[1]    = 0.015;
                     }
+                    if(fMode == 5){
+                      fMesonLambdaTail            = 0.006;
+                      fMesonLambdaTailRange[0]    = 0.006;
+                      fMesonLambdaTailRange[1]    = 0.006;
+                    }
                     TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
                     if(trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0){
                       fMesonFitRange[0] = 0.03;
@@ -4881,6 +4886,11 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTail            = 0.012;
                 fMesonLambdaTailRange[0]    = 0.012;
                 fMesonLambdaTailRange[1]    = 0.012;
+                if(fMode == 5 && fEnergyFlag.Contains("5TeV2017")){
+                      fMesonLambdaTail            = 0.006;
+                      fMesonLambdaTailRange[0]    = 0.006;
+                      fMesonLambdaTailRange[1]    = 0.006;
+                }
                 if(fDoJetAnalysis){
                   fMesonWidthRange[0]         = 0.022;
                   fMesonWidthRange[1]         = 0.035;

@@ -4112,35 +4112,54 @@
     //************************************************************************************
     //********* Analyzes the Sphericity cut, return correct cut label       **************
     //************************************************************************************
-    TString AnalyseSphericity(Int_t cut ){
-        switch(cut) {
-            case 0:
-                return "no cut";
-            case 17:
-                return "S_{T} < 0.5";
-            case 18:
-                return "S_{T} > 0.5";
-            case 19:
-                return "0 < S_{T} < 1";
-            case 20: // k: pp -> 0 < Sphericity < 1.0  + mult cut < 20
-                return "0 < S_{T} < 1, N_{tracks}<20";
-            case 21: // l: pp ->0 < Sphericity < 1.0 + mult cut > 20
-                return "0 < S_{T} < 1, N_{tracks}>20";
-            case 22: // m: pp -> Sphericity < 0.5 + mult cut < 20
-                return "S_{T} < 0.5, N_{tracks}<20";
-            case 23: // n: pp -> Sphericity < 0.5 + mult cut > 20
-                return "S_{T} < 0.5, N_{tracks}>20";
-            case 24: // o: pp -> Sphericity > 0.5 + mult cut < 20
-                return "S_{T} > 0.5, N_{tracks}<20";
-            case 25: // p: pp -> Sphericity > 0.5 + mult cut > 20
-                return "S_{T} > 0.5, N_{tracks}>20";
-            case 26: // q: pp -> Sphericity > 0.5
-                return "S_{T} < 0.3";
-            case 27: // r: pp -> Sphericity > 0.5
-                return "S_{T} > 0.7";
-            default:
-                return "Sphericity cut not defined";
+    TString AnalyseSphericity(TString string ){
+        if(string.CompareTo("h0a") == 0){
+          return "0 < S_{T} < 1";
+        } else if(string.CompareTo("h05") == 0){
+          return "S_{T} < 0.5";
+        } else if(string.CompareTo("h5a") == 0){
+          return "S_{T} > 0.5";
+        } else if(string.CompareTo("h03") == 0){
+          return "S_{T} < 0.3";
+        } else if(string.CompareTo("h7a") == 0){
+          return "S_{T} > 0.7";
+        } else {
+          return "Sphericity cut not defined";
         }
+    }
+    //************************************************************************************
+    //********* Analyzes the Multiplicity cut, return correct cut label       ************
+    //************************************************************************************
+    TString AnalyseMultiplicity(TString string){
+      if(string.CompareTo("m01") == 0){
+        return "0-1% V0M";
+      } else if(string.CompareTo("m02") == 0){
+        return "0-2% V0M";
+      } else if(string.CompareTo("m05") == 0){
+        return "0-5% V0M";
+      } else if(string.CompareTo("m5k") == 0){
+        return "5-20% V0M";
+      } else if(string.CompareTo("n26") == 0){
+        return "20-60% V0M";
+      } else if(string.CompareTo("n6a") == 0){
+        return "60-100% V0M";
+      } else if(string.CompareTo("o01") == 0){
+        return "0-1% SPD";
+      } else if(string.CompareTo("o02") == 0){
+        return "0-2% SPD";
+      } else if(string.CompareTo("o05") == 0){
+        return "0-5% SPD";
+      } else if(string.CompareTo("o5k") == 0){
+        return "5-20% SPD";
+      } else if(string.CompareTo("p26") == 0){
+        return "20-60% SPD";
+      } else if(string.CompareTo("p6a") == 0){
+        return "60-100% SPD";
+      } else if(string.CompareTo("000") == 0){
+        return "0-100%";
+      } else {
+        return "Mult cut not defined";
+      }
     }
 
 

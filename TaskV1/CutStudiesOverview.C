@@ -391,8 +391,11 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fPhotonAsymmetry));
         } else if (cutVariationName.Contains("Sphericity")){
-            TString fSphericityCut                                        = fEventCutSelection(0,1);
-            cutStringsName[i]                                   = AnalyseSphericity(CutNumberToInteger(fSphericityCut));
+            TString fSphericityCut                                        = fEventCutSelection(0,3);
+            cutStringsName[i]                                   = AnalyseSphericity(fSphericityCut);
+        } else if (cutVariationName.Contains("Mult")){
+            TString fMultiplicityCut                                      = fEventCutSelection(0,3);
+            cutStringsName[i]                                   = AnalyseMultiplicity(fMultiplicityCut);
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }
@@ -1532,6 +1535,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if(cutVariationName.Contains("Sphericity")){
                   minYRatio = 0.51;
                   maxYRatio = 1.49;
+                }
+                if(cutVariationName.Contains("Mult")){
+                  minYRatio = 0.01;
+                  maxYRatio = 9.99;
                 }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
