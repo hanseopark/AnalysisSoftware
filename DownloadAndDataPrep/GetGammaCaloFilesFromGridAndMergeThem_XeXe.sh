@@ -89,7 +89,6 @@ else
     pathMC=PWGGA/GA_PbPb_MC_AOD
 fi
 
-OUTPUTDIR=$BASEDIR/$TRAINDIR
 ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoData/"
 OUTPUTDIRData=$BASEDIR/$TRAINDIR/$baseLegoData
 ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoMC/"

@@ -934,7 +934,7 @@ void ClusterQA_Runwise(
             } else cout << "Info: Object |EtaPhi_afterClusterQA| could not be found! Skipping..." << endl;
 
 
-            if (i<nData && nSets < 3){
+            if (i<nData && nSets < 3 && doExtQA==2){
                 TH2D* CellTimeVsCellID     = (TH2D*)CaloExtQAContainer->FindObject(Form("CellTimeVsCellID %s", fClusterCutSelection.Data()));
                 if (CellTimeVsCellID){
                     TH2D* tempCellTimeVsCellId = new TH2D(*CellTimeVsCellID);
@@ -966,7 +966,7 @@ void ClusterQA_Runwise(
                 vecClusterNCells[i].push_back(tempClusNCells);
             } else cout << "Info: Object |NCellPerCluster_afterClusterQA| could not be found! Skipping..." << endl;
 
-            if(doExtQA>0 && nSets < 3){
+            if(doExtQA>0 && nSets < 3 ){
                 TH2D* ClusEVsNCells = (TH2D*) CaloExtQAContainer->FindObject(Form("ClusterEnergyVsNCells_afterQA %s", fClusterCutSelection.Data()));
                 if(ClusEVsNCells){
                     TH2D* tempClusEVsNCells = new TH2D(*ClusEVsNCells);
@@ -1056,7 +1056,7 @@ void ClusterQA_Runwise(
                 hClusterRMSTime[i]->SetBinError(bin, Time->GetRMSError());
             } else cout << "Info: Object |ClusterTimeVsE_afterClusterQA| could not be found! Skipping Fill..." << endl;
 
-            if(i<nData && nSets < 3){
+            if(i<nData && nSets < 3 && doExtQA==2){
                 TH2D* ClusEnergyTime = (TH2D*) CaloCutsContainer->FindObject(Form("ClusterTimeVsE_afterClusterQA %s", fClusterCutSelection.Data()));
                 if(ClusEnergyTime){
                     TH2D* tempClusEnergyTime = new TH2D(*ClusEnergyTime);
@@ -1440,18 +1440,22 @@ void ClusterQA_Runwise(
                 }
             }
 
+            cout << __LINE__ << endl;
             DrawVectorOverviewTH2D( canvaslarge, vecClusterEtaPhi[i], "hClusterEtaPhi_scaledNEventsAndMean", outputDirDataSet, suffix,
                                     0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kFALSE);
-            if(i<nData && nSets < 3)
-                DrawVectorOverviewTH2D( canvaslarge, vecCellTimeID[i], "hCellTimeVsId", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kTRUE);
+            cout << __LINE__ << endl;
+//             if(i<nData && nSets < 3 && doExtQA == 2)
+//                 DrawVectorOverviewTH2D( canvaslarge, vecCellTimeID[i], "hCellTimeVsId", outputDirDataSet, suffix,
+//                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kTRUE);
 
             TGaxis::SetExponentOffset(0, -0.1, "x");
-            if(i<nData && nSets < 3)
-                DrawVectorOverviewTH2D( canvaslarge, vecClusterEnergyTime[i], "ExtQA/hClusterEnergyTime", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, 0x0, kTRUE, kTRUE);
+            cout << __LINE__ << endl;
+//             if(i<nData && nSets < 3 && doExtQA == 2)
+//                 DrawVectorOverviewTH2D( canvaslarge, vecClusterEnergyTime[i], "ExtQA/hClusterEnergyTime", outputDirDataSet, suffix,
+//                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, 0x0, kTRUE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
 
+            cout << __LINE__ << endl;
             if(doExtQA>0){
                 if (nSets < 3) DrawVectorOverviewTH2D( canvaslarge, vecClusterEVsNCells[i], "ExtQA/hClusterEVsNCells", outputDirDataSet, suffix,
                                                       0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, boxLabel2, kFALSE, kTRUE);
@@ -1461,6 +1465,7 @@ void ClusterQA_Runwise(
                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
             }
 
+            cout << __LINE__ << endl;
             if(i < nData && doExtQA==2){
                 for(Int_t iMC=nData; iMC<nSets; iMC++){
                     if(vecClusterFiredCellIDs[i].size() == vecClusterFiredCellIDs[iMC].size()){
@@ -1472,11 +1477,13 @@ void ClusterQA_Runwise(
                 }
             }
 
+            cout << __LINE__ << endl;
             DrawVectorOverviewTH1D( canvaslarge, vecClusterEFracCellsBefore[i], "ExtQA/EFrac/hClusterEFracCellsBefore", outputDirDataSet, suffix,
                                     0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+            cout << __LINE__ << endl;
             DrawVectorOverviewTH1D( canvaslarge, vecClusterEFracCells[i], "ExtQA/EFrac/hClusterEFracCells", outputDirDataSet, suffix,
                                     0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
-
+            cout << __LINE__ << endl;
             if(isPCMCalo){
                 DrawVectorOverviewTH1D( canvas, vecClusterPi0ConvPhotonEta[i], "ExtQA/ConvPhotonEtaPhi/hClusterPi0ConvPhotonEta_Runwise", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.2, 0.93, 0x0, kFALSE, kTRUE);
@@ -1498,14 +1505,14 @@ void ClusterQA_Runwise(
                     AdjustHistRange(((TH1D*) vecHistos[i].at(h)),1.1,1.1,kTRUE);
                     ((TH1D*) vecHistos[i].at(h))->Draw("px0e1");
                 }
-
+                cout << __LINE__ << endl;
                 if(doTrigger && i<nData){
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger.Data());
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.81, 0.03, Form("%s clusters", calo.Data()), "", "");
                 } else{
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), Form("%s clusters", calo.Data()));
                 }
-
+                cout << __LINE__ << endl;
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 )
                     SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
                 else
@@ -1559,39 +1566,48 @@ void ClusterQA_Runwise(
                 if(fTrigger.Contains("not defined"))
                     fTrigger            = "";
             }
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterEnergy[i], vecRuns, 5, 5, kFALSE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterEnergy_Runwise", plotDataSets[i],kFALSE,
                                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kTRUE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterM02[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterM02_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kFALSE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterM20[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterM20_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kFALSE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterNCells[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterNCells_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kTRUE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterDispersion[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterDispersion_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kFALSE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             //--------------------------------------------------------------------------------------------------------
             TGaxis::SetExponentOffset(0.5, 0, "x");
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterTime[i][0], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterTime_Runwise", plotDataSets[i], kTRUE,
                     fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kFALSE, kTRUE, kFALSE);
+            cout << __LINE__ << endl;
             for(Int_t iT=1; iT<5; iT++){
                 DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterTime[i][iT], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                         doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, Form("ClusterTime_Runwise_%.01f-%.01f",minT_Energy[iT], maxT_Energy[iT]), plotDataSets[i], kTRUE,
                                         fCollisionSystem, Form("%s clusters", calo.Data()), suffix, kFALSE, kTRUE, kFALSE);
             }
+            cout << __LINE__ << endl;
             TGaxis::SetExponentOffset(0, 0, "x");
             //--------------------------------------------------------------------------------------------------------
             if(isTrackMatching){
+                cout << __LINE__ << endl;
                 TGaxis::SetExponentOffset(0.013, -0.0285, "x");
                 DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterDeltaEta[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                         doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "ClusterDeltaEta_Runwise", plotDataSets[i], kTRUE,
@@ -1602,6 +1618,7 @@ void ClusterQA_Runwise(
                 TGaxis::SetExponentOffset(0, 0, "x");
             }
             //--------------------------------------------------------------------------------------------------------
+            cout << __LINE__ << endl;
             if(doExtQA>0){
                 for(Int_t iModule=0; iModule<nCaloModules; iModule++){
                     DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecClusterEVsModule[i][iModule], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
@@ -1620,6 +1637,7 @@ void ClusterQA_Runwise(
             }
 
             if(doExtQA>1){
+                cout << __LINE__ << endl;
                 for(Int_t iBad=0; iBad<(Int_t)vecBadCells[i].size(); iBad++){
                     DrawVectorRunwiseBadCells(canvasRunwise, legendRuns, vecBadCellsEnergy[i], (Int_t)vecBadCells[i].size(), iBad, vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.92, 0.03, 0.8, 0.81, 0.03,
                                               doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, Form("BadCells/Cell%i_Energy",((TString)vecBadCells[i].at(iBad)).Atoi()), plotDataSets[i], kTRUE,
@@ -1817,10 +1835,9 @@ void ClusterQA_Runwise(
             }
         }
 
-        if(doExtQA>0){
-          DeleteVecTH2D(vecClusterEVsNCells[i]);
-
-        }
+//         if(doExtQA>0){
+//           DeleteVecTH2D(vecClusterEVsNCells[i]);
+//         }
         DeleteVecTH2D(vecClusterFiredCellIDs[i]);
 
 

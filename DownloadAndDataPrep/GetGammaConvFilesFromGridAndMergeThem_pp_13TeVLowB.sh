@@ -13,7 +13,7 @@ MERGEON=1
 MERGEONData=1
 MERGEONMC=1
 SINGLERUN=1
-SEPARATEON=1
+SEPARATEON=0
 MERGEONSINGLEData=1
 MERGEONSINGLEMC=1
 CLEANUP=1
@@ -88,7 +88,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 TRAINDIR=Legotrain-QA2019LowB
 
 # LHC16fData="755";
-LHC17gData="756";
+# LHC17gData="756";
 # LHC18Data="754"
 #     LHC18cwoSDDData="child_1";
 #     LHC18cfastData="child_2";
@@ -98,6 +98,15 @@ LHC17gData="756";
 # LHC18xMCPHY="1418";
 #     LHC18h1woSDDMC="child_1"
 #     LHC18h1fastMC="child_2"
+
+TRAINDIR=20190714-PCMQAtree-LowB
+
+LHC16fData="887";
+LHC17gData="888";
+LHC18Data="889"
+    LHC18cwoSDDData="child_1";
+    LHC18cfastData="child_2";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -163,14 +172,17 @@ echo "18h1_fast anchored to 18c_fast: $HAVELHC18h1fast $LHC18h1fastMC $OUTPUTDIR
 
 if [ $CLEANUPMAYOR == 0 ]; then
     if [ $REMERGE == 1 ]; then
-        echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+#         echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+        echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
         CopyRunwiseAndMergeAccordingToRunlistData "LHC16f" $HAVELHC16f $OUTPUTDIR_LHC16f $LHC16fData $pathData $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMergeLowB.txt "pass1_lowB" GammaConvV1
         CopyRunwiseAndMergeAccordingToRunlistData "LHC17g" $HAVELHC17g $OUTPUTDIR_LHC17g $LHC17gData $pathData $baseLegoData "/alice/data/2017" $NSlashes3 runlistsToMergeLowB.txt "pass1" GammaConvV1
         CopyRunwiseAndMergeAccordingToRunlistData "LHC18c" $HAVELHC18cwoSDD $OUTPUTDIR_LHC18cwoSDD $LHC18cwoSDDData $pathData2 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMergeLowB.txt "pass1_CENT_woSDD" GammaConvV1
         CopyRunwiseAndMergeAccordingToRunlistData "LHC18c" $HAVELHC18cfast $OUTPUTDIR_LHC18cfast $LHC18cfastData $pathData3 $baseLegoData "/alice/data/2018" $NSlashes3 runlistsToMergeLowB.txt "pass1_FAST" GammaConvV1
 
         currentDir=$PWD
-        echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+
+#         echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+        echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
         CopyRunwiseAndMergeAccordingToRunlistMC "LHC17d1" $HAVELHC17d1 $OUTPUTDIR_LHC17d1 $LHC17d1MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMergeLowB.txt GammaConvV1 "_lowB"
         CopyRunwiseAndMergeAccordingToRunlistMC "LHC17h3" $HAVELHC17h3 $OUTPUTDIR_LHC17h3 $LHC17h3MC $pathMC $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMergeLowB.txt GammaConvV1
         CopyRunwiseAndMergeAccordingToRunlistMC "LHC18h1_cent_woSDD" $HAVELHC18h1woSDD $OUTPUTDIR_LHC18h1woSDD $LHC18h1woSDDMC $pathMC $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMergeLowB.txt GammaConvV1
@@ -178,7 +190,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
     echo "Change Structure If Needed"
 
-    echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+    echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
     listsToMerge=`cat runlistsToMergeLowB.txt`
     for runListName in $listsToMerge; do
         if [ $HAVELHC16f == 1 ]; then
@@ -215,7 +228,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
         fi
     done
 
-    echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+#     echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+    echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
     listsToMerge=`cat runlistsToMergeLowB.txt`
     for runListName in $listsToMerge; do
         # MC for LHC16f
@@ -262,7 +276,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
         echo "Starting Merging"
 
         if [ $MERGEONData == 1 ]; then
-            echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+#             echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+            echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
             listsToMerge=`cat runlistsToMergeLowB.txt`
             for runListName in $listsToMerge; do
                 ls $OUTPUTDIR/GammaConvV1_LHC17g-pass$passNr-$runListName\_*.root > filesForMerging.txt
@@ -336,7 +351,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done
         fi
         if [ $MERGEONMC == 1 ]; then
-            echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+#             echo -e "DPGTrack\nDPGTrackIncAccTPC" > runlistsToMergeLowB.txt
+            echo -e "DPGTrackIncAccTPCandPCM" > runlistsToMergeLowB.txt
             listsToMerge=`cat runlistsToMergeLowB.txt`
             for runListName in $listsToMerge; do
                 ls $OUTPUTDIR/GammaConvV1_MC_LHC17h3-anchor17g-$runListName\_*.root > filesForMerging.txt

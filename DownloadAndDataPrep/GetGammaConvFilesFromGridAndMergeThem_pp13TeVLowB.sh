@@ -54,7 +54,16 @@ echo $BASEDIR
     NSlashes4=`expr $NSlashes + 2`
     echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
-TRAINDIR=Legotrain-vAN-20170612-LowBtest
+# TRAINDIR=Legotrain-vAN-20170612-LowBtest
+# LHClowB="2376"
+# # LHC17gData="child_2";
+# LHClowBMC="3340";
+# # LHC17h3MC="child_2";
+# LHC18clowB="2396";
+# LHC18c_woSDD="child_3";
+# LHC18c_wSDD="child_5";
+
+TRAINDIR=20190714-PCMQAtree
 LHClowB="2376"
 # LHC17gData="child_2";
 LHClowBMC="3340";
@@ -238,7 +247,7 @@ OUTPUTDIR=$BASEDIR/$TRAINDIR
                 runNumbers=`cat runlists/runNumbersLHC17h3_DPGTrack.txt`
                 echo $runNumbers
                 for runNumber in $runNumbers; do
-                    CopyFileIfNonExisitent $OUTPUTDIR_LHC17h3/$runNumber 
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC17h3/$runNumber
                     "/alice/sim/2017/LHC17h3$5/$runNumber/PWGGA/GA_pp_MC/$LHC17h3MC" $NSlashes3 "/alice/sim/2017/LHC17h3$5/$runNumber/PWGGA/GA_pp_MC/$LHC17h3MC/" kTRUE
                 done;
                 if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC17h3/mergedAllConv.txt ]; then

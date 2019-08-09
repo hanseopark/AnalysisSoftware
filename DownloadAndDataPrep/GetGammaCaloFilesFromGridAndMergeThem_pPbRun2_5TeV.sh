@@ -80,6 +80,13 @@ if [ $3 = "AOD" ]; then
     pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
     pathDataR2=pass1/AOD210/PWGGA/GA_pPb_AOD
     pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+elif [ $3 = "ESDLF" ]; then
+    baseLegoData=LF_pPb
+    baseLegoMC=LF_pPb_MC
+    pathDataR1=pass4/PWGLF/LF_pPb
+    pathMCR1=PWGLF/LF_pPb_MC
+    pathDataR2=pass1/PWGLF/LF_pPb
+    pathMCR2=PWGLF/LF_pPb_MC
 else
     baseLegoData=GA_pPb
     baseLegoMC=GA_pPb_MC
@@ -273,22 +280,41 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17f2bMCFast="child_1";
 
 # new reco run1 pPb
-TRAINDIR=20190612-QAPass4PCMEMCPHOS
-LHC13beData="534"
-LHC13bData="child_1"
-LHC13cData="child_2"
-LHC13dData="child_3"
-LHC13eData="child_4"
-LHC13fData="535"
-LHC18j5MC="699"
-LHC18j5_2MC="child_2"
-LHC18j5_1MC="child_1"
-LHC18j5_3MC="child_3"
+# TRAINDIR=20190612-QAPass4PCMEMCPHOS
+# LHC13beData="534"
+# LHC13bData="child_1"
+# LHC13cData="child_2"
+# LHC13dData="child_3"
+# LHC13eData="child_4"
+# LHC13fData="535"
+# LHC18j5MC="699"
+# LHC18j5_2MC="child_2"
+# LHC18j5_1MC="child_1"
+# LHC18j5_3MC="child_3"
+
+# new reco run1 pPb
+TRAINDIR=20190804-MultCalib
+# LHC13beData="534"
+# LHC13bData="child_1"
+# LHC13cData="child_2"
+# LHC13dData="child_3"
+# LHC13eData="child_4"
+# LHC13fData="535"
+# LHC18j5MC="429"
+# LHC18j5_2MC="child_2"
+LHC18j5_1MC="429"
+# LHC18j5_3MC="child_3"
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
-ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoData/"
+if [ $3 = "ESDLF" ]; then
+  ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGLF/$baseLegoData/"
+  ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGLF/$baseLegoMC/"
+else
+  ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoData/"
+  ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoMC/"
+fi
 OUTPUTDIRData=$BASEDIR/$TRAINDIR/$baseLegoData
-ALIENDIRMC="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoMC/"
 OUTPUTDIRMC=$BASEDIR/$TRAINDIR/$baseLegoMC
 mkdir -p $OUTPUTDIR/CutSelections
 

@@ -28,7 +28,8 @@ void PhotonQA_Runwise(
                         TString suffix                  = "eps",
                         TString folderRunlists          = "",
                         TString addLabelRunList         = "",
-                        TString cutTreeProjection       = ""
+                        TString cutTreeProjection       = "",
+                        Bool_t useConsistentCut         = kFALSE
                     ){
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "PhotonQA_Runwise" << endl;
