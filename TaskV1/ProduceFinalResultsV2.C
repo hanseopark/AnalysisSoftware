@@ -278,6 +278,11 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         nameEfficiency = "TrueMesonEffiPt";
         nameCorrectedYieldEta = "CorrectedYieldTrueEff";
         nameEfficiencyEta = "TrueMesonEffiPt";
+    } else if (mode == 3) {
+        nameCorrectedYield = "CorrectedYieldTrueEff";
+        nameEfficiency = "TrueMesonEffiPt";
+        nameCorrectedYieldEta = "CorrectedYieldTrueEff";
+        nameEfficiencyEta = "TrueMesonEffiPt";
     } else {
         nameCorrectedYield = "CorrectedYieldNormEff";
         nameEfficiency = "MesonEffiPt";
