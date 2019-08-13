@@ -64,6 +64,7 @@ Double_t widthErrElectron[2][4][14][20]; //type r pt eta
 Double_t widthErrPositron[2][4][14][20]; //type r pt eta
 Double_t chi[20][20];
 Bool_t doFitting[2][4][14][20]; //type r pt eta
+Double_t scalWidthFit[2][4][14][20]; //type r pt eta
 
 void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                         TString cutSelection        = "",
@@ -136,21 +137,6 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         }
     }
 
-    Double_t scalWidthFit       = 3;
-    Double_t maxChi2            = 200;
-    Bool_t fixSearchRange       = kFALSE;  // in case there is another, higher peak in the nSigma histos, should fix the range to search for bin with maximum content before fitting
-    if(fEnergy.Contains("PbPb")){
-        scalWidthFit       = 1.5;
-        maxChi2            = 20;
-        fixSearchRange     = kTRUE;
-    } else if ((fEnergy.Contains("XeXe")) && period.Contains("Peri")){
-        scalWidthFit       = 2;
-        maxChi2            = 20;
-    } else if (fEnergy.Contains("XeXe") && period.Contains("Cent")){
-        scalWidthFit       = 1.5;
-        maxChi2            = 20;
-    }
-
     Color_t colorR[4]           = { kBlack, kBlue+2, kRed+2, kGreen+2};
     Color_t colorEta[18]        = { kBlack, kGray+2, kBlue-7, kBlue-4, kBlue+2, kCyan+2, kCyan-5, kGreen-7, kGreen+2, kYellow+1,
                                     kOrange-5, kOrange-3, kRed+2, kRed-4, kRed-6, kMagenta-5, kMagenta-2, kViolet-7};
@@ -200,6 +186,28 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         cout << "TPC Cl bins:: " << i << " " << arrTPCClBinningOut[i] << endl;
     }
 
+    // fitting settings
+    Double_t scalWidthFitStd    = 3;
+    Double_t maxChi2            = 200;     // maximum allowed Chi2 of fit
+    Bool_t fixSearchRange       = kFALSE;  // in case there is another, higher peak in the nSigma histos, should fix the range to search for bin with maximum content before fitting
+    Double_t fitRange           = 3;       // -fitRange, fitRange
+    Int_t firstRebinBoundary    = 200;     // If maximum counts is smaller than secRebinBoundary, do first rebin with factor 2
+    Int_t secRebinBoundary      = 100;     // If maximum counts is smaller than secRebinBoundary, do second rebin with factor 2
+
+    if(fEnergy.Contains("PbPb")){
+        scalWidthFitStd    = 1.5;
+        maxChi2            = 20;
+        fixSearchRange     = kTRUE;
+        firstRebinBoundary = 100;
+        secRebinBoundary   = 0;
+
+    } else if ((fEnergy.Contains("XeXe")) && period.Contains("Peri")){
+        scalWidthFitStd    = 2;
+        maxChi2            = 20;
+    } else if (fEnergy.Contains("XeXe") && period.Contains("Cent")){
+        scalWidthFitStd    = 1.5;
+        maxChi2            = 20;
+    }
 
     // enable fitting
     for (Int_t r = 0; r < 4; r++){
@@ -207,6 +215,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
             for (Int_t i = 0; i < nEtaBinsOut; i++){
                 doFitting[0][r][j][i] = kTRUE;
                 doFitting[1][r][j][i] = kTRUE;
+                scalWidthFit[0][r][j][i] = scalWidthFitStd;
+                scalWidthFit[1][r][j][i] = scalWidthFitStd;
             }
         }
     }
@@ -222,32 +232,100 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
         for (Int_t i = 0; i < nEtaBinsOut; i++){
 
             //  [0][R][Pt][Eta]
+
+            // R00
             doFitting[0][0][1][i]  = kFALSE;
+            doFitting[0][0][9][i] = kFALSE;  // list2
+            doFitting[0][0][10][i] = kFALSE;
+            doFitting[0][0][11][i] = kFALSE;
+            doFitting[0][0][12][i] = kFALSE;
             doFitting[0][0][13][i] = kFALSE;
-            if( i < 3 || i > 15 ) doFitting[0][1][1][i] = kFALSE;
+            scalWidthFit[0][0][5][i]= 2.0;
+            scalWidthFit[0][0][6][i]= 2.0;
+            scalWidthFit[0][0][7][i]= 2.0;
+            scalWidthFit[0][0][8][i]= 2.0;  // list2
+            scalWidthFit[0][0][9][i]= 2.0;
+
+             // R01
+            //if( i < 2 || i > 15 ) doFitting[0][1][1][i] = kFALSE;   // list1
+            if( i < 9 || i > 15 ) doFitting[0][1][1][i] = kFALSE;   // list2
+            for(Int_t p = startBinP; p < nPBins; p++){
+                if(p==1 || p==9) scalWidthFit[0][1][p][i] = 2.5;
+                else if(p==6) scalWidthFit[0][1][p][i] = 3.0;
+                else scalWidthFit[0][1][p][i] = 2.0;
+            }
+            doFitting[0][1][9][i] = kFALSE;  // list2
+            doFitting[0][1][10][i] = kFALSE;  // list2
+            doFitting[0][1][11][i] = kFALSE;  // list2
+            doFitting[0][1][12][i] = kFALSE;
             doFitting[0][1][13][i] = kFALSE;
+
+            // R02
+            doFitting[0][2][9][i] = kFALSE;   // list2
+            doFitting[0][2][10][i] = kFALSE;  // list2
+            doFitting[0][2][11][i] = kFALSE;  // list2
+            doFitting[0][2][12][i] = kFALSE;
             doFitting[0][2][13][i] = kFALSE;
-            doFitting[0][3][10][i] = kFALSE;
-            doFitting[0][3][11][i] = kFALSE;
-            doFitting[0][3][12][i] = kFALSE;
-            doFitting[0][3][13][i] = kFALSE;
+            for(Int_t p = startBinP; p < nPBins; p++){
+                if(p==10 || p==12) scalWidthFit[0][2][p][i] = 2.0;
+                else scalWidthFit[0][2][p][i] = 3.0;
+            }
+
+            // R03
+            if( i < 2 || i > 16 ) doFitting[0][3][1][i] = kFALSE;
+            if( i < 2 || i > 16 ) doFitting[0][3][3][i] = kFALSE;  // list2
+            for(Int_t p = 5; p < 8; p++){
+                if( i < 1 || i > 16 ) doFitting[0][3][p][i] = kFALSE;
+            }
+            //for(Int_t p = 8; p < nPBins; p++){      // list1
+            for(Int_t p = 3; p < nPBins; p++){        // list2
+                doFitting[0][3][p][i] = kFALSE;
+            }
+            for(Int_t p = 0; p < nPBins; p++){
+                scalWidthFit[0][3][p][i] = 2.0;
+            }
 
             //  [1][TPCCl][Pt][Eta]
-            doFitting[1][0][9][i]  = kFALSE;
-            doFitting[1][0][10][i] = kFALSE;
-            doFitting[1][0][11][i] = kFALSE;
-            doFitting[1][0][12][i] = kFALSE;
-            doFitting[1][0][13][i] = kFALSE;
-            doFitting[1][1][9][i]  = kFALSE;
-            doFitting[1][1][10][i] = kFALSE;
-            doFitting[1][1][12][i] = kFALSE;
-            doFitting[1][1][13][i] = kFALSE;
+
+            // Cl00
+            scalWidthFit[1][0][1][i] = 2.0;
+            scalWidthFit[1][0][2][i] = 2.0;
+            //for(Int_t p = 5; p < nPBins; p++){   // list1
+            for(Int_t p = 3; p < nPBins; p++){     // list2
+                doFitting[1][0][p][i]  = kFALSE;
+            }
+
+            // Cl01
+            for(Int_t p = 8; p < nPBins; p++){
+                doFitting[1][1][p][i]  = kFALSE;
+            }
+            if( i ==0 || i == 17 ) doFitting[1][1][1][i]  = kFALSE;
+            scalWidthFit[1][1][1][i] = 2.5;
+            scalWidthFit[1][1][2][i] = 2.5;
+            scalWidthFit[1][1][5][i] = 2.2; // list1 2.0;
+            scalWidthFit[1][1][6][i] = 2.2; // list1 2.0;
+            scalWidthFit[1][1][7][i] = 2.2; // list1 2.0;
+
+            // Cl02
             doFitting[1][2][1][i]  = kFALSE;
+            doFitting[1][2][12][i] = kFALSE;
             doFitting[1][2][13][i] = kFALSE;
+            scalWidthFit[1][2][2][i] = 2.0;
+            for(Int_t p = 6; p < 11; p++){
+                scalWidthFit[1][2][p][i] = 2.0;
+            }
+
+            // Cl03
             doFitting[1][3][1][i]  = kFALSE;
-            if( i < 3 || i > 15 ) doFitting[1][3][2][i]  = kFALSE;
+            if( i < 6 || i > 11 ) doFitting[1][3][2][i]  = kFALSE;
             if( i < 2 || i > 16 ) doFitting[1][3][3][i]  = kFALSE;
-            if( i < 1 || i > 16 ) doFitting[1][3][4][i]  = kFALSE;
+            for(Int_t p = startBinP; p < 10; p++){
+                if((p>3) &&( i < 1 || i > 16) ) doFitting[1][3][p][i]  = kFALSE;
+                else scalWidthFit[1][3][p][i] = 2.5;
+            }
+            doFitting[1][3][10][i] = kFALSE;
+            doFitting[1][3][11][i] = kFALSE;
+            doFitting[1][3][12][i] = kFALSE;
             doFitting[1][3][13][i] = kFALSE;
         }
     }
@@ -346,11 +424,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 cout << r << "\t" << i << "\t" << j << "\t" << doFitting[0][r][i][j] << "\t"<< doFitting[1][r][i][j] << endl;
                 // Electron, different R bins
                 histoElectronDeDx[0][r][i][j]  = (TH1D*)histoElectronDeDxPEta[0][r]->ProjectionX(Form("R%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 200) histoElectronDeDx[0][r][i][j]->Rebin(2);
-                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < 100) histoElectronDeDx[0][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < firstRebinBoundary) histoElectronDeDx[0][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[0][r][i][j]->GetMaximum() < secRebinBoundary) histoElectronDeDx[0][r][i][j]->Rebin(2);
 //                 fitElectronDeDx[0][r][i][j]    = FitSignal(histoElectronDeDx[0][r][i][j],kBlue);
                 if (doFitting[0][r][i][j] && histoElectronDeDx[0][r][i][j]->GetMaximum() > 10)
-                    fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
+                    fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[0][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[0][r][i][j], maxChi2, fixSearchRange);
 //                     fitElectronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25);
 
                 if ( fitElectronDeDx[0][r][i][j]){
@@ -373,11 +451,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
                 // Positron, different R bins
                 histoPositronDeDx[0][r][i][j] = (TH1D*)histoPositronDeDxPEta[0][r]->ProjectionX(Form("R%dPosiSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 200) histoPositronDeDx[0][r][i][j]->Rebin(2);
-                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < 100) histoPositronDeDx[0][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < firstRebinBoundary) histoPositronDeDx[0][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[0][r][i][j]->GetMaximum() < secRebinBoundary) histoPositronDeDx[0][r][i][j]->Rebin(2);
 //                 fitPositronDeDx[0][r][i][j]    = FitSignal(histoPositronDeDx[0][r][i][j],kBlue);
                 if (doFitting[0][r][i][j] &&histoPositronDeDx[0][r][i][j]->GetMaximum() > 10)
-                    fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
+                    fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[0][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[0][r][i][j], maxChi2, fixSearchRange);
 //                     fitPositronDeDx[0][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[0][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
                 if (fitPositronDeDx[0][r][i][j]){
@@ -401,11 +479,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
                 // Electron, different TPC Cl bins
                 histoElectronDeDx[1][r][i][j]  = (TH1D*)histoElectronDeDxPEta[1][r]->ProjectionX(Form("Cl%dElecSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 200) histoElectronDeDx[1][r][i][j]->Rebin(2);
-                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < 100) histoElectronDeDx[1][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < firstRebinBoundary) histoElectronDeDx[1][r][i][j]->Rebin(2);
+                if (histoElectronDeDx[1][r][i][j]->GetMaximum() < secRebinBoundary) histoElectronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitElectronDeDx[1][r][i][j]    = FitSignal(histoElectronDeDx[1][r][i][j],kBlue);
                 if (doFitting[1][r][i][j] && histoElectronDeDx[1][r][i][j]->GetMaximum() > 10)
-                    fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, maxChi2, fixSearchRange);
+                    fitElectronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoElectronDeDx[1][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[1][r][i][j], maxChi2, fixSearchRange);
 //                     fitElectronDe[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoElectronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25);
 
                 if (fitElectronDeDx[1][r][i][j]){
@@ -428,11 +506,11 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
 
                 // Positron, different TPC Cl bins
                 histoPositronDeDx[1][r][i][j] = (TH1D*)histoPositronDeDxPEta[1][r]->ProjectionX(Form("Cl%dPosiSigdEdxP%dEta%d",r,i,j),minBinEta,maxBinEta,minBinPt,maxBinPt);
-                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 200) histoPositronDeDx[1][r][i][j]->Rebin(2);
-                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < 100) histoPositronDeDx[1][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < firstRebinBoundary) histoPositronDeDx[1][r][i][j]->Rebin(2);
+                if (histoPositronDeDx[1][r][i][j]->GetMaximum() < secRebinBoundary) histoPositronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitPositronDeDx[1][r][i][j]    = FitSignal(histoPositronDeDx[1][r][i][j],kBlue);
                 if (doFitting[1][r][i][j] && histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
-                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -3, 3, scalWidthFit, fixSearchRange);
+                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[1][r][i][j], fixSearchRange);
 //                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
                 if (fitPositronDeDx[1][r][i][j]){
