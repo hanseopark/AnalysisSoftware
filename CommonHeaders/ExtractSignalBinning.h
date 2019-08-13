@@ -494,7 +494,7 @@
                 }
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0  ) {
                 if (mode == 0){//PCM
-                    return 6;
+                    return 5;
                 } else if ( mode == 1 ){
                     return 5;
                 } else if ( mode == 2 || mode == 4 || mode == 13 || mode == 14 || mode == 15 ){
