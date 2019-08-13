@@ -135,6 +135,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     gROOT->Reset();
     gROOT->SetStyle("Plain");
+    //cout << "Debug; ProduceFinalResultsPatchedTriggers.C, line " << __LINE__ <<"; fileListNamePi0: "<<fileListNamePi0.Data()<<"; mode: "<<mode<<"; numberOfTrigg: "<<numberOfTrigg<<"; suffix: "<<suffix.Data()<<"; MC: "<<isMC.Data()<<"; optionEnergy: "<<optionEnergy.Data()<<"; period: "<<period.Data()<<"; pileUpApplied: "<<pileUpApplied<<"; maxPtGlobalPi0: "<<maxPtGlobalPi0<<"; averagedPi0: "<<averagedPi0<<"; enableEta: "<<enableEta<<"; maxPtGlobalEta: "<<maxPtGlobalEta<<"; averagedEta: "<<averagedEta<<"; v2ClusterizerMerged: "<<v2ClusterizerMerged<<"; nameFileFitsShift: "<<nameFileFitsShift.Data()<<"; hasClusterOutput: "<<hasClusterOutput<<"; fileInputCorrFactors: "<<fileInputCorrFactors.Data()<<endl;
 
     StyleSettingsThesis();
     SetPlotStyle();
@@ -4913,6 +4914,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             canvasWidth->Update();
             canvasWidth->SaveAs(Form("%s/Eta_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
+
         //***************************************************************************************************************
         //************************************Plotting unscaled invariant raw-yield Eta *********************************
         //***************************************************************************************************************
@@ -5127,6 +5129,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     cout << counter << "\t"<< ptSysRelEta[i][counter]<< "\t"  << yErrorSysLowRelEta[i][counter] << "\t"  <<yErrorSysHighRelEta[i][counter] << "\t"  << endl;;
                     counter++;
                 }
+
                 fileSysErrEta.close();
                 hasSysEta                   = kTRUE;
              // read in detailed systematics
@@ -5240,7 +5243,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               continue;
             // shorten graphs at the end according to range set in ptFromSpecEta
             } else if (ptFromSpecEta[i][1] > -1) {
-
                 for (Int_t f = histoCorrectedYieldEtaScaledMasked[i]->GetXaxis()->FindBin(ptFromSpecEta[i][1]); f < histoCorrectedYieldEtaScaledMasked[i]->GetNbinsX()+1; f++ ){
                     histoCorrectedYieldEtaScaledMasked[i]->SetBinContent(f,0.);
                     histoCorrectedYieldEtaScaledMasked[i]->SetBinError(f,0.);
@@ -5267,7 +5269,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphEfficiencyEta[i]   = NULL;
                 graphEffTimesAccEta[i]  = NULL;
             }
-
             // Remove 0 at beginning of the graphs
 //             graphsCorrectedYieldShrunkEta[i]->Print();
             cout << "step 2" << endl;
@@ -5281,7 +5282,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             cout << "sys shrunk 2" << endl;
             while (graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[0] == 0) graphsCorrectedYieldSysRemoved0Eta[i]->RemovePoint(0);
 //             graphsCorrectedYieldSysRemoved0Eta[i]->Print();
-
             if (graphsCorrectedYieldSysRemoved0Eta[i]){
                 if (sysAvailSingleEta[i]){
                     nRelSysErrEtaSources                    = (Int_t)ptSysDetail[i][0].size()-1;
@@ -5415,6 +5415,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               offSetsEtaSys[4]+=3; //EGA
             }
         }
+
 
 
         TString nameWeightsLogFileEta =     Form("%s/weightsEta_%s.dat",outputDir.Data(),isMC.Data());
@@ -5881,10 +5882,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphEffTimesAccEtaWeighted                     = graphEffTimesAccEta[0];
 
             TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
-            while (graphRelErrorEtaStat->GetY()[0] < 0 ) graphRelErrorEtaStat->RemovePoint(0);
+            while (graphRelErrorEtaStat->GetY()[0] < 0 ) {
+                graphRelErrorEtaStat->RemovePoint(0);
+            }
 
             TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
-            while (graphRelErrorEtaSys->GetY()[0] < 0 ) graphRelErrorEtaSys->RemovePoint(0);
+            while (graphRelErrorEtaSys->GetY()[0] < 0 ) {
+                graphRelErrorEtaSys->RemovePoint(0);
+            }
 
             const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
             fstream SysErrDatAverSingleCheck;
@@ -6570,7 +6575,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         histoEtaToPi0Masked[i]->SetBinError(f,0.);
                     }
                 }
-
                 // remove 0 bins at beginning
 //                 graphsEtaToPi0Shrunk[i]->Print();
                 cout << "step 2" << endl;
