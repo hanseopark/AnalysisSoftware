@@ -1014,9 +1014,9 @@
                     // scaleFac        = 4.;
                     return 2;
                 } else if ( mode == 3 ) {//PCM-PHOS
-                    return 3;
+                    return 9;
                 } else if ( mode == 5 ) {//PHOS-PHOS
-                    return 3;
+                    return 9;
                 } else{
                     return 7;
                 }
@@ -1309,6 +1309,7 @@
         TString   minECut       = "",
         Bool_t    DoJetAnalysis = kFALSE
     ){
+
         // Heavy meson fix
         if( mode>=100 ) mode -= 100;
 
@@ -1430,11 +1431,15 @@
                     startPtBin     = 6;
                     // startPtBin     = 3;
                 } else if ( mode == 3){ //PCM-PHOS
-                    startPtBin     = 10;
+                    if( energy.Contains("RBins")) {
+                        startPtBin     = 2;
+                    } else {
+                        startPtBin     = 4;
+                    }
                 } else if ( mode == 4 || mode == 12 || mode == 15){
                     startPtBin     = 1;
                 } else if ( mode == 5){ //PHOS-PHOS
-                    startPtBin     = 3;
+                    startPtBin     = 6;
                 } else if ( mode == 10){
                     startPtBin     = 28;
                 } else if (mode == 20){
@@ -1818,7 +1823,7 @@
                     startPtBin = 1;}
                 else if( mode==4 || mode==12 || mode == 15) startPtBin = 1;
                 else if( mode==5  ) { //PHOS-PHOS
-                    startPtBin = 2;}
+                    startPtBin = 5;}
                 else if( mode==40 ) startPtBin = 2;
                 else if( mode==41 ) startPtBin = 6;
                 else if( mode==42 ) startPtBin = 4;
@@ -2106,6 +2111,7 @@
         TString     centrality      = "",
         Bool_t      DoJetAnalysis   = kFALSE
     ){
+        //cout<<"Debug, ExtractSignalBinning.h, Line: " << __LINE__ << "; GetBinning called with " << endl << "binningMax: " << binningMax << "; meson: " << meson.Data() << "; energy: " << energy.Data() << "; mode: " << mode << "; SpecialTrigger: " << SpecialTrigger << "DCAcase: " << DCAcase<<"; centrality: " << centrality.Data() << "; centrality: " << centrality << "; DoJetAnalysis: " << DoJetAnalysis << endl;
         Int_t maxNBins      = 0;
         binningMax          = 0;
         //*************************************************************************************************
@@ -2445,8 +2451,24 @@
                         cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode;
                         switch(SpecialTrigger) {
                             default:
-                                cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMPHOSTrigINT7Pt"<<endl;
-                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 82 );
+                                if( energy.Contains("RBins")) {
+                                    //------------------------------------Std PCM-PHOS Binning
+                                    //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMPHOSTrigINT7Pt"<<endl;
+                                    //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 82 );
+                                    //------------------------------------Std PCM RBins
+                                    cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigINT7RBinsPt"<<endl;
+                                    maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 18 );
+                                } else {
+                                    //------------------------------------Std PCM-PHOS Binning
+                                    cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMPHOSTrigINT7Pt"<<endl;
+                                    maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt, binning, 82 );
+                                    //------------------------------------DPG2019 PCM-PHOS Binning
+                                    //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMPHOSTrigINT7Pt_DPG2019"<<endl;
+                                    //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMPHOSTrigINT7Pt_DPG2019, binning, 29 );
+                                    //------------------------------------PCM Binning, for Combination of Measurements
+                                    //cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigINT7Pt"<<endl;
+                                    //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
+                                }
                                 break;
                         }
                         break;
@@ -2465,10 +2487,27 @@
                         cout<<energy<<" "<<meson<<" Binning used for mode "<<mode;
                         switch(SpecialTrigger) {
                             default:
-                            //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMEMCTrigINT7Pt"<<endl;
-                            //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 99 );
-                            cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPHOSTrigINT7Pt"<<endl;
-                            maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPHOSTrigINT7Pt, binning, 82 );
+                            if( energy.Contains("RBins")) {
+                                //------------------------------------Std PHOS-PHOS Binning
+                                //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPHOSTrigINT7Pt"<<endl;
+                                //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPHOSTrigINT7Pt, binning, 82 );
+                                //------------------------------------Std PCM RBins
+                                cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigINT7RBinsPt"<<endl;
+                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7RBinsPt, binning, 18 );
+                            } else {
+                                //------------------------------------Std PHOS-PHOS Binning
+                                cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPHOSTrigINT7Pt"<<endl;
+                                maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPHOSTrigINT7Pt, binning, 82 );
+                                //------------------------------------DPG2019 PHOS-PHOS Binning
+                                //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPHOSTrigINT7Pt"<<endl;
+                                //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPHOSTrigINT7Pt, binning, 29 );
+                                //------------------------------------Std PCM-EMC Binning
+                                //cout<<"; Special Trigger: "<<SpecialTrigger<<" => default; Used Binning: "<<"fBinsPi013TeVPCMEMCTrigINT7Pt"<<endl;
+                                //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMEMCTrigINT7Pt, binning, 99 );
+                                //------------------------------------PCM Binning, for Combination of Measurements
+                                //cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsPi013TeVPCMTrigINT7Pt"<<endl;
+                                //maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVPCMTrigINT7Pt, binning, 84 );
+                            }
                         break;
                         }
                     break;
@@ -3245,8 +3284,22 @@
                     // case 13:
                     case 3: //PCM-PHOS
                         cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode;
-                        cout<<"; Used Binning: "<<"fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
-                        maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMPHOSTrigINT7Pt, binning ); break;
+                        if(energy.Contains("RBins")){
+                            //------------------------------------Std PCM-PHOS Binning
+                            //cout<<"; Used Binning: "<<"fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                            //maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMPHOSTrigINT7Pt, binning );
+                            //------------------------------------Std PCM RBins
+                            cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7RBinsPt"<<endl;
+                            maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 18 );
+                        } else {
+                            //------------------------------------Std PCM-PHOS Binning
+                            //cout<<"; Used Binning: "<<"fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                            //maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMPHOSTrigINT7Pt, binning );
+                            //------------------------------------PCM Binning, for Combination of Measurements
+                            cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7Pt"<<endl;
+                            maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 );
+                        }
+                        break;
                     case 4:
                         switch(SpecialTrigger) {
                             case 0: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
@@ -3267,8 +3320,22 @@
                         break;
                     case 5: //PHOS-PHOS
                         cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode;
-                        cout<<"; Used Binning: "<<"fBinsEta13TeVPHOSTrigINT7Pt"<<endl;
-                        maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning ); break;
+                        if(energy.Contains("RBins")){
+                            //------------------------------------Std PHOS-PHOS Binning
+                            //cout<<"; Used Binning: "<<"fBinsEta13TeVPHOSTrigINT7Pt"<<endl;
+                            //maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning );
+                            //------------------------------------Std PCM RBins
+                            cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7RBinsPt"<<endl;
+                            maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 18 );
+                        } else {
+                            //------------------------------------Std PHOS-PHOS Binning
+                            cout<<"; Used Binning: "<<"fBinsEta13TeVPHOSTrigINT7Pt"<<endl;
+                            maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPHOSTrigINT7Pt, binning );
+                            //------------------------------------PCM Binning, for Combination of Measurements
+                            //cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7Pt"<<endl;
+                            //maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 );
+                        }
+                        break;
                     case 40:
                     case 41:
                     case 42:
@@ -3975,12 +4042,14 @@
             }
         }
         cout << "maximum " << maxNBins << " pt bins for " << meson.Data() << endl;
+        //cout<<"Debug, ExtractSignalBinning.h, Line: "<<__LINE__<<"; GetBinning ended"<<endl;
         return maxNBins;
     }
 
 
     void InitializeClusterBinning( TString energy, Int_t modi ){
 
+        //cout<<"Debug, ExtractSignalBinning.h, Line: "<<__LINE__<<"; InitializeClusterBinning called with "<<endl<<"energy: "<<energy.Data()<<"; modi: "<<modi<<endl;
         // For heavy meson analysis
         Int_t modeHeavy = modi;
         if(modi>=100) modi -= 100;
@@ -4016,7 +4085,7 @@
                 }
             }
 
-        } else if( energy.EqualTo("13TeV") || energy.EqualTo("13TeVLowB") ) {
+        } else if( energy.EqualTo("13TeV") || energy.EqualTo("13TeVLowB") || energy.EqualTo("13TeVRBins") ) {
             if( modi!=0 && modeHeavy<100 ) {
                 fNBinsClusterPt            = fNBinsCluster13TeVPt; // 307
                 for(Int_t i=0; i<=fNBinsCluster13TeVPt; i++ ){
@@ -4056,6 +4125,7 @@
             fNBinsClusterPt       = 0;
             fBinsClusterPt        = NULL;
         }
+        //cout<<"Debug, ExtractSignalBinning.h, Line: "<<__LINE__<<"; InitializeClusterBinning ended"<<endl;
     }
 
     //*************************************************************************************************
@@ -4196,12 +4266,13 @@
             modi = tmpmode;
         }
         cout << "modi is " << modi <<endl;
+        //cout<<"Debug, ExtractSignalBinning.h, Line: " << __LINE__ << "; InitializeBinning called with " << endl << "setPi0: " << setPi0.Data() << "; numberOfBins: " << numberOfBins << "energy: " << energy.Data() << "; directPhoton: " << directPhoton.Data() << "; modi: " << modi << "; eventCutSelection: " << eventCutSelection.Data() << "; clusterCutSelection: " << clusterCutSelection << "; clusterCutSelection: " << clusterCutSelection <<"; triggerSet: " << triggerSet << "; isDCA: " << isDCA <<"centDCA: " << centDCA.Data()<<"; periodDCA: " << periodDCA.Data() << "; photonCutSelection: " << photonCutSelection << "; DoJetAnalysis: " << DoJetAnalysis << endl;
+
         // Heavy meson analysis
         Int_t modeHeavy = modi;
         if( modi>=100 ) modi -= 100;
 
         InitializeClusterBinning(energy, modeHeavy);
-
         //get centrality
         TString centrality      = GetCentralityString(eventCutSelection);
         // set trigger string
@@ -4816,8 +4887,9 @@
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     //Rebinning, because not implemented in getBinning
                     if (!isDCA) {
-                        cout<<"ReBinning for Pi0, modi: "<<modi<<endl;
+                        //cout<<"ReBinning for Pi0, modi: "<<modi<<" (fNBinsPt=="<<fNBinsPt<<") "<<endl;
                         for (Int_t i = 0; i < fNBinsPt; i++) {
+                            //cout<<"Debug; ExtractSignalBinning.h, Rebinning; Line: "<<__LINE__<<"; Loop over PtBins, loop variable: "<<i<<endl;
                             if (modi==0){ //PCM-PCM
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                     if (energy.Contains("RBins")){
@@ -4842,7 +4914,19 @@
                                     fNRebin[i]      = fBinsPi013TeVPCMEMCTrigEG1PtRebin[i];
                                 }
                             } else if (modi == 3){ //PCM-PHOS
-                                fNRebin[i]=fBinsPi013TeVPCMPHOSTrigINT7PtRebin[i];
+                                if (energy.Contains("RBins")){
+                                    //------------------------------------Std PCMPHOS Rebin
+                                    //fNRebin[i]=fBinsPi013TeVPCMPHOSTrigINT7PtRebin[i];
+                                    //------------------------------------Std PCM RBins Rebin
+                                    fNRebin[i]      = fBinsPi013TeVPCMTrigINT7RBinsPtRebin[i];
+                                } else {
+                                    //------------------------------------Std PCMPHOS Rebin
+                                    fNRebin[i]=fBinsPi013TeVPCMPHOSTrigINT7PtRebin[i];
+                                    //------------------------------------DPG2019 PCMPHOS Rebin
+                                    //fNRebin[i]=fBinsPi013TeVPCMPHOSTrigINT7PtRebin_DPG2019[i];
+                                    //------------------------------------PCM Rebin, for Combination of Measurements
+                                    //fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
+                                }
                             } else if( modi == 4){
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                     fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
@@ -4856,13 +4940,26 @@
                             } else if( modi == 5){ //PHOS-PHOS
                                 switch(specialTrigg) {
                                     default:
-                                        fNRebin[i]=fBinsPi013TeVPHOSTrigINT7PtRebin[i];
+                                        if (energy.Contains("RBins")){
+                                            //------------------------------------Std PHOS Rebin
+                                            //fNRebin[i]=fBinsPi013TeVPHOSTrigINT7PtRebin[i];
+                                            //------------------------------------Std PCM RBins Rebin
+                                            fNRebin[i]      = fBinsPi013TeVPCMTrigINT7RBinsPtRebin[i];
+                                        } else {
+                                            //------------------------------------Std PHOS Rebin
+                                            fNRebin[i]=fBinsPi013TeVPHOSTrigINT7PtRebin[i];
+                                            //------------------------------------DPG2019 PHOS Rebin
+                                            //fNRebin[i]=fBinsPi013TeVPHOSTrigINT7PtRebin_DPG2019[i];
+                                            //------------------------------------PCM Rebin, for Combination of Measurements
+                                            //fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
+                                        }
                                     break;
                                 }
                             } else {
                                 fNRebin[i]      = fBinsPi013TeVPCMEMCTrigINT7PtRebin[i];
                             }
                         }
+                        cout<<"ReBinning for Pi0, modi: "<<modi<<" done"<<endl;
                     }
 
 
@@ -6036,8 +6133,25 @@
                             cout<<"Rebin Case PCM-PHOS"<<endl;
                             switch(specialTrigg) {
                                 default: {
-                                    cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
-                                    CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin,fNRebin); break;
+                                    if (energy.Contains("RBins")){
+                                        //------------------------------------Std PCMPHOS Rebin
+                                        //cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                                        //CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt,fNRebin);
+                                        //------------------------------------Std PCM RBins Rebin
+                                        cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                        CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
+                                    } else {
+                                        //------------------------------------Std PCMPHOS Rebin
+                                        cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                                        CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt,fNRebin);
+                                        //------------------------------------DPG2019 PCMPHOS Rebin
+                                        //cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt_DPG2019"<<endl;
+                                        //CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt_DPG2019,fNRebin);
+                                        //------------------------------------PCM Rebin, for Combination of Measurements
+                                        //cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                        //CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
+                                    }
+                                    break;
                                 }
                             }
                             break;
@@ -6052,8 +6166,24 @@
                             break;
                         case 5:  {//PHOS-PHOS
                             cout<<"Rebin Case PHOS-PHOS"<<endl;
-                            cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
-                            CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin, fNRebin);
+                            if (energy.Contains("RBins")){
+                                //------------------------------------Std PHOS Rebin
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin, fNRebin);
+                                //------------------------------------Std PCM RBins Rebin
+                                cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin, fNRebin);
+                            } else {
+                                //------------------------------------Std PHOS Rebin
+                                cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
+                                CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin, fNRebin);
+                                //------------------------------------DPG2019 PHOS Rebin
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin_DPG2019"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin_DPG2019, fNRebin);
+                                //------------------------------------PCM Rebin, for Combination of Measurements
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin, fNRebin);
+                            }
                             break;
                             }
                         case 40: CopyVectorToArray(fBinsEtaPiPlPiMiPiZero13TevPtRebinPCM,fNRebin); break;
@@ -6061,7 +6191,10 @@
                     }
                 } else { // Pi0Eta binning
                     switch(modi) {
-                        case 0: CopyVectorToArray(fBinsPi0Eta13TeVPtPCMTrigINT7Rebin,fNRebin); break;
+                        case 0: { //PCM-PCM
+                            CopyVectorToArray(fBinsPi0Eta13TeVPtPCMTrigINT7Rebin,fNRebin);
+                            break;
+                    }
                         case 2:
                             switch(specialTrigg) {
                                 case 0:
@@ -6071,12 +6204,31 @@
                                 case 3: CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigEG2PtRebin, fNRebin); break;
                             }
                             break;
-                        case 3:
+                        case 3: { //PCM-PHOS
                             switch(specialTrigg) {
-                                default:
-                                    CopyVectorToArray(fBinsPi0EtaBinning13TeVPCMPHOSTrigINT7PtRebin,fNRebin); break;
+                                default: {
+                                    if (energy.Contains("RBins")){
+                                        //------------------------------------Std PCMPHOS Rebin
+                                        //cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                                        //CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt,fNRebin);
+                                        //------------------------------------Std PCM RBins Rebin
+                                        cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                        CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
+                                    } else {
+                                        //------------------------------------Std PCMPHOS Rebin
+                                        cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt"<<endl;
+                                        CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt,fNRebin);
+                                        //------------------------------------DPG2019 PCMPHOS Rebin
+                                        //cout<<"Use Rebin Vector: fBinsEta13TeVPCMPHOSTrigINT7Pt_DPG2019"<<endl;
+                                        //CopyVectorToArray(fBinsEta13TeVPCMPHOSTrigINT7Pt_DPG2019,fNRebin);
+                                        //------------------------------------PCM Rebin, for Combination of Measurements
+                                        //CopyVectorToArray(fBinsPi0EtaBinning13TeVPCMPHOSTrigINT7PtRebin,fNRebin);
+                                    }
+                                    break;
+                                }
                             }
                             break;
+                        }
                         case 4:
                             switch(specialTrigg) {
                                 case 0:
@@ -6086,6 +6238,29 @@
                                 case 3: CopyVectorToArray(fBinsPi0Eta13TeVEMCTrigEG2PtRebin, fNRebin); break;
                             }
                             break;
+                        case 5:  {//PHOS-PHOS
+                            if (energy.Contains("RBins")){
+                                cout<<"Rebin Case PHOS-PHOS"<<endl;
+                                //------------------------------------Std PHOS Rebin
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin, fNRebin);
+                                //------------------------------------Std PCM RBins Rebin
+                                cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin, fNRebin);
+                            } else {
+                                cout<<"Rebin Case PHOS-PHOS"<<endl;
+                                //------------------------------------Std PHOS Rebin
+                                cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin"<<endl;
+                                CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin, fNRebin);
+                                //------------------------------------DPG2019 PHOS Rebin
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPHOSTrigINT7PtRebin_DPG2019"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPHOSTrigINT7PtRebin_DPG2019, fNRebin);
+                                //------------------------------------PCM Rebin, for Combination of Measurements
+                                //cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                //CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin, fNRebin);
+                            }
+                            break;
+                        }
                         default: CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin); break;
                     }
                 }
@@ -6887,6 +7062,9 @@
             cout << "**************************************************************************************************************************************" << endl;
             fExampleBin = fStartPtBin;
         }
+
+
+        //cout<<"Debug, ExtractSignalBinning.h, Line: "<<__LINE__<<"; InitializeBinning ended"<<endl;
     }
 
 

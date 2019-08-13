@@ -14,14 +14,35 @@
     // minimum bias trigger (INT7) - pi0
     // ---------------------------------------------------------
     // PCM
-    std::vector<Double_t> fBinsPi013TeVPCMTrigINT7Pt {      // size: 29
+    std::vector<Double_t> fBinsPi013TeVPCMTrigINT7Pt_DPG2019 {      // size: 29, alternative Binning  PCM-PCM 13TeV, DPG2019
         0.00,  0.25,  0.50,  0.75,  1.00,        1.25,  1.50,  1.75,  2.00,  2.25,
         2.50,  2.75,  3.00,  3.50,  4.00,        4.50,  5.00,  5.50,  6.00,  6.50,
         7.00,  8.00, 10.00, 12.00, 16.00,       20.00, 25.00, 30.00, 35.00};
-    std::vector<Int_t>    fBinsPi013TeVPCMTrigINT7PtRebin { // size: 28
+    std::vector<Int_t>    fBinsPi013TeVPCMTrigINT7PtRebin_DPG2019 { // size: 28
         8, 8, 4, 4, 2,      2, 1, 1, 1, 1,
         1, 1, 1, 1, 1,      1, 1, 2, 2, 2,
         4, 4, 4, 8, 8,      8, 8, 8};
+
+    std::vector<Double_t> fBinsPi013TeVPCMTrigINT7Pt {      // size: 85, Standard Binning PCM 13TeV
+            0.00,  0.30,  0.40,  0.50,  0.60,        0.70,  0.80,  0.90,  1.00,  1.10,
+            1.20,  1.30,  1.40,  1.50,  1.60,        1.70,  1.80,  1.90,  2.00,  2.10,
+            2.20,  2.30,  2.40,  2.50,  2.60,        2.70,  2.80,  2.90,  3.00,  3.10,
+            3.20,  3.30,  3.40,  3.50,  3.60,        3.70,  3.80,  3.90,  4.00,  4.10,
+            4.20,  4.30,  4.40,  4.50,  4.60,        4.70,  4.80,  4.90,  5.00,  5.10,
+            5.20,  5.30,  5.40,  5.50,  5.60,        5.70,  5.80,  5.90,  6.00,  6.20,
+            6.40,  6.60,  6.80,  7.00,  7.50,        8.00,  8.50,  9.00, 10.00, 12.00,
+           16.00, 20.00, 25.00, 30.00, 35.00,       40.00, 45.00, 50.00, 55.00, 60.00,
+           65.00, 70.00, 75.00, 80.00, 85.00};
+        std::vector<Int_t>    fBinsPi013TeVPCMTrigINT7PtRebin { // size: 84
+            4, 4, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2,      4, 4, 4, 4, 4,
+            4, 8, 5, 5, 5,      5, 5, 5, 5, 5,
+            5, 5, 5, 5};
 
     // PCM binning fir Pi0 in RBins
     std::vector<Double_t> fBinsPi013TeVPCMTrigINT7RBinsPt {      // size: 19
@@ -36,6 +57,8 @@
         0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
         1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
         4.0, 5.0, 6.0, 8.0,12.0,16.0,20.0, 25.0 };
+
+
     // EMC
     std::vector<Double_t> fBinsPi013TeVEMCTrigINT7Pt {      // size: 106
         0.00, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7,
@@ -95,23 +118,67 @@
         8, 10, 10, 10, 10};
 
     //PCM-PHOS 13TeV
-    std::vector<Double_t> fBinsPi013TeVPCMPHOSTrigINT7Pt {      // size: 30
+    std::vector<Double_t> fBinsPi013TeVPCMPHOSTrigINT7Pt_DPG2019 {      // size: 30, alternative Binning  PCM-PHOS 13TeV, DPG2019
         0.00,  0.25,  0.50,  0.75,  1.00,        1.25,  1.50,  1.75,  2.00,  2.25,
         2.50,  2.75,  3.00,  3.25,  3.50,        3.75,  4.00,  4.25,  4.50,  4.75,
         5.00,  5.25,  5.50,  6.00,  6.50,        7.00,  8.00, 10.00, 12.50, 15.00};
-    std::vector<Int_t>    fBinsPi013TeVPCMPHOSTrigINT7PtRebin { // size: 29
+    std::vector<Int_t>    fBinsPi013TeVPCMPHOSTrigINT7PtRebin_DPG2019 { // size: 29
         8,  8,  4,  4,  2,      2,  1,  1,  1,  1,
         1,  1,  1,  1,  1,      1,  1,  1,  1,  1,
         1,  1,  2,  4,  4,      4,  4,  8,  8};
+
+    std::vector<Double_t> fBinsPi013TeVPCMPHOSTrigINT7Pt {      // size: 85, same as Binning PCM 13TeV
+            0.00,  0.30,  0.40,  0.50,  0.60,        0.70,  0.80,  0.90,  1.00,  1.10,
+            1.20,  1.30,  1.40,  1.50,  1.60,        1.70,  1.80,  1.90,  2.00,  2.10,
+            2.20,  2.30,  2.40,  2.50,  2.60,        2.70,  2.80,  2.90,  3.00,  3.10,
+            3.20,  3.30,  3.40,  3.50,  3.60,        3.70,  3.80,  3.90,  4.00,  4.10,
+            4.20,  4.30,  4.40,  4.50,  4.60,        4.70,  4.80,  4.90,  5.00,  5.10,
+            5.20,  5.30,  5.40,  5.50,  5.60,        5.70,  5.80,  5.90,  6.00,  6.20,
+            6.40,  6.60,  6.80,  7.00,  7.50,        8.00,  8.50,  9.00, 10.00, 12.00,
+           16.00, 20.00, 25.00, 30.00, 35.00,       40.00, 45.00, 50.00, 55.00, 60.00,
+           65.00, 70.00, 75.00, 80.00, 85.00};
+        std::vector<Int_t>    fBinsPi013TeVPCMPHOSTrigINT7PtRebin { // size: 84
+            4, 4, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2,      4, 4, 4, 4, 4,
+            4, 8, 5, 5, 5,      5, 5, 5, 5, 5,
+            5, 5, 5, 5};
+
     //PHOS-PHOS 13TeV
-    std::vector<Double_t> fBinsPi013TeVPHOSTrigINT7Pt {      // size: 30
+    std::vector<Double_t> fBinsPi013TeVPHOSTrigINT7Pt_DPG2019 {      // size: 30, alternative Binning  PHOS-PHOS 13TeV, DPG2019
         0.00,  0.25,  0.50,  0.75,  1.00,        1.25,  1.50,  1.75,  2.00,  2.25,
         2.50,  2.75,  3.00,  3.25,  3.50,        3.75,  4.00,  4.25,  4.50,  4.75,
         5.00,  5.25,  5.50,  6.00,  6.50,        7.00,  8.00, 10.00, 12.50, 15.00};
-    std::vector<Int_t>    fBinsPi013TeVPHOSTrigINT7PtRebin { // size: 29
+    std::vector<Int_t>    fBinsPi013TeVPHOSTrigINT7PtRebin_DPG2019 { // size: 29
         8,  8,  4,  4,  2,      2,  1,  1,  1,  1,
         1,  1,  1,  1,  1,      1,  1,  1,  1,  1,
         1,  1,  2,  4,  4,      4,  4,  8,  8};
+
+    std::vector<Double_t> fBinsPi013TeVPHOSTrigINT7Pt {      // size: 85, same as Binning PCM 13TeV
+            0.00,  0.30,  0.40,  0.50,  0.60,        0.70,  0.80,  0.90,  1.00,  1.10,
+            1.20,  1.30,  1.40,  1.50,  1.60,        1.70,  1.80,  1.90,  2.00,  2.10,
+            2.20,  2.30,  2.40,  2.50,  2.60,        2.70,  2.80,  2.90,  3.00,  3.10,
+            3.20,  3.30,  3.40,  3.50,  3.60,        3.70,  3.80,  3.90,  4.00,  4.10,
+            4.20,  4.30,  4.40,  4.50,  4.60,        4.70,  4.80,  4.90,  5.00,  5.10,
+            5.20,  5.30,  5.40,  5.50,  5.60,        5.70,  5.80,  5.90,  6.00,  6.20,
+            6.40,  6.60,  6.80,  7.00,  7.50,        8.00,  8.50,  9.00, 10.00, 12.00,
+           16.00, 20.00, 25.00, 30.00, 35.00,       40.00, 45.00, 50.00, 55.00, 60.00,
+           65.00, 70.00, 75.00, 80.00, 85.00};
+        std::vector<Int_t>    fBinsPi013TeVPHOSTrigINT7PtRebin { // size: 84
+            4, 4, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,      1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2,      4, 4, 4, 4, 4,
+            4, 8, 5, 5, 5,      5, 5, 5, 5, 5,
+            5, 5, 5, 5};
+
     // ---------------------------------------------------------
     // L0 EMC trigger (EMC7, ~2 GeV) - pi0
     // ---------------------------------------------------------
@@ -405,6 +472,12 @@
     // minimum bias trigger (INT7) - eta
     // ---------------------------------------------------------
     // PCM (mode 0)
+    std::vector<Double_t> fBinsEta13TeVPCMTrigINT7Pt_DPG2019 {      // size: 11
+         0.0,  1.0,  2.5,  4.0,     5.5,  7.0,  9.0,  13.0, 16.0,
+        25.0};
+     std::vector<Int_t>    fBinsEta13TeVPCMTrigINT7PtRebin_DPG2019 { // size: 10
+         16,  8,  4,  4,  4,      8, 16, 16, 16, 16};
+
     std::vector<Double_t> fBinsEta13TeVPCMTrigINT7Pt {      // size: 41
       0.0, 0.4, 0.6, 0.8,  1.0, 1.2, 1.3, 1.4, 1.5, 1.6,
         1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6,
@@ -412,16 +485,10 @@
         4.4, 4.6, 4.8, 5.0, 5.5, 6.0, 7.0, 8.0, 12.0, 16.0,
         25.0 };
     std::vector<Int_t>    fBinsEta13TeVPCMTrigINT7PtRebin { // size: 40
-      8, 8, 8, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };
-
-   /*std::vector<Double_t> fBinsEta13TeVPCMTrigINT7Pt {      // size: 11
-        0.0,  1.0,  2.5,  4.0,     5.5,  7.0,  9.0,  13.0, 16.0,
-       25.0};
-    std::vector<Int_t>    fBinsEta13TeVPCMTrigINT7PtRebin { // size: 10
-        16,  8,  4,  4,  4,      8, 16, 16, 16, 16};*/
+      16, 16,16, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };   
 
     // PCM binning  in RBins
     std::vector<Double_t> fBinsEta13TeVPCMTrigINT7RBinsPt {      // size: 19
@@ -463,29 +530,40 @@
         8, 8, 8, 8, 8, 8, 8, 8, 10, 10,
         12, 20, 20, 20, 20 };
     // PCM-PHOS (mode 3)
-    std::vector<Double_t> fBinsEta13TeVPCMPHOSTrigINT7Pt {      // size: 11
+    std::vector<Double_t> fBinsEta13TeVPCMPHOSTrigINT7Pt_DPG2019 {      // size: 11
         0.0,  1.0,  2.5,  4.0,  5.5,        7.0,  9.0,  13.0, 16.0, 25.0};
-    std::vector<Int_t>    fBinsEta13TeVPCMPHOSTrigINT7PtRebin { // size: 10
+    std::vector<Int_t>    fBinsEta13TeVPCMPHOSTrigINT7PtRebin_DPG2019 { // size: 10
        16,  8,  8,  8,  8,                 8, 16, 16, 16};
     std::vector<Int_t>    fBinsPi0EtaBinning13TeVPCMPHOSTrigINT7PtRebin { // size: 19
         8,  4,  4,  4,  4,      4,  4,  4,  4,  4,
         4,  4,  4,  4,  4,      4,  8,  8, 10};
-    // PHOS-PHOS (mode 5)
-    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt {      // size: 10
-        0.0,  1.0,  2.5,  4.0,  5.5,        7.0,  9.0,  13.0, 16.0, 25.0};
-    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin { // size: 9
-        16,  8,  8,  8,  8,                 8, 16, 16, 16};
-    // PHOS-PHOS (mode 5)
-    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt_Backup {      // size: 41
-        0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.3, 1.4, 1.5, 1.6,
+    std::vector<Double_t> fBinsEta13TeVPCMPHOSTrigINT7Pt {      // size: 41
+      0.0, 0.4, 0.6, 0.8,  1.0, 1.2, 1.3, 1.4, 1.5, 1.6,
         1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6,
         2.7, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
         4.4, 4.6, 4.8, 5.0, 5.5, 6.0, 7.0, 8.0, 12.0, 16.0,
         25.0 };
-    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin_Backup { // size: 40
-        8, 8, 8, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    std::vector<Int_t>    fBinsEta13TeVPCMPHOSTrigINT7PtRebin { // size: 40
+      16, 16,16, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };
+    // PHOS-PHOS (mode 5)
+    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt_DPG2019 {      // size: 10
+        0.0,  1.0,  2.5,  4.0,  5.5,        7.0,  9.0,  13.0, 16.0, 25.0};
+    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin_DPG2019 { // size: 9
+        16,  8,  8,  8,  8,                 8, 16, 16, 16};
+    // PHOS-PHOS (mode 5)
+    std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7Pt {      // size: 41
+      0.0, 0.4, 0.6, 0.8,  1.0, 1.2, 1.3, 1.4, 1.5, 1.6,
+        1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6,
+        2.7, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
+        4.4, 4.6, 4.8, 5.0, 5.5, 6.0, 7.0, 8.0, 12.0, 16.0,
+        25.0 };
+    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtRebin { // size: 40
+      16, 16,16, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };
     // Eta->pi+pi-pi0 PCM
     std::vector<Double_t> fBinsEtaPiPlPiMiPiZero13TevPtPCM {      // size: 20
@@ -749,7 +827,7 @@ Double_t fBinsDirGamma13TeVPtDCAzDist[16]       = { 0.0, 0.1, 0.4, 0.6, 0.8, 1.0
     // Cluster binning
     // ---------------------------------------------------------
     Int_t fNBinsCluster13TeVPt                      =  307;
-    Double_t fBinsCluster13TeVPt[306];
+    Double_t fBinsCluster13TeVPt[308];
     Int_t fNBinsCluster13TeVPCMPt                   =  301;
     Double_t fBinsCluster13TeVPCMPt[302];
 
