@@ -380,7 +380,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             TString fMinEnergyCut                               = fClusterCutSelection(GetClusterMinEnergyCutPosition(fClusterCutSelection),1);
             cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
             cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut));
-            if(mode == 3 || mode == 5) cutStringsName[i]                                   = AnalyseMinEnergyCutPHOS(CutNumberToInteger(fMinEnergyCut));
+            if(mode == 3 || mode == 5) cutStringsName[i]        = AnalyseMinEnergyCutPHOS(CutNumberToInteger(fMinEnergyCut));
         } else if (cutVariationName.Contains("ClusterTiming")){
             TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
