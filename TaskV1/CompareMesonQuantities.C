@@ -173,11 +173,11 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     cout << "Start bin for " << mesonType << " (mode " << mode << "): " << fStartPtBin << endl;
 
     //******************************* Reading histograms **************************************************************
-    if (debugMesonQual) cout << "initializing hists" << endl;
+    if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<<"initializing hists" << endl;
     TH1D*  histoSignalDataInvMassPtBin[200] = {NULL};
     TH1D*  histoSignalMCInvMassPtBin[200] = {NULL};
     TH1D*  histoTrueMCInvMassPtBin[200] = {NULL};
-    if (debugMesonQual) cout << "initializing arrays" << endl;
+    if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "initializing arrays" << endl;
     Double_t intLowMassData[200]                    = {0.};
     Double_t intLowMassMC[200]                      = {0.};
     Double_t intErrLowMassData[200]                 = {0.};
@@ -185,7 +185,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     Double_t ratioLowMass[200]                      = {1.};
     Double_t ratioErrLowMass[200]                   = {1.};
     for(Int_t j=0;j<3;j++){
-        if (debugMesonQual) cout << "j = " << j << " fNBinsPt = " << fNBinsPt << endl;
+        if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Beginning of Loop j = " << j << " fNBinsPt = " << fNBinsPt << endl;
         TString histonameSignal;
         TString histonameMCTruth;
         for(Int_t iPt=fStartPtBin; iPt<fNBinsPt && iPt < 200; iPt++){
@@ -208,10 +208,10 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 cout << "lost file info" << endl;
                 continue;
             }
-            if (debugMesonQual) cout << "loading data " << fileRawSignalData << endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "loading data " << fileRawSignalData << endl;
             histoSignalDataInvMassPtBin[iPt]    = (TH1D*)fileRawSignalData->Get(histonameSignal);
             if(!histoSignalDataInvMassPtBin[iPt] ) continue;
-            if (debugMesonQual) cout << "loading MC " << fileRawSignalMC << endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "loading MC " << fileRawSignalMC << endl;
             histoSignalMCInvMassPtBin[iPt]      = (TH1D*)fileRawSignalMC->Get(histonameSignal);
             if(!histoSignalMCInvMassPtBin[iPt])   continue;
 
@@ -219,8 +219,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             Double_t lastBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
             Double_t firstBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
             Double_t lastBinIntMC = histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
-            if (debugMesonQual) cout << "iPt = " << iPt << " firstBinIntData= " << firstBinIntData << "\t lastBinIntData= " << lastBinIntData << endl;
-            if (debugMesonQual) cout << "iPt = " << iPt << " firstBinIntMC= " << firstBinIntMC << "\t lastBinIntMC= " << lastBinIntMC << endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "iPt = " << iPt << " firstBinIntData= " << firstBinIntData << "\t lastBinIntData= " << lastBinIntData << endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "iPt = " << iPt << " firstBinIntMC= " << firstBinIntMC << "\t lastBinIntMC= " << lastBinIntMC << endl;
             Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(firstBinIntData,lastBinIntData);
             Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(firstBinIntMC,lastBinIntMC);
             if (j == 2){
@@ -246,7 +246,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 }
             }
 
-            if (debugMesonQual) cout << "integrals: " << integralData << "\t" << integralMC << endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "integrals: " << integralData << "\t" << integralMC << endl;
             if (integralData != 0) histoSignalDataInvMassPtBin[iPt]->Scale(1./integralData);
             if (integralMC != 0) histoSignalMCInvMassPtBin[iPt]->Scale(1./integralMC);
 
@@ -271,6 +271,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             }
 
         }
+
+        if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Loop over Pt Bins done" << endl;
 
         TCanvas * canvasLineShape = new TCanvas("CanvasLineShape","",2800,1800);  // gives the page size
         canvasLineShape->SetTopMargin(0.00);
@@ -300,7 +302,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
         Int_t place = 0;
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt && iPt < 200;iPt++){
-            // cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
+            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
             Double_t startPt = fBinsPt[iPt];
             Double_t endPt = fBinsPt[iPt+1];
 
@@ -416,8 +418,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 }
             }
         }
-        // cout << "saving" << endl;
-        cout << nameLineShapePlot.Data() << endl;
+        if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; " << "saving" << endl;
+        cout << "nameLineShapePlot: " << nameLineShapePlot.Data() << endl;
         if(j==0) {
             canvasLineShape->SaveAs(nameLineShapePlot.Data());
         } else if (j==1) {
@@ -426,9 +428,10 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             canvasLineShape->SaveAs(nameLineShapePlotFull.Data());
         }
 
-        // cout << "deleting" << endl;
+        if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; " << "deleting" << endl;
         if (padLineShape) delete padLineShape;
         if (canvasLineShape) delete canvasLineShape;
+        if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Ending of Loop j = " << j << " fNBinsPt = " << fNBinsPt << endl;
     }
     // **************************************************************************************************************
     // ************************ Chi2/ndf compared MC vs Data ********************************************************
