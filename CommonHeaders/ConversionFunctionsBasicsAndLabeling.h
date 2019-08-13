@@ -1070,26 +1070,6 @@
                 return "Pi0PHOS-Dal";
             case 50:
                 return "Pi0DCAL-Dal";
-            case 60:
-                return "Pi0PCM";
-            case 61:
-                return "Pi0PCM-EMC";
-            case 62:
-                return "Pi0PCM-PHOS";
-            case 63:
-                return "Pi0PCM-DCAL";
-            case 64:
-                return "Pi0EMC";
-            case 65:
-                return "Pi0PHOS";
-            case 66:
-                return "Pi0DCAL";
-            case 67:
-                return "Pi0PCM-Dal";
-            case 68:
-                return "Pi0EMC-Dal";
-            case 69:
-                return "Pi0PHOS-Dal";
             case 70:
                 return "Pi0DCAL-Dal";
             default:
