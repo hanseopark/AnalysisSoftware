@@ -3829,6 +3829,7 @@
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevSysPtPCM[i];
                     }
+                }
             } else if (energy.CompareTo("13TeV") == 0){
                 cout<<energy<<" "<<meson<<" Binning used for mode "<<mode<<endl;
                 if(mode == 40 || mode == 60){ //PCM-PCM
