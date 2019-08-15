@@ -903,14 +903,14 @@
         16, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         10, 10, 10, 10, 10, 10, 10, 10};
-    std::vector<Double_t> fBinsEta13TeVLowBPCMEMCPt {      // size: 25
-        0.0, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.6,
-        1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.6, 4.0,
-        4.5, 5.0, 6.0, 8.0, 10 };
-    std::vector<Int_t> fBinsEta13TeVLowBPCMEMCPtRebin { // size: 24
-        16, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    std::vector<Double_t> fBinsEta13TeVLowBPCMEMCPt {      // size: 24
+        1.0, 1.1, 1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,
+        2.6, 2.8, 3.0, 3.2, 3.6, 4.0, 4.5, 5.0, 6.0, 8.0,
+        10, 12., 14., 20. };
+    std::vector<Int_t> fBinsEta13TeVLowBPCMEMCPtRebin { // size: 23
+        16, 8, 4, 4, 4, 4, 4, 4, 4, 4,
         4, 4, 4, 4, 4, 4, 8, 8, 8, 8,
-        8, 8, 8, 10};
+        10, 10, 10};
     std::vector<Double_t> fBinsEta13TeVLowBPtDCA{ // size: 5
         0., 0.4, 2., 3., 6.};
     std::vector<Int_t> fBinsPi0Eta13TeVLowBPtRebin{ // size 29

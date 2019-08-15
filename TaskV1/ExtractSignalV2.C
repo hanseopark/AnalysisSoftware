@@ -2647,6 +2647,7 @@ void ExtractSignalV2(
     fFileDataLog.close();
 //     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     Delete();
+    gObjectTable->Print();
 //     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 }
 

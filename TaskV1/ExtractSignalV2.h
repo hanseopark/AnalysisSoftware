@@ -13,6 +13,7 @@
     #include "TF1.h"
     #include "TH1D.h"
     #include "TString.h"
+    #include "TObjectTable.h"
 
     //****************************************************************************
     //******************** Global variable for setup of macro ********************
@@ -1354,14 +1355,14 @@
             fMidPt[1]                   = 2.5;
 
             // Initialize peak range
-	    if(mode ==0){
-	      fPeakRange[0]           = 0.48;
-	      fPeakRange[1]           = 0.58;
-	      if (fEnergyFlag.Contains("13TeV")){
-		fPeakRange[0]           = 0.5;
-		fPeakRange[1]           = 0.57;
- 	      }
-	    }else if (mode == 2 || mode == 13){
+            if(mode ==0){
+                fPeakRange[0]           = 0.48;
+                fPeakRange[1]           = 0.58;
+            if (fEnergyFlag.Contains("13TeV")){
+                fPeakRange[0]           = 0.5;
+                fPeakRange[1]           = 0.57;
+            }
+            }else if (mode == 2 || mode == 13){
                 fPeakRange[0]           = 0.48;
                 fPeakRange[1]           = 0.58;
             } else if (mode == 3){
