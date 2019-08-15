@@ -3,11 +3,10 @@
 //and adds a range on both sides which is defined by the variable factor
 
 //used to calculate min and max values of a set of histograms
-Bool_t AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Double_t* A_tmp, Double_t* B_tmp){
+Bool_t AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Double_t* A_tmp, Double_t* B_tmp, Int_t xfirst = 1, Int_t xlast = 1){
 
     if(histogram->GetEntries()<=0) return kFALSE;
 
-    Int_t xfirst = 1;
     Double_t max = histogram->GetBinContent(xfirst);
     Double_t min = histogram->GetBinContent(xfirst);
 
@@ -27,7 +26,7 @@ Bool_t AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh,
     Double_t valueMin = 0;
     Double_t valueMax = 0;
 
-    Int_t xlast  = histogram->GetXaxis()->GetNbins();
+    if(xlast==1) xlast = histogram->GetXaxis()->GetNbins();
 
     for(Int_t binx = xfirst; binx <= xlast; binx++){
         valueMax = histogram->GetBinContent(binx);
@@ -47,7 +46,7 @@ Bool_t AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh,
     return kTRUE;
 }
 
-void AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Int_t fixRange = 0, Double_t range = 0){
+void AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Int_t fixRange = 0, Double_t range = 0, Int_t xfirst = 1, Int_t xlast = 1){
 
     if(histogram->GetEntries()<=0){
         cout << "Warning in AdjustHistRange: No Entries in given histogram with name: " << histogram->GetName() << ", return..." << endl;
@@ -55,7 +54,7 @@ void AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, B
     }
 
     Double_t A, B;
-    if(!AdjustHistRange(histogram,factorLow,factorHigh,useBinError,&A,&B)) {cout << "ERROR: AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Double_t* A_tmp, Double_t* B_tmp) returned kFALSE! Returning..." << endl; return;}
+    if(!AdjustHistRange(histogram,factorLow,factorHigh,useBinError,&A,&B,xfirst,xlast)) {cout << "ERROR: AdjustHistRange(TH1D* histogram, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Double_t* A_tmp, Double_t* B_tmp) returned kFALSE! Returning..." << endl; return;}
 
     if(fixRange==0) histogram->GetYaxis()->SetRangeUser(A, B);
     else if(fixRange==1) histogram->GetYaxis()->SetRangeUser(range, B);
@@ -83,13 +82,13 @@ void AdjustHistRange(TH2D* histogram, Double_t factorLow, Double_t factorHigh, B
 
 //overloaded function for AdjustHistRange
 //This function calls AdjustHistRange for all histograms in the same vector
-void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Int_t fixRange = 0, Double_t range = 0, Bool_t isYLog = kFALSE){
+void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t factorHigh, Bool_t useBinError, Int_t fixRange = 0, Double_t range = 0, Bool_t isYLog = kFALSE, Int_t xfirst = 1, Int_t xlast = 1){
 
     if(!vectorhist.empty()){
         Double_t Max_global,Min_global;
         Double_t A,B;
 
-        Bool_t successRange = AdjustHistRange(vectorhist.at(0),factorLow,factorHigh, useBinError, &A, &B);
+        Bool_t successRange = AdjustHistRange(vectorhist.at(0),factorLow,factorHigh, useBinError, &A, &B, xfirst, xlast);
         if(isYLog){
             if(A<0){
             successRange = kFALSE;
@@ -100,7 +99,7 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t
         Int_t iRange = 1;
         if(!successRange && ((Int_t) vectorhist.size() > 1) ){
             while(!successRange){
-                successRange = AdjustHistRange(vectorhist.at(iRange++),factorLow,factorHigh, useBinError, &A, &B);
+                successRange = AdjustHistRange(vectorhist.at(iRange++),factorLow,factorHigh, useBinError, &A, &B, xfirst, xlast);
                 if(isYLog){
                     if(A<0) successRange = kFALSE;
                 }
@@ -115,7 +114,7 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist, Double_t factorLow, Double_t
         Max_global = B;
 
         for(Int_t j=iRange; j<(Int_t) vectorhist.size(); j++){
-        if(!AdjustHistRange(vectorhist.at(j),factorLow,factorHigh, useBinError, &A, &B)) continue;
+        if(!AdjustHistRange(vectorhist.at(j),factorLow,factorHigh, useBinError, &A, &B, xfirst, xlast)) continue;
         if(A<Min_global){
             if(isYLog){
                 if(A>0) Min_global=A;
@@ -149,7 +148,7 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Double
     }
 
     if(iRange>=nSets){
-        cout << "ERROR in AdjustHistRange, iRange>nSets, returning..." << endl;
+        cout << "ERROR in AdjustHistRange for " << vectorhist[0].at(h)->GetName() << ", iRange = " << iRange << " >= nSets = " << nSets << ", returning..." << endl;
         return;
     }
 
@@ -184,7 +183,7 @@ Bool_t AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Doub
     }
 
     if(iRange>=nSets){
-        cout << "ERROR in AdjustHistRange, iRange>nSets, returning..." << endl;
+        cout << "ERROR in AdjustHistRange for " << vectorhist[0].at(h)->GetName() << ", iRange = " << iRange << " >= nSets = " << nSets << ", returning..." << endl;
         return kFALSE;
     }
 
