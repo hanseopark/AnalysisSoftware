@@ -47,6 +47,8 @@ void rebuildContainer(const char *fileNameOADB="");
     updateFile(fileNameOADB,"TPCRecalib_LHC17n","TaskQA/OADB_inputs/LHC17n/DeDxMaps_14810013_00200009327000000000000000_0053b1f1202.root", 280234, 280235); //
     updateFile(fileNameOADB,"TPCRecalib_LHC17pq","TaskQA/OADB_inputs/LHC17pq/DeDxMaps_00010113_00200009327000000000000000_000481b1202.root",282008, 282441); //
     updateFile(fileNameOADB,"TPCRecalib_LHC18c","TaskQA/OADB_inputs/LHC18c/DeDxMaps_00010113_00200089227300000000000000_0053b1f1202.root", 285466, 285958);
+    updateFile(fileNameOADB,"TPCRecalib_LHC18q","TaskQA/OADB_inputs/LHC18q/DeDxMaps_16810013_00200009247600008250404000_000481b1202.root", 295581, 296624);
+    updateFile(fileNameOADB,"TPCRecalib_LHC18r","TaskQA/OADB_inputs/LHC18r/DeDxMaps_16810013_00200009247600008250404000_000481b1202.root", 296690, 297625);
     // the final output will be sorted by runnumber
     sortOutput(fileNameOADB);
     // the OADB container is additionally checked for ownership

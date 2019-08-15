@@ -1331,9 +1331,14 @@
                 fMesonWidthExpect           = 0.003;
                 fMesonLambdaTail            = 0.012;
                 fMesonWidthRange[0]         = 0.001;
-                fMesonWidthRange[1]         = 0.009;
                 fMesonLambdaTailRange[0]    = 0.001;
-                fMesonLambdaTailRange[1]    = 0.02;
+                if  ( fEnergyFlag.Contains("LowB") ){
+                    fMesonLambdaTailRange[1]     = 0.03;
+                    fMesonWidthRange[1]         = 0.012;
+                } else {
+                    fMesonLambdaTailRange[1]    = 0.02;
+                    fMesonWidthRange[1]         = 0.009;
+                }
             }
 
         //****************************************************************************************************
@@ -1406,9 +1411,9 @@
                 fFitRange[1]                = 0.65;
             } else if (mode == 0) {
                 if( fEnergyFlag.Contains("13TeV")  ){
-		  fFitRange[0]                = 0.44;
-		  fFitRange[1]                = 0.65;
-		}
+                    fFitRange[0]                = 0.44;
+                    fFitRange[1]                = 0.65;
+                }
 
              } else {
                 fFitRange[0]            = 0.4;
@@ -1608,18 +1613,16 @@
                     fMesonFitRange[0]           = 0.38;
                     fMesonFitRange[1]           = 0.73;
                 }
-	    } else if (mode == 0) {
-		if( fEnergyFlag.Contains("13TeV")  ){
-		  fMesonFitRange[0]                = 0.44;
-		  fMesonFitRange[1]                = 0.7;
+                if( fEnergyFlag.Contains("13TeV")  ){
+                    fMesonFitRange[0]                = 0.44;
+                    fMesonFitRange[1]                = 0.7;
                 }else if( fEnergyFlag.Contains("PbPb") ){
-		  fMesonFitRange[0]                = 0.44;
-		  fMesonFitRange[1]                = 0.66;
-		}else{
-		  fMesonFitRange[0]                = 0.4;
-		  fMesonFitRange[1]                = 0.7;
-		}
-
+                    fMesonFitRange[0]                = 0.44;
+                    fMesonFitRange[1]                = 0.66;
+                }else{
+                    fMesonFitRange[0]                = 0.4;
+                    fMesonFitRange[1]                = 0.7;
+                }
             } else {
                 fMesonFitRange[0]           = 0.4;
                 fMesonFitRange[1]           = 0.7;

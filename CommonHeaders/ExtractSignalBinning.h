@@ -104,6 +104,7 @@
     //*********************  determine optimum number of rows and columns *****************************
     //*************************************************************************************************
     void GetOptimumNColumnsAndRows( Int_t totBins, Int_t startBin, Int_t &columns, Int_t &rows ) {
+        cout << totBins << "\t" << startBin << "\t"<< endl;
         if ( (totBins+1-startBin) < 5){
             columns     = 2;
             rows        = 2;
@@ -139,6 +140,9 @@
             rows        = 5;
         } else if ( (totBins+2-startBin) < 46){
             columns     = 9;
+            rows        = 5;
+        } else if ( (totBins+2-startBin) < 51){
+            columns     = 10;
             rows        = 5;
         } else if ( (totBins+2-startBin) < 61){
             columns     = 10;
@@ -533,8 +537,8 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 if (mode == 0){
-                    scaleFac        = 4.;
-                    return 2;
+                    scaleFac        = 2.;
+                    return 1;
                 } else {
                 return 2;
                 }
@@ -1936,7 +1940,7 @@
                 } else if ( mode == 4 || mode == 5 || mode == 12){
                     startPtBin     = 13;
                 } else if ( mode == 2 ){
-                    startPtBin     = 13;
+                    startPtBin     = 1;
                 }
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0){
                 if ( mode == 0 ){
@@ -2198,7 +2202,10 @@
                 } else {
                     startPtBin      = 1;
                 }
-
+            } else if (energy.CompareTo("13TeVLowB") == 0 ){
+                if (mode == 0){
+                    startPtBin      = 1;
+                }
             } else if (energy.CompareTo("5TeV") == 0 || energy.Contains("5TeV2017")){
                 if( energy.Contains("2017")){
                     if ( mode == 0){
@@ -2645,31 +2652,36 @@
                 for( Int_t i=0; i<binningMax+1; i++ ) cout << binning[i] << ", ";
                 cout << endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
-                if ( mode == 0 ){
-                    if (DCAcase == kTRUE)
-                        maxNBins = 23;
-                    else
-                        maxNBins = 64;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        if (DCAcase == kTRUE) {
-                            binning[i] = fBinsPi013TeVLowBPtDCA[i];
-                        } else
-                        binning[i] = fBinsPi013TeVLowBPt[i];
-                    }
-                } else if (mode == 4 || mode == 12){
-                    maxNBins = 40;
-                    for(Int_t i = 0; i < maxNBins+1; i++)
-                        binning[i] = fBinsPi013TeVLowBEMCPt[i];
-                } else if (mode == 2){
-                    maxNBins = 52;
-                    for(Int_t i = 0; i < maxNBins+1; i++)
-                        binning[i] = fBinsPi013TeVLowBPCMEMCPt[i];
-                } else if ( mode == 5 ){
-                    maxNBins = 52;
-                    for(Int_t i = 0; i < maxNBins+1; i++)
-                        binning[i] = fBinsPi013TeVLowBPHOSPt[i];
+                switch (mode) {
+                    case 0:
+                        if (DCAcase == kTRUE){
+                            maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBPtDCA,binning, 21);
+                            maxNBins = 21;
+                        }else{
+                            maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBPt,binning, 46);
+                            maxNBins = 46;
+                        }
+                        break;
+                    case 4:
+                    case 12:
+                        maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBEMCPt,binning, 34);
+                        maxNBins = 34;
+                        break;
+                    case 2:
+                    case 13:
+                        maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBPCMEMCPt,binning, 42);
+                        maxNBins = 42;
+                        break;
+                    case 3:
+                    case 5:
+                        maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBPHOSPt,binning, 40);
+                        maxNBins = 40;
+                        break;
+                    default:
+                        maxNBins = CopyVectorToArray(binningMax,fBinsPi013TeVLowBPt,binning, 46);
+                        maxNBins = 46;
+                        break;
                 }
-
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0 ){
                 switch (mode) {
                     case 0:
@@ -3371,21 +3383,19 @@
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0){
                 switch(mode) {
                     case 0: //PCM-PCM
-		      cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode << "  SpecialTrigger::"<< SpecialTrigger << endl;
+                        cout<<"13 TeV "<<energy<<" Binning used for mode "<<mode << "  SpecialTrigger::"<< SpecialTrigger << endl;
                         if( DCAcase==kTRUE ) maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7PtDCA, binning, 9 );
                         else switch(SpecialTrigger) {
                             case -1: cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigCombPt"<<endl; maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigCombPt, binning, 45 ); break;
                             case 0:
-                             if(energy.Contains("RBins")){
-			          maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 18 );
-                               }else  {
-                      cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7Pt"<<endl;
-			          maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 ) ;
-			     }
-
-			     cout << "maxNBins"<< maxNBins<< endl;
-			     break;
-
+                                if(energy.Contains("RBins")){
+                                    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7RBinsPt, binning, 18 );
+                                }else  {
+                                    cout<<"; Special Trigger: "<<SpecialTrigger<<"; Used Binning: "<<"fBinsEta13TeVPCMTrigINT7Pt"<<endl;
+                                    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 40 ) ;
+                                }
+                                cout << "maxNBins"<< maxNBins<< endl;
+                                break;
                             case 4:
                             case 5: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 41 ); break;
                             case 1: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigEMC7Pt, binning, 22 ); break;
@@ -3476,8 +3486,10 @@
                         break;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
-                if( mode==0 || mode == 2 || mode == 4 || mode == 5 || mode == 12)
-                    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPt, binning );
+                if( mode==0 || mode == 4 || mode == 5 || mode == 12)
+                    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPCMPt, binning );
+                else if (mode == 2)
+                    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVLowBPCMEMCPt, binning );
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
                     maxNBins = 26;
@@ -4027,6 +4039,13 @@
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i]  = fBinsDirGamma8TeVPt[i];
                     }
+                }
+            } else if (energy.CompareTo("13TeVLowB") == 0){
+                if (mode == 0){
+                    if (DCAcase == kTRUE)
+                        maxNBins = CopyVectorToArray(binningMax,fBinsDirGamma13TeVLowBPt,binning, 24);
+                    else
+                        maxNBins = CopyVectorToArray(binningMax,fBinsDirGamma13TeVLowBPtDCAzDist,binning, 15);
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0){
@@ -5200,20 +5219,18 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
-                    fStartPtBin     = 1;
-                    if (fNBinsPt > 24) {
-                        cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
-                        fNBinsPt    = 24;
+                    fStartPtBin                 = GetStartBin(directPhoton, energy, modi, specialTrigg, centrality);
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Gamma", energy, modi, specialTrigg, isDCA, centrality, DoJetAnalysis );
+                    if (fNBinsPt > maxPtBinTheo) {
+                        cout << "**************************************************************************************************************************************" << endl;
+                        cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                        cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
+                        cout << "**************************************************************************************************************************************" << endl;
+                        fNBinsPt    = maxPtBinTheo;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        fBinsPt[i]         = fBinsDirGamma13TeVLowBPt[i];
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma13TeVLowBPtRebin[i];
-                    }
-                    fNBinsPtDCAzDist    = 15;
-                    fBinsPtDCAzDist     = new Double_t[fNBinsPtDCAzDist+1];
-                    for (Int_t i = 0; i < fNBinsPtDCAzDist+1; i++) {
-                        fBinsPtDCAzDist[i] = fBinsDirGamma13TeVLowBPtDCAzDist[i];
+                    if (modi == 0){
+                        CopyVectorToArray(fBinsDirGamma13TeVLowBPtRebin,fNRebin);
                     }
                 } else {
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
@@ -5233,15 +5250,25 @@
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                    for (Int_t i = 0; i < fNBinsPt; i++) {
-                        if ( modi == 0 ) {
-                            fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
-                        } else if ( modi == 4 || modi == 12) {
-                            fNRebin[i]  = fBinsPi013TeVLowBEMCPtRebin[i];
-                        } else if ( modi == 5 ){
-                            fNRebin[i]  = fBinsPi013TeVLowBPHOSPtRebin[i];
-                        } else if ( modi == 2 )
-                            fNRebin[i]  = fBinsPi013TeVLowBPCMEMCPtRebin[i];
+                    switch (modi){
+                        case 0:
+                            CopyVectorToArray(fBinsPi013TeVLowBPtRebin,fNRebin);
+                            break;
+                        case 2:
+                        case 13:
+                            CopyVectorToArray(fBinsPi013TeVLowBPCMEMCPtRebin,fNRebin);
+                            break;
+                        case 4:
+                        case 12:
+                            CopyVectorToArray(fBinsPi013TeVLowBEMCPtRebin,fNRebin);
+                            break;
+                        case 5:
+                        case 3:
+                            CopyVectorToArray(fBinsPi013TeVLowBPHOSPtRebin,fNRebin);
+                            break;
+                        default:
+                            CopyVectorToArray(fBinsPi013TeVLowBPtRebin,fNRebin);
+                            break;
                     }
                     nIterBGFit                  = 10;
                     fMaxYFracBGOverIntHist      = 60;
@@ -6462,7 +6489,8 @@
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                if( modi==0 || modi == 2  || modi == 4 || modi == 5 || modi == 12 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
+                if( modi==0 || modi == 4 || modi == 5 || modi == 12 ) CopyVectorToArray(fBinsEta13TeVLowBPCMPtRebin,fNRebin);
+                else if (modi == 2) CopyVectorToArray(fBinsEta13TeVLowBPCMEMCPtRebin,fNRebin);
                 nIterBGFit                  = 8;
                 fMaxYFracBGOverIntHist      = 70;
                 optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";

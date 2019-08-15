@@ -2641,13 +2641,13 @@ void ExtractSignalV2(
         SaveCorrectionHistos(fCutSelection, fPrefix2);
     }
     SaveHistos(fIsMC, fCutSelection, fPrefix2, UseTHnSparse);
-    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+//     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileErrLog.close();
-    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+//     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileDataLog.close();
-    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+//     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     Delete();
-    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+//     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 }
 
 //****************************************************************************
@@ -7405,6 +7405,7 @@ void PlotJetPlots(
 //****** Deleting all pointers generated during this analysis ****************
 //****************************************************************************
 void Delete(){
+    cout << __LINE__ << endl;
     if (fBinsPt)                                                delete[] fBinsPt;
     if (fPeakRange)                                             delete[] fPeakRange;
     if (fIntFixedRange)                                         delete[] fIntFixedRange;
@@ -7421,12 +7422,12 @@ void Delete(){
     if (fMesonWidthRange)                                       delete[] fMesonWidthRange;
     if (fMesonLambdaTailRange)                                  delete[] fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
-
+    cout << __LINE__ << endl;
     for (Int_t m = 0; m< 3; m++){
         if (fMesonYieldsResBckOtherFunc[m])                     delete[] fMesonYieldsResBckOtherFunc[m];
         if (fMesonYieldsResBckOtherFuncError[m])                delete[] fMesonYieldsResBckOtherFuncError[m];
     }
-
+    cout << __LINE__ << endl;
     for (Int_t k = 0; k < 6; k++){
         // delete arrays for yields
         if (fGGYields[k])                                       delete[] fGGYields[k];
@@ -7452,6 +7453,7 @@ void Delete(){
         if (fMesonCurIntRange[k])                               delete[] fMesonCurIntRange[k];
 
     }
+    cout << __LINE__ << endl;
     for (Int_t k = 0; k < 3; k++){
         // delete mass window arrays
         if (fMassWindowHigh[k])                                 delete[] fMassWindowHigh[k];
@@ -7474,6 +7476,7 @@ void Delete(){
         if (fMesonSigndefaultError[k])                          delete[] fMesonSigndefaultError[k];
 
     }
+    cout << __LINE__ << endl;
     if (fMesonTrueYieldsDC)                                     delete[] fMesonTrueYieldsDC;
     if (fMesonTrueYieldFixedWindow)                             delete[] fMesonTrueYieldFixedWindow;
     if (fMesonTrueYieldGammaConvGammaFixedWindow)               delete[] fMesonTrueYieldGammaConvGammaFixedWindow;
@@ -7498,19 +7501,20 @@ void Delete(){
     if (fMesonResidualBGlinError)                               delete[] fMesonResidualBGlinError;
     if (fMesonResidualBGcon)                                    delete[] fMesonResidualBGcon;
     if (fMesonResidualBGconError)                               delete[] fMesonResidualBGconError;
+    cout << __LINE__ << endl;
     for (Int_t m = 0; m < 4; m++){
         if (fMesonChi2[m])                                      delete[] fMesonChi2[m];
     }
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
         if (fSigToBckFitChi2[m])                                delete[] fSigToBckFitChi2[m];
     }
-
+    cout << __LINE__ << endl;
     if (fMesonTrueSB)                                           delete[] fMesonTrueSB;
     if (fMesonTrueSign)                                         delete[] fMesonTrueSign;
     if (fMesonFWHM)                                             delete[] fMesonFWHM;
     if (fMesonMassLeft)                                         delete[] fMesonMassLeft;
     if (fMesonFWHMLeft)                                         delete[] fMesonFWHMLeft;
-
+    cout << __LINE__ << endl;
     if (fMesonMassError)                                        delete[] fMesonMassError;
     if (fMesonTrueSBError)                                      delete[] fMesonTrueSBError;
     if (fMesonTrueSignError)                                    delete[] fMesonTrueSignError;
@@ -7554,17 +7558,21 @@ void Delete(){
     if (fHistoFillPerEventBGZbinVsMbin)                         delete[] fHistoFillPerEventBGZbinVsMbin;
     if (fHistoWeightsBGZbinVsPsibin)                            delete[] fHistoWeightsBGZbinVsPsibin;
     if (fHistoFillPerEventBGZbinVsPsibin)                       delete[] fHistoFillPerEventBGZbinVsPsibin;
+    cout << __LINE__ << endl;
     for (Int_t m = 0; m < 3; m++){
         if (fFitSignalWithOtherBGInvMassPtBin[m])               delete[] fFitSignalWithOtherBGInvMassPtBin[m];
 
         if (fFitBckOtherInvMassPtBin[m])                        delete[] fFitBckOtherInvMassPtBin[m];
     }
+    cout << __LINE__ << endl;
     for (Int_t m = 0; m < iNumberOfOtherSigToBckRatioFits; m++){
         if (fFitPHOSAllOtherSigToBckFits[m])                    delete[] fFitPHOSAllOtherSigToBckFits[m];
     }
+    cout << __LINE__ << endl;
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
         if (fHistoChi2SigToBckFit[m])                          delete fHistoChi2SigToBckFit[m];
     }
+    cout << __LINE__ << endl;
     // delete Gaussian fit histograms
     if (fMesonMassGaussian)                                     delete[] fMesonMassGaussian;
     if (fMesonMassGaussianError)                                delete[] fMesonMassGaussianError;
@@ -7580,12 +7588,12 @@ void Delete(){
     if (fHistoTrueWidthGaussianMeson)                           delete fHistoTrueWidthGaussianMeson;
     if (fFitSignalGaussianInvMassPtBin)                         delete[] fFitSignalGaussianInvMassPtBin;
     if (fFitTrueSignalGaussianInvMassPtBin)                     delete[] fFitTrueSignalGaussianInvMassPtBin;
-
+    cout << __LINE__ << endl;
     for (Int_t j = 0; j < 3; j++){
         if (fFileToyMCInput[j] )                                   delete[] fFileToyMCInput[j];
     }
     if (fFileCocktailInput)                                     delete fFileCocktailInput;
-
+    cout << __LINE__ << endl;
 }
 
 // MAIN FUNCTION for non-ROOT compilation (prototype)
