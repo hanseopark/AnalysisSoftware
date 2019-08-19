@@ -1057,7 +1057,7 @@
                     fMesonFitRange[0]       = 0.03;
                     fMesonFitRange[1]       = 0.25;
                 }
-            } else if (mode == 3){                        // PCM-EMC
+            } else if (mode == 3){                        // PCM-PHOS
                 fMesonFitRange[0]       = 0.01;
                 fMesonFitRange[1]       = 0.3;
                 if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
