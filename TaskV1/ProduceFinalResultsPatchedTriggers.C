@@ -104,6 +104,8 @@ Int_t GetOrderedTrigger(TString triggerNameDummy){
         return 10;
     } else if (triggerNameDummy.CompareTo("EG1_NLM1") == 0  || triggerNameDummy.CompareTo("EJ1") == 0){
         return 11;
+    } else if (triggerNameDummy.CompareTo("PHI7") == 0){
+        return 12;
     } else
      return -1;
 }
@@ -182,7 +184,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Size_t textSizeSpectra          = 0.04;
     Int_t textSizePixelSpectra      = textSizeSpectra*1000;
-    const Int_t MaxNumberOfFiles    = 12;
+    const Int_t MaxNumberOfFiles    = 13;
 
     Color_t colorTrigg      [MaxNumberOfFiles];
         for(Int_t set=0;set<MaxNumberOfFiles;set++) colorTrigg[set]= kBlack;
