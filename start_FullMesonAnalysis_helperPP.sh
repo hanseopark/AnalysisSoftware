@@ -294,7 +294,7 @@ function GiveBinning13TeV()
     if [ $DOPI0 -eq 1 ] || [ $DOGAMMA -eq 1 ]; then
         echo "How many p_T bins do you want to use for the Pi0?"
         echo "  for PCM: Max. 17 for 15f, 20 for 15fhi, 17 for low B 17g ";
-        echo "  for PCM-EDC: Max. 96 ";
+        echo "  for PCM-EDC: Max. 85 ";
         echo "  for other modes: max 37";
         read BINSPTPI0
         CORRECTPI0=1
@@ -305,7 +305,7 @@ function GiveBinning13TeV()
     if [ $DOETA -eq 1 ] || [ $DOPI0INETABINS -eq 1 ]; then
         echo "How many p_T bins do you want to use for the Eta meson?"
         echo "  for PCM: Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
-        echo "  for PCM-EDC: Max. 35 ";
+        echo "  for PCM-EDC: Max. 52 ";
         echo "  for other modes: max 24";
         read BINSPTETA
         CORRECTETA=1
