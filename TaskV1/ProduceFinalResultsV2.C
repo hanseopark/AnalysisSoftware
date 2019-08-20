@@ -297,7 +297,9 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     histoCorrectedYieldPi0                  = (TH1D*)filePi0->Get(nameCorrectedYield.Data());
     histoUncorrectedYieldPi0                = (TH1D*)filePi0->Get("histoYieldMeson");
     histoFWHMMesonPi0                       = (TH1D*)filePi0->Get("histoFWHMMeson");
+    histoFWHMMesonPi0MC                     = (TH1D*)filePi0->Get("histoFWHMMesonRecMC");
     histoMassMesonPi0                       = (TH1D*)filePi0->Get("histoMassMeson");
+    histoMassMesonPi0MC                     = (TH1D*)filePi0->Get("histoMassMesonRecMC");
     histoAccPi0                             = (TH1D*)filePi0->Get("fMCMesonAccepPt");
     histoTrueEffPtPi0                       = (TH1D*)filePi0->Get(nameEfficiency.Data());
     histoTrueFWHMMesonPi0                   = (TH1D*)filePi0->Get("histoTrueFWHMMeson");
@@ -669,7 +671,11 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
             histoAccPi0->Write("AcceptancePi0",TObject::kOverwrite);
             histoTrueEffPtPi0->Write("EfficiencyPi0",TObject::kOverwrite);
             histoFWHMMesonPi0->Write("FWHMPi0",TObject::kOverwrite);
+            histoFWHMMesonPi0->Write("Pi0_FWHM_data",TObject::kOverwrite);
+            histoFWHMMesonPi0MC->Write("Pi0_FWHM_MC",TObject::kOverwrite);
             histoMassMesonPi0->Write("MassPi0",TObject::kOverwrite);
+            histoMassMesonPi0->Write("Pi0_Mass_data",TObject::kOverwrite);
+            histoMassMesonPi0MC->Write("Pi0_Mass_MC",TObject::kOverwrite);
             histoMassMesonPi0MinusExp->Write("MassPi0MinusExp",TObject::kOverwrite);
             histoTrueMassMesonPi0->Write("TrueMassPi0",TObject::kOverwrite);
             histoTrueMassMesonPi0MinusExp->Write("TrueMassPi0MinusExp",TObject::kOverwrite);
