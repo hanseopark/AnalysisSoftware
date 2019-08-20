@@ -82,6 +82,7 @@ void CorrectCaloNonLinearityV4(
     TString optionEnergy        = "";
     Int_t mode                  = -1;
     TString FittingFunction    ="";
+    TString manualmaindir              = "";
 
     // variables for data set indentifiers and maximum number of sets
     Int_t nSets                 = 0;
@@ -174,6 +175,9 @@ void CorrectCaloNonLinearityV4(
         // reading mode
         } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
             mode            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        // reading mode
+    } else if (tempValue.BeginsWith("manualmaindir",TString::kIgnoreCase)){
+            manualmaindir            = (TString)((TObjString*)tempArr->At(1))->GetString();
         // reading number of data sets to be compared
         } else if (tempValue.BeginsWith("nSets",TString::kIgnoreCase)){
             nSets            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
@@ -444,7 +448,14 @@ void CorrectCaloNonLinearityV4(
 
     TFile* dataFile             = new TFile(strDataFile[0].Data(),"READ");
     if(dataFile->IsZombie()) {cout << "Info: ROOT file '" << strDataFile[0].Data() << "' could not be openend, return!" << endl; return;}
-    TString mainDirNameData     =  AutoDetectMainTList(mode , dataFile);
+    TString mainDirNameData;
+    if(manualmaindir.Length()){
+        mainDirNameData = manualmaindir;
+    } else {
+        mainDirNameData     =  AutoDetectMainTList(mode , dataFile);
+    }
+    cout << Form("mainDirNameData: %s",mainDirNameData.Data()) << endl;
+
     TList* dataTopDir           = (TList*) dataFile->Get(mainDirNameData.Data());
     if(dataTopDir == NULL) {cout << "ERROR: dataTopDir not Found"<<endl; return;}
     TList* dataTopContainer     = (TList*) dataTopDir->FindObject(Form("Cut Number %s",dataCut[0].Data()));
@@ -454,7 +465,14 @@ void CorrectCaloNonLinearityV4(
 
     TFile* mcFile               = new TFile(strMCFile[0].Data(),"READ");
     if(mcFile->IsZombie()) {cout << "Info: ROOT file '" << strMCFile[0].Data() << "' could not be openend, return!" << endl; return;}
-    TString mainDirNameMC       =  AutoDetectMainTList(mode , mcFile);
+    TString mainDirNameMC;
+    if(manualmaindir.Length()){
+        mainDirNameMC = manualmaindir;
+    } else {
+        mainDirNameMC     =  AutoDetectMainTList(mode , dataFile);
+    }
+    cout << Form("mainDirNameMC: %s",mainDirNameMC.Data()) << endl;
+
     TList* mcTopDir             = (TList*) mcFile->Get(mainDirNameMC.Data());
     if(mcTopDir == NULL) {cout << "ERROR: mcTopDir not Found"<<endl; return;}
     TList* mcTopContainer       = (TList*) mcTopDir->FindObject(Form("Cut Number %s",mcCut[0].Data()));
