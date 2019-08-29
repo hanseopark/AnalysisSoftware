@@ -73,13 +73,13 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiNDM.C\($1\)
+    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiNDM.C+\($1\)
     #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
 function CorrectSignal()
 {
-    root -x -l -b -q TaskV1/CorrectSignalPiPlPiMiPiZero.C\($1\)
+    root -x -l -b -q TaskV1/CorrectSignalPiPlPiMiPiZero.C++\($1\)
 }
 
 
@@ -155,6 +155,7 @@ echo $1
 echo $2
 echo $3
 echo $4
+echo $5
 
 if [[ "$1" == *-h* ]] ; then
     Usage
@@ -172,7 +173,7 @@ elif [[ "$1" == "-omegaOnly" ]] ; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
     else
-        echo "No data file specified, analysis can not be fullfiled."
+        echo "No data file specified, analysis can not be fullfiled. Will only do ExtractSIgnal for MC file "
 #    exit
     fi
     if [ -f $MCRootFile ]; then
@@ -182,8 +183,7 @@ elif [[ "$1" == "-omegaOnly" ]] ; then
         PARTLY=1
         MCFILE=0
     fi
-
-    if [ -f $AltCorrFile ]; then
+    if [ -f $AltCorrFile ] && ![ -z "$AltCorrFile"  ]; then
         altAccFileGiven=1
         echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
@@ -200,7 +200,7 @@ elif [[ "$1" == "-etaOnly" ]] ; then
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
-    if [ -f $AltCorrFile ]; then
+    if [ -f $AltCorrFile ] && ![ -z "$AltCorrFile" ]; then
         altAccFileGiven=1
         echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
@@ -218,7 +218,7 @@ elif [[ "$1" == -d* ]] ; then
     MCRootFile=$3
     Suffix=$4;
     AltCorrFile=$5
-    if [ -f $AltCorrFile ]; then
+    if [ -f $AltCorrFile ] && ![ -z "$AltCorrFile" ]; then
         altAccFileGiven=1
         echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
@@ -236,7 +236,8 @@ elif [[ "$1" != -* ]] ; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
     else
-        echo "No data file specified, analysis can not be fullfiled."
+        echo "No data file specified, will run MC only"
+        PARTLY=1
 #    exit
     fi
     if [ -f $MCRootFile ]; then
@@ -255,7 +256,8 @@ else
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
     else
-        echo "No data file specified, analysis can not be fullfiled."
+        echo "No data file specified, only ExtractSignal on MC file is run"
+        PARTLY=1
     #    exit
     fi
     if [ -f $MCRootFile ]; then
@@ -265,7 +267,7 @@ else
         PARTLY=1
         MCFILE=0
     fi
-    if [ -f $AltCorrFile ]; then
+    if [ -f $AltCorrFile  ] && ![-z "$AltCorrFile" ]; then
         altAccFileGiven=1
         echo "An additional file $AltCorrFile was given, which will be used to load the acceptance histogram."
     fi
@@ -439,6 +441,7 @@ do
             correct=1
         else
             echo $DataRootFile #DEBUGGING
+            echo "No data file found, will use MC root file for CutSelection"
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
         fi

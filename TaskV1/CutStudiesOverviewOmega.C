@@ -66,17 +66,23 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
                         TString fDalitz                         = "",
                         TString optionPeriod                    = "No",
                         Int_t mode                              = 9,
-                        Bool_t doBarlow                         = kFALSE
-        ){
+                        Bool_t doBarlow                         = kFALSE,
+                        TString CombineCutsNamePi0              = "",   // if a log file of cuts for pi0 is given, the omega/pi0 ratio will be calculated as well
+                        TString Pi0Directory                    = ""    // if left empty, Pi0 output will be searched for in the same directory as omega 
+){
 
     // Define global arrays
     TString     cutNumber               [50];
+    TString     cutNumberPi0            [50];
     TString     cutNumberAdv            [50];
+    TString     cutNumberAdvPi0         [50];
     Double_t    nColls                  [50];
     TString     prefix2                                         = "";
     Bool_t      doMassRatio                                     = kTRUE;
     Bool_t      doWidthRatio                                    = kTRUE;
     Bool_t      correctionFilesAvail                            = kTRUE;
+
+    Bool_t      doOmegaPi0Ratio                                 = kFALSE;
 
     // Variable to quickly change which type of yield is used
     TString InvMassTypeEnding = "_SubPiZero";
@@ -142,6 +148,30 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         Number++;
     }
 
+    if(CombineCutsNamePi0.CompareTo("")!=0){ // a Pi0 log file was given -> calculate omega/pi0 ratio as well
+        doOmegaPi0Ratio = kTRUE;
+        TString Pi0InFullPath = "";
+        if(Pi0Directory.CompareTo("")!=0){
+            Pi0InFullPath = Form("%s/%s",Pi0Directory.Data(),CombineCutsNamePi0.Data());
+        } else{
+            Pi0InFullPath = CombineCutsNamePi0;
+        }
+        
+
+        ifstream inPi0(Pi0InFullPath.Data());
+        cout<<"Available Cuts:"<<endl;
+        string TempCutNumberPi0;
+        Int_t NumberPi0 = 0;
+        while(getline(inPi0, TempCutNumberPi0)){
+            TString tempCutNumberAdvPi0                                = TempCutNumberPi0;
+            cutNumberAdvPi0[Number]                                    = tempCutNumberAdvPi0;
+            cutNumberPi0[Number]                                       = tempCutNumberAdvPi0;
+            cout<< cutNumberPi0[Number]<<endl;
+            Number++;
+        }
+
+    }
+
     cout<<"=========================="<<endl;
 
     cout << "analysing " << cutVariationName << " cut variations" << endl;
@@ -168,12 +198,13 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     TString folderName[50];
     TString specialString[50];
     TString FileNameCorrected           [MaxNumberOfCuts];
+    TString FileNamePi0OmegaBinCorrected[MaxNumberOfCuts];
     TString FileNameUnCorrected         [MaxNumberOfCuts];
     TFile*  Cutcorrfile                 [ConstNumberOfCuts];
-    TFile*  CutcorrPi0EtaBinfile        [ConstNumberOfCuts];
+    TFile*  CutcorrPi0OmegaBinfile      [ConstNumberOfCuts];
     TFile*  Cutuncorrfile               [ConstNumberOfCuts];
     TH1D*   histoCorrectedYieldCut      [ConstNumberOfCuts];
-    TH1D*   histoCorrectedYieldPi0EtaCut[ConstNumberOfCuts];
+    TH1D*   histoCorrectedYieldPi0OmegaCut[ConstNumberOfCuts];
     TH1D*   histoRawClusterPtCut        [ConstNumberOfCuts];
     TH1D*   histoTrueEffiCut            [ConstNumberOfCuts];
     TH1D*   histoAcceptanceCut          [ConstNumberOfCuts];
@@ -182,7 +213,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     TH1D*   histoTrueEffiCutRelUnc      [ConstNumberOfCuts];
     TH1D*   histoMassRatioCut           [ConstNumberOfCuts];
     TH1D*   histoWidthRatioCut          [ConstNumberOfCuts];
-    TH1D*   histoEtaToPi0Cut            [ConstNumberOfCuts];
+    TH1D*   histoOmegaToPi0Cut            [ConstNumberOfCuts];
     TH1D*   histoWidthMeson             [ConstNumberOfCuts];
     TH1D*   histoSBCut                  [ConstNumberOfCuts];
     TH1D*   histoSBNarrowCut            [ConstNumberOfCuts];
@@ -194,7 +225,7 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     TH1D*   histoRatioRawYieldCut       [ConstNumberOfCuts];
     TH1D*   histoRatioMassRatioCut      [ConstNumberOfCuts];
     TH1D*   histoRatioWidthRatioCut     [ConstNumberOfCuts];
-    TH1D*   histoRatioEtaToPi0Cut       [ConstNumberOfCuts];
+    TH1D*   histoRatioOmegaToPi0Cut       [ConstNumberOfCuts];
     TH1D*   histoRatioWidthMeson        [ConstNumberOfCuts];
     TH1D*   histoRatioSBCut             [ConstNumberOfCuts];
     TH1D*   histoRatioSBNarrowCut       [ConstNumberOfCuts];
@@ -209,8 +240,8 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
     // Define yield extraction error graphs
     TGraphAsymmErrors* systErrGraphNegYieldExt                  = NULL;
     TGraphAsymmErrors* systErrGraphPosYieldExt                  = NULL;
-    TGraphAsymmErrors* systErrGraphNegYieldExtPi0EtaBinning     = NULL;
-    TGraphAsymmErrors* systErrGraphPosYieldExtPi0EtaBinning     = NULL;
+    TGraphAsymmErrors* systErrGraphNegYieldExtPi0OmegaBinning     = NULL;
+    TGraphAsymmErrors* systErrGraphPosYieldExtPi0OmegaBinning     = NULL;
 
     TGraphAsymmErrors* systErrGraphBGEstimate                   = NULL;
     TGraphAsymmErrors* systErrGraphBGEstimateIterations         = NULL;
@@ -421,6 +452,20 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             correctionFilesAvail                            = kFALSE;
         }
 
+        if (doOmegaPi0Ratio){
+            if(Pi0Directory.CompareTo("")!=0){
+                FileNamePi0OmegaBinCorrected[i]                   = Form("%s/%s/%s/Pi0OmegaBinning_%s_GammaConvV1%sCorrection_%s.root",Pi0Directory.Data() ,cutNumberAdvPi0[i].Data(), optionEnergy.Data(), prefix2.Data(),
+                                                                        fDalitz.Data(), cutNumberPi0[i].Data());
+            } else{
+                FileNamePi0OmegaBinCorrected[i]                   = Form("%s/%s/Pi0OmegaBinning_%s_GammaConvV1%sCorrection_%s.root",cutNumberAdvPi0[i].Data(), optionEnergy.Data(), prefix2.Data(),
+                                                                        fDalitz.Data(), cutNumberPi0[i].Data());
+            }
+            CutcorrPi0OmegaBinfile[i]                         = new TFile(FileNamePi0OmegaBinCorrected[i]);
+            if (CutcorrPi0OmegaBinfile[i]->IsZombie()){
+                cout << "Pi0/Eta ratio can't be compared file: " << FileNamePi0OmegaBinCorrected[i] << " missing! "<< endl;
+                doOmegaPi0Ratio                                       = kFALSE;
+            }
+        }
                                                                        
         cout<< FileNameUnCorrected[i] << endl;
         Cutuncorrfile[i]                                        = new TFile(FileNameUnCorrected[i]);
@@ -450,6 +495,11 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             TString nameCorrectedYieldTrueWide                  = Form("CorrectedYieldTrueEffWide%s",InvMassTypeEnding.Data());
             TString nameEfficiency                              = Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data());
             TString nameAcceptance                              = "fMCMesonAccepPt";
+
+            // names for histograms loaded from pi0 file
+            TString nameCorrectedYieldPi0                          = "CorrectedYieldTrueEff";
+            TString nameEfficiencyPi0                              = "TrueMesonEffiPt";
+            TString nameAcceptancePi0                              = "fMCMesonAccepPt";
 
             if(i==0){
                histoCorrectedYieldNorm                       = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYieldNorm.Data());
@@ -491,6 +541,13 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
                 doWidthRatio                                     = kFALSE;
             if (doWidthRatio) histoWidthRatioCut[i]->SetName(Form("histoWidthRatio_%s", cutNumber[i].Data()));
             */
+
+            if (doOmegaPi0Ratio){
+                histoCorrectedYieldPi0OmegaCut[i]                 = (TH1D*)CutcorrPi0OmegaBinfile[i]->Get(nameCorrectedYieldPi0.Data());
+                histoCorrectedYieldPi0OmegaCut[i]->SetName(Form("Pi0OmegaBinning_%s_%s", nameCorrectedYieldPi0.Data(),cutNumber[i].Data()));
+                histoOmegaToPi0Cut[i]                             = (TH1D*)histoCorrectedYieldCut[i]->Clone(Form("OmegaToPi0_%s", cutNumber[i].Data()));
+                histoOmegaToPi0Cut[i]->Divide(histoOmegaToPi0Cut[i],histoCorrectedYieldPi0OmegaCut[i],1.,1.,"");
+            }
         }
 
         // read histograms from uncorrected file
@@ -548,10 +605,10 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
             //                histoRatioWidthRatioCut[i]                       = (TH1D*) histoWidthRatioCut[i]->Clone(Form("histoRatioWidthRatio_%s", cutNumber[i].Data()));
             //                histoRatioWidthRatioCut[i]->Divide(histoRatioWidthRatioCut[i],histoWidthRatioCut[0],1.,1.,"B");
             //            }
-            //            if (isEta){
-            //                histoRatioEtaToPi0Cut[i]                        = (TH1D*) histoEtaToPi0Cut[i]->Clone(Form("histoEtaToPi0Ratio_%s", cutNumber[i].Data()));
-            //                histoRatioEtaToPi0Cut[i]->Divide(histoRatioEtaToPi0Cut[i],histoEtaToPi0Cut[0],1.,1.,"B");
-            //            }
+            if (doOmegaPi0Ratio){
+                histoRatioOmegaToPi0Cut[i]                        = (TH1D*) histoOmegaToPi0Cut[i]->Clone(Form("histoOmegaToPi0Ratio_%s", cutNumber[i].Data()));
+                histoRatioOmegaToPi0Cut[i]->Divide(histoRatioOmegaToPi0Cut[i],histoOmegaToPi0Cut[0],1.,1.,"B");
+            }
         }
         histoRatioRawYieldCut[i]                                = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s", cutNumber[i].Data()));
         if (!kSpecialTrigger && !cutVariationName.Contains("Cent")){
@@ -1834,98 +1891,94 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         //            delete canvasWidthRatioMeson;
         //        }
 
-        // ***************************************************************************************************
-        // *************Omega to pi0 ratio not implemented for now !! ****************************************
-        // ***************************************************************************************************
+               if (doOmegaPi0Ratio){
+                   //**************************************************************************************
+                   //********************* Plotting Eta to pi0 ratio  *************************************
+                   //**************************************************************************************
+                   // Define canvas
+                   TCanvas* canvasOmegaToPi0Meson = new TCanvas("canvasOmegaToPi0Meson","",1350,1500);  // gives the page size
+                   DrawGammaCanvasSettings( canvasOmegaToPi0Meson,  0.13, 0.02, 0.02, 0.09);
+                   // Define upper panel
+                   TPad* padOmegaToPi0 = new TPad("padOmegaToPi0", "", 0., 0.25, 1., 1.,-1, -1, -2);
+                   DrawGammaPadSettings( padOmegaToPi0, 0.12, 0.02, 0.04, 0.);
+                   padOmegaToPi0->Draw();
+                   // Define lower panel
+                   TPad* padOmegaToPi0Ratios = new TPad("padOmegaToPi0Ratios", "", 0., 0., 1., 0.25,-1, -1, -2);
+                   DrawGammaPadSettings( padOmegaToPi0Ratios, 0.12, 0.02, 0.0, 0.2);
+                   padOmegaToPi0Ratios->Draw();
 
-        //        if (isEta){
-        //            //**************************************************************************************
-        //            //********************* Plotting Eta to pi0 ratio  *************************************
-        //            //**************************************************************************************
-        //            // Define canvas
-        //            TCanvas* canvasEtaToPi0Meson = new TCanvas("canvasEtaToPi0Meson","",1350,1500);  // gives the page size
-        //            DrawGammaCanvasSettings( canvasEtaToPi0Meson,  0.13, 0.02, 0.02, 0.09);
-        //            // Define upper panel
-        //            TPad* padEtaToPi0 = new TPad("padEtaToPi0", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        //            DrawGammaPadSettings( padEtaToPi0, 0.12, 0.02, 0.04, 0.);
-        //            padEtaToPi0->Draw();
-        //            // Define lower panel
-        //            TPad* padEtaToPi0Ratios = new TPad("padEtaToPi0Ratios", "", 0., 0., 1., 0.25,-1, -1, -2);
-        //            DrawGammaPadSettings( padEtaToPi0Ratios, 0.12, 0.02, 0.0, 0.2);
-        //            padEtaToPi0Ratios->Draw();
+                   // draw efficiency in upper panel
+                   padOmegaToPi0->cd();
+           //         if (mode == 2 || mode == 3 ) padOmegaToPi0->SetLogy(1);
+                   padOmegaToPi0->SetLogy(0);
 
-        //            // draw efficiency in upper panel
-        //            padEtaToPi0->cd();
-        //    //         if (mode == 2 || mode == 3 ) padEtaToPi0->SetLogy(1);
-        //            padEtaToPi0->SetLogy(0);
+                   TLegend* legendOmegaToPi0 = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.3,0.92, 1500*0.75*0.032);
+                   if (cutVariationName.Contains("dEdxPi")){
+                       legendOmegaToPi0->SetTextSize(0.02);
+                   }
+                   for(Int_t i = 0; i< NumberOfCuts; i++){
+                       if(i == 0){
+                           DrawGammaSetMarker(histoOmegaToPi0Cut[i], 20, 1., color[0], color[0]);
+                           DrawAutoGammaMesonHistos( histoOmegaToPi0Cut[i],
+                                                   "", "#it{p}_{T} (GeV/#it{c})", "#omega/#pi^{0}",
+                                                   kFALSE, 5., 10e-10,kFALSE,
+                                                   kFALSE, -0.1, 0.00030,
+                                                   kFALSE, 0., 10.);
+                           histoOmegaToPi0Cut[i]->GetYaxis()->SetRangeUser(0.,1.5);
+                           histoOmegaToPi0Cut[i]->DrawCopy("e1,p");
+                           legendOmegaToPi0->AddEntry(histoOmegaToPi0Cut[i],Form("standard: %s",cutStringsName[i].Data()));
+                       } else {
+                           if(i<20){
+                               DrawGammaSetMarker(histoOmegaToPi0Cut[i], 20+i, 1.,color[i],color[i]);
+                           } else {
+                               DrawGammaSetMarker(histoOmegaToPi0Cut[i], 20+i, 1.,color[i-20],color[i-20]);
+                           }
+                           histoOmegaToPi0Cut[i]->DrawCopy("same,e1,p");
+                           legendOmegaToPi0->AddEntry(histoOmegaToPi0Cut[i],cutStringsName[i].Data());
+                       }
 
-        //            TLegend* legendEtaToPi0 = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.3,0.92, 1500*0.75*0.032);
-        //            if (cutVariationName.Contains("dEdxPi")){
-        //                legendEtaToPi0->SetTextSize(0.02);
-        //            }
-        //            for(Int_t i = 0; i< NumberOfCuts; i++){
-        //                if(i == 0){
-        //                    DrawGammaSetMarker(histoEtaToPi0Cut[i], 20, 1., color[0], color[0]);
-        //                    DrawAutoGammaMesonHistos( histoEtaToPi0Cut[i],
-        //                                            "", "#it{p}_{T} (GeV/#it{c})", "#eta/#pi^{0}",
-        //                                            kFALSE, 5., 10e-10,kFALSE,
-        //                                            kFALSE, -0.1, 0.00030,
-        //                                            kFALSE, 0., 10.);
-        //                    histoEtaToPi0Cut[i]->GetYaxis()->SetRangeUser(0.,1.5);
-        //                    histoEtaToPi0Cut[i]->DrawCopy("e1,p");
-        //                    legendEtaToPi0->AddEntry(histoEtaToPi0Cut[i],Form("standard: %s",cutStringsName[i].Data()));
-        //                } else {
-        //                    if(i<20){
-        //                        DrawGammaSetMarker(histoEtaToPi0Cut[i], 20+i, 1.,color[i],color[i]);
-        //                    } else {
-        //                        DrawGammaSetMarker(histoEtaToPi0Cut[i], 20+i, 1.,color[i-20],color[i-20]);
-        //                    }
-        //                    histoEtaToPi0Cut[i]->DrawCopy("same,e1,p");
-        //                    legendEtaToPi0->AddEntry(histoEtaToPi0Cut[i],cutStringsName[i].Data());
-        //                }
+                   }
+                   legendOmegaToPi0->Draw();
+                   DrawGammaLines(0., maxPt,0.45, 0.45,0.1);
+                   DrawGammaLines(0., maxPt,0.55, 0.55,0.1,kGray+1, 7);
+                   DrawGammaLines(0., maxPt,0.35, 0.35 ,0.1,kGray+1, 7);
 
-        //            }
-        //            legendEtaToPi0->Draw();
-        //            DrawGammaLines(0., maxPt,0.45, 0.45,0.1);
-        //            DrawGammaLines(0., maxPt,0.55, 0.55,0.1,kGray+1, 7);
-        //            DrawGammaLines(0., maxPt,0.35, 0.35 ,0.1,kGray+1, 7);
+                   // OmegaToPi0 plot labeling
+                   PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
-        //            // EtaToPi0 plot labeling
-        //            PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+                   // Draw ratio of efficiencies in lower panel
+                   padOmegaToPi0Ratios->cd();
+                   if( optionEnergy.Contains("Pb") ) padOmegaToPi0Ratios->SetLogy(0);
+                   else padOmegaToPi0Ratios->SetLogy(0);
+                   for(Int_t i = 0; i< NumberOfCuts; i++){
+                       if(i==0){
+                           Double_t minYRatio = 0.2;
+                           Double_t maxYRatio = 1.8;
+                           SetStyleHistoTH1ForGraphs(histoRatioOmegaToPi0Cut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                           DrawGammaSetMarker(histoRatioOmegaToPi0Cut[i], 20, 1.,color[0],color[0]);
+                           histoRatioOmegaToPi0Cut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                           histoRatioOmegaToPi0Cut[i]->DrawCopy("p,e1");
+                       } else{
+                           if(i<20){
+                               DrawGammaSetMarker(histoRatioOmegaToPi0Cut[i], 20+i, 1.,color[i],color[i]);
+                           } else {
+                               DrawGammaSetMarker(histoRatioOmegaToPi0Cut[i], 20+i, 1.,color[i-20],color[i-20]);
+                           }
+                           histoRatioOmegaToPi0Cut[i]->DrawCopy("same,e1,p");
+                           cout<< cutStringsName[i].Data() << endl;
+                           for (Int_t l = 1; l<histoRatioOmegaToPi0Cut[i]->GetNbinsX()+1;l++ ){
+                              cout << l << "\t"<< histoRatioOmegaToPi0Cut[i]->GetBinCenter(l) << "\t" << histoRatioOmegaToPi0Cut[i]->GetBinContent(l) << endl;
+                           }
+                       }
 
-        //            // Draw ratio of efficiencies in lower panel
-        //            padEtaToPi0Ratios->cd();
-        //            if( optionEnergy.Contains("Pb") ) padEtaToPi0Ratios->SetLogy(0);
-        //            else padEtaToPi0Ratios->SetLogy(0);
-        //            for(Int_t i = 0; i< NumberOfCuts; i++){
-        //                if(i==0){
-        //                    Double_t minYRatio = 0.2;
-        //                    Double_t maxYRatio = 1.8;
-        //                    SetStyleHistoTH1ForGraphs(histoRatioEtaToPi0Cut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-        //                    DrawGammaSetMarker(histoRatioEtaToPi0Cut[i], 20, 1.,color[0],color[0]);
-        //                    histoRatioEtaToPi0Cut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-        //                    histoRatioEtaToPi0Cut[i]->DrawCopy("p,e1");
-        //                } else{
-        //                    if(i<20){
-        //                        DrawGammaSetMarker(histoRatioEtaToPi0Cut[i], 20+i, 1.,color[i],color[i]);
-        //                    } else {
-        //                        DrawGammaSetMarker(histoRatioEtaToPi0Cut[i], 20+i, 1.,color[i-20],color[i-20]);
-        //                    }
-        //                    histoRatioEtaToPi0Cut[i]->DrawCopy("same,e1,p");
-        //                    cout<< cutStringsName[i].Data() << endl;
-        //                    for (Int_t l = 1; l<histoRatioEtaToPi0Cut[i]->GetNbinsX()+1;l++ ){
-        //                       cout << l << "\t"<< histoRatioEtaToPi0Cut[i]->GetBinCenter(l) << "\t" << histoRatioEtaToPi0Cut[i]->GetBinContent(l) << endl;
-        //                    }
-        //                }
+                       DrawGammaLines(0., maxPt,1., 1.,0.1);
+                   }
 
-        //                DrawGammaLines(0., maxPt,1., 1.,0.1);
-        //            }
+                   canvasOmegaToPi0Meson->Update();
+                   canvasOmegaToPi0Meson->SaveAs(Form("%s/%s_%s_OmegaToPi0%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
+                   delete canvasOmegaToPi0Meson;
 
-        //            canvasEtaToPi0Meson->Update();
-        //            canvasEtaToPi0Meson->SaveAs(Form("%s/%s_%s_EtaToPi0%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
-        //            delete canvasEtaToPi0Meson;
-
-        //        }
+               }
 
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for Meson ************
@@ -2167,198 +2220,197 @@ void CutStudiesOverviewOmega(TString CombineCutsName                 = "CombineC
         cout << "positive error graph" << endl;
         SystErrGraphPos->Print();
 
-        //        TGraphAsymmErrors* SystErrGraphNegEtaToPi0 = NULL;
-        //        TGraphAsymmErrors* SystErrGraphPosEtaToPi0 = NULL;
+        TGraphAsymmErrors* SystErrGraphNegOmegaToPi0 = NULL;
+        TGraphAsymmErrors* SystErrGraphPosOmegaToPi0 = NULL;
 
-        // Ratio not implemented for now
-        //        if (isEta){
-        //            //*************************************************************************************************
-        //            //******************** Output of the systematic Error due to Signal extraction for Meson ************
-        //            //*************************************************************************************************
-        //            // Determine number of bins
-        //            Int_t NBinsPtEtaToPi0                        = histoEtaToPi0Cut[0]->GetNbinsX();
-        //            const Int_t NBinstPtConstEtaToPi0            = NBinsPtEtaToPi0+1;
+        if (doOmegaPi0Ratio){
+            //*************************************************************************************************
+            //******************** Output of the systematic Error due to Signal extraction for Meson ************
+            //*************************************************************************************************
+            // Determine number of bins
+            Int_t NBinsPtOmegaToPi0                        = histoOmegaToPi0Cut[0]->GetNbinsX();
+            const Int_t NBinstPtConstOmegaToPi0            = NBinsPtOmegaToPi0+1;
 
-        //            // Create array of bin boundaries
-        //            Double_t  BinsXCenterEtaToPi0[NBinstPtConstEtaToPi0];
-        //            Double_t  BinsXWidthEtaToPi0[NBinstPtConstEtaToPi0];
-        //            BinsXCenterEtaToPi0[0]                      = 0;
-        //            BinsXWidthEtaToPi0[0]                       = 0.;
-        //            for (Int_t i = 1; i < NBinsPtEtaToPi0 +1; i++){
-        //                BinsXCenterEtaToPi0[i]                  = histoEtaToPi0Cut[0]->GetBinCenter(i);
-        //                BinsXWidthEtaToPi0[i]                   = histoEtaToPi0Cut[0]->GetBinWidth(i)/2.;
-        //            }
+            // Create array of bin boundaries
+            Double_t  BinsXCenterOmegaToPi0[NBinstPtConstOmegaToPi0];
+            Double_t  BinsXWidthOmegaToPi0[NBinstPtConstOmegaToPi0];
+            BinsXCenterOmegaToPi0[0]                      = 0;
+            BinsXWidthOmegaToPi0[0]                       = 0.;
+            for (Int_t i = 1; i < NBinsPtOmegaToPi0 +1; i++){
+                BinsXCenterOmegaToPi0[i]                  = histoOmegaToPi0Cut[0]->GetBinCenter(i);
+                BinsXWidthOmegaToPi0[i]                   = histoOmegaToPi0Cut[0]->GetBinWidth(i)/2.;
+            }
 
-        //            // Create array of Sys Err Objects and fill them
-        //            SysErrorConversion SysErrCutEtaToPi0[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            SysErrorConversion SysErrCutEtaToPi0Raw[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            for (Int_t j = 0; j < NumberOfCuts; j++){
-        //                for (Int_t i = 1; i < NBinsPtEtaToPi0 +1; i++){
-        //                    SysErrCutEtaToPi0[j][i].value       = histoEtaToPi0Cut[j]->GetBinContent(i);
-        //                    SysErrCutEtaToPi0[j][i].error       = histoEtaToPi0Cut[j]->GetBinError(i);
-        //                    SysErrCutEtaToPi0Raw[j][i].value    = histoRawYieldCut[j]->GetBinContent(i);
-        //                    SysErrCutEtaToPi0Raw[j][i].error    = histoRawYieldCut[j]->GetBinError(i);
-        //                }
-        //            }
+            // Create array of Sys Err Objects and fill them
+            SysErrorConversion SysErrCutOmegaToPi0[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            SysErrorConversion SysErrCutOmegaToPi0Raw[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            for (Int_t j = 0; j < NumberOfCuts; j++){
+                for (Int_t i = 1; i < NBinsPtOmegaToPi0 +1; i++){
+                    SysErrCutOmegaToPi0[j][i].value       = histoOmegaToPi0Cut[j]->GetBinContent(i);
+                    SysErrCutOmegaToPi0[j][i].error       = histoOmegaToPi0Cut[j]->GetBinError(i);
+                    SysErrCutOmegaToPi0Raw[j][i].value    = histoRawYieldCut[j]->GetBinContent(i);
+                    SysErrCutOmegaToPi0Raw[j][i].error    = histoRawYieldCut[j]->GetBinError(i);
+                }
+            }
 
-        //            // Create Difference arrays
-        //            Double_t DifferenceEtaToPi0Cut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            Double_t DifferenceEtaToPi0ErrorCut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            Double_t RelDifferenceEtaToPi0Cut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            Double_t RelDifferenceEtaToPi0ErrorCut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-        //            Double_t RelDifferenceEtaToPi0RawCut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
+            // Create Difference arrays
+            Double_t DifferenceOmegaToPi0Cut[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            Double_t DifferenceOmegaToPi0ErrorCut[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            Double_t RelDifferenceOmegaToPi0Cut[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            Double_t RelDifferenceOmegaToPi0ErrorCut[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
+            Double_t RelDifferenceOmegaToPi0RawCut[ConstNumberOfCuts][NBinstPtConstOmegaToPi0];
 
-        //            // Create largest difference array
-        //            Double_t LargestDiffEtaToPi0Neg[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0Pos[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0ErrorNeg[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0ErrorPos[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0RelNeg[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0RelPos[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0RelErrorNeg[NBinstPtConstEtaToPi0];
-        //            Double_t LargestDiffEtaToPi0RelErrorPos[NBinstPtConstEtaToPi0];
+            // Create largest difference array
+            Double_t LargestDiffOmegaToPi0Neg[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0Pos[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0ErrorNeg[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0ErrorPos[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0RelNeg[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0RelPos[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0RelErrorNeg[NBinstPtConstOmegaToPi0];
+            Double_t LargestDiffOmegaToPi0RelErrorPos[NBinstPtConstOmegaToPi0];
 
-        //            // Initialize all differences with 0
-        //            for (Int_t j = 0; j < NumberOfCuts; j++){
-        //                for ( Int_t i = 0; i < NBinstPtConstEtaToPi0; i++) {
-        //                    DifferenceEtaToPi0Cut[j][i]         = 0.;
-        //                    DifferenceEtaToPi0ErrorCut[j][i]    = 0.;
-        //                    LargestDiffEtaToPi0Neg[i]           = 0.;
-        //                    LargestDiffEtaToPi0Pos[i]           = 0.;
-        //                    LargestDiffEtaToPi0ErrorNeg[i]      = 0.;
-        //                    LargestDiffEtaToPi0ErrorPos[i]      = 0.;
-        //                    RelDifferenceEtaToPi0Cut[j][i]      = 0.;
-        //                    RelDifferenceEtaToPi0RawCut[j][i]   = 0.;
-        //                    RelDifferenceEtaToPi0ErrorCut[j][i] = 0.;
-        //                }
-        //            }
+            // Initialize all differences with 0
+            for (Int_t j = 0; j < NumberOfCuts; j++){
+                for ( Int_t i = 0; i < NBinstPtConstOmegaToPi0; i++) {
+                    DifferenceOmegaToPi0Cut[j][i]         = 0.;
+                    DifferenceOmegaToPi0ErrorCut[j][i]    = 0.;
+                    LargestDiffOmegaToPi0Neg[i]           = 0.;
+                    LargestDiffOmegaToPi0Pos[i]           = 0.;
+                    LargestDiffOmegaToPi0ErrorNeg[i]      = 0.;
+                    LargestDiffOmegaToPi0ErrorPos[i]      = 0.;
+                    RelDifferenceOmegaToPi0Cut[j][i]      = 0.;
+                    RelDifferenceOmegaToPi0RawCut[j][i]   = 0.;
+                    RelDifferenceOmegaToPi0ErrorCut[j][i] = 0.;
+                }
+            }
 
 
-        //            // Calculate largest difference among cut variation
-        //            for(Int_t j = 1; j < NumberOfCuts; j++){
-        //                for (Int_t i = 0; i < NBinsPtEtaToPi0 +1; i++){
-        //                    // Calculate difference (rel/abs) and error for corrected yield
-        //                    DifferenceEtaToPi0Cut[j][i]         = SysErrCutEtaToPi0[j][i].value - SysErrCutEtaToPi0[0][i].value;
-        //                    DifferenceEtaToPi0ErrorCut[j][i]    = TMath::Sqrt(TMath::Abs(TMath::Power(SysErrCutEtaToPi0[j][i].error,2)-TMath::Power(SysErrCutEtaToPi0[0][i].error,2)));
-        //                    if(SysErrCutEtaToPi0[0][i].value != 0){
-        //                        RelDifferenceEtaToPi0Cut[j][i]      = DifferenceEtaToPi0Cut[j][i]/SysErrCutEtaToPi0[0][i].value*100. ;
-        //                        RelDifferenceEtaToPi0ErrorCut[j][i] = DifferenceEtaToPi0ErrorCut[j][i]/SysErrCutEtaToPi0[0][i].value*100. ;
-        //                    } else {
-        //                        RelDifferenceEtaToPi0Cut[j][i]      = -10000.;
-        //                        RelDifferenceEtaToPi0ErrorCut[j][i] = 100. ;
-        //                    }
-        //                    // Calculate relativ difference for raw yield
-        //                    if(SysErrCutEtaToPi0Raw[0][i].value != 0){
-        //                        RelDifferenceEtaToPi0RawCut[j][i]   = (SysErrCutEtaToPi0Raw[j][i].value - SysErrCutEtaToPi0Raw[0][i].value)/SysErrCutEtaToPi0Raw[0][i].value*100. ;
-        //                    } else {
-        //                        RelDifferenceEtaToPi0RawCut[j][i]   = -10000.;
-        //                    }
+            // Calculate largest difference among cut variation
+            for(Int_t j = 1; j < NumberOfCuts; j++){
+                for (Int_t i = 0; i < NBinsPtOmegaToPi0 +1; i++){
+                    // Calculate difference (rel/abs) and error for corrected yield
+                    DifferenceOmegaToPi0Cut[j][i]         = SysErrCutOmegaToPi0[j][i].value - SysErrCutOmegaToPi0[0][i].value;
+                    DifferenceOmegaToPi0ErrorCut[j][i]    = TMath::Sqrt(TMath::Abs(TMath::Power(SysErrCutOmegaToPi0[j][i].error,2)-TMath::Power(SysErrCutOmegaToPi0[0][i].error,2)));
+                    if(SysErrCutOmegaToPi0[0][i].value != 0){
+                        RelDifferenceOmegaToPi0Cut[j][i]      = DifferenceOmegaToPi0Cut[j][i]/SysErrCutOmegaToPi0[0][i].value*100. ;
+                        RelDifferenceOmegaToPi0ErrorCut[j][i] = DifferenceOmegaToPi0ErrorCut[j][i]/SysErrCutOmegaToPi0[0][i].value*100. ;
+                    } else {
+                        RelDifferenceOmegaToPi0Cut[j][i]      = -10000.;
+                        RelDifferenceOmegaToPi0ErrorCut[j][i] = 100. ;
+                    }
+                    // Calculate relativ difference for raw yield
+                    if(SysErrCutOmegaToPi0Raw[0][i].value != 0){
+                        RelDifferenceOmegaToPi0RawCut[j][i]   = (SysErrCutOmegaToPi0Raw[j][i].value - SysErrCutOmegaToPi0Raw[0][i].value)/SysErrCutOmegaToPi0Raw[0][i].value*100. ;
+                    } else {
+                        RelDifferenceOmegaToPi0RawCut[j][i]   = -10000.;
+                    }
 
-        //                    if (i == 0){
-        //                        DifferenceEtaToPi0Cut[j][i]         = 0.;
-        //                        DifferenceEtaToPi0ErrorCut[j][i]    = 0;
-        //                        RelDifferenceEtaToPi0Cut[j][i]      = 0.;
-        //                        RelDifferenceEtaToPi0ErrorCut[j][i] = 0;
-        //                        RelDifferenceEtaToPi0RawCut[j][i]   = 0;
-        //                    }
+                    if (i == 0){
+                        DifferenceOmegaToPi0Cut[j][i]         = 0.;
+                        DifferenceOmegaToPi0ErrorCut[j][i]    = 0;
+                        RelDifferenceOmegaToPi0Cut[j][i]      = 0.;
+                        RelDifferenceOmegaToPi0ErrorCut[j][i] = 0;
+                        RelDifferenceOmegaToPi0RawCut[j][i]   = 0;
+                    }
 
-        //                    if(doBarlow){
-        //                        // !!! => Careful, this is meant to be a cross check. If it has to be used for the syst errors
-        //                        // the syste error macros has to be changed accordingly (the mean of pos and  neg dev cannot be used)
+                    if(doBarlow){
+                        // !!! => Careful, this is meant to be a cross check. If it has to be used for the syst errors
+                        // the syste error macros has to be changed accordingly (the mean of pos and  neg dev cannot be used)
 
-        //                        // Calculate largest differences in positiv and negative direction
-        //                        if(DifferenceEtaToPi0Cut[j][i] < 0){ // largest negativ deviation
-        //                            // Take deviation if larger than previous largest deviation
-        //                            // and relative raw yield loss less than 75%
-        //                            if (TMath::Abs(LargestDiffEtaToPi0Neg[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
-        //                                if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) > 1. ){
-        //                                    LargestDiffEtaToPi0Neg[i]       = DifferenceEtaToPi0Cut[j][i];
-        //                                    LargestDiffEtaToPi0ErrorNeg[i]  = DifferenceEtaToPi0ErrorCut[j][i];
-        //                                } else if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) < 1.){
-        //                                    cout << "Largest negative difference not updated" << endl;
-        //                                }
-        //                            }
-        //                        } else { // largest positive deviation
-        //                            // Take deviation if larger than previous largest deviation
-        //                            // and relative raw yield loss less than 75%
-        //                            if (TMath::Abs(LargestDiffEtaToPi0Pos[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
-        //                                if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) > 1. ){
-        //                                    LargestDiffEtaToPi0Pos[i]       = DifferenceEtaToPi0Cut[j][i];
-        //                                    LargestDiffEtaToPi0ErrorPos[i]  = DifferenceEtaToPi0ErrorCut[j][i];
-        //                                } else if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) < 1.){
-        //                                    cout << "Largest positive difference not updated" << endl;
-        //                                }
-        //                            }
-        //                        }
+                        // Calculate largest differences in positiv and negative direction
+                        if(DifferenceOmegaToPi0Cut[j][i] < 0){ // largest negativ deviation
+                            // Take deviation if larger than previous largest deviation
+                            // and relative raw yield loss less than 75%
+                            if (TMath::Abs(LargestDiffOmegaToPi0Neg[i]) < TMath::Abs(DifferenceOmegaToPi0Cut[j][i]) && RelDifferenceOmegaToPi0RawCut[j][i] > -75.){
+                                if( TMath::Abs(DifferenceOmegaToPi0Cut[j][i])/TMath::Abs(DifferenceOmegaToPi0ErrorCut[j][i]) > 1. ){
+                                    LargestDiffOmegaToPi0Neg[i]       = DifferenceOmegaToPi0Cut[j][i];
+                                    LargestDiffOmegaToPi0ErrorNeg[i]  = DifferenceOmegaToPi0ErrorCut[j][i];
+                                } else if( TMath::Abs(DifferenceOmegaToPi0Cut[j][i])/TMath::Abs(DifferenceOmegaToPi0ErrorCut[j][i]) < 1.){
+                                    cout << "Largest negative difference not updated" << endl;
+                                }
+                            }
+                        } else { // largest positive deviation
+                            // Take deviation if larger than previous largest deviation
+                            // and relative raw yield loss less than 75%
+                            if (TMath::Abs(LargestDiffOmegaToPi0Pos[i]) < TMath::Abs(DifferenceOmegaToPi0Cut[j][i]) && RelDifferenceOmegaToPi0RawCut[j][i] > -75.){
+                                if( TMath::Abs(DifferenceOmegaToPi0Cut[j][i])/TMath::Abs(DifferenceOmegaToPi0ErrorCut[j][i]) > 1. ){
+                                    LargestDiffOmegaToPi0Pos[i]       = DifferenceOmegaToPi0Cut[j][i];
+                                    LargestDiffOmegaToPi0ErrorPos[i]  = DifferenceOmegaToPi0ErrorCut[j][i];
+                                } else if( TMath::Abs(DifferenceOmegaToPi0Cut[j][i])/TMath::Abs(DifferenceOmegaToPi0ErrorCut[j][i]) < 1.){
+                                    cout << "Largest positive difference not updated" << endl;
+                                }
+                            }
+                        }
 
-        //                    } else {
+                    } else {
 
-        //                        // Calculate largest differences in positiv and negative direction
-        //                        if(DifferenceEtaToPi0Cut[j][i] < 0){ // largest negativ deviation
-        //                            // Take deviation if larger than previous largest deviation
-        //                            // and relative raw yield loss less than 75%
-        //                            if (TMath::Abs(LargestDiffEtaToPi0Neg[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
-        //                                LargestDiffEtaToPi0Neg[i]           = DifferenceEtaToPi0Cut[j][i];
-        //                                LargestDiffEtaToPi0ErrorNeg[i]      = DifferenceEtaToPi0ErrorCut[j][i];
-        //                            }
-        //                        } else { // largest positive deviation
-        //                            // Take deviation if larger than previous largest deviation
-        //                            // and relative raw yield loss less than 75%
-        //                            if (TMath::Abs(LargestDiffEtaToPi0Pos[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
-        //                                LargestDiffEtaToPi0Pos[i]           = DifferenceEtaToPi0Cut[j][i];
-        //                                LargestDiffEtaToPi0ErrorPos[i]      = DifferenceEtaToPi0ErrorCut[j][i];
-        //                            }
-        //                        }
-        //                        if (i == 0){
-        //                            LargestDiffEtaToPi0Pos[i]           = 0.;
-        //                            LargestDiffEtaToPi0ErrorPos[i]      = 0.;
-        //                            LargestDiffEtaToPi0Neg[i]           = 0.;
-        //                            LargestDiffEtaToPi0ErrorNeg[i]      = 0.;
-        //                        }
+                        // Calculate largest differences in positiv and negative direction
+                        if(DifferenceOmegaToPi0Cut[j][i] < 0){ // largest negativ deviation
+                            // Take deviation if larger than previous largest deviation
+                            // and relative raw yield loss less than 75%
+                            if (TMath::Abs(LargestDiffOmegaToPi0Neg[i]) < TMath::Abs(DifferenceOmegaToPi0Cut[j][i]) && RelDifferenceOmegaToPi0RawCut[j][i] > -75.){
+                                LargestDiffOmegaToPi0Neg[i]           = DifferenceOmegaToPi0Cut[j][i];
+                                LargestDiffOmegaToPi0ErrorNeg[i]      = DifferenceOmegaToPi0ErrorCut[j][i];
+                            }
+                        } else { // largest positive deviation
+                            // Take deviation if larger than previous largest deviation
+                            // and relative raw yield loss less than 75%
+                            if (TMath::Abs(LargestDiffOmegaToPi0Pos[i]) < TMath::Abs(DifferenceOmegaToPi0Cut[j][i]) && RelDifferenceOmegaToPi0RawCut[j][i] > -75.){
+                                LargestDiffOmegaToPi0Pos[i]           = DifferenceOmegaToPi0Cut[j][i];
+                                LargestDiffOmegaToPi0ErrorPos[i]      = DifferenceOmegaToPi0ErrorCut[j][i];
+                            }
+                        }
+                        if (i == 0){
+                            LargestDiffOmegaToPi0Pos[i]           = 0.;
+                            LargestDiffOmegaToPi0ErrorPos[i]      = 0.;
+                            LargestDiffOmegaToPi0Neg[i]           = 0.;
+                            LargestDiffOmegaToPi0ErrorNeg[i]      = 0.;
+                        }
 
-        //                    }
-        //                }
-        //            }
+                    }
+                }
+            }
 
-        //            if(doBarlow){
+            if(doBarlow){
 
-        //                TString SysErrCheckEtaToPi0name     = Form("%s/EtaToPi0_%s_SystematicErrorBarlowCheck.dat",outputDir.Data(),prefix2.Data());
-        //                fstream SysErrDatEtaToPi0Check;
-        //                SysErrDatEtaToPi0Check.open(SysErrCheckEtaToPi0name.Data(), ios::out);
-        //                SysErrDatEtaToPi0Check << "Barlow check for the systematic error" << endl;
-        //                for (Int_t l=0; l< NumberOfCuts; l++){
-        //                    if (l == 0) {
-        //                        SysErrDatEtaToPi0Check << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
-        //                        for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
-        //                            SysErrDatEtaToPi0Check << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << endl;
-        //                        }
-        //                    } else{
-        //                        for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
-        //                            SysErrDatEtaToPi0Check << endl <<"Cut" << "\t" << cutNumber[l] << "\t" <<endl;
-        //                            SysErrDatEtaToPi0Check << "\t Barlow check for " << BinsXCenterEtaToPi0[i] << endl;
-        //                            SysErrDatEtaToPi0Check << "Delta = |a_1 - a_2| \t" << TMath::Abs(DifferenceEtaToPi0Cut[l][i]) << endl;
-        //                            SysErrDatEtaToPi0Check << "sigma_Delta = sqrt( |sigma_2^2 - sigma_1^2| ) \t" << TMath::Abs(DifferenceEtaToPi0ErrorCut[l][i]) << endl;
-        //                            SysErrDatEtaToPi0Check << "Check: Delta/sigma_Delta < 1? " << (TMath::Abs(DifferenceEtaToPi0Cut[l][i]))/(TMath::Abs(DifferenceEtaToPi0ErrorCut[l][i])) << endl;
-        //                        }
-        //                    }
-        //                }
-        //                SysErrDatEtaToPi0Check.close();
-        //            }
-
+                TString SysErrCheckOmegaToPi0name     = Form("%s/OmegaToPi0_%s_SystematicErrorBarlowCheck.dat",outputDir.Data(),prefix2.Data());
+                fstream SysErrDatOmegaToPi0Check;
+                SysErrDatOmegaToPi0Check.open(SysErrCheckOmegaToPi0name.Data(), ios::out);
+                SysErrDatOmegaToPi0Check << "Barlow check for the systematic error" << endl;
+                for (Int_t l=0; l< NumberOfCuts; l++){
+                    if (l == 0) {
+                        SysErrDatOmegaToPi0Check << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
+                        for(Int_t i = 1; i < (NBinsPtOmegaToPi0 +1); i++){
+                            SysErrDatOmegaToPi0Check << BinsXCenterOmegaToPi0[i] << "\t" << SysErrCutOmegaToPi0[l][i].value << "\t" << SysErrCutOmegaToPi0[l][i].error << endl;
+                        }
+                    } else{
+                        for(Int_t i = 1; i < (NBinsPtOmegaToPi0 +1); i++){
+                            SysErrDatOmegaToPi0Check << endl <<"Cut" << "\t" << cutNumber[l] << "\t" <<endl;
+                            SysErrDatOmegaToPi0Check << "\t Barlow check for " << BinsXCenterOmegaToPi0[i] << endl;
+                            SysErrDatOmegaToPi0Check << "Delta = |a_1 - a_2| \t" << TMath::Abs(DifferenceOmegaToPi0Cut[l][i]) << endl;
+                            SysErrDatOmegaToPi0Check << "sigma_Delta = sqrt( |sigma_2^2 - sigma_1^2| ) \t" << TMath::Abs(DifferenceOmegaToPi0ErrorCut[l][i]) << endl;
+                            SysErrDatOmegaToPi0Check << "Check: Delta/sigma_Delta < 1? " << (TMath::Abs(DifferenceOmegaToPi0Cut[l][i]))/(TMath::Abs(DifferenceOmegaToPi0ErrorCut[l][i])) << endl;
+                        }
+                    }
+                }
+                SysErrDatOmegaToPi0Check.close();
+            }
+        }
         // Write sys-err graph to root output file
         TString Outputname = Form("%s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
         TFile* SystematicErrorFile = new TFile(Outputname.Data(),"UPDATE");
 
         SystErrGraphPos->Write(Form("%s_SystErrorRelPos_%s%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
         SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
-        //            if (isEta){
-        //                if (SystErrGraphPosEtaToPi0) SystErrGraphPosEtaToPi0->Write(Form("EtaToPi0_SystErrorRelPos_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
-        //                if (SystErrGraphNegEtaToPi0) SystErrGraphNegEtaToPi0->Write(Form("EtaToPi0_SystErrorRelNeg_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
-        //                if (systErrGraphNegYieldExtPi0EtaBinning) systErrGraphNegYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()),
-        //                                                                                                      TObject::kOverwrite);
-        //                if (systErrGraphPosYieldExtPi0EtaBinning) systErrGraphPosYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()),
-        //                                                                                                      TObject::kOverwrite);
-        //            }
+        if (isEta){
+            if (SystErrGraphPosOmegaToPi0) SystErrGraphPosOmegaToPi0->Write(Form("OmegaToPi0_SystErrorRelPos_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+            if (SystErrGraphNegOmegaToPi0) SystErrGraphNegOmegaToPi0->Write(Form("OmegaToPi0_SystErrorRelNeg_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+            if (systErrGraphNegYieldExtPi0OmegaBinning) systErrGraphNegYieldExtPi0OmegaBinning->Write(Form("Pi0OmegaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()),
+                                                                                                    TObject::kOverwrite);
+            if (systErrGraphPosYieldExtPi0OmegaBinning) systErrGraphPosYieldExtPi0OmegaBinning->Write(Form("Pi0OmegaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()),
+                                                                                                    TObject::kOverwrite);
+        }
         systErrGraphNegYieldExt->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
         systErrGraphPosYieldExt->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
         if (systErrGraphBGEstimate) systErrGraphBGEstimate->Write(Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);

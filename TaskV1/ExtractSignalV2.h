@@ -780,7 +780,7 @@
         //****************************************************************************************************
         // Initialization for pi0 meson
         //****************************************************************************************************
-        if (setPi0.CompareTo("Pi0") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
+        if (setPi0.Contains("Pi0")){
 
             // set meson ID according to PDG
             fMesonId                    = 111;

@@ -32,6 +32,7 @@ CORRFSETTING=""
 BINSPTGAMMA=0
 BINSPTPI0=0
 BINSPTETA=0
+BINSPTOMEGA=0
 BINSPTETAPRIME=0
 ENERGY=""
 MODE=-1
@@ -59,6 +60,7 @@ DOGAMMA=1
 DOPI0=1
 DOETA=1
 DOPI0INETABINS=1
+DOPI0INOMEGABINS=0
     # Heavy meson configuration set based on mode>100,
     # search for "Set heavy meson configuration" in this script
 DOETAPRIME=0
@@ -216,6 +218,7 @@ $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
 $PROGNAME  *-*pi0Only* \t\t\t\t pi0 calculation only\n
 $PROGNAME  *-*pi0etaOnly* \t\t\t pi0 in eta binnin calculation only\n
+$PROGNAME  *-*pi0omegaOnly* \t\t\t pi0 in omega binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 
@@ -243,6 +246,7 @@ $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
 $PROGNAME  *-*pi0Only* \t\t\t\t pi0 calculation only\n
 $PROGNAME  *-*pi0etaOnly* \t\t\t pi0 in eta binnin calculation only\n
+$PROGNAME  *-*pi0omegaOnly* \t\t\t pi0 in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 "
@@ -288,6 +292,14 @@ if [[ "$1" == *-*pi0etaOnly* ]]; then
     DOETA=0
     DOPI0INETABINS=1
     echo "Pi0 in Eta binning calculation only"
+fi
+
+if [[ "$1" == *-*pi0omegaOnly* ]]; then
+    DOPI0=0
+    DOETA=0
+    DOPI0INETABINS=0
+    DOPI0INOMEGABINS=1
+    echo "Pi0 in Omega binning calculation only"
 fi
 
 if [[ "$1" == *-*pi0Only* ]]; then
@@ -1253,6 +1265,63 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                         fi
                     fi
                 fi
+                if [ $DOPI0INOMEGABINS -eq 1 ]; then
+                    echo -e "\n\n____________________________"
+                    echo -e "EXTRACTING SIGNAL FOR PI0-OMEGA\n"
+                    if [ -f $DATAROOTFILE ]; then
+                        OPTIONSPI0OMEGADATA=\"Pi0OmegaBinning\"\,\"$DATAROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kFALSE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kFALSE
+                        ExtractSignal $OPTIONSPI0OMEGADATA
+                    fi
+                    PI0OMEGADATARAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_data_GammaConvV1WithoutCorrection_$CUTSELECTION.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        OPTIONSPI0OMEGAMC=\"Pi0OmegaBinning\"\,\"$MCROOTFILE\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kFALSE
+                        ExtractSignal $OPTIONSPI0OMEGAMC
+                        PI0OMEGAMCRAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1WithoutCorrection_*$CUTSELECTION.root`
+                        PI0OMEGAMCCORRFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistos_*$CUTSELECTION.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            if [ $ADDEDSIG -eq 1 ]; then
+                                OPTIONSPI0OMEGAMC2=\"Pi0OmegaBinning\"\,\"$MCROOTFILEADDSIG\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kTRUE
+                                ExtractSignal $OPTIONSPI0OMEGAMC2
+                                PI0OMEGAMCCORR=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistos_*.root`
+                                PI0OMEGAMCCORRADDSIG=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosAddSig_*.root`
+                                if [ $ISROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0OMEGAMCCORR\"\,\"$CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosMinBias_$CUTSELECTION.root\"\,\"$PI0OMEGAMCCORRADDSIG\"\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0OMEGAMCCORR\"\,\"$CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosMinBias_$CUTSELECTION.root\"\,\"$PI0OMEGAMCCORRADDSIG\"\)
+                                fi
+                            elif [ $ADDEDSIG -eq 2 ]; then
+                                OPTIONSPI0OMEGAMC2=\"Pi0OmegaBinning\"\,\"$MCROOTFILEADDSIG\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kFALSE
+                                ExtractSignal $OPTIONSPI0OMEGAMC2
+                                PI0OMEGAMCCORR=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistos_*.root`
+                                PI0OMEGAMCCORRADDSIG=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
+                                if [ $ISROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0OMEGAMCCORR\"\,\"$CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosMinBias_$CUTSELECTION.root\"\,\"$PI0OMEGAMCCORRADDSIG\"\,$minPtMergePi0\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\(\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0OMEGAMCCORR\"\,\"$CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosMinBias_$CUTSELECTION.root\"\,\"$PI0OMEGAMCCORRADDSIG\"\,$minPtMergePi0\)
+                                fi
+                            else
+                                OPTIONSPI0OMEGAMCA=\"Pi0OmegaBinning\"\,\"$MCROOTFILEMERGEA\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kFALSE
+                                echo $OPTIONSPI0OMEGAMCA
+                                ExtractSignal $OPTIONSPI0OMEGAMCA
+                                OPTIONSPI0OMEGAMCB=\"Pi0OmegaBinning\"\,\"$MCROOTFILEMERGEB\"\,\"$CUTSELECTION\"\,\"$SUFFIX\"\,\"kTRUE\"\,\"$ENERGY\"\,\"$crystal\"\,\"$DIRECTPHOTON\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$ADVMESONQA\"\,$BINSPTOMEGA\,kFALSE
+                                echo $OPTIONSPI0OMEGAMCB
+                                ExtractSignal $OPTIONSPI0OMEGAMCB
+
+                                PI0OMEGAMCCORRFILEA=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosBC_*.root`
+                                PI0OMEGAMCCORRFILEB=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistosD_*.root`
+                                root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\",\"$SUFFIX\"\,\"$ENERGY\"\,\"$PI0OMEGAMCCORRFILE\"\,\"$PI0OMEGAMCCORRFILEA\",\"$PI0OMEGAMCCORRFILEB\"\)
+                            fi
+                        fi
+
+                        echo -e "\n________________________"
+                        echo -e "COMPARE MESON QUANTITIES\n"
+                        if [ $ISROOT6 -eq 0 ]; then
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
+                        else
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
+                        fi
+                    fi
+                fi
                 if [ $DOETA -eq 1 ]; then
                     echo -e "\n\n_________________________"
                     echo -e "EXTRACTING SIGNAL FOR ETA\n"
@@ -1371,6 +1440,9 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
             PI0ETADATARAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
             PI0ETAMCRAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
             PI0ETAMCCORRFILE=`ls $CUTSELECTION/$ENERGY/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$CUTSELECTION*.root`
+            PI0OMEGADATARAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_data_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
+            PI0OMEGAMCRAWFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
+            PI0OMEGAMCCORRFILE=`ls $CUTSELECTION/$ENERGY/Pi0OmegaBinning_MC_GammaConvV1CorrectionHistos_*$CUTSELECTION*.root`
             ETADATARAWFILE=`ls $CUTSELECTION/$ENERGY/Eta_data_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
             ETAMCRAWFILE=`ls $CUTSELECTION/$ENERGY/Eta_MC_GammaConvV1WithoutCorrection_*$CUTSELECTION*.root`
             ETAMCCORRFILE=`ls $CUTSELECTION/$ENERGY/Eta_MC_GammaConvV1CorrectionHistos_*$CUTSELECTION*.root`
@@ -1433,6 +1505,14 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                     CorrectSignal $PI0ETAMCRAWFILE $PI0ETAMCCORRFILE $CUTSELECTION $SUFFIX Pi0EtaBinning kTRUE $ESTIMATEPILEUP $DIRECTPHOTON
                 fi
             fi
+            if [ $DOPI0INOMEGABINS -eq 1 ]; then
+                if [ -f $PI0OMEGADATARAWFILE ] && [ -f $PI0OMEGAMCCORRFILE ] ; then
+                    CorrectSignal $PI0OMEGADATARAWFILE $PI0OMEGAMCCORRFILE $CUTSELECTION $SUFFIX Pi0OmegaBinning kFALSE $ESTIMATEPILEUP $DIRECTPHOTON
+                fi
+                if [ -f $PI0OMEGAMCRAWFILE ] && [ -f $PI0OMEGAMCCORRFILE ] ; then
+                    CorrectSignal $PI0OMEGAMCRAWFILE $PI0OMEGAMCCORRFILE $CUTSELECTION $SUFFIX Pi0OmegaBinning kTRUE $ESTIMATEPILEUP $DIRECTPHOTON
+                fi
+            fi
             if [ $DOETA -eq 1 ]; then
                 if [ -f $ETADATARAWFILE ] && [ -f $ETAMCCORRFILE ]; then
                     CorrectSignal $ETADATARAWFILE $ETAMCCORRFILE $CUTSELECTION $SUFFIX Eta kFALSE $ESTIMATEPILEUP $DIRECTPHOTON
@@ -1474,6 +1554,10 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Pi0EtaBinning\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Pi0EtaBinning\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
     fi
+    if [ $DOPI0INOMEGABINS -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Pi0OmegaBinning\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Pi0OmegaBinning\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
+    fi
     if [ $DOETA -eq 1 ]; then
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Eta\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$SUFFIX\"\,\"Eta\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$ENERGY\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$MODE\)
@@ -1506,6 +1590,7 @@ echo "  DOPI0=$DOPI0"
 echo "  DOETA=$DOETA"
 echo "  DOETAPRIME=$DOETAPRIME"
 echo "  DOPI0INETABINS=$DOPI0INETABINS"
+echo "  DOPI0INOMEGABINS=$DOPI0INOMEGABINS"
 echo ""
 
     #Read the different cuts form the Cut selection log file

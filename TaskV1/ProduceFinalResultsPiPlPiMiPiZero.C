@@ -275,8 +275,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     while(!in.eof() && nrOfTrigToBeComb<numberOfTrigg ){
         in >> cutNumber[nrOfTrigToBeComb] >> cutNumberPi0[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
         >> trigSteps[nrOfTrigToBeComb][0]  >> trigSteps[nrOfTrigToBeComb][1]  >> trigSteps[nrOfTrigToBeComb][2] >> ptFromSpecOmega[nrOfTrigToBeComb][0] >> ptFromSpecOmega[nrOfTrigToBeComb][1]
-        >> ptFromSpecPi0[nrOfTrigToBeComb][0] >> ptFromSpecPi0[nrOfTrigToBeComb][1] >> sysFileOmega[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileOmegaToPi0[nrOfTrigToBeComb] >>
-        cutNumberBaseEff[nrOfTrigToBeComb];
+        >> ptFromSpecPi0[nrOfTrigToBeComb][0] >> ptFromSpecPi0[nrOfTrigToBeComb][1] >> sysFileOmega[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileOmegaToPi0[nrOfTrigToBeComb] >> cutNumberBaseEff[nrOfTrigToBeComb];
         cout<< cutNumber[nrOfTrigToBeComb]<<"\t"<< cutNumberPi0[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
         cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
         nrOfTrigToBeComb++;
@@ -376,9 +375,6 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     TString FileNameUnCorrectedMCOmega[MaxNumberOfFiles];
     TFile*  fileUnCorrectedMCOmega    [MaxNumberOfFiles];
 
-    Bool_t foundPi0OmegaBinFile           [MaxNumberOfFiles];
-    Bool_t doOmegaToPi0 = kFALSE;
-
     TH1D*   histoCorrectedYieldOmega  [MaxNumberOfFiles];
     TH1D*   histoRawClusterPt       [MaxNumberOfFiles];
     TH1D*   histoRawClusterE        [MaxNumberOfFiles];
@@ -406,7 +402,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     TFile*  fileEffBaseOmega          [MaxNumberOfFiles];
     TH1D*   histoEffBaseOmega         [MaxNumberOfFiles];
     TH1D*   histoTriggerEffOmega      [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffOmega     [MaxNumberOfFiles];
+    Bool_t  enableTriggerEffOmega     [MaxNumberOfFiles] = {kFALSE};
     Bool_t  enableTriggerEffOmegaAll                          = kFALSE;
     Bool_t  enableTriggerRejecCompMC                        = kFALSE;
 
@@ -576,7 +572,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             if (fitInvMassSig[i]) fitInvMassSig[i]->SetName(Form("Omega_InvMassSigFit_Example_%s",triggerName[i].Data()));
         }
         if (cutNumberBaseEff[i].CompareTo("bla") != 0){
-            FileNameEffBaseOmega[i]                           = Form("%s/%s/Omega_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
+            FileNameEffBaseOmega[i]                           = Form("%s/%s/Omega_MC_GammaConvV1Correction_%s.root", cutNumberBaseEff[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
             fileEffBaseOmega[i]                               = new TFile(FileNameEffBaseOmega[i]);
             if (fileEffBaseOmega[i]->IsZombie()){
                 enableTriggerEffOmega[i]                         = kFALSE;
@@ -655,8 +651,12 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         //***************************************************************************************************************
         if ((mode == 0 || mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10 
             || (mode >= 41 && mode <= 50) || (mode >= 61 && mode <= 70)) && hasClusterOutput ){
+            cout << "Loading ClusterPt histo from " << endl;
+            fileUnCorrectedOmega[i]->Print();
             histoRawClusterPt[i]                        = (TH1D*)fileUnCorrectedOmega[i]->Get("ClusterPtPerEvent");
-
+            
+            // Quick check
+            if(triggerName[i].CompareTo("INT1") == 0) histoRawClusterPt[i]->Scale(10./4.);   
             // DIRTY FIX SINCE THIS HISTO IS NOT AVAILABLE YET
             //histoRawClusterE[i]                         = (TH1D*)fileUnCorrectedOmega[i]->Get("ClusterEPerEvent");
             histoRawClusterE[i]                         = (TH1D*) histoRawClusterPt[i]->Clone("ClusterEPerEvent");
@@ -864,7 +864,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             //***************************************************************************************************************
 
             TH2F * histo2DTriggRejectE;
-            histo2DTriggRejectE = new TH2F("histo2DTriggRejectE","histo2DTriggRejectE",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject);
+            histo2DTriggRejectE = new TH2F("histo2DTriggRejectE","histo2DTriggRejectE",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject*10);
             SetStyleHistoTH2ForGraphs(histo2DTriggRejectE, "#it{E} (GeV)","#it{R}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
                                     0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
             histo2DTriggRejectE->DrawCopy();
@@ -941,7 +941,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.076, 0.015, textSizeSpectra2, 0.08);
         canvasTriggerRejectLinear->SetLogy(0);
         Double_t minTriggRejectLin = 0;
-        Double_t maxTriggRejectLin = 2000;
+        Double_t maxTriggRejectLin = 5000;
         if (isMC.CompareTo("MC")== 0) maxTriggRejectLin = 2500;
         if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
             maxTriggRejectLin = 100;
@@ -1009,13 +1009,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
             if (i != trigSteps[i][0] ){
                 histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,histoRatioRawClusterPt[i]->GetMaximum()*1.5);
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
-                if (triggerName[i].Contains("EG2"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
-                if (triggerName[i].Contains("EG1"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
-                if (optionEnergy.CompareTo("8TeV")==0){
+                if (optionEnergy.CompareTo("2.76TeV")==0){
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
+                } else if (optionEnergy.CompareTo("8TeV")==0){
                     if (triggerName[i].Contains("EMC7"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
                     if (triggerName[i].Contains("EGA"))
@@ -1023,6 +1024,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 } else if (optionEnergy.CompareTo("13TeV")==0){
                     if (triggerName[i].Contains("EG2"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                } else if (optionEnergy.CompareTo("7TeV")==0){
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,3000);
                     if (triggerName[i].Contains("EG1"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
@@ -1118,13 +1124,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
             if (i != trigSteps[i][0] ){
                 histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,histoRatioRawClusterE[i]->GetMaximum()*1.5);
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
-                if (triggerName[i].Contains("EG2"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
-                if (triggerName[i].Contains("EG1"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
-                if (optionEnergy.CompareTo("8TeV")==0){
+                if (optionEnergy.CompareTo("2.76TeV")==0){
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
+                } else if (optionEnergy.CompareTo("8TeV")==0){
                     if (triggerName[i].Contains("EMC7"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
                     if (triggerName[i].Contains("EGA"))
@@ -1132,6 +1139,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 } else if (optionEnergy.CompareTo("13TeV")==0){
                     if (triggerName[i].Contains("EG2"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                } else if (optionEnergy.CompareTo("7TeV")==0){
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,3000);
                     if (triggerName[i].Contains("EG1"))
                         histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
@@ -1342,7 +1354,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             canvasClusterYield->Update();
             canvasClusterYield->SaveAs(Form("%s/Cluster_E_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        if (!enableEta) delete canvasClusterYield;
+        if (!enablePi0) delete canvasClusterYield;
     }
 
     //***************************************************************************************************************
@@ -1569,7 +1581,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         canvasEffi->SaveAs(Form("%s/Omega_EfficiencyW0TriggEff_%i.%s",outputDir.Data(),mode,suffix.Data()));
     }
 
-//     if (!enableEta) delete canvasEffi;
+//     if (!enablePi0) delete canvasEffi;
 
     //***************************************************************************************************************
     //************************************Plotting acceptance Omega *************************************************
@@ -1889,7 +1901,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
     canvasRawUnscaled->Update();
     canvasRawUnscaled->SaveAs(Form("%s/Omega_%s_RawYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-    if (!enableEta) delete canvasRawUnscaled;
+    if (!enablePi0) delete canvasRawUnscaled;
 
     //***************************************************************************************************************
     //************************************Plotting unscaled invariant yield Omega *************************************
@@ -1954,7 +1966,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
     canvasCorrUnscaled->Update();
     canvasCorrUnscaled->SaveAs(Form("%s/Omega_%s_CorrectedYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
-    if (!enableEta) delete canvasCorrUnscaled;
+    if (!enablePi0) delete canvasCorrUnscaled;
 
     //***************************************************************************************************************
     //******************************* Scaling corrected yield by trigger rejection factors **************************
@@ -3307,8 +3319,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         canvasWidth->Update();
         canvasWidth->SaveAs(Form("%s/Omega_%s_Width_Weighted_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
     }
-    if (!enableEta) delete canvasMass;
-    if (!enableEta) delete canvasWidth;
+    if (!enablePi0) delete canvasMass;
+    if (!enablePi0) delete canvasWidth;
 
     //***************************************************************************************************************
     //************************************* Efficiency weighted *****************************************************
@@ -3548,7 +3560,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         canvasAcc->Update();
         canvasAcc->SaveAs(Form("%s/Omega_Acceptance_weighted_%i.%s",outputDir.Data(),mode,suffix.Data()));
     }
-//     if (!enableEta) delete canvasAcc;
+//     if (!enablePi0) delete canvasAcc;
 
     //***************************************************************************************************************
     //************************************Plotting scaled invariant yield *****************************************
@@ -3682,7 +3694,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     canvasCorrScaled->Update();
     canvasCorrScaled->SaveAs(Form("%s/Omega_%s_CorrectedYieldFinal_WithMC_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
 
-    if (!enableEta) delete canvasCorrScaled;
+    if (!enablePi0) delete canvasCorrScaled;
 
     //***************************************************************************************************************
     //****************************** Ratio to fit for individual spectra full range *********************************
@@ -3830,116 +3842,85 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     canvasRatioSpec->SaveAs(Form("%s/Omega_%s_RatioSpectraToFitFinal_withMC.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
 
 
-    if (!enableEta) delete canvasRatioSpec;
+    if (!enablePi0) delete canvasRatioSpec;
 
 
 
     //***************************************************************************************************************
-    //************************************Loading pi0 histograms ****************************************************
+    //************************************Loading pi0 omega binning histograms ****************************************************
     //***************************************************************************************************************
-    TString FileNameCorrectedPi0        [MaxNumberOfFiles];
-    TFile* fileCorrectedPi0             [MaxNumberOfFiles];
     TString FileNameCorrectedPi0OmegaBin  [MaxNumberOfFiles];
     TFile* fileCorrectedPi0OmegaBin       [MaxNumberOfFiles];
     Bool_t foundPi0OmegaBinFile           [MaxNumberOfFiles];
     Bool_t doOmegaToPi0            = kFALSE;
 
-    TString FileNameUnCorrectedPi0      [MaxNumberOfFiles];
-    TFile* fileUnCorrectedPi0           [MaxNumberOfFiles];
-
-    TH1D*   histoCorrectedYieldPi0      [MaxNumberOfFiles];
-    TH1D*   histoEfficiencyPi0          [MaxNumberOfFiles];
-    TH1D*   histoAcceptancePi0          [MaxNumberOfFiles];
-    TH1D*   histoAcceptancePi0WOEvtWeights [MaxNumberOfFiles];
-    TH1D*   histoEffTimesAccPi0         [MaxNumberOfFiles];
-    TH1D*   histoRawYieldPi0            [MaxNumberOfFiles];
     TH1D*   histoCorrectedYieldPi0OmegaBin[MaxNumberOfFiles];
     TH1D*   histoOmegaToPi0               [MaxNumberOfFiles];
-    TH1D*   histoMassPi0Data            [MaxNumberOfFiles];
-    TH1D*   histoMassPi0MC              [MaxNumberOfFiles];
-    TH1D*   histoWidthPi0Data           [MaxNumberOfFiles];
-    TH1D*   histoWidthPi0MC             [MaxNumberOfFiles];
-    TH1D*   histoPi0InvMassSigPlusBG    [MaxNumberOfFiles];
-    TH1D*   histoPi0InvMassSig          [MaxNumberOfFiles];
-    TH1D*   histoPi0InvMassBG           [MaxNumberOfFiles];
-    TF1*    fitPi0InvMassSig            [MaxNumberOfFiles];
 
     TH1D* histoCorrectedYieldPi0OmegaBinBinShift[MaxNumberOfFiles];
     TH1D* histoCorrectedYieldPi0BinShift[MaxNumberOfFiles];
 
     // create pointers for weighted graphs and supporting figutes
-    TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Stat    = NULL;
-    TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Sys     = NULL;
-    TGraphAsymmErrors* graphMassPi0DataWeighted                     = NULL;
-    TGraphAsymmErrors* graphMassPi0MCWeighted                       = NULL;
-    TGraphAsymmErrors* graphWidthPi0DataWeighted                    = NULL;
-    TGraphAsymmErrors* graphWidthPi0MCWeighted                      = NULL;
-    TGraphAsymmErrors* graphAcceptancePi0Weighted                   = NULL;
-    TGraphAsymmErrors* graphEfficiencyPi0Weighted                   = NULL;
-    TGraphAsymmErrors* graphEffTimesAccPi0Weighted                  = NULL;
     TGraphAsymmErrors* graphOmegaToPi0WeightedAverageStat             = NULL;
     TGraphAsymmErrors* graphOmegaToPi0WeightedAverageSys              = NULL;
     // create pointers for shrunk graphs and supporting figures
-    TGraphAsymmErrors* graphsCorrectedYieldRemoved0Pi0      [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphsCorrectedYieldSysRemoved0Pi0   [MaxNumberOfFiles];
     TGraphAsymmErrors* graphsOmegaToPi0Removed0               [MaxNumberOfFiles];
     TGraphAsymmErrors* graphsOmegaToPi0SysRemoved0            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphMassPi0Data                     [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphMassPi0MC                       [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedMassPi0Data              [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedMassPi0MC                [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphWidthPi0Data                    [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphWidthPi0MC                      [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedWidthPi0Data             [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedWidthPi0MC               [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphAcceptancePi0                   [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedAcceptancePi0            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphEfficiencyPi0                   [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedEfficiencyPi0            [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphEffTimesAccPi0                  [MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedEffTimesAccPi0           [MaxNumberOfFiles];
 
-    TString FileNameEffBasePi0      [MaxNumberOfFiles];
-    TFile*  fileEffBasePi0          [MaxNumberOfFiles];
-    TH1D*   histoEffBasePi0         [MaxNumberOfFiles];
-    TH1D*   histoTriggerEffPi0      [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffPi0     [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffPi0All                                  = kFALSE;
 
     Int_t nRelSysErrPi0Sources          = 0;
-    TGraphAsymmErrors* graphRelSysErrPi0Source              [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphOrderedRelSysErrPi0Source       [30][MaxNumberOfFiles];
-    TGraphAsymmErrors* graphRelSysErrPi0SourceWeighted      [30];
     Int_t nRelSysErrOmegaToPi0Sources     = 0;
     TGraphAsymmErrors* graphRelSysErrOmegaToPi0Source         [30][MaxNumberOfFiles];
     TGraphAsymmErrors* graphOrderedRelSysErrOmegaToPi0Source  [30][MaxNumberOfFiles];
     TGraphAsymmErrors* graphRelSysErrOmegaToPi0SourceWeighted [30];
     for (Int_t j = 0; j< 30; j++){
-        graphRelSysErrPi0SourceWeighted[j]          = NULL;
         graphRelSysErrOmegaToPi0SourceWeighted[j]     = NULL;
         for (Int_t k = 0; k< MaxNumberOfFiles; k++){
-            graphRelSysErrPi0Source[j][k]               = NULL;
-            graphOrderedRelSysErrPi0Source[j][k]        = NULL;
             graphRelSysErrOmegaToPi0Source[j][k]          = NULL;
             graphOrderedRelSysErrOmegaToPi0Source[j][k]   = NULL;
         }
     }
     Bool_t sysAvailSingleOmegaToPi0                           [MaxNumberOfFiles];
-    Bool_t sysAvailSinglePi0                                [MaxNumberOfFiles];
 
-    if ( mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
+        //***************************************************************************************************************
+    //********************************** setting correct histo names fir pi0 ************************************************
+    //***************************************************************************************************************
+    nameCorrectedYield                          = "CorrectedYieldTrueEff";
+    nameEfficiency                              = "TrueMesonEffiPt";
+    nameAcceptance                              = "fMCMesonAccepPt";
+    nameAcceptanceWOEvtWeights                  = "fMCMesonAccepPtWOEvtWeights";
+    nameMassMC                                  = "histoTrueMassMeson";
+    nameWidthMC                                 = "histoTrueFWHMMeson";
+    nameMCYield                                 = "MCYield_Meson_oldBinWOWeights";
+    if ( mode == 64 || mode == 65 ){
+        nameCorrectedYield                              = "CorrectedYieldNormEff";
+        nameEfficiency                                  = "MesonEffiPt";
+        nameMassMC                                      = "histoMassMesonRecMC";
+        nameWidthMC                                     = "histoFWHMMesonRecMC";
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 ){
+            nameMassMC                                  = "histoTrueMassMeson";
+            nameWidthMC                                 = "histoTrueFWHMMeson";
+            nameCorrectedYield                          = "CorrectedYieldTrueEff";
+            nameEfficiency                              = "TrueMesonEffiPt";
+        }
+    } else if ( (mode == 61 || mode == 62) && !(optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("pPb_5.023TeV")==0)){
+        cout << "using rec quantities for PCM-EMC/PCM-PHOS" << endl;
+        nameMassMC                                      = "histoMassMesonRecMC";
+        nameWidthMC                                     = "histoFWHMMesonRecMC";
+    } else if (mode == 10){
         nameCorrectedYield                              = "CorrectedYieldTrueEff";
-        nameEfficiency                                  = "TrueMesonEffiPt";
-        nameMassMC                                      = "histoTrueMassMeson";
-        nameWidthMC                                     = "histoTrueFWHMMeson";
+        nameEfficiency                                  = "PrimaryMesonEfficiency";
+        nameAcceptance                                  = "fHistoMCAcceptancePt";
+        nameMCYield                                     = "MCYield_Meson_oldBin";
     }
+
     cout << "reading the following Pi0 hists: " << nameCorrectedYield.Data() << "\t" << nameEfficiency.Data() << "\t" << nameMassMC.Data() << "\t" << nameWidthMC.Data() << endl;
 
     // read Pi0 files if we are not in mode 10
     if (enablePi0 && mode != 10){
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){
             // Define CutSelections
-            if (cutNumberBaseEff[i].CompareTo("bla") != 0)
+            if (cutNumberPi0[i].CompareTo("bla") == 0) continue;
             TString fEventCutSelectionPi0                          = "";
             TString fGammaCutSelectionPi0                          = "";
             TString fClusterCutSelectionPi0                        = "";
@@ -3950,11 +3931,11 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             // Found out what pi0 mode corresponds to omega mode
             Int_t pi0mode;
             switch(mode){
-                case 40: case 60: pi0mode = 0; // PCM
-                case 41: case 61: pi0mode = 2; // PCM-EMC
-                case 42: case 62: pi0mode = 3; // PCM-PHOS
-                case 44: case 64: pi0mode = 4; // EMC
-                case 45: case 65: pi0mode = 5; // PHOS
+                case 40: case 60: pi0mode = 0; break; // PCM
+                case 41: case 61: pi0mode = 2; break;// PCM-EMC
+                case 42: case 62: pi0mode = 3; break;// PCM-PHOS
+                case 44: case 64: pi0mode = 4; break;// EMC
+                case 45: case 65: pi0mode = 5; break;// PHOS
                 default: pi0mode = 0;
             }
 
@@ -3966,7 +3947,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Omega", optionEnergy, mode, trigger.Atoi(), scaleFacSinBin);
 
             // read files for omega to pi0 ratio
-            FileNameCorrectedPi0OmegaBin[i]                   = Form("%s/%s/Pi0OmegaBinning_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(),
+            FileNameCorrectedPi0OmegaBin[i]                   = Form("%s/%s/Pi0OmegaBinning_%s_GammaConvV1Correction_%s.root", cutNumberPi0[i].Data(), optionEnergy.Data(), isMC.Data(),
                                                                         cutNumberPi0[i].Data());
             cout<< FileNameCorrectedPi0OmegaBin[i] << endl;
             fileCorrectedPi0OmegaBin[i]                       = new TFile(FileNameCorrectedPi0OmegaBin[i]);
@@ -4068,7 +4049,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
           legendBinShift2->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftOmega = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}");
+          labelBinShiftOmega = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}");
           SetStyleTLatex( labelBinShiftOmega, 0.85*textSizeSpectra,4);
           labelBinShiftOmega->Draw();
           labelDetProcEffi->Draw();

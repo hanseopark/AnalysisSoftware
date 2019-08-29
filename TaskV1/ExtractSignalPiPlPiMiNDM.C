@@ -32,6 +32,7 @@
 #include "TASImage.h"
 #include "TMath.h"
 #include "TPostScript.h"
+#include "TRegexp.h"
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TGraphAsymmErrors.h"
@@ -241,11 +242,6 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
 
     //************************* Get background histos  ***************************************************************
 
-    // Switches for Debugging:
-    // Disabled Groups will not be added to total background (all other histos will still be plottet)
-    Bool_t UseGroup2 = kTRUE;
-    Bool_t UseGroup3 = kTRUE;
-    Bool_t UseGroup4 = kTRUE;
 
     TString ObjectNameESD           = "ESD_Mother_InvMass_Pt";
     TString ObjectNameBck[4]        = { "ESD_Background_1_InvMass_Pt",
@@ -253,15 +249,45 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                                         "ESD_Background_3_InvMass_Pt",
                                         "ESD_Background_4_InvMass_Pt"
                                       };
-    // Get Names of alternative InvMass histos
-    // InvMass minus Pi0 inv Mass
+    TString fBackMixingMode = fMesonCutSelection(1,1);
+    Bool_t UseNewBackground = kFALSE;
+    // Check if histo is there
+    TH2D* tempTestHisto = NULL;
+    tempTestHisto = (TH2D*)ESDContainer->FindObject(ObjectNameBck[0].Data());
+    if(!tempTestHisto && fBackMixingMode.CompareTo("a")!=0 && fBackMixingMode.CompareTo("4")!=0){
+        // the histogram is not there, and the user didn't choose likesign mixing
+        // try finding it with new naming scheme
+        tempTestHisto = (TH2D*)ESDContainer->FindObject("ESD_Background_InvMass_Pt");
+        if(!tempTestHisto){
+            cout << "no valid background histogram found" << endl;
+            return;
+        } else{
+            UseNewBackground = kTRUE;
+        }
 
+    } 
+
+    // Switches for Debugging:
+    // Disabled Groups will not be added to total background (all other histos will still be plottet)
+    
+    Bool_t UseGroup2 = kTRUE;
+    Bool_t UseGroup3 = kTRUE;
+    Bool_t UseGroup4 = kTRUE;
+
+    if(UseNewBackground){
+        UseGroup2 = kFALSE;
+        UseGroup3 = kFALSE;
+        UseGroup4 = kFALSE;
+    }
 
     TString oldNewTaskString;
     oldNewTaskString ="_Neutral";
 
     // file naems are different if old output is used
     if(!isNewTask) oldNewTaskString = "(NeutralPion)";
+
+    // Get Names of alternative InvMass histos
+    // InvMass minus Pi0 inv Mass
 
     TString ObjectNameESDSubPiZero           =   Form("ESD_InvMass_Mother_Sub_InvMass%s_Pt",oldNewTaskString.Data());
     TString ObjectNameBckSubPiZero[4]        = { Form("ESD_Background_1_InvMass_Sub_InvMass%s_Pt",oldNewTaskString.Data()),
@@ -278,8 +304,13 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
                                                  Form("ESD_Background_4_InvMass_FixedPz%s_Pt",oldNewTaskString.Data())
                                       };
 
+    if(UseNewBackground){
+        TRegexp re("_1_");
+        ObjectNameBck[0](re) = "_"; 
+        ObjectNameBckSubPiZero[0](re) = "_"; 
+        ObjectNameBckFixedPzPiZero[0](re) = "_"; 
+    }
 
-    TString fBackMixingMode = fMesonCutSelection(1,1);
 
     TString histBckName    = "ESD_Background_LikeSign_InvMass_Pt";
     TString histBckNameSub = "ESD_Background_LikeSign_InvMass_Sub_InvMass_Neutral_Pt";
@@ -2556,37 +2587,41 @@ void ExtractSignalPiPlPiMiNDM(   TString meson                  = "",
         namePad             = "MesonWithBckPad";
         PlotInvMassInPtBinsBckGroups(fHistoMappingGGInvMassPtBin_FixedPzPiZero, fHistoMappingBackNormInvMassPtBin_FixedPzPiZero, nameMeson, nameCanvas, namePad, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem,kFALSE,fThesis);
     }
+    TString nameMesonSub; 
+    TString nameCanvasSub;
+    TString namePadSub;   
+    if(((TString)fMesonCutSelection(1,1)).CompareTo("4")!=0){
+        // Meson Subtracted
+        TString nameMesonSub        = Form("%s/%s_%s_MesonSubtracted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+        TString nameCanvasSub       = "MesonCanvasSubtracted";
+        TString namePadSub          = "MesonPadSubtracted";
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,NULL,fThesis);
 
-    // Meson Subtracted
-    TString nameMesonSub        = Form("%s/%s_%s_MesonSubtracted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
-    TString nameCanvasSub       = "MesonCanvasSubtracted";
-    TString namePadSub          = "MesonPadSubtracted";
-    if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,NULL,fThesis);
-
-    // Meson Subtracted minus InvMass pi0
-    nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_SubPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
-    nameCanvasSub       = "MesonCanvasSubtracted";
-    namePadSub          = "MesonPadSubtracted";
-    if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitSignalInvMassPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_SubPiZero,fThesis);
-
-    // Meson Subtracted with pz of pi0 fixed
-    nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
-    nameCanvasSub       = "MesonCanvasSubtracted";
-    namePadSub          = "MesonPadSubtracted";
-    if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero,fThesis);
-
-    if(fIsMC){
-        // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
-        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+        // Meson Subtracted minus InvMass pi0
+        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_SubPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
         nameCanvasSub       = "MesonCanvasSubtracted";
         namePadSub          = "MesonPadSubtracted";
-        if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitTrueSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_FixedPzPiZero,fThesis);
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitSignalInvMassPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_SubPiZero,fThesis);
 
-        // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
-        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_SubPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+        // Meson Subtracted with pz of pi0 fixed
+        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
         nameCanvasSub       = "MesonCanvasSubtracted";
         namePadSub          = "MesonPadSubtracted";
-        if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitTrueSignalInvMassPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_SubPiZero);
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero,fThesis);
+
+        if(fIsMC){
+            // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
+            nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+            nameCanvasSub       = "MesonCanvasSubtracted";
+            namePadSub          = "MesonPadSubtracted";
+            if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitTrueSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_FixedPzPiZero,fThesis);
+
+            // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
+            nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_SubPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+            nameCanvasSub       = "MesonCanvasSubtracted";
+            namePadSub          = "MesonPadSubtracted";
+            if(backAvailable) PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitTrueSignalInvMassPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonTrueMass_SubPiZero);
+        }
     }
 
     // Meson Subtracted backfit

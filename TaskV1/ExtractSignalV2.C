@@ -337,6 +337,8 @@ void ExtractSignalV2(
         Initialize("EtaPrime",numberOfBins, triggerSet);
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
         Initialize("Pi0EtaBinning",numberOfBins, triggerSet);
+    } else if(meson.CompareTo("Pi0OmegaBinning") == 0) {
+        Initialize("Pi0OmegaBinning",numberOfBins, triggerSet);
     } else   {
         cout<<"ERROR: First argument in the ExtractSignal(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrime"<<endl;
         return;
@@ -433,7 +435,7 @@ void ExtractSignalV2(
     //*********************************************************************************************************
     //******************* Set MC histo names ******************************************************************
     //*********************************************************************************************************
-    if (meson.CompareTo("Pi0") == 0 || meson.CompareTo("Pi0EtaBinning") == 0 ){
+    if (meson.Contains("Pi0")){
         SetCorrectMCHistogrammNames("Pi0");
     } else if (meson.CompareTo("Eta") == 0 ){
         SetCorrectMCHistogrammNames("Eta");
@@ -2084,7 +2086,7 @@ void ExtractSignalV2(
     Float_t maxPlotLambda               = fMesonLambdaTailRangeNominal[1]*1.2;
     if (fMesonLambdaTailRangeNominal[1] == fMesonLambdaTailRangeNominal[0])
         maxPlotLambda                   = fMesonLambdaTailRangeNominal[1]*2;
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+    if (fPrefix.Contains("Pi0")){
         DrawAutoGammaMesonHistos( fHistoLambdaTail,
                                 "", "p_{T} (GeV/c)", "#lambda",
                                 kFALSE, 3.,0.,  kFALSE,
@@ -2122,7 +2124,7 @@ void ExtractSignalV2(
 
     Double_t maxMesonMassRange = 0.140;
     Double_t minMesonMassRange = 0.132;
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+    if (fPrefix.Contains("Pi0")){
         if (fEnergyFlag.Contains("PbPb")){
             maxMesonMassRange = 0.160;
             minMesonMassRange = 0.130;
@@ -2173,7 +2175,7 @@ void ExtractSignalV2(
     canvasMesonFWHM->SetTicky();
 
     DrawGammaSetMarker(fHistoFWHMMeson, 20, 1., kBlack, kBlack);
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+    if (fPrefix.Contains("Pi0")){
         DrawAutoGammaMesonHistos( fHistoFWHMMeson,
                                     "", "p_{T} (GeV/c)","FWHM (GeV/c^{2})",
                                     kFALSE, 3.,0., kFALSE,
@@ -2225,7 +2227,7 @@ void ExtractSignalV2(
     canvasSigma->SetTicky();
 
     DrawGammaSetMarker(fHistoSigma, 20, 1., kBlack, kBlack);
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+    if (fPrefix.Contains("Pi0")){
         DrawAutoGammaMesonHistos(   fHistoSigma,
                                     "", "p_{T} (GeV/c)","#sigma (GeV/c^{2})",
                                     kFALSE, 3.,0., kFALSE,
@@ -4566,7 +4568,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
 
     // Settings specific for PbPb collisions
     if (fEnergyFlag.Contains("PbPb")){
-        if (fPrefix.CompareTo("Pi0") == 0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             //pi0 meson amplitude settings
             if(fMode == 0){
                 if(((TString)histoMappingSignalInvMassPtBinSingle->GetName()).Contains("Left") && (GetCentralityString(fEventCutSelection)).CompareTo("20-50%")==0){
@@ -4651,7 +4653,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     // Settings specific for pPb collisions
     } else if (fEnergyFlag.Contains("pPb") ){
         // pi0 reconstruction
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             if ( fMode == 0) {                                      // PCM
                 mesonAmplitudeMin = mesonAmplitude*92./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -4757,7 +4759,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     // settings specific for pp collisions
     } else {
         // pi0 reconstruction
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             if (fMode == 0){                                        // PCM
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -4926,7 +4928,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     fFitReco= NULL;
     TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
     //for pp5TeV triggers, enable exponential tail also on right side of the peak for improving the fit quality
-    if( (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0) && fEnergyFlag.Contains("5TeV2017") && (trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0)){
+    if( (fPrefix.Contains("Pi0")) && fEnergyFlag.Contains("5TeV2017") && (trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0)){
       fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp(-(x-[1])/[6])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
     } else {
       fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(TMath::Exp(-0.5*((x-[1])/[2])^2)+TMath::Exp((x-[1])/[3])*(1.-TMath::Exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*TMath::Exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",fMesonFitRange[0],fMesonFitRange[1]);
@@ -4962,7 +4964,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
       }
     }
 
-    if( (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+    if(fPrefix.Contains("Pi0")){
         if(fEnergyFlag.Contains("pPb") ){
             if(fMode == 4 ) {
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
@@ -5130,7 +5132,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle
     Double_t mesonAmplitudeMax      = 0;
 
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
             else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
             else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
@@ -5155,7 +5157,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle
             }
         }
     } else {
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
@@ -5334,7 +5336,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle
             }
         }
     } else {
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
@@ -5485,7 +5487,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle
     Double_t mesonAmplitudeMax      = 0;
 
     if (fEnergyFlag.Contains("PbPb")){
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
             else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
             else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
@@ -5510,7 +5512,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle
             }
         }
     } else {
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        if (fPrefix.Contains("Pi0")){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             // set global max for pPb
@@ -5671,7 +5673,7 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* histoMappingSignalInvMassPtB
     Double_t mesonAmplitude         = histoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin      = 0;
     Double_t mesonAmplitudeMax      = 0;
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+    if (fPrefix.Contains("Pi0")){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
@@ -6094,7 +6096,7 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* histoMappingSignalInvMassPtBinSing
     Double_t mesonAmplitude         = histoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin      = 0;
     Double_t mesonAmplitudeMax      = 0;
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+    if (fPrefix.Contains("Pi0")){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;

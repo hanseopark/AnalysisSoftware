@@ -209,6 +209,19 @@ function GiveBinning7TeV()
             CORRECTETA=0
         fi
     fi
+
+    if [ $DOPI0INOMEGABINS -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the pi in omega binning? )";
+        read answer
+        if [ $answer -ge 2 ] && [ $answer -lt 25 ] ; then
+            echo "--> $answer bins";
+            CORRECTOMEGA=1
+            BINSPTOMEGA=$answer
+        else
+            echo "--> omega binning was not set correctly. please try again.";
+            CORRECTOMEGA=0
+        fi
+    fi
 }
 
 

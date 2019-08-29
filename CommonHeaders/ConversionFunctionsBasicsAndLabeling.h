@@ -1057,7 +1057,7 @@
     //************************ return latex writing of meson name ************************
     //************************************************************************************
     TString ReturnMesonString ( TString mesonName){
-        if(mesonName.CompareTo("Pi0") == 0 || mesonName.CompareTo("Pi0EtaBinning") == 0){
+        if(mesonName.CompareTo("Pi0") == 0 || mesonName.CompareTo("Pi0EtaBinning") == 0 ||  mesonName.CompareTo("Pi0OmegaBinning") == 0){
             return "#pi^{0}";
         } else if(mesonName.CompareTo("Eta") == 0)  {
             return "#eta";

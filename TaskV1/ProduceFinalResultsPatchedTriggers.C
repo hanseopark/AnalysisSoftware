@@ -575,7 +575,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TFile*  fileEffBasePi0          [MaxNumberOfFiles];
     TH1D*   histoEffBasePi0         [MaxNumberOfFiles];
     TH1D*   histoTriggerEffPi0      [MaxNumberOfFiles];
-    Bool_t  enableTriggerEffPi0     [MaxNumberOfFiles];
+    Bool_t  enableTriggerEffPi0     [MaxNumberOfFiles] = {kFALSE};
     Bool_t  enableTriggerEffPi0All                          = kFALSE;
     Bool_t  enableTriggerRejecCompMC                        = kFALSE;
 

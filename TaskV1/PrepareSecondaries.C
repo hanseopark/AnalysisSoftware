@@ -143,6 +143,9 @@ void PrepareSecondaries(    TString     meson                       = "",
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
         fAnalyzedMeson                                          = "Pi0";
         Initialize("Pi0EtaBinning", fEnergyFlag, numberOfBins);
+    } else if(meson.CompareTo("Pi0OmegaBinning") == 0) {
+        fAnalyzedMeson                                          = "Pi0";
+        Initialize("Pi0OmegaBinning", fEnergyFlag, numberOfBins);
     } else   {
         cout << "ERROR: Meson not specified correctly, returning" << endl;
         return;
