@@ -605,8 +605,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 Double_t scaleFactorRaw = 5.;
-                if (kSpecialTrigger && optionEnergy.Contains("pPb")) scaleFactorRaw = 1000.;
+                if (kSpecialTrigger && optionEnergy.Contains("pPb")) scaleFactorRaw = 5.;
                 else if (kSpecialTrigger ) scaleFactorRaw = 100.;
+                if (meson.CompareTo("Eta") == 0) scaleFactorRaw=scaleFactorRaw*5;
 
                 DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoRawYieldCut[i],
@@ -706,7 +707,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 maxYRaw = histoRawYieldCut[i]->GetMaximum();
         }
         minYRaw = minYRaw/100;
-        if (optionEnergy.Contains("pPb")) maxYRaw = maxYRaw*100;
+        if (optionEnergy.Contains("pPb")) maxYRaw = maxYRaw*5;
         else maxYRaw = maxYRaw*10;
 
         TH1F* histo1DDummy              = new TH1F("histo1DDummy","histo1DDummy",1000, 0, maxPt);

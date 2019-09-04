@@ -293,7 +293,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC18j5_3MC="child_3"
 
 # new reco run1 pPb
-TRAINDIR=20190804-MultCalib
+# TRAINDIR=20190804-MultCalib
 # LHC13beData="534"
 # LHC13bData="child_1"
 # LHC13cData="child_2"
@@ -302,8 +302,15 @@ TRAINDIR=20190804-MultCalib
 # LHC13fData="535"
 # LHC18j5MC="429"
 # LHC18j5_2MC="child_2"
-LHC18j5_1MC="429"
+# LHC18j5_1MC="429"
 # LHC18j5_3MC="child_3"
+
+TRAINDIR=20190830-QAPCMRun2
+LHC16qtData="592"; #pass 2
+LHC16qDataFast="child_1"; #pass 3
+LHC16tDataFast="child_2"; #pass 2
+LHC16qData="child_3"; #pass 3
+LHC16tData="child_4"; #pass 2
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

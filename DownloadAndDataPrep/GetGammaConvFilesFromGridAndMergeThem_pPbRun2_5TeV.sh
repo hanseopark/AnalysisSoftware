@@ -85,14 +85,18 @@ if [ $3 = "AOD" ]; then
     baseLegoMC=GA_pPb_MC_AOD
     pathDataR1=pass4/AOD210/PWGGA/GA_pPb_AOD
     pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
-    pathDataR2=pass1/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
     pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
 else
     baseLegoData=GA_pPb
     baseLegoMC=GA_pPb_MC
     pathDataR1=pass4/PWGGA/GA_pPb
     pathMCR1=PWGGA/GA_pPb_MC
-    pathDataR2=pass1/PWGGA/GA_pPb
+    pathDataR2WOSDD=pass1/PWGGA/GA_pPb
+    pathDataR2FAST=pass1/PWGGA/GA_pPb
     pathMCR2=PWGGA/GA_pPb_MC
 fi
 
@@ -137,17 +141,25 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17g8aMCFast="child_1"
 
 # new reco run1 pPb
-TRAINDIR=20190612-QAPass4PCMEMCPHOS
+# TRAINDIR=20190612-QAPass4PCMEMCPHOS
 # LHC13beData="534"
 # LHC13bData="child_1"
 # LHC13cData="child_2"
 # LHC13dData="child_3"
 # LHC13eData="child_4"
 # LHC13fData="535"
-LHC18j5MC="699"
-LHC18j5_2MC="child_2"
-LHC18j5_1MC="child_1"
-LHC18j5_3MC="child_3"
+# LHC18j5MC="699"
+# LHC18j5_2MC="child_2"
+# LHC18j5_1MC="child_1"
+# LHC18j5_3MC="child_3"
+
+TRAINDIR=20190830-QAPCMRun2
+LHC16qtData="592"; #pass 2
+LHC16qDataFast="child_1"; #pass 3
+LHC16tDataFast="child_2"; #pass 2
+LHC16qData="child_3"; #pass 3
+LHC16tData="child_4"; #pass 2
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 ALIENDIRData="/alice/cern.ch/user/a/alitrain/PWGGA/$baseLegoData/"
@@ -196,12 +208,12 @@ OUTPUTDIR_LHC16t=$tempPath
 echo "16t: $HAVELHC16t $LHC16tData $OUTPUTDIR_LHC16t"
 FindCorrectTrainDirectory $LHC16qDataFast $OUTPUTDIRData $ALIENDIRData $LHC16qtData
 HAVELHC16qF=$tempBool
-LHC16qData=$tempDir
+LHC16qDataFast=$tempDir
 OUTPUTDIR_LHC16qF=$tempPath
 echo "16q: $HAVELHC16qF $LHC16qDataFast $OUTPUTDIR_LHC16qF"
 FindCorrectTrainDirectory $LHC16tDataFast $OUTPUTDIRData $ALIENDIRData $LHC16qtData
 HAVELHC16tF=$tempBool
-LHC16tData=$tempDir
+LHC16tDataFast=$tempDir
 OUTPUTDIR_LHC16tF=$tempPath
 echo "16t: $HAVELHC16tF $LHC16tDataFast $OUTPUTDIR_LHC16tF"
 
@@ -278,13 +290,13 @@ if [ $CLEANUPMAYOR == 0 ]; then
     cd $currentDir
     CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j5_3" $HAVELHC18j53 $OUTPUTDIR_LHC18j53 $LHC18j5_3MC $pathMCR1 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvV1
 
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16q $OUTPUTDIR_LHC16q $LHC16qData $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16q $OUTPUTDIR_LHC16q $LHC16qData $pathDataR2WOSDD $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$WOSDD" GammaConvV1
     # "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData" $NSlashes3 "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16qF" $HAVELHC16qF $OUTPUTDIR_LHC16qF $LHC16qDataFast $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16qF $OUTPUTDIR_LHC16qF $LHC16qDataFast $pathDataR2FAST $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaConvV1
     #   "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16qDataFast" $NSlashes3 "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16qDataFast/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16t $OUTPUTDIR_LHC16t $LHC16tData $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16t $OUTPUTDIR_LHC16t $LHC16tData $pathDataR2WOSDD $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$WOSDD" GammaConvV1
     # "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData" $NSlashes3 "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16tF" $HAVELHC16tF $OUTPUTDIR_LHC16tF $LHC16tDataFast $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaConvV1
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16tF $OUTPUTDIR_LHC16tF $LHC16tDataFast $pathDataR2FAST $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaConvV1
     #  "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16tDataFast" $NSlashes3 "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16tDataFast/"
 
 

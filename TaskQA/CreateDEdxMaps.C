@@ -510,8 +510,8 @@ void CreateDEdxMaps(    TString fileNameWithMaps    ="" ,
                 if (histoPositronDeDx[1][r][i][j]->GetMaximum() < secRebinBoundary) histoPositronDeDx[1][r][i][j]->Rebin(2);
                 //                 fitPositronDeDx[1][r][i][j]    = FitSignal(histoPositronDeDx[1][r][i][j],kBlue);
                 if (doFitting[1][r][i][j] && histoPositronDeDx[1][r][i][j]->GetMaximum() > 10)
-                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[1][r][i][j], fixSearchRange);
-//                     fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
+                    fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussianWExp(histoPositronDeDx[1][r][i][j], 0.02, -fitRange, fitRange, scalWidthFit[1][r][i][j], maxChi2, fixSearchRange);
+            //  fitPositronDeDx[1][r][i][j]   = FitTH1DRecursivelyGaussian (histoPositronDeDx[1][r][i][j], 0.02, -3, 3, 2, 1.25 );
 
                 if (fitPositronDeDx[1][r][i][j]){
                     meanPositron[1][r][i][j]        = fitPositronDeDx[1][r][i][j]->GetParameter(1);

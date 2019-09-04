@@ -2741,7 +2741,7 @@
                     case 2:
                     case 13:
                         if (SpecialTrigger == 3 ){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG1,binning, 36);
+                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG1,binning, 38);
                         } else if ( SpecialTrigger == 1 ){
                             maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEMC7,binning, 17);
                         } else if (SpecialTrigger == 2 ) {
@@ -2767,7 +2767,7 @@
                     case 4:
                     case 12:
                         if (SpecialTrigger == 3 ){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG1,binning,36);
+                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG1,binning,38);
                         } else if ( SpecialTrigger == 1 ){
                             maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEMC7,binning,17);
                         } else if (SpecialTrigger == 2 ){
@@ -5346,6 +5346,7 @@
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
+                    cout << "---> entered rebin functionn:" << modi << "\t" << specialTrigg << "\t" << energy.Data() << centrality.Data() << endl;
                     switch (modi){
                         case 0:
                             if (!energy.CompareTo("pPb_5.023TeVCent")){
@@ -5369,9 +5370,11 @@
                             CopyVectorToArray(fBinsPi0pPb5TeVDalitzPtRebin,fNRebin);
                             break;
                         case 2:
+                            cout << "entered case PCM-EMC" << endl;
                             switch (specialTrigg){
+                                case -1:
                                 case 0:
-                                    if (energy.CompareTo("pPb_5.023TeV")){
+                                    if (!energy.CompareTo("pPb_5.023TeV")){
                                         if((centrality.Contains("0-100%") && !centrality.Contains("60-100%")))        // MB pi0 for PCM run 1
                                             CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCPtRebin,fNRebin);
                                         else
@@ -5423,7 +5426,7 @@
                         case 4:
                             switch (specialTrigg){
                                 case 0:
-                                    if (energy.CompareTo("pPb_5.023TeV")){
+                                    if (!energy.CompareTo("pPb_5.023TeV")){
                                         if((centrality.Contains("0-100%") && !centrality.Contains("60-100%"))) // MB pi0 for PCM run 1
                                             CopyVectorToArray(fBinsPi0pPb5TeVEMCPtRebin,fNRebin);
                                         else
@@ -6307,11 +6310,11 @@
                             switch(specialTrigg) {
                                 case 0:
                                     if (energy.Contains("RBins")) {
-				      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
-				    }else{
-                      cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
-				      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
-				    }
+                                      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7RBinsPtRebin,fNRebin);
+                                    }else{
+                                        cout<<"Use Rebin Vector: fBinsEta13TeVPCMTrigINT7PtRebin"<<endl;
+                                      CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
+                                    }
                                     break;
                                 case 1: CopyVectorToArray(fBinsEta13TeVPCMTrigEMC7PtRebin,fNRebin); break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG1PtRebin, fNRebin); break;
