@@ -169,9 +169,9 @@ void updateFile(const char *fileNameOADB, TString arrName, TString fileName,Int_
         } else {
             cout<<"PHOS cellIDs and modules start at 1; The 0 case is skipped"<<endl;
         }
-        if(hBadMap[positionFromID[0]]->GetBinContent(positionFromID[1],positionFromID[2]) == 0){
-          cout  << vecBadChannels.at(j).Atoi() <<  endl;
-        }
+        //if(hBadMap[positionFromID[0]]->GetBinContent(positionFromID[1],positionFromID[2]) == 0){
+          //cout  << vecBadChannels.at(j).Atoi() <<  endl;
+        //}
 //         else cout << vecBadChannels.at(j) << " channel was already marked as bad. " << endl;
     }
 //     cleanedFile.close();
@@ -547,6 +547,48 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
 
     //OADB File: 294009-294925
     updateFile(fileNameOADBtemp, "additional bad channels LHC18p - Jens", "badChannelListsPHOS/BadCellsByHand_LHC18p_pass1.log", 294009, 294925, 1);*/
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //LHC18Periods: b, d, e, f, g, h, i, j, k, l, m, n, o, p  //Good Runs (taken from old OADB File)
+    //OADB File: 284891-285447
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18b - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18b_pass1.log", 284891, 285447, 1);
+
+    //OADB File: 285978-286350
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18d - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18d_pass1.log", 285978, 286350, 1);
+
+    //OADB File: 286380-286937
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18e - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18e_pass1.log", 286380, 286937, 1);
+
+    //OADB File: 287000-287977
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18f - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18f_pass1.log", 287000, 287977, 1);
+
+    //OADB File: 288619-288750
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18g - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18g_pass1.log", 288619, 288750, 1);
+
+    //OADB File: 288804-288806
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18h - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18h_pass1.log", 288804, 288806, 1);
+
+    //OADB File: 288861-288943
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18iandj - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18iandj_pass1.log", 288861, 288943, 1);
+
+    //OADB File: 289165-289201
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18k - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18k_pass1.log", 289165, 289201, 1);
+
+    //OADB File: 289240-289971
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18l - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18l_pass1.log", 289240, 289971, 1);
+
+    //OADB File: 290222-292839
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18m - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18m_pass1.log", 290222, 292839, 1);
+
+    //OADB File: 293357-293362
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18n - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18n_pass1.log", 293357, 293362, 1);
+
+    //OADB File: 293368-293898
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18o - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18o_pass1.log", 293368, 293898, 1);
+
+    //OADB File: 294009-294925
+    updateFile(fileNameOADBtemp, "additional bad channels LHC18p - Jens", "badChannelListsPHOS/BadCellsCleaned_LHC18p_pass1.log", 294009, 294925, 1);
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //=======================================================================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
