@@ -829,6 +829,7 @@ Double_t fBinsDirGamma13TeVPtDCAzDist[16]       = { 0.0, 0.1, 0.4, 0.6, 0.8, 1.0
     // ---------------------------------------------------------
     // Cluster binning
     // ---------------------------------------------------------
+    Int_t fNBinsClusterOmega13TeVPt                 =  249;
     Int_t fNBinsCluster13TeVPt                      =  307;
     Double_t fBinsCluster13TeVPt[308];
     Int_t fNBinsCluster13TeVPCMPt                   =  301;
@@ -994,54 +995,98 @@ Double_t fBinsDirGamma13TeVPtDCAzDist[16]       = { 0.0, 0.1, 0.4, 0.6, 0.8, 1.0
         10, 4, 4, 8, 8,      8, 8, 12 };
 
 
-        //****************************************************************************************************
-        //*********************** Omega Pt binning for pp, 13TeV  ********************************************
-        //****************************************************************************************************
+    //****************************************************************************************************
+    //*********************** Omega Pt binning for pp, 13TeV  ********************************************
+    //****************************************************************************************************
 
 
-        // omega->pi+pi-pi0
-        std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCM                        = { //PCM-PCM
-            /*0.0,  1.0,  1.4,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
-            5.0,  6.0,  8.0, 12.0}; //14*/
-            0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
-            7.0,  9.0, 13.0, 17.0}; //14
-        std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCM                      = { //PCM-PCM Rebin
-           10, 10,  8,  8,  8,       4,  5,  5,  5,  5,
-           10, 10, 10}; //13
+    // omega->pi+pi-pi0
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCM                        = { //PCM-PCM
+                                                                                        /*0.0,  1.0,  1.4,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
+                                                                                                5.0,  6.0,  8.0, 12.0}; //14*/
+                                                                                        0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
+                                                                                        7.0,  9.0, 13.0, 17.0, 21.0,         25.0, 30.0, 40.0, 50.0, 60.0,
+                                                                                       70.0, 80.0, 90.0,100.0}; //24
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCM                      = { //PCM-PCM Rebin
+                                                                                        10, 10,  8,  8,  8,       4,  5,  5,  5,  5,
+                                                                                        10, 10, 10, 10, 10,      10, 10, 10, 10, 10,
+                                                                                        10, 10, 10}; //23
 
-        std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCMPHOS                     = { //PCM-PHOS
-            /*0.0,  1.0,  1.4,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
-            5.0,  6.0,  8.0, 12.0}; //14*/
-            0.0,  1.0,  1.5,  2.0,  4.0,          6.0, 9.0, 13.0}; //8
-        std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMPHOS                   = { //PCM-PHOS Rebin
-            /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
-            4,  5,  5}; //13*/
-           16, 16, 16, 16, 16,      16, 16}; //7
-        std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPHOS                        = { //PHOS-PHOS
-            //0.0,  1.0,  1.8,  2.0,  2.5,          3.0,  3.5,  4.0,  6.0,  8.0}; //10
-            /*0.0,  1.0,  1.5,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
-            5.0,  6.0,  8.0, 12.0}; //14*/
-            0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
-            7.0,  9.0, 13.0, 15.0}; //14
-        std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPHOS                      = { //PHOS-PHOS Rebin
-            //5,  5,  5,  5,  4,       4,  3,  3,  3}; //9
-            /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
-            4,  5,  5}; //13*/
-           16, 16,  16,  16,  16,       8,  5,  5,  5, 16,
-           10, 10, 16}; //13
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCMPHOS                     = { //PCM-PHOS
+                                                                                         /*0.0,  1.0,  1.4,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
+                                                                                                 5.0,  6.0,  8.0, 12.0}; //14*/
+                                                                                         0.0,  1.0,  1.5,  2.0,  4.0,          6.0,  9.0, 13.0, 17.0, 21.0,
+                                                                                        25.0, 30.0, 40.0, 50.0, 60.0,         70.0, 80.0, 90.0,100.0}; //19
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMPHOS                   = { //PCM-PHOS Rebin
+                                                                                         /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
+                                                                                                 4,  5,  5}; //13*/
+                                                                                         16, 16, 16, 16, 16,      16, 16, 16, 16, 16,
+                                                                                         16, 16, 16, 16, 16,      16, 16, 16}; //18
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMPHOSPHI7               = { //PCM-PHOS Rebin
+                                                                                         /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
+                                                                                                 4,  5,  5}; //13*/
+                                                                                         16, 16, 16, 16, 16,       5,  5,  5,  5,  5,
+                                                                                          5,  5,  5,  8,  8,       8, 16, 16}; //18
 
-        std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCMEMC                      = { //PCM-EMCal
-            0.0,  1.0,  1.5,  2.0,  2.5,          3.0,  3.5,  4.0,  5.0,  6.0,
-            8.0, 12.0}; //12
-        std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMEMC                    = {
-           10, 10, 10, 10, 10,      10,  8,  8,  8,  6,
-            6}; //11
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPHOS                        = { //PHOS-PHOS
+                                                                                         //0.0,  1.0,  1.8,  2.0,  2.5,          3.0,  3.5,  4.0,  6.0,  8.0}; //10
+                                                                                         /*0.0,  1.0,  1.5,  1.6,  1.8,          2.0,  2.5,  3.0,  3.5,  4.0,
+                                                                                                 5.0,  6.0,  8.0, 12.0}; //14*/
+                                                                                         0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
+                                                                                         7.0,  9.0, 13.0, 15.0, 17.0,         21.0, 25.0, 30.0, 40.0, 50.0,
+                                                                                        60.0, 70.0, 80.0, 90.0,100.0}; //25
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPHOS                      = { //PHOS-PHOS Rebin
+                                                                                         //5,  5,  5,  5,  4,       4,  3,  3,  3}; //9
+                                                                                         /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
+                                                                                                 4,  5,  5}; //13*/
+                                                                                         16, 16, 16, 16, 16,       8,  5,  5,  5, 16,
+                                                                                         16, 16, 16, 16, 16,      16, 16, 16, 16, 16,
+                                                                                         16, 16, 16, 16}; //24
 
-        std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMC                         = { //EMCal-EMCal
-            0.0,  1.0,  1.5,  2.0,  2.5,          3.0,  3.5,  4.0,  5.0,  6.0,
-            8.0, 12.0, 16.0}; //13
-        std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMC                       = {
-           10, 10, 10, 10, 10,      10, 10, 10,  4,  3,
-            4,  6}; //12
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPHOSPHI7                  = { //PHOS-PHOS Rebin
+                                                                                         //5,  5,  5,  5,  4,       4,  3,  3,  3}; //9
+                                                                                         /*4,  4,  4,  4,  5,       5,  4,  4,  4,  4,
+                                                                                                 4,  5,  5}; //13*/
+                                                                                         16, 16, 16, 16, 16,       8,  5,  5,  5,  5,
+                                                                                          5,  5,  5,  5,  5,       5,  5,  5,  5,  8,
+                                                                                         16, 16, 16, 16}; //24
+
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtPCMEMC                      = { //PCM-EMCal
+                                                                                         /*0.0,  1.0,  1.5,  2.0,  2.5,          3.0,  3.5,  4.0,  5.0,  6.0,
+                                                                                         8.0, 12.0}; //12*/
+                                                                                         0.0,  1.0,  1.5,  2.0,  4.0,          6.0,  9.0, 13.0, 17.0, 21.0,
+                                                                                        25.0, 30.0, 40.0, 50.0, 60.0,         70.0, 80.0, 90.0,100.0}; //19
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMEMC                    = {
+                                                                                        /*10, 10, 10, 10, 10,      10,  8,  8,  8,  6,
+                                                                                         6}; //11*/
+                                                                                       16, 16, 16, 16, 16,       8,  8,  8, 10, 16,
+                                                                                       16, 16, 16, 16, 16,      16, 16, 16}; //18
+
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCMEMCEG1                    = {
+                                                                                        /*10, 10, 10, 10, 10,      10,  8,  8,  8,  6,
+                                                                                         6}; //11*/
+                                                                                        4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                        4, 16, 16, 16, 16,      16, 16, 16}; //18
+
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMC                         = { //EMCal-EMCal
+                                                                                         /*0.0,  1.0,  1.5,  2.0,  2.5,          3.0,  3.5,  4.0,  5.0,  6.0,
+                                                                                         8.0, 12.0, 16.0}; //13*/
+                                                                                        0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
+                                                                                        7.0,  9.0, 13.0, 15.0, 17.0,         21.0, 25.0, 30.0, 40.0, 50.0,
+                                                                                       60.0, 70.0, 80.0, 90.0,100.0}; //25
+
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMC                       = {
+                                                                                        /*10, 10, 10, 10, 10,      10, 10, 10,  4,  3,
+                                                                                         4,  6}; //12*/
+                                                                                        16, 16, 16, 16, 16,      10, 10, 10, 10, 16,
+                                                                                        16, 16, 16, 16, 16,      16, 16, 16, 16, 16,
+                                                                                        16, 16, 16, 16}; //24
+
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMCEG1                   = {
+                                                                                        /*10, 10, 10, 10, 10,      10, 10, 10,  4,  3,
+                                                                                         4,  6}; //12*/
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4, 16, 16,
+                                                                                        16, 16, 16, 16}; //24
 
 #endif
