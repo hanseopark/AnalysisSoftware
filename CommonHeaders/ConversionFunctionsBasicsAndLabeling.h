@@ -964,17 +964,17 @@
             case 20: case 21: case 22: case 23:
                 return "Comb";
             // Cases added for omega analysis
-            case 40:
+            case 40: case 60:
                 return "#pi^{0} rec w/ PCM";
-            case 41:
+            case 41: case 61:
                 return "#pi^{0} rec w/ PCM-EMC";
-            case 42:
+            case 42: case 62:
                 return "#pi^{0} rec w/ PCM, PHOS";
-            case 43:
+            case 43: case 63:
                 return "#pi^{0} rec w/ PCM, DCAL";
-            case 44:
+            case 44: case 64:
                 return "#pi^{0} rec w/ EMC";
-            case 45:
+            case 45: case 65:
                 return "#pi^{0} rec w/ PHOS";
             case 46: case 66:
                 return "#pi^{0} rec w/ DCAL, DCAL";
