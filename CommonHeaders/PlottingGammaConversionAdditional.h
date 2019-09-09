@@ -4324,6 +4324,8 @@
         else if ((triggerName.Contains("EJ2") ) && isShade)   return kRed-6;
         else if (triggerName.Contains("EJ1") && !isShade)  return kRed+2;
         else if (triggerName.Contains("EJ1") && isShade)   return kRed-6;
+        else if (triggerName.Contains("PHI7") && !isShade) return kRed+2;
+        else if (triggerName.Contains("PHI7") && isShade) return kRed-6;
         else return kBlack;
 
         return kBlack;
@@ -4354,6 +4356,8 @@
         else if (triggerName.Contains("EJ2") && isShade)  return 25;
         else if (triggerName.Contains("EJ1") && !isShade) return 33;
         else if (triggerName.Contains("EJ1") && isShade)  return 24;
+        else if (triggerName.Contains("PHI7") && !isShade) return 21;
+        else if (triggerName.Contains("PHI7") && isShade) return 25;
         else return 20;
 
         return 20;
@@ -4384,6 +4388,8 @@
         else if (triggerName.Contains("EJ2") && isShade)   return (Size_t)2;
         else if (triggerName.Contains("EJ1") && !isShade)  return (Size_t)2;
         else if (triggerName.Contains("EJ1") && isShade)   return (Size_t)2;
+        else if (triggerName.Contains("PHI7") && !isShade) return (Size_t)2;
+        else if (triggerName.Contains("PHI7") && isShade) return (Size_t)2;
         else return (Size_t)1.5;
 
         return (Size_t)1.5;
