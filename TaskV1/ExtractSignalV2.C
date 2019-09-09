@@ -4823,6 +4823,25 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       fMesonFitRange[1] = 0.28;
                       mesonAmplitudeMin = mesonAmplitude*90./100.;
                     }
+                } else if( fEnergyFlag.Contains("13TeV")  ){
+                    mesonAmplitudeMin = mesonAmplitude*10./100.;
+                    mesonAmplitudeMax = mesonAmplitude*400./100.;
+                    if(fBinsPt[ptBin] >= 10) {
+                      fMesonLambdaTail            = 0.015;
+                      fMesonLambdaTailRange[0]    = 0.015;
+                      fMesonLambdaTailRange[1]    = 0.015;
+                    }
+                    if(fMode == 5){
+                      fMesonLambdaTail            = 0.006;
+                      fMesonLambdaTailRange[0]    = 0.006;
+                      fMesonLambdaTailRange[1]    = 0.006;
+                    }
+                    TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+                    if(trigger.CompareTo("a1") == 0 || trigger.CompareTo("a2") == 0){
+                      fMesonFitRange[0] = 0.03;
+                      fMesonFitRange[1] = 0.28;
+                      mesonAmplitudeMin = mesonAmplitude*90./100.;
+                    }
                 }else if(fDoJetAnalysis){
                     fMesonLambdaTailRange[0]        = 0.013;
                     fMesonLambdaTailRange[1]        = 0.03;
