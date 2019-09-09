@@ -976,37 +976,15 @@
                 return "#pi^{0} rec w/ EMC";
             case 45:
                 return "#pi^{0} rec w/ PHOS";
-            case 46:
+            case 46: case 66:
                 return "#pi^{0} rec w/ DCAL, DCAL";
-            case 47:
+            case 47: case 67:
                 return "#pi^{0} rec w/ PCM, DALITZ";
-            case 48:
+            case 48: case 68:
                 return "#pi^{0} rec w/ EMCAL, DALITZ";
-            case 49:
+            case 49: case 69:
                 return "#pi^{0} rec w/ PHOS, DALITZ";
-            case 50:
-                return "#pi^{0} rec w/ DCAL, DALITZ";
-            case 60:
-                return "#pi^{0} rec w/ PCM";
-            case 61:
-                return "#pi^{0} rec w/ PCM-EMC";
-            case 62:
-                return "#pi^{0} rec w/ PCM, PHOS";
-            case 63:
-                return "#pi^{0} rec w/ PCM, DCAL";
-            case 64:
-                return "#pi^{0} rec w/ EMC";
-            case 65:
-                return "#pi^{0} rec w/ PHOS, PHOS";
-            case 66:
-                return "#pi^{0} rec w/ DCAL, DCAL";
-            case 67:
-                return "#pi^{0} rec w/ PCM, DALITZ";
-            case 68:
-                return "#pi^{0} rec w/ EMCAL, DALITZ";
-            case 69:
-                return "#pi^{0} rec w/ PHOS, DALITZ";
-            case 70:
+            case 50: case 70:
                 return "#pi^{0} rec w/ DCAL, DALITZ";
             default:
                 return "not known";
@@ -1068,9 +1046,7 @@
                 return "Pi0EMC-Dal";
             case 49: case 69:
                 return "Pi0PHOS-Dal";
-            case 50:
-                return "Pi0DCAL-Dal";
-            case 70:
+            case 50: case 70:
                 return "Pi0DCAL-Dal";
             default:
                 return "not known";
