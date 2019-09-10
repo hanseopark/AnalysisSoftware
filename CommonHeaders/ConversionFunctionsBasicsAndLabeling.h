@@ -734,6 +734,7 @@
     //************************************************************************************
     Int_t GetNEvents (  TH1* histo,
                         Bool_t doCout=kTRUE){
+        //cout<<"Debug, ConversionFunctionsBasicsAndLabeling.h, Line: "<<__LINE__<<"; histo->GetNbinsX(): "<<histo->GetNbinsX()<<endl;
         if (!histo) cout << "NO EVENT HISTO" << endl;
         if(histo->GetNbinsX()==11){
             if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(4)==0) return 0;
@@ -814,11 +815,11 @@
             Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
             for (Int_t i = 1; i<15; i++ ){
-                if(doCout) cout << histo->GetBinContent(i) << "\t";
+                if(doCout) cout << "("<<i<<")" << histo->GetBinContent(i) << "\t";
             }
-            if(doCout) cout << nEventsMB  << endl;
+            if(doCout) cout <<endl<< "nEvents: "<< nEvents <<"; nEventsMB:" << nEventsMB  << endl;
             for (Int_t i = 1; i<15; i++ ){
-                    if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
+                    if(doCout) cout << "("<<i<<")"<< histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
             }
             if(doCout) cout << "accepted \t" << (Float_t)nEvents/nEventsMB << endl;
             if(doCout) cout << endl;
