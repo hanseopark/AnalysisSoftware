@@ -1068,25 +1068,38 @@ Double_t fBinsDirGamma13TeVPtDCAzDist[16]       = { 0.0, 0.1, 0.4, 0.6, 0.8, 1.0
                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
                                                                                         4, 16, 16, 16, 16,      16, 16, 16}; //18
 
-    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMC                         = { //EMCal-EMCal
-                                                                                         /*0.0,  1.0,  1.5,  2.0,  2.5,          3.0,  3.5,  4.0,  5.0,  6.0,
-                                                                                         8.0, 12.0, 16.0}; //13*/
-                                                                                        0.0,  1.0,  1.4,  1.6,  2.0,          2.5,  3.0,  3.5,  4.0,  5.0,
-                                                                                        7.0,  9.0, 13.0, 15.0, 17.0,         21.0, 25.0, 30.0, 40.0, 50.0,
-                                                                                       60.0, 70.0, 80.0, 90.0,100.0}; //25
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMC                         = { //EMCal-EMCal Int7
+                                                                                        3.5,  4.0,  4.5,  5.0,  5.5,          6.0,  6.5,  7.0,  7.5,  8.0,
+                                                                                        8.5,  9.0,  9.5, 10.0, 11.0,         12.0, 14.0, 16.0, 18.0, 22.0}; //20
 
-    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMC                       = {
-                                                                                        /*10, 10, 10, 10, 10,      10, 10, 10,  4,  3,
-                                                                                         4,  6}; //12*/
-                                                                                        16, 16, 16, 16, 16,      10, 10, 10, 10, 16,
-                                                                                        16, 16, 16, 16, 16,      16, 16, 16, 16, 16,
-                                                                                        16, 16, 16, 16}; //24
-
-    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMCEG1                   = {
-                                                                                        /*10, 10, 10, 10, 10,      10, 10, 10,  4,  3,
-                                                                                         4,  6}; //12*/
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMC                       = { //Rebin EMCal-EMCal Int7
                                                                                          4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
-                                                                                         4,  4,  4,  4,  4,       4,  4,  4, 16, 16,
-                                                                                        16, 16, 16, 16}; //24
+                                                                                         4,  4,  4,  4,  4,       4,  7,  7,  7}; //19
+
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMCEG1                         = { //EMCal-EMCal EG1
+                                                                                        5.0,  5.5,  6.0,  6.5,  7.0,          7.5,  8.0,  8.5,  9.0,  9.5,
+                                                                                       10.0, 10.5, 11.0, 11.5, 12.0,         12.5, 13.0, 13.5, 14.0, 14.5,
+                                                                                       15.0, 15.5, 16.0, 16.5, 17.0,         17.5,  18,  18.5,  19,  19.5,
+                                                                                       20.0, 20.5, 21.0, 21.5, 22.0,         22.5, 23.0, 23.5, 24.0, 25.0,
+                                                                                       26.0, 28.0, 30.0, 32.0, 36.0,         40.0, 45.0, 50.0}; //48
+
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMCEG1                   = { //Rebin EMCal-EMCal EG1
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  8,  8,      10, 10}; //47
+
+    std::vector<Double_t> fBinsOmegaPiPlPiMiPiZero13TevPtEMCEG2                         = { //EMCal-EMCal EG2
+                                                                                        5.0,  5.5,  6.0,  6.5,  7.0,          7.5,  8.0,  8.5,  9.0,  9.5,
+                                                                                       10.0, 10.5, 11.0, 11.5, 12.0,         12.5, 13.0, 13.5, 14.0, 14.5,
+                                                                                       15.0, 15.5, 16.0, 17.0, 18.0,         19.0, 20.0, 21.0, 22.0, 24.0,
+                                                                                       26.0, 30.0, 35.0}; //33
+
+    std::vector<Int_t> fBinsOmegaPiPlPiMiPiZero13TevPtRebinEMCEG2                   = { //Rebin EMCal-EMCal EG2
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  4,  4,  4,  4,       4,  4,  4,  4,  4,
+                                                                                         4,  8}; //32
 
 #endif
