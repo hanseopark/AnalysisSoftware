@@ -2988,6 +2988,8 @@
             return "calofastEG2";
           } else if ( triggerNumber.CompareTo("a3") ==0 ){ // EG1 CALOFAST
             return "calofastEG1";
+          } else if ( triggerNumber.CompareTo("ap") ==0 ){ // PHI7 CALOFAST
+            return "calofastPHI7";
           } else {
             return "pp";
           }
@@ -4135,14 +4137,22 @@
         return "0-1% V0M";
       } else if(string.CompareTo("m02") == 0){
         return "0-2% V0M";
+      } else if(string.CompareTo("m15") == 0){
+        return "1-5% V0M";
       } else if(string.CompareTo("m05") == 0){
         return "0-5% V0M";
       } else if(string.CompareTo("m5k") == 0){
         return "5-20% V0M";
+      } else if(string.CompareTo("n24") == 0){
+        return "20-40% V0M";
       } else if(string.CompareTo("n26") == 0){
         return "20-60% V0M";
+      } else if(string.CompareTo("n47") == 0){
+        return "40-70% V0M";
       } else if(string.CompareTo("n6a") == 0){
         return "60-100% V0M";
+      } else if(string.CompareTo("n7a") == 0){
+        return "70-100% V0M";
       } else if(string.CompareTo("o01") == 0){
         return "0-1% SPD";
       } else if(string.CompareTo("o02") == 0){
@@ -4161,7 +4171,6 @@
         return "Mult cut not defined";
       }
     }
-
 
     //************************************************************************************
     //******** Analyzes the phi exclusion photon cuts, return correct cut label **********
@@ -5047,6 +5056,18 @@
                 return "-90 ns < t_{clus} < 90 ns";
             case 15:
                 return "-80 ns < t_{clus} < 80 ns";
+            case 16:
+                return "-30 ns < t_{clus} < 30 ns - w. TimingCutEfficiency";
+            case 17:
+                return "-50 ns < t_{clus} < 50 ns - w. TimingCutEfficiency";
+            case 18:
+                return "-12.5 ns < t_{clus} < 13 ns - w. TimingCutEfficiency";
+            case 19:
+                return "-30 ns < t_{clus} < 30 ns - w. TimingCutEfficiency";
+            case 20:
+                return "-50 ns < t_{clus} < 50 ns - w. TimingCutEfficiency";
+            case 21:
+                return "-12.5 ns < t_{clus} < 13 ns - w. TimingCutEfficiency";
             default:
                 return "no timing cut defined";
         }

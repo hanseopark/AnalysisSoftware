@@ -202,10 +202,8 @@ void ExtractSignalV2(
         if (fEventCutSelectionRead.BeginsWith("9")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("e")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("h") || 
-            fEventCutSelectionRead.BeginsWith("i") || 
-            fEventCutSelectionRead.BeginsWith("j") || 
-            fEventCutSelectionRead.BeginsWith("q") || 
-            fEventCutSelectionRead.BeginsWith("r")) fEventCutSelectionRead.Replace(0,1,"0");
+            fEventCutSelectionRead.BeginsWith("m") || 
+            fEventCutSelectionRead.BeginsWith("n")) fEventCutSelectionRead.Replace(0,1,"0");
 //         if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeVCent") == 0 ) && (mode == 2 || mode == 3 || mode == 4 ) ) fEventCutSelectionRead.Replace(3,1,"0");
         cout << fEventCutSelectionRead.Data() << endl;
         if (mode==0 || mode==100)
@@ -4556,7 +4554,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     //--------------------------------------------------------------------------------------
     histoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
     Double_t mesonAmplitude     = histoMappingSignalInvMassPtBinSingle->GetMaximum();
-    if( fMode == 4 || fMode == 5 ){
+    if( fMode == 4 || fMode == 5 || (fMode == 0 && fEnergyFlag.Contains("PbPb")) ){
         mesonAmplitude = 0;
         for(Int_t i=histoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[0]); i<histoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[1]) ; i++){
             if(histoMappingSignalInvMassPtBinSingle->GetBinContent(i)>mesonAmplitude) mesonAmplitude = histoMappingSignalInvMassPtBinSingle->GetBinContent(i);
@@ -4578,6 +4576,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     if(ptBin > 1) mesonAmplitudeMin = mesonAmplitude*98./100.;
                     else  mesonAmplitudeMin = mesonAmplitude*80./100.;
                 }
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
             if (fMode == 2 || fMode == 13) {
@@ -4780,6 +4779,9 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     }
                     fMesonWidthRange[0]         = 0.001;
                     fMesonWidthRange[1]         = 0.009;
+                    fMesonLambdaTail            = 0.005;
+                    fMesonLambdaTailRange[0]    = 0.005;
+                    fMesonLambdaTailRange[1]    = 0.005;
                 }
             } else if (fMode == 2 || fMode == 13 ) {                // PCM-EMC, PCM-DMC
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4872,6 +4874,9 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 } else if ( fEnergyFlag.Contains("5TeV2017") ){
                     mesonAmplitudeMin = mesonAmplitude*80./100.;
                     mesonAmplitudeMax = mesonAmplitude*120./100.;
+                    fMesonLambdaTail            = 0.011;
+                    fMesonLambdaTailRange[0]    = 0.011;
+                    fMesonLambdaTailRange[1]    = 0.011;
                } else if ( fEnergyFlag.Contains("13TeV") ){
 		  if (ptBin <= 4){
 		    fMesonFitRange[0]                = 0.44;
@@ -4911,6 +4916,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                       fMesonLambdaTail            = 0.006;
                       fMesonLambdaTailRange[0]    = 0.006;
                       fMesonLambdaTailRange[1]    = 0.006;
+                      mesonAmplitudeMin = mesonAmplitude*70./100.;
+                      mesonAmplitudeMax = mesonAmplitude*130./100.;
                 }
                 if(fDoJetAnalysis){
                   fMesonWidthRange[0]         = 0.022;
@@ -5023,6 +5030,10 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
             if ( fEnergyFlag.Contains("PbPb") && fMode == 5 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
+            if ( fEnergyFlag.Contains("PbPb") && (fMode == 0 || fMode == 3) )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
+            if ( fEnergyFlag.Contains("PbPb") && (fMode == 4) )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.1);
         } else if(fDoJetAnalysis){
             fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
             if(ptBin < 3) fFitReco->SetParLimits(1,fMesonMassExpect,fMesonMassExpect);

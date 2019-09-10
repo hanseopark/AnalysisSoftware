@@ -193,6 +193,7 @@ void ComputeCorrelationFactors(
         // if last value given without % at the end:
         //      => absolute error according to that number is taken out of total error for meas A with respect to B
         in >> tempA >> tempB >> tempC >> tempD;
+        cout << "tempA " << tempA << " tempB " << tempB << " tempC " << tempC << " tempD " << tempD << endl;
         if(!tempA.IsNull() && !tempB.IsNull() && !tempC.IsNull() && !tempD.IsNull()){
             corrName[GetPosInVec(vecComb,tempA)][GetPosInVec(vecComb,tempB)].push_back(tempC);
             corr    [GetPosInVec(vecComb,tempA)][GetPosInVec(vecComb,tempB)].push_back(tempD);
@@ -295,7 +296,7 @@ void ComputeCorrelationFactors(
           minCorrYaxis = 0.2;
           maxCorrYaxis = 0.82;
         }
-    } else if (combMode.CompareTo("triggers") == 0 && (energy.CompareTo("2.76TeV") == 0  || energy.Contains("5TeV2017") )&& ( mode == 2 || mode == 4 ) ){
+    } else if (combMode.CompareTo("triggers") == 0 && (energy.CompareTo("2.76TeV") == 0  || energy.Contains("5TeV2017") )&& ( mode == 2 || mode == 4 || mode == 5) ){
         minCorrYaxis            = 0.15;
     }
     Double_t maxPt              = 0;
@@ -434,6 +435,7 @@ void ComputeCorrelationFactors(
                 histoCorr->SetBinContent(iBin,0.);
 
             for(;; iPtA++, iPtB++){
+              cout << "iPtA = " << iPtA << "\t iPtB = " << iPtB << endl;
                 // check if bin count goes above defined value in config for both measurements
                 if( iPtA == vecNBinsPt.at(iMeasA)+1 || iPtB == vecNBinsPt.at(iMeasB)+1 ) break;
 
@@ -444,6 +446,7 @@ void ComputeCorrelationFactors(
                 // find overlapping bin
                 if( iPtA < vecNBinsPt.at(iMeasA) && iPtB < vecNBinsPt.at(iMeasB) ){
                     do {
+                      cout << "pTA = " << pTA << "\t pTB = " << pTB << endl;
                         // increase bin for measurement A if pT meas A < pT meas B
                         if(pTA < pTB){
                             if( iPtA == vecNBinsPt.at(iMeasA) ) break;
@@ -456,6 +459,7 @@ void ComputeCorrelationFactors(
                     // continue doing this until no bins are left
                     } while (pTA!=pTB && iPtA <= vecNBinsPt.at(iMeasA) && iPtB <= vecNBinsPt.at(iMeasB));
                 }
+                cout << "pTA = " << pTA << "\t pTB = " << pTB << endl;
 
                 if( pTA!=pTB ) break;
                 // increase number of common bins
@@ -466,6 +470,8 @@ void ComputeCorrelationFactors(
 
                 if( (Int_t) corrName[iMeasA][iMeasB].size() > 0){
                     // get total error for measurement A at ptBin = iPtA
+                  cout << "iMeasA = " << iMeasA << " iPtA = << " << iPtA << " GetPosInVec(ptSys[iMeasA][0] = " << GetPosInVec(ptSys[iMeasA][0],"TotalError") << endl;
+                  cout << "size ptSys[iMeasA][iPtA] = " << ptSys[iMeasA][iPtA].size() << endl;
                     Double_t totalErr   = ((TString)ptSys[iMeasA][iPtA].at(GetPosInVec(ptSys[iMeasA][0],"TotalError"))).Atof();
                     cout << vecComb.at(iMeasA) << " totErr: " << totalErr << endl;
                     fLog << vecComb.at(iMeasA) << " totErr: " << totalErr << endl;
@@ -512,6 +518,7 @@ void ComputeCorrelationFactors(
                     plotErr++;
                 }
             }
+
             cout << commonBins << endl;
             // plot if there are overlapping bins among the triggers and they are not completely uncorrelated
             if (commonBins > 0 && histoCorr->GetMaximum() > 0 ){

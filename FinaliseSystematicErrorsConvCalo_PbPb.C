@@ -536,10 +536,10 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = (2.4+(0.01)*ptBins[k]*ptBins[k]);
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ) error *= 1.4;
-                    if(additionalName.CompareTo("20-40%") == 0 ) error *= 1.0;
+                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
+                    if(additionalName.CompareTo("20-40%") == 0 || additionalName.CompareTo("30-50%") == 0) error *= 1.0;
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.8;
-                    if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.6;
+                    if(additionalName.CompareTo("60-80%") == 0 || additionalName.CompareTo("50-90%") == 0) error *= 0.6;
                     if(meson.Contains("Eta")) error *= 1.2;
                     if (mode == 3){
 //                       error = 1.06259e+01+-1.82800*ptBins[k]+0.1*ptBins[k]*ptBins[k];
@@ -618,7 +618,7 @@ void FinaliseSystematicErrorsConvCalo_PbPb(  TString nameDataFileErrors    = "",
                         error   = errorEta; 
                     }
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ) error *= 1.4;
+                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;

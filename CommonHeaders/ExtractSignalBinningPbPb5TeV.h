@@ -32,9 +32,8 @@
                                                         4, 4, 4, 8, 8,
                                                         8, 8, 8, 8};
 
-    Double_t fBinsPi0PbPb5TeVPCMPtDCA[14]           = { 0.0, 1.0, 1.4, 1.6, 1.8,
-                                                        2.0, 2.2, 2.4, 2.6, 3.0,
-                                                        3.5, 4.0, 5.0, 7.0};
+    Double_t fBinsPi0PbPb5TeVPCMPtDCA[16]           = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
+                                                        2.0, 2.4, 3.0, 5.0, 7.0, 12.0};
 
     // EMCal:
     Double_t fBinsPi0PbPb5TeVEMCPt[34]              =  {  0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
@@ -81,7 +80,7 @@
     Double_t fBinsEtaPbPb5TeVPCMPt[10]              = { 0.0, 0.8, 1.4, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0};
     Int_t fBinsEtaPbPb5TeVPCMPtRebin[9]             = { 10, 4, 8, 8, 8, 8, 8, 16, 16};
 
-    Double_t fBinsEtaPbPb5TeVPCMPtDCA[4]            = { 0.0, 1.0, 3.0, 6.0};
+    Double_t fBinsEtaPbPb5TeVPCMPtDCA[9]            = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};
 
     // EMCal
     Double_t fBinsEtaPbPb5TeVEMCPt[14]              = { 0.0, 1.0, 1.4, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0, 30.0};

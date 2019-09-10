@@ -1380,8 +1380,8 @@
                     fFitRange[1]                = 0.73;
                 }
             } else if (mode == 5) {
-                fFitRange[0]                = 0.38;
-                fFitRange[1]                = 0.73;
+                fFitRange[0]                = 0.45;
+                fFitRange[1]                = 0.65;
             } else if (mode == 0) {
                 if( fEnergyFlag.Contains("13TeV")  ){
 		  fFitRange[0]                = 0.44;
@@ -1590,6 +1590,9 @@
 		if( fEnergyFlag.Contains("13TeV")  ){
 		  fMesonFitRange[0]                = 0.44;
 		  fMesonFitRange[1]                = 0.7;
+                }else if( fEnergyFlag.Contains("PbPb") ){
+		  fMesonFitRange[0]                = 0.44;
+		  fMesonFitRange[1]                = 0.66;
 		}else{
 		  fMesonFitRange[0]                = 0.4;
 		  fMesonFitRange[1]                = 0.7;

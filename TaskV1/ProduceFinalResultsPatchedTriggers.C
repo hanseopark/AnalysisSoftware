@@ -86,7 +86,7 @@ Int_t GetOrderedTrigger(TString triggerNameDummy){
         return 1;
     } else if ((triggerNameDummy.CompareTo("EMC1") == 0 || triggerNameDummy.CompareTo("EMC1_NLM2") == 0 ) ){
         return 2;
-    } else if ((triggerNameDummy.CompareTo("EMC7") == 0 || triggerNameDummy.CompareTo("EMC7_NLM2") == 0 ) ){
+    } else if ((triggerNameDummy.CompareTo("EMC7") == 0 || triggerNameDummy.CompareTo("EMC7_NLM2") == 0|| triggerNameDummy.CompareTo("PHI7") == 0 ) ){
         return 3;
     } else if ((triggerNameDummy.CompareTo("EG2") == 0 || triggerNameDummy.CompareTo("EG2_NLM2") == 0 ||  triggerNameDummy.CompareTo("EGA") == 0) ){
         return 4;
@@ -439,18 +439,30 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               } else if(fMultiplicityCut.CompareTo("m02") == 0){
                 fCentOutput = "V0M_0_2";
                 centEstimator = "V0M_0_2";
+              } else if(fMultiplicityCut.CompareTo("m15") == 0){
+                fCentOutput = "V0M_1_5";
+                centEstimator = "V0M_1_5";
               } else if(fMultiplicityCut.CompareTo("m05") == 0){
                 fCentOutput = "V0M_0_5";
                 centEstimator = "V0M_0_5";
               } else if(fMultiplicityCut.CompareTo("m5k") == 0){
                 fCentOutput = "V0M_5_20";
                 centEstimator = "V0M_5_20";
+              } else if(fMultiplicityCut.CompareTo("n24") == 0){
+                fCentOutput = "V0M_20_40";
+                centEstimator = "V0M_20_40";
               } else if(fMultiplicityCut.CompareTo("n26") == 0){
                 fCentOutput = "V0M_20_60";
                 centEstimator = "V0M_20_60";
+              } else if(fMultiplicityCut.CompareTo("n47") == 0){
+                fCentOutput = "V0M_40_70";
+                centEstimator = "V0M_40_70";
               } else if(fMultiplicityCut.CompareTo("n6a") == 0){
                 fCentOutput = "V0M_60_100";
                 centEstimator = "V0M_60_100";
+              } else if(fMultiplicityCut.CompareTo("n7a") == 0){
+                fCentOutput = "V0M_70_100";
+                centEstimator = "V0M_70_100";
               } else if(fMultiplicityCut.CompareTo("o01") == 0){
                 fCentOutput = "SPD_0_1";
                 centEstimator = "SPD_0_1";
@@ -976,7 +988,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 110000;
         }else if (optionEnergy.Contains("5TeV2017")){
             minTriggReject = 0.07;
-            maxTriggReject = 8200;
+            maxTriggReject = 1e5;
         } else if (mode == 10)
             maxTriggReject = 5200;
 

@@ -4314,8 +4314,8 @@
         else if (triggerName.Contains("INT7") && isShade)  return kGray;
         else if (triggerName.Contains("EMC1") && !isShade) return kRed+2;
         else if (triggerName.Contains("EMC1") && isShade)  return kRed-6;
-        else if (triggerName.Contains("EMC7") && !isShade) return kBlue+2;
-        else if (triggerName.Contains("EMC7") && isShade)  return kBlue-6;
+        else if ((triggerName.Contains("EMC7")|| triggerName.Contains("PHI7")) && !isShade) return kBlue+2;
+        else if ((triggerName.Contains("EMC7")|| triggerName.Contains("PHI7")) && isShade)  return kBlue-6;
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return kGreen+3;
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return kGreen-8;
         else if (triggerName.Contains("EG1") && !isShade)  return kCyan+2;
@@ -4344,8 +4344,8 @@
         else if (triggerName.Contains("EMC1") && !isShade) return 21;
         else if (triggerName.Contains("EMC1") && isShade)  return 25;
         else if (triggerName.Contains("EMC7_NLM1") && !isShade) return 28;
-        else if (triggerName.Contains("EMC7") && !isShade) return 34;
-        else if (triggerName.Contains("EMC7") && isShade)  return 28;
+        else if ((triggerName.Contains("EMC7") || triggerName.Contains("PHI7")) && !isShade) return 34;
+        else if ((triggerName.Contains("EMC7") || triggerName.Contains("PHI7")) && isShade)  return 28;
         else if (triggerName.Contains("EG2_NLM1") && !isShade)  return 30;
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return 29;
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return 30;

@@ -48,7 +48,8 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                                             Double_t startPtSys             = 0, 
                                             TString additionalName          = "pp", 
                                             TString additionalNameOutput    = "", 
-                                            TString suffix                  = "eps"
+                                            TString suffix                  = "eps",
+                                            Int_t mode                      = 4
                                         ){
     
     // ***************************************************************************************************
@@ -459,12 +460,13 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = (2.4+(0.01)*ptBins[k]*ptBins[k])*2.;
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ) error *= 1.4;
-                    if(additionalName.CompareTo("20-40%") == 0 ) error *= 1.0;
+                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0) error *= 1.4;
+                    if(additionalName.CompareTo("20-40%") == 0 || additionalName.CompareTo("30-50%") == 0 ) error *= 1.0;
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.8;
-                    if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.6;
+                    if(additionalName.CompareTo("60-80%") == 0 || additionalName.CompareTo("50-90%") == 0) error *= 0.6;
                     if(meson.Contains("Eta")) error *= 1.2;
                     if(meson.Contains("EtaToPi0")) error *= 0.5;
+                    if(mode == 5) error /= 2.;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -475,6 +477,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
             if (nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0 ){
                 cout << "Material smoothing" << endl;
                 Double_t error                  = 4.24; //(3% for TRD mat, 3% for TOF mat added in quadrature)
+                if(mode == 5) error = 2.5;
                 if (meson.CompareTo("EtaToPi0") == 0)
                     error                       = 0;    // cancels fully for eta/pi0
                 for (Int_t k = 0;k < nPtBins;k++){
@@ -492,10 +495,10 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = 5.;
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ) error *= 1.4;
-                    if(additionalName.CompareTo("20-40%") == 0 ) error *= 1.0;
+                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
+                    if(additionalName.CompareTo("20-40%") == 0 || additionalName.CompareTo("30-50%") == 0) error *= 1.0;
                     if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.9;
-                    if(additionalName.CompareTo("60-80%") == 0 ) error *= 0.8;
+                    if(additionalName.CompareTo("60-80%") == 0 || additionalName.CompareTo("50-90%") == 0) error *= 0.8;
                     if(meson.Contains("EtaToPi0")) error *= 0.5;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -546,7 +549,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                         error   = errorEta; 
                     }
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ) error *= 1.4;
+                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
                    
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;

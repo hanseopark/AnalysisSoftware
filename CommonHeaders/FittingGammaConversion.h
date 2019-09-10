@@ -1129,9 +1129,11 @@
             f0->SetParameter(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax));
             f0->SetParLimits(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*0.5,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*1.2);
             f0->SetParameter(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax));
-            f0->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(2*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(2*histo->GetRMS()));
+            f0->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(1*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(1*histo->GetRMS()));
+            f0->SetParameter(2,0.3);
+            f0->SetParLimits(2,0.2,3);
         }
-        histo->Fit(f0,"0RMEQ");
+        histo->Fit(f0,"L0RMEQ");
         Double_t rp = f0->GetParameter(2);
         Double_t mp = f0->GetParameter(1);
         Double_t ymin = mp -(rp * multWidth);
@@ -1146,11 +1148,13 @@
             f1->SetParameter(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax));
             f1->SetParLimits(0,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*0.5,FindLargestBin1DHistFit(histo,fitRangeMin,fitRangeMax)*1.2);
             f1->SetParameter(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax));
-            f1->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(2*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(2*histo->GetRMS()));
+            f1->SetParLimits(1,FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)-(1*histo->GetRMS()),FindLargestBin1DHistX (histo,fitRangeMin,fitRangeMax)+(1*histo->GetRMS()));
+            f1->SetParameter(2,0.3);
+            f1->SetParLimits(2,0.2,3);
         }
         while(deviation > precision && counter < 100){
             f1->SetRange(ymin,ymax);
-            histo->Fit(f1,"0RMEQ");
+            histo->Fit(f1,"L0RMEQ");
             Double_t rp2 = f1->GetParameter(2);
             if (rp2>rp){ deviation = rp2-rp;}
                 else {deviation = rp -rp2 ;}
@@ -1191,6 +1195,7 @@
         f0->SetParameter(2,1);
         f0->SetParLimits(2,0.5,2);
         f0->SetParameter(3,0);
+        f0->SetParLimits(3,-0.2,.2);
 
         histo->Fit(f0,"0RMEQ");
         Double_t rp = f0->GetParameter(2);
@@ -1211,6 +1216,7 @@
         f1->SetParameter(2,1);
         f1->SetParLimits(2,0.5,2);
         f1->SetParameter(3,0);
+        f1->SetParLimits(3,-0.2,.2);
 
         while(deviation > precision && counter < 100){
             f1->SetRange(ymin,ymax);

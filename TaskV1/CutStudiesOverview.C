@@ -643,6 +643,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                   minYRatio = 0.01;
                   maxYRatio = 1.99;
                 }
+                if(cutVariationName.Contains("Mult")){
+                  minYRatio = 0.01;
+                  maxYRatio = 0.5;
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioRawYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioRawYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1327,8 +1331,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                         padRawClusterPtRatios->SetLogy(1);
                     }
                     if (cutVariationName.Contains("Timing")){
-                        minYRatio = 0.971;
-                        maxYRatio = 1.49;
+                        minYRatio = 0.001;
+                        maxYRatio = 1.99;
                         // padRawClusterPtRatios->SetLogy(1);
                     }
                     if( optionEnergy.Contains("PbPb_5.02TeV") ){
@@ -1522,9 +1526,11 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
 //                 } else if (cutVariationName.Contains("ClusterTrackMatching")){
 //                     minYRatio = 0.75;      maxYRatio = 1.25;
 //                 }
-                if (cutVariationName.Contains("Timing") ){
-                    minYRatio = 0.951;      maxYRatio = 1.049;
-                }
+                if (cutVariationName.Contains("Timing")){
+                        minYRatio = 0.001;
+                        maxYRatio = 1.99;
+                        // padRawClusterPtRatios->SetLogy(1);
+                    }
 //                 if (mode != 0 && mode!= 1 ){
 //                     minYRatio = 0.75;      maxYRatio = 1.25;
 //                 }
@@ -1647,6 +1653,11 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     minYRatio = 0.5;
                     maxYRatio = 2.7;
 
+                }
+                if (cutVariationName.Contains("Timing")){
+                        minYRatio = 0.001;
+                        maxYRatio = 1.99;
+                        // padRawClusterPtRatios->SetLogy(1);
                 }
 //                 if( optionEnergy.Contains("Pb") && optionMult.CompareTo("Mult") == 0){
 //                     minYRatio = 0.05;        maxYRatio = 2.4;

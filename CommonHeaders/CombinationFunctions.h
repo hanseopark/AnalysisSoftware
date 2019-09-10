@@ -2290,6 +2290,8 @@
             Double_t corrFracEMC71_INT7_EMC71   = 0;
             Double_t corrFracEG21_INT7_EG21     = 0;
             Double_t corrFracEG11_INT7_EG11     = 0;
+            Double_t corrFracINT7_INT7_PHI7     = 0;
+            Double_t corrFracPHI7_INT7_PHI7     = 0;
 
             Double_t corrFracEMC1_EMC1_EMC7     = 0;
             Double_t corrFracEMC1_EMC1_EG2      = 0;
@@ -2519,6 +2521,9 @@
                 corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG2_INT7-EG2");
                 corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EMC7_EMC7-EG2");
                 corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4", meson, "EG2_EMC7-EG2");
+            } else if (mode == 5 && energy.Contains("5TeV2017") ){
+                corrFracINT7_INT7_PHI7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"5", meson, "INT7_INT7-PHI7");
+                corrFracPHI7_INT7_PHI7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"5", meson, "PHI7_INT7-PHI7");
             } else if (mode == 10 && energy.CompareTo("8TeV") == 0 ){
                 corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10", meson, "INT7_INT7-EMC7");
                 corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10", meson, "EMC7_INT7-EMC7");
