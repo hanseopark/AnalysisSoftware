@@ -2866,7 +2866,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoTrueEffiPtWOWeights[0]->DrawCopy("same,e1,p");
                 DrawGammaSetMarker(histoTrueEffiPt[0], 21, 1., kBlue+1, kBlue+1);
                 histoTrueEffiPt[0]->DrawCopy("same,e1,p");
-            } else if (mode == 4 || mode == 12 || mode == 2 || mode == 13 || mode == 0){
+            } else if (mode == 4 || mode == 5 || mode == 12 || mode == 2 || mode == 13 || mode == 0){
                 DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
                 histoEffiPt[0]->DrawCopy("same,e1,p");
             }
@@ -2876,7 +2876,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendEff->AddEntry(histoTrueEffiPtWOWeights[0],"validated efficiency, w/o weights");
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data");
                 legendEff->AddEntry(histoTrueEffiPt[0],"corr validated efficiency");
-            } else if (mode == 4 || mode == 12 || mode == 2 || mode == 13 || mode == 0 ) {
+            } else if (mode == 4 || mode == 5 || mode == 12 || mode == 2 || mode == 13 || mode == 0 ) {
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data");
                 legendEff->AddEntry(histoTrueEffiPtUnmod[0],"validated efficiency");
             } else {
