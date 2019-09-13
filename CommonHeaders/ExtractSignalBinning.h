@@ -876,20 +876,22 @@
             } else if (energy.CompareTo("5TeV") == 0 || energy.Contains("5TeV2017") || energy.CompareTo("5TeVSpecial") == 0) {
                 if (mode == 1 )
                     return 4;
-                if (mode == 2 )
+                if (mode == 2 ){
                     if(DoJetAnalysis){
                         return 4;
                     }else{
                         return 8;
                     }
+                }
                 if (mode == 3 )
                     return 4;
-                else if (mode == 4 || mode == 5 )
+                else if (mode == 4 || mode == 5 ){
                     if(DoJetAnalysis){
                         return 5;
                     }else{
                         return 18;
                     }
+                }
                 else if (mode == 12 )
                     return 7;
                 else

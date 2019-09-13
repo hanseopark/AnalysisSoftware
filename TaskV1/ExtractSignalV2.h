@@ -89,6 +89,7 @@
     Bool_t      fUsingUnfolding_AsData                                      = kFALSE;
     Bool_t      fUsingUnfolding_Missed                                      = kFALSE;
     Bool_t      fUsingUnfolding_Reject                                      = kFALSE;
+    Int_t       fNJetEvents                                                 = 0;
 
     //****************************************************************************
     //******************************** Output files ******************************
@@ -325,6 +326,10 @@
     TH2D*       fHistoTruePi0FragmFuncChargPart                             = nullptr;
     TH2D*       fHistoTrueEtaFragmFunc                                      = nullptr;
     TH2D*       fHistoTrueEtaFragmFuncChargPart                             = nullptr;
+    TH2D*       fHistFragmZInvMass                                          = nullptr;
+    TH2D*       fHistoTruePi0FramZInvMass                                   = nullptr;
+    TH2D*       fHistoTrueEtaFramZInvMass                                   = nullptr;
+
 
     //****************************************************************************
     //************************** background histograms ***************************
@@ -394,6 +399,7 @@
     TH1D**      fHistoMappingTrueMesonCaloMergedClusterInvMassPtBins        = nullptr;
     TH1D**      fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins= nullptr;
     TH1D**      fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins      = nullptr;
+    TH1D**      fHistoMapping_Fragm_ZInvMassZBin                            = nullptr;
 
     //****************************************************************************
     //**************************** global fit functions **************************
@@ -453,6 +459,10 @@
 
     Double_t*   fMesonYieldsResBckOtherFunc[3]                              = { nullptr, nullptr, nullptr};
     Double_t*   fMesonYieldsResBckOtherFuncError[3]                         = { nullptr, nullptr, nullptr};
+
+    TH1D*       fHistoYieldMesonPerJetEvent[6]                              = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    Double_t*   fMesonYieldsPerJetEvent[6]                                  = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    Double_t*   fMesonYieldsPerJetEventError[6]                             = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     //****************************************************************************
     //************* histos, fits, doubles for pure Standard fitting **************

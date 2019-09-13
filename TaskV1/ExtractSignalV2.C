@@ -457,6 +457,7 @@ void ExtractSignalV2(
     } else if (meson.CompareTo("EtaPrime") == 0 ){
         SetCorrectMCHistogrammNames("EtaPrime");
     }
+    cout << " MC histo names Set " << endl;
 
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TList *BackgroundContainer          = (TList*) HistosGammaConversion->FindObject(Form("%s Back histograms",fCutSelectionRead.Data()));
@@ -499,6 +500,7 @@ void ExtractSignalV2(
       fHistoPileUpVertexDistance_TrackletHits  = (TH1F*) EventCuts->FindObject(Form("PileupVertexDistance_TrackletvsHits %s",fEventCutSelectionRead.Data()));
     }
 
+
     cout << fMesonCutSelectionRead.Data() << endl;
     cout << fGammaCutSelectionRead.Data() << endl;
     fNumberOfGoodESDTracks              = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
@@ -512,7 +514,6 @@ void ExtractSignalV2(
     if(fDoJetAnalysis){
       fGammaGammaInvMassVSPt              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
       fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
-    }else{
       if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
         if(fUsingUnfolding_AsData) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
         if(fUsingUnfolding_Missed) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
@@ -523,6 +524,9 @@ void ExtractSignalV2(
         //fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
         fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
       }
+    } else{
+      fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
+      fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
     }
     fGammaGammaInvMassVSPt->Sumw2();
     fBckInvMassVSPt->Sumw2();
@@ -547,7 +551,7 @@ void ExtractSignalV2(
         fHistNJetsEvents                = (TH1D*)JetContainer->FindObject("NJets");
         fHistNJetsEvents->Sumw2();
         fHistNEventswithJets            = (TH1D*)JetContainer->FindObject("NEvents_with_Jets");
-        fNJetEvents = fHistNEventswithJets->GetBinContent(1)*1.17;
+        fNJetEvents = fHistNEventswithJets->GetBinContent(1);
         if(fIsMC == 0){
           fHistNEventswithJets->Sumw2();
           fHistRatioPtPi0Jet              = (TH1D*)JetContainer->FindObject("Ratio_Pt_Pi0_Jet");
@@ -2659,7 +2663,7 @@ void ExtractSignalV2(
 //****************************************************************************
 //************** Produce background with proper weighting ********************
 //****************************************************************************
-void void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer, TList* JetContainer, TList* TrueJetContainer ,Bool_t UseTHnSparse){
+void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer, TList* JetContainer, TList* TrueJetContainer ,Bool_t UseTHnSparse){
 
     if(UseTHnSparse){
         cout << "Using THnSparse for the background" << endl;
@@ -3009,7 +3013,6 @@ void void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherCont
         if(fDoJetAnalysis){
           fHistoMotherZM              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
           fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
-        }else{
           if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
             if(fUsingUnfolding_AsData) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
             if(fUsingUnfolding_Missed) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
@@ -3020,6 +3023,9 @@ void void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherCont
             //fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
             fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
           }
+        }else{
+          fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
+          fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
         }
         fHistoMotherZM->Sumw2();
         fHistoBckZM->Sumw2();
@@ -4643,6 +4649,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fMesonLambdaTailRange[1]    = 0.015;
                 fMesonFitRange[0] = 0.05;
                 fMesonFitRange[1] = 0.22;
+            }
             if (fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
                 mesonAmplitudeMax = mesonAmplitude*130./100.;
