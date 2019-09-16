@@ -396,6 +396,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         } else if (cutVariationName.Contains("Mult")){
             TString fMultiplicityCut                                      = fEventCutSelection(0,3);
             cutStringsName[i]                                   = AnalyseMultiplicity(fMultiplicityCut);
+	} else if (cutVariationName.Contains("RBins")){
+             TString fRBinCut                                    = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
+             cutStringsName[i]                                   = AnalyseRBinCut(CutNumberToInteger(fRBinCut));
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }
@@ -643,10 +646,18 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                   minYRatio = 0.01;
                   maxYRatio = 1.99;
                 }
+
                 if(cutVariationName.Contains("Mult")){
                   minYRatio = 0.01;
                   maxYRatio = 0.5;
                 }
+
+               if( optionEnergy.Contains("13TeV") ){
+                  minYRatio = 0.0001;
+                  maxYRatio = 6.;
+		  padRawYieldRatios->SetLogy(1);
+                }
+
                 SetStyleHistoTH1ForGraphs(histoRatioRawYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioRawYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1508,6 +1519,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
 
         // plot ratio of corrected yields in lower panel
         padCorrectedYieldRatios->cd();
+
+	
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
                 // Set ratio min and max
@@ -1538,6 +1551,12 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                   minYRatio = 0.01;
                   maxYRatio = 1.99;
                 }
+                if( optionEnergy.Contains("13TeV") ){
+                  minYRatio = 0.5;
+                  maxYRatio = 1.5;
+		  //		  padCorrectedYieldRatios->SetLogy(1);
+                }
+
                 if(cutVariationName.Contains("Sphericity")){
                   minYRatio = 0.51;
                   maxYRatio = 1.49;
@@ -1669,6 +1688,12 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                   minYRatio = 0.01;
                   maxYRatio = 1.99;
                 }
+               if( optionEnergy.Contains("13TeV") ){
+                  minYRatio = 0.0002;
+                  maxYRatio = 6.;
+		  padTrueEffiRatios->SetLogy(1);
+                }
+
                 SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
                 histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);

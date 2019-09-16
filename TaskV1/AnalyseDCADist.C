@@ -1008,7 +1008,7 @@ void AnalyseDCADist(    TString meson           ="",
 
 	Int_t nCatFit=3;
 	TString rBin = fGammaCutSelection(2,1);
-	if((rBin.CompareTo("c") ==0) ){
+	if( (rBin.CompareTo("c") ==0)  || (rBin.CompareTo("k") ==0)  || (rBin.CompareTo("l") ==0)  || (rBin.CompareTo("g") ==0)   ){
 	  //&& (kMC==1)
 
  	  nCatFit=2;

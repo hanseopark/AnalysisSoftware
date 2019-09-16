@@ -76,6 +76,21 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
     // Set common default plot style
     StyleSettingsThesis();
     SetPlotStyle();
+    Size_t sizeTextNameBins              = 0.05;
+   
+    TString arrayRangesRBins[12]      = { "0 cm < R #leq 1.5 cm",     //0
+					  "1.5 cm < R #leq 5. cm",    //1
+					  "5. cm < R #leq 8.5 cm",    //2
+					  "8.5 cm < R #leq 13 cm",    //3
+					  "13 cm < R #leq 21 cm",     //4
+					  "21 cm < R #leq 33.5 cm",   //5
+					  "33.5 cm < R #leq 41 cm",   //6
+					  "41 cm < R #leq 55 cm",     //7
+					  "55 cm < R #leq 72 cm",     //8
+					  "72 cm < R #leq 95 cm",     //9
+					  "95 cm < R #leq 145 cm",    //10
+					  "145 cm < R #leq 180 cm"    //11
+    };
 
     // Set cutvariation-name to "" for no explicit name
     if (cutVariationName.CompareTo("None")==0) cutVariationName = "";
@@ -756,6 +771,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
         }
         if (j==0)  legendWeightPtOnfly->Draw();
+	TLatex *latexBinning = new TLatex(0.25,0.8,Form("R: %s ",arrayRangesRBins[j].Data()));
+	SetStyleTLatex( latexBinning, sizeTextNameBins,2);
+	latexBinning->Draw();
     }
 
     canvasMBWeightEachROnfly->Print(Form("%s/MBWeightVSPtMinOnflyEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
@@ -815,6 +833,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         }
 
         if (j==0)  legendWeightPtOffline->Draw();
+	TLatex *latexBinning = new TLatex(0.25,0.8,Form("R: %s ",arrayRangesRBins[j].Data()));
+	SetStyleTLatex( latexBinning, sizeTextNameBins,2);
+	latexBinning->Draw();
     }
     canvasMBWeightEachROffline->Print(Form("%s/MBWeightVSPtMinOfflineEachR_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
@@ -879,6 +900,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
         }
         if (j==0)  legendWeightPtOnflySecSubCock->Draw();
+	TLatex *latexBinning = new TLatex(0.25,0.8,Form("R: %s ",arrayRangesRBins[j].Data()));
+	SetStyleTLatex( latexBinning, sizeTextNameBins,2);
+	latexBinning->Draw();
     }
 
     canvasMBWeightEachROnflySecSubCock->Print(Form("%s/MBWeightVSPtMinOnflyEachRSecSubCock_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
@@ -943,6 +967,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
         }
 
         if (j==0)  legendWeightPtOfflineSecSubCock->Draw();
+	TLatex *latexBinning = new TLatex(0.25,0.8,Form("R: %s ",arrayRangesRBins[j].Data()));
+	SetStyleTLatex( latexBinning, sizeTextNameBins,2);
+	latexBinning->Draw();
     }
     canvasMBWeightEachROfflineSecSubCock->Print(Form("%s/MBWeightVSPtMinOfflineEachRSecSubCock_%s.%s",outputDir.Data(),cutVariationName.Data(),suffix.Data()));
 
@@ -1007,6 +1034,9 @@ void WeightStudiesOverview(TString CombineFilesName             = "CombineCuts.d
             // histoWeightsEachRPtMinSecSub[j][i]->Draw("same");
         }
 	// if (j==0)  legendEffiPtOnfly->Draw();
+	TLatex *latexBinning = new TLatex(0.25,0.8,Form("R: %s ",arrayRangesRBins[j].Data()));
+	SetStyleTLatex( latexBinning, sizeTextNameBins,2);
+	latexBinning->Draw();
     }
 
     cout << "line " << __LINE__ << endl;

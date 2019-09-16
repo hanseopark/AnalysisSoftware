@@ -1430,7 +1430,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         Bool_t includeHistoPileUpCorrectionFactorMC_Pt              = kTRUE;
         TCanvas* canvasPileUpCorrFactor                             = GetAndSetCanvas("canvasPileUpCorrFactor");
 
-        SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+
+	if( energy.Contains("13TeV") )  {
+	  SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.64,1.02);
+	} else {
+	  SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+	}
+
         DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp, 24, 2.0, kBlack, kBlack);
 
         histoPileUpCorrectionFactor_PtTemp->Draw("e1");

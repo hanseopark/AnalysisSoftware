@@ -5144,7 +5144,32 @@
                       optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                       optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                       optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    }else if( rBin.CompareTo("k") ==0){
+                      nIterBGFit                  = 5;
+                      fMaxYFracBGOverIntHist      = 100;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 
+		    }else if( rBin.CompareTo("j") ==0){
+                      nIterBGFit                  = 8;
+                      fMaxYFracBGOverIntHist      = 100;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+		    }else if( rBin.CompareTo("l") ==0){
+                      nIterBGFit                  = 5;
+                      fMaxYFracBGOverIntHist      = 110;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+
+                    }else if( rBin.CompareTo("g") ==0){
+                      nIterBGFit                  = 5;
+                      fMaxYFracBGOverIntHist      = 110;
+                      optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                      optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                      optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
                     }else{
                       nIterBGFit                  = 6;
                       fMaxYFracBGOverIntHist      = 100;

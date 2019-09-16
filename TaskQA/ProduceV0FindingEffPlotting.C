@@ -228,76 +228,129 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
     gStyle->SetEndErrorSize(0);
     StyleSettingsThesis();
     SetPlotStyle();
+    Double_t eps = 0.001;
+    Double_t fMaxPt                   = 20.;
+
+    const int nBinsPtThree=23;
+    Double_t arrayPtBinsThree[nBinsPtThree]; 
+    for(Int_t i=0; i<nBinsPtThree+1;i++){
+      if (i < 10) arrayPtBinsThree[i]            = 0.2*i;
+      else if(i<18) arrayPtBinsThree[i]          = 2. + 1.0*(i-10);
+      else if(i<23) arrayPtBinsThree[i]          = 10.+ 2.0*(i-18);
+      else arrayPtBinsThree[i]                   = fMaxPt;
+      //cout<< i<< " "<<  arrayPtBinsThree[i]<< endl;
+    }
+
 
     gSystem->Exec(Form("mkdir -p %s",outputDir.Data()));
     TString fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
 
-	TFile *file_OnFly              = new TFile(filename_OnFly.Data());
-	TList *list_OnFly              = (TList*) file_OnFly->Get(nameFolder.Data());
-	TList *HistosV0Finding_OnFly   = (TList*)list_OnFly->FindObject(Form("V0FindingEfficiencyInput_%s", cutString_OnFly.Data()));
+    TFile *file_OnFly              = new TFile(filename_OnFly.Data());
+    TList *list_OnFly              = (TList*) file_OnFly->Get(nameFolder.Data());
+    TList *HistosV0Finding_OnFly   = (TList*)list_OnFly->FindObject(Form("V0FindingEfficiencyInput_%s", cutString_OnFly.Data()));
+    
+    //loading histos
+    TH2F* histoConvGamma_Pt_R_OnFly        = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_R");
+    TH2F* histoConvGamma_Pt_Eta_OnFly      = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_Eta");
+    TH2F* histoConvGamma_Pt_Phi_OnFly      = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_Phi");
+    
+    TH2F* histoRecConvGamma_Pt_R_OnFly 	   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_R");
+    TH2F* histoRecConvGamma_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Eta");
+    TH2F* histoRecConvGamma_Pt_Phi_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Phi");
+    
+    TH2F* histoRecConvGammaMult_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt_Eta");
+    
+    TH1D* histoRecConvGammaMult_Pt_OnFly   = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt");
+    TH1D* histoRecConvGammaMult_R_OnFly    = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_R");
+    TH1D* histoRecConvGammaMult_Phi_OnFly  = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Phi");
+    
+    //projecting histos
+    TH1D* histoConvGamma_Pt_OnFly 			= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_OnFly"); //restricted to eta cut range
+    
+    TH1D* histoConvGamma_Pt_largeR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_largeR_OnFly",
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(55.0),
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(72.0)); // 55 < R < 72 cm
 
-	//loading histos
-	TH2F* histoConvGamma_Pt_R_OnFly        = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_R");
-	TH2F* histoConvGamma_Pt_Eta_OnFly      = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_Eta");
-	TH2F* histoConvGamma_Pt_Phi_OnFly      = (TH2F*)HistosV0Finding_OnFly->FindObject("MCconvGamma_Pt_Phi");
+    TH1D* histoConvGamma_Pt_large1R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large1R_OnFly",
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(72.0),
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(95.0)); // 72 < R < 95 cm
+    
+    TH1D* histoConvGamma_Pt_large2R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large2R_OnFly",
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(95.0),
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(145.0)); // 95 < R < 180 cm
+    
+    TH1D* histoConvGamma_Pt_large3R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large3R_OnFly",
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(145.0),
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(180.0)); // 95 < R < 180 cm
+    
+    
+    
+    TH1D* histoConvGamma_Pt_middleR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_middleR_OnFly",
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(13.0),
+													histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(55.0)); // 13 < R < 55 cm
+    
+    TH1D* histoConvGamma_Pt_lowR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_lowR_OnFly",
+												histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(5.0),
+												histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(13.0)); // 5 < R < 13 cm
+    
+    
+    TH1D* histoConvGamma_PtlargerEta_OnFly	= (TH1D*)histoConvGamma_Pt_Eta_OnFly->ProjectionX("histoConvGamma_PtlargerEta_OnFly"); //full eta range
+    
+    TH1D* histoConvGamma_R_OnFly			= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_OnFly"); //full pT range
+    TH1D* histoConvGamma_R_lowpT_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_lowpT_OnFly",
+												histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(0.),
+												histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(1.0)); // 0. < pT < 1. GeV/c
+    TH1D* histoConvGamma_R_midpT_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_midpT_OnFly",
+												histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(1.0),
+												histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(4.0)); // 1.0 < pT < 4. GeV/c
+    TH1D* histoConvGamma_R_highpT_OnFly		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_highpT_OnFly",
+												histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(4.0),
+												histoConvGamma_Pt_R_OnFly->GetNbinsX()); // pT > 4. GeV/c
+    
+    TH1D* histoConvGamma_Eta_OnFly			= (TH1D*)histoConvGamma_Pt_Eta_OnFly->ProjectionY("histoConvGamma_Eta_OnFly");
+    TH1D* histoConvGamma_Phi_OnFly 			= (TH1D*)histoConvGamma_Pt_Phi_OnFly->ProjectionY("histoConvGamma_Phi_OnFly");
+    
+    TH1D* histoRecConvGamma_Pt_OnFly 		= (TH1D*)histoRecConvGamma_Pt_R_OnFly->ProjectionX("histoRecConvGamma_Pt_OnFly"); //restricted to eta cut range
+    const int nBinsR                  = 12;
+    //    Double_t arrayRBins[13]           = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
+    Double_t arrayRBins[13]           = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
+    // pT distribution of data reconstructed in each R Bin
+    TH1F *histoRecConvGamma_Pt_RBins_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F *histoConvGamma_Pt_RBins_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F *histoRecConvGamma_Pt_RBinsRebin_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1F *histoConvGamma_Pt_RBinsRebin_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+ 
+    TH1F *histoRatioRecConvGamma_Pt_RBins_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    
+    TH1F *histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[nBinsR] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    
+    for(Int_t j=0; j<nBinsR; j++){
 
-	TH2F* histoRecConvGamma_Pt_R_OnFly 	   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_R");
-	TH2F* histoRecConvGamma_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Eta");
-	TH2F* histoRecConvGamma_Pt_Phi_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGamma_Pt_Phi");
+      
+      histoRecConvGamma_Pt_RBins_OnFly[j] = (TH1F*)histoRecConvGamma_Pt_R_OnFly->ProjectionX(Form("histoRecConvGammaPtEachRBin_onFly_%i",j),
+											     histoRecConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(arrayRBins[j]+eps),
+											     histoRecConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(arrayRBins[j+1]-eps),"e");
 
-	TH2F* histoRecConvGammaMult_Pt_Eta_OnFly   = (TH2F*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt_Eta");
-
-	TH1D* histoRecConvGammaMult_Pt_OnFly   = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Pt");
-	TH1D* histoRecConvGammaMult_R_OnFly    = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_R");
-	TH1D* histoRecConvGammaMult_Phi_OnFly  = (TH1D*)HistosV0Finding_OnFly->FindObject("RecMCconvGammaMulti_Phi");
-
-	//projecting histos
-	TH1D* histoConvGamma_Pt_OnFly 			= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_OnFly"); //restricted to eta cut range
-
-	TH1D* histoConvGamma_Pt_largeR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_largeR_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(55.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(72.0)); // 55 < R < 72 cm
-
-	TH1D* histoConvGamma_Pt_large1R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large1R_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(72.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(95.0)); // 72 < R < 95 cm
-
-	TH1D* histoConvGamma_Pt_large2R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large2R_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(95.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(145.0)); // 95 < R < 180 cm
-
-	TH1D* histoConvGamma_Pt_large3R_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_large3R_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(145.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(180.0)); // 95 < R < 180 cm
+      histoRecConvGamma_Pt_RBinsRebin_OnFly[j] = (TH1F*) histoRecConvGamma_Pt_RBins_OnFly[j]->Rebin(nBinsPtThree, Form("histoRecConvGammaPtEachRBinRebin_onFly_%i",j), arrayPtBinsThree);
 
 
+      histoConvGamma_Pt_RBins_OnFly[j]    = (TH1F*)histoConvGamma_Pt_R_OnFly->ProjectionX(Form("histoConvGammaPtEachRBin_OnFly_%i",j),
+											  histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(arrayRBins[j]+eps),
+											  histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(arrayRBins[j+1]-eps),"e"); // 
+  
+      histoConvGamma_Pt_RBinsRebin_OnFly[j] = (TH1F*) histoConvGamma_Pt_RBins_OnFly[j]->Rebin(nBinsPtThree, Form("histoConvGammaPtEachRBinRebin_onFly_%i",j), arrayPtBinsThree);
+    
+      histoRatioRecConvGamma_Pt_RBins_OnFly[j] = (TH1F*) histoRecConvGamma_Pt_RBins_OnFly[j]->Clone(Form("histoRatioRecConvGamma_Pt_EachRbin_OnFly_%i",j));
+      histoRatioRecConvGamma_Pt_RBins_OnFly[j] ->Sumw2();
+      histoRatioRecConvGamma_Pt_RBins_OnFly[j] ->Divide(histoRatioRecConvGamma_Pt_RBins_OnFly[j] ,histoConvGamma_Pt_RBins_OnFly[j] ,1.,1.,"B");
 
-	TH1D* histoConvGamma_Pt_middleR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_middleR_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(13.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(55.0)); // 13 < R < 55 cm
+      histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[j] = (TH1F*) histoRecConvGamma_Pt_RBinsRebin_OnFly[j]->Clone(Form("histoRatioRecConvGamma_Pt_EachRbinRebin_OnFly_%i",j));
+      histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[j] ->Sumw2();
+      histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[j] ->Divide(histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[j] ,histoConvGamma_Pt_RBinsRebin_OnFly[j] ,1.,1.,"B");
+      
+    }
+    // histoPtEachRBinData[j]->Rebin(rebinPtPlots);
 
-	TH1D* histoConvGamma_Pt_lowR_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionX("histoConvGamma_Pt_lowR_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(5.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(13.0)); // 5 < R < 13 cm
-
-
-	TH1D* histoConvGamma_PtlargerEta_OnFly	= (TH1D*)histoConvGamma_Pt_Eta_OnFly->ProjectionX("histoConvGamma_PtlargerEta_OnFly"); //full eta range
-
-	TH1D* histoConvGamma_R_OnFly			= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_OnFly"); //full pT range
-	TH1D* histoConvGamma_R_lowpT_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_lowpT_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(0.),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(1.0)); // 0. < pT < 1. GeV/c
-	TH1D* histoConvGamma_R_midpT_OnFly 		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_midpT_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(1.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(4.0)); // 1.0 < pT < 4. GeV/c
-	TH1D* histoConvGamma_R_highpT_OnFly		= (TH1D*)histoConvGamma_Pt_R_OnFly->ProjectionY("histoConvGamma_R_highpT_OnFly",
-                                                                                            histoConvGamma_Pt_R_OnFly->GetXaxis()->FindBin(4.0),
-                                                                                            histoConvGamma_Pt_R_OnFly->GetNbinsX()); // pT > 4. GeV/c
-
-	TH1D* histoConvGamma_Eta_OnFly			= (TH1D*)histoConvGamma_Pt_Eta_OnFly->ProjectionY("histoConvGamma_Eta_OnFly");
-	TH1D* histoConvGamma_Phi_OnFly 			= (TH1D*)histoConvGamma_Pt_Phi_OnFly->ProjectionY("histoConvGamma_Phi_OnFly");
-
-	TH1D* histoRecConvGamma_Pt_OnFly 		= (TH1D*)histoRecConvGamma_Pt_R_OnFly->ProjectionX("histoRecConvGamma_Pt_OnFly"); //restricted to eta cut range
 
 	TH1D* histoRecConvGamma_Pt_largeR_OnFly        	= (TH1D*)histoRecConvGamma_Pt_R_OnFly->ProjectionX("histoRecConvGamma_Pt_largeR_OnFly",
                                                                                             histoRecConvGamma_Pt_R_OnFly->GetYaxis()->FindBin(55.0),
@@ -381,10 +434,14 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	histoRatioRecConvGamma_PtlargerEta_OnFly->Sumw2();
 	histoRatioRecConvGamma_PtlargerEta_OnFly->Divide(histoRecConvGamma_PtlargerEta_rebin_OnFly,histoConvGamma_PtlargerEta_rebin_OnFly,1.,1.,"B");
 
+	cout<< __LINE__<< endl;
+	histoRecConvGamma_R_OnFly->Rebin(2);
+	histoConvGamma_R_OnFly->Rebin(2);
+
 	TH1D* histoRatioRecConvGamma_R_OnFly = (TH1D*)histoRecConvGamma_R_OnFly->Clone("histoRatioRecConvGamma_R_OnFly");
 	histoRatioRecConvGamma_R_OnFly->Sumw2();
 	histoRatioRecConvGamma_R_OnFly->Divide(histoRatioRecConvGamma_R_OnFly,histoConvGamma_R_OnFly,1.,1.,"B");
-
+	cout<< __LINE__<< endl;
 	TH1D* histoRatioRecConvGamma_R_lowpT_OnFly = (TH1D*)histoRecConvGamma_R_lowpT_OnFly->Clone("histoRatioRecConvGamma_R_lowpT_OnFly");
 	histoRatioRecConvGamma_R_lowpT_OnFly->Sumw2();
 	histoRatioRecConvGamma_R_lowpT_OnFly->Divide(histoRatioRecConvGamma_R_lowpT_OnFly,histoConvGamma_R_lowpT_OnFly,1.,1.,"B");
@@ -935,7 +992,10 @@ void ProduceV0FindingEffPlotting(TString filename_OnFly = "",
 	histoRatioRecConvGammaMultOnly_Eta_Offline->Write();
 	histoRatioRecConvGammaMultOnly_R_Offline ->Write();
 	histoRatioRecConvGammaMultOnly_Pt_Offline ->Write();
-
+	for(Int_t j=0; j < nBinsR; j++){
+	  histoRatioRecConvGamma_Pt_RBins_OnFly[j] ->Write();
+	  histoRatioRecConvGamma_Pt_RBinsRebin_OnFly[j] ->Write();
+	}
 	output->Write();
 	output->Close();
 

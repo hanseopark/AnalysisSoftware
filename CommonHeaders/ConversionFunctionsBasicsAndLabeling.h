@@ -5501,11 +5501,21 @@
                 return "33.5 cm < R < 72 cm "; 
             case 12:	//c 72-180
                 return "72 cm < R < 180 cm "; 
+            case 16:	//g 95-180 
+                return "95 cm < R < 180 cm "; 
             case 17:	//h 5-13 
                 return "5 cm < R < 13. cm "; 
             case 18:	//i 13-33.5
                 return "13 cm < R < 33.5 cm "; 
-  
+            case 19:	//i 33.5-55
+                return "33.5 cm < R < 55 cm "; 
+            case 20:	//i 55-72
+                return "55 cm < R < 72 cm "; 
+            case 21:	//i 72-95
+                return "72 cm < R < 95 cm "; 
+            case 22:	//i 5-180, except 55-72
+	      return "5 cm < R < 55 cm OR 72 cm < R < 180 cm ";                 
+
 	default:
        return "RBins cut unknown";
 	}
