@@ -2078,7 +2078,7 @@
                     startPtBin = 3;
                   }
                 } else if( mode == 5){
-                    startPtBin = 4;
+                    startPtBin = 6;
                 } else if (mode == 0){
                     startPtBin = 1;
                 }

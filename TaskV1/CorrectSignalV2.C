@@ -458,23 +458,23 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DoJetAnalysis = kTRUE;
     }
 
-    TF1* Unfolding_Fit = new TF1();
+    TFile *Jet_Unfolding = (TFile*)Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode);
     if(DoJetAnalysis){
-        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
-        if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
-            Unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
-        }else{
-            Unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+      TF1* unfolding_fit;
+      if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+          unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+      }else{
+          unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+      }
+      for (Int_t k= 0; k < 6; k++){
+        Int_t NTotalBins = histoUnCorrectedYield[k]->GetNbinsX();
+        for(Int_t i = 0; i <= NTotalBins; i++){
+          Double_t value = histoUnCorrectedYield[k]->GetBinContent(i);
+          Double_t x = histoUnCorrectedYield[k]->GetBinCenter(i);
+          value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+          histoUnCorrectedYield[k]->SetBinContent(i, value);
         }
-        for (Int_t k= 0; k < 6; k++){
-          Int_t NTotalBins = histoUnCorrectedYield[k]->GetNbinsX();
-          for(Int_t i = 0; i <= NTotalBins; i++){
-            Double_t value = histoUnCorrectedYield[k]->GetBinContent(i);
-            Double_t x = histoUnCorrectedYield[k]->GetBinCenter(i);
-            value = value*(Unfolding_Fit->GetParameter(0) + Unfolding_Fit->GetParameter(1)*x);
-            histoUnCorrectedYield[k]->SetBinContent(i, value);
-          }
-        }
+      }
     }
 
     Double_t scaleFactorMeasXSecForExternalInput              = 1;
@@ -583,12 +583,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
     }
     if(DoJetAnalysis){
+        TF1* unfolding_fit;
+          if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
+          }else{
+            unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Eta");
+          }
         for(Int_t k = 0; k < 6; k++){
           Int_t NTotalBins = histoEffiPt[k]->GetNbinsX();
           for(Int_t i = 0; i <= NTotalBins; i++){
             Double_t value = histoEffiPt[k]->GetBinContent(i);
             Double_t x = histoEffiPt[k]->GetBinCenter(i);
-            value = value*(Unfolding_Fit->GetParameter(0) + Unfolding_Fit->GetParameter(1)*x);
+            value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
             histoEffiPt[k]->SetBinContent(i, value);
           }
         }
@@ -2924,7 +2930,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         canvasEffSimple->Update();
         PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
         if(DoJetAnalysis){
-          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
           TF1* unfolding_fit;
           if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
             unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
@@ -3138,8 +3143,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
 
         if(DoJetAnalysis){
-          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
-          TF1* unfolding_fit = new TF1();
+          TF1* unfolding_fit;
           if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
             unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
           }else{
@@ -3173,8 +3177,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYieldDrawing->DrawCopy("e1");
 
         PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
-        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
-        TF1* unfolding_fit = new TF1();
+        TF1* unfolding_fit;
         if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
           unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
         }else{
@@ -3224,9 +3227,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYieldRaw->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
-        TF1* unfolding_fit = new TF1();
+        TF1* unfolding_fit;
         if(DoJetAnalysis){
-          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
           if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
             unfolding_fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
           }else{
@@ -3402,8 +3404,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
         if(DoJetAnalysis){
-          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
-          TF1* unfolding_Fit = new TF1();
+          TF1* unfolding_Fit;
           if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
             unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
           }else{
@@ -3453,8 +3454,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
         if(DoJetAnalysis){
-          TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
-          TF1* unfolding_Fit = new TF1();
+          TF1* unfolding_Fit;
           if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
             unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
           }else{
@@ -3494,8 +3494,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
-        TF1* unfolding_Fit = new TF1();
-        TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+        TF1* unfolding_Fit;
         if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
           unfolding_Fit = (TF1*)Jet_Unfolding->Get("FinalFit_Pi0");
         }else{
@@ -3543,6 +3542,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         canvasCorrectedYield->Update();
         canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_JetNorm_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+        if (histo2DDummyPt_JetNorm) delete histo2DDummyPt_JetNorm;
     }
 
     cout << fCutSelection.Data() << endl;

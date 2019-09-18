@@ -5102,7 +5102,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
             if ( fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
             if ( fEnergyFlag.Contains("PbPb") && fMode == 5 )
-                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.1);
             if ( fEnergyFlag.Contains("PbPb") && (fMode == 0 || fMode == 3) )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
             if ( fEnergyFlag.Contains("PbPb") && (fMode == 4) )
