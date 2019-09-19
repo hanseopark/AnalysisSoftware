@@ -570,18 +570,11 @@ function ChangeStructureIfNeededCaloMerged()
     if [[ $1 == *"Basic.root"* ]]; then
         echo "Nothing to be done: Basis.root"
     else
-        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
-        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
-        if [ -z "$number2" ]; then
-            number=$number1
-        else
-            echo $number2
-            number=$number1\_$number2
-        fi
-        echo $number
+        GetFileNumberMerging $1 $3 2
         cp $2/GammaCaloMerged$5_$number.root $OUTPUTDIR/GammaCaloMerged_$4\_$number.root
-        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ]; then
-            echo "Nothing to be done (CutSelection_GammaCaloMerged_$4_$number)";
+        if  [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ] &&
+            [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalomerged_$4_$number.log ]; then
+            echo "Nothing to be done: \"CutSelection_GammaCaloMerged_$4_$number.log\" already exists";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log\"\,10\)
         fi

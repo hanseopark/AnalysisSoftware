@@ -232,25 +232,39 @@
     // NColl values for 20% V0M slices
     Double_t nCollPbPb5TeVV0M20[5]      = {1273, 468.2, 138.5, 28.31, 3.691};
     Double_t nCollPbPb5TeVErrV0M20[5]   = {14.1, 6.92, 2.7, 0.68, 0.0761};
-                                        // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    // NColl values for 20% V0M slices alternates
+                                        // 10-30, 30-50, 50-70, 70-90
+    Double_t nCollPbPb5TeVV0M20_2[5]      = {783.1, 264.8, 66.0, 10.9};
+    Double_t nCollPbPb5TeVErrV0M20_2[5]   = {9.8, 4.51, 1.57, 0.221};
+    // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
     Double_t nCollPbPb5TeVV0M5[20]      = { 1763,   1382,   1090,   857.3,  668.8,  516.6,  393,    294.6,  216.1,  155.2,
                                         // 50-55,   55-60,  60-65,  65-70,  70-75,  75-80,  80-85,  85-90,  90-95,  95-100
                                             108.6,  74.14,  49.18,  31.81,  20,     12.23,  7.198,  4.104,  2.172,  1.228 };
     Double_t nCollPbPb5TeVErrV0M5[20]   = { 19.4,   15.7,   12.3,   10.5,   9.21,   7.32,   6.51,   5.12,   3.83,   2.91,
                                             2.61,   1.74,   1.37,   0.763,  0.502,  0.253,  0.236,  0.0635, 0.0844, 0.0416 };
+    Double_t nCollPbPb5TeVV0M5090       = 38.45;
+    Double_t nCollPbPb5TeVErrV0M5090    = 0.9;
 
     // TAA values for 10% V0M slices
     Double_t tAAPbPb5TeVV0M10[10]       = {23.26, 14.4, 8.767, 5.086, 2.747,    1.352, 0.5992, 0.2385, 0.08383, 0.02527};
     Double_t tAAPbPb5TeVErrV0M10[10]    = {0.168, 0.126, 0.101, 0.0814, 0.0486, 0.0309, 0.0158, 0.00552, 0.00178, 0.000777};
     // TAA values for 20% V0M slices
+                                          //0-20, 20-40, 40-60, 60-80, 80-100
     Double_t tAAPbPb5TeVV0M20[5]        = {18.83, 6.927, 2.049, 0.4188, 0.0546};
     Double_t tAAPbPb5TeVErrV0M20[5]     = {0.142, 0.0909, 0.0394, 0.0106, 0.00133};
-                                        // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
+    // TAA values alternate for 20% V0M slices
+                                          // 10-30, 30-50, 50-70, 70-90 - not exact values: need to ask Alberica for precise numbers
+    Double_t tAAPbPb5TeVV0M20_2[4]      = {11.58, 3.917, 0.9756, 0.1612};
+    Double_t tAAPbPb5TeVErrV0M20_2[4]   = {0.1135, 0.0645, 0.02335, 0.00365};
+    // 0-5,     5-10,   10-15,  15-20,  20-25,  25-30,  30-35,  35-40,  40-45,  45-50
     Double_t tAAPbPb5TeVV0M5[20]        = { 26.08,   20.44,   16.12,   12.68,  9.894,  7.641,  5.814,    4.358,  3.197,  2.296,
                                         // 50-55,   55-60,  60-65,  65-70,  70-75,  75-80,  80-85,  85-90,  90-95,  95-100
                                             1.607,  1.097,  0.7275,  0.4706,  0.2959,  0.1808,  0.1065,  0.06071,  0.03213,  0.01816 };
     Double_t tAAPbPb5TeVErrV0M5[20]     = { 0.176,  0.166,  0.135,   0.118,   0.11,    0.0942,  0.0917,  0.073,   0.0554,  0.0427,
                                             0.0378, 0.026,  0.0207, 0.012,   0.0079,  0.0041,  0.0037,  0.00126, 0.00132,  0.000673};
+                                            // not exact values: need to ask Alberica for precise numbers
+    Double_t tAAPbPb5TeVV0M5090        = 0.5684;
+    Double_t tAAPbPb5TeVErrV0M5090     = 0.01234;
 
     // ******************************************************************************************
     // ************************ Set correct xSection for pp & pPb *******************************
@@ -1983,8 +1997,17 @@
                     toTest          = Form("%d%d",i*2,(i+1)*2);
                     if (i == 5)
                         toTest          = Form("%d%d",i*2,0);
-                    return nCollPbPb5TeVV0M20[i];
+                    if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                      return nCollPbPb5TeVV0M20[i];
                 }
+                for (Int_t i = 0; i < 4; i++){
+                  toTest          = Form("%d%d",i*2+1,(i+1)*2+1);
+                  if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVV0M20_2[i];
+                }
+                if  (centralityCutNumber.CompareTo("59") == 0)
+                  return nCollPbPb5TeVV0M5090;
+
                 cout << "ERROR: NColl values not implemented!" << endl;
             } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
                 // find correct NColl err for 5% slices
@@ -2068,6 +2091,13 @@
                     if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
                         return nCollPbPb5TeVErrV0M20[i];
                 }
+                for (Int_t i = 0; i < 4; i++){
+                  toTest          = Form("%d%d",i*2+1,(i+1)*2+1);
+                  if (centralityCutNumber.CompareTo(toTest.Data()) == 0)
+                    return nCollPbPb5TeVErrV0M20_2[i];
+                }
+                if  (centralityCutNumber.CompareTo("59") == 0)
+                  return nCollPbPb5TeVErrV0M5090;
                 cout << "ERROR: NColl Err values not implemented!" << endl;
 
             } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
@@ -2270,6 +2300,13 @@
                 if (name.CompareTo(toTest.Data()) == 0)
                     return nCollPbPb5TeVV0M20[i];
             }
+            for (Int_t i = 0; i < 4; i++){
+              toTest          = Form("%02d%d",i*20+10,(i+1)*20+10);
+              if (name.CompareTo(toTest.Data()) == 0)
+                return nCollPbPb5TeVV0M20_2[i];
+            }
+            if  (name.CompareTo("5090") == 0)
+              return nCollPbPb5TeVV0M5090;
             cout << "ERROR: NColl values not implemented!" << endl;
         } else {
             return 1.;
@@ -2408,6 +2445,13 @@
                 if (name.CompareTo(toTest.Data()) == 0)
                     return nCollPbPb5TeVErrV0M20[i];
             }
+            for (Int_t i = 0; i < 4; i++){
+              toTest          = Form("%02d%d",i*20+10,(i+1)*20+10);
+              if (name.CompareTo(toTest.Data()) == 0)
+                return nCollPbPb5TeVErrV0M20_2[i];
+            }
+            if  (name.CompareTo("5090") == 0)
+              return nCollPbPb5TeVErrV0M5090;
             cout << "ERROR: NColl Err values not implemented!" << endl;
         } else {
             return 1.;
@@ -2497,7 +2541,7 @@
             return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0  ) {
             cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
-	    return  1./1. -1.;
+            return  1./1. -1.;
          } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.Contains("5TeV2017")  || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             cout << "Same as 7 TeV K0 scaling factor" << endl;
             return  1./1. - 1; //1./0.75 -1.;
@@ -2615,6 +2659,15 @@
                 if (name.CompareTo(Form("%02d%d",i*20,(i+1)*20)) == 0)
                     return tAAPbPb5TeVV0M20[i];
             }
+            for (Int_t i = 0; i < 4; i++){
+              toTest          = Form("%02d%d",i*20+10,(i+1)*20+10);
+              if (name.CompareTo(toTest.Data()) == 0)
+                return tAAPbPb5TeVV0M20_2[i];
+            }
+            if  (name.CompareTo("5090") == 0)
+              return tAAPbPb5TeVV0M5090;
+
+
             cout << "ERROR: TAA values not implemented!" << endl;
         } else {
             return 1.;
@@ -2715,6 +2768,13 @@
                 if (name.CompareTo(Form("%02d%d",i*20,(i+1)*20)) == 0)
                     return tAAPbPb5TeVErrV0M20[i];
             }
+            for (Int_t i = 0; i < 4; i++){
+              toTest          = Form("%02d%d",i*20+10,(i+1)*20+10);
+              if (name.CompareTo(toTest.Data()) == 0)
+                return tAAPbPb5TeVErrV0M20_2[i];
+            }
+            if  (name.CompareTo("5090") == 0)
+              return tAAPbPb5TeVErrV0M5090;
             cout << "ERROR: TAA Err values not implemented!" << endl;
         } else {
             return 1.;
@@ -4858,7 +4918,7 @@
     TString AnalyseMinEnergyCut(Int_t minEnergyCut, Int_t clusterType=1){
         Double_t fMinEnergy = 0.;
         switch(minEnergyCut){
-            case 0:        
+            case 0:
                 fMinEnergy = 0;
                 break;
             case 1:
@@ -5491,34 +5551,33 @@
     //************************************************************************************
     TString AnalyseRBinCut(Int_t RBinCut){
         switch(RBinCut){
-	    case 0:	// 5-33.5
-                return "0 cm < R < 180. cm ";   
-	    case 2:	// 5- 180
+            case 0:	// 5-33.5
+                return "0 cm < R < 180. cm ";
+            case 2:	// 5- 180
                 return " 5 cm < R < 180 cm ";
             case 10:	//a 5-33.5
-                return "5 cm < R < 33.5 cm "; 
+                return "5 cm < R < 33.5 cm ";
             case 11:	//b 33.5-72.
-                return "33.5 cm < R < 72 cm "; 
+                return "33.5 cm < R < 72 cm ";
             case 12:	//c 72-180
-                return "72 cm < R < 180 cm "; 
-            case 16:	//g 95-180 
-                return "95 cm < R < 180 cm "; 
-            case 17:	//h 5-13 
-                return "5 cm < R < 13. cm "; 
+                return "72 cm < R < 180 cm ";
+            case 16:	//g 95-180
+                return "95 cm < R < 180 cm ";
+            case 17:	//h 5-13
+                return "5 cm < R < 13. cm ";
             case 18:	//i 13-33.5
-                return "13 cm < R < 33.5 cm "; 
+                return "13 cm < R < 33.5 cm ";
             case 19:	//i 33.5-55
-                return "33.5 cm < R < 55 cm "; 
+                return "33.5 cm < R < 55 cm ";
             case 20:	//i 55-72
-                return "55 cm < R < 72 cm "; 
+                return "55 cm < R < 72 cm ";
             case 21:	//i 72-95
-                return "72 cm < R < 95 cm "; 
+                return "72 cm < R < 95 cm ";
             case 22:	//i 5-180, except 55-72
-	      return "5 cm < R < 55 cm OR 72 cm < R < 180 cm ";                 
-
-	default:
-       return "RBins cut unknown";
-	}
+                return "5 cm < R < 55 cm OR 72 cm < R < 180 cm ";
+            default:
+                return "RBins cut unknown";
+        }
     }
     //******** Analyze neutral meson pt cut *********************
     //************************************************************************************

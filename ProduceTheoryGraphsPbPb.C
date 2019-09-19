@@ -1451,5 +1451,37 @@ void ProduceTheoryGraphsPbPb(TString specifier = "", TString energy = ""){
         readFileMinAndMaxSeparately(fileVitevMin2040, fileVitevMax2040, fileTheoryGraphsPbPb, "Pi0_PbPb_5.02TeV", "RAA_Vitev_2040", "#it{p}_{T} (GeV/#it{c})", "#it{R}_{AA}" , kFALSE);
         readFileMinAndMaxSeparately(fileVitevMin4060, fileVitevMax4060, fileTheoryGraphsPbPb, "Pi0_PbPb_5.02TeV", "RAA_Vitev_4060", "#it{p}_{T} (GeV/#it{c})", "#it{R}_{AA}" , kFALSE);
 
+
+        TString centArrayReadHIJING[4]  = {"0-10%", "10-30%", "30-50%", "50-90%"};
+        TString centArrayOutHIJING[4]   = {"0010", "1030", "3050", "5090"};
+        TFile* fileHIJING               = new TFile("ExternalInputPbPb/Theory/MCInputCompilationLHC18e1_PbPb5TeV_0.root");
+        for (Int_t j = 0; j<4; j++){
+            TString hijingDir               = Form("%sPbPb_5.02TeV",centArrayReadHIJING[j].Data());
+            TH1D* histoPi0HIJING            = (TH1D*)fileHIJING->Get(Form("%s/MC_Pi0_Pt", hijingDir.Data()));
+            TH1D* histoPi0ToPiCHHIJING      = (TH1D*)fileHIJING->Get(Form("%s/MCPi0ToPiCh", hijingDir.Data()));
+            directory5TeVPi0->cd();
+                histoPi0HIJING->Write(Form("Spectra_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+                histoPi0ToPiCHHIJING->Write(Form("Pi0ToPiCh_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+//             TH1D* histoPi0HIJINGReb         = (TH1D*)fileHIJING->Get("MC_Pi0_Pt_Rebinned");
+            TH1D* histoPiChHIJING           = (TH1D*)fileHIJING->Get(Form("%s/MC_PiCh_All_Pt", hijingDir.Data()));
+            directory5TeVPiCh->cd();
+                histoPiChHIJING->Write(Form("Spectra_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+
+            TH1D* histoKChHIJING            = (TH1D*)fileHIJING->Get(Form("%s/MC_KCh_All_Pt", hijingDir.Data()));
+            directory5TeVKCh->cd();
+                histoKChHIJING->Write(Form("Spectra_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+
+            TH1D* histoEtaHIJING            = (TH1D*)fileHIJING->Get(Form("%s/MC_Eta_Pt", hijingDir.Data()));
+            TH1D* histoEtaToPi0HIJING       = (TH1D*)fileHIJING->Get(Form("%s/MCEtaToPi0", hijingDir.Data()));
+            TH1D* histoEtaToKChHIJING       = (TH1D*)fileHIJING->Get(Form("%s/MCEtaToKCh", hijingDir.Data()));
+            directory5TeVEta->cd();
+            histoEtaHIJING->Write(Form("Spectra_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+                histoEtaToPi0HIJING->Write(Form("EtaToPi0_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+                histoEtaToKChHIJING->Write(Form("EtaToKCh_HIJING_MCGen_%s",centArrayOutHIJING[j].Data()), TObject::kOverwrite);
+
+            //             TH1D* histoEtaHIJINGReb         = (TH1D*)fileHIJING->Get("MC_Eta_Pt_Rebinned");
+
+        }
+
     }
 }

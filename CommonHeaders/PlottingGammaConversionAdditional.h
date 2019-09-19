@@ -3331,12 +3331,15 @@
                 else if (!centrality.CompareTo("0-40%")) return kMagenta+2;
                 else if (!centrality.CompareTo("0-5%"))  return kRed+1;
                 else if (!centrality.CompareTo("5-10%")) return 807;
-                else if (!centrality.CompareTo("10-20%")|| !centrality.CompareTo("10-30%") ) return 800;
+                else if (!centrality.CompareTo("10-20%")) return 800;
+                else if (!centrality.CompareTo("10-30%") ) return kYellow-3;
                 else if (!centrality.CompareTo("20-40%")) return kGreen+2;
                 else if (!centrality.CompareTo("20-50%")) return kCyan+2;
+                else if (!centrality.CompareTo("30-50%")) return kTeal+4;
                 else if (!centrality.CompareTo("40-60%")) return kCyan+2;
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")) return kBlue+1;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%")) return kCyan+2;
+                else if (!centrality.CompareTo("50-90%") )  return kViolet+2;
                 else if (!centrality.CompareTo("30-100%") )  return kViolet+2;
             } else { // generator defined (MC) and centrality defined (for combination)
                 if (!centrality.CompareTo("0-10%"))          return kRed+3;
@@ -3344,12 +3347,15 @@
                 else if (!centrality.CompareTo("0-40%"))     return kMagenta+4;
                 else if (!centrality.CompareTo("0-5%"))      return kRed+2;
                 else if (!centrality.CompareTo("5-10%"))     return 809;
-                else if (!centrality.CompareTo("10-20%") || !centrality.CompareTo("10-30%") ) return 802;
+                else if (!centrality.CompareTo("10-20%") )   return 802;
+                else if (!centrality.CompareTo("10-30%") )   return kYellow-2;
                 else if (!centrality.CompareTo("20-40%"))    return kGreen+4;
                 else if (!centrality.CompareTo("20-50%"))    return kCyan+3;
+                else if (!centrality.CompareTo("30-50%"))    return kTeal-7;
                 else if (!centrality.CompareTo("40-60%") )   return kCyan+3;
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%"))  return kBlue+3;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%"))   return kCyan+3;
+                else if (!centrality.CompareTo("50-90%") )   return kViolet-6;
                 else if (!centrality.CompareTo("30-100%") )  return kViolet-6;
             }
         }
@@ -3719,11 +3725,14 @@
                 else if (!centrality.CompareTo("0-40%"))  return 20;
                 else if (!centrality.CompareTo("0-5%"))   return 20;
                 else if (!centrality.CompareTo("5-10%"))  return 21;
-                else if (!centrality.CompareTo("10-20%") || !centrality.CompareTo("10-30%") ) return 29;
+                else if (!centrality.CompareTo("10-20%")) return 29;
+                else if (!centrality.CompareTo("10-30%") ) return 47;
                 else if (!centrality.CompareTo("20-40%")) return 33;
                 else if (!centrality.CompareTo("20-50%")) return 34;
+                else if (!centrality.CompareTo("30-50%")) return 34;
                 else if (!centrality.CompareTo("40-60%")) return 20;
                 else if (!centrality.CompareTo("30-100%") ) return 21;
+                else if (!centrality.CompareTo("50-90%"))   return 43;
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")) return 21;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") ) return 34;
             } else { // generator defined (MC) and centrality defined (for combination)
@@ -3732,11 +3741,14 @@
                 else if (!centrality.CompareTo("0-40%"))    return 24;
                 else if (!centrality.CompareTo("0-5%"))     return 24;
                 else if (!centrality.CompareTo("5-10%"))    return 25;
-                else if (!centrality.CompareTo("10-20%")|| !centrality.CompareTo("10-30%") )  return 30;
+                else if (!centrality.CompareTo("10-20%"))   return 30;
+                else if (!centrality.CompareTo("10-30%"))   return 46;
                 else if (!centrality.CompareTo("20-40%"))   return 27;
                 else if (!centrality.CompareTo("20-50%"))   return 28;
+                else if (!centrality.CompareTo("30-50%"))   return 28;
                 else if (!centrality.CompareTo("40-60%"))   return 24;
                 else if (!centrality.CompareTo("30-100%") ) return 25;
+                else if (!centrality.CompareTo("50-90%"))   return 42;
                 else if (!centrality.CompareTo("60-80%") || !centrality.CompareTo("60-92%")) return 25;
                 else if (!centrality.CompareTo("40-80%") || !centrality.CompareTo("0-94%") || !centrality.CompareTo("0-86%") || !centrality.CompareTo("0-92%") || !centrality.CompareTo("0-80%") )
                     return 28;

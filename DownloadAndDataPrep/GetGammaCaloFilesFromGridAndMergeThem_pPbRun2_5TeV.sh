@@ -76,23 +76,84 @@ fi
 if [ $3 = "AOD" ]; then
     baseLegoData=GA_pPb_AOD
     baseLegoMC=GA_pPb_MC_AOD
-    pathDataR1=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1b=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1c=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1d=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1e=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1f=pass4/AOD210/PWGGA/GA_pPb_AOD
     pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
-    pathDataR2=pass1/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
     pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
-elif [ $3 = "ESDLF" ]; then
-    baseLegoData=LF_pPb
-    baseLegoMC=LF_pPb_MC
-    pathDataR1=pass4/PWGLF/LF_pPb
-    pathMCR1=PWGLF/LF_pPb_MC
-    pathDataR2=pass1/PWGLF/LF_pPb
-    pathMCR2=PWGLF/LF_pPb_MC
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
+elif [ $3 = "AODSKIMMB" ]; then
+    baseLegoData=GA_pPb_AOD
+    baseLegoMC=GA_pPb_MC_AOD
+    pathDataR1b=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1c=pass4/AOD210/PWGGA/GA_pPb_AOD
+    pathDataR1d=pass4/AOD210/PWGGA/GA_pPb_AOD/547_20190603-1141/PWGGA/GA_pPb_AOD
+    pathDataR1e=pass4/AOD210/PWGGA/GA_pPb_AOD/548_20190603-1142/PWGGA/GA_pPb_AOD
+    pathDataR1f=pass4/AOD210/PWGGA/GA_pPb_AOD/540_20190524-1221/PWGGA/GA_pPb_AOD
+    pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
+    pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
+elif [ $3 = "AODSKIMEMC7" ]; then
+    baseLegoData=GA_pPb_AOD
+    baseLegoMC=GA_pPb_MC_AOD
+    pathDataR1b=pass4/AOD210/PWGGA/GA_pPb_AOD/549_20190603-1142/PWGGA/GA_pPb_AOD
+    pathDataR1c=pass4/AOD210/PWGGA/GA_pPb_AOD/550_20190603-1143/PWGGA/GA_pPb_AOD
+    pathDataR1d=pass4/AOD210/PWGGA/GA_pPb_AOD/551_20190603-1143/PWGGA/GA_pPb_AOD
+    pathDataR1e=pass4/AOD210/PWGGA/GA_pPb_AOD/552_20190603-1143/PWGGA/GA_pPb_AOD
+    pathDataR1f=pass4/AOD210/PWGGA/GA_pPb_AOD/539_20190524-1221/PWGGA/GA_pPb_AOD
+    pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
+    pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
+elif [ $3 = "AODSKIMEGAJE" ]; then
+    baseLegoData=GA_pPb_AOD
+    baseLegoMC=GA_pPb_MC_AOD
+    pathDataR1b=pass4/AOD210/PWGGA/GA_pPb_AOD/544_20190524-1413/PWGGA/GA_pPb_AOD
+    pathDataR1c=pass4/AOD210/PWGGA/GA_pPb_AOD/543_20190524-1412/PWGGA/GA_pPb_AOD
+    pathDataR1d=pass4/AOD210/PWGGA/GA_pPb_AOD/542_20190524-1412/PWGGA/GA_pPb_AOD
+    pathDataR1e=pass4/AOD210/PWGGA/GA_pPb_AOD/541_20190524-1411/PWGGA/GA_pPb_AOD
+    pathDataR1f=pass4/AOD210/PWGGA/GA_pPb_AOD/537_20190524-1218/PWGGA/GA_pPb_AOD
+    pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
+    pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
+elif [ $3 = "AODSKIMPHI7" ]; then
+    baseLegoData=GA_pPb_AOD
+    baseLegoMC=GA_pPb_MC_AOD
+    pathDataR1b=pass4/AOD210/PWGGA/GA_pPb_AOD/558_20190604-1320/PWGGA/GA_pPb_AOD
+    pathDataR1c=pass4/AOD210/PWGGA/GA_pPb_AOD/559_20190604-1320/PWGGA/GA_pPb_AOD
+    pathDataR1d=pass4/AOD210/PWGGA/GA_pPb_AOD/560_20190604-1320/PWGGA/GA_pPb_AOD
+    pathDataR1e=pass4/AOD210/PWGGA/GA_pPb_AOD/561_20190604-1321/PWGGA/GA_pPb_AOD
+    pathDataR1f=pass4/AOD210/PWGGA/GA_pPb_AOD/562_20190604-1321/PWGGA/GA_pPb_AOD
+    pathMCR1=AOD214/PWGGA/GA_pPb_MC_AOD
+    pathDataR2WOSDD=pass1_CENT_woSDD/AOD190/PWGGA/GA_pPb_AOD
+    pathDataR2FAST=pass1_FAST/AOD190/PWGGA/GA_pPb_AOD
+    pathMCR2=AOD214/PWGGA/GA_pPb_MC_AOD
+    FAST="_FAST"
+    WOSDD="_CENT_woSDD"
 else
     baseLegoData=GA_pPb
     baseLegoMC=GA_pPb_MC
-    pathDataR1=pass4/PWGGA/GA_pPb
+    pathDataR1b=pass4/PWGGA/GA_pPb
+    pathDataR1c=pass4/PWGGA/GA_pPb
+    pathDataR1d=pass4/PWGGA/GA_pPb
+    pathDataR1e=pass4/PWGGA/GA_pPb
+    pathDataR1f=pass4/PWGGA/GA_pPb
     pathMCR1=PWGGA/GA_pPb_MC
-    pathDataR2=pass1/PWGGA/GA_pPb
+    pathDataR2WOSDD=pass1/PWGGA/GA_pPb
+    pathDataR2FAST=pass1/PWGGA/GA_pPb
     pathMCR2=PWGGA/GA_pPb_MC
 fi
 
@@ -104,193 +165,6 @@ NSlashes2=`expr $NSlashes - 1`
 NSlashes3=`expr $NSlashes + 1`
 NSlashes4=`expr $NSlashes + 2`
 echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
-
-# TRAINDIR=Legotrain-vAN20171005-dirGammaRun2
-# woSDD (CENT)
-# LHC16qtData="679"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1090";
-# LHC17f2a_fixMC="1088";
-#cell QA
-# LHC16qtData="674"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1075";
-
-# FAST
-# LHC16qtData="681"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1089";
-# LHC17f2a_fixMC="1087";
-#cell QA
-# LHC16qtData="673"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1076";
-
-# WSDD (CENT)
-# LHC16qtData="680"; #pass 1
-# LHC16qData="child_1"; #pass 1
-# LHC16tData="child_2"; #pass 1
-# LHC17f2bMC="1092";
-# LHC17f2a_fixMC="1091";
-
-# TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
-# # woSDD (CENT) EMC
-# LHC16qtData="707"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1150";
-# LHC17f2a_fixMC="1148_20180124";
-
-# FAST EMC
-# LHC16qtData="708"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1151";
-# LHC17f2a_fixMC="1149_20180124";
-
-# # woSDD (CENT) PHOS
-# LHC16qtData="710"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1146";
-# LHC17f2a_fixMC="1144";
-
-# FAST PHOS
-# LHC16qtData="709_20180125"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1147";
-# LHC17f2a_fixMC="1145";
-
-# TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
-# woSDD (CENT) PHOS
-# LHC16qtData="712"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1162";
-# LHC17f2a_fixMC="1160";
-
-# FAST PHOS
-# LHC16qtData="711"; #pass 2
-# LHC16qData="child_1"; #pass 3
-# LHC16tData="child_2"; #pass 2
-# LHC17f2bMC="1163";
-# LHC17f2a_fixMC="1161";
-
-# TRAINDIR=Legotrain-vAN20180206-EMC
-# woSDD (CENT) PHOS
-# LHC16qtData="718"; #pass 2
-# LHC16qDataFast="child_1"; #pass 3
-# LHC16tDataFast="child_2"; #pass 2
-# LHC16qData="child_3"; #pass 3
-# LHC16tData="child_4"; #pass 2
-# LHC17f2bMCMoth="1168";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-# LHC17f2a_fixMCMoth="1167";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-
-# LHC17f2bMCMoth="1171";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-# LHC17f2a_fixMCMoth="1170";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17g8aMCMoth="1173"
-# LHC17g8aMC="child_2"
-# LHC17g8aMCFast="child_1"
-
-# TRAINDIR=Legotrain-vAN20180220-EMCNonLin
-# woSDD EMC
-# LHC16qtData="720"; #pass 2
-# LHC16qDataFast="child_1"; #pass 3
-# LHC16tDataFast="child_2"; #pass 2
-# LHC16qData="child_3"; #pass 3
-# LHC16tData="child_4"; #pass 2
-# LHC17f2bMCMoth="1205";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-# LHC17f2a_fixMCMoth="1207";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-
-# TRAINDIR=Legotrain-vAN20180220-EMCNonLin2
-# LHC17f2bMCMoth="1211";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-# LHC17f2a_fixMCMoth="1210";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17g8aMCMoth="1216"
-# LHC17g8aMC="child_2"
-# LHC17g8aMCFast="child_1"
-
-# TRAINDIR=Legotrain-vAN20180322-RerunAll
-# LHC16qtData="724"; #pass 2
-# LHC16qtData="725"; #pass 2
-# LHC16qDataFast="child_1"; #pass 3
-# LHC16tDataFast="child_2"; #pass 2
-# LHC16qData="child_3"; #pass 3
-# LHC16tData="child_4"; #pass 2
-# LHC17f2bMCMoth="1218";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-# LHC17f2a_fixMCMoth="1217";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17g8aMCMoth="1216"
-# LHC17g8aMC="child_2"
-# LHC17g8aMCFast="child_1"
-
-# LHC17f2a_fixMCMoth="1231";
-# LHC17f2bMCMoth="1232";
-# LHC17f2a_fixMCMoth="1230";
-# LHC17f2bMCMoth="1218";
-# LHC17f2a_fixMCMoth="1227";
-# LHC17f2bMCMoth="1229";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-
-# TRAINDIR=Legotrain-vAN20180410-RerunAll2
-# LHC17f2a_fixMCMoth="1239";
-# LHC17f2bMCMoth="1240";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-
-# TRAINDIR=Legotrain-vAN20180427-AODValidationESD
-# LHC16qtData="739"; #pass 2
-# LHC16qDataFast="child_1"; #pass 3
-# LHC16tDataFast="child_2"; #pass 2
-# LHC16qData="child_3"; #pass 3
-# LHC16tData="child_4"; #pass 2
-# LHC17f2a_fixMCMoth="1251";
-# LHC17f2bMCMoth="1252";
-# LHC17f2a_fixMC="child_2";
-# LHC17f2a_fixMCFast="child_1";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
-
-# new reco run1 pPb
-# TRAINDIR=20190612-QAPass4PCMEMCPHOS
-# LHC13beData="534"
-# LHC13bData="child_1"
-# LHC13cData="child_2"
-# LHC13dData="child_3"
-# LHC13eData="child_4"
-# LHC13fData="535"
-# LHC18j5MC="699"
-# LHC18j5_2MC="child_2"
-# LHC18j5_1MC="child_1"
-# LHC18j5_3MC="child_3"
 
 # new reco run1 pPb
 # TRAINDIR=20190804-MultCalib
@@ -305,12 +179,97 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC18j5_1MC="429"
 # LHC18j5_3MC="child_3"
 
-TRAINDIR=20190830-QAPCMRun2
-LHC16qtData="592"; #pass 2
-LHC16qDataFast="child_1"; #pass 3
-LHC16tDataFast="child_2"; #pass 2
-LHC16qData="child_3"; #pass 3
-LHC16tData="child_4"; #pass 2
+# TRAINDIR=20190830-QAPCMRun2
+# LHC16qtData="592"; #pass 2
+# LHC16qDataFast="child_1"; #pass 3
+# LHC16tDataFast="child_2"; #pass 2
+# LHC16qData="child_3"; #pass 3
+# LHC16tData="child_4"; #pass 2
+
+if [ $3 = "AODSKIMMB" ]; then
+#     TRAINDIR=20190831-EMCNonLin
+#     LHC13beData="";
+#     LHC13bcData="589"
+#     LHC13bData="child_1"
+#     LHC13cData="child_2"
+#     LHC13deData="590" #skim MB
+#     LHC13dData="child_1"
+#     LHC13eData="child_2"
+#     LHC13fData="591" #skim MB
+    TRAINDIR=20190903-EMCtriggerStat
+    LHC13beData="";
+    LHC13bcData="602"
+    LHC13bData="child_1"
+    LHC13cData="child_2"
+    LHC13deData="603" #skim MB
+    LHC13dData="child_1"
+    LHC13eData="child_2"
+    LHC13fData="604" #skim MB
+
+elif [ $3 = "AODSKIMEMC7" ]; then
+    TRAINDIR=20190831-EMCNonLin2
+    LHC13beData="600" #skim EMC7
+    LHC13bData="child_1"
+    LHC13cData="child_2"
+    LHC13dData="child_3"
+    LHC13eData="child_4"
+    LHC13fData="596" #skim EMC7
+#     TRAINDIR=20190903-EMCtriggerStat
+#     LHC13beData="607" #skim EMC7
+#     LHC13bData="child_1"
+#     LHC13cData="child_2"
+#     LHC13dData="child_3"
+#     LHC13eData="child_4"
+#     LHC13fData="608" #skim EMC7
+
+elif [ $3 = "AODSKIMEGAJE" ]; then
+    TRAINDIR=20190831-EMCNonLin
+    LHC13beData="593" #skim EGA
+    LHC13bData="child_1"
+    LHC13cData="child_2"
+    LHC13dData="child_3"
+    LHC13eData="child_4"
+    LHC13fData="594" #skim EGA
+
+#     TRAINDIR=20190903-EMCtriggerStat
+#     LHC13beData="605" #skim EGA
+#     LHC13bData="child_1"
+#     LHC13cData="child_2"
+#     LHC13dData="child_3"
+#     LHC13eData="child_4"
+#     LHC13fData="606" #skim EGA
+
+elif [ $3 = "AODSKIMPHI7" ]; then
+    TRAINDIR=20190831-EMCNonLin
+    LHC13beData="597" #skim PHI7
+    LHC13bData="child_1"
+    LHC13cData="child_2"
+    LHC13dData="child_3"
+    LHC13eData="child_4"
+    LHC13fData="598" #skim PHI7
+#     TRAINDIR=20190903-PHOStriggerStat
+#     LHC13beData="609" #skim PHI7
+#     LHC13bData="child_1"
+#     LHC13cData="child_2"
+#     LHC13dData="child_3"
+#     LHC13eData="child_4"
+#     LHC13fData="610" #skim PHI7
+
+else
+    TRAINDIR=20190831-EMCNonLin
+    LHC18j5MC="730"
+    LHC18j5_1MC="child_1"
+    LHC18j5_2MC="child_2"
+    LHC18j5_3MC="child_3"
+
+#     TRAINDIR=20190903-EMCtriggerStat
+#     LHC16qtData="601"; #pass 2
+#     LHC16qDataFast="child_1"; #pass 3
+#     LHC16tDataFast="child_2"; #pass 2
+#     LHC16qData="child_3"; #pass 3
+#     LHC16tData="child_4"; #pass 2
+
+fi
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -326,26 +285,50 @@ OUTPUTDIRMC=$BASEDIR/$TRAINDIR/$baseLegoMC
 mkdir -p $OUTPUTDIR/CutSelections
 
 # finding run1 data paths
-FindCorrectTrainDirectory $LHC13bData $OUTPUTDIRData $ALIENDIRData $LHC13beData
-HAVELHC13b=$tempBool
-LHC13bData=$tempDir
-OUTPUTDIR_LHC13b=$tempPath
-echo "13b: $HAVELHC13b $LHC13bData $OUTPUTDIR_LHC13b"
-FindCorrectTrainDirectory $LHC13cData $OUTPUTDIRData $ALIENDIRData $LHC13beData
-HAVELHC13c=$tempBool
-LHC13cData=$tempDir
-OUTPUTDIR_LHC13c=$tempPath
-echo "13c: $HAVELHC13c $LHC13cData $OUTPUTDIR_LHC13c"
-FindCorrectTrainDirectory $LHC13dData $OUTPUTDIRData $ALIENDIRData $LHC13beData
-HAVELHC13d=$tempBool
-LHC13dData=$tempDir
-OUTPUTDIR_LHC13d=$tempPath
-echo "13d: $HAVELHC13d $LHC13dData $OUTPUTDIR_LHC13d"
-FindCorrectTrainDirectory $LHC13eData $OUTPUTDIRData $ALIENDIRData $LHC13beData
-HAVELHC13e=$tempBool
-LHC13eData=$tempDir
-OUTPUTDIR_LHC13e=$tempPath
-echo "13e: $HAVELHC13e $LHC13eData $OUTPUTDIR_LHC13e"
+if [ "$LHC13beData" == "" ]; then
+  FindCorrectTrainDirectory $LHC13bData $OUTPUTDIRData $ALIENDIRData $LHC13bcData
+  HAVELHC13b=$tempBool
+  LHC13bData=$tempDir
+  OUTPUTDIR_LHC13b=$tempPath
+  echo "13b: $HAVELHC13b $LHC13bData $OUTPUTDIR_LHC13b"
+  FindCorrectTrainDirectory $LHC13cData $OUTPUTDIRData $ALIENDIRData $LHC13bcData
+  HAVELHC13c=$tempBool
+  LHC13cData=$tempDir
+  OUTPUTDIR_LHC13c=$tempPath
+  echo "13c: $HAVELHC13c $LHC13cData $OUTPUTDIR_LHC13c"
+  FindCorrectTrainDirectory $LHC13dData $OUTPUTDIRData $ALIENDIRData $LHC13deData
+  HAVELHC13d=$tempBool
+  LHC13dData=$tempDir
+  OUTPUTDIR_LHC13d=$tempPath
+  echo "13d: $HAVELHC13d $LHC13dData $OUTPUTDIR_LHC13d"
+  FindCorrectTrainDirectory $LHC13eData $OUTPUTDIRData $ALIENDIRData $LHC13deData
+  HAVELHC13e=$tempBool
+  LHC13eData=$tempDir
+  OUTPUTDIR_LHC13e=$tempPath
+  echo "13e: $HAVELHC13e $LHC13eData $OUTPUTDIR_LHC13e"
+else
+  FindCorrectTrainDirectory $LHC13bData $OUTPUTDIRData $ALIENDIRData $LHC13beData
+  HAVELHC13b=$tempBool
+  LHC13bData=$tempDir
+  OUTPUTDIR_LHC13b=$tempPath
+  echo "13b: $HAVELHC13b $LHC13bData $OUTPUTDIR_LHC13b"
+  FindCorrectTrainDirectory $LHC13cData $OUTPUTDIRData $ALIENDIRData $LHC13beData
+  HAVELHC13c=$tempBool
+  LHC13cData=$tempDir
+  OUTPUTDIR_LHC13c=$tempPath
+  echo "13c: $HAVELHC13c $LHC13cData $OUTPUTDIR_LHC13c"
+  FindCorrectTrainDirectory $LHC13dData $OUTPUTDIRData $ALIENDIRData $LHC13beData
+  HAVELHC13d=$tempBool
+  LHC13dData=$tempDir
+  OUTPUTDIR_LHC13d=$tempPath
+  echo "13d: $HAVELHC13d $LHC13dData $OUTPUTDIR_LHC13d"
+  FindCorrectTrainDirectory $LHC13eData $OUTPUTDIRData $ALIENDIRData $LHC13beData
+  HAVELHC13e=$tempBool
+  LHC13eData=$tempDir
+  OUTPUTDIR_LHC13e=$tempPath
+  echo "13e: $HAVELHC13e $LHC13eData $OUTPUTDIR_LHC13e"
+fi
+
 FindCorrectTrainDirectory $LHC13fData $OUTPUTDIRData $ALIENDIRData
 HAVELHC13f=$tempBool
 LHC13fData=$tempDir
@@ -365,12 +348,12 @@ OUTPUTDIR_LHC16t=$tempPath
 echo "16t: $HAVELHC16t $LHC16tData $OUTPUTDIR_LHC16t"
 FindCorrectTrainDirectory $LHC16qDataFast $OUTPUTDIRData $ALIENDIRData $LHC16qtData
 HAVELHC16qF=$tempBool
-LHC16qData=$tempDir
+LHC16qDataFast=$tempDir
 OUTPUTDIR_LHC16qF=$tempPath
 echo "16q: $HAVELHC16qF $LHC16qDataFast $OUTPUTDIR_LHC16qF"
 FindCorrectTrainDirectory $LHC16tDataFast $OUTPUTDIRData $ALIENDIRData $LHC16qtData
 HAVELHC16tF=$tempBool
-LHC16tData=$tempDir
+LHC16tDataFast=$tempDir
 OUTPUTDIR_LHC16tF=$tempPath
 echo "16t: $HAVELHC16tF $LHC16tDataFast $OUTPUTDIR_LHC16tF"
 
@@ -429,15 +412,16 @@ if [ $CLEANUPMAYOR == 0 ]; then
         #echo -e "DPGTrack\nDPGTrackIncAccTPC\nDPGTrackIncAccAndEMC" > runlistsToMerge.txt
     echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC13b" $HAVELHC13b $OUTPUTDIR_LHC13b $LHC13bData $pathDataR1 $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    echo "LHC13b" $HAVELHC13b $OUTPUTDIR_LHC13b $LHC13bData $pathDataR1b $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC13b" $HAVELHC13b $OUTPUTDIR_LHC13b $LHC13bData $pathDataR1b $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC13c" $HAVELHC13c $OUTPUTDIR_LHC13c $LHC13cData $pathDataR1 $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC13c" $HAVELHC13c $OUTPUTDIR_LHC13c $LHC13cData $pathDataR1c $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC13d" $HAVELHC13d $OUTPUTDIR_LHC13d $LHC13dData $pathDataR1 $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC13d" $HAVELHC13d $OUTPUTDIR_LHC13d $LHC13dData $pathDataR1d $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC13e" $HAVELHC13e $OUTPUTDIR_LHC13e $LHC13eData $pathDataR1 $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC13e" $HAVELHC13e $OUTPUTDIR_LHC13e $LHC13eData $pathDataR1e $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC13f" $HAVELHC13f $OUTPUTDIR_LHC13f $LHC13fData $pathDataR1 $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC13f" $HAVELHC13f $OUTPUTDIR_LHC13f $LHC13fData $pathDataR1f $baseLegoData "/alice/data/2013" $NSlashes3 runlistsToMerge.txt "pass4" GammaCalo
 
     cd $currentDir
     echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
@@ -447,15 +431,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
     cd $currentDir
     CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j5_3" $HAVELHC18j53 $OUTPUTDIR_LHC18j53 $LHC18j5_3MC $pathMCR1 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaCalo
 
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16q $OUTPUTDIR_LHC16q $LHC16qData $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-    # "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData" $NSlashes3 "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16qF" $HAVELHC16qF $OUTPUTDIR_LHC16qF $LHC16qDataFast $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaCalo
-    #   "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16qDataFast" $NSlashes3 "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16qDataFast/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16t $OUTPUTDIR_LHC16t $LHC16tData $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1" GammaCalo
-    # "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData" $NSlashes3 "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData/"
-    CopyRunwiseAndMergeAccordingToRunlistData "LHC16tF" $HAVELHC16tF $OUTPUTDIR_LHC16tF $LHC16tDataFast $pathDataR2 $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaCalo
-    #  "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16tDataFast" $NSlashes3 "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$FAST/PWGGA/GA_pPb/$LHC16tDataFast/"
-
+    cd $currentDir
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16q $OUTPUTDIR_LHC16q $LHC16qData $pathDataR2WOSDD $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$WOSDD" GammaCalo
+    cd $currentDir
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16q" $HAVELHC16qF $OUTPUTDIR_LHC16qF $LHC16qDataFast $pathDataR2FAST $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaCalo
+    cd $currentDir
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16t $OUTPUTDIR_LHC16t $LHC16tData $pathDataR2WOSDD $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$WOSDD" GammaCalo
+    cd $currentDir
+    CopyRunwiseAndMergeAccordingToRunlistData "LHC16t" $HAVELHC16tF $OUTPUTDIR_LHC16tF $LHC16tDataFast $pathDataR2FAST $baseLegoData "/alice/data/2016" $NSlashes3 runlistsToMerge.txt "pass1$FAST" GammaCalo
 
     CopyRunwiseAndMergeAccordingToRunlistMC "LHC17f2b" $HAVELHC17f2b $OUTPUTDIR_LHC17f2b $LHC17f2bMC $pathMCR2 $baseLegoMC "/alice/sim/2017" $NSlashes3 runlistsToMerge.txt GammaCalo
     # "/alice/sim/2017/LHC17f2b$5/$runNumber/PWGGA/GA_pPb_MC/$LHC17f2bMC" $NSlashes3 "/alice/sim/2017/LHC17f2b$5/$runNumber/PWGGA/GA_pPb_MC/$LHC17f2bMC/"
@@ -723,8 +706,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
         echo -e "$3\nfast" > listReconstruction.txt
         listReconstruction=`cat listReconstruction.txt`
         for reco in $listReconstruction; do
-            ls $OUTPUTDIR/GammaCalo_LHC16q_$reco-pass$passNr-DPGTrack\_*.root > filesForMerging.txt
-            echo -e "DPGTrack" > runlistsToMerge.txt
+            ls $OUTPUTDIR/GammaCalo_LHC16q_$reco-pass$passNr-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
+            echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
             filesForMerging=`cat filesForMerging.txt`
             listsToMerge=`cat runlistsToMerge.txt`
             for fileName in $filesForMerging; do
@@ -743,8 +726,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
 
     if [ $MERGEONFASTAndWOSDD == 1 ]; then
-        ls $OUTPUTDIR/GammaCalo_LHC16qt_fast-pass$passNr-DPGTrack\_*.root | grep -v "WTree" > filesForMerging.txt
-        echo -e "DPGTrack" > runlistsToMerge.txt
+        ls $OUTPUTDIR/GammaCalo_LHC16qt_fast-pass$passNr-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
+        echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
         filesForMerging=`cat filesForMerging.txt`
         listsToMerge=`cat runlistsToMerge.txt`
         for fileName in $filesForMerging; do
@@ -760,7 +743,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done
         done
 
-        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2a_fix_fast-DPGTrack\_*.root | grep -v "WTree" > filesForMerging.txt
+        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2a_fix_fast-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName
@@ -775,7 +758,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done
         done
 
-        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2b_fast-DPGTrack\_*.root | grep -v "WTree" > filesForMerging.txt
+        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2b_fast-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName
@@ -790,7 +773,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done
         done
 
-        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2b_fast-woSDD-DPGTrack\_*.root | grep -v "WTree" > filesForMerging.txt
+        ls $OUTPUTDIR/GammaCalo_MC_LHC17f2b_fast-woSDD-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName
@@ -806,7 +789,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
         done
 
 
-        ls $OUTPUTDIR/GammaCalo_MC_LHC17g8a_fast-DPGTrack\_*.root > filesForMerging.txt
+        ls $OUTPUTDIR/GammaCalo_MC_LHC17g8a_fast-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName

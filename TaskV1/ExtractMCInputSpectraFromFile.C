@@ -75,7 +75,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                                     TString nameExternalInput       = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_07_04.root",
                                     Double_t minPt                  = 0,
                                     Double_t maxPt                  = 20,
-                                    Bool_t enableSecPi0             = kFALSE
+                                    Bool_t enableSecPi0             = kFALSE,
+                                    Bool_t enableRebin              = kTRUE
                                 ) {
 
     //*****************************************************************************************************************
@@ -209,9 +210,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     } else {
         fHistoMCPi0Pt->Scale(1/0.98923);
     }
-    TH1D* fHistoMCPi0PtRebinned         = (TH1D*)fHistoMCPi0Pt->Clone("fHistoMCPi0PtRebinned");
-    fHistoMCPi0PtRebinned->Rebin(nBinsX,"fHistoMCPi0PtRebinned2",ptBinning);
-    fHistoMCPi0PtRebinned               = (TH1D*)gDirectory->Get("fHistoMCPi0PtRebinned2");
+    TH1D* fHistoMCPi0PtRebinned         = NULL;
+
+    if (enableRebin){
+      fHistoMCPi0PtRebinned               = (TH1D*)fHistoMCPi0Pt->Clone("fHistoMCPi0PtRebinned");
+      fHistoMCPi0PtRebinned->Rebin(nBinsX,"fHistoMCPi0PtRebinned2",ptBinning);
+      fHistoMCPi0PtRebinned               = (TH1D*)gDirectory->Get("fHistoMCPi0PtRebinned2");
+    }
 
     // ----------- read eta -----------------------------------
     cout << "reading eta" << endl;
@@ -225,10 +230,12 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     } else {
         fHistoMCEtaPt->Scale(1/0.3941);
     }
-    TH1D* fHistoMCEtaPtRebinned         = (TH1D*)fHistoMCEtaPt->Clone("fHistoMCEtaPtRebinned");
-    fHistoMCEtaPtRebinned->Rebin(nBinsX,"fHistoMCEtaPtRebinned2",ptBinning);
-    fHistoMCEtaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCEtaPtRebinned2");
-
+    TH1D* fHistoMCEtaPtRebinned         = NULL;
+    if (enableRebin){
+      fHistoMCEtaPtRebinned         = (TH1D*)fHistoMCEtaPt->Clone("fHistoMCEtaPtRebinned");
+      fHistoMCEtaPtRebinned->Rebin(nBinsX,"fHistoMCEtaPtRebinned2",ptBinning);
+      fHistoMCEtaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCEtaPtRebinned2");
+    }
     // ----------- read gamma -----------------------------------
     cout << "reading gamma" << endl;
     TH1D* fHistoMCAllGammaPt           = (TH1D*)MCContainer->FindObject("MC_AllGamma_Pt");
@@ -241,22 +248,26 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoMCDirGammaPt->Add(fHistoMCDecGammaPt,-1);
     }
     TH1D* fHistoMCAllGammaPtRebinned         = NULL;
-    if(fHistoMCAllGammaPt){
-    TH1D* fHistoMCAllGammaPtRebinned         = (TH1D*)fHistoMCAllGammaPt->Clone("fHistoMCAllGammaPtRebinned");
-        fHistoMCAllGammaPtRebinned->Rebin(nBinsX,"fHistoMCAllGammaPtRebinned2",ptBinning);
-        fHistoMCAllGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCAllGammaPtRebinned2");
-    }
     TH1D* fHistoMCDecGammaPtRebinned         = NULL;
-    if(fHistoMCDecGammaPt){
-    TH1D* fHistoMCDecGammaPtRebinned         = (TH1D*)fHistoMCDecGammaPt->Clone("fHistoMCDecGammaPtRebinned");
-        fHistoMCDecGammaPtRebinned->Rebin(nBinsX,"fHistoMCDecGammaPtRebinned2",ptBinning);
-        fHistoMCDecGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDecGammaPtRebinned2");
-    }
     TH1D* fHistoMCDirGammaPtRebinned         = NULL;
-    if(fHistoMCDirGammaPt){
-    TH1D* fHistoMCDirGammaPtRebinned         = (TH1D*)fHistoMCDirGammaPt->Clone("fHistoMCDirGammaPtRebinned");
-        fHistoMCDirGammaPtRebinned->Rebin(nBinsX,"fHistoMCDirGammaPtRebinned2",ptBinning);
-        fHistoMCDirGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDirGammaPtRebinned2");
+    if (enableRebin){
+      if(fHistoMCAllGammaPt){
+          fHistoMCAllGammaPtRebinned         = (TH1D*)fHistoMCAllGammaPt->Clone("fHistoMCAllGammaPtRebinned");
+          fHistoMCAllGammaPtRebinned->Rebin(nBinsX,"fHistoMCAllGammaPtRebinned2",ptBinning);
+          fHistoMCAllGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCAllGammaPtRebinned2");
+      }
+
+      if(fHistoMCDecGammaPt){
+          fHistoMCDecGammaPtRebinned         = (TH1D*)fHistoMCDecGammaPt->Clone("fHistoMCDecGammaPtRebinned");
+          fHistoMCDecGammaPtRebinned->Rebin(nBinsX,"fHistoMCDecGammaPtRebinned2",ptBinning);
+          fHistoMCDecGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDecGammaPtRebinned2");
+      }
+
+      if(fHistoMCDirGammaPt){
+          fHistoMCDirGammaPtRebinned         = (TH1D*)fHistoMCDirGammaPt->Clone("fHistoMCDirGammaPtRebinned");
+          fHistoMCDirGammaPtRebinned->Rebin(nBinsX,"fHistoMCDirGammaPtRebinned2",ptBinning);
+          fHistoMCDirGammaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCDirGammaPtRebinned2");
+      }
     }
     // ------------ read 2D primary particle histo vs pt --------
     TH2D* fHistoPrimPartYSource         = NULL;
@@ -326,43 +337,56 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoMCPiPt->Sumw2();
     fHistoMCPiPt->Add(fHistoMCPiPosPt);
     fHistoMCPiPt->Scale(0.5);
-    TH1D* fHistoMCPiPtRebinned          = (TH1D*)fHistoMCPiPt->Clone("fHistoMCPiPtRebinned");
-    fHistoMCPiPtRebinned->Rebin(nBinsX,"fHistoMCPiPtRebinned2",ptBinning);
-    fHistoMCPiPtRebinned                = (TH1D*)gDirectory->Get("fHistoMCPiPtRebinned2");
+
+    TH1D* fHistoMCPiPtRebinned          = NULL;
+    if (enableRebin){
+        fHistoMCPiPtRebinned              = (TH1D*)fHistoMCPiPt->Clone("fHistoMCPiPtRebinned");
+        fHistoMCPiPtRebinned->Rebin(nBinsX,"fHistoMCPiPtRebinned2",ptBinning);
+        fHistoMCPiPtRebinned              = (TH1D*)gDirectory->Get("fHistoMCPiPtRebinned2");
+    }
     // ----------- charged kaons ------------------------------
     cout << "reading charged kaons" << endl;
     TH1D* fHistoMCKPt                   = (TH1D*)fHistoMCKNegPt->Clone("MC_KCh_All_Pt");
     fHistoMCKPt->Sumw2();
     fHistoMCKPt->Add(fHistoMCKPosPt);
     fHistoMCKPt->Scale(0.5);
-    TH1D* fHistoMCKPtRebinned           = (TH1D*)fHistoMCKPt->Clone("fHistoMCKPtRebinned");
-    fHistoMCKPtRebinned->Rebin(nBinsX,"fHistoMCKPtRebinned2",ptBinning);
-    fHistoMCKPtRebinned                 = (TH1D*)gDirectory->Get("fHistoMCKPtRebinned2");
+    TH1D* fHistoMCKPtRebinned           = NULL;
+    if (enableRebin){
+        fHistoMCKPtRebinned             = (TH1D*)fHistoMCKPt->Clone("fHistoMCKPtRebinned");
+        fHistoMCKPtRebinned->Rebin(nBinsX,"fHistoMCKPtRebinned2",ptBinning);
+        fHistoMCKPtRebinned             = (TH1D*)gDirectory->Get("fHistoMCKPtRebinned2");
+    }
     // ----------- neutral kaons ------------------------------
     cout << "reading K0s" << endl;
     TH1D* fHistoMCK0sPtYield            = (TH1D*)fHistoMCK0sPt->Clone("MC_K0s_Pt");
     fHistoMCK0sPtYield->Sumw2();
-    TH1D* fHistoMCK0sPtRebinned         = (TH1D*)fHistoMCK0sPt->Clone("fHistoMCK0sPtRebinned");
-    fHistoMCK0sPtRebinned->Rebin(nBinsX,"fHistoMCK0sPtRebinned2",ptBinning);
-    fHistoMCK0sPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCK0sPtRebinned2");
-
+    TH1D* fHistoMCK0sPtRebinned         = NULL;
+    if (enableRebin){
+        fHistoMCK0sPtRebinned           = (TH1D*)fHistoMCK0sPt->Clone("fHistoMCK0sPtRebinned");
+        fHistoMCK0sPtRebinned->Rebin(nBinsX,"fHistoMCK0sPtRebinned2",ptBinning);
+        fHistoMCK0sPtRebinned           = (TH1D*)gDirectory->Get("fHistoMCK0sPtRebinned2");
+    }
     // ----------- neutral kaons ------------------------------
     cout << "reading K0l" << endl;
     TH1D* fHistoMCK0lPtYield            = (TH1D*)fHistoMCK0lPt->Clone("MC_K0l_Pt_Yield");
     fHistoMCK0lPtYield->Sumw2();
-    TH1D* fHistoMCK0lPtRebinned         = (TH1D*)fHistoMCK0lPt->Clone("fHistoMCK0lPtRebinned");
-    fHistoMCK0lPtRebinned->Rebin(nBinsX,"fHistoMCK0lPtRebinned2",ptBinning);
-    fHistoMCK0lPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCK0lPtRebinned2");
-
+    TH1D* fHistoMCK0lPtRebinned         = NULL;
+    if (enableRebin){
+        fHistoMCK0lPtRebinned           = (TH1D*)fHistoMCK0lPt->Clone("fHistoMCK0lPtRebinned");
+        fHistoMCK0lPtRebinned->Rebin(nBinsX,"fHistoMCK0lPtRebinned2",ptBinning);
+        fHistoMCK0lPtRebinned           = (TH1D*)gDirectory->Get("fHistoMCK0lPtRebinned2");
+    }
     // ----------- Lambda -------------------------------------
     TH1D* fHistoMCLambdaPtRebinned      = NULL;
     TH1D* fHistoMCLambdaPtYield         = NULL;
     if (fHistoMCLambdaPt){
         fHistoMCLambdaPtYield           = (TH1D*)fHistoMCLambdaPt->Clone("MC_Lambda_Pt_Yield");
         fHistoMCLambdaPtYield->Sumw2();
-        fHistoMCLambdaPtRebinned        = (TH1D*)fHistoMCLambdaPt->Clone("fHistoMCLambdaPtRebinned");
-        fHistoMCLambdaPtRebinned->Rebin(nBinsX,"fHistoMCLambdaPtRebinned2",ptBinning);
-        fHistoMCLambdaPtRebinned        = (TH1D*)gDirectory->Get("fHistoMCLambdaPtRebinned2");
+        if (enableRebin){
+            fHistoMCLambdaPtRebinned        = (TH1D*)fHistoMCLambdaPt->Clone("fHistoMCLambdaPtRebinned");
+            fHistoMCLambdaPtRebinned->Rebin(nBinsX,"fHistoMCLambdaPtRebinned2",ptBinning);
+            fHistoMCLambdaPtRebinned        = (TH1D*)gDirectory->Get("fHistoMCLambdaPtRebinned2");
+        }
     }
     cout << __LINE__  << endl;
     // ----------- secondary pions from K0s, K0l, Lambda ------
@@ -376,43 +400,44 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TH1D* fHistoRatioPi0FromLambdaDivLambda = NULL;
     if (enableSecPi0){
         TH2D* fHistoMCSecPi0PtSource                = (TH2D*)MCContainer->FindObject("MC_SecPi0_Pt_Source");
-        fHistoMCSecPi0FromK0sPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0s", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1.),
+        fHistoMCSecPi0FromK0sPt                     = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0s", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1.),
                                                                                                     fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1.),"e");
-        TH1D* fHistoMCSecPi0FromK0sPtRebinned       = (TH1D*)fHistoMCSecPi0FromK0sPt->Clone("MCSecPi0FromK0sRebinned");
+        TH1D* fHistoMCSecPi0FromK0sPtRebinned       = NULL;
+        if (enableRebin){
+            fHistoMCSecPi0FromK0sPtRebinned         = (TH1D*)fHistoMCSecPi0FromK0sPt->Clone("MCSecPi0FromK0sRebinned");
+            fHistoMCSecPi0FromK0sPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0sRebinned2",ptBinning);
+            fHistoMCSecPi0FromK0sPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0sRebinned2");
+            fHistoRatioPi0FromK0sDivK0s           = (TH1D*)fHistoMCSecPi0FromK0sPtRebinned->Clone("ratioPi0FromK0s");
+            fHistoRatioPi0FromK0sDivK0s->Divide(fHistoMCSecPi0FromK0sPtRebinned, fHistoMCK0sPtRebinned);
+        }
         cout << __LINE__  << endl;
-
-
-        fHistoMCSecPi0FromK0sPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0sRebinned2",ptBinning);
-        fHistoMCSecPi0FromK0sPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0sRebinned2");
-
-        cout << __LINE__  << endl;
-
-        fHistoRatioPi0FromK0sDivK0s           = (TH1D*)fHistoMCSecPi0FromK0sPtRebinned->Clone("ratioPi0FromK0s");
-        fHistoRatioPi0FromK0sDivK0s->Divide(fHistoMCSecPi0FromK0sPtRebinned, fHistoMCK0sPtRebinned);
-
-        cout << __LINE__  << endl;
-
         //---> K0l
         fHistoMCSecPi0FromK0lPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0l", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),
                                                                                                     fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),"e");
-        TH1D* fHistoMCSecPi0FromK0lPtRebinned       = (TH1D*)fHistoMCSecPi0FromK0lPt->Clone("MCSecPi0FromK0lRebinned");
-        fHistoMCSecPi0FromK0lPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0lRebinned2",ptBinning);
-        fHistoMCSecPi0FromK0lPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0lRebinned2");
-        fHistoRatioPi0FromK0lDivK0l           = (TH1D*)fHistoMCSecPi0FromK0lPtRebinned->Clone("ratioPi0FromK0l");
-        fHistoRatioPi0FromK0lDivK0l->Divide(fHistoMCSecPi0FromK0lPtRebinned, fHistoMCK0lPtRebinned);
+        TH1D* fHistoMCSecPi0FromK0lPtRebinned       = NULL;
+        if (enableRebin){
+            fHistoMCSecPi0FromK0lPtRebinned         = (TH1D*)fHistoMCSecPi0FromK0lPt->Clone("MCSecPi0FromK0lRebinned");
+            fHistoMCSecPi0FromK0lPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0lRebinned2",ptBinning);
+            fHistoMCSecPi0FromK0lPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0lRebinned2");
+            fHistoRatioPi0FromK0lDivK0l           = (TH1D*)fHistoMCSecPi0FromK0lPtRebinned->Clone("ratioPi0FromK0l");
+            fHistoRatioPi0FromK0lDivK0l->Divide(fHistoMCSecPi0FromK0lPtRebinned, fHistoMCK0lPtRebinned);
+        }
         cout << __LINE__  << endl;
 
         //---> Lambda
         fHistoMCSecPi0FromLambdaPt            = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromLambda", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2.),
                                                                                                     fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2.),"e");
-        TH1D* fHistoMCSecPi0FromLambdaPtRebinned    = (TH1D*)fHistoMCSecPi0FromLambdaPt->Clone("MCSecPi0FromLambdaRebinned");
-        fHistoMCSecPi0FromLambdaPtRebinned->Rebin(nBinsX,"MCSecPi0FromLambdaRebinned2",ptBinning);
-        fHistoMCSecPi0FromLambdaPtRebinned          = (TH1D*)gDirectory->Get("MCSecPi0FromLambdaRebinned2");
+        TH1D* fHistoMCSecPi0FromLambdaPtRebinned    = NULL;
+        if (enableRebin){
+            fHistoMCSecPi0FromLambdaPtRebinned    = (TH1D*)fHistoMCSecPi0FromLambdaPt->Clone("MCSecPi0FromLambdaRebinned");
+            fHistoMCSecPi0FromLambdaPtRebinned->Rebin(nBinsX,"MCSecPi0FromLambdaRebinned2",ptBinning);
+            fHistoMCSecPi0FromLambdaPtRebinned          = (TH1D*)gDirectory->Get("MCSecPi0FromLambdaRebinned2");
 
-        fHistoRatioPi0FromLambdaDivLambda     = NULL;
-        if (fHistoMCLambdaPt){
-            fHistoRatioPi0FromLambdaDivLambda       = (TH1D*)fHistoMCSecPi0FromLambdaPtRebinned->Clone("ratioPi0FromLambda");
-        fHistoRatioPi0FromLambdaDivLambda->Divide(fHistoMCSecPi0FromLambdaPtRebinned, fHistoMCLambdaPtRebinned);
+            fHistoRatioPi0FromLambdaDivLambda     = NULL;
+            if (fHistoMCLambdaPt){
+                fHistoRatioPi0FromLambdaDivLambda       = (TH1D*)fHistoMCSecPi0FromLambdaPtRebinned->Clone("ratioPi0FromLambda");
+                fHistoRatioPi0FromLambdaDivLambda->Divide(fHistoMCSecPi0FromLambdaPtRebinned, fHistoMCLambdaPtRebinned);
+            }
         }
     }
     // scale yield to per event quantities
@@ -430,30 +455,32 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     }
     // scale yield to fully invariant numbers
     ScaleMCYield(fHistoMCPi0Pt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCPi0PtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCEtaPt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCEtaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     if(fHistoMCAllGammaPt)          ScaleMCYield(fHistoMCAllGammaPt,  deltaRapid,  scaling,  nEvtMC );
-    if(fHistoMCAllGammaPtRebinned)  ScaleMCYield(fHistoMCAllGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     if(fHistoMCDecGammaPt)          ScaleMCYield(fHistoMCDecGammaPt,  deltaRapid,  scaling,  nEvtMC );
-    if(fHistoMCDecGammaPtRebinned)  ScaleMCYield(fHistoMCDecGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     if(fHistoMCDirGammaPt)          ScaleMCYield(fHistoMCDirGammaPt,  deltaRapid,  scaling,  nEvtMC );
-    if(fHistoMCDirGammaPtRebinned)  ScaleMCYield(fHistoMCDirGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCPiPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiNegPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPosPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCKPt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCKPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCKNegPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCKPosPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCK0sPt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCK0sPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCK0lPt,  deltaRapid,  scaling,  nEvtMC );
-    ScaleMCYield(fHistoMCK0lPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    if (enableRebin){
+        ScaleMCYield(fHistoMCPi0PtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        ScaleMCYield(fHistoMCEtaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        if(fHistoMCAllGammaPtRebinned)  ScaleMCYield(fHistoMCAllGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        if(fHistoMCDecGammaPtRebinned)  ScaleMCYield(fHistoMCDecGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        if(fHistoMCDirGammaPtRebinned)  ScaleMCYield(fHistoMCDirGammaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        ScaleMCYield(fHistoMCPiPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        ScaleMCYield(fHistoMCKPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        ScaleMCYield(fHistoMCK0sPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        ScaleMCYield(fHistoMCK0lPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    }
     if (fHistoMCLambdaPt){
         ScaleMCYield(fHistoMCLambdaPt,  deltaRapid,  scaling,  nEvtMC );
-        ScaleMCYield(fHistoMCLambdaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+        if (enableRebin) ScaleMCYield(fHistoMCLambdaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     }
 
     TH1D* fHistoRatioMCPi0DivPi         = NULL;
@@ -531,9 +558,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     }*/
     // build ratio eta/pi^0
     if (fHistoMCPi0Pt && fHistoMCEtaPt){
-        fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivPi0");
-        fHistoRatioMCEtaDivPi0->Divide(fHistoRatioMCEtaDivPi0,fHistoMCPi0PtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivPi0");
+            fHistoRatioMCEtaDivPi0->Divide(fHistoRatioMCEtaDivPi0,fHistoMCPi0PtRebinned);
+        } else {
+            fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPt->Clone("fHistoRatioMCEtaDivPi0");
+            fHistoRatioMCEtaDivPi0->Divide(fHistoRatioMCEtaDivPi0,fHistoMCPi0Pt);
+        }
         Double_t maxPtForFit    = 5;
         Double_t minPtForFit    = 15;
         if (fGeneratorName.Contains("p_{")){
@@ -574,9 +605,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     // build ratio eta/pi^0
     if (fHistoMCKPt && fHistoMCEtaPt){
         cout << "eta/Kch" << endl;
-        fHistoRatioMCEtaDivK = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivKCh");
-        fHistoRatioMCEtaDivK->Divide(fHistoRatioMCEtaDivK,fHistoMCKPtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCEtaDivK = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivKCh");
+            fHistoRatioMCEtaDivK->Divide(fHistoRatioMCEtaDivK,fHistoMCKPtRebinned);
+        } else {
+            fHistoRatioMCEtaDivK = (TH1D*)fHistoMCEtaPt->Clone("fHistoRatioMCEtaDivKCh");
+            fHistoRatioMCEtaDivK->Divide(fHistoRatioMCEtaDivK,fHistoMCKPt);
+        }
         DrawAutoGammaMesonHistos(   fHistoRatioMCEtaDivK,
                             "", "#it{p}_{T} (GeV/#it{c})", "#eta/ K^{#pm}",
                             kFALSE, 10, 1e-10, kFALSE,
@@ -595,9 +630,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
     // build ratio pi0/pi^\m
     if (fHistoMCPi0Pt && fHistoMCPiPt){
-        fHistoRatioMCPi0DivPi = (TH1D*)fHistoMCPi0PtRebinned->Clone("fHistoRatioMCPi0DivPi");
-        fHistoRatioMCPi0DivPi->Divide(fHistoRatioMCPi0DivPi,fHistoMCPiPtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCPi0DivPi = (TH1D*)fHistoMCPi0PtRebinned->Clone("fHistoRatioMCPi0DivPi");
+            fHistoRatioMCPi0DivPi->Divide(fHistoRatioMCPi0DivPi,fHistoMCPiPtRebinned);
+        } else {
+            fHistoRatioMCPi0DivPi = (TH1D*)fHistoMCPi0Pt->Clone("fHistoRatioMCPi0DivPi");
+            fHistoRatioMCPi0DivPi->Divide(fHistoRatioMCPi0DivPi,fHistoMCPiPt);
+        }
         DrawAutoGammaMesonHistos(   fHistoRatioMCPi0DivPi,
                             "", "#it{p}_{T} (GeV/#it{c})", "#pi^{0} / #frac{#pi^{+}+#pi^{-}}{2}",
                             kFALSE, 10, 1e-10, kFALSE,
@@ -615,12 +654,21 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     }
     // build ratio K0s/K^\pm
     if (fHistoMCK0sPt && fHistoMCKPt){
-        fHistoRatioMCK0sDivK = (TH1D*)fHistoMCK0sPtRebinned->Clone("fHistoRatioMCK0sDivK");
-        fHistoRatioMCK0sDivK->Divide(fHistoRatioMCK0sDivK,fHistoMCKPtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCK0sDivK = (TH1D*)fHistoMCK0sPtRebinned->Clone("fHistoRatioMCK0sDivK");
+            fHistoRatioMCK0sDivK->Divide(fHistoRatioMCK0sDivK,fHistoMCKPtRebinned);
+        } else {
+            fHistoRatioMCK0sDivK = (TH1D*)fHistoMCK0sPt->Clone("fHistoRatioMCK0sDivK");
+            fHistoRatioMCK0sDivK->Divide(fHistoRatioMCK0sDivK,fHistoMCKPt);
+        }
         if (fHistoMCK0lPt){
-            fHistoRatioMCK0lDivK = (TH1D*)fHistoMCK0lPtRebinned->Clone("fHistoRatioMCK0lDivK");
-            fHistoRatioMCK0lDivK->Divide(fHistoRatioMCK0lDivK,fHistoMCKPtRebinned);
+            if (enableRebin){
+                fHistoRatioMCK0lDivK = (TH1D*)fHistoMCK0lPtRebinned->Clone("fHistoRatioMCK0lDivK");
+                fHistoRatioMCK0lDivK->Divide(fHistoRatioMCK0lDivK,fHistoMCKPtRebinned);
+            } else {
+                fHistoRatioMCK0lDivK = (TH1D*)fHistoMCK0lPt->Clone("fHistoRatioMCK0lDivK");
+                fHistoRatioMCK0lDivK->Divide(fHistoRatioMCK0lDivK,fHistoMCKPt);
+            }
         }
 
         TLegend* legendRatioK0ToK = GetAndSetLegend2(0.15, 0.8, 0.42, 0.95, 32,1);
@@ -654,9 +702,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
     // build ratio K^\pm/pi^\pm
     if ( fHistoMCKPt && fHistoMCPiPt){
-        fHistoRatioMCKDivPi = (TH1D*)fHistoMCKPtRebinned->Clone("fHistoRatioMCKDivPi");
-        fHistoRatioMCKDivPi->Divide(fHistoRatioMCKDivPi,fHistoMCPiPtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCKDivPi = (TH1D*)fHistoMCKPtRebinned->Clone("fHistoRatioMCKDivPi");
+            fHistoRatioMCKDivPi->Divide(fHistoRatioMCKDivPi,fHistoMCPiPtRebinned);
+        } else {
+            fHistoRatioMCKDivPi = (TH1D*)fHistoMCKPt->Clone("fHistoRatioMCKDivPi");
+            fHistoRatioMCKDivPi->Divide(fHistoRatioMCKDivPi,fHistoMCPiPt);
+        }
         DrawAutoGammaMesonHistos(   fHistoRatioMCKDivPi,
                             "", "#it{p}_{T} (GeV/#it{c})", "#frac{K^{+}+K^{-}}{2} / #frac{#pi^{+}+#pi^{-}}{2}",
                             kFALSE, 10, 1e-10, kFALSE,
@@ -676,9 +728,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
     // build ratio K0s/pi0
     if ( fHistoMCK0sPt && fHistoMCPi0PtRebinned){
-        fHistoRatioMCK0sDivPi0 = (TH1D*)fHistoMCK0sPtRebinned->Clone("fHistoRatioMCKDivPi");
-        fHistoRatioMCK0sDivPi0->Divide(fHistoRatioMCK0sDivPi0,fHistoMCPi0PtRebinned);
-
+        if (enableRebin){
+            fHistoRatioMCK0sDivPi0 = (TH1D*)fHistoMCK0sPtRebinned->Clone("fHistoRatioMCKDivPi");
+            fHistoRatioMCK0sDivPi0->Divide(fHistoRatioMCK0sDivPi0,fHistoMCPi0PtRebinned);
+        } else {
+            fHistoRatioMCK0sDivPi0 = (TH1D*)fHistoMCK0sPt->Clone("fHistoRatioMCKDivPi");
+            fHistoRatioMCK0sDivPi0->Divide(fHistoRatioMCK0sDivPi0,fHistoMCPi0Pt);
+        }
         DrawAutoGammaMesonHistos(   fHistoRatioMCK0sDivPi0,
                             "", "#it{p}_{T} (GeV/#it{c})", "K^{0}_{s} / #pi^{0}",
                             kFALSE, 10, 1e-10, kFALSE,
