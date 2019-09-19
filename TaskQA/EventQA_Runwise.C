@@ -1555,11 +1555,7 @@ void EventQA_Runwise(
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Histograms" << endl;
-    TCanvas* canvas;
-    Int_t width = (Int_t)((Double_t)vecRuns.size()*3);
-    // canvas = new TCanvas("canvas","",10,10,750,500);  // gives the page size
-    canvas = new TCanvas("canvas","",10,10,width,500);  // gives the page size
-
+    TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
     Double_t leftMar        = 0.09;
     Double_t rightMar       = 0.025;
     Double_t topMargin      = 0.04;

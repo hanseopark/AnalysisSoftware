@@ -850,6 +850,15 @@
                 fBGFitRange[1]              = 0.3;
                 fBGFitRangeLeft[0]          = 0.03;
                 fBGFitRangeLeft[1]          = 0.05;
+                if ( fEnergyFlag.CompareTo("13TeV") == 0 ){
+                    if ( trigger.CompareTo("8e")==0 ){
+                        fBGFitRange[0] = 0.25;
+                        fBGFitRange[1] = 0.30;
+                    } else if ( trigger.CompareTo("8d")==0 ){
+                        fBGFitRange[0] = 0.25;
+                        fBGFitRange[1] = 0.30;
+                    }
+                }
             } else if (mode == 4 || mode == 12 ) {                  // EMC
                 fBGFitRange[0]              = 0.19;
                 fBGFitRange[1]              = 0.3;

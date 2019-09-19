@@ -217,8 +217,8 @@ void ExtractSignalV2(
         if (fEventCutSelectionRead.BeginsWith("c")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("9")) fEventCutSelectionRead.Replace(0,1,"8");
         if (fEventCutSelectionRead.BeginsWith("e")) fEventCutSelectionRead.Replace(0,1,"8");
-        if (fEventCutSelectionRead.BeginsWith("h") || 
-            fEventCutSelectionRead.BeginsWith("m") || 
+        if (fEventCutSelectionRead.BeginsWith("h") ||
+            fEventCutSelectionRead.BeginsWith("m") ||
             fEventCutSelectionRead.BeginsWith("n")) fEventCutSelectionRead.Replace(0,1,"0");
 //         if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeVCent") == 0 ) && (mode == 2 || mode == 3 || mode == 4 ) ) fEventCutSelectionRead.Replace(3,1,"0");
         cout << fEventCutSelectionRead.Data() << endl;
@@ -2151,6 +2151,7 @@ void ExtractSignalV2(
     }
     canvasLambdaTail->Update();
 
+
     TLegend* legendLambdaTail = GetAndSetLegend2(0.15,0.90,0.4,0.94, 0.04*1200,1);
     legendLambdaTail->AddEntry(fHistoLambdaTail,Form("Lambda tail parameter for %s",fPrefix.Data()),"p");
     legendLambdaTail->Draw();
@@ -2161,7 +2162,6 @@ void ExtractSignalV2(
 
     if (fIsMC) canvasLambdaTail->SaveAs(Form("%s/%s_MC_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasLambdaTail->SaveAs(Form("%s/%s_data_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-
 
     ///*********************** Mass
     TCanvas* canvasMesonMass = new TCanvas("canvasMesonMass","",1550,1200);  // gives the page size
@@ -2206,6 +2206,7 @@ void ExtractSignalV2(
     TLegend* legendMesonMass = GetAndSetLegend2(0.15,0.90,0.4,0.94, 0.04*1200,1);
     legendMesonMass->AddEntry(fHistoMassMeson,Form("%s mass",fPrefix.Data()),"p");
     legendMesonMass->Draw();
+
 
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonMassRange[0], fMesonMassRange[0], 1, kRed+1, 2);
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonMassExpect, fMesonMassExpect, 1, kGray+2, 2);
@@ -2256,7 +2257,6 @@ void ExtractSignalV2(
                             kFALSE, 0., 10.);
 
     canvasAmplitude->Update();
-
     TLegend* legendAmplitude = new TLegend(0.45,0.8,0.7,0.95);
     legendAmplitude->SetFillColor(0);
     legendAmplitude->SetLineColor(0);
@@ -2318,7 +2318,6 @@ void ExtractSignalV2(
     fFittingHistMidPtSignalSub->Draw("same");
     fFitSignalInvMassMidPt->Draw("same");
     canvasMesonMidPt->Update();
-
     TLegend* legendMesonMidPt = new TLegend(0.15,0.62,0.45,0.76);
     legendMesonMidPt->SetFillColor(0);
     legendMesonMidPt->SetLineColor(0);
@@ -2329,7 +2328,6 @@ void ExtractSignalV2(
 
     if (fIsMC) canvasMesonMidPt->SaveAs(Form("%s/%s_MC_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonMidPt->SaveAs(Form("%s/%s_data_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-
 
     ///*********************** SPD pileup monitoring
     if(fHistoPileUpVertexDistance && fHistoPileUpVertexDistance_SPDPileup && fHistoPileUpVertexDistance_TrackletHits){
@@ -2389,7 +2387,6 @@ void ExtractSignalV2(
         fFitGausPileUpFull->SetLineStyle(2);
         fFitGausPileUpFull->SetLineWidth(5);
         fFitGausPileUpFull->Draw("same");
-
         TF1* fFitGausTrackletHitsFull = new TF1("gausFitPileUpFull2","gaus",-0.8,0.8);
         fFitGausTrackletHitsFull->SetParameters(fFitGausTrackletHits->GetParameters());
         fFitGausTrackletHitsFull->SetLineColor(kRed);
@@ -2460,26 +2457,25 @@ void ExtractSignalV2(
     fHistoChi2[0]->DrawCopy("same,e1,p");
     legendChi2->Draw();
 
-
     PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
     canvasChi2->Update();
-    if (fIsMC) canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-    else canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-
+    if (fIsMC) {
+        canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    }  else {
+        canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    }
     // **************************************************************************************************************
     // ************************ Chi2/ndf Different Signal To Ratio Fits *********************************************
     // **************************************************************************************************************
     if (iBckSwitch!=0){
         TCanvas* canvasChi2SigToBckFit = new TCanvas("canvasChi2SigToBckFit","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasChi2SigToBckFit, 0.092, 0.01, 0.02, 0.082);
-
         Double_t maxChi2SigToBckFit    = fHistoChi2SigToBckFit[0]->GetMaximum();
         for (Int_t m = 1; m <= iNumberOfOtherSigToBckRatioFits; m++){
             if (maxChi2SigToBckFit < fHistoChi2SigToBckFit[m]->GetMaximum())
                 maxChi2SigToBckFit     = fHistoChi2SigToBckFit[m]->GetMaximum();
         }
         maxChi2SigToBckFit             = maxChi2SigToBckFit*1.2;
-
         TLegend* legendChi2SigToBckFit = GetAndSetLegend2(0.75, 0.95-(0.035*4), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
 
         fHistoChi2SigToBckFit[0]->GetYaxis()->SetRangeUser(0, maxChi2SigToBckFit);
@@ -2491,7 +2487,6 @@ void ExtractSignalV2(
         DrawGammaSetMarker(fHistoChi2SigToBckFit[0], 20, 2, kCyan+2, kCyan+2);
         fHistoChi2SigToBckFit[0]->DrawCopy("same,e1,p");
         legendChi2SigToBckFit->AddEntry(fHistoChi2SigToBckFit[0],"pol2 SigToBG Fit","p");
-
         Color_t colorFitSigToBckFit[3] = {kRed+1, kAzure+2, 807};
         Style_t styleFitSigToBckFit[3] = {34, 21, 33};
 
@@ -2503,13 +2498,11 @@ void ExtractSignalV2(
         fHistoChi2SigToBckFit[0]->DrawCopy("same,e1,p");
         legendChi2SigToBckFit->Draw();
 
-
         PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         canvasChi2SigToBckFit->Update();
         if (fIsMC) canvasChi2SigToBckFit->SaveAs(Form("%s/%s_MC_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
         else canvasChi2SigToBckFit->SaveAs(Form("%s/%s_data_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     }
-
     // **************************************************************************************************************
     // ************************ ResBG compared MC vs Data ********************************************************
     // **************************************************************************************************************
@@ -2561,7 +2554,6 @@ void ExtractSignalV2(
     // **************************************************************************************************************
     // Filling MC hists
     // **************************************************************************************************************
-
     if(fIsMC){
         // Rebin MC histograms for acceptance and input with possible weights
         FillHistosArrayMC(fHistoMCMesonPtWithinAcceptance, fHistoMCMesonPt, fDeltaPt);
@@ -2611,7 +2603,6 @@ void ExtractSignalV2(
             cout << fNameHistoEffi.Data() << endl;
             fHistoMCTrueMesonEffiPt[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson[k], NULL, fHistoMCMesonWithinAccepPt, fNameHistoEffi);
 
-
             // True meson efficiencies with possibly fully weighted inputs taking the average weight per inv mass bin in the original binning of the TrueMesonInvMass vs pT plot
             // should give on average the same as TrueMesonEffiPt
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted",nameIntRange[k].Data());
@@ -2647,17 +2638,16 @@ void ExtractSignalV2(
                                                                                     Form("TrueSecFrom%sFrac%s",nameSecondaries[j].Data(),nameIntRange[k].Data()));
             }
         }
-
         SaveCorrectionHistos(fCutSelection, fPrefix2);
     }
     SaveHistos(fIsMC, fCutSelection, fPrefix2, UseTHnSparse);
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileErrLog.close();
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     fFileDataLog.close();
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     Delete();
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+    // cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 }
 
 //****************************************************************************
@@ -4708,7 +4698,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
                 fMesonLambdaTailRange[0]    = 0.007;
                 fMesonLambdaTailRange[1]    = 0.007;
-                
+
             }
         }
     // Settings specific for pPb collisions
@@ -4846,6 +4836,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     fMesonLambdaTailRange[1]    = 0.005;
                 }
             } else if (fMode == 2 || fMode == 13 ) {                // PCM-EMC, PCM-DMC
+                TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
@@ -4854,6 +4845,32 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     fMesonWidthRange[1]         = 0.020;
                     mesonAmplitudeMin = mesonAmplitude*98./100.;
                     mesonAmplitudeMax = mesonAmplitude*600./100.;
+                } else if( fEnergyFlag.CompareTo("13TeV") == 0 && (trigger.CompareTo("8d") == 0 || trigger.CompareTo("8e") == 0 ) ){
+                      mesonAmplitudeMin = mesonAmplitude*98./100.;
+                      mesonAmplitudeMax = mesonAmplitude*600./100.;
+
+                      fMesonWidthExpect               = 0.005;
+                      fMesonWidthRange[0]             = 0.0045;
+                      fMesonWidthRange[1]             = 0.04;
+
+                      fMesonLambdaTail                = 0.012;
+                      fMesonLambdaTailRange[0]        = 0.01;
+                      fMesonLambdaTailRange[1]        = 0.05;
+
+                      if ( fBinsPt[ptBin] > 5.) {
+                          fMesonWidthExpect               = 0.00168025 + fBinsPt[ptBin] * 0.000841804;
+                          fMesonWidthRange[0]             = fMesonWidthExpect * 0.8;
+                          fMesonWidthRange[1]             = fMesonWidthExpect * 1.2;
+
+                          fMesonLambdaTail               = 0.0101713 + fBinsPt[ptBin] * 0.00042247;
+                          fMesonLambdaTailRange[0]             = fMesonLambdaTail * 0.7;
+                          fMesonLambdaTailRange[1]             = fMesonLambdaTail * 1.3;
+                      }
+                      if ( fBinsPt[ptBin] > 15.) {
+                          fMesonLambdaTail               = -0.00178933 + fBinsPt[ptBin] * 0.00134097;
+                          fMesonLambdaTailRange[0]             = fMesonLambdaTail * 0.7;
+                          fMesonLambdaTailRange[1]             = fMesonLambdaTail * 1.3;
+                      }
                 } else {
                     mesonAmplitudeMin = mesonAmplitude*98./100.;
                     mesonAmplitudeMax = mesonAmplitude*600./100.;
@@ -5058,7 +5075,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
 	if(fMode == 0 ) {
 	  if( ptBin < 3){
 	    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1);
-	  }	
+	  }
 	}
       }
     }

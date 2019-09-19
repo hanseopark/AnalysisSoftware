@@ -61,20 +61,20 @@ then
         ###############################################
         ##### new Trains
 
-        ### LHC16 Data 900
-        bash DownScript.sh 900 -Name_LHC16Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
-
-        ### LHC17 Data 901
-        bash DownScript.sh 901 -Name_LHC17Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
-
-        ### LHC18 Data 902
-        bash DownScript.sh 902 -Name_LHC12Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
-
-        ### merging 16 + 17
-        bash DownScript.sh 900 901 -Name_Data_pp13TeV_16_17_v2 GA_pp_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -noDown -totalLog
-
-        ### merging 16 + 17 + 18
-        bash DownScript.sh 900 901 902 -Name_Data_pp13TeV_16_17_18_v2 GA_pp_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -noDown -totalLog
+        # ### LHC16 Data 900
+        # bash DownScript.sh 900 -Name_LHC16Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
+        #
+        # ### LHC17 Data 901
+        # bash DownScript.sh 901 -Name_LHC17Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
+        #
+        # ### LHC18 Data 902
+        # bash DownScript.sh 902 -Name_LHC12Data_v2 GA_pp_AOD ?_GammaCalo -mergechilds -childsareperiods  -RL_listDPGEDC -totalLog
+        #
+        # ### merging 16 + 17
+        # bash DownScript.sh 900 901 -Name_Data_pp13TeV_16_17_v2 GA_pp_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -noDown -totalLog
+        #
+        # ### merging 16 + 17 + 18
+        # bash DownScript.sh 900 901 902 -Name_Data_pp13TeV_16_17_18_v2 GA_pp_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -noDown -totalLog
 
 
 
@@ -143,16 +143,16 @@ then
     ##### new Trains
 
 
-    ### LHC16 Data 1651 + 1652 + 1653
+    ### LHC16 Data 1651 + 1652 + 1653 with weights
     bash DownScript.sh 1651 1652 1653 -Name_LHC16MC_v2 GA_pp_MC_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -totalLog
 
-    # ### LHC17 Data 1654 + 1655
+    # ### LHC17 Data 1654 + 1655  with weights
     bash DownScript.sh 1654 1655 -Name_LHC17MC_v2 GA_pp_MC_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -totalLog
 
     # ### LHC18 Data ???? ????
     # bash DownScript.sh ???? ???? -Name_LHC18MC_v2 GA_pp_MC_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods  -RL_listDPGEDC -totalLog
 
-    ### merging 16 + 17
+    ### merging 16 + 17   with weights
     bash DownScript.sh 1651 1652 1653 1654 1655 -Name_MC_pp13TeV_16_17_v2 GA_pp_MC_AOD ?_GammaCalo -mergechilds -mergetrains -childsareperiods -RL_listDPGEDC -noDown -totalLog
 
     # ### merging 16 + 17 + 18

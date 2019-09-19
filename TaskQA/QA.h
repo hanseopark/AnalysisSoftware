@@ -305,7 +305,7 @@ public:
         Double_t integralErr = 0;
         Double_t integralBG = 0;
 
-        //cout << "QA.h:" << __LINE__ << endl;
+        cout << "QA.h:" << __LINE__ << endl;
 
         if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -329,15 +329,15 @@ public:
                 if(doPrint) cout << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
                 if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
                 if(doLog) fLog << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
-                //cout << "QA.h:" << __LINE__ << endl;
+                cout << "QA.h:" << __LINE__ << endl;
 
             } else {
                 if(doPrint) cout << "here" << endl;
             }
         } else {
-            //cout << "QA.h:" << __LINE__ << endl;
+            cout << "QA.h:" << __LINE__ << endl;
 
-            //cout << "QA.h:" << __LINE__ << endl;
+            cout << "QA.h:" << __LINE__ << endl;
             CalculateFWHM(fFitRecoPi,0.1,0.17);
             widthPi = fFWHMFunc;
             widthPiErr = fFWHMFuncError;
@@ -656,8 +656,6 @@ void SaveCanvasAndWriteHistogram(TCanvas* canvas, TObject* hist, TString output)
     if(hist) hist->Write();
     canvas->Update();
     canvas->SaveAs(output.Data());
-    // TObjArray *arr = output. Tokenize("/");
-    // printf("\tSaveAs(%s)\n",arr->At(arr->GetLast()));
     canvas->Clear();
     return;
 }
@@ -665,7 +663,6 @@ void SaveCanvasAndWriteHistogram(TCanvas* canvas, TObject* hist, TString output)
 void SaveCanvasOnly(TCanvas* canvas, TString output){
     canvas->Update();
     canvas->SaveAs(output.Data());
-    // printf("SaveAs(%s)\n",output.Data());
     canvas->Clear();
     return;
 }
@@ -717,7 +714,7 @@ void WriteHistogramTF1Vec(TFile* file, std::vector<TF1*> vec, TString dir){
 
 void DeleteVecTH1D(std::vector<TH1D*> vec){
     for(Int_t i=0; i<(Int_t) vec.size(); i++){
-        if(vec.at(i)) delete vec.at(i);
+        delete vec.at(i);
     }
 }
 void DeleteVecTH2D(std::vector<TH2D*> vec){
@@ -738,7 +735,6 @@ void SaveCanvas(TCanvas* cvs, TString f, Bool_t logx, Bool_t logy, Bool_t logz)
     cvs->SetLogz(logz);
     cvs->Update();
     cvs->SaveAs(f.Data());
-    // printf("SaveAs(%s)\n",f.Data());
     cvs->Clear();
     return;
 }
@@ -750,7 +746,6 @@ void SaveWriteCanvas(TCanvas* cvs, TString f, Bool_t logx, Bool_t logy, Bool_t l
     cvs->SetLogz(logz);
     cvs->Update();
     cvs->SaveAs(f.Data());
-    // printf("SaveAs(%s)\n",f.Data());
     cvs->Write();
     cvs->Clear();
     return;
@@ -1133,8 +1128,8 @@ Bool_t readin(TString fileRuns, std::vector<TString> &vec, Bool_t output, Bool_t
         if(output) cout << "\"" << endl;
     }
     file.close();
-    if(output && !badCells) cout << "...done!\n\nIn total " << totalNused << " Runs will be processed!\n" << endl;
-    if(output && badCells) cout << "...done!\n\nIn total " << totalNused << " bad cells were read in!\n" << endl;
+    if(output && !badCells) cout << "...done!\n\nIn total " << totalN << " Runs will be processed!\n" << endl;
+    if(output && badCells) cout << "...done!\n\nIn total " << totalN << " bad cells were read in!\n" << endl;
     if(!badCells){
         if(totalN > 0) return kTRUE;
         else return kFALSE;

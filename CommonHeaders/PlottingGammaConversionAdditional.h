@@ -3045,12 +3045,6 @@
                 return kGreen;
             } else if (generator.Contains("ESD")){
                 return kGreen-2;;
-            } else if (generator.Contains("LHC16")){
-                return kGreen-2;;
-            } else if (generator.Contains("LHC17")){
-                return kRed+1;
-            } else if (generator.Contains("LHC18")){
-                return kMagenta+2;
             } else if (generator.Contains("MC")){
                 return kCyan+3;
             } else if (generator.Contains("LHC16d")||generator.Contains("LHC17c") ||generator.Contains("LHC18b")) {
