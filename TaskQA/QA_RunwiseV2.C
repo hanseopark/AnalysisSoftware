@@ -56,7 +56,7 @@
 #include "EventQA_Runwise.C"
 #include "PhotonQA_Runwise.C"
 #include "ClusterQA_Runwise.C"
-#include "ClusterQA_Runwise_V2.C"
+// #include "ClusterQA_Runwise_V2.C"
 #include "PrimaryTrackQA_Runwise.C"
 
 void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selected config file
@@ -72,7 +72,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
     TString     folderRunlists          = "DownloadAndDataPrep/runlists";
-    const Int_t maxSets                 = 100;
+    const Int_t maxSets                 = 40;
     Int_t       cutNr                   = -1;               // if -1 & not overwritten in configFile: you have to choose number at runtime
     Int_t       mode                    = -1;               // will abort if not set in file
 
@@ -285,8 +285,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, addPhotonCutNr);
     }
     if (doClusterQA){
-      if (SwithManyRuns) ClusterQA_Runwise_V2(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kFALSE, 50, onlytrending );
-      else
+//       if (SwithManyRuns) ClusterQA_Runwise_V2(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kFALSE, 50, onlytrending );
+//       else
           ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr, doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
     }
     if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
