@@ -1528,68 +1528,123 @@
                     startPtBin     = 1;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
-                if ( mode == 0 || mode == 2 ){
-                    startPtBin     = 1;
-                } else if ( mode == 4  || mode == 12 ){
-                    startPtBin     = 2;
+                switch(mode){
+                    case 0:
+                    case 2:
+                        startPtBin     = 1;
+                        break;
+                    case 4:
+                    case 12:
+                        startPtBin     = 2;
+                        break;
                 }
-
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0 ){
-                if ( mode == 0 ){
-                    startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
-                    startPtBin     = 4;
-                } else if ( mode == 3 ){
-                    startPtBin     = 1;
-                } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 7;
-                } else if ( mode == -5 ){
-                    startPtBin     = 1;
+                switch(mode){
+                    case 0:
+                        startPtBin     = 1;
+                        break;
+                    case 2:
+                    case 13:
+                        startPtBin     = 4;
+                        break;
+                    case 3:
+                        startPtBin     = 1;
+                        break;
+                    case 4:
+                    case 12:
+                        startPtBin     = 7;
+                        break;
+                    case -5:
+                        startPtBin     = 1;
+                        break;
+                    default:
+                        startPtBin     = 1;
+                        break;
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
-                if ( mode == 0 ){
-                    startPtBin     = 1;
-                } else if ( mode == 1 ){
-                    startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
-                    if ((centrality.CompareTo("0-100%") == 0 ) && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
-                        startPtBin     = 6;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1)
+                switch(mode){
+                    case 0:
                         startPtBin     = 1;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2)
-                        startPtBin     = 4;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3)
-                        startPtBin     = 5;
-                    else
-                        startPtBin     = 5;
-                } else if ( mode == 3 ){
-                    if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && specialTrigg != 4)
-                        startPtBin     = 3;
-                    else if (specialTrigg == 4)
-                        startPtBin     = 10;
-                    else
+                        break;
+                    case 1:
                         startPtBin     = 1;
-                } else if ( mode == 4 || mode == 12 ){
-                    if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
-                        startPtBin     = 9;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1)
-                        startPtBin     = 3;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2)
-                        startPtBin     = 8;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3)
-                        startPtBin     = 6;
-                    else
-                        startPtBin     = 7;
-                } else if ( mode == 5){
-                    startPtBin     = 5;
-                } else if ( mode == -5){
-                    startPtBin     = 1;
-                } else if ( mode == 10){
-                    startPtBin     = 1;
-                } else if (mode == 20){
-                    startPtBin     = 1;
-                } else {
-                    startPtBin     = 1;
+                        break;
+                    case 2: 
+                    case 13:
+                        switch (specialTrigg){
+                            case 0: // INT7 trigger
+                                if ((centrality.CompareTo("0-100%") == 0 ) )
+                                    startPtBin     = 1;
+                                else 
+                                    startPtBin     = 5;
+                                break;
+                            case 1: // EMC7 trigger
+                                startPtBin     = 1;
+                                break;
+                            case 2: // EG2 trigger
+                                if ((centrality.CompareTo("0-100%") == 0 ) )
+                                    startPtBin     = 4;
+                                else 
+                                    startPtBin     = 2;
+                                break;
+                            case 3: // EG1 trigeer
+                                if ((centrality.CompareTo("0-100%") == 0 ) )
+                                    startPtBin     = 5;
+                                else
+                                    startPtBin     = 2;
+                                break;
+                            default:
+                                startPtBin     = 5;
+                                break;
+                        }
+                        cout << "Start bin: "<< startPtBin << endl;
+                        break;
+                    case 3:
+                        if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && specialTrigg != 4)
+                            startPtBin     = 3;
+                        else if (specialTrigg == 4)
+                            startPtBin     = 10;
+                        else
+                            startPtBin     = 1;
+                        break;
+                    case 4:
+                    case 12:
+                        switch (specialTrigg){
+                            case 0: // INT7 trigger
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    startPtBin     = 9;
+                                else
+                                    startPtBin     = 7;
+                                break;
+                            case 1: // EMC7 trigger
+                                startPtBin     = 3;
+                                break;
+                            case 2: // EG2 trigger
+                                startPtBin     = 8;
+                                break;
+                            case 3: // EG1 trigger
+                                startPtBin     = 6;
+                                break;
+                            default:
+                                startPtBin     = 9;
+                                break;
+                        }
+                        break;
+                    case 5:
+                        startPtBin     = 5;
+                        break;
+                    case -5:
+                        startPtBin     = 1;
+                        break;
+                    case 10:
+                        startPtBin     = 1;
+                        break;
+                    case 20:
+                        startPtBin     = 1;
+                        break;
+                    default:
+                        startPtBin     = 1;
+                        break;
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if ( mode == 0 ){
@@ -1599,27 +1654,10 @@
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1)
-                        startPtBin     = 14;
-                    else if (specialTrigg == 2)
-                        startPtBin     = 24;
-                    else if (specialTrigg == 3)
-                        startPtBin     = 29;
-                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("60-100%"))
-                        startPtBin     = 3;
-                    else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") )
-                        startPtBin     = 4;
-                    else
-                        startPtBin     = 2;
                 } else if ( mode == 3 ){
                     startPtBin     = 1;
-                } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 7;
                 } else if ( mode == 5){
                     startPtBin     = 10;
-                } else if ( mode == 10){
-                    startPtBin     = 1;
                 } else if (mode == 20){
                     startPtBin     = 1;
                 } else {
@@ -1672,120 +1710,151 @@
                     startPtBin     = 1;
                 }
             } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
-                if ( mode == 0 ){
-                    startPtBin      = 1;
-                } else if ( mode == 1 ){
-                    startPtBin      = 2;
-                } else if ( mode == 2 || mode == 13 ){
-                    startPtBin      = 4;
-                } else if ( mode == 3 ){
-                    startPtBin      = 3;
-                } else if ( mode == 4 || mode == 12 ){
-                    cout << minECut << endl;
-                    if (minECut.Atoi() != 3)
-                        startPtBin      = 12;
-                    else
-                        startPtBin      = 6;
-                } else if ( mode == 5){
-                    startPtBin      = 4;
-                } else if (mode == 20){
-                    startPtBin      = 1;
-                } else {
-                    startPtBin      = 1;
+                switch(mode){
+                    case 0:
+                        startPtBin      = 1;
+                        break;
+                    case 1:
+                        startPtBin      = 2;
+                        break;
+                    case 2:
+                    case 13:
+                        startPtBin      = 4;
+                        break;
+                    case 3:
+                        startPtBin      = 3;
+                        break;
+                    case 4:
+                    case 12:
+                        cout << minECut << endl;
+                        if (minECut.Atoi() != 3)
+                            startPtBin      = 12;
+                        else
+                            startPtBin      = 6;
+                        break;
+                    case 5:
+                        startPtBin      = 4;
+                        break;
+                    case 20:
+                        startPtBin      = 1;
+                        break;
+                    default:
+                        startPtBin      = 1;
+                        break;
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0){ // startbin pi0
-                if ( mode == 0 ){
-                    startPtBin      = 1;
-                } else if ( mode == 1 ){
-                    startPtBin      = 2;
-                } else if ( mode == 2 || mode == 13 ){
-                    startPtBin      = 4;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
-                      startPtBin = 10;
-                    }
-                    if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0){
-                      startPtBin = 10;
-                    }
-                } else if ( mode == 3 ){
-                    startPtBin      = 3;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
-                      startPtBin      = 3;
-                    }
-                } else if ( mode == 4 || mode == 12 ){
-                    startPtBin      = 6;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
-                      startPtBin = 23;
-                    }
-                    if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0){
-                      startPtBin = 19;
-                    }
-                } else if ( mode == 5){
-                    startPtBin      = 3;
-                    if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
-                      startPtBin = 4;
-                    }
-                    if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0){
-                      startPtBin = 4;
-                    }
-                } else if (mode == 20){
-                    startPtBin      = 1;
-                } else {
-                    startPtBin      = 1;
+                switch(mode){
+                    case 0:
+                        startPtBin      = 1;
+                        break;
+                    case 1:
+                        startPtBin      = 2;
+                        break;
+                    case 2:
+                    case 13:
+                        if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
+                            startPtBin = 10;
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                            startPtBin = 10;
+                        else 
+                            startPtBin      = 4;
+                        break;
+                    case 3:
+                        if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
+                            startPtBin      = 3;
+                        else 
+                            startPtBin      = 3;
+                        break;
+                    case 4:
+                    case 12:
+                        if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
+                            startPtBin = 23;
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                            startPtBin = 19;
+                        else 
+                            startPtBin      = 6;
+                        break;
+                    case 5:
+                        if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
+                            startPtBin = 4;
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                            startPtBin = 4;
+                        else 
+                            startPtBin      = 3;
+                        break;
+                    case 20:
+                        startPtBin      = 1;
+                        break;
+                    default:
+                        startPtBin      = 1;
+                        break;
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
-                if ( mode == 0 ){
-                    if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
-                        startPtBin     = 3;
-                    else if (!centrality.CompareTo("40-80%") )
-                        startPtBin     = 1;
-                    else if (!centrality.CompareTo("20-40%") )
-                      startPtBin       = 2;
-                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%")  )
-                      startPtBin       = 3;
-                    else
+                switch(mode){
+                    case 0:
+                        if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
+                            startPtBin     = 3;
+                        else if (!centrality.CompareTo("40-80%") )
+                            startPtBin     = 1;
+                        else if (!centrality.CompareTo("20-40%") )
+                        startPtBin       = 2;
+                        else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%")  )
+                        startPtBin       = 3;
+                        else
+                            startPtBin     = 2;
+                        break;
+                    case 1:
                         startPtBin     = 2;
-                } else if ( mode == 1 ){
-                    startPtBin     = 2;
-                } else if ( mode == 2 || mode == 13 ){
-                    if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
-                        startPtBin     = 6;
-                    else if (!centrality.CompareTo("0-20%") )
-                        startPtBin     = 3;
-                    else if ( !centrality.CompareTo("0-40%") )
+                        break;
+                    case 2:
+                    case 13:
+                        if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
+                            startPtBin     = 6;
+                        else if (!centrality.CompareTo("0-20%") )
+                            startPtBin     = 3;
+                        else if ( !centrality.CompareTo("0-40%") )
+                            startPtBin     = 2;
+                        else if ( !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
+                            startPtBin     = 1;
+                        else
+                            startPtBin     = 7;
+                        break;
+                    case 3:
+                        if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
+                            startPtBin     = 4;
+                        else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%") || !centrality.CompareTo("40-80%") )
+                            startPtBin     = 2;
+                        else if (!centrality.CompareTo("20-40%")  )
+                            startPtBin     = 1;
+                        else
+                            startPtBin     = 6;
+                        break;
+                    case 4:
+                    case 12:
+                        if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
+                            startPtBin     = 8;
+                        else if (!centrality.CompareTo("0-20%") )
+                            startPtBin     = 3;
+                        else if ( !centrality.CompareTo("0-40%") )
+                            startPtBin     = 2;
+                        else if ( !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
+                            startPtBin     = 1;
+                        else
+                            startPtBin     = 9;
+                        break;
+                    case 5:
+                        if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
+                            startPtBin     = 6;
+                        else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%") || !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
+                            startPtBin     = 2;
+                        else
+                            startPtBin     = 8;
+                        break;
+                    case 20:
                         startPtBin     = 2;
-                    else if ( !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
-                        startPtBin     = 1;
-                    else
-                        startPtBin     = 7;
-                } else if ( mode == 3 ){
-                    if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
-                        startPtBin     = 4;
-                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%") || !centrality.CompareTo("40-80%") )
-                        startPtBin     = 2;
-                    else if (!centrality.CompareTo("20-40%")  )
-                        startPtBin     = 1;
-                    else
-                        startPtBin     = 6;
-                } else if ( mode == 4 || mode == 12 ){
-                    if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
-                        startPtBin     = 8;
-                    else if (!centrality.CompareTo("0-20%") )
-                        startPtBin     = 3;
-                    else if ( !centrality.CompareTo("0-40%") )
-                        startPtBin     = 2;
-                    else if ( !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
-                        startPtBin     = 1;
-                    else
-                        startPtBin     = 9;
-                } else if ( mode == 5){
-                    if (!centrality.CompareTo("0-90%") || !centrality.CompareTo("0-80%") )
-                        startPtBin     = 6;
-                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-40%") || !centrality.CompareTo("20-40%")  || !centrality.CompareTo("40-80%") )
-                        startPtBin     = 2;
-                    else
-                        startPtBin     = 8;
-                } else if (mode == 20){
-                    startPtBin     = 2;
+                        break;
+                    default:
+                        break;
                 }
             }
         //*************************************************************************************************
@@ -1793,20 +1862,33 @@
         //*************************************************************************************************
         } else if( meson.Contains("Eta") && !meson.EqualTo("EtaPrime") ){
             if (energy.CompareTo("2.76TeV") == 0){
-                if ( mode == 0 ){
-                    startPtBin     = 1;
-                } else if ( mode == 1 ){
-                    startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
-                    startPtBin     = 2;
-                } else if ( mode == 3 ){
-                    startPtBin     = 2;
-                } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 4;
-                } else if ( mode == 5){
-                    startPtBin     = 3;
-                } else if (mode == 20){
-                    startPtBin     = 1;
+                switch(mode){
+                    case 0:
+                        startPtBin     = 1;
+                        break;
+                    case 1:
+                        startPtBin     = 1;
+                        break;
+                    case 2:
+                    case 13:
+                        startPtBin     = 2;
+                        break;
+                    case 3:
+                        startPtBin     = 2;
+                        break;
+                    case 4:
+                    case 12:
+                        startPtBin     = 4;
+                        break;
+                    case 5:
+                        startPtBin     = 3;
+                        break;
+                    case 20:
+                        startPtBin     = 1;
+                        break;
+                    default:
+                        startPtBin     = 1;
+                        break;
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.Contains("5TeV2017") || energy.CompareTo("5TeVSpecial") == 0){
               if( energy.Contains("2017") || energy.Contains("Special")){
@@ -1862,24 +1944,53 @@
                 }
               }
             } else if (energy.CompareTo("7TeV") == 0){
-                if (mode == 2){
-                    if (specialTrigg == 1) startPtBin = 10;
-                    else startPtBin     = 3;
-                } else if (mode == 3){
-                    startPtBin     = 2;
-                } else if (mode == 4){
+                switch(mode){
+                    case 0:
+                        startPtBin     = 1;
+                        break;
+                    case 1:
+                        startPtBin     = 1;
+                        break;
+                    case 2:
+                    case 13:
+                        if (specialTrigg == 1) startPtBin = 10;
+                        else startPtBin     = 3;
+                        break;
+                    case 3:
+                        startPtBin     = 2;
+                        break;
+                    case 4:
+                    case 12:
                     if (specialTrigg == 1) startPtBin = 11;
                     else startPtBin     = 6;
-                } else if (mode == 40 || mode == 60){
-                    startPtBin     = 4;
-                } else if (mode == 41 || mode == 61){
-                    startPtBin     = 7;
-                } else if (mode == 42 || mode == 62){
-                    startPtBin     = 5;
-                } else if (mode == 44 || mode == 64){
-                    startPtBin     = 8;
-                } else if (mode == 45 || mode == 65){
-                    startPtBin     = 4;
+                        break;
+                    case 5:
+                        break;
+                    case 20:
+                        break;
+                    case 40:
+                    case 60:
+                        startPtBin     = 4;
+                        break;
+                    case 41:
+                    case 61:
+                        startPtBin     = 7;
+                        break;
+                    case 42:
+                    case 62:
+                        startPtBin     = 5;
+                        break;
+                    case 44:
+                    case 64:
+                        startPtBin     = 8;
+                        break;
+                    case 45:
+                    case 65:
+                        startPtBin     = 4;
+                        break;
+                    default:
+                        startPtBin     = 1;
+                        break;
                 }
             } else if (energy.CompareTo("7TeVSys") == 0){
                 if (mode == 2){
@@ -1953,49 +2064,87 @@
                     startPtBin      = 6;
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
-                if ( mode == 0 ){
-                    startPtBin      = 3;
-                } else if ( mode == 1 ){
-                    startPtBin      = 3;
-                } else if ( mode == 2 || mode == 13 ){
-                    if (!centrality.CompareTo("0-100%") && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
-                        startPtBin     = 5;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1 )
-                        startPtBin     = 1;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2 )
-                        startPtBin     = 5;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3 )
-                        startPtBin     = 3;
-                    else
-                        startPtBin     = 6;
-                } else if ( mode == 3 ){
-                    if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && specialTrigg != 4)
-                        startPtBin     = 4;
-                    else if (specialTrigg == 4)
-                        startPtBin     = 8;
-                    else
-                        startPtBin     = 5;
-                } else if ( mode == 4 || mode == 12 ){
-                    if (energy.CompareTo("pPb_5.023TeVCent") == 0)
-                        startPtBin     = 6;
-                    else if (!centrality.CompareTo("0-100%") && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
-                        startPtBin     = 7;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1 )
-                        startPtBin     = 3;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2 )
-                        startPtBin     = 8;
-                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3 )
-                        startPtBin     = 6;
-                    else
-                        startPtBin     = 6;
-                } else if ( mode == 5){
-                    startPtBin      = 5;
-                } else if ( mode == -5){
-                    startPtBin      = 3;
-                } else if ( mode == 10){
-                    startPtBin      = 11;
-                } else if (mode == 20){
-                    startPtBin      = 3;
+                switch(mode){
+                    case 0:
+                        startPtBin      = 3;
+                        break;
+                    case 1:
+                        startPtBin      = 3;
+                        break;
+                    case 2:
+                    case 13:
+                        switch(specialTrigg){
+                            case 0: // INT7 trigger
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    startPtBin     = 2;
+                                else 
+                                    startPtBin     = 6;
+                                break;
+                            case 1: // EMC7 trigger
+                                startPtBin     = 1;
+                                break;
+                            case 2: // EG2 trigger
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    startPtBin     = 5;
+                                else 
+                                    startPtBin     = 3;
+                                break;
+                            case 3: // EG1 trigger
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    startPtBin     = 3;
+                                else 
+                                    startPtBin     = 2;
+                                break;
+                            default:
+                                startPtBin     = 5;
+                                break;       
+                        }
+                        break;
+                    case 3:
+                        if ((centrality.Contains("0-100%") && !centrality.Contains("60-100%")) && specialTrigg != 4)
+                            startPtBin     = 4;
+                        else if (specialTrigg == 4)
+                            startPtBin     = 8;
+                        else
+                            startPtBin     = 5;
+                        break;
+                    case 4:
+                    case 12:
+                        switch(specialTrigg){
+                            case 0: // INT7 trigger
+                                if (energy.CompareTo("pPb_5.023TeVCent") == 0)
+                                    startPtBin     = 6;
+                                else if (centrality.CompareTo("0-100%") == 0)
+                                    startPtBin     = 7;
+                                else 
+                                    startPtBin     = 6;
+                                break;
+                            case 1: // EMC7 trigger
+                                startPtBin     = 3;
+                                break;
+                            case 2: // EG2 trigger
+                                startPtBin     = 8;
+                                break;
+                            case 3: // EG1 trigger
+                                startPtBin     = 6;
+                                break;
+                            default:
+                                startPtBin     = 6;
+                                break;       
+                        }
+                        break;
+                    case 5:
+                        startPtBin      = 5;
+                        break;
+                    case -5:
+                        startPtBin      = 3;
+                        break;
+                    case 20:
+                        startPtBin      = 3;
+                        break;
+                    default:
+                        startPtBin      = 3;
+                        break;
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if ( mode == 0 ){
@@ -2741,20 +2890,31 @@
                     case 2:
                     case 13:
                         cout << SpecialTrigger << "\t" << centrality.Data() << "\t" << energy.Data() << endl;
-                        if ((!centrality.Contains("60-100%") || !centrality.Contains("80-100%")))
-                            cout << "peripheral bin" << endl;
-                        if (SpecialTrigger == 3 ){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG1,binning, 38);
-                        } else if ( SpecialTrigger == 1 ){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEMC7,binning, 17);
-                        } else if (SpecialTrigger == 2 ) {
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG2,binning, 40);
-                        } else if ( centrality.CompareTo("0-100%") == 0){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVEMCPt,binning,36);
-                            maxNBins    = 32;
-
-                        } else {
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPCMEMCCentPt,binning, 38);
+                        switch (SpecialTrigger){
+                            case 0: // INT7 trigger
+                                if ( centrality.CompareTo("0-100%") == 0)
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPCMEMCPt,binning,51);
+                                else 
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPCMEMCCentPt,binning, 38);
+                                break;
+                            case 1:   // EMC7 trigger
+                                maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEMC7,binning, 17);
+                                break;
+                            case 2:  // EG2 trigger
+                                if ( centrality.CompareTo("0-100%") == 0)
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtEMCTrigEG2,binning, 40);
+                                else 
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtCentPCMEMCTrigEG2,binning, 20);
+                                break; 
+                            case 3: // EG1 trigger
+                                if ( centrality.CompareTo("0-100%") == 0)
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtPCMEMCTrigEG1,binning, 39);
+                                else 
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPtCentPCMEMCTrigEG1,binning, 19);
+                                break;
+                            default:
+                                maxNBins    = CopyVectorToArray(binningMax,fBinsPi0pPb5TeVPCMEMCPt,binning,50);
+                                break;
                         }
                         break;
                     case 3:
@@ -3531,19 +3691,27 @@
                         break;
                     case 2:     // PCM-EMC
                     case 13:    // PCM-DMC
-                        if (SpecialTrigger == 3){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEG1,binning, 20);
-                        } else if (SpecialTrigger == 2){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEG2,binning, 24);
-                            maxNBins    = 18;
-                        } else if (SpecialTrigger == 1){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEMC7,binning, 11);
-                            maxNBins    = 18;
-                        } else if (centrality.CompareTo("0-100%") == 0){
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVCentPt,binning, 21);
-                            maxNBins    = 18;
-                        } else {
-                            maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVCentPCMEMCPt,binning, 23);
+                        switch(SpecialTrigger){
+                            case 0:
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPCMEMCPt,binning, 25);
+                                else 
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVCentPCMEMCPt,binning, 23);
+                                break;
+                            case 1:
+                                maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEMC7,binning, 11);
+                                break;
+                            case 2:
+                                maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEG2,binning, 24);
+                                break;
+                            case 3:
+                                if (centrality.CompareTo("0-100%") == 0)
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtEMCTrigEG1,binning, 20);
+                                else 
+                                    maxNBins    = CopyVectorToArray(binningMax,fBinsEtapPb5TeVPtCentPCMEMCTrigEG1,binning, 11);
+                                break;
+                            default:
+                                break;
                         }
                         break;
                     case 3:     // PCM-PHOS
@@ -5288,10 +5456,16 @@
                                     CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCTrigEMC7PtRebin,fNRebin);
                                     break;
                                 case 2:
-                                    CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCTrigEG2PtRebin,fNRebin);
+                                    if(centrality.CompareTo("0-100%") == 0 )
+                                        CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCTrigEG2PtRebin,fNRebin);
+                                    else 
+                                        CopyVectorToArray(fBinsPi0pPb5TeVCentPCMEMCTrigEG2PtRebin,fNRebin);
                                     break;
                                 case 3:
-                                    CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin,fNRebin);
+                                    if(centrality.CompareTo("0-100%") == 0 )
+                                        CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin,fNRebin);
+                                    else 
+                                        CopyVectorToArray(fBinsPi0pPb5TeVCentPCMEMCTrigEG1PtRebin,fNRebin);
                                     break;
                                 default:
                                     CopyVectorToArray(fBinsPi0pPb5TeVPCMEMCPtRebin,fNRebin);
@@ -6436,9 +6610,18 @@
                                 case 1:
                                     CopyVectorToArray(fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin,fNRebin);  break;
                                 case 2:
-                                    CopyVectorToArray(fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin,fNRebin);  break;
+                                    if (centrality.CompareTo("0-100%") == 0)
+                                        CopyVectorToArray(fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin,fNRebin);  
+                                    else 
+                                        CopyVectorToArray(fBinsEtapPb5TeVCentPCMEMCTrigEG2PtRebin,fNRebin); 
+                                    break;
                                 case 3:
-                                    CopyVectorToArray(fBinsEtapPb5TeVPCMEMCTrigPtRebin,fNRebin);  break;
+                                    if (centrality.CompareTo("0-100%") == 0)
+                                        CopyVectorToArray(fBinsEtapPb5TeVPCMEMCTrigPtRebin,fNRebin);  
+                                    else 
+                                        CopyVectorToArray(fBinsEtapPb5TeVCentPCMEMCTrigPtRebin,fNRebin);  
+                                    break;
+                                    
 
                             }
                             break;

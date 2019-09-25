@@ -7,7 +7,7 @@ MERGEONFASTAndWOSDD=1
 SINGLERUN=0
 SEPARATEON=1
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEMC=1
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -259,6 +259,8 @@ else
     TRAINDIR=20190916-PCMEMCSys
 #     LHC16qtData="622";
 #     LHC16qtData="623";
+#     LHC16qtData="637";
+#     LHC16qtData="638";
 #     LHC16qDataFast="child_1";
 #     LHC16tDataFast="child_2";
 #     LHC16qData="child_3";
@@ -267,9 +269,9 @@ else
 #     LHC18j5_1MC="child_1"
 #     LHC18j5_2MC="child_2"
 #     LHC18j5_3MC="child_3"
-    LHC18f3MCMoth="745";
-    LHC18f3MC1="child_2";
-    LHC18f3MC2="child_4";
+#     LHC18f3MCMoth="745";
+#     LHC18f3MC1="child_2";
+#     LHC18f3MC2="child_4";
 #     LHC18f3MCFast1="child_1";
 #     LHC18f3MCFast2="child_3";
     # LHC17f2a_fixMCMoth="1217";
@@ -738,7 +740,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             done
         done
 
-        echo -e "$3\nfast" > listReconstruction.txt
+        echo -e "$3\n_fast" > listReconstruction.txt
         listReconstruction=`cat listReconstruction.txt`
         for reco in $listReconstruction; do
             ls $OUTPUTDIR/GammaConvCalo_LHC16q_$reco-pass$passNr-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
@@ -751,8 +753,8 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo $number
                 for runListName in $listsToMerge; do
                     rm listCurrMerge.txt
-                    fileQ="$OUTPUTDIR/GammaConvCalo_LHC16q_$reco-pass$passNr-$runListName""_$number.root"
-                    fileT="$OUTPUTDIR/GammaConvCalo_LHC16t_$reco-pass$passNr-$runListName""_$number.root"
+                    fileQ="$OUTPUTDIR/GammaConvCalo_LHC16q$reco-pass$passNr-$runListName""_$number.root"
+                    fileT="$OUTPUTDIR/GammaConvCalo_LHC16t$reco-pass$passNr-$runListName""_$number.root"
                     echo -e "$fileQ\n$fileT" > listCurrMerge.txt
                     MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16qt_$reco-pass$passNr-$runListName\_$number.root
                 done
@@ -772,11 +774,23 @@ if [ $CLEANUPMAYOR == 0 ]; then
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
                 fileF="$OUTPUTDIR/GammaConvCalo_LHC16qt_fast-pass$passNr-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_LHC16qt_woSDD-pass$passNr-$runListName""_$number.root"
+                fileW="$OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr-$runListName""_$number.root"
                 echo -e "$fileF\n$fileW" > listCurrMerge.txt
                 MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16qt_fast-woSDD-pass$passNr-$runListName\_$number.root
             done
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 4
+            echo $number
+            for runListName in $listsToMerge; do
+                rm listCurrMerge.txt
+                fileF="$OUTPUTDIR/GammaConvCalo_LHC16qt_fast-pass$passNr-$runListName""_$number.root"
+                fileW="$OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr-$runListName""_$number.root"
+                fileR1="$OUTPUTDIR/GammaConvCalo_LHC13bcdef-pass4-$runListName""_$number.root"
+                echo -e "$fileF\n$fileW\n$fileR1" > listCurrMerge.txt
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13bcdef-pass4_LHC16qt_fast-woSDD-pass$passNr-$runListName\_$number.root
+            done
         done
+        
 
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_fast-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`

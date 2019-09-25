@@ -56,7 +56,7 @@ function FindCorrectTrainDirectory()
           tempDir="$InterMediate"
           rm listGrid.txt
       else
-          tempDir=`alien_ls $3 | grep $1\_`
+          tempDir=`alien_ls $3 | grep $1\_2`
       fi
       if [ "$tempDir" == "" ]; then
           tempBool=0;
@@ -275,6 +275,7 @@ function CopyRunwiseAndMergeAccordingToRunlistJJMC()
 
 function CopyRunwiseAndMergeAccordingToRunlistData()
 {
+    currentDir=$PWD
     if [ $2 == 1 ]; then
         echo "downloading $1"
         if [ $SINGLERUN == 1 ]; then
@@ -284,6 +285,8 @@ function CopyRunwiseAndMergeAccordingToRunlistData()
                 CopyFileIfNonExisitent $3/$runNumber "$7/$1/000$runNumber/$5/$4" $8 "$7/$1/000$runNumber/$5/$4" kTRUE
             done;
             if [ $MERGEONSINGLEData == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
+                cd $currentDir
+                echo "I am here:" $PWD
                 rm $3/${11}*.root*
                 firstrunNumber=`head -n1 runlists/runNumbers$1\_${10}.txt`
                 ls $3/$firstrunNumber/${11}\_*.root > file$1.txt
