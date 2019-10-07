@@ -120,7 +120,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
     Bool_t bsmoothMBEtaToPi0[13]            = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothINT7Pi0[13]               = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothINT7Pi0[13]               = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
     Bool_t bsmoothINT7Eta[13]               = { 0, 1, 1, 1, 1,
@@ -348,6 +348,13 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                     if (additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EG1")==0 )
                         error                   = 7.0;
                     for (Int_t k = 0;k < nPtBins;k++){
+                        if(mode == 4){
+                          if(additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0) error = 7.5;
+                          if(additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("20-30%") == 0 ) error = 6.5;
+                          if(additionalName.CompareTo("30-50%") == 0 || additionalName.CompareTo("30-40%") == 0 || additionalName.CompareTo("40-50%") == 0) error =  30/pow(1.5,ptBins[k])+10;
+                          if(additionalName.CompareTo("50-90%") == 0 || additionalName.CompareTo("50-60%") == 0 || additionalName.CompareTo("60-70%") == 0 ||
+                            additionalName.CompareTo("70-80%") == 0 || additionalName.CompareTo("80-90%") == 0 ) error = 30/pow(1.5,ptBins[k])+10;
+                        }
                         errorsMean[i][k]            = error;
                         errorsMeanErr[i][k]         = error*0.01;
                         errorsMeanCorr[i][k]        = error;
@@ -375,6 +382,21 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                     else if ( additionalNameOutput.CompareTo("EG2")==0 )
                         error              = 5.;
                     for (Int_t k = 0;k < nPtBins;k++){
+                      if(mode == 4){
+                        if(additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0) error = 7.5;
+                        if(additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("20-30%") == 0 ) error = 6.5;
+                        if(additionalName.CompareTo("30-50%") == 0 || additionalName.CompareTo("30-40%") == 0 || additionalName.CompareTo("40-50%") == 0) error = 4.52566e+00+2.51196e+01/pow(2.18924e+00,ptBins[k]);
+                        if(additionalName.CompareTo("50-90%") == 0 || additionalName.CompareTo("50-60%") == 0 || additionalName.CompareTo("60-70%") == 0 ||
+                            additionalName.CompareTo("70-80%") == 0 || additionalName.CompareTo("80-90%") == 0 ) error = 3.77403e+00+1.71150e+01/pow(1.56152e+00,ptBins[k]);
+                      }
+                      if(mode == 5){
+                        if(additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0) error = 7.5;
+                        if(additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("20-30%") == 0 ) error = 10/pow(1.5,ptBins[k])+4;
+                        if(additionalName.CompareTo("30-50%") == 0 || additionalName.CompareTo("30-40%") == 0 || additionalName.CompareTo("40-50%") == 0) error = 10/pow(1.5,ptBins[k])+3;
+                        if(additionalName.CompareTo("50-90%") == 0 || additionalName.CompareTo("50-60%") == 0 || additionalName.CompareTo("60-70%") == 0 ||
+                            additionalName.CompareTo("70-80%") == 0 || additionalName.CompareTo("80-90%") == 0 ) error = 3.5;
+                        if(ptBins[k] == 1.1 && (additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0)) error*= 1.3;
+                      }
                         errorsMean[i][k]            = error;
                         errorsMeanErr[i][k]         = error*0.01;
                         errorsMeanCorr[i][k]        = error;
@@ -459,11 +481,11 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                 Double_t error              = 0;
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = (2.4+(0.01)*ptBins[k]*ptBins[k])*2.;
-                    if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0) error *= 1.4;
-                    if(additionalName.CompareTo("20-40%") == 0 || additionalName.CompareTo("30-50%") == 0 ) error *= 1.0;
-                    if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.8;
-                    if(additionalName.CompareTo("60-80%") == 0 || additionalName.CompareTo("50-90%") == 0) error *= 0.6;
+                    if(additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0) error *= 1.4;
+                    if(additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("20-30%") == 0 ) error *= 1.0;
+                    if(additionalName.CompareTo("30-50%") == 0 || additionalName.CompareTo("30-40%") == 0 || additionalName.CompareTo("40-50%") == 0) error *= 0.8;
+                    if(additionalName.CompareTo("50-90%") == 0 || additionalName.CompareTo("50-60%") == 0 || additionalName.CompareTo("60-70%") == 0 ||
+                            additionalName.CompareTo("70-80%") == 0 || additionalName.CompareTo("80-90%") == 0 ) error *= 0.6;
                     if(meson.Contains("Eta")) error *= 1.2;
                     if(meson.Contains("EtaToPi0")) error *= 0.5;
                     if(mode == 5) error /= 2.;
@@ -494,11 +516,11 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                 Double_t error              = 0;
                 for (Int_t k = 0;k < nPtBins;k++){
                     error = 5.;
-                    if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                        additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
-                    if(additionalName.CompareTo("20-40%") == 0 || additionalName.CompareTo("30-50%") == 0) error *= 1.0;
-                    if(additionalName.CompareTo("40-60%") == 0 ) error *= 0.9;
-                    if(additionalName.CompareTo("60-80%") == 0 || additionalName.CompareTo("50-90%") == 0) error *= 0.8;
+                    if(additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("0-5%") == 0 || additionalName.CompareTo("5-10%") == 0) error *= 1.4;
+                    if(additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("20-30%") == 0 ) error *= 1.0;
+                    if(additionalName.CompareTo("30-50%") == 0 || additionalName.CompareTo("30-40%") == 0 || additionalName.CompareTo("40-50%") == 0) error *= 0.9;
+                    if(additionalName.CompareTo("50-90%") == 0 || additionalName.CompareTo("50-60%") == 0 || additionalName.CompareTo("60-70%") == 0 ||
+                            additionalName.CompareTo("70-80%") == 0 || additionalName.CompareTo("80-90%") == 0 ) error *= 0.8;
                     if(meson.Contains("EtaToPi0")) error *= 0.5;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -549,7 +571,8 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
                         error   = errorEta; 
                     }
                     if(additionalName.CompareTo("0-5%") == 0  || additionalName.CompareTo("5-10%") == 0 ||
-                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 || additionalName.CompareTo("10-30%") == 0 ) error *= 1.4;
+                         additionalName.CompareTo("0-10%") == 0 || additionalName.CompareTo("10-20%") == 0 ||
+                         additionalName.CompareTo("10-30%") == 0 || additionalName.CompareTo("20-30%") == 0) error *= 1.4;
                    
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -790,7 +813,7 @@ void FinaliseSystematicErrorsCalo_PbPbV2(     const char* nameDataFileErrors  = 
             cout <<endl << endl<<  "variation: " << cut << " \t"<< nameCutVariation[cut].Data() << endl;
             Double_t minPt = startPtSys;
 //             if (additionalNameOutput.CompareTo("EMC1")==0)  minPt = 2.6;
-            Double_t maxPt = ptBins[nPtBins-2]+1;
+            Double_t maxPt = ptBins[nPtBins];
 //             if (cut == 13) maxPt = 6;
 //             if (cut == 12 || cut == 5) maxPt = 8;
 //             if (cut == 6) maxPt = 8;

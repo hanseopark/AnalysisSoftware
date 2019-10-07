@@ -4736,6 +4736,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
             if (fMode == 5){
+                mesonAmplitudeMax = mesonAmplitude*130./100.;
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
                 fMesonLambdaTailRange[0]    = 0.007;
                 fMesonLambdaTailRange[1]    = 0.007;
@@ -5198,7 +5199,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.1);
             if ( fEnergyFlag.Contains("PbPb") && (fMode == 0 || fMode == 3) )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
-            if ( fEnergyFlag.Contains("PbPb") && (fMode == 4) )
+            if ( fEnergyFlag.Contains("PbPb") && (fMode == 2 || fMode == 4) )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.1);
         } else if(fDoJetAnalysis){
             fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);

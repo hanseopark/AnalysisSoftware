@@ -772,19 +772,19 @@
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0) {
                 if (mode == 0){
-                    scaleFac    = 10;
-                    return 4;
+                    scaleFac    = 1;
+                    return 6;
                 } else if (mode == 1){
-                    scaleFac    = 20;
+                    scaleFac    = 1;
                     return 3;
                 } else if (mode == 2 || mode == 13 ){
-                  scaleFac    = 2.5;
+                  scaleFac    = 1;
                   return 20;
                 } else if (mode == 3 ||  mode == 5){
-                    scaleFac    = 10;
+                    scaleFac    = 1;
                     return 15;
                 } else if (mode == 4 || mode == 12 ){
-                    scaleFac    = 1.5;
+                    scaleFac    = 1;
                     return 23;
                 } else
                     return 4;
@@ -1438,7 +1438,11 @@
                         if(DoJetAnalysis)
                             startPtBin = 6;
                     } else if ( mode == 3){
+                      if( energy.Contains("Ref1")){
                         startPtBin = 1;
+                      } else {
+                        startPtBin = 1;
+                      }
                     } else if ( mode == 4){
                       if( energy.Contains("Ref1")){
                         if (specialTrigg == 1) startPtBin = 25;
@@ -1790,22 +1794,22 @@
                     case 13:
                         if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
                             startPtBin = 10;
-                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("20-30%") == 0 || centrality.CompareTo("10-30%") == 0)
                             startPtBin = 10;
                         else 
                             startPtBin      = 4;
                         break;
                     case 3:
                         if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
-                            startPtBin      = 3;
+                            startPtBin      = 4;
                         else 
-                            startPtBin      = 3;
+                            startPtBin      = 4;
                         break;
                     case 4:
                     case 12:
                         if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
                             startPtBin = 23;
-                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("20-30%") == 0 || centrality.CompareTo("10-30%") == 0)
                             startPtBin = 19;
                         else 
                             startPtBin      = 6;
@@ -1813,7 +1817,7 @@
                     case 5:
                         if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0)
                             startPtBin = 4;
-                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0)
+                        else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("20-30%") == 0 || centrality.CompareTo("10-30%") == 0)
                             startPtBin = 4;
                         else 
                             startPtBin      = 3;
@@ -1944,7 +1948,7 @@
                         startPtBin = 1;
                   } else if ( mode == 3 ){
                     if (energy.CompareTo("5TeV2017") == 0) startPtBin = 4;
-                    else startPtBin = 1;
+                    else startPtBin = 3;
                   } else if ( mode == 4 ){
                     if( energy.Contains("Ref1")){
                       if (specialTrigg == 1) startPtBin = 8;
@@ -1957,8 +1961,12 @@
                       else startPtBin = 6;
                     }
                   } else if ( mode == 5 ){
-                    startPtBin = 8;
-                    if (specialTrigg == 4) startPtBin = 14;
+                    if( energy.Contains("Ref1")){
+                      startPtBin = 4;
+                    } else {
+                      startPtBin = 9;
+                      if (specialTrigg == 4) startPtBin = 14;
+                    }
                   } else if ( mode == 13 ){
                       startPtBin = 1;
                   } else if ( mode == 12 ){
@@ -2245,23 +2253,23 @@
                 if( mode == 2 ){
                   if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
                     startPtBin = 6;
-                  } else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0){
+                  } else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("20-30%") == 0 || centrality.CompareTo("10-30%") == 0){
                     startPtBin = 4;
                   } else {
                     startPtBin = 2;
                   }
                 } else if( mode == 3 ){
-                  startPtBin = 2;
+                  startPtBin = 3;
                 } else if( mode == 4 ){
                   if (centrality.CompareTo("0-20%") == 0 || centrality.CompareTo("0-10%") == 0 || centrality.CompareTo("0-5%") == 0 || centrality.CompareTo("5-10%") == 0){
+                    startPtBin = 7;
+                  } else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("20-30%") == 0 || centrality.CompareTo("10-30%") == 0){
                     startPtBin = 5;
-                  } else if (centrality.CompareTo("10-20%") == 0 || centrality.CompareTo("10-30%") == 0){
-                    startPtBin = 4;
                   } else {
                     startPtBin = 3;
                   }
                 } else if( mode == 5){
-                    startPtBin = 6;
+                    startPtBin = 7;
                 } else if (mode == 0){
                     startPtBin = 1;
                 }
@@ -2560,9 +2568,16 @@
                           }
                       }
                   } else if ( mode == 3 ){
-                    maxNBins = 33;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsPi05TeV2017PtCombination[i];
+                    if(energy.Contains("Ref1")){
+                            maxNBins = 34;
+                            for(Int_t i = 0; i < maxNBins+1; i++){
+                                binning[i] = fBinsPi05TeV2017PtPbPbRef[i];
+                            }
+                    } else {
+                      maxNBins = 33;
+                      for(Int_t i = 0; i < maxNBins+1; i++){
+                          binning[i] = fBinsPi05TeV2017PtCombination[i];
+                      }
                     }
                   } else if ( mode == 4  || mode == 5){
                     if(energy.Contains("2017")){
@@ -3187,8 +3202,8 @@
                 }
             } else if (energy.CompareTo("PbPb_5.02TeV") == 0 ){
                 if (mode == 0 ){ // PCM
-                    maxNBins = 29;
-                    binningMax  = 29;
+                    maxNBins = 34;
+                    binningMax  = 34;
                     if (DCAcase)
                         maxNBins = 15;
                     for(Int_t i = 0; i < maxNBins+1; i++){
@@ -3198,20 +3213,20 @@
                             binning[i] = fBinsPi0PbPb5TeVPCMPt[i];
                     }
                 } else if ( mode == 2 || mode == 13 ) {
-                    maxNBins = 33;
-                    binningMax  = 33;
+                    maxNBins = 34;
+                    binningMax  = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
                     }
                 } else if ( mode == 3 || mode == 5) {
-                    maxNBins = 33;
-                    binningMax  = 33;
+                    maxNBins = 34;
+                    binningMax  = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVPCMPHOSPt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins = 33;
-                    binningMax  = 33;
+                    maxNBins = 34;
+                    binningMax  = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
                     }
@@ -3443,10 +3458,17 @@
                     }
                   }
                 } else if ( mode == 3 ){
+                  if(energy.Contains("Ref1")){
+                        maxNBins = 14;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsEta5TeV2017PtPbPbRef[i];
+                        }
+                      } else {
                         maxNBins = 24;
                         for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsEta5TeV2017PtCombination[i];
                         }
+                      }
                 } else if ( mode == 4 || mode == 5){
                   if(energy.Contains("2017")){
                     if(energy.Contains("Ref1")){
@@ -4973,7 +4995,7 @@
 
                     }
                     if(modi == 0 && energy.Contains("2017")){
-                        nIterBGFit                  = 8;
+                        nIterBGFit                  = 9;
                         fMaxYFracBGOverIntHist      = 70;
                         optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                         optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";

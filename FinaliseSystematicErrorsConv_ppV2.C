@@ -957,17 +957,17 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         meanErrorsCorrBefore[i]     = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrBefore[i] ,ptBinsErr ,errorsMeanErrCorrBefore[i] );
         positiveErrorsCorr[i]       = new TGraphErrors(nPtBins,ptBins ,errorsPosCorr[i] ,ptBinsErr ,errorsPosErrCorr[i] );
 
-        if ( !meson.CompareTo("EtaToPi0") && !nameCutVariationSC[i].CompareTo("YieldExtraction_pp") && i==1){
-            // set the pi0etabinning yield error to zero as both yield errors are already combined in the eta yield error
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > -10){
-                    errorsMean[i][k]            = 0;
-                    errorsMeanErr[i][k]         = 0;
-                    errorsMeanCorr[i][k]        = 0;
-                    errorsMeanErrCorr[i][k]     = 0;
-                }
-            }
-        }
+//         if ( !meson.CompareTo("EtaToPi0") && !nameCutVariationSC[i].CompareTo("YieldExtraction_pp") && i==1){
+//             // set the pi0etabinning yield error to zero as both yield errors are already combined in the eta yield error
+//             for (Int_t k = 0; k < nPtBins; k++){
+//                 if (ptBins[k] > -10){
+//                     errorsMean[i][k]            = 0;
+//                     errorsMeanErr[i][k]         = 0;
+//                     errorsMeanCorr[i][k]        = 0;
+//                     errorsMeanErrCorr[i][k]     = 0;
+//                 }
+//             }
+//         }
     }
 
     Double_t errorMaterial = 4.50;
@@ -1215,8 +1215,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
     SysErrDatAverSingle << "Pt bin\t" ;
     for (Int_t i= 0; i< numberCutStudies; i++){
-        if(!meson.CompareTo("EtaToPi0")&&i==1)
-            continue;
+        //if(!meson.CompareTo("EtaToPi0")&&i==1)
+        //    continue;
         SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
     }
     if(meson.CompareTo("EtaToPi0"))
@@ -1225,8 +1225,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
     for (Int_t l=0;l< nPtBins-1;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
-            if(!meson.CompareTo("EtaToPi0")&&i==1)
-                continue;
+//             if(!meson.CompareTo("EtaToPi0")&&i==1)
+//                 continue;
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
         }
         if(meson.CompareTo("EtaToPi0"))

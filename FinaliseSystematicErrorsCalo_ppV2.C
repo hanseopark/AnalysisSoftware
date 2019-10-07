@@ -403,6 +403,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
 //                       error = 1.5;
 //                       if (ptBins[k] > 12.0 && meson.Contains("Pi0")) error = 1.5 + 0.4*(ptBins[k]-12)*(ptBins[k]-12);
                       error =  5.32285e-01 + -2.01078e-01*ptBins[k] + 2.37952e-02*ptBins[k]*ptBins[k];
+                      if(additionalName.CompareTo("calofastPHI7") == 0 ) error = 0.5;
                       if ( meson.CompareTo("Eta") == 0 ) error = 0;
                     }
                     errorsMean[i][k]            = error;
@@ -542,6 +543,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                           error = 1.32874;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                           if(additionalName.CompareTo("calofastEMC7") == 0 || additionalName.CompareTo("calofastEG2") == 0) error = 1.32874;
+                          if(additionalName.CompareTo("calofastPHI7") == 0 ) error = 1.4;
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -564,6 +566,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                           error = 1.32874 * 2.;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                           if(additionalName.CompareTo("calofastEMC7") == 0 || additionalName.CompareTo("calofastEG2") == 0) error = 1.32874;
+                          if(additionalName.CompareTo("calofastPHI7") == 0 ) error = 1.4;
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
