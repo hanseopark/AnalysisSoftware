@@ -85,7 +85,7 @@
     void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*& ,Bool_t ,TString);
     Double_t            Chi2ForNullHypoPValue(TGraphErrors*, TGraphAsymmErrors* ,  Bool_t , TString );
     Int_t               ModeMapping(Int_t);
-
+    void                RecalculateErrorsBasedOnDetailedInputFile (TGraphAsymmErrors* , TString );
     // ****************************************************************************************************************
     // ********************** definition of functions defined in this header ******************************************
     // ****************************************************************************************************************

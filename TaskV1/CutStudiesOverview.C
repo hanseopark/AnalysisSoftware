@@ -138,9 +138,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         Number++;
     }
     cout<<"=========================="<<endl;
-
     cout << "analysing " << cutVariationName << " cut variations" << endl;
-
     cout << " " << endl;
 
     // Determine number of collisions for PbPb case

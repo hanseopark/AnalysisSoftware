@@ -6,107 +6,142 @@
     //****************************************************************************************************
 
     //----------------------------------------------------------------------------------------------------
-    // Pi0 Run 1
+    // Pi0 
     //----------------------------------------------------------------------------------------------------
-    std::vector<Double_t> fBinsPi0pPb5TeVPt { // size 40
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
-        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  12.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 30.0, 35.0, 40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCPt { // size 52
+    // pt binnings 
+    //____________________________________________________________________________________________________
+    // combined:
+    std::vector<Double_t> fBinsPi0pPb5TeVCombPt { // size 36
+        0.0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,   1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 
+        2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0,   3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0,
+        5.4, 5.8, 6.2, 6.6, 7.0, 7.5, 8.0, 9.0, 10.0, 11.0,  12.0, 14.0, 16.0, 18.0, 20.0, 25.0, 30.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVCombCentPt { // size 28
+        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
+        6.0, 8.0, 10.0, 12.0, 16.0, 24.0, 32.0, 40.0};
+        
+    // PCM:
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMPt { // size 56
+        0.0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,   1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 
+        2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0,   3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0,
+        5.4, 5.8, 6.2, 6.6, 7.0, 7.5, 8.0, 9.0, 10.0, 11.0,  12.0, 14.0, 16.0, 20.0, 25.0, 30.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMDCAPt { // size 17
+        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMCentPt { // size 26
+        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
+        6.0, 8.0, 10.0, 12.0, 16.0, 20.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMDCACentPt { // size 17
+        0.0, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,  1.8, 2.0, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
+
+    // PCM-EMC    :
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCPt { // size 54
         0.0, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5,   1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 
         2.6, 2.7, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,   4.2, 4.4, 4.6, 4.8, 5.0, 5.4, 5.8, 6.2, 6.6, 7.0, 
-        7.5, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 16.0, 18.0, 20.0,   25.0, 30.0};
-
-    std::vector<Double_t> fBinsPi0pPb5TeVPtEMCTrig { // size 45
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
-        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 9.0,   10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 20.0,
-        22.0, 26.0, 30.0, 35.0, 40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtEMCTrigEMC7{ // size 18
+        7.5, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 16.0, 18.0, 20.0,   25.0, 30.0, 35.0, 40.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCTrigEMC7Pt{ // size 18
         0.0, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0,               8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtEMCTrigEG2 { // size 41
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCTrigEG2Pt { // size 41
         0.0, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0,               7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0,
         12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0, 16.5, 17.0,     17.5, 18.0, 19.0, 20.0, 21.0, 22.0, 24.0, 26.0, 30.0, 35.0,
         40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtCentPCMEMCTrigEG2 { // size 21
-        0.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0,             12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 20.0, 25.0, 30.0, 
-        40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtEMCTrigEG1 { // size 39
-        0.0, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0,            11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0,
-        16.5, 17.0, 17.5, 18.0, 18.5, 19.0, 19.5, 20.0, 21.0, 22.0,     23.0, 24.0, 25.0, 26.0, 30.0, 35.0, 40.0, 50.0, 60.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtPCMEMCTrigEG1 { // size 40
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCTrigEG1Pt { // size 40
         0.0, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0,            11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0,
         16.5, 17.0, 17.5, 18.0, 18.5, 19.0, 19.5, 20.0, 21.0, 22.0,     23.0, 24.0, 25.0, 26.0, 28.0, 30.0, 35.0, 40.0, 50.0, 60.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtCentPCMEMCTrigEG1 { // size 20
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCCentPt { // size 39
+        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2,   1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4,
+        2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,   5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCTrigEG2CentPt { // size 15
+        0.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0,             12.0, 14.0, 16.0, 20.0, 30.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCTrigEG1CentPt { // size 20
         0.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0,         16.0, 17.0, 18.0, 19.0, 20.0, 22.0, 24.0, 26.0, 30.0, 40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVEMCPt { // size 37
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
-        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  12.0, 16.0, 20.0, 25.0, 30.0, 35.0, 40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVCombPt { // size 36
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
-        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  12.0, 14.0, 18.0, 24.0, 32.0, 40.0};
 
+
+    // EMC:
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCPt { // size 48
+        0.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,       2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 
+        3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8,       5.0, 5.4, 5.8, 6.2, 6.6, 7.0, 7.5, 8.0, 9.0, 10.0,
+        11.0, 12.0, 14.0, 16.0, 18.0, 20.0, 25.0, 30.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCTrigEMC7Pt{ // size 18
+        0.0, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0,               8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCTrigEG2Pt { // size 41
+        0.0, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0,               7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0,
+        12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0, 16.5, 17.0,     17.5, 18.0, 19.0, 20.0, 21.0, 22.0, 24.0, 26.0, 30.0, 35.0,
+        40.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCTrigEG1Pt { // size 39
+        0.0, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0,            11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0,
+        16.5, 17.0, 17.5, 18.0, 18.5, 19.0, 19.5, 20.0, 21.0, 22.0,     23.0, 24.0, 25.0, 26.0, 30.0, 35.0, 40.0, 50.0, 60.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCCentPt { // size 31
+        0.0, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+        4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCTrigEG2CentPt { // size 19
+        0.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0,             12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVEMCTrigEG1CentPt { // size 14
+        0.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,        17.0, 18.0, 19.0, 20.0};
+
+    // PHOS:
     std::vector<Double_t> fBinsPi0pPb5TeVPHOSPt { // size 37
         0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
         3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  12.0, 16.0, 20.0, 25.0, 30.0, 35.0, 40.0};
     std::vector<Double_t> fBinsPi0pPb5TeVPHOSDmitriPt { // size 31
         0.0, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,   2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
         5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 14.0, 18.0, 24.0, 32.0, 40.0};
+    std::vector<Double_t> fBinsPi0pPb5TeVPHOSCentPt { // size 24
+        0.0, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,   2.6, 2.8, 3.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,
+        16.0, 24.0, 32.0, 40.0};
+        
+    // mEMC:
     std::vector<Double_t> fBinsPi0pPb5TeVmEMCPt { // size 32
         0.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0,      19.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0, 34.0, 36.0,
         38.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 80.0, 100.0,    125.0, 150.0};
 
-    std::vector<Double_t> fBinsPi0pPb5TeVPtDCA { // size 17
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPtDCACent { // size 17
-        0.0, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,  1.8, 2.0, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
-
-    std::vector<Double_t> fBinsPi0pPb5TeVCombCentPt { // size 28
-        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
-        6.0, 8.0, 10.0, 12.0, 16.0, 24.0, 32.0, 40.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPCMCentPt { // size 26
-        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
-        6.0, 8.0, 10.0, 12.0, 16.0, 20.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPCMEMCCentPt { // size 39
-        0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2,   1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4,
-        2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,   5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0};
-
-    std::vector<Double_t> fBinsPi0pPb5TeVEMCCentPt { // size 25
-        0.0, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,   2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0, 6.0,
-        8.0, 10.0, 12.0, 16.0, 20.0};
-    std::vector<Double_t> fBinsPi0pPb5TeVPHOSCentPt { // size 24
-        0.0, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,   2.6, 2.8, 3.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,
-        16.0, 24.0, 32.0, 40.0};
+    // PCM-Dalitz:
     std::vector<Double_t> fBinsPi0pPb5TeVDalitzPt { // size 23
         0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,       2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.6, 4.0, 5.0, 6.0,
         8.0, 10., 15.};
+    // EMC-Dalitz
     std::vector<Double_t> fBinsPi0pPb5TeVEMCDalitzPt { // size 23
         0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,     2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.6, 4.0, 5.0, 6.0,
         8.0, 10., 15.};
 
-    std::vector<Int_t> fBinsPi0pPb5TeVPtRebin { // size 39
+    //______________________________________________________________________________________
+    // pt rebins
+    //______________________________________________________________________________________
+    // PCM
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMPtRebin { // size 55
         10, 8, 4, 2, 2, 1, 1, 1, 1, 1,      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 2, 2, 4, 5, 8, 8, 10,      10,10, 10, 10,10, 10,10,10,10};
-    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCPtRebin { // size 50
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 2, 2, 4, 5, 8, 8, 10,      10,10, 10, 10,10};
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMCentPtRebin { // size 25
+        10, 4, 2, 2, 2, 2, 2, 2, 2, 2,      2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
+        4, 5, 10, 10, 10};
+    // PCM-EMC
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCPtRebin { // size 53
         10, 4, 2, 2, 2, 2, 1, 1, 1, 1,      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 2, 2, 2, 4,
-        4, 4, 4, 5, 5, 8, 8, 8, 8, 10,      10};
+        4, 4, 4, 5, 5, 8, 8, 8, 8, 10,      10, 10, 10};
     std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEMC7PtRebin { // size 17
         10, 4, 4, 4, 4, 4, 4, 4, 4, 4,      5, 8, 8, 8, 8, 10, 10};
     std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG2PtRebin { // size 40
         10, 8, 8, 8, 8, 4, 4, 4, 4, 4,      4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
         4, 4, 4, 5, 5, 5, 8, 8, 8, 8,       8, 8, 8, 8, 8, 8, 8, 10, 10, 10 };
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMEMCTrigEG2PtRebin { // size 20
-        10, 8, 8, 8, 4, 4, 4, 4, 4, 4,      4, 8, 8, 8, 8, 8, 8, 8, 10, 10, 10 };
     std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin { // size 39
         10, 8, 8, 8, 8, 4, 4, 4, 4, 4,      4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 8, 8, 10, 10, 10, 10, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMEMCTrigEG1PtRebin { // size 19
+    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMEMCPtRebin { // size 38
+        8, 8, 8, 8, 8, 8, 4, 4, 4, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       4, 4, 4, 4, 8, 8, 10, 10};
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG2CentPtRebin { // size 14
+        10, 8, 8, 8, 8, 8, 8, 8, 8, 8,      8, 8, 8, 10 };
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG1CentPtRebin { // size 19
         10, 8, 8, 4, 4, 4, 4, 4, 4, 4,      4, 4, 4, 4, 8, 8, 8, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVPCMPHOSPtRebin { // size 36
-        7 , 7 , 7 , 7 , 4, 3, 3, 3, 3, 3,   3 , 3 , 3 , 3 , 3, 3, 3, 3, 4, 4,
-        4 , 4 , 4 , 4 , 4, 5, 7, 7, 7, 7,   7, 7, 7, 7, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVEMCPtRebin { // size 37
-        5, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 5,       10, 20, 20, 20, 20, 20, 20};
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG1CentCentPtRebin { // size 19
+        10, 8, 8, 8, 8, 8, 8, 8, 8, 8,      8, 8, 8, 8, 8, 10, 10, 15, 20};
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMEMCTrigEG1CentPerPtRebin { // size 19
+        10, 8, 8, 8, 8, 8, 8, 8, 8, 8,      8, 8, 8, 8, 8, 10, 10, 15, 20};
+    // EMC
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCPtRebin { // size 47
+        5, 4, 4, 4, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        10, 10, 10, 10, 10, 20, 20};
     std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEMC7PtRebin { // size 17
         10, 8, 4, 4, 4, 4, 4, 4, 4, 4,      4, 5, 5, 8, 8, 10, 10};
     std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG2PtRebin { // size 40
@@ -115,35 +150,43 @@
     std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG1PtRebin { // size 37
         5, 4, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 4, 4, 4,
         5, 5, 5, 5, 5, 8, 8, 8, 8, 8,       10, 10, 10, 10, 20, 20, 20};
+    std::vector<Int_t> fBinsPi0pPb5TeVCentEMCPtRebin { // size 30
+        5, 4, 4, 4, 4, 4, 4, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
+        4, 4, 4, 4, 4, 8, 8, 8, 10, 10};
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG2CentPtRebin { // size 18
+        5, 8, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 8, 10, 10};
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG2CentPerPtRebin { // size 18
+        5, 8, 8, 8, 8, 8, 8, 8, 8, 8,       8, 10, 10, 10, 10, 15, 20, 20};
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG1CentPtRebin { // size 13
+        5, 8, 4, 4, 2, 2, 2, 2, 4, 4,       4, 8, 10};
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCTrigEG1CentPerPtRebin { // size 13
+        5, 8, 8, 8, 4, 4, 4, 4, 8, 8,       8, 10, 20};
+    // PHOS
     std::vector<Int_t> fBinsPi0pPb5TeVPHOSPtRebin { // size 36
         5, 4, 3, 3, 3, 3, 3, 3, 3, 3,       3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3,       7, 11, 11, 11, 10, 10};
-
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMPtRebin { // size 25
-        10, 4, 2, 2, 2, 2, 2, 2, 2, 2,      2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
-        4, 5, 10, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVCentEMCPtRebin { // size 24
-        5, 4, 4, 4, 4, 4, 4, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
-        8, 8, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMEMCPtRebin { // size 38
-        8, 8, 8, 8, 8, 8, 4, 4, 4, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       4, 4, 4, 4, 8, 8, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPHOSPtRebin { // size 24
+    std::vector<Int_t> fBinsPi0pPb5TeVPHOSCentPtRebin { // size 24
         8, 4, 4, 4, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 4, 4, 4,
         10, 10, 10, 10};
-    std::vector<Int_t> fBinsPi0pPb5TeVCentPCMPHOSPtRebin { // size 24
+    // PCM-PHOS
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMPHOSPtRebin { // size 36
+        7 , 7 , 7 , 7 , 4, 3, 3, 3, 3, 3,   3 , 3 , 3 , 3 , 3, 3, 3, 3, 4, 4,
+        4 , 4 , 4 , 4 , 4, 5, 7, 7, 7, 7,   7, 7, 7, 7, 10, 10};
+    std::vector<Int_t> fBinsPi0pPb5TeVPCMPHOSCentPtRebin { // size 24
         8, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 8, 8,
         10, 20, 20, 20};
-
-    std::vector<Int_t> fBinsPi0pPb5TeVDalitzPtRebin { // size 22
-        5, 5, 5, 5, 4, 4, 4, 4, 4, 4,       4, 4, 5, 5, 5, 5, 5, 5, 5, 5,
-        8, 8};
-    std::vector<Int_t> fBinsPi0pPb5TeVEMCDalitzPtRebin { // size 22
-        5, 5, 8, 5, 4, 4, 4, 4, 4, 4,       4, 4, 5, 5, 5, 5, 5, 5, 5, 5,
-        8, 8};
+    // mEMC
     std::vector<Int_t> fBinsPi0pPb5TeVmEMCPtRebin { // size 31
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       2, 2, 2, 2, 4, 4, 4, 4, 4, 4,
         4, 4, 4, 5, 5, 5, 5, 5, 5, 5,       10 };
+    // PCM-Dalitz
+    std::vector<Int_t> fBinsPi0pPb5TeVDalitzPtRebin { // size 22
+        5, 5, 5, 5, 4, 4, 4, 4, 4, 4,       4, 4, 5, 5, 5, 5, 5, 5, 5, 5,
+        8, 8};
+    // EMC-Dalitz
+    std::vector<Int_t> fBinsPi0pPb5TeVEMCDalitzPtRebin { // size 22
+        5, 5, 8, 5, 4, 4, 4, 4, 4, 4,       4, 4, 5, 5, 5, 5, 5, 5, 5, 5,
+        8, 8};
 
     //----------------------------------------------------------------------------------------------------
     // Pi0 Run 2
@@ -248,79 +291,109 @@
         4, 4, 4, 4, 4, 4, 4, 5, 5, 5,       10, 15, 15, 15, 20, 20, 20, 20, 20 };
 
     //----------------------------------------------------------------------------------------------------
-    // Eta Run 1
+    // Eta 
     //----------------------------------------------------------------------------------------------------
-    std::vector<Double_t> fBinsEtapPb5TeVPt { // size 23
-        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 14., 16.,
-        20., 25., 30.};
+    // pt binnings 
+    //____________________________________________________________________________________________________
+    // Comb:
+    std::vector<Double_t> fBinsEtapPb5TeVCombPt { // size 23
+        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
+        26., 32., 40};        
+    std::vector<Double_t> fBinsEtapPb5TeVCombCentPt { // size 23
+        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
+        26., 32., 40};        
+    // PCM:
+    std::vector<Double_t> fBinsEtapPb5TeVPCMPt { // size 32
+        0., 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.4,    1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 3.0, 3.4, 3.8, 4.2, 
+        4.6, 5.0, 5.5, 6.0, 7.0, 8.0, 10, 12., 16., 20.,    25., 30.};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMDCAPt { // size 17
+        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMCentPt { // size 18
+        0., 0.3, 0.5, 0.7, 1.1, 1.4, 1.8, 2.2, 2.6, 3.0,    4.0, 6.0, 10.0, 14.0, 20.0, 26.0, 32.0, 40.};
+    // PCM-EMC
     std::vector<Double_t> fBinsEtapPb5TeVPCMEMCPt { // size 26
         0., 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6,    3.0, 3.4, 3.8, 4.2, 4.6, 5., 5.5, 6., 7.0, 8., 
         10,  12., 16., 20., 25., 30.};
-    std::vector<Double_t> fBinsEtapPb5TeVEMCPt { // size 22
-        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
-        25., 30.};
-    std::vector<Double_t> fBinsEtapPb5TeVCombPt { // size 23
-        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
-        26., 32., 40};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCTrigEMC7Pt { // size 12
+        0., 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 8.0, 10, 12.,     16.0, 20.0};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCTrigEG2Pt { // size 28
+        0., 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,    8.5, 9., 9.5, 10, 10.5, 11., 12., 13., 14., 15.0,
+        16.0, 17.0, 18., 20.,  22., 26., 30., 40};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCTrigEG1Pt { // size 23
+        0., 9., 9.5, 10, 10.5, 11., 11.5, 12., 13., 14.,    15.0, 16.0, 17.0, 18., 20., 22., 24., 26.0, 30., 35.0,
+        40.0, 50.0, 60.0};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCCentPt { // size 24
+        0., 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,    2.2, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 14.0,
+        20.0, 26.0, 32.0, 40.};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCTrigEG2CentPt { // size 9
+        0., 4.0, 5.0, 6.0, 8.0, 10, 14., 20.,  30.};
+    std::vector<Double_t> fBinsEtapPb5TeVPCMEMCTrigEG1CentPt { // size 9
+        0., 9., 10, 12., 14., 16.0, 20., 24.,  30.};
+    // EMC: 
+    std::vector<Double_t> fBinsEtapPb5TeVEMCPt { // size 23
+        0., 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 3.0, 3.4,    3.8, 4.2, 4.6, 5.0, 5.5, 6., 7.0, 8.0, 10,  12., 
+        16., 20., 25.0};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCTrigEMC7Pt { // size 12
+        0., 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 8.0, 10, 12.,     16.0, 20.0};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCTrigEG2Pt { // size 28
+        0., 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,    8.5, 9., 9.5, 10, 10.5, 11., 12., 13., 14., 15.0,
+        16.0, 17.0, 18., 20.,  22., 26., 30., 40};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCTrigEG1Pt { // size 23
+        0., 9., 9.5, 10, 10.5, 11., 11.5, 12., 13., 14.,    15.0, 16.0, 17.0, 18., 20., 22., 24., 26.0, 30., 35.0,
+        40.0, 50.0, 60.0};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCCentPt { // size 18
+        0., 1.4, 1.6, 1.8, 2.2, 2.6, 3.0, 3.5, 4.0, 5.0,    6.0, 8.0, 10.0, 14.0, 20.0, 26.0, 32.0, 40.};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCTrigEG2CentPt { // size 14
+        0., 4.0, 5.0, 6.0, 7.0, 8.0, 9., 10, 12., 14., 16.0, 18., 20.,  26.};
+    std::vector<Double_t> fBinsEtapPb5TeVEMCTrigEG1CentPt { // size 10
+        0., 11., 12., 14., 16.0, 18., 20., 24., 30., 40.0};
+    // PHOS:
     std::vector<Double_t> fBinsEtapPb5TeVPHOSPt { // size 20
         0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 3.0,    4.,  5.,  6., 8.,  10,  12., 16., 20., 25., 30.};
     std::vector<Double_t> fBinsEtapPb5TeVPHOSDmitriPt { // size 13
         0., 2.6, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0,    26.0, 32.0, 40.0};
+    std::vector<Double_t> fBinsEtapPb5TeVPHOSCentPt { // size 11
+        0., 2.6, 3.0, 4.0, 6.0, 10.0, 14.0, 20.0, 26.0, 32.0, 40.0};
+    // PCM-PHOS:
     std::vector<Double_t> fBinsEtapPb5TeVPCMPHOSPt { // size 21
         0., 0.3, 0.5, 0.7, 1.1, 1.4, 1.8, 2.2, 2.6, 3.0,    3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20., 25.,
         30.};
-    std::vector<Double_t> fBinsEtapPb5TeVPtEMCTrig { // size 27
-        0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 7.,  8., 9., 10, 11.,
-        12., 13., 14., 18., 20., 24., 30.};
-    std::vector<Double_t> fBinsEtapPb5TeVPtEMCTrigEMC7 { // size 12
-        0., 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 8.0, 10, 12.,     16.0, 20.0};
-    std::vector<Double_t> fBinsEtapPb5TeVPtEMCTrigEG2 { // size 28
-        0., 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,    8.5, 9., 9.5, 10, 10.5, 11., 12., 13., 14., 15.0,
-        16.0, 17.0, 18., 20.,  22., 26., 30., 40};
-    std::vector<Double_t> fBinsEtapPb5TeVPtCentPCMEMCTrigEG2 { // size 16
-        0., 4.0, 5.0, 6.0, 7.0, 8.0, 9., 10, 12., 14., 16.0, 18., 20.,  24., 30., 40};
-    std::vector<Double_t> fBinsEtapPb5TeVPtEMCTrigEG1 { // size 23
-        0., 9., 9.5, 10, 10.5, 11., 11.5, 12., 13., 14.,    15.0, 16.0, 17.0, 18., 20., 22., 24., 26.0, 30., 35.0,
-        40.0, 50.0, 60.0};
-    std::vector<Double_t> fBinsEtapPb5TeVPtCentPCMEMCTrigEG1 { // size 12
-        0., 9., 10, 11., 12., 14., 16.0, 18., 20., 24.,     30., 40.0};
-
-    std::vector<Double_t> fBinsEtapPb5TeVCentPt { // size 18
-        0., 0.3, 0.5, 0.7, 1.1, 1.4, 1.8, 2.2, 2.6, 3.0,    4.0, 6.0, 10.0, 14.0, 20.0, 26.0, 32.0, 40.};
-    std::vector<Double_t> fBinsEtapPb5TeVCentPCMEMCPt { // size 24
-        0., 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,    2.2, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 14.0,
-        20.0, 26.0, 32.0, 40.};
-    std::vector<Double_t> fBinsEtapPb5TeVPHOSCentPt { // size 11
-        0., 2.6, 3.0, 4.0, 6.0, 10.0, 14.0, 20.0, 26.0, 32.0, 40.0};
-
-    std::vector<Double_t> fBinsEtapPb5TeVPtDCA { // size 17
-        0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
+    // Dalitz:
     std::vector<Double_t> fBinsEtapPb5TeVDalitzPt { // size 10
         0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
 
-    std::vector<Int_t> fBinsEtapPb5TeVPtRebin { // size 22
-        10, 8, 8, 8, 5, 5, 5, 5, 4, 4,          4, 5, 8, 8, 8, 8, 10, 10, 10, 10,
-        10, 10};
+    //______________________________________________________________________________________
+    // pt rebins
+    //______________________________________________________________________________________
+    // PCM:
+    std::vector<Int_t> fBinsEtapPb5TeVPCMPtRebin { // size 31
+        10, 8, 8, 8, 8, 5, 5, 4, 4, 4,           4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 
+        8, 8, 8, 8, 8, 10, 10, 10, 10, 10,       10};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMCentPtRebin { // size 14
+        10, 10, 10, 10, 8, 5, 5, 4, 5, 5,       8,  8,  8,  10};
+    // PCM-EMC:
     std::vector<Int_t> fBinsEtapPb5TeVPCMEMCPtRebin { // size 25
         10, 8, 5, 5, 4, 4, 4, 4, 4, 4,          4, 4, 4, 4, 4, 5, 5, 8, 8, 8, 
         10, 12, 12, 12, 12 };
-    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigPtRebin { // size 26
-        10, 10, 10, 10, 8, 8, 8, 8, 8, 8,       8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 10, 16, 20};
-    std::vector<Int_t> fBinsEtapPb5TeVCentPCMEMCTrigPtRebin { // size 11
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 16, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin { // size 11
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 20};
     std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin { // size 26
         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
         10, 10, 10, 12, 20, 20};
-    std::vector<Int_t> fBinsEtapPb5TeVCentPCMEMCTrigEG2PtRebin { // size 15
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 12, 20, 20};
-    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin { // size 11
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 20};
-    std::vector<Int_t> fBinsEtapPb5TeVPCMPHOSPtRebin { // size 20
-        16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 21, 21, 21, 21, 21};
-    std::vector<Int_t> fBinsEtapPb5TeVEMCPtRebin { // size 21
-        10, 8, 8, 8, 8, 8, 8, 8, 8, 5,          5, 5, 5, 5, 8, 16, 16, 20, 20, 20,
-        20};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEG1PtRebin { // size 26
+        10, 10, 10, 10, 8, 8, 8, 8, 8, 8,       8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+        8, 8, 8, 10, 16, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCCentPtRebin { // size 23
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 8,         8, 8, 8, 8, 8, 8, 10, 12, 15, 15,
+        15,  15,  15};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEG2CentPtRebin { // size 8
+        10, 12, 12, 12, 12, 12, 20, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCTrigEG1CentPtRebin { // size 8
+        10, 12, 12, 12, 12, 12, 12, 20};
+    // EMC
+    std::vector<Int_t> fBinsEtapPb5TeVEMCPtRebin { // size 22
+        10, 8, 8, 8, 8, 8, 8, 8, 5, 5,          5, 5, 5, 5, 8, 10, 10, 15, 15, 15,
+        20, 20};
     std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEMC7PtRebin { // size 11
         10, 8, 8, 8, 8, 8, 8, 10, 10, 10,        20 };
     std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG2PtRebin { // size 22
@@ -329,22 +402,82 @@
     std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG1PtRebin { // size 22
         10, 8, 8, 8, 8, 8, 8, 5, 5, 5,          5, 5, 5, 5, 5, 10, 10, 10, 10, 10,
         10, 20 };
+    std::vector<Int_t> fBinsEtapPb5TeVEMCCentPtRebin { // size 17
+        10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 8, 8, 10, 20,  20, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVEMCCentPerPtRebin { // size 17
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 10,         16, 16, 16, 20, 20,  20, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG2CentPtRebin { // size 13
+        10, 10, 8, 8, 8, 8, 8, 8, 8, 8, 10, 10, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG2CentPerPtRebin { // size 13
+        10, 10, 12, 12, 12, 12, 12, 12, 12, 16, 20, 20, 40};
+    std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG1CentPtRebin { // size 9
+        10, 10, 8, 8, 8, 10, 15, 20, 20};
+    std::vector<Int_t> fBinsEtapPb5TeVEMCTrigEG1CentPerPtRebin { // size 9
+        10, 12, 12, 12, 12, 15, 20, 25, 25};
+        
+    // PHOS
     std::vector<Int_t> fBinsEtapPb5TeVPHOSPtRebin { // size 19
         19, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 20, 25, 25, 25, 24, 19, 19};
-    std::vector<Int_t> fBinsEtapPb5TeVDalitzPtRebin { // size 9
-        10, 10, 10, 10, 10, 10, 10, 10, 10};
-    std::vector<Int_t> fBinsEtapPb5TeVPCMCentPtRebin { // size 14
-        10, 10, 10, 10, 8, 5, 5, 4, 5, 5,         8,  8,  8,  10};
-
-    std::vector<Int_t> fBinsEtapPb5TeVPCMEMCCentPtRebin { // size 23
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 8,         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        10,  10,  10};
-    std::vector<Int_t> fBinsEtapPb5TeVEMCCentPtRebin { // size 14
-        10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 10,  20, 20};
-    std::vector<Int_t> fBinsEtapPb5TeVPCMPHOSCentPtRebin { // size 14
-        20, 20, 15, 12, 12, 12, 12, 12, 12, 15, 15, 20, 20, 20};
     std::vector<Int_t> fBinsEtapPb5TeVPHOSCentPtRebin { // size 14
         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+    // PCM-PHOS
+    std::vector<Int_t> fBinsEtapPb5TeVPCMPHOSPtRebin { // size 20
+        16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 21, 21, 21, 21, 21};
+    std::vector<Int_t> fBinsEtapPb5TeVPCMPHOSCentPtRebin { // size 14
+        20, 20, 15, 12, 12, 12, 12, 12, 12, 15, 15, 20, 20, 20};
+    // Dalitz
+    std::vector<Int_t> fBinsEtapPb5TeVDalitzPtRebin { // size 9
+        10, 10, 10, 10, 10, 10, 10, 10, 10};
+
+    //______________________________________________________________________________________
+    // pt rebins pi0Eta 
+    //______________________________________________________________________________________
+    // PCM
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMPtRebin{ // size 32
+        8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+        1, 2, 2, 2, 4, 4, 4, 8, 8, 8,           8};
+        
+    // PCM-EMC:
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCPtRebin { // size 25
+        10, 2, 1, 1, 1, 1, 1, 1, 1, 1,          1, 1, 1, 1, 1, 2, 2, 4, 4, 4, 
+        4, 4, 10, 10, 10 };
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEMC7PtRebin{ // size 11
+        8, 4, 2, 2, 2, 2, 4, 4, 8, 8, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEG2PtRebin { // size 26
+        10, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 8, 10, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEG1PtRebin { // size 26
+        10, 5, 5, 5, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 5, 8, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCCentPtRebin { // size 23
+        10, 2, 2, 2, 2, 2, 2, 2, 2, 2,         4, 4, 4, 4, 4, 4, 5, 5, 10, 10,
+        10,  10,  10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEG2CentPtRebin { // size 8
+        10, 4, 4, 4, 4, 4, 4, 8, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEG1CentPtRebin { // size 8
+        10, 4, 4, 4, 4, 6, 6, 8, 10};
+    // EMC
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCPtRebin { // size 22
+        5, 4, 4, 4, 4, 4, 4, 4, 2, 2,          2, 2, 2, 2, 4, 5, 5, 6, 6, 6,
+        10, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEMC7PtRebin { // size 11
+        10, 4, 4, 4, 4, 4, 4, 5, 5, 5,         10 };
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG2PtRebin { // size 22
+        10, 4, 4, 4, 2, 2, 2, 2, 2, 2,         4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        5, 5, 5, 10, 10, 10, 10 };
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG1PtRebin { // size 22
+        10, 4, 4, 4, 4, 4, 4, 2, 2, 2,         2, 2, 2, 2, 2, 5, 5, 5, 5, 5,
+        5, 10 };
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCCentPtRebin { // size 17
+        10, 5, 4, 4, 4, 4, 4, 4, 4, 4,         4, 4, 4, 5, 8,  10, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG2CentPtRebin { // size 13
+        10, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 8};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG2CentPerPtRebin { // size 13
+        10, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 8, 16};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG1CentPtRebin { // size 9
+        10, 5, 4, 4, 4, 5, 5, 10, 10};
+    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCTrigEG1CentPerPtRebin { // size 9
+        10, 5, 4, 4, 8, 10, 10, 15, 15};
 
     //----------------------------------------------------------------------------------------------------
     // Eta Run 2
@@ -396,18 +529,9 @@
 
 
     // Pi0 Eta binning rebin factors Run 1
-    std::vector<Int_t> fBinsPi0EtapPb5TeVPtRebin{ // size 22
-        8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
-        4, 4};
-    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCPtRebin { // size 25
-        10, 2, 1, 1, 1, 1, 1, 1, 1, 1,          1, 1, 1, 1, 1, 2, 2, 4, 4, 4, 
-        4, 4, 10, 10, 10 };
     std::vector<Int_t> fBinsPi0EtapPb5TeVPCMPHOSPtRebin{ // size 22
         8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
         4, 4};
-    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCPtRebin{ // size 22
-        8, 4, 4, 4, 4, 4, 4, 4, 4, 4,           4, 4, 4, 4, 4, 4, 5, 5, 8, 10,
-        10, 10};
     std::vector<Int_t> fBinsPi0EtapPb5TeVPHOSPtRebin{ // size 22
         8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 2, 2, 2, 4, 4,
         4, 4};
@@ -415,16 +539,10 @@
         8, 2, 2, 2, 2, 2, 4, 4, 4};
     std::vector<Int_t> fBinsPi0EtapPb5TeVPCMCentPtRebin{ // size 14
         10, 8, 4, 4, 2, 2, 2, 2, 2, 2,          4, 5, 8, 10};
-    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCCentPtRebin{ // size 14
-        10, 10, 4, 4, 4, 4, 2, 2, 2, 2,         4, 5, 8, 10};
-    std::vector<Int_t> fBinsPi0EtapPb5TeVEMCCentPtRebin{ // size 14
-        10, 8, 8, 2, 2, 2, 2, 2, 2, 2,          2, 2, 4, 8};
     std::vector<Int_t> fBinsPi0EtapPb5TeVPCMPHOSCentPtRebin{ // size 14
         10, 4, 4, 2, 2, 2, 2, 2, 2, 2,          4, 4, 8, 10};
     std::vector<Int_t> fBinsPi0EtapPb5TeVPHOSCentPtRebin{ // size 14
         10, 8, 8, 4, 2, 2, 2, 2, 2, 2,          4, 4, 8, 10};
-    std::vector<Int_t> fBinsPi0EtapPb5TeVPCMEMCTrigEMC7PtRebin{ // size 11
-        8, 4, 2, 2, 2, 2, 4, 4, 8, 8, 10};
 
 
     // Pi0 Eta binning rebin factors Run 2

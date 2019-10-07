@@ -9,12 +9,14 @@ SINGLERUN=0
 SEPARATEON=0
 MERGEONSINGLEData=0
 MERGEONSINGLEMC=0
+MERGEONSINGLEMCJJ=0
 CLEANUP=0
 CLEANUPMAYOR=0
 number=""
 minFileSize=1000
 SEPARATEONLYConv=1
-
+FILENAMEBASE="GammaConvV1"
+MODE=0
 tempDir=""
 tempPath=""
 tempBool=1
@@ -227,7 +229,7 @@ function CopyRunwiseAndMergeAccordingToRunlistMC()
                 cd $currentDir
                 rm $3/${10}*.root*
                 echo runlists/runNumbers$1${11}.txt
-                firstrunNumber=`head -n1 runlists/runNumbers$1${11}.txt`
+                firstrunNumber=`tail -n1 runlists/runNumbers$1${11}.txt`
                 echo $firstrunNumber
                 ls $3/$firstrunNumber/${10}\_*.root > file$1.txt
 
@@ -253,6 +255,18 @@ function CopyRunwiseAndMergeAccordingToRunlistJJMC()
                 for pThard in {1..20}; do
                     CopyFileIfNonExisitent $3/$pThard/$runNumber "$7/$1/$pThard/$runNumber/$5/$4" $8 "$7/$1/$runNumber/$5/$4/Stage_1/" kTRUE
                 done
+                if [ $MERGEONSINGLEMCJJ == 1 ] ; then 
+                    mkdir -p $3/$runNumber
+                    ls $3/1/$runNumber/${10}\_*.root > filebins$1.txt
+                    filesToMerge=`cat filebins$1.txt`
+                    for fileToMerge in $filesToMerge; do
+                        nSlashesCurr=`expr $8 + 1`
+                        echo "file name: " $fileToMerge " slashes: " $nSlashesCurr;
+                        GetFileNumberMerging2 $fileToMerge $nSlashesCurr
+                        echo "searching for file " ${10}\_$number".root";
+                        hadd -f $3/$runNumber/${10}\_$number.root $3/*/$runNumber/${10}\_$number.root
+                    done
+                fi
             done;
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
                 cd $currentDir
@@ -287,8 +301,8 @@ function CopyRunwiseAndMergeAccordingToRunlistData()
             if [ $MERGEONSINGLEData == 1 ] && [ ! -f $3/mergedAllCalo.txt ]; then
                 cd $currentDir
                 echo "I am here:" $PWD
-                rm $3/${11}*.root*
-                firstrunNumber=`head -n1 runlists/runNumbers$1\_${10}.txt`
+                #rm $3/${11}*.root*
+                firstrunNumber=`tail -n1 runlists/runNumbers$1\_${10}.txt`
                 ls $3/$firstrunNumber/${11}\_*.root > file$1.txt
                 listsToMerge=`cat $9`
                 for runListName in $listsToMerge; do
@@ -517,6 +531,23 @@ function CopyFileIfNonExisitentDiffList()
         cp $1/$3/HeavyNeutralMesonToGG_$fileNumber.root $1/HeavyNeutralMesonToGG-$3\_$fileNumber.root
     done
     rm -f fileNumbers2.txt
+}
+
+
+function ChangeStructureIfNeededGeneral()
+{
+    if [[ $1 == *"Basic.root"* ]]; then
+        echo "Nothing to be done: Basis.root"
+    else
+        GetFileNumberMerging $1 $3 2
+        cp $2/$FILENAMEBASE$5_$number.root $OUTPUTDIR/$FILENAMEBASE\_$4\_$number.root
+        if  [ -f $OUTPUTDIR/CutSelections/CutSelection_$FILENAMEBASE\_$4_$number.log ] &&
+            [ -s $OUTPUTDIR/CutSelections/CutSelection_$FILENAMEBASE\_$4_$number.log ]; then
+            echo "Nothing to be done: \"CutSelection_$FILENAMEBASE\_$4_$number.log\" already exists";
+        else
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/$FILENAMEBASE\_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_$FILENAMEBASE\_$4_$number.log\"\,$MODE\)
+        fi
+    fi
 }
 
 

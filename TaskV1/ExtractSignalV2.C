@@ -883,7 +883,7 @@ void ExtractSignalV2(
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
 
         cout << "---------------------------------------------------------------------------------" << endl;
-        cout << "Begin Analysis Pt Bin " << iPt <<endl;
+        cout << "Begin Analysis Pt Bin " << iPt << "\t range: " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << " rebin: " << fNRebin[iPt]  <<endl;
         cout << "---------------------------------------------------------------------------------" << endl;
         // Function to subtract GG minus Bck
         fFileDataLog << "---------------------------------------------------------------------------------" << endl;

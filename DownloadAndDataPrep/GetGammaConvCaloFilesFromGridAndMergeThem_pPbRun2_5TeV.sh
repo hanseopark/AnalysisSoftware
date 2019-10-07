@@ -3,11 +3,12 @@ source basicFunction.sh
 
 DOWNLOADON=1
 MERGEON=1
-MERGEONFASTAndWOSDD=1
+MERGEONFASTAndWOSDD=0
 SINGLERUN=1
-SEPARATEON=1
+SEPARATEON=0
 MERGEONSINGLEData=1
 MERGEONSINGLEMC=1
+MERGEONSINGLEMCJJ=1
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -196,15 +197,18 @@ if [ $3 = "AODSKIMMB" ]; then
     TRAINDIR=20190916-PCMEMCSys
     LHC13beData="";
 #     LHC13bcData="619"
-    LHC13bcData="620"
+#     LHC13bcData="620"
+    LHC13bcData="641"
 #     LHC13bcData="621"
     LHC13bData="child_1"
     LHC13cData="child_2"
 #     LHC13deData="612" #skim MB
-#     LHC13dData="child_1"
-#     LHC13eData="child_2"
+    LHC13deData="642" #skim MB
+    LHC13dData="child_1"
+    LHC13eData="child_2"
 #     LHC13fData="613" #skim MB
 #     LHC13fData="617" #skim MB
+    LHC13fData="643" #skim MB
 
 
 elif [ $3 = "AODSKIMEMC7" ]; then
@@ -233,12 +237,16 @@ elif [ $3 = "AODSKIMEGAJE" ]; then
 #     LHC13fData="606" #skim EGA
 
     TRAINDIR=20190916-PCMEMCSys
-    LHC13beData="627" #skim EGA
+#     LHC13beData="627" #skim EGA
+    LHC13beData="634" #skim EGA
+#     LHC13beData="645" #skim EGA
     LHC13bData="child_1"
     LHC13cData="child_2"
     LHC13dData="child_3"
     LHC13eData="child_4"
-    LHC13fData="628" #skim EGA
+#     LHC13fData="628" #skim EGA
+    LHC13fData="635" #skim EGA
+#     LHC13fData="646" #skim EGA
 elif [ $3 = "AODSKIMPHI7" ]; then
 #     TRAINDIR=20190831-EMCNonLin
 #     LHC13beData="597" #skim PHI7
@@ -272,15 +280,18 @@ else
 #     LHC16qtData="623";
 #     LHC16qtData="637";
 #     LHC16qtData="638";
+#     LHC16qtData="644";
 #     LHC16qDataFast="child_1";
 #     LHC16tDataFast="child_2";
 #     LHC16qData="child_3";
 #     LHC16tData="child_4";
-#     LHC18j5MC="744"
+#     LHC18j5MC="756"
+#     LHC18j5MC="768"
 #     LHC18j5_1MC="child_1"
 #     LHC18j5_2MC="child_2"
 #     LHC18j5_3MC="child_3"
-#     LHC18f3MCMoth="745";
+#     LHC18f3MCMoth="757";
+#     LHC18f3MCMoth="761";
 #     LHC18f3MC1="child_2";
 #     LHC18f3MC2="child_4";
 #     LHC18f3MCFast1="child_1";
@@ -289,9 +300,13 @@ else
     # LHC17f2a_fixMC="child_2";
     # LHC17f2a_fixMCFast="child_1";
 
-    LHC19a4MCMother="748";
-    LHC19a4MC1="child_1";
-    LHC19a4MC2="child_2";
+#     LHC19a4MCMother="765";
+#     LHC19a4MC1="child_1";
+#     LHC19a4MC2="child_2";
+    LHC17g8aMCMoth="764"
+    LHC17g8aMC="child_2"
+    LHC17g8aMCFast="child_1"
+
 fi
 
 
@@ -470,9 +485,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
     cd $currentDir
     CopyRunwiseAndMergeAccordingToRunlistMC "LHC18j5_3" $HAVELHC18j53 $OUTPUTDIR_LHC18j53 $LHC18j5_3MC $pathMCR1 $baseLegoMC "/alice/sim/2018" $NSlashes3 runlistsToMerge.txt GammaConvCalo
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC19a4_1" $HAVELHC19a41 $OUTPUTDIR_LHC19a41 $LHC19a4MC1 $pathMCR1 $baseLegoMC "/alice/sim/2019" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC19a4_1" $HAVELHC19a41 $OUTPUTDIR_LHC19a41 $LHC19a4MC1 $pathMCR1 $baseLegoMC "/alice/sim/2019" $NSlashes3 runlistsToMerge.txt GammaConvCalo runlists/binsJetJetLHC19a4_1.txt
     cd $currentDir
-    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC19a4_2" $HAVELHC19a42 $OUTPUTDIR_LHC19a42 $LHC19a4MC2 $pathMCR1 $baseLegoMC "/alice/sim/2019" $NSlashes3 runlistsToMerge.txt GammaConvCalo
+    CopyRunwiseAndMergeAccordingToRunlistJJMC "LHC19a4_2" $HAVELHC19a42 $OUTPUTDIR_LHC19a42 $LHC19a4MC2 $pathMCR1 $baseLegoMC "/alice/sim/2019" $NSlashes3 runlistsToMerge.txt GammaConvCalo runlists/binsJetJetLHC19a4_2.txt
     
     cd $currentDir
     echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
@@ -652,6 +667,22 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2a_fixF $NSlashes "MC_LHC17f2a_fix_fast-$runListName" "-$runListName"
             done;
         fi
+        if [ $HAVELHC19a41 == 1 ]; then
+            ls $OUTPUTDIR_LHC19a41/GammaConvCalo-$runListName\_*.root > fileLHC19a41.txt
+            fileNumbers=`cat fileLHC19a41.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC19a41 $NSlashes "MC_LHC19a4_1-$runListName" "-$runListName"
+            done;
+        fi
+        if [ $HAVELHC19a42 == 1 ]; then
+            ls $OUTPUTDIR_LHC19a42/GammaConvCalo-$runListName\_*.root > fileLHC19a42.txt
+            fileNumbers=`cat fileLHC19a42.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC19a42 $NSlashes "MC_LHC19a4_2-$runListName" "-$runListName"
+            done;
+        fi
         if [ $HAVELHC17g8a == 1 ]; then
             ls $OUTPUTDIR_LHC17g8a/GammaConvCalo-$runListName\_*.root > fileLHC17g8a.txt
             fileNumbers=`cat fileLHC17g8a.txt`
@@ -778,6 +809,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 
         echo -e "_woSDD\n_fast" > listReconstruction.txt
         listReconstruction=`cat listReconstruction.txt`
+        periodList=`echo -e "q\nt"`
         for reco in $listReconstruction; do
             ls $OUTPUTDIR/GammaConvCalo_LHC16q$reco-pass$passNr-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
             echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
@@ -789,138 +821,273 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo $number
                 for runListName in $listsToMerge; do
                     rm listCurrMerge.txt
-                    fileQ="$OUTPUTDIR/GammaConvCalo_LHC16q$reco-pass$passNr-$runListName""_$number.root"
-                    fileT="$OUTPUTDIR/GammaConvCalo_LHC16t$reco-pass$passNr-$runListName""_$number.root"
-                    echo -e "$fileQ\n$fileT" > listCurrMerge.txt
-                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16qt$reco-pass$passNr-$runListName\_$number.root
-                    mv $fileQ $OUTPUTDIR/SinglePeriods/
-                    mv $fileT $OUTPUTDIR/SinglePeriods/
+                    nameOut=""
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvCalo_LHC16$periodID$reco-pass$passNr-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                            nameOut+=$outAdd
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        else
+                            echo $currFile " does not exist"
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16$nameOut$reco-pass$passNr-$runListName\_$number.root
+                    for periodID in $periodList; do
+                        mv $OUTPUTDIR/GammaConvCalo_LHC16$periodID$reco-pass$passNr-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                    done  
                 done
             done
         done
-    fi
-
-    if [ $MERGEONFASTAndWOSDD == 1 ]; then
+    
         ls $OUTPUTDIR/GammaConvCalo_LHC16qt_fast-pass$passNr-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         echo -e "DPGTrackIncAccAndEMC" > runlistsToMerge.txt
         filesForMerging=`cat filesForMerging.txt`
         listsToMerge=`cat runlistsToMerge.txt`
+        periodList=`echo -e "_fast\n_woSDD"`
         for fileName in $filesForMerging; do
             echo $fileName
             GetFileNumberMerging $fileName $((NSlashes-1)) 4
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF="$OUTPUTDIR/GammaConvCalo_LHC16qt_fast-pass$passNr-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_LHC16qt_woSDD-pass$passNr-$runListName""_$number.root"
-                echo -e "$fileF\n$fileW" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16qt_fast-woSDD-pass$passNr-$runListName\_$number.root
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_LHC16qt$periodID-pass$passNr-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC16$nameOut-pass$passNr-$runListName\_$number.root
+                for periodID in $periodList; do
+                    mv $OUTPUTDIR/GammaConvCalo_LHC16qt$periodID-pass$passNr-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                done  
             done
+        done
+        ls $OUTPUTDIR/GammaConvCalo_LHC16qt_fast_woSDD-pass$passNr-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "LHC13bcdef-pass4\nLHC16qt_fast_woSDD-pass$passNr"`
+        for fileName in $filesForMerging; do
             echo $fileName
-            GetFileNumberMerging $fileName $((NSlashes-1)) 4
+            GetFileNumberMerging $fileName $((NSlashes-1)) 5
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF="$OUTPUTDIR/GammaConvCalo_LHC16qt_fast-pass$passNr-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_LHC16qt_woSDD-pass$passNr-$runListName""_$number.root"
-                fileR1="$OUTPUTDIR/GammaConvCalo_LHC13bcdef-pass4-$runListName""_$number.root"
-                echo -e "$fileF\n$fileW\n$fileR1" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13bcdef-pass4_LHC16qt_fast-woSDD-pass$passNr-$runListName\_$number.root
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=_$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo$nameOut-$runListName\_$number.root
             done
         done
-        
 
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_fast-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "_fast\n_woSDD"`
         for fileName in $filesForMerging; do
             echo $fileName
-            GetFileNumberMerging $fileName $((NSlashes-1)) 6
+            GetFileNumberMerging $fileName $((NSlashes-1)) 5
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF="$OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_fast-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_woSDD-$runListName""_$number.root"
-                echo -e "$fileF\n$fileW" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_fast-woSDD-$runListName\_$number.root
-                mv $fileW $OUTPUTDIR/SinglePeriods/
-                mv $fileF $OUTPUTDIR/SinglePeriods/
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                if [ $nameOut = "_fast_woSDD" ]; then
+                    nameOut="";
+                fi
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix$nameOut-$runListName\_$number.root
+                for periodID in $periodList; do
+                    mv $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix$periodID-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                done  
             done
         done
 
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC18f3_fast_1-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "_fast_1\n_fast_2\n_1\n_2"`
         for fileName in $filesForMerging; do
             echo $fileName
-            GetFileNumberMerging $fileName $((NSlashes-1)) 6
+            GetFileNumberMerging $fileName $((NSlashes-1)) 5
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF1="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3_fast_1-$runListName""_$number.root"
-                fileF2="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3_fast_2-$runListName""_$number.root"
-                fileW1="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3_1-$runListName""_$number.root"
-                fileW2="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3_2-$runListName""_$number.root"
-                echo -e "$fileF1\n$fileF2\n$fileW1\n$fileW2" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC18f3x-$runListName\_$number.root
-                mv $fileF1 $OUTPUTDIR/SinglePeriods/
-                mv $fileF2 $OUTPUTDIR/SinglePeriods/
-                mv $fileW1 $OUTPUTDIR/SinglePeriods/
-                mv $fileW2 $OUTPUTDIR/SinglePeriods/
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_LHC18f3$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                if [ $nameOut = "_fast_1_fast_2_1_2" ]; then
+                    nameOut="x";
+                fi
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC18f3$nameOut-$runListName\_$number.root
+                for periodID in $periodList; do
+                    mv $OUTPUTDIR/GammaConvCalo_MC_LHC18f3$periodID-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                done  
             done
         done
 
+
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC18f3x-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "LHC18j5x\nLHC18f3x"`
         for fileName in $filesForMerging; do
             echo $fileName
             GetFileNumberMerging $fileName $((NSlashes-1)) 4
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF1="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3x-$runListName""_$number.root"
-                fileW2="$OUTPUTDIR/GammaConvCalo_MC_LHC18j5x-$runListName""_$number.root"
-                echo -e "$fileF1\n$fileW2" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC18j5x_LHC18f3x-$runListName\_$number.root
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=_$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC$nameOut-$runListName\_$number.root
             done
         done
 
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC18f3x-DPGTrackIncAccAndEMC\_*.root | grep -v "WTree" > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "LHC17f2a_fix\nLHC18f3x"`
         for fileName in $filesForMerging; do
             echo $fileName
-            GetFileNumberMerging $fileName $((NSlashes-1)) 5
+            GetFileNumberMerging $fileName $((NSlashes-1)) 4
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF="$OUTPUTDIR/GammaConvCalo_MC_LHC18f3_fast-woSDD-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_fast-woSDD-$runListName""_$number.root"
-                echo -e "$fileF\n$fileW" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC17f2a_fix_LHC18f3_fast-woSDD-$runListName\_$number.root
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=_$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC$nameOut-$runListName\_$number.root
             done
         done
-
 
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC17g8a_fast-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "_fast\n_woSDD"`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 4
+            echo $number
+            for runListName in $listsToMerge; do
+                rm listCurrMerge.txt
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_LHC17g8a$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
+                done
+                if [ $nameOut = "_fast_woSDD" ]; then
+                    nameOut="x";
+                fi
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC17g8a$nameOut-$runListName\_$number.root
+                for periodID in $periodList; do
+                    mv $OUTPUTDIR/GammaConvCalo_MC_LHC17g8a$periodID-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                done  
+#                 for binNumber in $binNumbersJJ; do
+#                     echo $binNumber
+#                     rm listCurrMerge.txt
+#                     fileF="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_fast-$runListName""_$number.root"
+#                     fileW="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_woSDD-$runListName""_$number.root"
+#                     echo -e "$fileF\n$fileW" > listCurrMerge.txt
+#                     MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber\_fast-woSDD-$runListName\_$number.root
+#                 done
+
+            done
+        done
+        
+        ls $OUTPUTDIR/GammaConvCalo_MC_LHC19a4_1-DPGTrackIncAccAndEMC\_*.root > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        periodList=`echo -e "_1\n_2"`
         for fileName in $filesForMerging; do
             echo $fileName
             GetFileNumberMerging $fileName $((NSlashes-1)) 5
             echo $number
             for runListName in $listsToMerge; do
                 rm listCurrMerge.txt
-                fileF="$OUTPUTDIR/GammaConvCalo_MC_LHC17g8a_fast-$runListName""_$number.root"
-                fileW="$OUTPUTDIR/GammaConvCalo_MC_LHC17g8a_woSDD-$runListName""_$number.root"
-                echo -e "$fileF\n$fileW" > listCurrMerge.txt
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC17g8a_fast-woSDD-$runListName\_$number.root
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    rm listCurrMerge.txt
-                    fileF="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_fast-$runListName""_$number.root"
-                    fileW="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_woSDD-$runListName""_$number.root"
-                    echo -e "$fileF\n$fileW" > listCurrMerge.txt
-                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber\_fast-woSDD-$runListName\_$number.root
+                nameOut=""
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_MC_LHC19a4$periodID-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        outAdd=`echo $periodID  | cut -d "-" -f 1 `
+                        nameOut+=$outAdd
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    else
+                        echo $currFile " does not exist"
+                    fi
                 done
+                if [ $nameOut = "_1_2" ]; then
+                    nameOut="x";
+                fi
+                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_MC_LHC19a4$nameOut-$runListName\_$number.root
+                for periodID in $periodList; do
+                    mv $OUTPUTDIR/GammaConvCalo_MC_LHC19a4$periodID-$runListName\_$number.root $OUTPUTDIR/SinglePeriods/
+                done  
+#                 for binNumber in $binNumbersJJ; do
+#                     echo $binNumber
+#                     rm listCurrMerge.txt
+#                     fileF="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_fast-$runListName""_$number.root"
+#                     fileW="$OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber""_woSDD-$runListName""_$number.root"
+#                     echo -e "$fileF\n$fileW" > listCurrMerge.txt
+#                     MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/JJMCSingleBins/GammaConvCalo_MC_LHC17g8a-$binNumber\_fast-woSDD-$runListName\_$number.root
+#                 done
+
             done
         done
+
     fi
 else
     if [ $HAVELHC16q == 1 ]; then

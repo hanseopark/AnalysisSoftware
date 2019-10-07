@@ -99,7 +99,13 @@ void ComputeCorrelationFactors(
     TString fCollisionSystemWrite   = ReturnCollisionEnergyOutputString(energy);
     TString fCollisionSystemAndCent = fCollisionSystemWrite;
     TString centralityForOutput     = GetCentralityStringOutput(eventCut);
-    if (energy.CompareTo("pPb_5.023TeVCent") == 0)
+    if (energy.CompareTo("5TeV2017") == 0 && eventCut.CompareTo("") == 0)
+        centralityForOutput         = "MB";        
+    else if (energy.Contains("5TeV2017Ref1"))
+        centralityForOutput         = centralityForOutput+"Ref1";
+    else if (energy.Contains("5TeV2017Ref2"))
+        centralityForOutput         = centralityForOutput+"Ref2";
+    else if (energy.CompareTo("pPb_5.023TeVCent") == 0)
         centralityForOutput         = centralityForOutput+"Cent";
     TString collisionSystem         = ReturnFullCollisionsSystem(energy);
     if (centrality.CompareTo("") != 0){
