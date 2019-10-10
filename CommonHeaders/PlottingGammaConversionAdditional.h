@@ -2974,7 +2974,7 @@
                 return kBlue-5;
             }
         }
-        if (!energy.CompareTo("8TeV")){
+        if (energy.BeginsWith("8TeV")){
             if (!kBox){
                 if (!generator.CompareTo("")){
                     return kGreen+2;
@@ -3465,7 +3465,7 @@
                 return 24;
             }
         }
-        if (!energy.CompareTo("8TeV")){
+        if (energy.BeginsWith("8TeV")){
             if (!generator.CompareTo("")){
                 return 33;
             } else if(generator.CompareTo("LHC12")==0 || (generator.BeginsWith("LHC12")&&generator.Length()==6)
@@ -3845,7 +3845,7 @@
             }
         }
 
-        if (!energy.CompareTo("8TeV")){
+        if (energy.BeginsWith("8TeV")){
             if (!generator.CompareTo("")){
                 return 2.2;
             } else {
@@ -4346,8 +4346,8 @@
     }
 
     Color_t GetDefaultTriggerColorName (TString triggerName, Bool_t isShade, TString opt = ""){
-        if ( (triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.CompareTo("8TeV")==0 && triggerName.Contains("INT7"))) && !isShade)     return kBlack;
-        else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.CompareTo("8TeV")==0 && triggerName.Contains("INT7"))) && isShade)  return kGray+1;
+        if ( (triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.BeginsWith("8TeV") && triggerName.Contains("INT7"))) && !isShade)     return kBlack;
+        else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.BeginsWith("8TeV") && triggerName.Contains("INT7"))) && isShade)  return kGray+1;
         else if (triggerName.Contains("INT7") && !isShade) return kGray+1;
         else if (triggerName.Contains("INT7") && isShade)  return kGray;
         else if (triggerName.Contains("EMC1") && !isShade) return kRed+2;

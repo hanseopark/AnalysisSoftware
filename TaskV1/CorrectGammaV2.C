@@ -586,10 +586,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[1]                                              = 16.0;
         minPtFitSec[2]                                              = 1.2;
         maxPtFitSec[2]                                              = 4.0;
-    } else if (!energy.CompareTo("8TeV") && mode == 0) {
+    } else if (energy.BeginsWith("8TeV") && mode == 0) {
         minPtFitSec[1]                                              = 1.0;
         maxPtFitSec[1]                                              = 2.0;
-    } else if (!energy.CompareTo("8TeV") && mode == 2) {
+    } else if (energy.BeginsWith("8TeV") && mode == 2) {
         FitSecFunction[0]                                           = kFitSecPower;
         minPtFitSec[0]                                              = 0.8;
         maxPtFitSec[0]                                              = 12.0;
@@ -598,7 +598,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[1]                                              = 10.0;
         minPtFitSec[2]                                              = 0.8;
         maxPtFitSec[2]                                              = 2.0;
-    } else if (!energy.CompareTo("8TeV") && mode == 4) {
+    } else if (energy.BeginsWith("8TeV") && mode == 4) {
         minPtFitSec[0]                                              = 1.2;
         maxPtFitSec[0]                                              = 16.0;
         FitSecFunction[1]                                           = kFitSecLinear;
@@ -1189,7 +1189,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         if( energy.Contains("PbPb") ||
             (energy.CompareTo("pPb_5.023TeVRun2")==0 ) ||
 
-            (energy.CompareTo("8TeV")==0 && mode == 2))
+            (energy.BeginsWith("8TeV") && mode == 2))
             rangeShift = 0.5;
         else if ((energy.CompareTo("pPb_5.023TeV")==0 && centrality.CompareTo("0-100%") != 0 && mode == 2) )
             rangeShift = 0.8;
@@ -1645,7 +1645,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             plotYrange[0] = 0.;
             plotYrange[1] = 35.e-3;
         }
-        if(energy.CompareTo("8TeV")==0){
+        if(energy.BeginsWith("8TeV")){
             if(mode==2){
                 plotYrange[0] = 0.;
                 plotYrange[1] = 35.e-3;
@@ -1777,7 +1777,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoGammaConvProb_MCPt->Draw();
 
             Double_t minFit_fConv = 2.5;
-            if(energy.CompareTo("8TeV")==0 && mode == 2) minFit_fConv = 3.;
+            if(energy.BeginsWith("8TeV") && mode == 2) minFit_fConv = 3.;
             TF1 *fConv                  = new TF1("line","[0]",minFit_fConv,25.);
             histoGammaConvProb_MCPt->Fit(fConv,"QRME0");
             Double_t parameterProb[1];
@@ -2738,7 +2738,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
                 if(i==0){
                     histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,100);
-                    if(energy.CompareTo("8TeV")==0 && (mode==2 || mode==4)) histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,1);
+                    if(energy.BeginsWith("8TeV") && (mode==2 || mode==4)) histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,1);
                     histoSignalToCombBackgroundRatio[i]->DrawCopy("e1");
                 } else if(i<9){
                     DrawGammaSetMarker(histoSignalToCombBackgroundRatio[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
@@ -3042,7 +3042,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxYLines                               = 1.2;
         } else {
             tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.5, 1.5);
-            if(energy.CompareTo("8TeV")==0 && mode==2) tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.8, 1.8);
+            if(energy.BeginsWith("8TeV") && mode==2) tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.8, 1.8);
             minYLines                               = 0.8;
             maxYLines                               = 1.2;
         }

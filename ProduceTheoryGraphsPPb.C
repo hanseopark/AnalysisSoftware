@@ -147,22 +147,22 @@ TGraphAsymmErrors* CombineMuScales( TGraph* mu,
 }
 
 
-//**********************************************************************************************************
-// Calculates the ratio of two error graphs
-//**********************************************************************************************************
-TGraph* CalculateGraphRatioToGraph(TGraph* graphA, TGraph* graphB){
+// //**********************************************************************************************************
+// // Calculates the ratio of two error graphs
+// //**********************************************************************************************************
+// TGraph* CalculateGraphRatioToGraph(TGraph* graphA, TGraph* graphB){
 
-    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
-    Double_t* xValue                = graphACopy->GetX();
-    Double_t* yValue                = graphACopy->GetY();
-    Int_t nPoints                   = graphACopy->GetN();
+//     TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
+//     Double_t* xValue                = graphACopy->GetX();
+//     Double_t* yValue                = graphACopy->GetY();
+//     Int_t nPoints                   = graphACopy->GetN();
 
-    for (Int_t i = 0; i < nPoints; i++){
-        yValue[i]                   = yValue[i]/graphB->GetY()[i];
-    }
-    TGraph* returnGraph       = new TGraph(nPoints,xValue,yValue);
-    return returnGraph;
-}
+//     for (Int_t i = 0; i < nPoints; i++){
+//         yValue[i]                   = yValue[i]/graphB->GetY()[i];
+//     }
+//     TGraph* returnGraph       = new TGraph(nPoints,xValue,yValue);
+//     return returnGraph;
+// }
 
 
 //**********************************************************************************************************
@@ -1345,6 +1345,22 @@ void ProduceTheoryGraphsPPb(){
     TH1D* histoEtaPythia8nCTEQ15pPb8TeV            = (TH1D*)filePythia8nCTEQ15->Get("h_invXsec_eta_etaEMCal");
     histoEtaPythia8nCTEQ15pPb8TeV->Scale(1/(2.1*1e12));
 
+    //**************************************************************************************************
+    //********************** Hijing spectra ***********************************************
+    //**************************************************************************************************
+    TFile* fileHIJING8160GeV              = new TFile("ExternalInputpPb/Theory/Hijing_pPb_8160GeV_1034Mio.root");
+    TH1D* histoPi0HIJING8160GeV               = (TH1D*)fileHIJING8160GeV->Get("hPtPi0HijingpPb");
+    TH1D* histoPiPlHIJING8160GeV              = (TH1D*)fileHIJING8160GeV->Get("hPtPiPlHijingpPb");
+    TH1D* histoPiMiHIJING8160GeV              = (TH1D*)fileHIJING8160GeV->Get("hPtPiMiHijingpPb");
+    TH1D* histoPiChHIJING8160GeV              = (TH1D*)histoPiPlHIJING8160GeV->Clone("hPtPiChHijingpPb");
+    histoPiChHIJING8160GeV->Add(histoPiMiHIJING8160GeV);
+    histoPiChHIJING8160GeV->Scale(1/2.);
+    TH1D* histoEtaHIJING8160GeV               = (TH1D*)fileHIJING8160GeV->Get("hPtEtaHijingpPb");
+    TH1D* histoEtaToPi0HIJING8160GeV          = (TH1D*)histoEtaHIJING8160GeV->Clone("MCEtaToPi0Hijing");
+    histoEtaToPi0HIJING8160GeV->Divide(histoPi0HIJING8160GeV);
+    TH1D* histoPi0ToPiCHHIJING8160GeV         = (TH1D*)histoPi0HIJING8160GeV->Clone("MCPi0ToPiChHijing");
+    histoPi0ToPiCHHIJING8160GeV->Divide(histoPiChHIJING8160GeV);
+
     //**********************************************************************************************************************
     //******************************** Electron cross section from weak Bosons *********************************************
     //**********************************************************************************************************************
@@ -1603,6 +1619,13 @@ void ProduceTheoryGraphsPPb(){
             histoEtaPythia8EPPS16pPb8TeV->Write("histoEtaPythia8EPPS16pPb8TeV", TObject::kOverwrite);
             histoPi0Pythia8nCTEQ15pPb8TeV->Write("histoPi0Pythia8nCTEQ15pPb8TeV", TObject::kOverwrite);
             histoEtaPythia8nCTEQ15pPb8TeV->Write("histoEtaPythia8nCTEQ15pPb8TeV", TObject::kOverwrite);
+
+
+            histoPi0HIJING8160GeV->Write("histoPi0SpecHIJING_MCGenpPb8TeV", TObject::kOverwrite);
+            histoPiChHIJING8160GeV->Write("histoPiChSpecHIJING_MCGenpPb8TeV", TObject::kOverwrite);
+            histoEtaHIJING8160GeV->Write("histoEtaSpecHIJING_MCGenpPb8TeV", TObject::kOverwrite);
+            histoEtaToPi0HIJING8160GeV->Write("histoEtaToPi0HIJING_MCGenpPb8TeV", TObject::kOverwrite);
+            histoPi0ToPiCHHIJING8160GeV->Write("histoPi0ToPiChHIJING_MCGenpPb8TeV", TObject::kOverwrite);
     fileTheoryGraphsPPb.Close();
 
 }

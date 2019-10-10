@@ -119,7 +119,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         isCalo                                                  = 1;
 
     //***************************** Calculate scaling factor ********************************************************
-    eventNormScalingFactor                                      = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
+    eventNormScalingFactor                                      = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection, mode);
 
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);

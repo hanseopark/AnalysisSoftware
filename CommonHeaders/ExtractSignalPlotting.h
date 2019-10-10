@@ -2216,7 +2216,7 @@
         }
         legendData->Draw();
 
-        canvasDataSpectra->Print(namePlot.Data());
+        canvasDataSpectra->SaveAs(namePlot.Data());
         delete padLegend;
         delete padDataSpectra;
         delete canvasDataSpectra;

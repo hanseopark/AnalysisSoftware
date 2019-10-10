@@ -128,16 +128,18 @@ void FinaliseSystematicErrorsMergedCalo_v2(
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[13]               = { 0, 0, 0, 0, 0,      1, 0, 0, 0, 0,      1, 1, 1  };
-    // Bool_t bsmooth[13]        = { 0, 0, 0, 0, 0,      1, 0, 0, 0, 0,      0, 0, 0  };
+    Bool_t bsmooth[13]                      = { 0, 0, 0, 0, 0,      1, 0, 0, 0, 0,      0, 0, 0  };
     // pp 8TeV
-    Bool_t bsmoothpp8TeVINT7Pi0[13]  = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
-    Bool_t bsmoothpp8TeVEMC7Pi0[13]  = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
-    Bool_t bsmoothpp8TeVEGAPi0[13]   = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpp8TeVINT7Pi0[13]         = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpp8TeVEMC7Pi0[13]         = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpp8TeVEGAPi0[13]          = { 1, 1, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
     // pPb 8.16TeV
-    Bool_t bsmoothpPb8TeVINT7Pi0[13] = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
-    Bool_t bsmoothpPb8TeVEG2Pi0[13]  = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
-    Bool_t bsmoothpPb8TeVEG1Pi0[13]  = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVINT7Pi0[13]        = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVEG2Pi0[13]         = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVEG1Pi0[13]         = { 1, 0, 1, 1, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVINT7Pi0Ratio[13]   = { 1, 1, 1, 0, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVEG2Pi0Ratio[13]    = { 1, 1, 1, 0, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
+    Bool_t bsmoothpPb8TeVEG1Pi0Ratio[13]    = { 1, 1, 1, 0, 1,      1, 1, 1, 1, 1,      1, 1, 1  };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if(!energy.CompareTo("8TeV")){
@@ -156,6 +158,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                 bsmooth[i]      = bsmoothpPb8TeVEG2Pi0[i];
             }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                 bsmooth[i]      = bsmoothpPb8TeVEG1Pi0[i];
+            }
+            if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                bsmooth[i]      = bsmoothpPb8TeVINT7Pi0Ratio[i];
+            }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                bsmooth[i]      = bsmoothpPb8TeVEG2Pi0Ratio[i];
+            }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                bsmooth[i]      = bsmoothpPb8TeVEG1Pi0Ratio[i];
             }
         }
         else {
@@ -312,6 +321,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 0.0915347+0.0368243*ptBins[k]+-0.000222092*pow(ptBins[k],2)+3.05061e-09*pow(ptBins[k],4);
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 3.0;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 3.70466+-0.076748*ptBins[k]+0.00226496*pow(ptBins[k],2);
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 1.02+0.0368243*ptBins[k]+-0.000222092*pow(ptBins[k],2)+3.05061e-09*pow(ptBins[k],4);
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -342,6 +358,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 51.3161+-50.5636/pow(1.00039,ptBins[k]);
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 51.3161+-50.5636/pow(1.00039,ptBins[k]);
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5*(51.3161+-50.5636/pow(1.00039,ptBins[k]));
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5*(51.3161+-50.5636/pow(1.00039,ptBins[k]));
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -371,6 +394,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                             error   = 2.3;
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 2.3;
+                        }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5;
                         }
                     }
                     errorsMean[i][k]        = error;
@@ -432,6 +462,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 0.824983+-1.47897/pow(1.04395,ptBins[k]);
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 1.1;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.5;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.4;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -461,20 +498,27 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                     Double_t error          = 0;
                     if(!energy.CompareTo("8TeV")){
                         if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
                         }else if (additionalNameOutput.Contains("EMC7") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
                         }else if (additionalNameOutput.Contains("EGA") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
                         }
                     }
                     else if(!energy.CompareTo("pPb_8TeV")){
                         if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
                         }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
-                            error   = 12+0.02*(ptBins[k]-20);
+                            error   = 7+0.02*(ptBins[k]-20);
+                        }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.6;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.6;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.6;
                         }
                     }
                     errorsMean[i][k]        = error;
@@ -506,6 +550,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 2.3;
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.84;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.84;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.84;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -535,6 +586,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                             error   = TMath::Sqrt(1.57*1.57); // V2 clusterizer 6.17% trigger uncertainty, 2% pileup (trigger: EG2/EMC7 5.27%)
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = TMath::Sqrt(1.57*1.57+1.05*1.05); // V2 clusterizer 8.6, 2% pileup (trigger EG1/EG2: 5.99%)
+                        }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = TMath::Sqrt(1.57*1.57+1.22*1.22); //
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = TMath::Sqrt(1.57*1.57+1.05*1.05+1.22*1.22+2.99*2.99); // 
                         }
                     }
                     errorsMean[i][k]        = error;
@@ -567,6 +625,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 3.;
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.9;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.9;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.9;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -596,6 +661,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                             error   = 4.2;
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 4.2;
+                        }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.75;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.75;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.75;
                         }
                     }
                     errorsMean[i][k]        = error;
@@ -627,6 +699,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 1.5;
                         }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.2;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.2;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 0.2;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
@@ -656,6 +735,13 @@ void FinaliseSystematicErrorsMergedCalo_v2(
                             error   = 27.842+-28.4243/pow(1.00231,ptBins[k]);
                         }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0")==0){
                             error   = 0.628326+-0.00693552*ptBins[k]+9.80999e-05*pow(ptBins[k],2);
+                        }
+                        if (additionalNameOutput.Contains("INT7") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 1.2;
+                        }else if (additionalNameOutput.Contains("EG2") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 1.2;
+                        }else if (additionalNameOutput.Contains("EG1") && meson.CompareTo("Pi0Ratio")==0){
+                            error   = 1.2;
                         }
                     }
                     errorsMean[i][k]        = error;
@@ -863,11 +949,11 @@ void FinaliseSystematicErrorsMergedCalo_v2(
             bla->SetParameter(2,5);
             pol4->SetParLimits(3,0,10);
 
-            meanErrorsCorr[cut]->Fit(pol4,"NRMEX0+","",minPt,maxPt);
-            meanErrorsCorr[cut]->Fit(pol2,"NRMEX0+","",minPt,maxPt);
-            meanErrorsCorr[cut]->Fit(pol1,"NRMEX0+","",minPt,maxPt);
-            meanErrorsCorr[cut]->Fit(pol0,"NRMEX0+","",minPt,maxPt);
-            meanErrorsCorr[cut]->Fit(bla,"NRMEX0+","",minPt,maxPt);
+            meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",minPt,maxPt);
+            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",minPt,maxPt);
+            meanErrorsCorr[cut]->Fit(pol1,"QNRMEX0+","",minPt,maxPt);
+            meanErrorsCorr[cut]->Fit(pol0,"QNRMEX0+","",minPt,maxPt);
+            meanErrorsCorr[cut]->Fit(bla,"QNRMEX0+","",minPt,maxPt);
             pol4->SetLineColor(kRed+2);
             pol2->SetLineColor(kBlue+2);
             pol1->SetLineColor(kCyan+2);

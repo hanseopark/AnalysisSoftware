@@ -100,6 +100,13 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
         color[1]                            = GetColorSystematics( "YieldExtractionPi0" );
         markerStyle[1]                      = GetMarkerStyleSystematics( "YieldExtractionPi0" );
     }
+    if (meson.CompareTo("Pi0Ratio") == 0){
+        nameCutVariation[0]                 = "Yield extraction pPb";
+        nameCutVariation[1]                 = "Yield extraction pp";
+        nameCutVariationSC[1]               = "YieldExtraction";
+        color[1]                            = GetColorSystematics( "YieldExtractionPi0" );
+        markerStyle[1]                      = GetMarkerStyleSystematics( "YieldExtractionPi0" );
+    }
 
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
@@ -210,7 +217,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     for (Int_t i = 0; i < nCuts; i++){
         TGraphAsymmErrors* graphPosErrors   = NULL;
         TGraphAsymmErrors* graphNegErrors   = NULL;
-        if ( nameCutVariationSC[i].Contains("BGEstimate")  ){
+        if ( nameCutVariationSC[i].Contains("BGEstimate") && meson.CompareTo("Pi0Ratio")  ){
             TString nameGraphPos            = Form("%s_SystErrorRel_%s_%s",meson.Data(),nameCutVariationSC[i].Data(), additionalName.Data() );
             TString nameGraphNeg            = Form("%s_SystErrorRel_%s_%s",meson.Data(),nameCutVariationSC[i].Data(), additionalName.Data() );
             if (meson.CompareTo("EtaToPi0")==0){
@@ -240,11 +247,28 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
             cout << "trying to read: " << nameGraphPos.Data() << "\t" << nameGraphNeg.Data() << endl;
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( nameCutVariationSC[i].CompareTo("YieldExtraction")==0 && !meson.CompareTo("Pi0Ratio") &&  i == 0){
+            TString nameGraphPos            = Form("Eta_SystErrorRelPos_%s_%s",nameCutVariationSC[i].Data(), additionalName.Data() );
+            TString nameGraphNeg            = Form("Eta_SystErrorRelNeg_%s_%s",nameCutVariationSC[i].Data(), additionalName.Data() );
+            cout << "trying to read: " << nameGraphPos.Data() << "\t" << nameGraphNeg.Data() << endl;
+            graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+
+        } else if ( nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 && !meson.CompareTo("Pi0Ratio") &&  i == 1){
+            TString nameGraphPos            = Form("Pi0EtaBinning_SystErrorRelPos_%s_%s","YieldExtraction", "pp" );
+            TString nameGraphNeg            = Form("Pi0EtaBinning_SystErrorRelNeg_%s_%s","YieldExtraction", "pp" );
+            cout << "trying to read: " << nameGraphPos.Data() << "\t" << nameGraphNeg.Data() << endl;
+            graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 
         } else {
             TString nameGraphPos            = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(), additionalName.Data() );
             TString nameGraphNeg            = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(), additionalName.Data() );
             cout << "trying to read: " << nameGraphPos.Data() << "\t" << nameGraphNeg.Data() << endl;
+            if(!meson.CompareTo("Pi0Ratio") ){
+                nameGraphPos            = Form("%s_SystErrorRelPos_%s",meson.Data(),nameCutVariationSC[i].Data());
+                nameGraphNeg            = Form("%s_SystErrorRelNeg_%s",meson.Data(),nameCutVariationSC[i].Data() );
+            }
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
             if ( graphPosErrors == NULL ){
@@ -535,7 +559,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     }
 
     Double_t errorMaterial      = 4.50;
-    if (meson.CompareTo("EtaToPi0") == 0)
+    if (meson.CompareTo("EtaToPi0") == 0 || meson.CompareTo("Pi0Ratio") == 0)
         errorMaterial           = 0.0;
 
     for (Int_t l = 0; l < nPtBins; l++){
@@ -627,6 +651,8 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     TLatex *labelMeson;
     if (meson.CompareTo("EtaToPi0") == 0){
         labelMeson= new TLatex(0.95,0.89,Form("#eta/#pi^{0} rec. PCM"));
+    } else if (meson.Contains("Pi0Ratio")){
+        labelMeson= new TLatex(0.95,0.89,Form("#it{R}_{pA} PCM"));
     } else if (meson.Contains("Pi0")){
         labelMeson= new TLatex(0.95,0.89,Form("#pi^{0} PCM"));
     } else {
@@ -671,7 +697,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
         meanErrorsCorr[i]->Draw("pX0,csame");
         legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
     }
-    if (meson.CompareTo("EtaToPi0")){
+    if (meson.CompareTo("EtaToPi0") && meson.CompareTo("Pi0Ratio")){
         DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "Material"), 1., GetColorSystematics( "Material" ), GetColorSystematics( "Material"));
         graphMaterialError->Draw("p,csame");
         legendMeanNew->AddEntry(graphMaterialError,"Material","p");
@@ -780,7 +806,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
 //             continue;
         SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
     }
-    if(meson.CompareTo("EtaToPi0"))
+    if(meson.CompareTo("EtaToPi0")  &&  meson.CompareTo("Pi0Ratio"))
         SysErrDatAverSingle << "Material";
     SysErrDatAverSingle << endl;
     for (Int_t l=0;l< nPtBins;l++){
@@ -790,7 +816,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
 //                 continue;
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
         }
-        if(meson.CompareTo("EtaToPi0"))
+        if(meson.CompareTo("EtaToPi0") &&  meson.CompareTo("Pi0Ratio"))
             SysErrDatAverSingle << 9 << "\t";
         SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
     }
@@ -828,7 +854,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
                                                                 pow(errorsMeanCorr[7][l],2)+    // Alpha
                                                                 pow(errorsMeanCorr[9][l],2)+    // BG
                                                                 pow(errorsMeanCorr[11][l],2));  // MCSmearing
-        if (meson.CompareTo("EtaToPi0") == 0){
+        if (!meson.CompareTo("EtaToPi0") || !meson.CompareTo("Pi0Ratio")){
             errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[0][l],2)+    // Yield extraction eta
                                                                 pow(errorsMeanCorr[7][l],2)+    // Alpha
                                                                 pow(errorsMeanCorr[9][l],2)+    // BG
@@ -906,7 +932,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
     meanErrorsPhotonReco->Draw("p,csame");
     legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reconstruction","p");
     cout << "here" << endl;
-    if (meson.CompareTo("EtaToPi0")){
+    if (meson.CompareTo("EtaToPi0") &&  meson.CompareTo("Pi0Ratio")){
         DrawGammaSetMarkerTGraphErr(meanErrorsPileup, GetMarkerStyleSystematics( "BGEstimate"), 1.,GetColorSystematics( "BGEstimate"),GetColorSystematics( "BGEstimate"));
         meanErrorsPileup->Draw("p,csame");
         legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup Estimate","p");

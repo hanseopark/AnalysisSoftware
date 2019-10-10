@@ -1187,6 +1187,125 @@ void ProduceTheoryGraphsPP(){
     TH1D* histoEta5TeVJetsReb                   = (TH1D*)file5TeVJets->Get("MC_Eta_Pt_Rebinned");
     TH1D* histoEtaToPi05TeVJets                 = (TH1D*)file5TeVJets->Get("MCEtaToPi0");
 
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCM only inputs
+    TString fileName5TeVSphericity[6] = {"SP0000","SP0010","SP0005","SP0510","SP0003","SP0710"};
+    TFile* file5TeVSphericity[6] = {NULL};
+    TH1D* histoPi05TeVSphericity[6] = {NULL};
+    TH1D* histoPi05TeVSphericityReb[6] = {NULL};
+    TH1D* histoEta5TeVSphericity[6] = {NULL};
+    TH1D* histoEta5TeVSphericityReb[6] = {NULL};
+    TH1D* histoEtaToPi05TeVSphericity[6] = {NULL};
+    cout << __LINE__ << endl;
+    for(Int_t i=0;i<6;i++){
+        file5TeVSphericity[i]                        = new TFile(Form("ExternalInput/Theory/Pythia/MCInputCompilation5TeV_%s_pp5020GeV_2.root",fileName5TeVSphericity[i].Data()));
+        histoPi05TeVSphericity[i]                      = (TH1D*)file5TeVSphericity[i]->Get("5TeV2017/MC_Pi0_Pt");
+        histoPi05TeVSphericityReb[i]                   = (TH1D*)file5TeVSphericity[i]->Get("5TeV2017/MC_Pi0_Pt_Rebinned");
+        histoEta5TeVSphericity[i]                      = (TH1D*)file5TeVSphericity[i]->Get("5TeV2017/MC_Eta_Pt");
+        histoEta5TeVSphericityReb[i]                   = (TH1D*)file5TeVSphericity[i]->Get("5TeV2017/MC_Eta_Pt_Rebinned");
+        histoEtaToPi05TeVSphericity[i]                 = (TH1D*)file5TeVSphericity[i]->Get("5TeV2017/MCEtaToPi0");
+    }
+    cout << __LINE__ << endl;
+
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCMEMC only inputs
+    TString fileName5TeVMultiplicity[7] = {"CNT0000","CNT0001","CNT0105","CNT0520","CNT2040","CNT4070","CNT7000"};
+    TFile* file5TeVMultiplicity[7] = {NULL};
+    TH1D* histoPi05TeVMultiplicity[7] = {NULL};
+    TH1D* histoPi05TeVMultiplicityReb[7] = {NULL};
+    TH1D* histoEta5TeVMultiplicity[7] = {NULL};
+    TH1D* histoEta5TeVMultiplicityReb[7] = {NULL};
+    TH1D* histoEtaToPi05TeVMultiplicity[7] = {NULL};
+    cout << __LINE__ << endl;
+    for(Int_t i=0;i<7;i++){
+        file5TeVMultiplicity[i]                        = new TFile(Form("ExternalInput/Theory/Pythia/MCInputCompilation5TeV_%s_pp5020GeV_2.root",fileName5TeVMultiplicity[i].Data()));
+        histoPi05TeVMultiplicity[i]                      = (TH1D*)file5TeVMultiplicity[i]->Get("5TeV2017/MC_Pi0_Pt");
+        histoPi05TeVMultiplicityReb[i]                   = (TH1D*)file5TeVMultiplicity[i]->Get("5TeV2017/MC_Pi0_Pt_Rebinned");
+        histoEta5TeVMultiplicity[i]                      = (TH1D*)file5TeVMultiplicity[i]->Get("5TeV2017/MC_Eta_Pt");
+        histoEta5TeVMultiplicityReb[i]                   = (TH1D*)file5TeVMultiplicity[i]->Get("5TeV2017/MC_Eta_Pt_Rebinned");
+        histoEtaToPi05TeVMultiplicity[i]                 = (TH1D*)file5TeVMultiplicity[i]->Get("5TeV2017/MCEtaToPi0");
+    }
+    cout << __LINE__ << endl;
+
+    // Hijing plus plus from Adam for pi0
+    Double_t       ptHijingPlusPlusPi05020GeV[100];
+    Double_t       ptErrHijingPlusPlusPi05020GeV[100];
+    Double_t       yValueHijingPlusPlusPi05020GeV[100];
+    Double_t       yErrHijingPlusPlusPi05020GeV[100];
+    Int_t       nlinesHijingPlusPlusPi05020GeV =       0;
+
+    TString fileNameHijingPlusPlusPi05020GeV = "ExternalInput/Theory/HijingPlusPlus/HijingPlusPlus_Adam_pp_5020_pi0.yoda";
+    ifstream  fileHijingPlusPlusPi05020GeV;
+    fileHijingPlusPlusPi05020GeV.open(fileNameHijingPlusPlusPi05020GeV,ios_base::in);
+    cout << fileNameHijingPlusPlusPi05020GeV << endl;
+
+    while(!fileHijingPlusPlusPi05020GeV.eof()){
+        nlinesHijingPlusPlusPi05020GeV++;
+        TString garbage1;
+        TString garbage2;
+        fileHijingPlusPlusPi05020GeV >> ptHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] >> ptErrHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] >> garbage1 >> yValueHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] >> yErrHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] >> garbage2;
+        cout << nlinesHijingPlusPlusPi05020GeV << "         "  << ptHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] << "         "  << ptErrHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] << "         "  << yValueHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] << "         "  << yErrHijingPlusPlusPi05020GeV[nlinesHijingPlusPlusPi05020GeV] << endl;;
+
+
+    }
+    fileHijingPlusPlusPi05020GeV.close();
+    TGraphAsymmErrors* graphHijingPlusPlusPi05020GeV = new TGraphAsymmErrors(nlinesHijingPlusPlusPi05020GeV, ptHijingPlusPlusPi05020GeV, yValueHijingPlusPlusPi05020GeV, ptErrHijingPlusPlusPi05020GeV, ptErrHijingPlusPlusPi05020GeV,
+                                                                                yErrHijingPlusPlusPi05020GeV, yErrHijingPlusPlusPi05020GeV);
+    graphHijingPlusPlusPi05020GeV->RemovePoint(0); //remove first zero bin
+    graphHijingPlusPlusPi05020GeV->Print(); //remove first zero bin
+
+    // Hijing plus plus from Adam for eta
+    Double_t       ptHijingPlusPlusEta5020GeV[100];
+    Double_t       ptErrHijingPlusPlusEta5020GeV[100];
+    Double_t       yValueHijingPlusPlusEta5020GeV[100];
+    Double_t       yErrHijingPlusPlusEta5020GeV[100];
+    Int_t       nlinesHijingPlusPlusEta5020GeV =       0;
+
+    TString fileNameHijingPlusPlusEta5020GeV = "ExternalInput/Theory/HijingPlusPlus/HijingPlusPlus_Adam_pp_5020_eta.yoda";
+    ifstream  fileHijingPlusPlusEta5020GeV;
+    fileHijingPlusPlusEta5020GeV.open(fileNameHijingPlusPlusEta5020GeV,ios_base::in);
+    cout << fileNameHijingPlusPlusEta5020GeV << endl;
+
+    while(!fileHijingPlusPlusEta5020GeV.eof()){
+        nlinesHijingPlusPlusEta5020GeV++;
+        TString garbage1;
+        TString garbage2;
+        fileHijingPlusPlusEta5020GeV >> ptHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] >> ptErrHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] >> garbage1 >> yValueHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] >> yErrHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] >> garbage2;
+        cout << nlinesHijingPlusPlusEta5020GeV << "         "  << ptHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] << "         "  << ptErrHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] << "         "  << yValueHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] << "         "  << yErrHijingPlusPlusEta5020GeV[nlinesHijingPlusPlusEta5020GeV] << endl;;
+
+
+    }
+    fileHijingPlusPlusEta5020GeV.close();
+    TGraphAsymmErrors* graphHijingPlusPlusEta5020GeV = new TGraphAsymmErrors(nlinesHijingPlusPlusEta5020GeV, ptHijingPlusPlusEta5020GeV, yValueHijingPlusPlusEta5020GeV, ptErrHijingPlusPlusEta5020GeV, ptErrHijingPlusPlusEta5020GeV,
+                                                                                yErrHijingPlusPlusEta5020GeV, yErrHijingPlusPlusEta5020GeV);
+    graphHijingPlusPlusEta5020GeV->RemovePoint(0); //remove first zero bin
+    graphHijingPlusPlusEta5020GeV->Print(); //remove first zero bin
+
+    // Hijing plus plus from Adam for eta to pi0 ratio
+    Double_t       ptHijingPlusPlusEtaToPi05020GeV[100];
+    Double_t       ptErrHijingPlusPlusEtaToPi05020GeV[100];
+    Double_t       yValueHijingPlusPlusEtaToPi05020GeV[100];
+    Double_t       yErrHijingPlusPlusEtaToPi05020GeV[100];
+    Int_t       nlinesHijingPlusPlusEtaToPi05020GeV =       0;
+
+    TString fileNameHijingPlusPlusEtaToPi05020GeV = "ExternalInput/Theory/HijingPlusPlus/HijingPlusPlus_Adam_pp_5020_etatopi0.yoda";
+    ifstream  fileHijingPlusPlusEtaToPi05020GeV;
+    fileHijingPlusPlusEtaToPi05020GeV.open(fileNameHijingPlusPlusEtaToPi05020GeV,ios_base::in);
+    cout << fileNameHijingPlusPlusEtaToPi05020GeV << endl;
+
+    while(!fileHijingPlusPlusEtaToPi05020GeV.eof()){
+        nlinesHijingPlusPlusEtaToPi05020GeV++;
+        TString garbage1;
+        TString garbage2;
+        fileHijingPlusPlusEtaToPi05020GeV >> ptHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] >> ptErrHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] >> garbage1 >> yValueHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] >> yErrHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] >> garbage2;
+        cout << nlinesHijingPlusPlusEtaToPi05020GeV << "         "  << ptHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] << "         "  << ptErrHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] << "         "  << yValueHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] << "         "  << yErrHijingPlusPlusEtaToPi05020GeV[nlinesHijingPlusPlusEtaToPi05020GeV] << endl;;
+
+
+    }
+    fileHijingPlusPlusEtaToPi05020GeV.close();
+    TGraphAsymmErrors* graphHijingPlusPlusEtaToPi05020GeV = new TGraphAsymmErrors(nlinesHijingPlusPlusEtaToPi05020GeV, ptHijingPlusPlusEtaToPi05020GeV, yValueHijingPlusPlusEtaToPi05020GeV, ptErrHijingPlusPlusEtaToPi05020GeV, ptErrHijingPlusPlusEtaToPi05020GeV,
+                                                                                yErrHijingPlusPlusEtaToPi05020GeV, yErrHijingPlusPlusEtaToPi05020GeV);
+    graphHijingPlusPlusEtaToPi05020GeV->RemovePoint(0); //remove first zero bin
+    graphHijingPlusPlusEtaToPi05020GeV->Print(); //remove first zero bin
+    // return;
     //**********************************************************************************************************************
     //***************************** Pythia calculations 7TeV ************************************************************
     //**********************************************************************************************************************
@@ -1513,7 +1632,7 @@ void ProduceTheoryGraphsPP(){
         graphEtaToPi0NLOMuOne2760GeV->Write("graphNLOCalcEtaOverPi0MuOne2760GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo2760GeV->Write("graphNLOCalcEtaOverPi0MuTwo2760GeV", TObject::kOverwrite);
         graphNLOCalcEtaToPi02760GeV->Write("graphNLOCalcEtaOverPi02760GeV_AESSS_DSS07", TObject::kOverwrite);
-        graphNLOCalcEtaToPi02760GeV->Print();
+        // graphNLOCalcEtaToPi02760GeV->Print();
         // pi0 Stratmann PDF: CT10, FF: DSS14
         graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSec2760GeV", TObject::kOverwrite);
         graphNLOCalcDSS14InvYieldPi02760GeV->Write("graphNLOCalcDSS14InvYield2760GeV", TObject::kOverwrite);
@@ -1597,6 +1716,24 @@ void ProduceTheoryGraphsPP(){
         histoEta5TeVJetsReb->Write("histoEtainsideJet_5TeV_Reb", TObject::kOverwrite);
         histoEtaToPi05TeVJets->Write("histoEtaToPi0insideJet_5TeV", TObject::kOverwrite);
 
+        for(Int_t i=0;i<6;i++){
+            histoPi05TeVSphericity[i]->Write(Form("histoPi0Sphericity_%s_5TeV",fileName5TeVSphericity[i].Data()), TObject::kOverwrite);
+            histoEta5TeVSphericity[i]->Write(Form("histoEtaSphericity_%s_5TeV",fileName5TeVSphericity[i].Data()), TObject::kOverwrite);
+            histoPi05TeVSphericityReb[i]->Write(Form("histoPi0Sphericity_%s_5TeV_Reb",fileName5TeVSphericity[i].Data()), TObject::kOverwrite);
+            histoEta5TeVSphericityReb[i]->Write(Form("histoEtaSphericity_%s_5TeV_Reb",fileName5TeVSphericity[i].Data()), TObject::kOverwrite);
+            histoEtaToPi05TeVSphericity[i]->Write(Form("histoEtaToPi0Sphericity_%s_5TeV",fileName5TeVSphericity[i].Data()), TObject::kOverwrite);
+        }
+        for(Int_t i=0;i<7;i++){
+            histoPi05TeVMultiplicity[i]->Write(Form("histoPi0Multiplicity_%s_5TeV",fileName5TeVMultiplicity[i].Data()), TObject::kOverwrite);
+            histoEta5TeVMultiplicity[i]->Write(Form("histoEtaMultiplicity_%s_5TeV",fileName5TeVMultiplicity[i].Data()), TObject::kOverwrite);
+            histoPi05TeVMultiplicityReb[i]->Write(Form("histoPi0Multiplicity_%s_5TeV_Reb",fileName5TeVMultiplicity[i].Data()), TObject::kOverwrite);
+            histoEta5TeVMultiplicityReb[i]->Write(Form("histoEtaMultiplicity_%s_5TeV_Reb",fileName5TeVMultiplicity[i].Data()), TObject::kOverwrite);
+            histoEtaToPi05TeVMultiplicity[i]->Write(Form("histoEtaToPi0Multiplicity_%s_5TeV",fileName5TeVMultiplicity[i].Data()), TObject::kOverwrite);
+        }
+
+        graphHijingPlusPlusPi05020GeV->Write("graphHijingPlusPlusPi05020GeV", TObject::kOverwrite);
+        graphHijingPlusPlusEta5020GeV->Write("graphHijingPlusPlusEta5020GeV", TObject::kOverwrite);
+        graphHijingPlusPlusEtaToPi05020GeV->Write("graphHijingPlusPlusEtaToPi05020GeV", TObject::kOverwrite);
         //***********************************************************************
         // write  calculations for 7TeV
         //***********************************************************************

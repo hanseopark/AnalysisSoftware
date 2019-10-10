@@ -527,6 +527,11 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
             continue;
         }
         DrawGammaSetMarker(histoMassMC[i], markerStyle[i], 1, color[i], color[i]);
+        // if(select.Contains("PCMEMC_TB")){
+            histoMassMC[i]->GetXaxis()->SetRangeUser(0.7,30);
+            histoMassMC[i]->GetYaxis()->SetRangeUser(0.125,0.15);
+            DrawGammaLines(0.7,30,0.135,0.135,2,kGray+1,2);
+        // }
         histoMassMC[i]->GetYaxis()->SetTitleOffset(1.1);
         histoMassMC[i]->GetXaxis()->SetLabelOffset(-0.01);
         histoMassMC[i]->Draw(drawOption.Data());
@@ -552,6 +557,11 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
             continue;
         }
         DrawGammaSetMarker(histoMassData[i], markerStyle[i], 1, color[i], color[i]);
+        // if(select.Contains("PCMEMC_TB")){
+            histoMassData[i]->GetXaxis()->SetRangeUser(0.7,30);
+            histoMassData[i]->GetYaxis()->SetRangeUser(0.13,0.15);
+            DrawGammaLines(0.7,30,0.135,0.135,2,kGray+1,2);
+        // }
         histoMassData[i]->GetXaxis()->SetLabelOffset(-0.01);
         histoMassData[i]->GetYaxis()->SetTitleOffset(1.1);
         histoMassData[i]->Draw(drawOption.Data());
@@ -584,6 +594,11 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         histoMeanMassRatio[i]->SetTitle(" ");
         DrawGammaSetMarker(histoMeanMassRatio[i], markerStyle[i], 1, color[i], color[i]);
         if(select.Contains("LHC10-")) histoMeanMassRatio[i]->GetYaxis()->SetRangeUser(0.9,1.05);
+        // if(select.Contains("PCMEMC_TB")){
+            histoMeanMassRatio[i]->GetXaxis()->SetRangeUser(0.7,30);
+            histoMeanMassRatio[i]->GetYaxis()->SetRangeUser(0.8,1.05);
+            DrawGammaLines(0.7,30,1.0,1.0,2,kGray+1,2);
+        // }
 //         histoMeanMassRatio[i]->GetYaxis()->SetTitleOffset(1.1);
         histoMeanMassRatio[i]->GetXaxis()->SetLabelOffset(-0.01);
         histoMeanMassRatio[i]->GetXaxis()->SetTitleOffset(1.1);

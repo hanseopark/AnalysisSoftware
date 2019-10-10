@@ -328,7 +328,7 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     } else if (mode==4) {
         minPt                                = 1.5;
         minY                                 = 0.5;
-        if(optionEnergy.CompareTo("8TeV")==0){
+        if(optionEnergy.BeginsWith("8TeV")){
           minPt                                = 1.0;
           minY                                 = 0.5;
         }

@@ -285,7 +285,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 isV0AND         = 1; 
             }
         }
-        if (optionEnergy.CompareTo("8TeV") == 0){
+        if (optionEnergy.BeginsWith("8TeV")){
             isV0AND             = 1;
         }    
         if (trigger.Atoi() == 10 || trigger.Atoi() == 52 || trigger.Atoi() == 83  || trigger.Atoi() == 85 || trigger.Atoi() == 81 ){
@@ -627,7 +627,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyGammaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyGammaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
             histoMesonPurityPtOnlyGammaCorr->Add(histoRatioAdditionalGammaCorrM02,-1);
-        } else if (optionEnergy.CompareTo("8TeV") == 0 && fitPromptdivFragTheo_8TeV) {
+        } else if (optionEnergy.BeginsWith("8TeV") && fitPromptdivFragTheo_8TeV) {
             cout << "found theo scaling fac" <<  endl;
             cout << "adjusting gamma contribution according theory predictions" <<  endl;
             histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo_8TeV);
@@ -650,7 +650,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyEtaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyEtaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalEtaCorrM02,-1);
             histoMesonPurityPtOnlyEtaCorr->Add(histoRatioAdditionalEtaCorrM02,-1);
-        } else if (optionEnergy.CompareTo("8TeV") == 0 && nameMeson.CompareTo("Pi0") == 0 ){
+        } else if (optionEnergy.BeginsWith("8TeV") && nameMeson.CompareTo("Pi0") == 0 ){
             cout << "adjusting eta contribution according data/MC comparison for eta/pi0" <<  endl;
             TH1D* histoRatioAdditionalEtaCorrM02    = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
             for (Int_t i = histoRatioAdditionalEtaCorrM02->GetXaxis()->FindBin(11); i< histoRatioAdditionalEtaCorrM02->GetNbinsX(); i++){
@@ -683,7 +683,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPtOnlyElecCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyElecCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalElecCorrM02,-1);
             histoMesonPurityPtOnlyElecCorr->Add(histoRatioAdditionalElecCorrM02,-1);
-        }else if(optionEnergy.CompareTo("8TeV") == 0 && splineRatioElecFromWeakBoson_8TeV){
+        }else if(optionEnergy.BeginsWith("8TeV") && splineRatioElecFromWeakBoson_8TeV){
             cout << "adjusting electron contribution according data/MC comparison for eta/pi0" <<  endl;
             TH1D* histoRatioAdditionalElecCorrM02  = (TH1D*)fileCorrections->Get("RatioTrueYieldElectronM02");
             for(Int_t i = 1; i <= histoRatioAdditionalElecCorrM02->GetNbinsX(); i++){
@@ -763,7 +763,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 histoTrueSecFracMeson_Or[j]         = (TH1D*)histoTrueSecFracMeson[j]->Clone(Form("TrueSecFracFrom%s_Or",nameSecMeson[j].Data()));
                 Double_t maxPtSecondaries           = histoTrueSecFracMeson[j]->GetXaxis()->GetBinUpEdge(histoTrueSecFracMeson[j]->GetNbinsX());
                 fitSecFrac[j]->SetRange(minPtMesonSec, maxPtSecondaries);
-                TFitResultPtr resultSecFrac         = histoTrueSecFracMeson[j]->Fit(fitSecFrac[j], "SNRME+", "", (j==3 && optionEnergy.CompareTo("8TeV") == 0) ? minPtMesonSec+2 : minPtMesonSec, maxPtSecondaries);
+                TFitResultPtr resultSecFrac         = histoTrueSecFracMeson[j]->Fit(fitSecFrac[j], "SNRME+", "", (j==3 && optionEnergy.BeginsWith("8TeV")) ? minPtMesonSec+2 : minPtMesonSec, maxPtSecondaries);
                 
                 for (Int_t i = 1; i < histoTrueSecFracMeson[j]->GetNbinsX()+1; i++){
                     Double_t ptStart                    = histoTrueSecFracMeson[j]->GetXaxis()->GetBinLowEdge(i);

@@ -227,7 +227,7 @@ void NeutralMesonDecay_Threaded(
             ptDistribution[tt]->SetParameter(4,2.9785817202);
             ptDistribution[tt]->SetRange(minPt,maxPt);
          }
-      } else if (energy.CompareTo("8TeV") == 0){
+      } else if (energy.BeginsWith("8TeV")){
          for (Int_t tt = 0; tt < 10; tt++){ // one entry per thread for safety
             ptDistribution[tt]      = FitObject("tcm",Form("ptDistribution%d",tt),"Pi0",NULL,10,200.);
             ptDistribution[tt]->SetParameter(0,709.7622755997);

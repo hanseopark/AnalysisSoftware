@@ -310,7 +310,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             namedNdEta          = "histoChargedHadrondNdEtaALICEPP900GeV";
         } else if (energy.CompareTo("2.76TeV") == 0){
             namedNdEta          = "histoChargedHadrondNdEtaALICEPP2760GeV";
-        } else if (energy.CompareTo("8TeV") == 0){
+        } else if (energy.BeginsWith("8TeV")){
             namedNdEta          = "histoChargedHadrondNdEtaALICEPP8TeV";
         } else if (energy.CompareTo("7TeV") == 0){
             namedNdEta          = "histoChargedHadrondNdEtaALICEPP7TeV";
@@ -376,7 +376,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
               nParam                  = 3;
               maxOrSpec               = 12;
               fitPtPartInput          = FitObject("l","fitPtPartInput","K",NULL,fitRange[0],fitRange[1]);
-            } else if (energy.CompareTo("8TeV") == 0){
+            } else if (energy.BeginsWith("8TeV")){
               histoPartInputPt        = (TH1D*)inputFile->Get("histKaon8_8TeV");
               fitRange[0]             = 2;
               fitRange[1]             = 35;
@@ -417,7 +417,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             } else if (energy.CompareTo("7TeV") == 0){
                 fitRange[0]             = 5;
                 fitRange[1]             = 20;
-            } else if (energy.CompareTo("8TeV") == 0){
+            } else if (energy.BeginsWith("8TeV")){
                 fitRange[0]             = 5;
                 fitRange[1]             = 50;
             }
@@ -518,7 +518,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
               maxOrSpec               = 10;
               fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
               fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
-            } else if (energy.CompareTo("8TeV") == 0){
+            } else if (energy.BeginsWith("8TeV")){
               histoPartInputPt        = (TH1D*)inputFile->Get("histLambda8_8TeV");
               fitRange[0]             = 2;
               fitRange[1]             = 35;

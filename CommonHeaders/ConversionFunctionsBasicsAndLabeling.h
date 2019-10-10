@@ -435,6 +435,13 @@
     Double_t tpPb5TeVBaseHybrid60100        = 0.0459;
     Double_t tpPbErr5TeVBaseHybrid60100     = 0.0024786;
 
+                                            // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90-100
+    Double_t nCollpPb8TeVBaseV0A10[10]      = { 14.32, 11.98, 10.42, 8.941, 7.426, 5.911, 4.490, 3.279, 2.288, 1.517};
+    Double_t nCollpPbErr8TeVBaseV0A10[10]   = { 0.179, 0.159, 0.164, 0.147, 0.153, 0.153, 0.115, 0.0672, 0.0412, 0.0195};
+
+    Double_t tpPb8160GeV                    = 0.09818e3*(1/recalcBarn);
+    Double_t tpPbErr8160GeV                 = 0.00200e3*(1/recalcBarn);
+
     // basic function to convert cutNumber to integere
     Int_t CutNumberToInteger(TString cutNumber){
       char tmpChar = cutNumber(0);
@@ -1122,7 +1129,7 @@
 
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 7 TeV ",textProcessOpt.Data());
-        } else if(fEnergyFlagOpt.CompareTo("8TeV") == 0){
+        } else if(fEnergyFlagOpt.BeginsWith("8TeV")){
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 8 TeV ",textProcessOpt.Data());
         } else if(fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0){
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 13 TeV ",textProcessOpt.Data());
@@ -1154,7 +1161,7 @@
 
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return Form("pp #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 7 TeV ",textProcessOpt.Data());
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return  Form("pp #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 8 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return  Form("pp #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 900 GeV ",textProcessOpt.Data());
@@ -1180,7 +1187,7 @@
             return  "pp, #sqrt{#it{s}} = 7 TeV";
         } else if( fEnergyFlagOpt.CompareTo("7TeVSys") == 0) {
             return  "pp, #sqrt{#it{s}} = 7 TeV";
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return  "pp, #sqrt{#it{s}} = 8 TeV";
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 13TeV";
@@ -1218,7 +1225,7 @@
     Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  7000;
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return 8000;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0 ) {
             return 13000;
@@ -1252,7 +1259,7 @@
             return  "pp7TeV";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0|| fEnergyFlagOpt.CompareTo("5.02TeV") == 0 || fEnergyFlagOpt.Contains("5TeV2017") || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             return  "pp5020GeV";
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return  "pp8TeV";
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0  ) {
             return  "pp13TeV";
@@ -1284,7 +1291,7 @@
             return  "7TeV";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.Contains("5TeV2017") || fEnergyFlagOpt.CompareTo("5TeVSpecial") == 0 ) {
             return  "5TeV";
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return  "8TeV";
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0 ) {
             return  "13TeV";
@@ -2133,6 +2140,9 @@
         } else if (energy.CompareTo("dAu_0.2TeV") == 0){
             if (name.CompareTo("00100") == 0) //0-100%
                 return 7.59;
+        } else if (energy.CompareTo("pPb_8TeV") == 0){
+            if (name.CompareTo("00100") == 0) //0-100%
+                return 7.09;
         } else if ( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ||
                     energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
             for (Int_t i = 0; i < 2; i++){
@@ -2368,6 +2378,10 @@
             } else {
                 return ncollErrpPb5023GeV;
             }
+        } else if (energy.Contains("pPb_8TeV")){
+            if (name.CompareTo("00100") == 0){
+                return 0.33;
+            }
         } else if (energy.CompareTo("CuCu_0.2TeV") == 0){
             //Centrality dNch/dη Ncoll Npart
             // 0%–40%   109.3±7.8   108.2±12.0  66.4±2.5
@@ -2537,7 +2551,7 @@
     Double_t ReturnCorrectK0ScalingFactor(TString fEnergyFlagOpt, TString cutNr){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return 1./0.75 -1.;
-        } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        } else if( fEnergyFlagOpt.BeginsWith("8TeV")) {
             return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0 || fEnergyFlagOpt.CompareTo("13TeVLowB") == 0 || fEnergyFlagOpt.CompareTo("13TeVRBins") == 0  ) {
             cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
@@ -2556,6 +2570,9 @@
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return GetScalingFactorSecCorrection(cutNr.Data());
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVCent") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
+            // return 0.;
+            return  GetScalingFactorSecCorrection(cutNr.Data());
+        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0 ) {
             // return 0.;
             return  GetScalingFactorSecCorrection(cutNr.Data());
         } else {
@@ -2617,6 +2634,12 @@
                 return tpPb5023GeV;
             } else {
                 return tpPb5023GeV;
+            }
+        } else if (energy.Contains("pPb_8TeV")){
+            if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return tpPb8160GeV;
+            } else {
+                return tpPb8160GeV;
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
@@ -2726,6 +2749,12 @@
                 return tpPbErr5023GeV;
             } else {
                 return tpPbErr5023GeV;
+            }
+        } else if (energy.Contains("pPb_8TeV") ){
+            if (name.CompareTo("00100_CL1") == 0 || name.CompareTo("00100_V0A") == 0 || name.CompareTo("00100_ZNA") == 0){ //0-100%
+                return tpPbErr8160GeV;
+            } else {
+                return tpPbErr8160GeV;
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
@@ -5780,7 +5809,7 @@
                 xSectionInt = xSection7TeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
             }
-        } else if(energy.CompareTo("8TeV") == 0){
+        } else if(energy.BeginsWith("8TeV")){
             if (selTrig == 1){
                 xSectionInt = xSection8TeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
@@ -5962,7 +5991,7 @@
     //************************************************************************************
     //** Return correct trigger rejection factor based on trigger cutnumber and energy ***
     //************************************************************************************
-    Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger, TString strTrigger = ""){
+    Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger, TString strTrigger = "", Int_t mode = 0){
         Double_t triggerRejec   = 1;
         if (energy.CompareTo("2.76TeV") == 0){
             cout << "Trigger used: " << trigger << endl;
@@ -5982,7 +6011,7 @@
             } else if (!strTrigger.CompareTo("a2")){  // EG2
                 triggerRejec    = 909;
             }
-        } else  if (energy.CompareTo("8TeV") == 0){
+        } else  if (energy.BeginsWith("8TeV")){
             cout << "Trigger used: " << trigger << endl;
             if (trigger == 52){  // EMC7
                 triggerRejec    = 67.3;
@@ -5992,9 +6021,11 @@
         }else  if (energy.Contains("pPb_8TeV") ){
         cout << "Trigger used: " << trigger << endl;
             if (!strTrigger.CompareTo("8e")){  // EG2
-                triggerRejec    = 276;
+                triggerRejec    = 386;
+                if(mode == 2) triggerRejec    = 422;
             } else if (!strTrigger.CompareTo("8d")){  // EG1
-                triggerRejec    = 874;
+                triggerRejec    = 1464;
+                if(mode == 2) triggerRejec    = 1683;
             } else if (!strTrigger.CompareTo("9c")){  // EJ2
                 triggerRejec    = 1;
             } else if (!strTrigger.CompareTo("9b")){  // EJ1
@@ -6023,7 +6054,7 @@
     //************************************************************************************
     //************ Return cocktail normalization factor **********************************
     //************************************************************************************
-    Double_t ReturnCocktailNormalization(TString energy, TString eventCutString) {
+    Double_t ReturnCocktailNormalization(TString energy, TString eventCutString, Int_t mode = 0 ) {
 
         // cocktail is normalized per INEL event, except for: PbPb and pPb 5TeV
 
@@ -6035,7 +6066,7 @@
 
         Double_t    xSec                = ReturnCorrectXSection(energy, selTrig);
         Double_t    xSecINEL            = ReturnCorrectXSection(energy, 3);
-        Double_t    triggerRejection    = ReturnTriggerRejectionFactor(energy, trigger.Atoi(),trigger);
+        Double_t    triggerRejection    = ReturnTriggerRejectionFactor(energy, trigger.Atoi(),trigger, mode);
         Double_t    scaleFactor         = 1.;
         if (energy.BeginsWith("PbPb") || energy.BeginsWith("XeXe")) {
             scaleFactor                 = 1.;

@@ -1138,8 +1138,10 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
         if [ $ONLYCUTS -eq 0 ]; then
             if [ -d $CUTSELECTION/$ENERGY/$SUFFIX ]; then
                 echo "Graphical Output $SUFFIX directory already exists, all files will be overwritten ";
+                echo -e "$1\n$2\n$3\n$4" > $CUTSELECTION/$ENERGY/$SUFFIX/startscript_arguments.txt
             else
                 mkdir $CUTSELECTION/$ENERGY/$SUFFIX
+                echo -e "$1\n$2\n$3\n$4" > $CUTSELECTION/$ENERGY/$SUFFIX/startscript_arguments.txt
             fi
 
             if [ $DISABLETOYMC -eq 0 ] && [ $USECOCK -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then

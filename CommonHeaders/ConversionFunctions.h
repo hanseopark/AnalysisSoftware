@@ -209,7 +209,7 @@
         Double_t    xMin, xMax;
         TString     formula         = func->GetExpFormula();
         func->GetRange(xMin, xMax);
-        #ifndef __CLING__
+            #if !defined (__CINT__) || defined (__CLING__)
             for (Int_t i=0; i<func->GetNpar(); i++) {
                 formula.ReplaceAll(Form("[p%d]", i), Form("[placeholder%d]",i+1));
             }
@@ -249,7 +249,7 @@
         TString formula2                    = f2->GetExpFormula();
 
         for (Int_t i = 0; i< nPar2; i++){
-            #ifndef __CLING__
+            #if !defined (__CINT__) || defined (__CLING__)
                 formula2.ReplaceAll(Form("[p%d]",i), Form("[p%d]",i+nPar1));
             #else
                 formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
@@ -282,8 +282,8 @@
         TString formula2                    = f2->GetExpFormula();
 
         for (Int_t i = 0; i< nPar2; i++){
-            #ifndef __CLING__
-                formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+            #if !defined (__CINT__) || defined (__CLING__)
+                formula2.ReplaceAll(Form("[p%d]",i), Form("[p%d]",i+nPar1));
             #else
                 formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
             #endif
@@ -736,6 +736,27 @@
             yValue[i]                   = yValue[i]/fit->Eval(xValue[i]);
             yErrorLow[i]                = yErrorLow[i]/fit->Eval(xValue[i]);
             yErrorHigh[i]               = yErrorHigh[i]/fit->Eval(xValue[i]);
+        }
+        TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+        return returnGraph;
+    }
+
+    //**********************************************************************************************************
+    // Calculates the ratio of a fit and a graph (inverse of above function)
+    //**********************************************************************************************************
+    TGraphAsymmErrors* CalculateFitRatioToGraphErr (TF1* fit, TGraphAsymmErrors* graph_Org){
+        TGraphAsymmErrors* graph        = (TGraphAsymmErrors*)graph_Org->Clone("Dummy");
+        Double_t * xValue               = graph->GetX();
+        Double_t * yValue               = graph->GetY();
+        Double_t* xErrorLow             = graph->GetEXlow();
+        Double_t* xErrorHigh            = graph->GetEXhigh();
+        Double_t* yErrorLow             = graph->GetEYlow();
+        Double_t* yErrorHigh            = graph->GetEYhigh();
+        Int_t nPoints                   = graph->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+            yErrorLow[i]                = fit->Eval(xValue[i])/yValue[i]*(yErrorLow[i]/yValue[i]);
+            yErrorHigh[i]               = fit->Eval(xValue[i])/yValue[i]*(yErrorHigh[i]/yValue[i]);
+            yValue[i]                   = fit->Eval(xValue[i])/yValue[i];
         }
         TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
         return returnGraph;
@@ -5080,7 +5101,7 @@
         TString formula2    = fit2->GetExpFormula();
 
         for (Int_t i = 0; i< nParFunc2; i++){
-            #ifdef __CLING__
+            #if !defined (__CINT__) || defined (__CLING__)
                 formula2.ReplaceAll(Form("[p%d]",i), Form("[p%d]",i+nParFunc1));
             #else
                 formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nParFunc1));

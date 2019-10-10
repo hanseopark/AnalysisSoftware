@@ -799,6 +799,9 @@ void CorrectCaloNonLinearityV4(
     } else if ((mode == 2 || mode == 13 || mode == 14) && select.Contains("LHC11cd")){
         minMass  = 0.89;
         maxMass  = 1.14;
+    } else if ((mode == 2) && select.Contains("LHC12TB")){
+        minMass  = 0.95;
+        maxMass  = 1.25;
     }
     //*********************************************************************************************************************************
     //************************************ Write mean mass for MC and data into output file *******************************************
@@ -1135,6 +1138,7 @@ void CorrectCaloNonLinearityV4(
     Double_t maxPlotY = 1.05;
     if (select.Contains("LHC15o") || select.Contains("LHC18qr"))           maxPlotY = 1.2;
     if (select.Contains("LHC11cd") && mode==2)           maxPlotY = 1.03;
+    if (select.Contains("LHC12TB") && mode==2)           minPlotY = 0.88;
     if (mode==3 || mode==5)   {   minPlotY = 0.9;     maxPlotY = 1.2; }
 
     TH2F * histoDummyDataMCRatio;

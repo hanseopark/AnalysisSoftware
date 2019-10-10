@@ -486,7 +486,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 isV0AND         = 1;
             }
         }
-        if (optionEnergy.CompareTo("8TeV") == 0){
+        if (optionEnergy.BeginsWith("8TeV")){
             isV0AND             = 1;
         }
         if (trigger.Atoi() == 10 || trigger.Atoi() == 52 || trigger.Atoi() == 83  || trigger.Atoi() == 85 || trigger.Atoi() == 81 ){
@@ -500,7 +500,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
     }
     // The trigger rejection factor has to be given externally
-    Double_t triggerRejection                       = ReturnTriggerRejectionFactor(optionEnergy, trigger.Atoi(), trigger);
+    Double_t triggerRejection                       = ReturnTriggerRejectionFactor(optionEnergy, trigger.Atoi(), trigger, mode);
     cout << "trigger rejection factor set to: " << triggerRejection << endl;
     if (triggerRejection != 1.)
         scaleFactorMeasXSecForExternalInput                   = scaleFactorMeasXSecForExternalInput*triggerRejection;
@@ -617,7 +617,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 modifiedSecAcc[j]                   = kTRUE;
             }
             // for EMCal, 8 TeV, EMC7+EGA triggers set K0s acc to prim acceptance
-            if( optionEnergy.CompareTo("8TeV") == 0 && mode == 4 && j == 0 && triggerRejection>2.){
+            if( optionEnergy.BeginsWith("8TeV") && mode == 4 && j == 0 && triggerRejection>2.){
               histoSecAcceptance[j]                 = (TH1D*) histoAcceptance->Clone(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
               modifiedSecAcc[j]                     = kTRUE;
             }
@@ -676,8 +676,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
                     Double_t minPtSecFitConst   = 2.5;
                     if (kCollisionSystem ==2 && (mode == 2 || mode == 13)) minPtSecFitConst        = 4.0;
-                    if (optionEnergy.CompareTo("8TeV") == 0 && mode == 2)  minPtSecFitConst        = 6.0;
-                    if (optionEnergy.CompareTo("8TeV") == 0 && mode == 0)  minPtSecFitConst        = 8.0;
+                    if (optionEnergy.BeginsWith("8TeV") && mode == 2)  minPtSecFitConst        = 6.0;
+                    if (optionEnergy.BeginsWith("8TeV") && mode == 0)  minPtSecFitConst        = 4.0;
 
                 // Fit
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
@@ -777,11 +777,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
-                } else if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("900GeV") == 0){
+                } else if (optionEnergy.BeginsWith("8TeV") || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("900GeV") == 0){
                     if (mode == 4 || mode == 12 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
-                          if(optionEnergy.CompareTo("8TeV") == 0){
+                          if(optionEnergy.BeginsWith("8TeV")){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
@@ -799,7 +799,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(1.0);
                         } else if ( j == 3 ){
-                          if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
+                          if (optionEnergy.BeginsWith("8TeV") || optionEnergy.CompareTo("7TeV") == 0){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
@@ -816,7 +816,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.5);
-                          } else if(optionEnergy.CompareTo("8TeV") == 0 && triggerRejection>2.){
+                          } else if(optionEnergy.BeginsWith("8TeV") && triggerRejection>2.){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.2);
@@ -830,7 +830,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.1);
                         } else if ( j == 3 ){
-                          if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
+                          if (optionEnergy.BeginsWith("8TeV") || optionEnergy.CompareTo("7TeV") == 0){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
@@ -1068,7 +1068,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t j = 0; j < 4; j++){
             fitSecFracPurePowerlaw[k][j]            = new TF1( Form("fitSecFracPurePowerlawFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/TMath::Power(x,[1])");
             fitSecFracPLWithConst[k][j]             = new TF1( Form("fitSecFracPLWithConstFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/TMath::Power(x,[1])+[2]");
-            if ( optionEnergy.CompareTo("8TeV") == 0 ){
+            if ( optionEnergy.BeginsWith("8TeV") ){
                if ( mode != 2 && mode != 4 ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
             }else if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
         }
@@ -1507,12 +1507,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t maxFracBG  = 8;
     if (optionEnergy.CompareTo("2.76TeV") == 0)
         maxFracBG       = 20;
-    if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.Contains("5TeV2017"))
+    if (optionEnergy.BeginsWith("8TeV") || optionEnergy.Contains("5TeV2017"))
         maxFracBG       = 40;
     if (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVRBins") == 0)
         maxFracBG       = 80;
     if (optionEnergy.Contains("pPb") )
-        maxFracBG       = 16;
+        maxFracBG       = 40;
     if (kDCAFileDataExists){
         cout << "Plotting total contamination from  out of bunch pileup with different methods" << endl;
         TCanvas* canvasCorrFrac = new TCanvas("canvasCorrFrac","",200,10,1350,900);// gives the page size
@@ -1629,8 +1629,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                         kFALSE, 0., 10.);
         } else {
             if (optionEnergy.Contains("pPb"))
-                minYCorrFac     = 0.84;
-            if (!optionEnergy.CompareTo("8TeV"))
+                minYCorrFac     = 0.6;
+            if (optionEnergy.BeginsWith("8TeV"))
                 minYCorrFac     = 0.6;
 	    if (optionEnergy.Contains("13TeV"))
                 minYCorrFac     = 0.4;
@@ -1734,7 +1734,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
             if ((mode == 4 || mode == 12) ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.170);
-                if (optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
+                if (optionEnergy.BeginsWith("8TeV") && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             } else if (mode == 2 || mode == 13 ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
                 if (histoMassMeson->GetXaxis()->GetBinUpEdge(histoMassMeson->GetNbinsX()) > 20) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.150);
@@ -1927,7 +1927,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
-                if (optionEnergy.CompareTo("8TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
+                if (optionEnergy.BeginsWith("8TeV")) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
                 if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
@@ -1993,7 +1993,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (!kIsEta){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
-                if (optionEnergy.CompareTo("8TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
+                if (optionEnergy.BeginsWith("8TeV")) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
                 if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
@@ -2071,7 +2071,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             switch (mode) {
                 case 4 :
                 case 12:
-                    if (optionEnergy.CompareTo("8TeV") == 0)
+                    if (optionEnergy.BeginsWith("8TeV"))
                         maxFWHM = 0.05;
                     else
                         maxFWHM = 0.060;
@@ -2286,7 +2286,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         Double_t maxFWHMAdd         = 0.030;
         if (mode == 2 || mode == 13)
             maxFWHMAdd              = 0.015;
-        if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0)
+        if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) && optionEnergy.BeginsWith("8TeV"))
             maxFWHMAdd              = 0.025;
         if (kIsEta)
             maxFWHMAdd              = 0.030;
@@ -2479,6 +2479,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             /// fitting of ratio with pol0
             if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
+            }else if(mode == 0 && optionEnergy.Contains("pPb_8TeV") ){
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.0,maxPtMeson);
             }else{
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",3.5,maxPtMeson);
                 cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
@@ -2523,7 +2525,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 else
                     histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",1.0,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("pPb_8TeV")){
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson-2    );
+                    histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson-2    );
+            }else if(mode == 2 && optionEnergy.Contains("pPb_8TeV")){
+                if(trigger.CompareTo("8d")==0)
+                    histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",10.0,20    );
+                else if(trigger.CompareTo("8e")==0)
+                    histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",4.5,15    );
+                else
+                    histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson-2    );
             }else if(mode == 2 && optionEnergy.Contains("5TeV2017")){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 2 && optionEnergy.Contains("8TeV")){
@@ -2599,7 +2608,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoTrueEffiPt[k]->Sumw2();
             // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
             if (scaleTrueEffiWithFit){
-                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV")|| !optionEnergy.CompareTo("pPb_5.023TeVRun2") || (!optionEnergy.CompareTo("pPb_5.023TeVCent") && mode == 0) || (!optionEnergy.CompareTo("8TeV") && mode == 0))
+                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV")|| !optionEnergy.CompareTo("pPb_5.023TeVRun2") || (!optionEnergy.CompareTo("pPb_5.023TeVCent") && mode == 0) || (optionEnergy.BeginsWith("8TeV") && mode == 0) || (!optionEnergy.CompareTo("pPb_8TeV") && mode == 0))
                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
                 else
                     histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);

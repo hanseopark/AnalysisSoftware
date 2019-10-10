@@ -201,7 +201,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
-
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if(HistosGammaConversion == NULL){
         //******************************************************************************************************
@@ -222,7 +221,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fClusterMergedCutSelection.Replace(GetClusterTimingCutPosition(fClusterMergedCutSelectionRead),1,mostProbableTimeCuts[i].Data());
                 fClusterCutSelectionRead= fClusterCutSelection;
                 fClusterMergedCutSelectionRead= fClusterMergedCutSelection;
-                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fClusterMergedCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fClusterMergedCutSelection.Data(), fMesonCutSelection.Data());
 
                 cout << "testing cutnumber:" << fCutSelectionRead.Data() << endl;
                 HistosGammaConversion   = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
@@ -704,7 +703,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     Double_t maxZM02        = 0;
     Double_t minPtPlotting  = 2.95;
     Double_t maxPtPlotting  = 50;
-    if (fEnergyFlag.CompareTo("8TeV") == 0){
+    if (fEnergyFlag.BeginsWith("8TeV")){
         minPtPlotting       = 10;
         maxPtPlotting       = 70;
     }

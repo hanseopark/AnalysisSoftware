@@ -789,11 +789,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 RebinSpectrum(fHistoGammaTruePrimaryCaloMCPt);
 
                 // true conversion histograms
-                fHistoGammaTrueCaloConvPt                       = (TH1D*)CaloContainer->FindObject("TrueClusConvGamma_Pt");
-                fHistoGammaTrueCaloConvPt->Sumw2();
-                fHistoGammaTrueCaloConvPtOrBin                  = (TH1D*)fHistoGammaTrueCaloConvPt->Clone("TrueClusConvGamma_Pt_OriginalBinning");
-                fHistoGammaTrueCaloConvPtOrBin->Sumw2();
-                RebinSpectrum(fHistoGammaTrueCaloConvPt);
+                // fHistoGammaTrueCaloConvPt                       = (TH1D*)CaloContainer->FindObject("TrueClusConvGamma_Pt");
+                // fHistoGammaTrueCaloConvPt->Sumw2();
+                // fHistoGammaTrueCaloConvPtOrBin                  = (TH1D*)fHistoGammaTrueCaloConvPt->Clone("TrueClusConvGamma_Pt_OriginalBinning");
+                // fHistoGammaTrueCaloConvPtOrBin->Sumw2();
+                // RebinSpectrum(fHistoGammaTrueCaloConvPt);
 
                 fHistoGammaTruePrimaryCaloConvPt                = (TH1D*)CaloContainer->FindObject("TruePrimaryClusConvGamma_Pt");
                 fHistoGammaTruePrimaryCaloConvPt->Sumw2();
@@ -807,12 +807,12 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 RebinSpectrum(fHistoGammaTruePrimaryCaloConvMCPt);
 
                 // true gamma histograms
-                fHistoGammaTrueCaloUnConvPt                     = (TH1D*)fHistoGammaTrueCaloPt->Clone("TrueClusUnConvGamma_Pt");
-                fHistoGammaTrueCaloUnConvPt->Sumw2();
-                fHistoGammaTrueCaloUnConvPt->Add(fHistoGammaTrueCaloConvPt,-1);
-                fHistoGammaTrueCaloUnConvPtOrBin                = (TH1D*)fHistoGammaTrueCaloPtOrBin->Clone("TrueClusUnConvGamma_Pt_OriginalBinning");
-                fHistoGammaTrueCaloUnConvPtOrBin->Sumw2();
-                fHistoGammaTrueCaloUnConvPtOrBin->Add(fHistoGammaTrueCaloConvPtOrBin,-1);
+                // fHistoGammaTrueCaloUnConvPt                     = (TH1D*)fHistoGammaTrueCaloPt->Clone("TrueClusUnConvGamma_Pt");
+                // fHistoGammaTrueCaloUnConvPt->Sumw2();
+                // fHistoGammaTrueCaloUnConvPt->Add(fHistoGammaTrueCaloConvPt,-1);
+                // fHistoGammaTrueCaloUnConvPtOrBin                = (TH1D*)fHistoGammaTrueCaloPtOrBin->Clone("TrueClusUnConvGamma_Pt_OriginalBinning");
+                // fHistoGammaTrueCaloUnConvPtOrBin->Sumw2();
+                // fHistoGammaTrueCaloUnConvPtOrBin->Add(fHistoGammaTrueCaloConvPtOrBin,-1);
 
                 fHistoGammaTruePrimaryCaloUnConvPt              = (TH1D*)fHistoGammaTruePrimaryCaloPt->Clone("TruePrimaryClusUnConvGamma_Pt");
                 fHistoGammaTruePrimaryCaloUnConvPt->Sumw2();
@@ -831,19 +831,19 @@ void ExtractGammaSignalV2(      TString meson               = "",
             } else {
 
                 // reconstructed and validated MC cluster gammas
-                fHistoGammaTrueCaloUnConvPt                                                 = (TH1D*)TrueConversionContainer->FindObject("TrueClusUnConvGamma_Pt");
-                fHistoGammaTrueCaloUnConvPt->SetName("TrueClusUnConvGamma_Pt");
-                fHistoGammaTrueCaloUnConvPt->Sumw2();
-                fHistoGammaTrueCaloUnConvPtOrBin                                            = (TH1D*)fHistoGammaTrueCaloUnConvPt->Clone("TrueClusUnConvGamma_Pt_OriginalBinning");
-                fHistoGammaTrueCaloUnConvPtOrBin->Sumw2();
-                RebinSpectrum(fHistoGammaTrueCaloUnConvPt);
+                // fHistoGammaTrueCaloUnConvPt                                                 = (TH1D*)TrueConversionContainer->FindObject("TrueClusUnConvGamma_Pt");
+                // fHistoGammaTrueCaloUnConvPt->SetName("TrueClusUnConvGamma_Pt");
+                // fHistoGammaTrueCaloUnConvPt->Sumw2();
+                // fHistoGammaTrueCaloUnConvPtOrBin                                            = (TH1D*)fHistoGammaTrueCaloUnConvPt->Clone("TrueClusUnConvGamma_Pt_OriginalBinning");
+                // fHistoGammaTrueCaloUnConvPtOrBin->Sumw2();
+                // RebinSpectrum(fHistoGammaTrueCaloUnConvPt);
 
-                fHistoGammaTrueCaloConvPt                                                   = (TH1D*)TrueConversionContainer->FindObject("TrueClusConvGamma_Pt");
-                fHistoGammaTrueCaloConvPt->SetName("TrueClusConvGamma_Pt");
-                fHistoGammaTrueCaloConvPt->Sumw2();
-                fHistoGammaTrueCaloConvPtOrBin                                              = (TH1D*)fHistoGammaTrueCaloConvPt->Clone("TrueClusConvGamma_Pt_OriginalBinning");
-                fHistoGammaTrueCaloConvPtOrBin->Sumw2();
-                RebinSpectrum(fHistoGammaTrueCaloConvPt);
+                // fHistoGammaTrueCaloConvPt                                                   = (TH1D*)TrueConversionContainer->FindObject("TrueClusConvGamma_Pt");
+                // fHistoGammaTrueCaloConvPt->SetName("TrueClusConvGamma_Pt");
+                // fHistoGammaTrueCaloConvPt->Sumw2();
+                // fHistoGammaTrueCaloConvPtOrBin                                              = (TH1D*)fHistoGammaTrueCaloConvPt->Clone("TrueClusConvGamma_Pt_OriginalBinning");
+                // fHistoGammaTrueCaloConvPtOrBin->Sumw2();
+                // RebinSpectrum(fHistoGammaTrueCaloConvPt);
 
                 fHistoGammaTrueCaloPt                                                       = (TH1D*)TrueConversionContainer->FindObject("TrueClusGamma_Pt");
                 fHistoGammaTrueCaloPt->Sumw2();
@@ -2998,7 +2998,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
-    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
+    } else if ((fEnergyFlag.BeginsWith("8TeV")) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 9;
         nIterationsShowBackground[1]                    = 9;
         nIterationsShowBackground[2]                    = 14;
@@ -4871,7 +4871,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
-        if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+        if (fMode == 0 && fEnergyFlag.BeginsWith("8TeV")){
             if ((ptBin > 2)&&ptBin<100 ){
                 fMesonWidthRange[0]         = 0.001;
                 fMesonWidthRange[1]         = 0.009;
@@ -4894,7 +4894,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
         if (fMode == 4 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+            if( fEnergyFlag.BeginsWith("8TeV") ){
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
@@ -4922,7 +4922,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
 
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
-    if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
+    if( fEnergyFlag.BeginsWith("8TeV") && fMode == 4 ){
       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
@@ -5036,7 +5036,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         if (fMode == 4 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
-            if( fEnergyFlag.CompareTo("8TeV") == 0  ){
+            if( fEnergyFlag.BeginsWith("8TeV")  ){
               mesonAmplitudeMin = mesonAmplitude*90./100.;
               mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
@@ -5059,7 +5059,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitRecoPre->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
     if (fMode == 2 || fMode == 4) fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
-    if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
+    if( fEnergyFlag.BeginsWith("8TeV") && fMode == 4 ){
       fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitRecoPre,"QRME0");

@@ -645,6 +645,11 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         specialString[1]="Pythia";
         specialString[2]="Phojet";
     }
+    if(!cutVariationName.CompareTo("MCBiasEMConlyGamma")){
+        specialString[0]="LHC18f5_gamma";
+        specialString[1]="LHC18l6b1_gamma";
+        specialString[2]="LHC18l6c1_gamma";
+    }
     if(!cutVariationName.CompareTo("PileupDCA")){
         specialString[0]="std";
         specialString[1]="DCAvar1";
@@ -874,7 +879,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("MBW")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("PileupDCA")||!cutVariationName.CompareTo("Test")){
+        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("MBW")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")||!cutVariationName.CompareTo("8TeVEfficiency")||!cutVariationName.CompareTo("MCBiasEMConlyGamma")||!cutVariationName.CompareTo("PileupDCA")||!cutVariationName.CompareTo("Test")){
             cutStringsName[i]   = specialString[i].Data();
             folderName[i]       = Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{

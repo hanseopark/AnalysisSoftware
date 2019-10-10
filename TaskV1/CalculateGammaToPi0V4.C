@@ -270,7 +270,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV")|| !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") ||
+        if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV")|| !fEnergy.CompareTo("7TeV") || fEnergy.BeginsWith("8TeV") || !fEnergy.CompareTo("13TeV") ||
             !fEnergy.CompareTo("5TeV") || !fEnergy.CompareTo("5TeV2017") ||
             !fEnergy.CompareTo("pPb_5.023TeV") || !fEnergy.CompareTo("pPb_5.023TeVCent") || !fEnergy.CompareTo("pPb_5.023TeVRun2") ||
             !fEnergy.CompareTo("PbPb_2.76TeV")){
@@ -877,7 +877,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         if (mode==4) {
             minPt                                = 0.8;
             minY                                 = 0.5;
-            if(fEnergy.CompareTo("8TeV")==0 || fEnergy.CompareTo("7TeV")==0 || fEnergy.CompareTo("900GeV")==0){
+            if(fEnergy.BeginsWith("8TeV") || fEnergy.CompareTo("7TeV")==0 || fEnergy.CompareTo("900GeV")==0){
               minPt = 1.0;
               minY = 0.7;
             }
