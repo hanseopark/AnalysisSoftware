@@ -2021,17 +2021,23 @@
                 } 
             } else if (energy.BeginsWith("8TeV")){
                 if ( mode == 0 ){
-                    startPtBin     = 1;
+                    if (specialTrigg == 1) startPtBin = 10;
+                    else if (specialTrigg == 2) startPtBin = 12;
+                    else startPtBin     = 1;
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
-                    startPtBin     = 3;
+                    if (specialTrigg == 1) startPtBin = 8;
+                    else if (specialTrigg == 2) startPtBin = 12;
+                    else startPtBin     = 2;
                 } else if ( mode == 3 ){
                     startPtBin     = 2;
                 } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 5;
+                    if (specialTrigg == 1) startPtBin = 8;
+                    else if (specialTrigg == 2) startPtBin = 12;
+                    else startPtBin     = 3;
                 } else if ( mode == 5){
-                    startPtBin     = 3;
+                    startPtBin     = 1;
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
@@ -6275,57 +6281,14 @@
             //*********************************************************************************************
             } else if (energy.BeginsWith("8TeV")) {
 
-                fStartPtBin = 1;
-                if (modi == 2 ) fStartPtBin = 2;
-                if (modi == 4 ) fStartPtBin = 3;
-
-                if (modi == 0 && specialTrigg == 1) fStartPtBin = 10;
-                if (modi == 0 && specialTrigg == 2) fStartPtBin = 12;
-                if (modi == 2 && specialTrigg == 1) fStartPtBin = 8;
-                if (modi == 2 && specialTrigg == 2) fStartPtBin = 12;
-                if (modi == 4 && specialTrigg == 1) fStartPtBin = 8;
-                if (modi == 4 && specialTrigg == 2) fStartPtBin = 12;
-
-                if ( fNBinsPt > 17 && isDCA ) {
-                    cout << "You have chosen to have more than 17 bins for Eta, this is not possible, it will be reduced to 12" << endl;
-                    fNBinsPt            = 17;
-                } else if (fNBinsPt > 16 && modi != 2 && modi != 3 && modi != 4) {
-                    if( specialTrigg == 2 && fNBinsPt > 23){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
-                        fNBinsPt        = 23;
-                    } else if ( specialTrigg == 1 && fNBinsPt > 23){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
-                        fNBinsPt = 23;
-                    } else if(specialTrigg!=1 && specialTrigg!=2 && fNBinsPt >21) {
-                        cout << "You have chosen to have more than 21 bins for Eta, this is not possible, it will be reduced to 21" << endl;
-                        fNBinsPt        = 21;
-                    }
-                } else if (fNBinsPt > 19 && (modi == 4)){
-                    if( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg ==1 && fNBinsPt > 24) ){
-                        fNBinsPt        = 24;
-                    } else if ( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg == 2 && fNBinsPt > 19) ){
-                        fNBinsPt        = 19;
-                    } else if( specialTrigg == 2 && fNBinsPt > 23){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
-                        fNBinsPt        = 23;
-                    } else if ( specialTrigg == 1 && fNBinsPt > 26){
-                        cout << "You have chosen to have more than 26 bins, this is not possible, it will be reduced to 26" << endl;
-                        fNBinsPt = 26;
-                    } else if(specialTrigg!=1 && specialTrigg!=2 && fNBinsPt >21) {
-                        cout << "You have chosen to have more than 21 bins for Eta, this is not possible, it will be reduced to 21" << endl;
-                        fNBinsPt        = 21;
-                    }
-                } else if (fNBinsPt > 19 && (modi == 2 || modi == 3)){
-                    if( specialTrigg == 2 && fNBinsPt > 23){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
-                        fNBinsPt        = 23;
-                    } else if ( specialTrigg == 1 && fNBinsPt > 23){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
-                        fNBinsPt = 23;
-                    } else if(specialTrigg!=1 && specialTrigg!=2) {
-                        cout << "You have chosen to have more than 19 bins for Eta, this is not possible, it will be reduced to 19" << endl;
-                        fNBinsPt        = 19;
-                    }
+                fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                if (fNBinsPt > maxPtBinTheo) {
+                    cout << "**************************************************************************************************************************************" << endl;
+                    cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                    cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
+                    cout << "**************************************************************************************************************************************" << endl;
+                    fNBinsPt    = maxPtBinTheo;
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 

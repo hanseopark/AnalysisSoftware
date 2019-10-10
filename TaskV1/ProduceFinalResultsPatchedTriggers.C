@@ -5207,7 +5207,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             offSetsEta[1] = -1; //INT7
             offSetsEta[3] = -1; //EMC7
             offSetsEta[4] = 2; //EGA
-          
+          }
         }
         if(optionEnergy.CompareTo("pPb_8TeV")==0){
           if(mode == 2 || mode == 4){
