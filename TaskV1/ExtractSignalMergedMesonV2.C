@@ -202,6 +202,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         return;
     }
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    if(fIsMC && file.Contains("_Sys") && fEnergyFlag.Contains("8TeV")){
+        fCutSelectionRead.Replace(3, 2,"10");
+        cout << "loading inputs using cutnumber: " << fCutSelectionRead.Data() << endl;
+        HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    }
     if(HistosGammaConversion == NULL){
         //******************************************************************************************************
         //Check whether MC would contain a different time cut as timing cuts aren't implemented for EMC in MC **
@@ -212,6 +217,10 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fClusterCutSelectionRead        = fClusterCutSelection;
             fClusterMergedCutSelectionRead  = fClusterMergedCutSelection;
             fMesonCutSelectionRead          = fMesonCutSelection;
+            if(fIsMC && file.Contains("_Sys")){
+                fEventCutSelectionRead.Replace(3, 2,"10");
+                cout << "loading inputs using cutnumber: " << fEventCutSelectionRead.Data() << endl;
+            }
             // Alternative time cuts for EMC
             TString mostProbableTimeCuts[11]= {"5", "6", "0", "1", "2", "3", "4", "7", "8", "9", "a"};
             Int_t i = 0;

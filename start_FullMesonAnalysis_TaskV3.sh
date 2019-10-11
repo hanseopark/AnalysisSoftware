@@ -828,6 +828,9 @@ do
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
         ENERGY="8TeV";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "8TeVRef" ] || [ $answer = "8Ref" ]; then
+        ENERGY="8TeVRef";
+        EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
         ENERGY="13TeV";
         EXTINPUTFILE="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
@@ -988,7 +991,7 @@ do
             if [ $MODE -lt 10 ] || [ $MODE -gt 11 ] ; then
                 AskForTHnSparseOption
             fi
-        elif [ $ENERGY = "8TeV" ]; then
+        elif [ $ENERGY = "8TeV" ] || [ $ENERGY = "8TeVRef" ]; then
             GiveBinning8TeV
         elif [ $ENERGY = "13TeV" ] || [ $ENERGY = "13TeVLowB" ]|| [ $ENERGY = "13TeVRBins" ]; then
             GiveBinning13TeV

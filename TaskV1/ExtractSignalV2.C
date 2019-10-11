@@ -4865,6 +4865,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
                     fMesonLambdaTailRange[1]    = 0.005;
                 }
             } else if (fMode == 2 || fMode == 13 ) {                // PCM-EMC, PCM-DMC
+                TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
                 if( fEnergyFlag.BeginsWith("8TeV") ){
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;

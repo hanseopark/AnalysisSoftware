@@ -232,6 +232,7 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
     TFile* filePCM                                          = new TFile(fileNamePCM.Data());
     TH1D* histoPCMNumberOfEvents                            = (TH1D*)filePCM->Get("NEvents_INT7");
     TDirectory* directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi08TeV");
+    if(!directoryPCMPi0)directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi08TeVRef");
         TH1D* histoPCMPi0Mass                               = (TH1D*)directoryPCMPi0->Get("Pi0_Mass_data_INT7");
         histoPCMPi0Mass                                     ->Scale(1000.);
         TH1D* histoPCMPi0FWHMMeV                            = (TH1D*)directoryPCMPi0->Get("Pi0_Width_data_INT7");
@@ -353,6 +354,7 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
         }
 
     TDirectory* directoryPCMEta                             = (TDirectory*)filePCM->Get("Eta8TeV");
+    if(!directoryPCMEta)directoryPCMEta                             = (TDirectory*)filePCM->Get("Eta8TeVRef");
         TH1D* histoPCMEtaMass                               = (TH1D*)directoryPCMEta->Get("Eta_Mass_data_INT7");
         histoPCMEtaMass                                     ->Scale(1000.);
         TH1D* histoPCMEtaFWHMMeV                            = (TH1D*)directoryPCMEta->Get("Eta_Width_data_INT7");
@@ -468,8 +470,8 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
 
     //************************** Read data for PCMEMCAL **************************************************
     TFile* filePCMEMCAL                                     = new TFile(fileNamePCMEMCAL.Data());
-    TH1D* histoPCMEMCALNumberOfEvents                       = (TH1D*)filePCMEMCAL->Get("histoNumberOfEvents8TeV");
     TDirectory* directoryPCMEMCALPi0                        = (TDirectory*)filePCMEMCAL->Get("Pi08TeV");
+    if(!directoryPCMEMCALPi0)directoryPCMEMCALPi0           = (TDirectory*)filePCMEMCAL->Get("Pi08TeVRef");
         TGraphAsymmErrors* graphPCMEMCALPi0Mass             = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Mass_data");
         graphPCMEMCALPi0Mass                                = ScaleGraph(graphPCMEMCALPi0Mass, 1000.);
         TGraphAsymmErrors* graphPCMEMCALPi0FWHM             = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Width_data");
@@ -563,6 +565,7 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
         }
 
     TDirectory* directoryPCMEMCALEta                        = (TDirectory*)filePCMEMCAL->Get("Eta8TeV");
+    if(!directoryPCMEMCALEta)directoryPCMEMCALEta           = (TDirectory*)filePCMEMCAL->Get("Eta8TeVRef");
         TGraphAsymmErrors* graphPCMEMCALEtaMass             = (TGraphAsymmErrors*)directoryPCMEMCALEta->Get("Eta_Mass_data");
         graphPCMEMCALEtaMass                                = ScaleGraph(graphPCMEMCALEtaMass, 1000.);
         TGraphAsymmErrors* graphPCMEMCALEtaFWHM             = (TGraphAsymmErrors*)directoryPCMEMCALEta->Get("Eta_Width_data");
@@ -658,8 +661,8 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
 
     //************************** Read data for EMCAL ****************************************************
     TFile* fileEMCALLow                                     = new TFile(fileNameEMCALLow.Data());
-    TH1D* histoEMCALNumberOfEvents                          = (TH1D*)fileEMCALLow->Get("histoNumberOfEvents8TeV");
     TDirectory* directoryEMCALPi0                           = (TDirectory*)fileEMCALLow->Get("Pi08TeV");
+    if(!directoryEMCALPi0)directoryEMCALPi0           = (TDirectory*)fileEMCALLow->Get("Pi08TeVRef");
         TGraphAsymmErrors* graphEMCALPi0Mass                = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Mass_data");
         graphEMCALPi0Mass                                   = ScaleGraph(graphEMCALPi0Mass, 1000.);
         TGraphAsymmErrors* graphEMCALPi0FWHM                = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Width_data");
@@ -754,6 +757,7 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
 
 
     TDirectory* directoryEMCALEta                           = (TDirectory*)fileEMCALLow->Get("Eta8TeV");
+    if(!directoryEMCALEta)directoryEMCALEta           = (TDirectory*)fileEMCALLow->Get("Eta8TeVRef");
         TGraphAsymmErrors* graphEMCALEtaMass                = (TGraphAsymmErrors*)directoryEMCALEta->Get("Eta_Mass_data");
         graphEMCALEtaMass                                   = ScaleGraph(graphEMCALEtaMass, 1000.);
         TGraphAsymmErrors* graphEMCALEtaFWHM                = (TGraphAsymmErrors*)directoryEMCALEta->Get("Eta_Width_data");
@@ -859,6 +863,7 @@ void CombineMesonMeasurements8TeV_Ref(      TString fileNamePCM         = "",
     TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSys    = NULL;
     if(fileEMCALmerged){
         directoryEMCALmergedPi0                             = (TDirectory*)fileEMCALmerged->Get("Pi08TeV");
+    if(!directoryEMCALmergedPi0)directoryEMCALmergedPi0           = (TDirectory*)fileEMCALmerged->Get("Pi08TeVRef");
         if(directoryEMCALmergedPi0){
 //             histoEMCALMergedPi0Eff                          = (TH1D*)directoryEMCALmergedPi0->Get("EfficiencyPi0");
 //             histoEMCALMergedPi0Pur                          = (TH1D*)directoryEMCALmergedPi0->Get("PurityPi0");
@@ -1312,26 +1317,21 @@ cout << __LINE__ << endl;
     Double_t xPtLimitsPi0[100];
     Int_t maxNBinsPi0               = 0;
     Int_t maxNBinsPi0Abs            = 0;
-    maxNBinsPi0                     = GetBinning( xPtLimitsPi0, maxNBinsPi0Abs, "Pi0", "8TeV", 2 );
+    maxNBinsPi0                     = GetBinning( xPtLimitsPi0, maxNBinsPi0Abs, "Pi0", "8TeVRef", 2 );
     // maxNBinsPi0--;
     Double_t xPtLimitsPi0WOMerged[70];
-    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, maxNBinsPi0Abs, "Pi0", "8TeV", 2 );
+    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, maxNBinsPi0Abs, "Pi0", "8TeVRef", 2 );
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
-    Int_t offSetsPi0[11]            = { 0,  6,  0,  0,  0,
-                                        0,  0,  0,  0,  0,
-                                        0};
-    Int_t offSetsPi0Sys[11]         = { 1,  6,  7,  0,  5,
-                                        0,  0,  0,  0,  38,
-                                        0};
+    Int_t offSetsPi0[11]            = { 0,  6,  0,  0,  0,      0,  0,  0,  0,  0,                   0};
+    Int_t offSetsPi0Sys[11]         = { 1,  6,  7,  0,  5,      0,  0,  0,  0,  38,                  0};
     Int_t offSetPi0Shifting[11]     = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0,
                                         0 };
     Int_t nComBinsPi0Shifting[11]   = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0,
                                         0 };
-
     // **********************************************************************************************************************
     // ************************ Adding PCM-EMCal measurements to matrix & calculating relativ errors ************************
     // **********************************************************************************************************************
@@ -2711,7 +2711,7 @@ cout << __LINE__ << endl;
     // Definition of binning for eta meson, take care that it is the correct one
     Double_t xPtLimitsEtaWOMerged[70];
     Int_t maxNBinsEtaAbs            = 0;
-    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, maxNBinsEtaAbs, "Eta", "8TeV", 2 );
+    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, maxNBinsEtaAbs, "Eta", "8TeVRef", 2 );
     maxNBinsEtaW0Merged--;
     for (Int_t i = 0; i< maxNBinsEtaW0Merged; i++){
         cout << i << ": "<< xPtLimitsEtaWOMerged[i] <<" - " << xPtLimitsEtaWOMerged[i+1]<< ", " <<endl;
@@ -8154,6 +8154,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     TFile* filePCMMB                                     = new TFile(fileNamePCMMB.Data());
     TDirectory* directoryPCMPi0L                         = (TDirectory*)filePCMMB->Get("Pi08TeV");
+    if(!directoryPCMPi0L)directoryPCMPi0L           = (TDirectory*)filePCMMB->Get("Pi08TeVRef");
 
     const Int_t nPCMBins = 1;
     Int_t binN[nPCMBins] = {21};
@@ -8273,6 +8274,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
     // **********************************************************************************************************************
 
     TDirectory* directoryPCMEtaL                         = (TDirectory*)filePCMMB->Get("Eta8TeV");
+    if(!directoryPCMEtaL)directoryPCMEtaL           = (TDirectory*)filePCMMB->Get("Eta8TeVRef");
 
     const Int_t nPCMEtaBins = 2;
     Int_t binNEta[nPCMEtaBins] = {3,11};
