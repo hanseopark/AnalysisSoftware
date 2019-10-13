@@ -1931,5 +1931,14 @@
             fMesonWidthRangeMC[0]   = fMesonWidthRange[0];
         if (fMesonWidthRangeMC[1] == -10)
             fMesonWidthRangeMC[1]   = fMesonWidthRange[1];
+
+        cout << "****************** InitializeWindows() **********************" << endl;
+        cout << "fMesonFitRange:\t\t"      << fMesonFitRange[0]                << "\t< Inv Mass <\t"   << fMesonFitRange[1]                << "GeV/c^2"<< endl;
+        cout << "fMesonIntDeltaRange:\t"   << "µ" << fMesonIntDeltaRange[0]    << "\t< Inv Mass <\t"   << "µ+" << fMesonIntDeltaRange[1]   << "GeV/c^2"<< endl;
+        cout << "fMesonMassRange:\t"       << fMesonMassRange[0]               << "\t< µ par <\t"      << fMesonMassRange[1]               << endl;
+        cout << "fMesonWidthRange:\t"      << fMesonWidthRange[0]              << "\t< sigma par <\t"  << fMesonWidthRange[1]              << endl;
+        cout << "fMesonLambdaTailRange:\t" << fMesonLambdaTailRange[0]         << "\t< lambda par <\t" << fMesonLambdaTailRange[1]         << endl;
+        cout << "*************************************************************" << endl;
+
     }
 #endif
