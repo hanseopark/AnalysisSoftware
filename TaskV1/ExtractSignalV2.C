@@ -180,7 +180,9 @@ void ExtractSignalV2(
     TString fGammaCutSelectionRead  = fGammaCutSelection.Data();
     TString fMesonCutSelectionRead  = fMesonCutSelection.Data();
     TString fClusterCutSelectionRead= fClusterCutSelection.Data();
+    TString addSigString = "";
     if (addSig) {
+        addSigString = "AddSig";
         if(directphotonPlots.CompareTo("directPhoton")==0){
             cout << "running added Signal for photons, be careful" << endl;
             cout << fEventCutSelectionRead.Data() << endl;
@@ -2122,7 +2124,7 @@ void ExtractSignalV2(
     legendDiffBck->AddEntry(fHistoYieldDiffBckResult[2],Form("dev. raw yield wrt exp2 Bck fit for %s",fPrefix.Data()),"p");
     legendDiffBck->Draw();
 
-    if (fIsMC) canvasDiffBck->SaveAs(Form("%s/%s_MC_DiffBck_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasDiffBck->SaveAs(Form("%s/%s_MC_DiffBck%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
 
@@ -2177,7 +2179,7 @@ void ExtractSignalV2(
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTail, fMesonLambdaTail, 1, kGray+2, 2);
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTailRangeNominal[1], fMesonLambdaTailRangeNominal[1], 1, kRed+1, 2);
 
-    if (fIsMC) canvasLambdaTail->SaveAs(Form("%s/%s_MC_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasLambdaTail->SaveAs(Form("%s/%s_MC_LambdaTail%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasLambdaTail->SaveAs(Form("%s/%s_data_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
     ///*********************** Mass
@@ -2229,7 +2231,7 @@ void ExtractSignalV2(
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonMassExpect, fMesonMassExpect, 1, kGray+2, 2);
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonMassRange[1], fMesonMassRange[1], 1, kRed+1, 2);
 
-    if (fIsMC) canvasMesonMass->SaveAs(Form("%s/%s_MC_MesonMass_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasMesonMass->SaveAs(Form("%s/%s_MC_MesonMass%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonMass->SaveAs(Form("%s/%s_data_MesonMass_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
 
@@ -2258,7 +2260,7 @@ void ExtractSignalV2(
     legendMesonFWHM->AddEntry(fHistoFWHMMeson,Form("%s FWHM",fPrefix.Data()),"p");
     legendMesonFWHM->Draw();
 
-    if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
     ///*********************** Amplitude fit parameter monitoring
@@ -2281,7 +2283,7 @@ void ExtractSignalV2(
     legendAmplitude->AddEntry(fHistoAmplitude,Form("Amplitude parameter for %s",fPrefix.Data()),"p");
     legendAmplitude->Draw();
 
-    if (fIsMC) canvasAmplitude->SaveAs(Form("%s/%s_MC_Amplitude_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasAmplitude->SaveAs(Form("%s/%s_MC_Amplitude%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasAmplitude->SaveAs(Form("%s/%s_data_Amplitude_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
     ///*********************** sigma fit parameter monitoring
@@ -2321,7 +2323,7 @@ void ExtractSignalV2(
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthExpect, fMesonWidthExpect, 1, kGray+2, 2);
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthRange[1], fMesonWidthRange[1], 1, kRed+1, 2);
 
-    if (fIsMC) canvasSigma->SaveAs(Form("%s/%s_MC_Sigma_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasSigma->SaveAs(Form("%s/%s_MC_Sigma%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasSigma->SaveAs(Form("%s/%s_data_Sigma_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
 
@@ -2343,7 +2345,7 @@ void ExtractSignalV2(
     legendMesonMidPt->AddEntry(fFitSignalInvMassMidPt,Form("%s Fit Mid-Pt",fPrefix.Data()),"l");
     legendMesonMidPt->Draw();
 
-    if (fIsMC) canvasMesonMidPt->SaveAs(Form("%s/%s_MC_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasMesonMidPt->SaveAs(Form("%s/%s_MC_MesonSubtractedFittingMidPt%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonMidPt->SaveAs(Form("%s/%s_data_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
     ///*********************** SPD pileup monitoring
@@ -2374,7 +2376,7 @@ void ExtractSignalV2(
         legendSPDPileUp->AddEntry(fHistoPileUpVertexDistance_TrackletHits,"removed by SPDTrackletHits");
         legendSPDPileUp->Draw();
 
-        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUpTotal_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUp%s_%s.%s",outputDirMon.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
         else canvasSPDPileUp->SaveAs(Form("%s/data_SPDPileUpTOtal_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
 
         TF1* fFitGausPileUp = new TF1("gausFitPileUp",fitGaussianPileUp,-15,15,3);
@@ -2477,7 +2479,7 @@ void ExtractSignalV2(
     PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
     canvasChi2->Update();
     if (fIsMC) {
-        canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+        canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     }  else {
         canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     }
@@ -2517,7 +2519,7 @@ void ExtractSignalV2(
 
         PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         canvasChi2SigToBckFit->Update();
-        if (fIsMC) canvasChi2SigToBckFit->SaveAs(Form("%s/%s_MC_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+        if (fIsMC) canvasChi2SigToBckFit->SaveAs(Form("%s/%s_MC_Chi2SigToBckFitFitComp%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
         else canvasChi2SigToBckFit->SaveAs(Form("%s/%s_data_Chi2SigToBckFitFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     }
     // **************************************************************************************************************
@@ -2565,7 +2567,7 @@ void ExtractSignalV2(
 
     PutProcessLabelAndEnergyOnPlot(0.70, 0.95, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
     canvasResBG->Update();
-    if (fIsMC) canvasResBG->SaveAs(Form("%s/%s_MC_ResBGYieldFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasResBG->SaveAs(Form("%s/%s_MC_ResBGYieldFitComp%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasResBG->SaveAs(Form("%s/%s_data_ResBGYieldFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
     // **************************************************************************************************************
