@@ -880,7 +880,7 @@ void ExtractSignalV2(
     TString namePadFittingMidPt= "MesonPadSubtractedFittingMidPt";
     //
     TString fDecayChannel = "#gamma#gamma";
-    delete fMidPt;
+    //delete fMidPt;  moved to later point so that it can be used for plotting
 
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
 
@@ -2337,12 +2337,12 @@ void ExtractSignalV2(
     fFittingHistMidPtSignalSub->Draw("same");
     fFitSignalInvMassMidPt->Draw("same");
     canvasMesonMidPt->Update();
-    TLegend* legendMesonMidPt = new TLegend(0.15,0.62,0.45,0.76);
+    TLegend* legendMesonMidPt = new TLegend(0.15,0.82,0.45,0.76);
     legendMesonMidPt->SetFillColor(0);
     legendMesonMidPt->SetLineColor(0);
     legendMesonMidPt->SetTextSize(0.04);
-    legendMesonMidPt->AddEntry(fFittingHistMidPtSignalSub,Form("%s Raw Mid-Pt",fPrefix.Data()),"l");
-    legendMesonMidPt->AddEntry(fFitSignalInvMassMidPt,Form("%s Fit Mid-Pt",fPrefix.Data()),"l");
+    legendMesonMidPt->AddEntry(fFittingHistMidPtSignalSub,Form("%s Raw",fPrefix.Data()),"l");
+    legendMesonMidPt->AddEntry(fFitSignalInvMassMidPt,Form("%s Fit %.2f-%.2f GeV/#it{c}",fPrefix.Data(), fMidPt[0], fMidPt[1]),"l");
     legendMesonMidPt->Draw();
 
     if (fIsMC) canvasMesonMidPt->SaveAs(Form("%s/%s_MC_MesonSubtractedFittingMidPt%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
@@ -7493,6 +7493,7 @@ void Delete(){
     if (fMesonWidthRange)                                       delete[] fMesonWidthRange;
     if (fMesonLambdaTailRange)                                  delete[] fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
+    if (fMidPt)                                                 delete fMidPt;
     for (Int_t m = 0; m< 3; m++){
         if (fMesonYieldsResBckOtherFunc[m])                     delete[] fMesonYieldsResBckOtherFunc[m];
         if (fMesonYieldsResBckOtherFuncError[m])                delete[] fMesonYieldsResBckOtherFuncError[m];
