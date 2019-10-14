@@ -92,6 +92,12 @@
     Bool_t      fUsingUnfolding_Reject                                      = kFALSE;
     Int_t       fNJetEvents                                                 = 0;
 
+    // for different remaining BG functions
+    Int_t       nOtherFits                                                  = 3;
+    TString     labelsOtherFits[3]                                          = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"}; // array of size nOtherFits
+    Color_t     colorFit[3]                                                 = {kRed+1, kAzure+2, 807};                         // array of size nOtherFits
+    Style_t     styleFit[3]                                                 = {34, 21, 33};                                    // array of size nOtherFits
+
     //****************************************************************************
     //******************************** Output files ******************************
     //****************************************************************************
@@ -436,9 +442,9 @@
     Double_t*   fTotalBckYieldsError[6]                                     = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     Double_t*   fMesonYieldsError[6]                                        = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     TH1D*       fHistoYieldMeson[6]                                         = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-    TH1D*       fHistoYieldDiffBck[6]                                       = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-    TH1D*       fHistoYieldDiffBckRatios[6]                                 = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-    TH1D*       fHistoYieldDiffBckResult[3]                                 = {nullptr, nullptr, nullptr};
+    TH1D*       fHistoYieldDiffBck[6]                                       = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};   // array of size 2*nOtherFits
+    TH1D*       fHistoYieldDiffBckRatios[6]                                 = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};   // array of size 2*nOtherFits
+    TH1D*       fHistoYieldDiffBckResult[3]                                 = {nullptr, nullptr, nullptr};                              // array of size nOtherFits
     TH1D*       fHistoYieldMesonPerEvent[6]                                 = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     TH1D*       fHistoYieldTrueMeson[6]                                     = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     TH1D*       fHistoYieldTrueMesonFromFit[6]                              = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
@@ -462,8 +468,8 @@
     TH1D*       fHistoYieldTrueMesonReweighted[3]                           = {nullptr, nullptr, nullptr};
     TH1D*       fHistoYieldTrueMesonUnweighted[3]                           = {nullptr, nullptr, nullptr};
 
-    Double_t*   fMesonYieldsResBckOtherFunc[3]                              = { nullptr, nullptr, nullptr};
-    Double_t*   fMesonYieldsResBckOtherFuncError[3]                         = { nullptr, nullptr, nullptr};
+    Double_t*   fMesonYieldsResBckOtherFunc[3]                              = { nullptr, nullptr, nullptr};    // array of size nOtherFits
+    Double_t*   fMesonYieldsResBckOtherFuncError[3]                         = { nullptr, nullptr, nullptr};    // array of size nOtherFits
 
     TH1D*       fHistoYieldMesonPerJetEvent[6]                              = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     Double_t*   fMesonYieldsPerJetEvent[6]                                  = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
@@ -473,10 +479,10 @@
     //************* histos, fits, doubles for pure Standard fitting **************
     //****************************************************************************
     TF1**       fFitSignalInvMassPtBin                                      = nullptr;
-    TF1**       fFitSignalWithOtherBGInvMassPtBin[3]                        = { nullptr, nullptr, nullptr };
+    TF1**       fFitSignalWithOtherBGInvMassPtBin[3]                        = { nullptr, nullptr, nullptr }; // array of size nOtherFits
     TF1**       fFitRemainingBGInvMassPtBin                                 = nullptr;
     TF1**       fFitBckInvMassPtBin                                         = nullptr;
-    TF1**       fFitBckOtherInvMassPtBin[3]                                 = { nullptr, nullptr, nullptr };
+    TF1**       fFitBckOtherInvMassPtBin[3]                                 = { nullptr, nullptr, nullptr }; // array of size nOtherFits
     TF1**       fFitTrueSignalInvMassPtBin                                  = nullptr;
     TF1**       fFitTrueSignalInvMassPtReweightedBin                        = nullptr;
     TF1**       fFitTrueSignalInvMassPtUnweightedBin                        = nullptr;
@@ -504,7 +510,7 @@
     Double_t*   fMesonResidualBGlinError                                    = nullptr;
     Double_t*   fMesonResidualBGcon                                         = nullptr;
     Double_t*   fMesonResidualBGconError                                    = nullptr;
-    Double_t*   fMesonChi2[4]                                               = {nullptr, nullptr, nullptr, nullptr};
+    Double_t*   fMesonChi2[4]                                               = {nullptr, nullptr, nullptr, nullptr};  // array of size nOtherFits+1
     Double_t*   fSigToBckFitChi2[2]                                         = {nullptr, nullptr};
 
 
@@ -633,11 +639,11 @@
     TH1D*       fHistoTrueSigma                                             = nullptr;
     TH1D*       fHistoResidualBGlin                                         = nullptr;
     TH1D*       fHistoResidualBGcon                                         = nullptr;
-    TH1D*       fHistoChi2[4]                                               = { nullptr, nullptr, nullptr, nullptr };
+    TH1D*       fHistoChi2[4]                                               = { nullptr, nullptr, nullptr, nullptr };   // array of size nOtherFits+1
     TH1D*       fHistoChi2SigToBckFit[2]                                    = { nullptr, nullptr };
     TH1D*       fHistoRatioResBGYield                                       = nullptr;
     TH1D*       fHistoRatioResBGYieldToSPlusResBG                           = nullptr;
-    TH1D*       fHistoResBGYield[4]                                         = { nullptr, nullptr, nullptr, nullptr };
+    TH1D*       fHistoResBGYield[4]                                         = { nullptr, nullptr, nullptr, nullptr };   // array of size nOtherFits+1
 
     Double_t*   fMassWindowHigh[3]                                          = { nullptr, nullptr, nullptr};
     Double_t*   fMassWindowLow[3]                                           = { nullptr, nullptr, nullptr};

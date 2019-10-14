@@ -1773,7 +1773,7 @@ void ExtractSignalV2(
         namePadSub      = "MesonPadSubtractedWithOther";
         cout << nameMesonSub.Data() << endl;
 
-        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitSignalInvMassPtBin, fFitSignalWithOtherBGInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
+        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitSignalInvMassPtBin, fFitSignalWithOtherBGInvMassPtBin, nOtherFits, labelsOtherFits, nameMesonSub,
                                                     nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
 
@@ -1782,7 +1782,7 @@ void ExtractSignalV2(
         namePadSub      = "MesonPadSubtractedWithOtherOnlyBGFits";
         cout << nameMesonSub.Data() << endl;
 
-        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitBckInvMassPtBin, fFitBckOtherInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
+        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitBckInvMassPtBin, fFitBckOtherInvMassPtBin, nOtherFits, labelsOtherFits, nameMesonSub,
                                                     nameCanvasSub, namePadSub, fMesonMassPlotRange, fDate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt,
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
 
@@ -2095,34 +2095,48 @@ void ExtractSignalV2(
         if(fHistoYieldDiffBckResult[2]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[2]->SetBinContent(m,0); fHistoYieldDiffBckResult[2]->SetBinError(m,0); }
     }
 
-    //normal
+    //****************************************************************
+    //**************** PLOTTING **************************************
+    //****************************************************************
+
     TCanvas* canvasDiffBck = new TCanvas("canvasDiffBck","",1550,1200);
     canvasDiffBck->SetTickx();
     canvasDiffBck->SetTicky();
 
-    DrawGammaSetMarker(fHistoYieldDiffBckResult[0], 20, 1.3, kBlack, kBlack);
+    Double_t maxDiffBck    = fHistoYieldDiffBckResult[0]->GetMaximum();  // for y range
+    for (Int_t m = 1; m < nOtherFits; m++){
+        if (maxDiffBck < fHistoYieldDiffBckResult[m]->GetMaximum())
+            maxDiffBck     = fHistoYieldDiffBckResult[m]->GetMaximum();
+    }
+    maxDiffBck             = maxDiffBck*1.4;
+
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[0], styleFit[0], 2, colorFit[0], colorFit[0]);
     DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[0],
-                                "", "p_{T} (GeV/c)", "dev. raw yield",
-                                kFALSE, 3.,0.,  kFALSE,
-                                kTRUE, -0.2,0.5,
-                                kFALSE, 0., 16.);
+                              "", "p_{T} (GeV/c)", "dev. raw yield",
+                              kFALSE, 3.,0.,  kFALSE,
+                              kTRUE, -0.2, maxDiffBck,
+                              kFALSE, 0., 16.);
+    fHistoYieldDiffBckResult[0]->DrawCopy("hist,L,same");  // draw line between points
+    fHistoYieldDiffBckResult[0]->DrawCopy("same,p,e1");    // draw copy twice to get points with errors AND line
 
-    DrawGammaSetMarker(fHistoYieldDiffBckResult[1], 33, 1.3, kRed+2, kRed+2);
-    fHistoYieldDiffBckResult[1]->DrawCopy("e1,p,SAME");
-
-    DrawGammaSetMarker(fHistoYieldDiffBckResult[2], 34, 1.3, kGreen+2, kGreen+2);
-    fHistoYieldDiffBckResult[2]->DrawCopy("e1,p,SAME");
-
+    for (Int_t x=1; x<nOtherFits; x++){
+        DrawGammaSetMarker(fHistoYieldDiffBckResult[x], styleFit[x], 2, colorFit[x], colorFit[x]);
+        fHistoYieldDiffBckResult[x]->DrawCopy("hist,L,same");
+        fHistoYieldDiffBckResult[x]->DrawCopy("e1,p,same");
+    }
+    fHistoYieldDiffBckResult[0]->DrawCopy("same,p,e1");
     canvasDiffBck->Update();
 
-    TLegend* legendDiffBck = new TLegend(0.15,0.8,0.4,0.95);
+    TLegend* legendDiffBck = new TLegend(0.2,0.8,0.45,0.95);
     legendDiffBck->SetFillColor(0);
     legendDiffBck->SetLineColor(0);
     legendDiffBck->SetTextSize(0.04);
-    legendDiffBck->AddEntry(fHistoYieldDiffBckResult[0],Form("dev. raw yield wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
-    legendDiffBck->AddEntry(fHistoYieldDiffBckResult[1],Form("dev. raw yield wrt exp Bck fit for %s",fPrefix.Data()),"p");
-    legendDiffBck->AddEntry(fHistoYieldDiffBckResult[2],Form("dev. raw yield wrt exp2 Bck fit for %s",fPrefix.Data()),"p");
+    for(Int_t x=0; x < nOtherFits; x++){
+        legendDiffBck->AddEntry(fHistoYieldDiffBckResult[x],Form("dev. raw yield wrt %s fit for %s", labelsOtherFits[x].Data(), fPrefix.Data()),"p");
+    }
     legendDiffBck->Draw();
+
+    DrawGammaLines(0., fBinsPt[fNBinsPt], 0, 0, 2, kRed+1, 2);
 
     if (fIsMC) canvasDiffBck->SaveAs(Form("%s/%s_MC_DiffBck%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
@@ -2446,14 +2460,17 @@ void ExtractSignalV2(
     TCanvas* canvasChi2 = new TCanvas("canvasChi2","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasChi2, 0.092, 0.01, 0.02, 0.082);
 
+    Style_t markerStdFit = 20;
+    Color_t colorStdFit  = kCyan+2;
+
     Double_t maxChi2    = fHistoChi2[0]->GetMaximum();
-    for (Int_t m = 1; m < 4; m++){
+    for (Int_t m = 1; m < (nOtherFits+1); m++){
         if (maxChi2 < fHistoChi2[m]->GetMaximum())
             maxChi2     = fHistoChi2[m]->GetMaximum();
     }
-    maxChi2             = maxChi2*1.2;
+    maxChi2             = maxChi2*1.4;
 
-    TLegend* legendChi2 = GetAndSetLegend2(0.75, 0.95-(0.035*4), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
+    TLegend* legendChi2 = GetAndSetLegend2(0.72, 0.95-(0.035*(nOtherFits+1)), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
 
     fHistoChi2[0]->GetYaxis()->SetRangeUser(0, maxChi2);
     DrawAutoGammaMesonHistos(   fHistoChi2[0],
@@ -2461,22 +2478,19 @@ void ExtractSignalV2(
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7,
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(fHistoChi2[0], 20, 2, kCyan+2, kCyan+2);
-    fHistoChi2[0]->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(fHistoChi2[0], markerStdFit, 2, colorStdFit, colorStdFit);
+    fHistoChi2[0]->DrawCopy("same,e1,p,L");
     legendChi2->AddEntry(fHistoChi2[0],"pol1 BG","p");
 
-    Color_t colorFit[3] = {kRed+1, kAzure+2, 807};
-    Style_t styleFit[3] = {34, 21, 33};
-
-    for (Int_t m = 1; m < 4; m++){
+    for (Int_t m = 1; m < (nOtherFits+1); m++){
         DrawGammaSetMarker(fHistoChi2[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
-        fHistoChi2[m]->DrawCopy("same,e1,p");
+        fHistoChi2[m]->DrawCopy("same,e1,p,L");
         legendChi2->AddEntry(fHistoChi2[m],labelsOtherFits[m-1],"p");
     }
     fHistoChi2[0]->DrawCopy("same,e1,p");
     legendChi2->Draw();
 
-    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
     canvasChi2->Update();
     if (fIsMC) {
         canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp%s_%s.%s",outputDir.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
@@ -2526,17 +2540,18 @@ void ExtractSignalV2(
     // ************************ ResBG compared MC vs Data ********************************************************
     // **************************************************************************************************************
     TCanvas* canvasResBG = new TCanvas("canvasResBG","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasResBG, 0.092, 0.01, 0.02, 0.082);
+    DrawGammaCanvasSettings( canvasResBG, 0.092, 0.01, 0.03, 0.082);
+    canvasResBG->SetLogx();
 
     Double_t maxResBG    = fHistoResBGYield[0]->GetMaximum();
-    for (Int_t m = 1; m < 4; m++){
+    for (Int_t m = 1; m < (nOtherFits+1); m++){
         if (maxResBG < fHistoResBGYield[m]->GetMaximum())
             maxResBG     = fHistoResBGYield[m]->GetMaximum();
     }
     maxResBG             = maxResBG*1.2;
 
     Double_t minResBG    = fHistoResBGYield[0]->GetMinimum();
-    for (Int_t m = 1; m < 4; m++){
+    for (Int_t m = 1; m < (nOtherFits+1); m++){
         if (minResBG > fHistoResBGYield[m]->GetMinimum())
             minResBG     = fHistoResBGYield[m]->GetMinimum();
     }
@@ -2545,7 +2560,7 @@ void ExtractSignalV2(
     else
         minResBG             = minResBG*0.8;
 
-    TLegend* legendResBG = GetAndSetLegend2(0.75, 0.80-(0.035*4), 0.95, 0.80, 0.035, 1, "", 42, 0.25);
+    TLegend* legendResBG = GetAndSetLegend2(0.7, 0.80-(0.035*(nOtherFits+1)), 0.95, 0.80, 0.035, 1, "", 42, 0.25);
 
     fHistoResBGYield[0]->GetYaxis()->SetRangeUser(minResBG, maxResBG);
     DrawAutoGammaMesonHistos( fHistoResBGYield[0],
@@ -2553,13 +2568,13 @@ void ExtractSignalV2(
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7,
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(fHistoResBGYield[0], 20, 2, kCyan+2, kCyan+2);
-    fHistoResBGYield[0]->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(fHistoResBGYield[0], markerStdFit, 2, colorStdFit, colorStdFit);
+    fHistoResBGYield[0]->DrawCopy("hist,L");
     legendResBG->AddEntry(fHistoResBGYield[0],"pol1 BG","p");
 
-    for (Int_t m = 1; m < 4; m++){
+    for (Int_t m = 1; m < (nOtherFits+1); m++){
         DrawGammaSetMarker(fHistoResBGYield[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
-        fHistoResBGYield[m]->DrawCopy("same,e1,p");
+        fHistoResBGYield[m]->DrawCopy("same,p,e1,L");
         legendResBG->AddEntry(fHistoResBGYield[m],labelsOtherFits[m-1],"p");
     }
     fHistoResBGYield[0]->DrawCopy("same,e1,p");
@@ -3184,7 +3199,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonYieldsPerEventError[k]                                = new Double_t[fNBinsPt];
     }
 
-    for (Int_t m = 0; m < 3; m++){
+    for (Int_t m = 0; m < nOtherFits; m++){
         fMesonYieldsResBckOtherFunc[m]                              = new Double_t[fNBinsPt];
         fMesonYieldsResBckOtherFuncError[m]                         = new Double_t[fNBinsPt];
     }
@@ -3248,7 +3263,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonResidualBGlinError                                        = new Double_t[fNBinsPt];
     fMesonResidualBGcon                                             = new Double_t[fNBinsPt];
     fMesonResidualBGconError                                        = new Double_t[fNBinsPt];
-    for (Int_t m = 0; m < 4; m++){
+    for (Int_t m = 0; m < (nOtherFits+1); m++){
         fMesonChi2[m]                                               = new Double_t[fNBinsPt];
     }
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
@@ -3364,7 +3379,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fFitSignalPeakPosInvMassPtBin                                   = new TF1*[fNBinsPt];
     fFitBckInvMassPtBin                                             = new TF1*[fNBinsPt];
 
-    for (Int_t m = 0; m < 3; m++){
+    for (Int_t m = 0; m < nOtherFits; m++){
         fFitSignalWithOtherBGInvMassPtBin[m]                        = new TF1*[fNBinsPt];
         fFitBckOtherInvMassPtBin[m]                                 = new TF1*[fNBinsPt];
     }
@@ -3441,7 +3456,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fFitSignalPeakPosInvMassPtBin[i]                                    = NULL;
         fFitBckInvMassPtBin[i]                                              = NULL;
 
-        for (Int_t m = 0; m < 3; m++){
+        for (Int_t m = 0; m < nOtherFits; m++){
             fFitSignalWithOtherBGInvMassPtBin[m][i]                         = NULL;
             fFitBckOtherInvMassPtBin[m][i]                                  = NULL;
         }
@@ -4257,13 +4272,13 @@ void CreatePtHistos(){
     }
 
     // yield assumptions with different backgrounds
-    for (Int_t k = 0; k < 6; k++){
+    for (Int_t k = 0; k < (2*nOtherFits); k++){
         fHistoYieldDiffBck[k]                    = new TH1D(Form("histoYieldMesonDiffBck%s",nameIntBck[k].Data()),"",fNBinsPt,fBinsPt);
         fHistoYieldDiffBck[k]->Sumw2();
         fHistoYieldDiffBckRatios[k]                    = new TH1D(Form("histoYieldMesonDiffBckRatios%s",nameIntBckRatios[k].Data()),"",fNBinsPt,fBinsPt);
         fHistoYieldDiffBckRatios[k]->Sumw2();
     }
-    for (Int_t k = 0; k < 3; k++){
+    for (Int_t k = 0; k < nOtherFits; k++){
         fHistoYieldDiffBckResult[k]                    = new TH1D(Form("histoYieldMesonDiffBckResult%s",nameIntBckResult[k].Data()),"",fNBinsPt,fBinsPt);
         fHistoYieldDiffBckResult[k]->Sumw2();
     }
@@ -4395,7 +4410,7 @@ void CreatePtHistos(){
     fHistoRatioResBGYield->Sumw2();
     fHistoRatioResBGYieldToSPlusResBG   = new TH1D("histoRatioResBGYieldToSPlusResBG","",fNBinsPt,fBinsPt);
     fHistoRatioResBGYieldToSPlusResBG->Sumw2();
-    for (Int_t m = 0; m < 4; m++){
+    for (Int_t m = 0; m < (nOtherFits+1); m++){
         fHistoChi2[m]                   = new TH1D(Form("histoChi2_%d",m),"",fNBinsPt,fBinsPt);
         fHistoChi2[m]->Sumw2();
         fHistoResBGYield[m]             = new TH1D(Form("histoResBGYield_%d",m),"",fNBinsPt,fBinsPt);
@@ -4538,7 +4553,7 @@ void FillPtHistos(){
             Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
             fHistoRatioResBGYieldToSPlusResBG->SetBinError(iPt,error);
         }
-        for (Int_t m = 0; m < 4; m++){
+        for (Int_t m = 0; m < (nOtherFits+1); m++){
             fHistoChi2[m]->SetBinContent(iPt,fMesonChi2[m][iPt-1]);
             fHistoChi2[m]->SetBinError(iPt,0);
         }
@@ -4549,11 +4564,10 @@ void FillPtHistos(){
 
         fHistoResBGYield[0]->SetBinContent(iPt,fMesonYieldsResidualBckFunc[0][iPt-1]);
         fHistoResBGYield[0]->SetBinError(iPt,fMesonYieldsResidualBckFuncError[0][iPt-1]);
-        for (Int_t m = 0; m < 3; m++){
+        for (Int_t m = 0; m < nOtherFits; m++){
             fHistoResBGYield[m+1]->SetBinContent(iPt,fMesonYieldsResBckOtherFunc[m][iPt-1]);
             fHistoResBGYield[m+1]->SetBinError(iPt,fMesonYieldsResBckOtherFuncError[m][iPt-1]);
         }
-
 
         // filling histogram arrays for normal, wide, narrow
         for (Int_t k = 0; k < 3; k++){
@@ -4575,7 +4589,7 @@ void FillPtHistos(){
             if(fDoJetAnalysis) fHistoYieldMesonPerJetEvent[k]->SetBinError(iPt,(1./fNJetEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         }
 
-        //normal
+        //normal pol2
         fHistoYieldDiffBck[0]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         fHistoYieldDiffBck[1]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         //normal exp
@@ -6775,11 +6789,11 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
     }
 
     // write histograms for assumption of different backgrounds
-    for (Int_t k = 0; k < 6; k++){
+    for (Int_t k = 0; k < (2*nOtherFits); k++){
         if (fHistoYieldDiffBck[k]) fHistoYieldDiffBck[k]->Write();
         if (fHistoYieldDiffBckRatios[k]) fHistoYieldDiffBckRatios[k]->Write();
     }
-    for (Int_t k = 0; k < 3; k++){
+    for (Int_t k = 0; k < nOtherFits; k++){
         if (fHistoYieldDiffBckResult[k]) fHistoYieldDiffBckResult[k]->Write();
     }
 
@@ -6798,7 +6812,7 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
     fHistoResidualBGlin->Write();
     fHistoRatioResBGYield->Write();
     fHistoRatioResBGYieldToSPlusResBG->Write();
-    for (Int_t m = 0; m < 4; m++){
+    for (Int_t m = 0; m < (nOtherFits+1); m++){
         fHistoChi2[m]->Write();
         fHistoResBGYield[m]->Write();
     }
@@ -6863,12 +6877,10 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
             if(fFitInvMassLeftPtBin[ii]!=0x00) fFitInvMassLeftPtBin[ii]->Write(fitnameSignalLeft.Data());
         }
         if (fFitSignalInvMassPtBin[ii]!=0x00) fFitSignalInvMassPtBin[ii]->Write(fitnameSignal.Data());
-        fitnameSignalOther   = Form("Signal_InvMassFitWithPol2_in_Pt_Bin%02d", ii);
-        if (fFitSignalWithOtherBGInvMassPtBin[0][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[0][ii]->Write(fitnameSignalOther.Data());
-        fitnameSignalOther   = Form("Signal_InvMassFitWithExp1_in_Pt_Bin%02d", ii);
-        if (fFitSignalWithOtherBGInvMassPtBin[1][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[1][ii]->Write(fitnameSignalOther.Data());
-        fitnameSignalOther   = Form("Signal_InvMassFitWithExp2_in_Pt_Bin%02d", ii);
-        if (fFitSignalWithOtherBGInvMassPtBin[2][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[2][ii]->Write(fitnameSignalOther.Data());
+        for(Int_t x=0; x<nOtherFits; x++){
+            fitnameSignalOther   = Form("Signal_InvMassFitWith%s_in_Pt_Bin%02d", labelsForSaving[x].Data(), ii);
+            if (fFitSignalWithOtherBGInvMassPtBin[x][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[x][ii]->Write(fitnameSignalOther.Data());
+        }
 
         if (fCrysFitting==1 ){
             if (fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]) fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]->Write();
@@ -7494,7 +7506,7 @@ void Delete(){
     if (fMesonLambdaTailRange)                                  delete[] fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
     if (fMidPt)                                                 delete fMidPt;
-    for (Int_t m = 0; m< 3; m++){
+    for (Int_t m = 0; m < nOtherFits; m++){
         if (fMesonYieldsResBckOtherFunc[m])                     delete[] fMesonYieldsResBckOtherFunc[m];
         if (fMesonYieldsResBckOtherFuncError[m])                delete[] fMesonYieldsResBckOtherFuncError[m];
     }
@@ -7570,7 +7582,7 @@ void Delete(){
     if (fMesonResidualBGlinError)                               delete[] fMesonResidualBGlinError;
     if (fMesonResidualBGcon)                                    delete[] fMesonResidualBGcon;
     if (fMesonResidualBGconError)                               delete[] fMesonResidualBGconError;
-    for (Int_t m = 0; m < 4; m++){
+    for (Int_t m = 0; m < (nOtherFits+1); m++){
         if (fMesonChi2[m])                                      delete[] fMesonChi2[m];
     }
     for (Int_t m = 0; m <= iNumberOfOtherSigToBckRatioFits; m++){
@@ -7624,7 +7636,7 @@ void Delete(){
     if (fHistoFillPerEventBGZbinVsMbin)                         delete[] fHistoFillPerEventBGZbinVsMbin;
     if (fHistoWeightsBGZbinVsPsibin)                            delete[] fHistoWeightsBGZbinVsPsibin;
     if (fHistoFillPerEventBGZbinVsPsibin)                       delete[] fHistoFillPerEventBGZbinVsPsibin;
-    for (Int_t m = 0; m < 3; m++){
+    for (Int_t m = 0; m < nOtherFits; m++){
         if (fFitSignalWithOtherBGInvMassPtBin[m])               delete[] fFitSignalWithOtherBGInvMassPtBin[m];
 
         if (fFitBckOtherInvMassPtBin[m])                        delete[] fFitBckOtherInvMassPtBin[m];
