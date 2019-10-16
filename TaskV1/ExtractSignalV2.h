@@ -97,6 +97,15 @@
     TString     labelsOtherFits[3]                                          = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"}; // array of size nOtherFits
     Color_t     colorFit[3]                                                 = {kRed+1, kAzure+2, 807};                         // array of size nOtherFits
     Style_t     styleFit[3]                                                 = {34, 21, 33};                                    // array of size nOtherFits
+    TString     labelsForSaving[3]                                          = {"Pol2", "Exp1", "Exp2"};                        // array of size nOtherFits
+
+    Int_t       optionOtherResBckAsStd                                      = -1;           // -1 for standard linear BG fit, 0 for pol2
+    TF1**       fFitSignalInvMassPtBinStd                                   = nullptr;
+    TF1**       fFitBckInvMassPtBinStd                                      = nullptr;
+    TF1**       fFitSignalPeakPosInvMassPtBinStd                            = nullptr;
+    Double_t*   fMesonChi2Std                                               = nullptr;
+    Double_t*   fMesonYieldsResidualBckFuncStd[6]                           = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};  // array of size 6 (integration and normalization window variations)
+    Double_t*   fMesonYieldsResidualBckFuncErrorStd[6]                      = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     //****************************************************************************
     //******************************** Output files ******************************
@@ -351,7 +360,7 @@
     //************************ sample histograms for inv Mass ********************
     //****************************************************************************
     Int_t       iBckSwitch                                                  = 0;
-    Int_t       iNumberOfOtherSigToBckRatioFits                             = 1; //If u change this value remember to also change: fHistoChi2SigToBckFit, fHistoChi2SigToBckFit, colorFitSigToBckFit, styleFitSigToBckFit, fSigToBckFitChi2, fFitPHOSAllOtherSigToBckFits
+    Int_t       iNumberOfOtherSigToBckRatioFits                             = 1; //If u change this value remember to also change: fHistoChi2SigToBckFit, fHistoChi2SigToBckFit, colorFitSigToBckFit, styleFitSigToBckFit, fSigToBckFitChi2, fFitPHOSAllOtherSigToBckFits, labelsOtherFitsRatio
     TH1D*       fBckNorm                                                    = nullptr;
     TH1D*       fSignal                                                     = nullptr;
     TH1D*       fRatioSB                                                    = nullptr;
@@ -483,6 +492,7 @@
     TF1**       fFitRemainingBGInvMassPtBin                                 = nullptr;
     TF1**       fFitBckInvMassPtBin                                         = nullptr;
     TF1**       fFitBckOtherInvMassPtBin[3]                                 = { nullptr, nullptr, nullptr }; // array of size nOtherFits
+    TF1**       fFitSignalPeakPosOtherInvMassPtBin[3]                       = { nullptr, nullptr, nullptr};  // array of size nOtherFits
     TF1**       fFitTrueSignalInvMassPtBin                                  = nullptr;
     TF1**       fFitTrueSignalInvMassPtReweightedBin                        = nullptr;
     TF1**       fFitTrueSignalInvMassPtUnweightedBin                        = nullptr;
@@ -812,10 +822,11 @@
             // set medium pt range
             fMidPt[0]                   = 0.8;
             fMidPt[1]                   = 2.5;
-            if(mode == 0 && fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){  // just temporary (18.1.2017)
-            fMidPt[0]                   = 4.0;                           // due to strange BG shape and wrong fits at lower pT
-            fMidPt[1]                   = 6.0;
-            }
+
+            // set remaining background standard function
+            if(mode == 0 && fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
+              optionOtherResBckAsStd      = 0;                           // use pol2 fit for remaining BG for Pi0
+             }
 
             // Initialize peak range
             if (mode == 2 || mode == 13){                           // PCM-EMC

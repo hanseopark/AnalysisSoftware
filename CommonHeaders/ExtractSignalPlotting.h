@@ -74,6 +74,53 @@
                                                     TString     fSuffix                             );
 
 
+/* contains also:
+   PlotInvMassSinglePtBin
+   PlotExampleInvMassBins
+   PlotSingle1DHistogramOmega
+   PlotSingle2DHistogramOmega
+   PlotMultipleSlicesOf2DHistoOmega
+   PlotExampleInvMassBinsV2
+   PlotExampleInvMassBinsBckGroups
+   PlotExampleInvMassSingleHistAndArray
+   PlotExampleInvMassBinsBckFit
+   PlotExampleInvMassBinsMC
+   PlotInvMassInPtBinsBckGroups
+   PlotInvMassInPtBins
+   PlotInvMassInPtBins
+   PlotInvMassSecondaryInPtBins
+   PlotInvMassBckGGInPtBins
+   PlotInvMassRatioInPtBins
+   PlotWithManyFitSigToBckRatioInPtBins
+   PlotWithFitSubtractedInvMassSinglePtBin
+   PlotWithFitSubtractedInvMassSinglePtBin2
+   PlotWithFitSubtractedInvMassInPtBins
+   PlotWithManyFitSubtractedInvMassInPtBins
+   PlotWith2FitsSubtractedInvMassInPtBins
+   PlotWithBGFitSubtractedInvMassInPtBins
+   PlotWithFitPeakPosInvMassInPtBins
+   PlotTrueInvMassSplittedInPhotonAndElectronInPtBins
+   PlotTrueInvMassSplittedInMergedInPtBins
+   PlotSignalInvMassW0TrueMesonInPtBins
+   PlotInvMassW0TrueMesonInPtBins
+   PlotInvMassDoubleCountingInPtBins
+   PlotInvMassMergedInPtBins
+   PlotM02MergedInPtBins
+   PlotInvMassMergedMCInPtBins
+   PlotM02ExoticsInEBins
+   PlotInvMassMergedTrueInPtBins
+   PlotM02MergedMCInPtBins
+   PlotM02MergedTrueInPtBins
+   PlotM02MergedTruePrimSecInPtBins
+   DrawDCAzHisto
+   DrawFractionPerCat
+   PlotDCAzInPtBinsWithBack
+   PlotDCAzInPtBinsWithBack
+   PlotDCAzInPtBinsWithBack
+   PlotDCAzInPtBinsWithBack
+   CalculateNumberOfRowsForDCAzPlots
+*/
+
     /*
     // ************************************************************************************
     // ************ Return correct trigger name based on trigger cutnumber ****************
@@ -436,7 +483,8 @@
                                     Int_t detMode                           = 0,
                                     Bool_t addSig                           = kFALSE,
                                     Bool_t isVsPtConv                       = kFALSE,
-                                    Double_t* UsrBckFitRange                = NULL
+                                    Double_t* UsrBckFitRange                = NULL,
+                                    Int_t optionOtherResBckAsStd            = -1
                                 ){
 
         cout << "Trigger set: " << triggerSet << endl;
@@ -466,22 +514,42 @@
         histoPi0InvMassBG                = (TH1D*)histoInvMassBG->Clone("InvMassBG_PtBin07");
         fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07");
         fitPi0InvMassSigRemBG            = (TF1*)fitSignal->Clone("FitInvMassOrig_PtBin07");
+        fitPi0InvMassBG                  = NULL;
 
         histoPi0InvMassSig->Fit(fitPi0InvMassSig,"QRME0");
         for (Int_t l=0; l < 6; l++){
             cout << fitPi0InvMassSig->GetParameter(l) << "\t +- " << fitPi0InvMassSig->GetParError(l) << endl;
         }
-        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
-            fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
-        } else {
-            fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.00,0.3);
+
+        if(optionOtherResBckAsStd == -1){
+            if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+                fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
+            } else {
+                fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.00,0.3);
+            }
+        } else if(optionOtherResBckAsStd == 0){
+            if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+                fitPi0InvMassBG                                  = new TF1("Pol2","[0]+[1]*x+[2]*x*x",0.02,0.25);
+            } else {
+                fitPi0InvMassBG                                  = new TF1("Pol2","[0]+[1]*x+[2]*x*x",0.00,0.3);
+            }
         }
 
+        // set parameters according to BG part of signal+BG fit
         fitPi0InvMassBG->SetParameter(0, fitPi0InvMassSig->GetParameter(4));
+        fitPi0InvMassBG->SetParError(0, fitPi0InvMassSig->GetParError(4));
         fitPi0InvMassBG->SetParameter(1, fitPi0InvMassSig->GetParameter(5));
+        fitPi0InvMassBG->SetParError(1, fitPi0InvMassSig->GetParError(5));
+
+        if(optionOtherResBckAsStd == 0){
+            fitPi0InvMassBG->SetParameter(2, fitPi0InvMassSig->GetParameter(6));
+            fitPi0InvMassBG->SetParError(2, fitPi0InvMassSig->GetParError(6));
+        }
+
         TVirtualFitter * fitter                             = TVirtualFitter::GetFitter();
         Int_t nFreePar                                      = fitPi0InvMassSig->GetNumberFreeParameters();
         double * covMatrix                                  = fitter->GetCovarianceMatrix();
+        // integrate remaining BG fit in every pT bin
         histoPi0InvMassRemBG                             = (TH1D*)histoPi0InvMassBG->Clone("Pi0_InvMassRemBG_Example");
         for (Int_t j = 1; j < histoPi0InvMassRemBG->GetNbinsX()+1; j++){
             histoPi0InvMassRemBG->SetBinContent(j,0);
@@ -491,13 +559,17 @@
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.30)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
-                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-                Double_t errorLinearBck                                 = TMath::Power(( TMath::Power( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
-                TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
-                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
-                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
-                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+                Double_t intRemBack                                     = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                Double_t errorRemBack                                   = 0;
+                if(optionOtherResBckAsStd == -1)
+                    errorRemBack                                        = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                                                                                  pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                                                                                  +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                  (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                else if (optionOtherResBckAsStd == 0)
+                    errorRemBack                                        = fitPi0InvMassBG->IntegralError(startBinEdge, endBinEdge, fitPi0InvMassBG->GetParameters(), covMatrix)/(endBinEdge-startBinEdge); // should in principle be covMatrix of BG fit instead of full fit
+                histoPi0InvMassRemBG->SetBinContent(j,intRemBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorRemBack);
             }
         } else if(fMesonType.CompareTo("Eta") == 0){
             Double_t lowBin  = 0.30;
@@ -509,14 +581,17 @@
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
-                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-
-                Double_t errorLinearBck                                 = TMath::Power(( TMath::Power( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
-                TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
-                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
-                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
-                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+                Double_t intRemBack                                     = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                Float_t errorRemBack                                    = 0;
+                if(optionOtherResBckAsStd == -1)
+                    errorRemBack                                          = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                                                                                  pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                                                                                  +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                  (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                else if (optionOtherResBckAsStd == 0)
+                    errorRemBack                                          = fitPi0InvMassBG->IntegralError(startBinEdge, endBinEdge, fitPi0InvMassBG->GetParameters(), covMatrix)/(endBinEdge-startBinEdge);  // should in principle be covMatrix of BG fit instead of full fit
+                histoPi0InvMassRemBG->SetBinContent(j,intRemBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorRemBack);
             }
         } else if(fMesonType.CompareTo("EtaPrime") == 0){
             Double_t lowBin  = 0.70;
@@ -524,14 +599,16 @@
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
-                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-
-                Double_t errorLinearBck                                 = TMath::Power(( TMath::Power( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
-                TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
-                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
-                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
-                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+                Double_t intRemBack                                     = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                Double_t errorRemBack                                   = 0;
+                if(optionOtherResBckAsStd == -1)
+                    errorRemBack                                          = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                                                                                  pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                                                                                  +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                  (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                else cout << "Warning in PlotExampleInvMassBinsV2(): BG int error not defined" << endl;
+                histoPi0InvMassRemBG->SetBinContent(j,intRemBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorRemBack);
             }
         } else { //omega
           Double_t lowBin = 0.65;
@@ -539,13 +616,16 @@
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
-                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-                Double_t errorLinearBck                                 = TMath::Power(( TMath::Power( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
-                TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
-                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
-                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
-                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+                Double_t intRemBack                                     = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                Double_t errorRemBack                                   = 0;
+                if(optionOtherResBckAsStd == -1)
+                    errorRemBack                                          = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                                                                                  pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                                                                                  +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                  (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                else cout << "Warning in PlotExampleInvMassBinsV2(): BG int error not defined" << endl;
+                histoPi0InvMassRemBG->SetBinContent(j,intRemBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorRemBack);
             }
         }
 
@@ -558,6 +638,10 @@
 
         fitPi0InvMassSig->SetParameter(4, 0);
         fitPi0InvMassSig->SetParameter(5, 0);
+        if(optionOtherResBckAsStd == 0){
+            fitPi0InvMassSig->SetParameter(6, 0);
+        }
+
         histoPi0InvMassSigRemBGSub->Scale(scaleFacSignal);
         histoPi0InvMassSigRemBG->Scale(scaleFacSignal);
 
@@ -3354,6 +3438,14 @@
         padDataFit->Divide(fColumnPlot,fRowPlot,0.0,0.0);
         padDataFit->Draw();
 
+        const Int_t nPossibleFunctions = 3;      // = nOtherFits from ExtractSignalV2.h
+        if(nFits > nPossibleFunctions) {
+            cout << "nFits > nPossibleFunctions in PlotWithManyFitSubtractedInvMassInPtBins" << endl;
+            return;
+        }
+        Color_t colorFit[nPossibleFunctions] = {kRed+1, kAzure+2, 807};
+        Style_t styleFit[nPossibleFunctions] = {1, 1, 1};
+
         Int_t place                     = 0;
         Int_t legendPlace[2]            = {fColumnPlot, fColumnPlot};
         if (fColumnPlot > 7)
@@ -3388,10 +3480,8 @@
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(2);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
                 }
-                Color_t colorFit[3]     = {kRed+1, kAzure+2, 807};
-                Style_t styleFit[3]     = {7, 3, 6};
 
-                for (Int_t m = 0; (m < nFits && m < 3); m++){
+                for (Int_t m = 0; m < nFits; m++){
                     if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]){
     //                     cout << m << "\t"<< iPt << "\t" << fFitSigWithOtherBGInvMassPtBinPlot[m][iPt] << endl;
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetNpx(10000);
@@ -3469,7 +3559,7 @@
                 fFitSignalInvMassPtBinPlot[exampleBin]->SetLineWidth(3*linewidth);
                 legendMC->AddEntry(fFitSignalInvMassPtBinPlot[exampleBin],fTextFit.Data(),"l");
             }
-            for (Int_t m = 0; (m < nFits && m < 3); m++){
+            for (Int_t m = 0; m < nFits; m++){
                 if (fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]!=0x00){
                     Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->GetLineWidth();
                     fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->SetLineWidth(3*linewidth);
@@ -3490,7 +3580,7 @@
                 fFitSignalInvMassPtBinPlot[exampleBin]->SetLineWidth(3*linewidth);
                 legendData->AddEntry(fFitSignalInvMassPtBinPlot[exampleBin],fTextFit.Data(),"l");
             }
-            for (Int_t m = 0; (m < nFits && m < 3); m++){
+            for (Int_t m = 0; m < nFits; m++){
                 if (fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]!=0x00){
                     Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->GetLineWidth();
                     fFitSigWithOtherBGInvMassPtBinPlot[m][exampleBin]->SetLineWidth(3*linewidth);
