@@ -67,6 +67,140 @@ void Delete(){
     if (fNRebin)                                                delete fNRebin;
 }
 
+TF1* FitSubtractedInvMassLinRemBG(TH1D* histoMappingSignalInvMassPtBinSingle,
+                                  Double_t* mesonMassFitRange,
+                                  Double_t* mesonMassPlotRange,
+                                  Double_t& chi2ndf,
+                                  Int_t ptBin,
+                                  Bool_t debug = kFALSE)
+{
+
+    if(debug) cout << "FitSubtractedInvMassLinRemBG for pT bin " << ptBin << endl;
+
+    histoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(mesonMassPlotRange[0],mesonMassPlotRange[1]);
+
+    TF1 * fFitRemBck = NULL;
+    fFitRemBck = new TF1("Linear","[0]+[1]*x",mesonMassFitRange[0],mesonMassFitRange[1]);
+
+    histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+    Int_t fitStatus = -1;
+    if(debug) fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"RME0");
+    else fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+
+    if(debug){
+        cout << "Fit status:  \t" << fitStatus << endl;
+        cout << "Parameter 0: \t" << fFitRemBck->GetParameter(0) <<"+-" << fFitRemBck->GetParError(0) << endl;
+        cout << "Parameter 1: \t" << fFitRemBck->GetParameter(1) <<"+-" << fFitRemBck->GetParError(1) << endl;
+        cout << "Chi2/ndf   : \t" << fFitRemBck->GetChisquare()/fFitRemBck->GetNDF() << endl;
+    }
+
+    if(fitStatus>-1){ // fit OK
+        chi2ndf = fFitRemBck->GetChisquare()/fFitRemBck->GetNDF();
+        fFitRemBck->SetLineColor(kCyan+2);
+        fFitRemBck->SetLineWidth(1);
+        fFitRemBck->SetLineStyle(2);
+        fFitRemBck->SetNpx(10000);
+    } else {
+        fFitRemBck->SetParameter(0,0);
+        fFitRemBck->SetParameter(1,0);
+        chi2ndf = 0.0;
+    }
+
+    return fFitRemBck;
+
+}
+
+TF1* FitSubtractedInvMassPol2RemBG(TH1D* histoMappingSignalInvMassPtBinSingle,
+                                   Double_t* mesonMassFitRange,
+                                   Double_t* mesonMassPlotRange,
+                                   Double_t& chi2ndf,
+                                   Int_t ptBin,
+                                   Bool_t debug = kFALSE)
+{
+
+    if(debug) cout << "FitSubtractedInvMassPol2RemBG for pT bin " << ptBin << endl;
+
+    histoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(mesonMassPlotRange[0],mesonMassPlotRange[1]);
+
+    TF1* fFitRemBck   = NULL;
+    fFitRemBck   = new TF1("BGfitPol2","[0]+[1]*x+[2]*x*x",mesonMassFitRange[0],mesonMassFitRange[1]);
+
+    histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+    Int_t fitStatus = -1;
+    if(debug) fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"RME0");
+    else fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+
+    if(debug){
+        cout << "Fit status:  \t" << fitStatus << endl;
+        cout << "Parameter 0: \t" << fFitRemBck->GetParameter(0) <<"+-" << fFitRemBck->GetParError(0) << endl;
+        cout << "Parameter 1: \t" << fFitRemBck->GetParameter(1) <<"+-" << fFitRemBck->GetParError(1) << endl;
+        cout << "Parameter 2: \t" << fFitRemBck->GetParameter(2) <<"+-" << fFitRemBck->GetParError(2) << endl;
+        cout << "Chi2/ndf   : \t" << fFitRemBck->GetChisquare()/fFitRemBck->GetNDF() << endl;
+    }
+
+    if(fitStatus>-1){ // fit OK
+        chi2ndf = fFitRemBck->GetChisquare()/fFitRemBck->GetNDF();
+        fFitRemBck->SetLineColor(kRed+1);
+        fFitRemBck->SetLineWidth(1);
+        fFitRemBck->SetLineStyle(2);
+        fFitRemBck->SetNpx(10000);
+    } else {
+        fFitRemBck->SetParameter(0,0);
+        fFitRemBck->SetParameter(1,0);
+        fFitRemBck->SetParameter(2,0);
+        chi2ndf = 0.0;
+    }
+
+    return fFitRemBck;
+
+}
+
+TF1* FitSubtractedInvMassPol3RemBG(TH1D* histoMappingSignalInvMassPtBinSingle,
+                                   Double_t* mesonMassFitRange,
+                                   Double_t* mesonMassPlotRange,
+                                   Double_t& chi2ndf,
+                                   Int_t ptBin,
+                                   Bool_t debug = kFALSE)
+{
+
+    if(debug) cout << "FitSubtractedInvMassPol3RemBG for pT bin " << ptBin << endl;
+
+    histoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(mesonMassPlotRange[0],mesonMassPlotRange[1]);
+
+    TF1* fFitRemBck   = NULL;
+    fFitRemBck   = new TF1("BGfitPol3","[0]+[1]*x+[2]*x*x+[3]*x*x*x",mesonMassFitRange[0],mesonMassFitRange[1]);
+
+    histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+    Int_t fitStatus = -1;
+    if(debug) fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"RME0");
+    else fitStatus = histoMappingSignalInvMassPtBinSingle->Fit(fFitRemBck,"QRME0");
+
+    if(debug){
+        cout << "Fit status:  \t" << fitStatus << endl;
+        cout << "Parameter 0: \t" << fFitRemBck->GetParameter(0) <<"+-" << fFitRemBck->GetParError(0) << endl;
+        cout << "Parameter 1: \t" << fFitRemBck->GetParameter(1) <<"+-" << fFitRemBck->GetParError(1) << endl;
+        cout << "Parameter 2: \t" << fFitRemBck->GetParameter(2) <<"+-" << fFitRemBck->GetParError(2) << endl;
+        cout << "Parameter 2: \t" << fFitRemBck->GetParameter(3) <<"+-" << fFitRemBck->GetParError(3) << endl;
+        cout << "Chi2/ndf   : \t" << fFitRemBck->GetChisquare()/fFitRemBck->GetNDF() << endl;
+    }
+
+    if(fitStatus>-1){ // fit OK
+        chi2ndf = fFitRemBck->GetChisquare()/fFitRemBck->GetNDF();
+        fFitRemBck->SetLineColor(kBlack);
+        fFitRemBck->SetLineWidth(1);
+        fFitRemBck->SetLineStyle(2);
+        fFitRemBck->SetNpx(10000);
+    } else {
+        fFitRemBck->SetParameter(0,0);
+        fFitRemBck->SetParameter(1,0);
+        fFitRemBck->SetParameter(2,0);
+        fFitRemBck->SetParameter(3,0);
+        chi2ndf = 0.0;
+    }
+
+    return fFitRemBck;
+
+}
 
 void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData",
                                 const char *mcFilename          = "rawSignalMC",
@@ -139,7 +273,6 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     TH1D* histoLambdaTailMC                 = (TH1D*) fileRawSignalMC->Get("histoLambdaTail");
     TH1D* histoRatioYieldLowMassDataDivMC   = (TH1D*) histoChi2Data->Clone("histoRatioYieldLowMassDataDivMC");
 
-    Double_t fMesonRange[2] = {0., 0.79};
     TString outputDir                       = Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
     TString nameLineShapePlot               = Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
     TString nameLineShapePlotLeft           = Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
@@ -153,8 +286,19 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     InitializeBinning(mesonType, numberOfBins, energyFlag, directPhoton, mode, fEventCutSelection, fClusterCutSelection, -1, kFALSE, "", "", fGammaCutSelection, kFALSE);
 
+    Double_t fMesonRange[2]    = {0., 0.79};
+    Double_t peakRange[2]      = {0.10,0.15};
+    Double_t fMesonFitRange[2] = {0.02, 0.3};
+    TF1* fitLinRemBG[200]      = {NULL};
+    TF1* fitPol2RemBG[200]     = {NULL};
+    TF1* fitPol3RemBG[200]     = {NULL};
+    Double_t chi2ndfLin[200];
+    Double_t chi2ndfPol2[200];
+    Double_t chi2ndfPol3[200];
+    TH1D* histoChi2RemLinBGFit  = NULL;
+    TH1D* histoChi2RemPol2BGFit = NULL;
+    TH1D* histoChi2RemPol3BGFit = NULL;
 
-    Double_t peakRange[2]   = {0.10,0.15};
     if (mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0EtaBinning") == 0){
         fMesonRange[0]      = 0.;
         fMesonRange[1]      = 0.3;
@@ -163,6 +307,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         fMesonRange[1]      = 0.79;
         peakRange[0]        = 0.50;
         peakRange[0]        = 0.60;
+        fMesonFitRange[0]   = fMesonRange[0];
+        fMesonFitRange[1]   = fMesonRange[1];
     } else if (mesonType.CompareTo("EtaPrime") == 0){
         fMesonRange[0]      = 0.9;
         fMesonRange[1]      = 1.0;
@@ -177,6 +323,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     TH1D*  histoSignalDataInvMassPtBin[200] = {NULL};
     TH1D*  histoSignalMCInvMassPtBin[200] = {NULL};
     TH1D*  histoTrueMCInvMassPtBin[200] = {NULL};
+    TH1D*  histoMCRemBGInvMassPtBin[200] = {NULL};
     if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "initializing arrays" << endl;
     Double_t intLowMassData[200]                    = {0.};
     Double_t intLowMassMC[200]                      = {0.};
@@ -193,16 +340,17 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             histoSignalDataInvMassPtBin[iPt]    = NULL;
             histoSignalMCInvMassPtBin[iPt]      = NULL;
             histoTrueMCInvMassPtBin[iPt]        = NULL;
+            histoMCRemBGInvMassPtBin[iPt]       = NULL;
 
             Double_t startPt    = fBinsPt[iPt];
             Double_t endPt      = fBinsPt[iPt+1];
             Double_t ptValue    = (fBinsPt[iPt] + fBinsPt[iPt+1])/2.;
             if(j==0){
-                histonameSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", iPt);
+                histonameSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", iPt);  // normal
             } else if(j==1) {
-                histonameSignal = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", iPt);
+                histonameSignal = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", iPt);  // left normalization
             } else if(j==2) {
-                histonameSignal = Form("Mapping_GG_InvMass_in_Pt_Bin%02d", iPt);
+                histonameSignal = Form("Mapping_GG_InvMass_in_Pt_Bin%02d", iPt); //with combinatorial BG
             }
             if (!(fileRawSignalData && fileRawSignalMC)){
                 cout << "lost file info" << endl;
@@ -214,6 +362,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "loading MC " << fileRawSignalMC << endl;
             histoSignalMCInvMassPtBin[iPt]      = (TH1D*)fileRawSignalMC->Get(histonameSignal);
             if(!histoSignalMCInvMassPtBin[iPt])   continue;
+            histoMCRemBGInvMassPtBin[iPt]       = (TH1D*)histoSignalMCInvMassPtBin[iPt]->Clone();
 
             Double_t firstBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001);
             Double_t lastBinIntData = histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001);
@@ -228,7 +377,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
             }
 
-            if (integralData < 0 || integralMC < 0 || j == 1){
+            if (integralData < 0 || integralMC < 0 || j == 1){  // normalize with maximum
                 integralData                    = histoSignalDataInvMassPtBin[iPt]->GetMaximum();
                 integralMC                      = histoSignalMCInvMassPtBin[iPt]->GetMaximum();
             }
@@ -246,14 +395,25 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 }
             }
 
-            if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "integrals: " << integralData << "\t" << integralMC << endl;
-            if (integralData != 0) histoSignalDataInvMassPtBin[iPt]->Scale(1./integralData);
-            if (integralMC != 0) histoSignalMCInvMassPtBin[iPt]->Scale(1./integralMC);
-
             if (j < 2){
-                histonameMCTruth = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);
+                //histonameMCTruth = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);  MC truth > MC does not make sense
+                histonameMCTruth = Form("Mapping_TrueMeson_InvMassUnweighted_in_Pt_Bin%02d", iPt);
                 histoTrueMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC->Get(histonameMCTruth);
-                if(j==0 && histoTrueMCInvMassPtBin[iPt])histoTrueMCInvMassPtBin[iPt]->Scale(1./integralMC);
+                if((histoSignalMCInvMassPtBin[iPt]->GetNbinsX()) == (histoTrueMCInvMassPtBin[iPt]->GetNbinsX())){
+                    for(Int_t m=0; m<histoSignalMCInvMassPtBin[iPt]->GetNbinsX(); m++){
+                        histoMCRemBGInvMassPtBin[iPt]->SetBinContent(m,histoSignalMCInvMassPtBin[iPt]->GetBinContent(m)-histoTrueMCInvMassPtBin[iPt]->GetBinContent(m));
+                    }
+                }
+
+                if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "integrals: " << integralData << "\t" << integralMC << endl;
+                if (integralData != 0) histoSignalDataInvMassPtBin[iPt]->Scale(1./integralData);
+                if (integralMC != 0){
+                    histoSignalMCInvMassPtBin[iPt]->Scale(1./integralMC);
+                    if(j==0){ // why not plot MC truth for histo with left side normalization?
+                        if(histoTrueMCInvMassPtBin[iPt])histoTrueMCInvMassPtBin[iPt]->Scale(1./integralMC);
+                        if(histoMCRemBGInvMassPtBin[iPt])histoMCRemBGInvMassPtBin[iPt]->Scale(1./integralMC);
+                    }
+                }
             }
             if (j == 0){
                 histoLinResBGData->SetBinContent(histoLinResBGData->FindBin(ptValue),histoLinResBGData->GetBinContent(histoLinResBGData->FindBin(ptValue))/integralData) ;
@@ -264,13 +424,17 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 histoLinResBGMC->SetBinError(histoLinResBGMC->FindBin(ptValue),histoLinResBGMC->GetBinError(histoLinResBGMC->FindBin(ptValue))/integralMC) ;
                 histoConstResBGMC->SetBinContent(histoConstResBGMC->FindBin(ptValue),histoConstResBGMC->GetBinContent(histoConstResBGMC->FindBin(ptValue))/integralMC) ;
                 histoConstResBGMC->SetBinError(histoConstResBGMC->FindBin(ptValue),histoConstResBGMC->GetBinError(histoConstResBGMC->FindBin(ptValue))/integralMC) ;
+                // fit remaining background
+                fitLinRemBG[iPt]  = FitSubtractedInvMassLinRemBG(histoMCRemBGInvMassPtBin[iPt], fMesonFitRange, fMesonRange, chi2ndfLin[iPt], iPt, debugMesonQual);
+                fitPol2RemBG[iPt] = FitSubtractedInvMassPol2RemBG(histoMCRemBGInvMassPtBin[iPt], fMesonFitRange, fMesonRange, chi2ndfPol2[iPt], iPt, debugMesonQual);
+                fitPol3RemBG[iPt] = FitSubtractedInvMassPol3RemBG(histoMCRemBGInvMassPtBin[iPt], fMesonFitRange, fMesonRange, chi2ndfPol3[iPt], iPt, debugMesonQual);
             }
             if (j == 2){
                 histoRatioYieldLowMassDataDivMC->SetBinContent(histoRatioYieldLowMassDataDivMC->FindBin(ptValue), ratioLowMass[iPt] );
                 histoRatioYieldLowMassDataDivMC->SetBinError(histoRatioYieldLowMassDataDivMC->FindBin(ptValue), ratioErrLowMass[iPt]);
             }
 
-        }
+        } // end of loop over pT bins
 
         if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Loop over Pt Bins done" << endl;
 
@@ -315,7 +479,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 padLineShape->cd(place);
 
                 Double_t nPixels = 13;
-                Double_t textHeight = 0.08;
+                Double_t textHeight = 0.07;
 
                 Double_t startTextX = 0.10;
                 Double_t startTextY = 0.8;
@@ -323,7 +487,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
                 PlotLabelsInvMassInPtPlots ( startTextX, startTextY, textHeight, differenceText, textAlice, date, energyText, decayChannel, DetectionChannel);
 
-                TLegend* legendLineShape = new TLegend(startTextX,startTextY-4.75*differenceText,1,startTextY-(4.75+2.)*differenceText);
+                TLegend* legendLineShape = new TLegend(startTextX,startTextY-8.5*differenceText,1,startTextY-5*differenceText);
                 legendLineShape->SetTextSize(textHeight);
                 legendLineShape->SetTextFont(62);
                 legendLineShape->SetFillColor(0);
@@ -342,8 +506,12 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                     histoTrueMCInvMassPtBin[fStartPtBin]->SetLineWidth(linesize);
                     legendLineShape->AddEntry(histoTrueMCInvMassPtBin[fStartPtBin],"MC truth" ,"l");
                 }
+                if( j == 0 && histoMCRemBGInvMassPtBin[fStartPtBin]){
+                    Size_t linesize = histoMCRemBGInvMassPtBin[fStartPtBin]->GetLineWidth();
+                    histoMCRemBGInvMassPtBin[fStartPtBin]->SetLineWidth(linesize);
+                    legendLineShape->AddEntry(histoMCRemBGInvMassPtBin[fStartPtBin],"MC rec - MC truth" ,"l");
+                }
                 legendLineShape->Draw();
-                delete legendLineShape;
 
             } else {
 
@@ -370,6 +538,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                     minY        = FindSmallestEntryIn1D(histoSignalMCInvMassPtBin[iPt]);
 
                 if (j == 0){
+                    // Comparison between Data, MC and validated MC
                     if (histoTrueMCInvMassPtBin[iPt]) {
                         histoTrueMCInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
                         DrawGammaHistoColored( histoTrueMCInvMassPtBin[iPt],
@@ -392,7 +561,25 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 "M_{#gamma#gamma} (GeV/c^{2})", "",
                                 fMesonRange[0],fMesonRange[1],0,860,1,0.8);
                     }
-                } else {
+                    if(histoMCRemBGInvMassPtBin[iPt]){
+                        DrawGammaHistoColored( histoMCRemBGInvMassPtBin[iPt],
+                                               Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                               "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                               fMesonRange[0],fMesonRange[1],0,kGreen+2,-1);
+                    }
+                    if(fitLinRemBG[iPt]){
+                        fitLinRemBG[iPt]->SetLineColor(kCyan+2);
+                        fitLinRemBG[iPt]->Draw("same");
+                    }
+                    if(fitPol2RemBG[iPt]){
+                        fitPol2RemBG[iPt]->SetLineColor(kRed+1);
+                        fitPol2RemBG[iPt]->Draw("same");
+                    }
+                    if(fitPol3RemBG[iPt]){
+                        fitPol3RemBG[iPt]->SetLineColor(kGray+1);
+                        fitPol3RemBG[iPt]->Draw("same");
+                    }
+                } else { // Comparison between data and MC
                     if (histoSignalDataInvMassPtBin[iPt]) {
                         histoSignalDataInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
                         DrawGammaHistoColored( histoSignalDataInvMassPtBin[iPt],
@@ -417,7 +604,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                     }
                 }
             }
-        }
+        } // end of loop over pT bins
         if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; " << "saving" << endl;
         cout << "nameLineShapePlot: " << nameLineShapePlot.Data() << endl;
         if(j==0) {
@@ -432,6 +619,19 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         if (padLineShape) delete padLineShape;
         if (canvasLineShape) delete canvasLineShape;
         if (debugMesonQual) cout << "Debug Line: " << __LINE__ <<"; "<< "Ending of Loop j = " << j << " fNBinsPt = " << fNBinsPt << endl;
+    } // end of loop over j
+
+    // create histograms with Chi2 of remaining background fits
+    histoChi2RemLinBGFit  = new TH1D("histoChi2RemLinBGFit","", fNBinsPt, fBinsPt);
+    histoChi2RemPol2BGFit = new TH1D("histoChi2RemPol2BGFit","", fNBinsPt, fBinsPt);
+    histoChi2RemPol3BGFit = new TH1D("histoChi2RemPol3BGFit","", fNBinsPt, fBinsPt);
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt && iPt < 200;iPt++){
+        histoChi2RemLinBGFit->SetBinContent(iPt,chi2ndfLin[iPt]);
+        histoChi2RemLinBGFit->SetBinError(iPt,0);
+        histoChi2RemPol2BGFit->SetBinContent(iPt,chi2ndfPol2[iPt]);
+        histoChi2RemPol2BGFit->SetBinError(iPt,0);
+        histoChi2RemPol3BGFit->SetBinContent(iPt,chi2ndfPol3[iPt]);
+        histoChi2RemPol3BGFit->SetBinError(iPt,0);
     }
     // **************************************************************************************************************
     // ************************ Chi2/ndf compared MC vs Data ********************************************************
@@ -532,6 +732,40 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
     canvasChi2->Update();
     canvasChi2->SaveAs(Form("%s/%s_Chi2_WithExp2BG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+    // Plot remaining BG fit Chi2
+    canvasChi2->cd();
+        maxChi2    = histoChi2RemLinBGFit->GetMaximum();
+        if (maxChi2 < histoChi2RemPol2BGFit->GetMaximum())
+            maxChi2         = histoChi2RemPol2BGFit->GetMaximum();
+        if (maxChi2 < histoChi2RemPol3BGFit->GetMaximum())
+            maxChi2         = histoChi2RemPol3BGFit->GetMaximum();
+        maxChi2             = maxChi2*1.2;
+
+        histoChi2RemLinBGFit->GetYaxis()->SetRangeUser(0, maxChi2);
+        DrawAutoGammaMesonHistos( histoChi2RemLinBGFit,
+                                    "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf",
+                                    kFALSE, 0., 0.7, kFALSE,
+                                    kFALSE, 0., 0.7,
+                                    kFALSE, 0., 10.);
+        DrawGammaSetMarker(histoChi2RemLinBGFit, 20, 2, kCyan+2, kCyan+2);
+        histoChi2RemLinBGFit->DrawCopy("same,p,L");
+        DrawGammaSetMarker(histoChi2RemPol2BGFit, 34, 2, kRed+1, kRed+1);
+        histoChi2RemPol2BGFit->DrawCopy("same,p,L");
+        DrawGammaSetMarker(histoChi2RemPol3BGFit, 24, 2, kGray+2, kGray+2);
+        histoChi2RemPol3BGFit->DrawCopy("same,p,L");
+
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), Form("Int. %.2f-%.2f",fMesonFitRange[0],fMesonFitRange[1]));
+
+        TLegend* legendChi2DiffFits = GetAndSetLegend2(0.85, 0.8, 0.95, 0.8+(0.035*3), 0.035, 1, "", 42, 0.25);  // xleft, ydown, xright, yup
+        legendChi2DiffFits->AddEntry(histoChi2RemLinBGFit,"Linear");
+        legendChi2DiffFits->AddEntry(histoChi2RemPol2BGFit,"Pol2");
+        legendChi2DiffFits->AddEntry(histoChi2RemPol3BGFit,"Pol3");
+        legendChi2DiffFits->Draw();
+
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/%s_Chi2_LinAndOtherRemBG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
     if (legendChi2) delete legendChi2;
     if (canvasChi2) delete canvasChi2;
 
@@ -553,7 +787,6 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             minResBGYieldDivTotBG         = minResBGYieldDivTotBG*1.4;
         else
             minResBGYieldDivTotBG         = minResBGYieldDivTotBG*0.6;
-
 
         histoResBGYieldVsTotBGData->GetYaxis()->SetRangeUser(minResBGYieldDivTotBG, maxResBGYieldDivTotBG);
         DrawAutoGammaMesonHistos( histoResBGYieldVsTotBGData,
@@ -704,7 +937,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
 
     // **************************************************************************************************************
-    // ************************ Res BG const compared MC vs Data ****************************************************
+    // ************************ Lambda tail compared MC vs Data ****************************************************
     // **************************************************************************************************************
     TCanvas* canvasLambda = new TCanvas("canvasLambda","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasLambda, 0.092, 0.01, 0.035, 0.082);
