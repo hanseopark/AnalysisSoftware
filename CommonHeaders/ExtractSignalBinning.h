@@ -2597,9 +2597,13 @@
                                 break;
                         }
                         break;
-                    case 4:
+                    case 4: //EMCal-EMCal
                         switch(SpecialTrigger) {
-                            case 0:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
+                            case 0:  if(DoJetAnalysis){
+					     maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
+				     } else{
+					     maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
+				     }
                             case 4:
                             case 5:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
                             case 1:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEMC7Pt, binning ); break;
@@ -3425,9 +3429,13 @@
                             maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMTrigINT7Pt, binning, 49 );
                         }
                         break;
-                    case 4:
+                    case 4: //EMCal-EMCal
                         switch(SpecialTrigger) {
-                            case 0: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
+                            case 0: if(DoJetAnalysis){
+					    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning );
+				    } else {
+					    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning );
+				    } break;
                             case 4:
                             case 5:
                             case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2Pt, binning ); break;
@@ -5031,7 +5039,7 @@
                     }
                 }  else {//13TeV, not directPhoton
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, DoJetAnalysis);
+                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, "",  DoJetAnalysis);
                     cout<<energy<<" "<<setPi0<<" Start Bin: "<<fStartPtBin<<endl;
                     CheckBinSize(fNBinsPt,maxPtBinAvail,kTRUE);
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -5077,9 +5085,13 @@
                                     //------------------------------------PCM Rebin, for Combination of Measurements
                                     //fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
                                 }
-                            } else if( modi == 4){
+                            } else if( modi == 4){ //EMCal-EMCal
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+					if(DoJetAnalysis){
+						fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtJetsRebin[i];
+					} else {
+						fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+					}
                                 } else if (specialTrigg==1){
                                     fNRebin[i]      = fBinsPi013TeVEMCTrigEMC7PtRebin[i];
                                 } else if (specialTrigg==3){
@@ -6263,7 +6275,7 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0 ) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, DoJetAnalysis );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, "", DoJetAnalysis );
                 if (fNBinsPt > maxPtBinTheo) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -6330,9 +6342,13 @@
                                 }
                             }
                             break;
-                        case 4:
+                        case 4: //EMCal-EMCal
                             switch(specialTrigg) {
-                                case 0: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
+                                case 0: if(DoJetAnalysis){
+						CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
+					} else {
+						CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
+					} break;
                                 case 2: CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtRebin, fNRebin); break;
                                 case 3: CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtRebin, fNRebin); break;
                                 case 4: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
