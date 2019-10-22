@@ -3468,6 +3468,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fFitSignalPeakPosInvMassPtBin                                   = new TF1*[fNBinsPt];
     fFitSignalPeakPosInvMassPtBinStd                                = new TF1*[fNBinsPt];
     fFitBckInvMassPtBin                                             = new TF1*[fNBinsPt];
+    fFitBckInvMassPtBinStd                                          = new TF1*[fNBinsPt];
 
     for (Int_t m = 0; m < nOtherFits; m++){
         fFitSignalWithOtherBGInvMassPtBin[m]                        = new TF1*[fNBinsPt];
