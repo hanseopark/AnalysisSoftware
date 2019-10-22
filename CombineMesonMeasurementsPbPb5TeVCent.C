@@ -149,9 +149,9 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
                                                      kFALSE, kFALSE, kFALSE, kFALSE };
     Bool_t  enableCentCombEta[14]                = { kTRUE, kTRUE, kTRUE, kTRUE, kFALSE,    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
                                                      kFALSE, kFALSE, kFALSE, kFALSE };
-    Bool_t  enableCentRAAPi0[14]                 = { kTRUE, kTRUE, kTRUE, kTRUE, kFALSE,    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
+    Bool_t  enableCentRAAPi0[14]                 = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
                                                      kFALSE, kFALSE, kFALSE, kFALSE };
-    Bool_t  enableCentRAAEta[14]                 = { kTRUE, kTRUE, kTRUE, kTRUE, kFALSE,    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
+    Bool_t  enableCentRAAEta[14]                 = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
                                                      kFALSE, kFALSE, kFALSE, kFALSE };
     TString nameCentEst                         =  "V0M";
 
@@ -5488,7 +5488,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     labelALICEYieldPaper->Draw();
     labelDetSysYieldPaper->Draw();
     legendPi0YieldPaperWPP->Draw();
-    canvasInvYieldPi0->SaveAs(Form("%s/Pi0_InvYieldAllCentwithPP_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
+    canvasInvYieldPi0->SaveAs(Form("%s/Pi0_InvYieldAllCentWidewithPP_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
     delete legendPi0YieldPaperWPP;
 
     histo2DYieldPi0->Draw("copy");
@@ -5525,7 +5525,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     labelALICEYieldPaper->Draw();
     labelDetSysYieldPaper->Draw();
     legendPi0YieldPaperWPP->Draw();
-    canvasInvYieldPi0->SaveAs(Form("%s/Pi0_InvYieldAllCentwithPP_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
+    canvasInvYieldPi0->SaveAs(Form("%s/Pi0_InvYieldAllCentFinewithPP_%s.%s",outputDir.Data(), nameCentEst.Data(), suffix.Data()));
     delete legendPi0YieldPaperWPP;
 
     // **********************************************************************************************************************
@@ -5651,8 +5651,10 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     canvasInvYieldEta->cd();
 
     histo2DYieldEta->Draw("copy");
-    TLegend* legendEtaYieldPaper    = GetAndSetLegend2(0.19, 0.10, 0.7, 0.10+0.035*(nCurrEst), textSizeLabelsPixel, 2, "", 43, 0.25);
-
+    TLegend* legendEtaYieldPaper    = GetAndSetLegend2(0.19, 0.10, 0.6, 0.10+0.035*(nCurrEst/2+1), textSizeLabelsPixel, 2, "", 43, 0.3);
+    if (graphPPInvYieldCombEtaSys && graphPPInvYieldCombEtaStatW0XErr){
+        DrawGammaSetMarkerTF1( fitPPTCMInvYieldEta, 7, 2, kGray+2);
+    }
     for (Int_t cent= 0; cent < maxCent; cent++ ){
         //         for (Int_t cent= 0; cent < maxCent; cent++ ){
         if (!enableCentCombEta[cent] ) continue;
@@ -5663,10 +5665,11 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         DrawGammaSetMarkerTF1( fitTCMInvYieldEta[cent], 7, 2, colorCentMC[cent]);
         fitTCMInvYieldEta[cent]->Draw("same");
         legendEtaYieldPaper->AddEntry(graphCombEtaInvYieldSys[cent],centArray[cent].Data(),"pf");
-        legendEtaYieldPaper->AddEntry(fitTCMInvYieldEta[cent],"TCM fit","l");
+//         legendEtaYieldPaper->AddEntry(fitTCMInvYieldEta[cent],"TCM fit","l");
 
     }
-
+    if (graphPPInvYieldCombEtaSys && graphPPInvYieldCombEtaStatW0XErr)
+        legendEtaYieldPaper->AddEntry(fitPPTCMInvYieldEta,"TCM fit","l");
     if (enableCentCombEta[0] ){
         graphCombEtaInvYieldSys[0]->Draw("E2same");
         graphCombEtaInvYieldStatWOXErr[0]->Draw("p,same,z");
@@ -5687,7 +5690,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
     delete legendEtaYieldPaper;
 
     histo2DYieldEta->Draw("copy");
-    TLegend* legendEtaYieldPaperWPP    = GetAndSetLegend2(0.19, 0.10, 0.7, 0.10+0.035*(nCurrEst+1), textSizeLabelsPixel, 2, "", 43, 0.25);
+    TLegend* legendEtaYieldPaperWPP    = GetAndSetLegend2(0.19, 0.10, 0.6, 0.10+0.035*(nCurrEst/2+2), textSizeLabelsPixel, 2, "", 43, 0.3);
 
     for (Int_t cent= 0; cent < maxCent; cent++ ){
         //         for (Int_t cent= 0; cent < maxCent; cent++ ){
@@ -5696,7 +5699,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         graphCombEtaInvYieldStatWOXErr[cent]->Draw("p,same,z");
         fitTCMInvYieldEta[cent]->Draw("same");
         legendEtaYieldPaperWPP->AddEntry(graphCombEtaInvYieldSys[cent],centArray[cent].Data(),"pf");
-        legendEtaYieldPaperWPP->AddEntry(fitTCMInvYieldEta[cent],"TCM fit","l");
+//         legendEtaYieldPaperWPP->AddEntry(fitTCMInvYieldEta[cent],"TCM fit","l");
 
     }
 
@@ -5714,6 +5717,7 @@ void CombineMesonMeasurementsPbPb5TeVCent(  TString fileNamePCM             = ""
         DrawGammaSetMarkerTF1( fitPPTCMInvYieldEta, 7, 2, kGray+2);
         fitPPTCMInvYieldEta->Draw("same");
         legendEtaYieldPaperWPP->AddEntry(graphPPInvYieldCombEtaSys,collisionSystempp.Data(),"pf");
+        legendEtaYieldPaperWPP->AddEntry((TObject*)0,"","");
         legendEtaYieldPaperWPP->AddEntry(fitPPTCMInvYieldEta,"TCM fit","l");
     }
     labelEnergyYieldPaper->Draw();

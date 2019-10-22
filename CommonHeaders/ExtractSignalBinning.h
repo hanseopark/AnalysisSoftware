@@ -3235,12 +3235,9 @@
                     binningMax  = 31;
 //                     maxNBins    = 34;
 //                     binningMax  = 34;
-                    if (!centrality.CompareTo("20-40%") ){
+                    if (!centrality.CompareTo("0-10%") || !centrality.CompareTo("10-30%") || !centrality.CompareTo("30-50%") || !centrality.CompareTo("50-90%")){
                         maxNBins    = 33;
                         binningMax  = 33;
-                    } else if (!centrality.CompareTo("40-60%") ){
-                        maxNBins    = 32;
-                        binningMax  = 32;
                     } else if (!centrality.CompareTo("60-80%") ){
                         maxNBins    = 30;
                         binningMax  = 30;

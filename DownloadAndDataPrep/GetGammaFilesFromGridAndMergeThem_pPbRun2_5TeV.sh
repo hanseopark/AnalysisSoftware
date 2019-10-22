@@ -13,9 +13,9 @@ MERGEONMC=1
 MERGEONFASTAndWOSDD=0
 SINGLERUN=1
 SEPARATEON=0
-MERGEONSINGLEData=1
+MERGEONSINGLEData=0
 MERGEONSINGLEMC=1
-MERGEONSINGLEMCJJ=1
+MERGEONSINGLEMCJJ=0
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -299,11 +299,11 @@ else
     LHC18j5_3MC="child_3"
 #     LHC18f3MCMoth="757";
 #     LHC18f3MCMoth="761";
-    LHC18f3MCMoth="775";
-    LHC18f3MC1="child_2";
-    LHC18f3MC2="child_4";
-    LHC18f3MCFast1="child_1";
-    LHC18f3MCFast2="child_3";
+#     LHC18f3MCMoth="775";
+#     LHC18f3MC1="child_2";
+#     LHC18f3MC2="child_4";
+#     LHC18f3MCFast1="child_1";
+#     LHC18f3MCFast2="child_3";
     # LHC17f2a_fixMCMoth="1217";
     # LHC17f2a_fixMC="child_2";
     # LHC17f2a_fixMCFast="child_1";
@@ -930,7 +930,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             periodList=`echo -e "_fast_1\n_fast_2\n_1\n_2"`
             for fileName in $filesForMerging; do
                 echo $fileName
-                GetFileNumberMerging $fileName $((NSlashes-1)) 5
+                GetFileNumberMerging $fileName $((NSlashes-1)) 6
                 echo $number
                 for runListName in $listsToMerge; do
                     rm listCurrMerge.txt

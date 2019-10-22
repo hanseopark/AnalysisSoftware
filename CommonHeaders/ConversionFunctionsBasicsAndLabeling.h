@@ -3220,7 +3220,12 @@
                 return "00100";
             } else {
                 if (centralityCutNumberStart.CompareTo("0") == 0){
-                    return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*5);
+                    if (centralityCutNumberEnd.CompareTo("1") == 0) 
+                        return Form("000%i", CutNumberToInteger(centralityCutNumberEnd)*5);
+                    else
+                        return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*5);
+                } else if (centralityCutNumberStart.CompareTo("1") == 0) {
+                    return Form("0%i%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
                 } else {
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
                 }

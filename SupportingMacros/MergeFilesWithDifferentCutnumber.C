@@ -112,12 +112,13 @@ void MergeFilesWithDifferentCutnumber( TString fileNameConfig   = "",
             TList *l2 = (TList*) list1->At(j);
             TString dirname = l2->GetName();
             if(dirname.Contains(cutNumber1[i].Data()) ){
-                cout<<"found " << cutNumber1[i].Data()<<endl;
+                cout<<"found " << cutNumber1[i].Data() << " in " << fileName1[i] <<endl;
                 dirname.ReplaceAll(cutNumber1[i].Data(), cutNumberOut[i].Data());
                 listToCopyInter1[i] = new TList();
                 listToCopyInter1[i]->SetName(dirname.Data());
                 refNr         = j;
-            }
+            } 
+                
         }
         if (listToCopyInter1[i]){
             for (Int_t k = 0; k < ((TList*) list1->At(refNr))->GetEntries();k++){
@@ -129,6 +130,9 @@ void MergeFilesWithDifferentCutnumber( TString fileNameConfig   = "",
                     listToCopyInter1[i]->Add(l3);
                 }
             }
+        } else {
+            cout<<"couldn't find " << cutNumber1[i].Data() << " in " << fileName2[i] <<endl;
+            return;
         }
         listInter1->Add(listToCopyInter1[i]);
     }
@@ -177,12 +181,12 @@ void MergeFilesWithDifferentCutnumber( TString fileNameConfig   = "",
             TList *l2 = (TList*) list1->At(j);
             TString dirname = l2->GetName();
             if(dirname.Contains(cutNumber2[i].Data()) ){
-                cout<<"found " << cutNumber2[i].Data()<<endl;
+                cout<<"found " << cutNumber2[i].Data() << " in " << fileName2[i] <<endl;
                 dirname.ReplaceAll(cutNumber2[i].Data(), cutNumberOut[i].Data());
                 listToCopyInter2[i] = new TList();
                 listToCopyInter2[i]->SetName(dirname.Data());
                 refNr         = j;
-            }
+            } 
         }
         if (listToCopyInter2[i]){
             for (Int_t k = 0; k < ((TList*) list1->At(refNr))->GetEntries();k++){
@@ -194,6 +198,9 @@ void MergeFilesWithDifferentCutnumber( TString fileNameConfig   = "",
                     listToCopyInter2[i]->Add(l3);
                 }
             }
+        } else {
+            cout<<"couldn't find " << cutNumber2[i].Data() << " in " << fileName2[i] <<endl;
+            return;
         }
         listInter2->Add(listToCopyInter2[i]);
     }
