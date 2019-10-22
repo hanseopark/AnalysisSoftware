@@ -512,6 +512,8 @@
     Double_t*   fMesonLambdaTailMCparError                                  = nullptr;
     Double_t*   fMesonAmplitudepar                                          = nullptr;
     Double_t*   fMesonAmplitudeparError                                     = nullptr;
+    Double_t*   fMesonTrueAmplitudepar                                      = nullptr;
+    Double_t*   fMesonTrueAmplitudeparError                                 = nullptr;
     Double_t*   fMesonSigmapar                                              = nullptr;
     Double_t*   fMesonSigmaparError                                         = nullptr;
     Double_t*   fMesonTrueSigmapar                                          = nullptr;
@@ -645,6 +647,7 @@
     TH1D*       fHistoLambdaTail                                            = nullptr;
     TH1D*       fHistoTrueLambdaTail                                        = nullptr;
     TH1D*       fHistoAmplitude                                             = nullptr;
+    TH1D*       fHistoTrueAmplitude                                         = nullptr;
     TH1D*       fHistoSigma                                                 = nullptr;
     TH1D*       fHistoTrueSigma                                             = nullptr;
     TH1D*       fHistoResidualBGlin                                         = nullptr;

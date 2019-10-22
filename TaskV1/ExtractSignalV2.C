@@ -1128,11 +1128,12 @@ void ExtractSignalV2(
             if (fHistoMappingTrueMesonInvMassPtBins[iPt]->GetEntries() !=0){
                 fFitTrueSignalInvMassPtBin[iPt]     = fFitReco;
                 if (fFitTrueSignalInvMassPtBin[iPt] != 0x00){
+                    fMesonTrueAmplitudepar[iPt]     = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(0);
+                    fMesonTrueAmplitudeparError[iPt] = fFitTrueSignalInvMassPtBin[iPt]->GetParError(0);
                     fMesonTrueMass[iPt]             = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(1);
                     fMesonTrueMassError[iPt]        = fFitTrueSignalInvMassPtBin[iPt]->GetParError(1);
                     fMesonTrueSigmapar[iPt]         = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(2);
                     fMesonTrueSigmaparError[iPt]    = fFitTrueSignalInvMassPtBin[iPt]->GetParError(2);
-
                     fMesonLambdaTailMCpar[iPt]      = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(3);
                     fMesonLambdaTailMCparError[iPt] = fFitTrueSignalInvMassPtBin[iPt]->GetParError(3);
 
@@ -2258,8 +2259,9 @@ void ExtractSignalV2(
     canvasLambdaTail->Update();
 
 
-    TLegend* legendLambdaTail = GetAndSetLegend2(0.15,0.90,0.4,0.94, 0.04*1200,1);
+    TLegend* legendLambdaTail = GetAndSetLegend2(0.15,0.84,0.4,0.94, 0.04*1200,1);
     legendLambdaTail->AddEntry(fHistoLambdaTail,Form("Lambda tail parameter for %s",fPrefix.Data()),"p");
+    if (fIsMC) legendLambdaTail->AddEntry(fHistoTrueLambdaTail,"True MC","p");
     legendLambdaTail->Draw();
 
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTailRangeNominal[0], fMesonLambdaTailRangeNominal[0], 1, kRed+1, 2);
@@ -2309,8 +2311,9 @@ void ExtractSignalV2(
     }
     canvasMesonMass->Update();
 
-    TLegend* legendMesonMass = GetAndSetLegend2(0.15,0.90,0.4,0.94, 0.04*1200,1);
+    TLegend* legendMesonMass = GetAndSetLegend2(0.15,0.84,0.4,0.94, 0.04*1200,1);
     legendMesonMass->AddEntry(fHistoMassMeson,Form("%s mass",fPrefix.Data()),"p");
+    if(fIsMC) legendMesonMass->AddEntry(fHistoTrueMassMeson,"True MC","p");
     legendMesonMass->Draw();
 
 
@@ -2341,10 +2344,15 @@ void ExtractSignalV2(
                                     kTRUE, 0., fMesonWidthRange[1]*4,
                                     kFALSE, 0., 10.);
     }
+    if (fIsMC > 0){
+        DrawGammaSetMarker(fHistoTrueFWHMMeson, 24, 1., kRed+2, kRed+2);
+        fHistoTrueFWHMMeson->Draw("same,pe");
+    }
     canvasMesonFWHM->Update();
 
-    TLegend* legendMesonFWHM = GetAndSetLegend2(0.2,0.12,0.45,0.16, 0.04*1200,1);
+    TLegend* legendMesonFWHM = GetAndSetLegend2(0.2,0.12,0.45,0.2, 0.04*1200,1);
     legendMesonFWHM->AddEntry(fHistoFWHMMeson,Form("%s FWHM",fPrefix.Data()),"p");
+    if(fIsMC) legendMesonFWHM->AddEntry(fHistoTrueFWHMMeson,"True MC","p");
     legendMesonFWHM->Draw();
 
     if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
@@ -2361,13 +2369,14 @@ void ExtractSignalV2(
                             kFALSE, 3.,0.,  kTRUE,
                             kFALSE, 0., 0.,
                             kFALSE, 0., 10.);
-
+    if (fIsMC > 0){
+        DrawGammaSetMarker(fHistoTrueAmplitude, 24, 1., kRed+2, kRed+2);
+        fHistoTrueAmplitude->Draw("same,pe");
+    }
     canvasAmplitude->Update();
-    TLegend* legendAmplitude = new TLegend(0.45,0.8,0.7,0.95);
-    legendAmplitude->SetFillColor(0);
-    legendAmplitude->SetLineColor(0);
-    legendAmplitude->SetTextSize(0.04);
+    TLegend* legendAmplitude = GetAndSetLegend2(0.2,0.12,0.45,0.2, 0.04*1200,1);
     legendAmplitude->AddEntry(fHistoAmplitude,Form("Amplitude parameter for %s",fPrefix.Data()),"p");
+    if(fIsMC) legendAmplitude->AddEntry(fHistoTrueAmplitude,"True MC","p");
     legendAmplitude->Draw();
 
     if (fIsMC) canvasAmplitude->SaveAs(Form("%s/%s_MC_Amplitude%s_%s.%s",outputDirMon.Data(),fPrefix.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
@@ -2399,11 +2408,12 @@ void ExtractSignalV2(
 
     canvasSigma->Update();
 
-    TLegend* legendSigma = new TLegend(0.15,0.8,0.4,0.95);
+    TLegend* legendSigma = new TLegend(0.15,0.84,0.4,0.95);
     legendSigma->SetFillColor(0);
     legendSigma->SetLineColor(0);
     legendSigma->SetTextSize(0.04);
     legendSigma->AddEntry(fHistoSigma,Form("Sigma parameter for %s",fPrefix.Data()),"p");
+    if(fIsMC) legendSigma->AddEntry(fHistoTrueSigma,"True MC","p");
     legendSigma->Draw();
 
     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthRange[0], fMesonWidthRange[0], 1, kRed+1, 2);
@@ -3330,6 +3340,8 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonLambdaTailMCparError                                      = new Double_t[fNBinsPt];
     fMesonAmplitudepar                                              = new Double_t[fNBinsPt];
     fMesonAmplitudeparError                                         = new Double_t[fNBinsPt];
+    fMesonTrueAmplitudepar                                          = new Double_t[fNBinsPt];
+    fMesonTrueAmplitudeparError                                     = new Double_t[fNBinsPt];
     fMesonSigmapar                                                  = new Double_t[fNBinsPt];
     fMesonSigmaparError                                             = new Double_t[fNBinsPt];
     fMesonTrueSigmapar                                              = new Double_t[fNBinsPt];
@@ -4480,6 +4492,8 @@ void CreatePtHistos(){
     fHistoTrueLambdaTail->Sumw2();
     fHistoAmplitude                     = new TH1D("histoAmplitude","",fNBinsPt,fBinsPt);
     fHistoAmplitude->Sumw2();
+    fHistoTrueAmplitude                 = new TH1D("histoTrueAmplitude","",fNBinsPt,fBinsPt);
+    fHistoTrueAmplitude->Sumw2();
     fHistoSigma                         = new TH1D("histoSigma","",fNBinsPt,fBinsPt);
     fHistoSigma->Sumw2();
     fHistoTrueSigma                     = new TH1D("histoTrueSigma","",fNBinsPt,fBinsPt);
@@ -4606,6 +4620,10 @@ void FillPtHistos(){
 
         fHistoAmplitude->SetBinContent(iPt,fMesonAmplitudepar[iPt-1]);
         fHistoAmplitude->SetBinError(iPt,fMesonAmplitudeparError[iPt-1]);
+        if(fIsMC){
+            fHistoTrueAmplitude->SetBinContent(iPt, fMesonTrueAmplitudepar[iPt-1]);
+            fHistoTrueAmplitude->SetBinError(iPt, fMesonTrueAmplitudeparError[iPt-1]);
+        }
         fHistoSigma->SetBinContent(iPt,fMesonSigmapar[iPt-1]);
         fHistoSigma->SetBinError(iPt,fMesonSigmaparError[iPt-1]);
         if (fIsMC) {
@@ -7166,6 +7184,9 @@ void SaveCorrectionHistos(TString cutID, TString prefix3){
     if (fHistoTrueFWHMMeson)            fHistoTrueFWHMMeson->Write();
     if (fHistoTrueFWHMMesonReweighted)  fHistoTrueFWHMMesonReweighted->Write();
     if (fHistoTrueFWHMMesonUnweighted)  fHistoTrueFWHMMesonUnweighted->Write();
+    if (fHistoTrueLambdaTail)           fHistoTrueLambdaTail->Write();
+    if (fHistoTrueSigma)                fHistoTrueSigma->Write();
+    if (fHistoTrueAmplitude)            fHistoTrueAmplitude->Write();
     if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
         if (fHistoTrueMassMesonCaloPhoton)                  fHistoTrueMassMesonCaloPhoton->Write();
         if (fHistoTrueMassMesonCaloElectron)                fHistoTrueMassMesonCaloElectron->Write();
@@ -7662,6 +7683,8 @@ void Delete(){
     if (fMesonTrueSigmaparError)                                delete[] fMesonTrueSigmaparError;
     if (fMesonAmplitudepar)                                     delete[] fMesonAmplitudepar;
     if (fMesonAmplitudeparError)                                delete[] fMesonAmplitudeparError;
+    if (fMesonTrueAmplitudepar)                                 delete[] fMesonTrueAmplitudepar;
+    if (fMesonTrueAmplitudeparError)                            delete[] fMesonTrueAmplitudeparError;
     if (fMesonResidualBGlin)                                    delete[] fMesonResidualBGlin;
     if (fMesonResidualBGlinError)                               delete[] fMesonResidualBGlinError;
     if (fMesonResidualBGcon)                                    delete[] fMesonResidualBGcon;
