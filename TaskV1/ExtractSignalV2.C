@@ -2473,7 +2473,7 @@ void ExtractSignalV2(
         legendSPDPileUp->AddEntry(fHistoPileUpVertexDistance_TrackletHits,"removed by SPDTrackletHits");
         legendSPDPileUp->Draw();
 
-        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUp%s_%s.%s",outputDirMon.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
+        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUpTotal%s_%s.%s",outputDirMon.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
         else canvasSPDPileUp->SaveAs(Form("%s/data_SPDPileUpTOtal_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
 
         TF1* fFitGausPileUp = new TF1("gausFitPileUp",fitGaussianPileUp,-15,15,3);
@@ -2534,7 +2534,7 @@ void ExtractSignalV2(
         // legendSPDPileUp2->AddEntry((TObject*)0,Form("%.2f",ratioIntegralPileUpIntegrals),"");
         legendSPDPileUp2->Draw();
 
-        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUp_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+        if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUp%s_%s.%s",outputDirMon.Data(),addSigString.Data(),fCutSelection.Data(),Suffix.Data()));
         else canvasSPDPileUp->SaveAs(Form("%s/data_SPDPileUp_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
     }
     // **************************************************************************************************************
