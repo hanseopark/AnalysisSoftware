@@ -1,6 +1,14 @@
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 
+// This macro will compare histos containing results for fit parameters (mass, sigma, FWHM, Amplitude, Lambda)
+// between file..1 and file...2 to compare method 1 (called label1) and metod 2 (called label2)
+// The comparisons are plotted 1) only for data
+//                             2) normal and validated MC
+//                             3) data and normal/true MC
+// a configuration file example can be found at the bottom of this file
+// provided by PCM group, PWGGA, Meike Danisch, 25.20.2019
+
 void SetStyle(TH1D* histo, Int_t i){
 
     if(histo==NULL) return;
@@ -34,17 +42,30 @@ void SetStyle(TH1D* histo, Int_t i){
     
 }
 
-void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_linBG/Pi0_data_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root",
-                          TString fileData2 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_pol2BG/Pi0_data_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root",
-                          TString fileMC1 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_linBG/Pi0_MC_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root",
-                          TString fileMC2 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_pol2BG/Pi0_MC_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root",
-                          TString fileMCTrue1 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_linBG/Pi0_MC_GammaConvV1CorrectionHistos_10110a13_00200009247600008250404000_0152501500000000.root",
-                          TString fileMCTrue2 = "/home/meike/analysis/results/photonconvResults/PbPb/remainingBGAddChecks/10110a13_00200009247600008250404000_0152501500000000/PbPb_5.02TeV/afterburner_AOD_MCmergedWithAddSigSep_pol2BG/Pi0_MC_GammaConvV1CorrectionHistos_10110a13_00200009247600008250404000_0152501500000000.root",
+void CompareFitParameters(TString input = "CompareFitParameters.txt",
                           TString meson = "Pi0",
-                          TString cut = "10110a13_00200009247600008250404000_0152501500000000",
-                          TString label1 = "lin",
-                          TString label2 = "pol2",
                           TString suffix = "pdf"){
+
+    // read input
+    ifstream in(input.Data());
+    TString cut;
+    TString label1;
+    TString fileData1;
+    TString fileMC1;
+    TString fileMCTrue1;
+    TString label2;
+    TString fileData2;
+    TString fileMC2;
+    TString fileMCTrue2;
+    in >> cut;
+    in >> label1;
+    in >> fileData1;
+    in >> fileMC1;
+    in >> fileMCTrue1;
+    in >> label2;
+    in >> fileData2;
+    in >> fileMC2;
+    in >> fileMCTrue2;
 
     //StyleSettingsThesis(suffix);
     SetPlotStyle();
@@ -156,7 +177,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Mass Data
    
    plotName = "CompareMassData";
-   TCanvas *canvasData = new TCanvas("canvasData","",1550,1200);
+   TCanvas *canvasData = new TCanvas("canvasMassData","",1550,1200);
    canvasData->SetLogx(logx);
    histoMassMesonData1->Draw("same");
    histoMassMesonData2->Draw("same");
@@ -171,7 +192,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Mass rec and true MC
    
    plotName = "CompareMassMC";
-   TCanvas *canvasMC = new TCanvas("canvasMC","",1550,1200);
+   TCanvas *canvasMC = new TCanvas("canvasMassMC","",1550,1200);
    canvasMC->SetLogx(logx);
    histoMassMesonMC1->Draw("same");
    histoMassMesonMC2->Draw("same");
@@ -191,7 +212,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Mass Data and rec MC
 
    plotName = "CompareMassDataAndRecMC";
-   TCanvas *canvasDataAndRecMC = new TCanvas("canvasDataAndRecMC","",1550,1200);
+   TCanvas *canvasDataAndRecMC = new TCanvas("canvasMassDataAndRecMC","",1550,1200);
    canvasDataAndRecMC->SetLogx(logx);
    histoMassMesonData1->Draw("same");
    histoMassMesonData2->Draw("same");
@@ -211,7 +232,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Mass Data and true MC
 
    plotName = "CompareMassDataAndTrueMC";
-   TCanvas *canvasDataAndTrueMC = new TCanvas("canvasDataAndTrueMC","",1550,1200);
+   TCanvas *canvasDataAndTrueMC = new TCanvas("canvasMassDataAndTrueMC","",1550,1200);
    canvasDataAndTrueMC->SetLogx(logx);
    histoMassMesonData1->Draw("same");
    histoMassMesonData2->Draw("same");
@@ -233,7 +254,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
   // FWHM Data
    
    plotName = "CompareFWHMData";
-   canvasData = new TCanvas("canvasData","",1550,1200);
+   canvasData = new TCanvas("canvasFWHMData","",1550,1200);
    canvasData->SetLogx(logx);
    histoFWHMMesonData1->Draw("same");
    histoFWHMMesonData2->Draw("same");
@@ -249,7 +270,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // FWHM rec and true MC
    
    plotName = "CompareFWHMMC";
-   canvasMC = new TCanvas("canvasMC","",1550,1200);
+   canvasMC = new TCanvas("canvasFWHMMC","",1550,1200);
    canvasMC->SetLogx(logx);
    histoFWHMMesonMC1->Draw("same");
    histoFWHMMesonMC2->Draw("same");
@@ -269,7 +290,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // FWHM Data and rec MC
 
    plotName = "CompareFWHMDataAndRecMC";
-   canvasDataAndRecMC = new TCanvas("canvasDataAndRecMC","",1550,1200);
+   canvasDataAndRecMC = new TCanvas("canvasFWHMDataAndRecMC","",1550,1200);
    canvasDataAndRecMC->SetLogx(logx);
    histoFWHMMesonData1->Draw("same");
    histoFWHMMesonData2->Draw("same");
@@ -289,7 +310,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // FWHM Data and true MC
 
    plotName = "CompareFWHMDataAndTrueMC";
-   canvasDataAndTrueMC = new TCanvas("canvasDataAndTrueMC","",1550,1200);
+   canvasDataAndTrueMC = new TCanvas("canvasFWHMDataAndTrueMC","",1550,1200);
    canvasDataAndTrueMC->SetLogx(logx);
    histoFWHMMesonData1->Draw("same");
    histoFWHMMesonData2->Draw("same");
@@ -312,7 +333,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
   // Lambda Tail Data
    
    plotName = "CompareLambdaTailData";
-   canvasData = new TCanvas("canvasData","",1550,1200);
+   canvasData = new TCanvas("canvasLambdaData","",1550,1200);
    canvasData->SetLogx(logx);
    histoLambdaTailData1->Draw("same");
    histoLambdaTailData2->Draw("same");
@@ -328,7 +349,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Lambda Tail rec and true MC
    
    plotName = "CompareLambdaTailMC";
-   canvasMC = new TCanvas("canvasMC","",1550,1200);
+   canvasMC = new TCanvas("canvasLambdaMC","",1550,1200);
    canvasMC->SetLogx(logx);
    histoLambdaTailMC1->Draw("same");
    histoLambdaTailMC2->Draw("same");
@@ -348,7 +369,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Lambda Tail Data and rec MC
 
    plotName = "CompareLambdaTailDataAndRecMC";
-   canvasDataAndRecMC = new TCanvas("canvasDataAndRecMC","",1550,1200);
+   canvasDataAndRecMC = new TCanvas("canvasLambdaDataAndRecMC","",1550,1200);
    canvasDataAndRecMC->SetLogx(logx);
    histoLambdaTailData1->Draw("same");
    histoLambdaTailData2->Draw("same");
@@ -368,7 +389,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Lambda Tail Data and true MC
 
    plotName = "CompareLambdaTailDataAndTrueMC";
-   canvasDataAndTrueMC = new TCanvas("canvasDataAndTrueMC","",1550,1200);
+   canvasDataAndTrueMC = new TCanvas("canvasLambdaDataAndTrueMC","",1550,1200);
    canvasDataAndTrueMC->SetLogx(logx);
    histoLambdaTailData1->Draw("same");
    histoLambdaTailData2->Draw("same");
@@ -391,7 +412,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
   // Sigma Data
    
    plotName = "CompareSigmaData";
-   canvasData = new TCanvas("canvasData","",1550,1200);
+   canvasData = new TCanvas("canvasSigmaData","",1550,1200);
    canvasData->SetLogx(logx);
    histoSigmaData1->Draw("same");
    histoSigmaData2->Draw("same");
@@ -407,7 +428,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Sigma rec and true MC
    
    plotName = "CompareSigmaMC";
-   canvasMC = new TCanvas("canvasMC","",1550,1200);
+   canvasMC = new TCanvas("canvasSigmaMC","",1550,1200);
    canvasMC->SetLogx(logx);
    histoSigmaMC1->Draw("same");
    histoSigmaMC2->Draw("same");
@@ -427,7 +448,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Sigma Data and rec MC
 
    plotName = "CompareSigmaDataAndRecMC";
-   canvasDataAndRecMC = new TCanvas("canvasDataAndRecMC","",1550,1200);
+   canvasDataAndRecMC = new TCanvas("canvasSigmaDataAndRecMC","",1550,1200);
    canvasDataAndRecMC->SetLogx(logx);
    histoSigmaData1->Draw("same");
    histoSigmaData2->Draw("same");
@@ -447,7 +468,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Sigma Data and true MC
 
    plotName = "CompareSigmaDataAndTrueMC";
-   canvasDataAndTrueMC = new TCanvas("canvasDataAndTrueMC","",1550,1200);
+   canvasDataAndTrueMC = new TCanvas("canvasSigmaDataAndTrueMC","",1550,1200);
    canvasDataAndTrueMC->SetLogx(logx);
    histoSigmaData1->Draw("same");
    histoSigmaData2->Draw("same");
@@ -469,7 +490,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
   // Amplitude Data
    
    plotName = "CompareAmplitudeData";
-   canvasData = new TCanvas("canvasData","",1550,1200);
+   canvasData = new TCanvas("canvasAmplitudeData","",1550,1200);
    canvasData->SetLogx(logx);
    canvasData->SetLogy();
    histoAmplitudeData1->Draw("same");
@@ -486,7 +507,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Amplitude rec and true MC
    
    plotName = "CompareAmplitudeMC";
-   canvasMC = new TCanvas("canvasMC","",1550,1200);
+   canvasMC = new TCanvas("canvasAmplitudeMC","",1550,1200);
    canvasMC->SetLogx(logx);
    canvasMC->SetLogy();
    histoAmplitudeMC1->Draw("same");
@@ -507,7 +528,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Amplitude Data and rec MC
 
    plotName = "CompareAmplitudeDataAndRecMC";
-   canvasDataAndRecMC = new TCanvas("canvasDataAndRecMC","",1550,1200);
+   canvasDataAndRecMC = new TCanvas("canvasAmplitudeDataAndRecMC","",1550,1200);
    canvasDataAndRecMC->SetLogx(logx);
    canvasDataAndRecMC->SetLogy();
    histoAmplitudeData1->Draw("same");
@@ -528,7 +549,7 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
    // Amplitude Data and true MC
 
    plotName = "CompareAmplitudeDataAndTrueMC";
-   canvasDataAndTrueMC = new TCanvas("canvasDataAndTrueMC","",1550,1200);
+   canvasDataAndTrueMC = new TCanvas("canvasAmplitudeDataAndTrueMC","",1550,1200);
    canvasDataAndTrueMC->SetLogx(logx);
    canvasDataAndTrueMC->SetLogy();
    histoAmplitudeData1->Draw("same");
@@ -557,3 +578,15 @@ void CompareFitParameters(TString fileData1 = "/home/meike/analysis/results/phot
 
 
 
+// example for what has to be contained in CompareFitParameters.txt
+/*
+10110a13_00200009247600008250404000_0152501500000000
+lin
+Pi0_data_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root
+Pi0_MC_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root
+Pi0_MC_GammaConvV1CorrectionHistos_10110a13_00200009247600008250404000_0152501500000000.root
+pol2
+Pi0_data_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root
+Pi0_MC_GammaConvV1WithoutCorrection_10110a13_00200009247600008250404000_0152501500000000.root
+Pi0_MC_GammaConvV1CorrectionHistos_10110a13_00200009247600008250404000_0152501500000000.root
+*/
