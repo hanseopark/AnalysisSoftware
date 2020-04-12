@@ -871,7 +871,7 @@
 
             // Initialize default BG fit range right & left
             if (mode == 2 || mode == 13){                           // PCM-EMC
-                fBGFitRange[0]              = 0.19;
+                fBGFitRange[0]              = 0.23;
                 fBGFitRange[1]              = 0.3;
                 fBGFitRangeLeft[0]          = 0.03;
                 fBGFitRangeLeft[1]          = 0.05;
@@ -886,9 +886,9 @@
                 }
             } else if (mode == 4 || mode == 12 ) {                  // EMC
                 fBGFitRange[0]              = 0.19;
-                fBGFitRange[1]              = 0.3;
-                fBGFitRangeLeft[0]          = 0.05;
-                fBGFitRangeLeft[1]          = 0.08;
+                fBGFitRange[1]              = 0.30;
+                fBGFitRangeLeft[0]          = 0.04; //0.05;
+                fBGFitRangeLeft[1]          = 0.07; //0.08;
                 if ( fEnergyFlag.CompareTo("7TeV") == 0 ){
                     if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
                         fBGFitRange[0] = 0.26;

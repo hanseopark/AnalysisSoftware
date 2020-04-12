@@ -335,8 +335,21 @@ void ExtractSignalV2(
       JetContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s Jet histograms",fCutSelectionRead.Data()));
       if(JetContainer != NULL){
         fDoJetAnalysis = kTRUE;
-      }
+	}
     }
+    //if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
+	
+	if(fDoJetAnalysis){
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+		cout <<	"!!!!!!!!!!!!!!! Do Jet On !!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+	}
+	else{
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+		cout << "!!!!!!!!!!!!!!! Do Jet Off !!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+
+	}	
 
     TString JetOutputDir;
     if(fDoJetAnalysis){
@@ -360,8 +373,8 @@ void ExtractSignalV2(
         return;
     }
 
-    if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
-
+   //if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
+    
     // set global variables for rap and BG number
     TString rapidityRange;
     fYMaxMeson                          = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
@@ -373,6 +386,7 @@ void ExtractSignalV2(
 
     //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
+	if(!fDoJetAnalysis) cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Debug; Do Jet Off Line: "<<__LINE__<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
 
     //************************* Start of Main routine ***************************************************************
     const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
@@ -513,33 +527,53 @@ void ExtractSignalV2(
 
     TList *TrueJetContainer         = (TList*)HistosGammaConversion->FindObject(Form("%s True Jet histograms",fCutSelectionRead.Data()));
 
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     if(fDoJetAnalysis){
       fGammaGammaInvMassVSPt              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
       fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
       if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
+
+	if(fUsingUnfolding_AsData) cout << "AsData_used" <<endl;
+	if(fUsingUnfolding_Missed) cout << "Missed_used" <<endl;
+	if(fUsingUnfolding_Reject) cout << "Reject_used" <<endl;
+
         if(fUsingUnfolding_AsData) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
         if(fUsingUnfolding_Missed) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
         if(fUsingUnfolding_Reject) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
-        fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
-      }else{
-        fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
-        //fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
-        fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+      // fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data()); //lightoutput
+         fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
       }
     } else{
-      fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
-      fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+//      fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
+//      fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+//      if(fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject){
+//
+//	      if(fUsingUnfolding_AsData) cout << "AsData_used" <<endl;
+//	      if(fUsingUnfolding_Missed) cout << "Missed_used" <<endl;
+//	      if(fUsingUnfolding_Reject) cout << "Reject_used" <<endl;
+//
+//	      if(fUsingUnfolding_AsData) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
+//	      if(fUsingUnfolding_Missed) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
+//	      if(fUsingUnfolding_Reject) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
+//	      fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+//	      //fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+//      }
+	//else{
+	      fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
+	      fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+	      //fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+     	//}
     }
     fGammaGammaInvMassVSPt->Sumw2();
     fBckInvMassVSPt->Sumw2();
 
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     const char* FileDataLogname         = Form("%s/%s/%s_%s_EffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(),
                                         fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
 
     if(UseTHnSparse) ProduceBckProperWeighting(BackgroundContainer,MotherContainer, JetContainer, TrueJetContainer ,UseTHnSparse);
     else ProduceBckProperWeighting(ESDContainer,ESDContainer, JetContainer, TrueJetContainer ,UseTHnSparse);
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
    if(fDoJetAnalysis){
         fHistJetPt                      = (TH1D*)JetContainer->FindObject("JetPt");
@@ -576,6 +610,7 @@ void ExtractSignalV2(
     }
     // enter pure simulation routines
     if(fIsMC){
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         // load containers for simulation
         TList *MCContainer              = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
         TList *TrueConversionContainer  = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
@@ -583,26 +618,31 @@ void ExtractSignalV2(
         // loading histograms for pi0
         if( fMesonId == 111){
             // histos without acceptance requirement
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             if(fDoJetAnalysis){
-              fHistoMCMesonPt                 = (TH1D*)TrueJetContainer->FindObject(ObjectNameMCPi0.Data());
-            }else {
+                fHistoMCMesonPt  = (TH1D*)TrueJetContainer->FindObject(ObjectNameMCPi0.Data());
+	    }else {
               fHistoMCMesonPt                 = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
             }
             fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOWeights.Data());
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOEvtWeights.Data());
 
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             // histos with gamma's in acceptance
             if(fDoJetAnalysis){
               fHistoMCMesonPtWithinAcceptance     = (TH1D*)TrueJetContainer->FindObject(ObjectNameMCPi0Acc.Data());
-            }
+	    }
             else{
               fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0Acc.Data());
             }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             // if ( fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
             // }
 
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             // secondary neutral pions histograms
             fHistoMCSecPi0SourcePt              = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0.Data());
             fHistoMCSecPi0WAccSourcePt          = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0Acc.Data());
@@ -611,6 +651,7 @@ void ExtractSignalV2(
                 fHistoMCSecPi0WAccSourcePt->Sumw2();
                 fNewMCOutput                     =  kTRUE;
             }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         }
         cout << "meson Id: " << fMesonId << endl;
@@ -673,15 +714,24 @@ void ExtractSignalV2(
 
         // load reconstructed meson histograms
         if(fDoJetAnalysis){
-          fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrue.Data());
+          if(TrueJetContainer == NULL) {
+          fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
+	  fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
+          } else{
+	  fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrue.Data());
           fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueFull.Data());
+	  }
         }else{
           fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
           fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
         }
+//          fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
+//          fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         fHistoTrueMesonInvMassVSPtWOWeights         = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueWOWeights.Data());
         fProfileTrueMesonInvMassVSPtWeights         = (TProfile2D*)TrueConversionContainer->FindObject(ObjectNameProfileWeights.Data());
         fHistoTrueMesonInvMassVSPtReweighted        = (TH2D*)fHistoTrueMesonInvMassVSPtWOWeights->Clone("Reweighted");
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         fHistoTrueMesonInvMassVSPt->Sumw2();
         fHistoTrueFullMesonInvMassVSPt->Sumw2();
         fHistoTrueMesonInvMassVSPtWOWeights->Sumw2();
@@ -689,7 +739,8 @@ void ExtractSignalV2(
         fHistoTrueMesonInvMassVSPtReweighted->Sumw2();
         fHistoTrueMesonInvMassVSPtReweighted->Multiply(fProfileTrueMesonInvMassVSPtWeights);
 
-         if(fDoJetAnalysis){
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+         if(fDoJetAnalysis){ //lightoutput
           TList *TrueJetContainer = (TList*)HistosGammaConversion->FindObject(Form("%s True Jet histograms",fCutSelectionRead.Data()));
           if(fMode != 0){
             fHistoDoubleCountTruePi0                    = (TH1D*)TrueJetContainer->FindObject("Double_Counting_True_Pi0inJet");
@@ -791,10 +842,17 @@ void ExtractSignalV2(
 
         if (meson.Contains("Pi0")){
             if(fDoJetAnalysis){
-              fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
+              if(TrueJetContainer == NULL) {
+	      fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
+              fHistoTrueSecMesonInvMassVSPt[1]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromLambda.Data());
+              fHistoTrueSecMesonInvMassVSPt[2]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0L.Data());
+              fHistoTrueSecMesonInvMassVSPt[3]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec.Data());
+	      } else{           
+	      fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
               fHistoTrueSecMesonInvMassVSPt[1]                        = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueSecFromLambda.Data());
               fHistoTrueSecMesonInvMassVSPt[2]                        = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueSecFromK0L.Data());
               fHistoTrueSecMesonInvMassVSPt[3]                        = (TH2D*)TrueJetContainer->FindObject(ObjectNameTrueSec.Data());
+	      }
             }else{
               fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
               fHistoTrueSecMesonInvMassVSPt[1]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromLambda.Data());
@@ -819,9 +877,7 @@ void ExtractSignalV2(
         }
 
         //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
-    }
-
-    // calculate meson mass from pdg code
+    } // calculate meson mass from pdg code
     cout << (TDatabasePDG::Instance())->GetParticle(fMesonId) << endl;
     fMesonMassExpect                            = (TDatabasePDG::Instance())->GetParticle(fMesonId)->Mass();
     // calculate number of events for normalization
@@ -834,7 +890,7 @@ void ExtractSignalV2(
 
     // Function to Project the 2D histos InvariantMass VS Pt into Invariant Mass spectrum
     FillMassHistosArray(fGammaGammaInvMassVSPt);
-    //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 
     ProcessEM_switch( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
     fMesonFullPtBackNorm                        = fBckNorm;
@@ -2123,16 +2179,26 @@ void ExtractSignalV2(
         PlotJetPlots(fHistRatioPtPi0Jet, FragFunctProjX, "FragmentationFuncvsRatio", "", "z", fCollisionSystem, JetOutputDir.Data(), plotSuffix.Data(), kTRUE, kFALSE, kFALSE);
     }
     else if(fDoJetAnalysis == kTRUE && fIsMC == 1){
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(fHistoJetUnfold, "TrueJetPtvsRecJetPt", "True Jet p_{t}", "Rec Jet p_{t}", JetOutputDir.Data(), plotSuffix.Data(), kFALSE);
         PlotJetPlots(fHistoDoubleCountTruePi0, "DoubleCountingTruePi0", "", "Number of times the same #pi^{0} is in a Jet", fCollisionSystem, JetOutputDir.Data(), plotSuffix.Data(), kTRUE, kTRUE, kFALSE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(fHistoDoubleCountTrueEta, "DoubleCountingTrueEta", "", "Number of times the same #eta is in a Jet", fCollisionSystem, JetOutputDir.Data(), plotSuffix.Data(), kTRUE, kTRUE, kFALSE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(fHistoTruePi0FragmFunc, "FragmentationFuncTruePi0", "Jet p_{t}", "z", JetOutputDir.Data(), plotSuffix.Data(), kTRUE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         TH1D* FragFunctTruePi0ProjX = fHistoTruePi0FragmFunc->ProjectionX();
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(FragFunctTruePi0ProjX, "FragmentationFuncProjxTruePi0", "", "z", fCollisionSystem, JetOutputDir.Data(), plotSuffix.Data(), kTRUE, kFALSE, kTRUE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(fHistoTrueEtaFragmFunc, "FragmentationFuncTrueEta", "Jet p_{t}", "z", JetOutputDir.Data(), plotSuffix.Data(), kTRUE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         TH1D* FragFunctTrueEtaProjX = fHistoTrueEtaFragmFunc->ProjectionX();
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         PlotJetPlots(FragFunctTrueEtaProjX, "FragmentationFuncProjxTrueEta", "", "z", fCollisionSystem, JetOutputDir.Data(), plotSuffix.Data(), kTRUE, kFALSE, kTRUE);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     //Calculate the raw yield assuming different background fit functions and taking the ratio to the default pol1
     //normal
     fHistoYieldDiffBckRatios[0]->Add(fHistoYieldMeson[0]);
@@ -2766,6 +2832,7 @@ void ExtractSignalV2(
     Delete();
 //     gObjectTable->Print();
 //     cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+	if(!fDoJetAnalysis) cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Debug; Do Jet Off Line: "<<__LINE__<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
 }
 
 //****************************************************************************
@@ -3125,19 +3192,22 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
             if(fUsingUnfolding_AsData) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
             if(fUsingUnfolding_Missed) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
             if(fUsingUnfolding_Reject) fHistoMotherZM              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
-            fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+            //fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt"); //lightoutput
+            fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
           }else{
             fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
-            //fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+            fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+            fHistoMotherZM              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
             fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
           }
+	
         }else{
           fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
           fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
         }
         fHistoMotherZM->Sumw2();
         fHistoBckZM->Sumw2();
-
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
 
             Int_t startBin = fHistoMotherZM->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
@@ -3180,6 +3250,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
         }
 
 
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         Int_t startBinFullPt = fHistoMotherZM->GetYaxis()->FindBin(fFullPt[0]+0.001);
         Int_t endBinFullPt = fHistoMotherZM->GetYaxis()->FindBin(fFullPt[1]-0.001);
 
@@ -3229,15 +3300,20 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
         Int_t endBinIntegralMidPt = fHistoMotherZMProjMidPt->GetXaxis()->FindBin(fBGFitRange[1]);
         if (fHistoBckZMProjMidPt->Integral(startBinIntegralMidPt,endBinIntegralMidPt) != 0) {
             fScalingFactorBckMidPt = fHistoMotherZMProjMidPt->Integral(startBinIntegralMidPt,endBinIntegralMidPt)/fHistoBckZMProjMidPt->Integral(startBinIntegralMidPt,endBinIntegralMidPt);
+		cout << "fBackgroundMultNumber: " << fBackgroundMultNumber << endl;
+		cout << "fScalingFactorBckMidPt: "<< fScalingFactorBckMidPt << endl;
             if ( fScalingFactorBckMidPt>20./fBackgroundMultNumber ){
                 fScalingFactorBckMidPt=1./fBackgroundMultNumber;
             }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
         fFittingHistMidPtBackground->Add(fHistoBckZMProjMidPt,fScalingFactorBckMidPt);
         fFittingHistMidPtBackground->Rebin(fNRebin[4]);
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
     }
+    cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
 }
-
 //****************************************************************************
 //****** Initialization of arrays and variables, histograms for analysis *****
 //****** depending on mesonType, number of bins, mode, energy, centrality ****
@@ -5396,8 +5472,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
         double *covMatrix       = fitter->GetCovarianceMatrix();
         Float_t intLinearBack   = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
             0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
-        Float_t errorLinearBck  = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)
-                                            +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+        Float_t errorLinearBck  = TMath::Power((TMath::Power( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+TMath::Power(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2) +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
         fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;

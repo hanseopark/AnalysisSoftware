@@ -906,6 +906,7 @@
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+        //histo1DInvMassDummy->GetYaxis()->SetRangeUser(-500,5000);
         if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb")){
             histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
             histo1DInvMassDummy->GetXaxis()->SetNdivisions(510);

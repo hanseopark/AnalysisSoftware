@@ -457,8 +457,19 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         nJetEvents = histoJetEvents->GetBinContent(1)*1.17;
         DoJetAnalysis = kTRUE;
     }
+	cout << "trigger:"    << trigger.Atoi() <<endl;
 
-    TFile *Jet_Unfolding = (TFile*)Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode);
+     if(trigger.Atoi() == 10){
+     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_INT7.root",optionEnergy.Data(),mode));
+     } else if(trigger.CompareTo("8d") == 0){
+     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_EG1.root",optionEnergy.Data(),mode));
+     } else if(trigger.CompareTo("8e") == 0){
+     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_EG2.root",optionEnergy.Data(),mode));
+     } else{
+     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_INT7.root",optionEnergy.Data(),mode));
+     }
+     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode));
+     //TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_test.root",optionEnergy.Data(),mode));
     if(DoJetAnalysis){
       TF1* unfolding_fit;
       if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
@@ -471,7 +482,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for(Int_t i = 0; i <= NTotalBins; i++){
           Double_t value = histoUnCorrectedYield[k]->GetBinContent(i);
           Double_t x = histoUnCorrectedYield[k]->GetBinCenter(i);
-          value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+          //value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+          value = value*(unfolding_fit->GetParameter(0) + exp(-unfolding_fit->GetParameter(1)/x));
           histoUnCorrectedYield[k]->SetBinContent(i, value);
         }
       }
@@ -594,7 +606,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           for(Int_t i = 0; i <= NTotalBins; i++){
             Double_t value = histoEffiPt[k]->GetBinContent(i);
             Double_t x = histoEffiPt[k]->GetBinCenter(i);
-            value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+            //value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+            value = value*(unfolding_fit->GetParameter(0) + exp(-unfolding_fit->GetParameter(1)/x));
             histoEffiPt[k]->SetBinContent(i, value);
           }
         }
@@ -2675,7 +2688,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         DrawGammaSetMarker(histoAcceptance, 20, 1.5, kAzure-6, kAzure-6);
         histoAcceptance->DrawCopy("e1");
-
+        histoAcceptance->SetAxisRange(0.,0.8, "Y"); //GetYaxis()->SetRangeUser(rangeAcc[0], rangeAcc[1]*1.5);
         PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
 
         canvasAcceptance->Update();
@@ -2949,7 +2962,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3162,7 +3175,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
     canvasRAWYield->Update();
@@ -3196,7 +3209,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         T1.SetTextSize(0.025);
         T1.SetTextAlign(12);
         T1.SetNDC();
-        T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
 
       canvasRAWYieldJetNormalisation->Update();
       canvasRAWYieldJetNormalisation->SaveAs(Form("%s/%s_%s_RAWYieldPt_JetNorm_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3247,7 +3260,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
     padRawYieldRatios->cd();
@@ -3423,7 +3436,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
         }
 
     padCorrectedYieldRatios->cd();
@@ -3473,7 +3486,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
         }
 
     padCorrectedYieldRatios->cd();
@@ -3513,7 +3526,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         T1.SetTextSize(0.025);
         T1.SetTextAlign(12);
         T1.SetNDC();
-        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 
@@ -3537,7 +3550,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
-        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 
@@ -4035,6 +4048,22 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
         }
     }
+
+////////////////// For adding to remove the left side of the background /////////////////////////
+//    for (Int_t k = 3; k < 6; k++){
+//        for (Int_t i = 1; i < 11 ; i++){
+//            if ( (mode == 9 || mode == 0 || mode == 1 || mode == 2) || (mode == 4 && nameMeson.CompareTo("Eta") && !optionEnergy.Contains("pPb_5.023TeV") ) ){
+//    //          binYValue[i] = histoCorrectedYieldTrue->GetBinContent(i);
+//                sysErr[k][i].value  = 0; 
+//                sysErr[k][i].error  = 0; 
+//            } else {
+//                sysErr[k][i].value  = 0;
+//                sysErr[k][i].error  = 0;
+//            }
+//        }
+//    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
     Double_t differencesToStandard[6][400];
     Double_t differencesToStandardErr[6][400];
     Double_t relDifferencesToStandard[6][400];
@@ -4124,7 +4153,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     for(Int_t i = 1; i < (nBinsPt +1); i++){
         fileSysErrDat << i  << "\t" << sysErr[5][i].value << "\t" << sysErr[5][i].error << "\t" << differencesToStandard[5][i]
                             << "\t" << differencesToStandardErr[5][i] << "\t" << relDifferencesToStandard[5][i] << "\t" << relDifferencesToStandardErr[5][i] <<endl;
-    }
+    }   
+
     fileSysErrDat << endl;
 
     fileSysErrDat << "Bin" << "\t" << "Largest Dev Neg" << "\t" << "Largest Dev Pos"  << endl;
@@ -4152,9 +4182,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     histo2DDummySys->DrawCopy();
 
         DrawGammaSetMarkerTGraphAsym(SystErrGraphPos, 20, 1.,kBlue+1,kBlue+1);
-        SystErrGraphPos->Draw("pX0,csame");
+        //SystErrGraphPos->Draw("pX0,csame");
+        SystErrGraphPos->Draw("p,csame");
         DrawGammaSetMarkerTGraphAsym(SystErrGraphNeg, 21, 1.,kCyan+1,kCyan+1);
-        SystErrGraphNeg->Draw("pX0,csame");
+        //SystErrGraphNeg->Draw("pX0,csame");
+        SystErrGraphNeg->Draw("p,csame");
 
         DrawGammaSetMarker(fHistoYieldDiffBckResult[0], 31, 1.,kBlack,kBlack);
         fHistoYieldDiffBckResult[0]->DrawCopy("e1,p,SAME");

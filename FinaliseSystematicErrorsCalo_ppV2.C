@@ -311,7 +311,6 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         }
-        
         // take out offsets
         while (graphPosErrors->GetX()[0] < startPtSys){
             graphPosErrors->RemovePoint(0);
