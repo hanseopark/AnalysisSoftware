@@ -52,7 +52,7 @@
             cout << "\n\n\n\n\n**************************************************************************************************" << endl;
             cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
             cout << "**************************************************************************************************\n\n\n\n\n" << endl;
-            clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
+            //clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
             return -10;
         }
         TH1D* histo = (TH1D*)fileCorrFactors->Get(Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()));
@@ -60,7 +60,7 @@
             cout << "\n**************************************************************************************************" << endl;
             cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
             cout << "**************************************************************************************************\n" << endl;
-            clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
+            //clog << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s%s_%s_%s",folderName.Data(), mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
             return 0;
         }
         cout << "pT: " << pT  << ", correlation factor for " << meson.Data() << " " << lookup.Data() << ": " << histo->GetBinContent(histo->FindBin(pT)) << " (from GetCorrFactorFromFile)" << endl;

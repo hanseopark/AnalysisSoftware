@@ -472,7 +472,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for(Int_t i = 0; i <= NTotalBins; i++){
           Double_t value = histoUnCorrectedYield[k]->GetBinContent(i);
           Double_t x = histoUnCorrectedYield[k]->GetBinCenter(i);
-          value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+          //value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+          value = value*(unfolding_fit->GetParameter(0) + exp(unfolding_fit->GetParameter(1)/x));
           histoUnCorrectedYield[k]->SetBinContent(i, value);
         }
       }
@@ -595,7 +596,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           for(Int_t i = 0; i <= NTotalBins; i++){
             Double_t value = histoEffiPt[k]->GetBinContent(i);
             Double_t x = histoEffiPt[k]->GetBinCenter(i);
-            value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+            //value = value*(unfolding_fit->GetParameter(0) + unfolding_fit->GetParameter(1)*x);
+            value = value*(unfolding_fit->GetParameter(0) + exp(unfolding_fit->GetParameter(1)/x));
             histoEffiPt[k]->SetBinContent(i, value);
           }
         }
@@ -2941,7 +2943,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          //T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.90, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3154,7 +3157,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          //T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
     canvasRAWYield->Update();
@@ -3188,7 +3192,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         T1.SetTextSize(0.025);
         T1.SetTextAlign(12);
         T1.SetNDC();
-        T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        //T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+        T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
 
       canvasRAWYieldJetNormalisation->Update();
       canvasRAWYieldJetNormalisation->SaveAs(Form("%s/%s_%s_RAWYieldPt_JetNorm_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3239,7 +3244,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          //T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_fit->GetParameter(0),unfolding_fit->GetParameter(1)));
         }
 
     padRawYieldRatios->cd();
@@ -3415,7 +3421,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          //T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          T1.DrawLatex(0.625, 0.80, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
         }
 
     padCorrectedYieldRatios->cd();
@@ -3465,7 +3472,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           T1.SetTextSize(0.025);
           T1.SetTextAlign(12);
           T1.SetNDC();
-          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          //T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+          T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
         }
 
     padCorrectedYieldRatios->cd();
@@ -3505,7 +3513,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         T1.SetTextSize(0.025);
         T1.SetTextAlign(12);
         T1.SetNDC();
-        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        //T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 
@@ -3529,7 +3538,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendYield3->Draw();
         PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
-        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        //T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + %0.3f*#it{p}_{T}}",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
+        T1.DrawLatex(0.6, 0.75, Form("#bf{Unfolding correction used: %0.2f + exp(-%0.3f/#it{p}_{T}})",unfolding_Fit->GetParameter(0),unfolding_Fit->GetParameter(1)));
 
         padCorrectedYieldRatios->cd();
 

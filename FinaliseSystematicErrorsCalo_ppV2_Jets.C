@@ -50,8 +50,7 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                                             TString additionalNameOutput    = "", 
                                             TString suffix                  = "eps",
                                             Int_t mode                      = 0
-                                        ){
-    
+                                        ){ 
     // ***************************************************************************************************
     // ****************************** General style settings *********************************************
     // ***************************************************************************************************
@@ -82,10 +81,13 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     TString nameCutVariation[13];
     TString nameCutVariationSC[13];
     
-    TString nameCutVariationSC2760GeV[13]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
-                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "CellTiming", 
-                                                "Trigger", "Efficiency", "YieldExtractionPi0"};
+//    TString nameCutVariationSC2760GeV[13]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
+//                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "CellTiming", 
+//                                                "Trigger", "Efficiency", "YieldExtractionPi0"};
                                                 
+    TString nameCutVariationSC2760GeV[13]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
+                                                "ClusterTrackMatching", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "ClusterTiming", 
+                                                "Trigger", "Efficiency", "YieldExtractionPi0"};
     Color_t color[20];
     Color_t markerStyle[20];
     for (Int_t k =0; k<13; k++ ){
@@ -117,15 +119,27 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     Bool_t bsmoothMBEtaToPi0[13]            = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothINT7Pi0[13]               = { 0, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 0 };
-    Bool_t bsmoothINT7Eta[13]               = { 0, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 0 };
-    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 0 };
+//    Bool_t bsmoothINT7Pi0[13]               = { 0, 1, 1, 1, 1, // standard
+//                                                1, 1, 1, 1, 1,
+//                                                1, 1, 0 };
+    Bool_t bsmoothINT7Pi0[13]               = { 0, 0, 0, 0, 0, // varitation 1
+                                                0, 0, 1, 1, 0,
+                                                1, 1, 1 };
+//    Bool_t bsmoothINT7Pi0[13]               = { 0, 0, 1, 1, 1, // variation 2
+//                                                1, 1, 1, 1, 1,
+//                                                1, 1, 1 };
+//    Bool_t bsmoothINT7Eta[13]               = { 0, 1, 1, 1, 1, // standard
+//                                                1, 1, 1, 1, 1,
+//                                                1, 1, 0 };
+    Bool_t bsmoothINT7Eta[13]               = { 0, 0, 0, 0, 0, // varitation 1
+                                                0, 0, 1, 1, 0,
+                                                1, 1, 1 };
+//    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 1, 1, 1, 1, // standard
+//                                                1, 1, 1, 1, 1,
+//                                                1, 1, 0 };
+    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 0, 0, 0, 0, // varitation 1
+                                                0, 0, 1, 1, 0,
+                                                1, 1, 1 };
     Bool_t bsmoothEMC1Pi0[13]               = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };                                                
@@ -153,10 +167,13 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     Bool_t bsmoothEG2EtaToPi0[13]           = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 1 };
-    Bool_t bsmoothEG1Pi0[13]                = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 0 };
-    Bool_t bsmoothEG1Eta[13]                = { 1, 1, 1, 1, 1,
+//    Bool_t bsmoothEG1Pi0[13]                = { 1, 1, 1, 1, 1, // Standard
+//                                                1, 1, 1, 1, 1,
+//                                                1, 1, 0 };
+    Bool_t bsmoothEG1Pi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+                                                0, 0, 1, 1, 0,
+                                                1, 1, 1 };
+	Bool_t bsmoothEG1Eta[13]                = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
     Bool_t bsmoothEG1EtaToPi0[13]           = { 1, 1, 1, 1, 1,
@@ -276,27 +293,41 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
-        //if (i == 0 || i == 3 || i == 8 || i == 9 || i == 10 || i == 11){// special treatment for Yield extraction error and calculated erros
-        if (i < 12){
+        //if (i <  7 || i == 8 || i == 9){// special treatment for Yield extraction error and calculated erros
+//        if (i < 12){
+//            TString nameGraphPos    = "";
+//            TString nameGraphNeg    = "";
+//            if ( meson.CompareTo("EtaToPi0") != 0 ){
+//                nameGraphPos        = Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),additionalName.Data() );
+//                nameGraphNeg        = Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),additionalName.Data() );
+//            } else {
+//                nameGraphPos        = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+//                nameGraphNeg        = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+//            }    
+//            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+//            graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+//            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+//        } else if ( i == 12) { // special treatment for eta to pi0 ratio    
+//            TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+//            TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+//            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+//            graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+//            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+//            
+		if (i == 0 || i ==4 || i == 7 || i == 8 || i == 10 || i == 11){
+		//if (i == 0 || i == 4 || i == 8){
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
-            if ( meson.CompareTo("EtaToPi0") != 0 ){
-                nameGraphPos        = Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),additionalName.Data() );
-                nameGraphNeg        = Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),additionalName.Data() );
-            } else {
-                nameGraphPos        = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
-                nameGraphNeg        = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
-            }    
+			if (meson.CompareTo("EtaToPi0") !=0){
+				nameGraphPos    = Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),additionalName.Data() );
+				nameGraphNeg    = Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),additionalName.Data() );
+			} else {
+				nameGraphPos    = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+				nameGraphNeg    = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+			}
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if ( i == 12) { // special treatment for eta to pi0 ratio    
-            TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
-            TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
-            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
-            graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
-            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-            
         } else {// read graphs from input file
             TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
             TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
@@ -304,7 +335,6 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         }
-        
         // take out offsets
         while (graphPosErrors->GetX()[0] < startPtSys){
             graphPosErrors->RemovePoint(0);
@@ -324,7 +354,6 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         errorsNegErr[i] = graphNegErrors->GetEYhigh();
         errorsPos[i]    = graphPosErrors->GetY();
         errorsPosErr[i] = graphPosErrors->GetEYhigh();
-        
         cout << nameCutVariationSC[i].Data() << endl;
         // Averaging of upper and lower errors
         CalculateMeanSysErr(errorsMean[i], errorsMeanErr[i], errorsPos[i], errorsNeg[i], nPtBins);
@@ -339,7 +368,7 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             // manual smoothing for Yield extraction errors - variation 0
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 cout << "Yield extraction smoothing" << endl;
-                if ( (meson.CompareTo("Eta") == 0 || (meson.CompareTo("EtaToPi0") == 0) && i == 0) ){
+                if ( (meson.CompareTo("Eta") == 0 || ((meson.CompareTo("EtaToPi0") == 0) && i == 0)) ){
                     Double_t error              = 12.5;
                     if (additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EG1")==0 )
                         error                   = 7.0;
@@ -574,7 +603,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                             additionalNameOutput.CompareTo("EG2")==0 ||
                             additionalNameOutput.CompareTo("EG1")==0
                         ){
-                          error   = 6+(-0.)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k];
+                          //error   = 6+(-0.)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k];
+							error = 0;
                         }
                         if(energy.CompareTo("5TeV2017") == 0){
                           error = 1.32874 * 2.;
@@ -759,7 +789,7 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                     } else {
                         error   = errorEta; 
                     }  
-                   
+					error = 0.1; 
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -776,7 +806,7 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             }   
         }    
         // Quadratic sum of errors except material error infront of EMCal & inner material
-        if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0){
+        if (!(nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0)){
             cout << "errors added quadratically" << endl;
             for (Int_t l = 0;l < nPtBins;l++){
                 errorsPosSummed[l]      = errorsPosSummed[l]+pow(errorsPos[i][l],2);
@@ -796,7 +826,9 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         positiveErrorsCorr[i]   = new TGraphErrors(nPtBins,ptBins ,errorsPosCorr[i] ,ptBinsErr ,errorsPosErrCorr[i] );
         
     }
-    
+   
+	//} //special treatment
+ 
     Int_t nMaterialError    = -1;
     for (Int_t j = 0; j < nCuts; j++){
        if (nameCutVariationSC[j].CompareTo("ClusterMaterialTRD")==0)
@@ -936,6 +968,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             labelTrig= new TLatex(0.75,0.84,Form("EG1 LHC13g"));
         }
         if(energy.CompareTo("5TeV2017") == 0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
+        if(energy.CompareTo("13TeV") == 0 || additionalNameOutput.CompareTo("INT7")==0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
+        if(energy.CompareTo("13TeV") == 0 || additionalNameOutput.CompareTo("EG1")==0) labelTrig= new TLatex(0.75,0.84,Form("EG1"));
         SetStyleTLatex( labelTrig, 0.038,4);
         labelTrig->Draw();
         
@@ -999,8 +1033,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
 
     canvasNewSysErrMean->Update();
     canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
-    
-    // ***************************************************************************************************
+
+	// ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
     // ***************************************************************************************************    
     for (Int_t cut =0 ;cut < numberCutStudies;cut++ ){
@@ -1217,5 +1251,5 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
 //  }
 // 
 //  SysErrDatAverPaper.close();
-        
+
 }

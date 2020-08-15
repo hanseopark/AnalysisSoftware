@@ -150,10 +150,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     if (isMC.CompareTo("MC") == 0) collisionSystem = "MC, "+collisionSystem;
 
     Bool_t fDoJetAnalysis = kFALSE;
+	Bool_t fDoRejectionFactorOfMeson = kFALSE;
     if(optionEnergy.CompareTo("5TeV2017_Jets") == 0){
         optionEnergy = "5TeV2017";
         fDoJetAnalysis = kTRUE;
     }
+	if(optionEnergy.CompareTo("13TeV_Jets") == 0){
+	optionEnergy = "13TeV";
+	fDoJetAnalysis = kTRUE;
+	fDoRejectionFactorOfMeson = kTRUE;
+	}
 
     Double_t maxPtGlobalCluster     = 25;
     if (optionEnergy.CompareTo("2.76TeV")==0){
@@ -500,7 +506,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     Double_t binningPi0[400];
     Int_t maxNBinsPi0Abs            = 0;
-    Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, -1, kFALSE, fCent, fDoJetAnalysis );
+    Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, 0, kFALSE, fCent, fDoJetAnalysis );
     Int_t maxNAllowedPi0            = 0;
     Int_t nRealTriggers             = 0;
     cout << "binning pi0" << endl;
@@ -512,7 +518,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t binningEta[400];
     Int_t maxNBinsEtaAbs            = 0;
-    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, -1, kFALSE, fCent, fDoJetAnalysis );
+    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, 0, kFALSE, fCent, fDoJetAnalysis );
     Int_t maxNAllowedEta            = 0;
     Int_t maxNAllowedEtaToPi0       = 0;
     if (enableEta){
@@ -594,6 +600,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t triggRejecFac          [MaxNumberOfFiles][MaxNumberOfFiles];
     Double_t triggRejecFacErr       [MaxNumberOfFiles][MaxNumberOfFiles];
+
+    Double_t triggRejecFacEta       [MaxNumberOfFiles][MaxNumberOfFiles] = {0};
+
 
     TString FileNameEffBasePi0      [MaxNumberOfFiles];
     TFile*  fileEffBasePi0          [MaxNumberOfFiles];
@@ -933,9 +942,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
                 delete pol0;
                 delete pol0_2;
+				cout << "DEBUG LINE" << __LINE__ << endl;
                 cout << "trigger rejection factor " << triggerName[i].Data() << "/" << triggerName[trigSteps[i][0]].Data() << ": " << triggRejecFac[i][trigSteps[i][0]]
                     << "+-" << triggRejecFacErr[i][trigSteps[i][0]] << endl;
 
+				cout << "DEBUG LINE" << __LINE__ << endl;
                 if (enableTriggerRejecCompMC){
                     histoMCRawClusterPt[i]                  = (TH1D*)fileUnCorrectedMCPi0[i]->Get("ClusterPtPerEvent");
                     histoMCRawClusterPt[i]->SetName(Form("MCClusterPtPerEvent_%s",cutNumber[i].Data()));
@@ -951,6 +962,27 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
                     cout << "data: "<<triggRejecFac[i][trigSteps[i][0]] << "\t MC: " << pol0_MC->GetParameter(0) << "\t scale factor: " << scaleFactorMC<< endl;
                 }
+			if(fDoRejectionFactorOfMeson){
+				TFile *MyRejectionFactor = new TFile ("MyResults/MyRejectionFactor.root","read");
+				TF1* EG1INT7triggRejecFac;
+				TF1* EG2INT7triggRejecFac;
+				TF1* EG1EG2triggRejecFac;
+				TF1* EG1INT7triggRejecFacEta;
+				TF1* EG2INT7triggRejecFacEta;
+				TF1* EG1EG2triggRejecFacEta;
+				EG1INT7triggRejecFac = (TF1*) MyRejectionFactor->Get("EG1INT7RejectionFactorOfYield");
+				EG2INT7triggRejecFac = (TF1*) MyRejectionFactor->Get("EG2INT7RejectionFactorOfYield");
+				EG1EG2triggRejecFac = (TF1*) MyRejectionFactor->Get("EG1EG2RejectionFactorOfYield");
+				EG1INT7triggRejecFacEta = (TF1*) MyRejectionFactor->Get("EG1INT7RejectionFactorOfYieldForEta");
+				EG2INT7triggRejecFacEta = (TF1*) MyRejectionFactor->Get("EG2INT7RejectionFactorOfYieldForEta");
+				EG1EG2triggRejecFacEta = (TF1*) MyRejectionFactor->Get("EG1EG2RejectionFactorOfYieldForEta");
+				triggRejecFac[1][0] = EG2INT7triggRejecFac->GetParameter(0); // EG2/INT7 
+				triggRejecFac[2][0] = EG1INT7triggRejecFac->GetParameter(0); // EG1/INT7
+				triggRejecFac[2][1] = EG1EG2triggRejecFac->GetParameter(0);  // EG1/EG2
+				triggRejecFacEta[1][0] = EG2INT7triggRejecFacEta->GetParameter(0); // EG2/INT7 
+				triggRejecFacEta[2][0] = EG1INT7triggRejecFacEta->GetParameter(0); // EG1/INT7
+				triggRejecFacEta[2][1] = EG1EG2triggRejecFacEta->GetParameter(0);  // EG1/EG2
+				}
             }
         } else {
             triggRejecFac[i][trigSteps[i][0]]       = 1;
@@ -1877,7 +1909,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
 
     TH2F * histo2DAccPi0;
-    histo2DAccPi0 = new TH2F("histo2DAccPi0","histo2DAccPi0",1000,0., maxPtGlobalPi0,10000,minAccPi0, maxAccPi0);
+    //histo2DAccPi0 = new TH2F("histo2DAccPi0","histo2DAccPi0",1000,0., maxPtGlobalPi0,10000,minAccPi0, maxAccPi0);
+    histo2DAccPi0 = new TH2F("histo2DAccPi0","histo2DAccPi0",1000,0., maxPtGlobalPi0,10000,minAccPi0, 0.5);
     SetStyleHistoTH2ForGraphs(histo2DAccPi0, "#it{p}_{T} (GeV/#it{c})","A_{#pi^{0}}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.25);
     histo2DAccPi0->DrawCopy();
@@ -2302,6 +2335,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     canvasCorrUnscaled->Update();
     canvasCorrUnscaled->SaveAs(Form("%s/Pi0_%s_CorrectedYieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
     if (!enableEta) delete canvasCorrUnscaled;
+
+	cout << "Debug: " << __LINE__ << endl;
 
     //***************************************************************************************************************
     //******************************* Scaling corrected yield by trigger rejection factors **************************
@@ -5062,21 +5097,38 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TH1D*     histoCorrectedYieldEtaScaled                  [MaxNumberOfFiles];
         TH1D*     histoCorrectedYieldEtaScaledMasked            [MaxNumberOfFiles];
         histoCorrectedYieldEtaScaled[0]                         = (TH1D*)histoCorrectedYieldEta[0]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[0].Data()));
-        for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
-            fileFitsOutput << triggerName[i].Data() << endl;
-            histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
-            histoCorrectedYieldEtaScaled[i]->Sumw2();
-            histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[i][trigSteps[i][0]]);
-            if (trigSteps[i][1]!= trigSteps[i][0]){
-                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
-                histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][0]][trigSteps[i][1]]);
-            }
-            if (trigSteps[i][2]!= trigSteps[i][1]){
-                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
-                histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][1]][trigSteps[i][2]]);
-            }
-        }
+//		if(fDoRejectionFactorOfMeson){
+//			for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
+//				fileFitsOutput << triggerName[i].Data() << endl;
+//				histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
+//				histoCorrectedYieldEtaScaled[i]->Sumw2();
+//				histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[i][trigSteps[i][0]]);
+//				if (trigSteps[i][1]!= trigSteps[i][0]){
+//					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << endl;
+//					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]]);
+//				}
+//				if (trigSteps[i][2]!= trigSteps[i][1]){
+//					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]] << endl;
+//					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]]);
+//				}
+//			}
+//		} else{
+			for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
+				fileFitsOutput << triggerName[i].Data() << endl;
+				histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
+				histoCorrectedYieldEtaScaled[i]->Sumw2();
+				histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[i][trigSteps[i][0]]);
+				if (trigSteps[i][1]!= trigSteps[i][0]){
+					fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
+					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][0]][trigSteps[i][1]]);
+				}
+				if (trigSteps[i][2]!= trigSteps[i][1]){
+					fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
+					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][1]][trigSteps[i][2]]);
+				}
+			}
 
+//		}
         // prepare arrays for systematics
         Double_t xValueFinalEta                                 [400];
         Double_t xErrorLowFinalEta                              [400];

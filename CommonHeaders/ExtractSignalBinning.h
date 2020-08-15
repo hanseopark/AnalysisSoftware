@@ -1496,8 +1496,7 @@
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 || mode == 14 ){
-                    startPtBin     = 6;
-                    // startPtBin     = 3;
+                    startPtBin     = 3;
                 } else if ( mode == 3){ //PCM-PHOS
                     cout<<"Getting PCM-PHOS("<<mode<<") Start Bin for "<<meson.Data()<<" in "<<energy<<"; The chosen Trigger is "<<specialTrigg<<endl;
                     if( energy.Contains("RBins")) {
@@ -1510,7 +1509,12 @@
                         }
                     }
                 } else if ( mode == 4 || mode == 12 || mode == 15){
-                    startPtBin     = 1;
+					startPtBin     = 7;
+					if (specialTrigg == 0) startPtBin = 7;
+					if (specialTrigg == 2) startPtBin = 3; //EG1
+					if (specialTrigg == 3) startPtBin = 1; //EG2
+					//startPtBin     = 1;
+					//startPtBin     = 0;
                 } else if ( mode == 5){ //PHOS-PHOS
                     cout<<"Getting PHOS-PHOS("<<mode<<") Start Bin for "<<meson.Data()<<" in "<<energy<<"; The chosen Trigger is "<<specialTrigg<<endl;
                     if (specialTrigg == 6 ){
@@ -1916,7 +1920,14 @@
                         startPtBin = 1;
                     }
                 }
-                else if( mode==4 || mode==12 || mode == 15) startPtBin = 1;
+                else if( mode==4 || mode==12 || mode == 15) {
+				startPtBin = 1;
+				if (specialTrigg == 0) startPtBin = 1; // INT7
+				if (specialTrigg == 2) startPtBin = 1; // EG1
+				if (specialTrigg == 3) startPtBin = 0; // EG2
+				//startPtBin = 0;
+
+				}
                 else if( mode==5  ) { //PHOS-PHOS
                     cout<<"Getting PHOS-PHOS("<<mode<<") Start Bin for "<<meson.Data()<<" in "<<energy<<"; The chosen Trigger is "<<specialTrigg<<endl;
                     if (specialTrigg == 6 ){
@@ -2600,15 +2611,30 @@
                     case 4: //EMCal-EMCal
                         switch(SpecialTrigger) {
                             case 0:  if(DoJetAnalysis){
-					     maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
-				     } else{
-					     maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
-				     }
+										maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
+									} else{
+										//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
+										maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
+									}
                             case 4:
                             case 5:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
                             case 1:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEMC7Pt, binning ); break;
-                            case 2:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG1Pt, binning ); break;
-                            case 3:  maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG2Pt, binning ); break;
+                            case 2:  if(DoJetAnalysis){
+									maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG1PtJets, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
+									} else{
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG1Pt, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
+									maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG1PtJets, binning ); break;
+									}
+                            case 3:  if(DoJetAnalysis){
+									maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG2PtJets, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7PtJets, binning ); break;
+									} else{
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG2Pt, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigINT7Pt, binning ); break;
+									maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigEG2PtJets, binning ); break;
+									}
                             default: maxNBins = CopyVectorToArray( binningMax, fBinsPi013TeVEMCTrigCombPt, binning, 201 ); break;
                         }
                         break;
@@ -3432,14 +3458,32 @@
                     case 4: //EMCal-EMCal
                         switch(SpecialTrigger) {
                             case 0: if(DoJetAnalysis){
-					    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning );
-				    } else {
-					    maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning );
-				    } break;
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning );
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJetsUnfolding, binning );
+								} else {
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning );
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning );
+								} break;
                             case 4:
                             case 5:
-                            case 3: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2Pt, binning ); break;
-                            case 2: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1Pt, binning ); break;
+                            case 3: if(DoJetAnalysis){
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2PtJets, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2PtJetsUnfolding, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning ); break;
+								} else{
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2Pt, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG2PtJets, binning ); break;
+								}
+                            case 2: if(DoJetAnalysis){
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1PtJets, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1PtJetsUnfolding, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7PtJets, binning ); break;
+								} else{
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1Pt, binning ); break;
+									//maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigINT7Pt, binning ); break;
+									maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVEMCTrigEG1PtJets, binning ); break;
+								}
                             default: maxNBins = CopyVectorToArray( binningMax, fBinsEta13TeVPCMEMCTrigINT7Pt, binning ); break;
                         }
                         break;
@@ -5090,14 +5134,29 @@
 					if(DoJetAnalysis){
 						fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtJetsRebin[i];
 					} else {
-						fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+						//fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+						fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtJetsRebin[i];
 					}
                                 } else if (specialTrigg==1){
                                     fNRebin[i]      = fBinsPi013TeVEMCTrigEMC7PtRebin[i];
                                 } else if (specialTrigg==3){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtRebin[i];
+					if(DoJetAnalysis){
+                        fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtJetsRebin[i];
+						//fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtJetsRebin[i];
+					} else{
+                        //fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtRebin[i];
+						//fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+                        fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtJetsRebin[i];
+					}
                                 } else if (specialTrigg==2){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtRebin[i];
+					if(DoJetAnalysis){
+                        fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtJetsRebin[i];
+						//fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtJetsRebin[i];
+					} else{
+                        //fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtRebin[i];
+						//fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+                        fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtJetsRebin[i];
+					}
                                 }
                             } else if( modi == 5){ //PHOS-PHOS
                                 switch(specialTrigg) {
@@ -6345,12 +6404,30 @@
                         case 4: //EMCal-EMCal
                             switch(specialTrigg) {
                                 case 0: if(DoJetAnalysis){
-						CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
-					} else {
-						CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
-					} break;
-                                case 2: CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtRebin, fNRebin); break;
-                                case 3: CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtRebin, fNRebin); break;
+										CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsUnfoldingRebin,fNRebin);
+									} else {
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
+										CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
+									} break;
+                                case 2: if(DoJetAnalysis){
+										CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtJetsRebin, fNRebin); break;
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtJetsUnfoldingRebin, fNRebin); break;
+									} else{
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtRebin, fNRebin); break;
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
+										CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtJetsRebin, fNRebin); break;
+									}
+                                case 3: if(DoJetAnalysis){
+										CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtJetsRebin, fNRebin); break;
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtJetsRebin,fNRebin);
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtJetsUnfoldingRebin, fNRebin); break;
+									} else{
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtRebin, fNRebin); break;
+										//CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
+										CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtJetsRebin, fNRebin); break;
+									}
                                 case 4: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
                                 case 5: CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin); break;
                             }

@@ -1373,11 +1373,11 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
 
                         echo -e "\n________________________"
                         echo -e "COMPARE MESON QUANTITIES\n"
-                        if [ $ISROOT6 -eq 0 ]; then
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
-                        else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
-                        fi
+#                        if [ $ISROOT6 -eq 0 ]; then
+#                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
+#                        else
+#                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$PI0OMEGADATARAWFILE\"\,\"$PI0OMEGAMCRAWFILE\"\,\"$CUTSELECTION\"\,\"Pi0OmegaBinning\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTOMEGA\,$MODE\)
+#                        fi
                     fi
                 fi
                 if [ $DOETA -eq 1 ]; then
@@ -1479,11 +1479,11 @@ if [ $MODE -lt 10 ]  || [ $MODE = 12 ] ||  [ $MODE = 13 ] || [ $MODE -ge 100 ]; 
                                 root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$CUTSELECTION\"\,\"EtaPrime\",\"$SUFFIX\"\,\"$ENERGY\"\,\"$ETAPRIMEMCCORRFILE\"\,\"$ETAPRIMEMCCORRFILEA\",\"$ETAPRIMEMCCORRFILEB\"\)
                             fi
                         fi
-                        if [ $ISROOT6 -eq 0 ]; then
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
-                        else
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
-                        fi
+#                        if [ $ISROOT6 -eq 0 ]; then
+#                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
+#                        else
+#                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$ETAPRIMEDATARAWFILE\"\,\"$ETAPRIMEMCRAWFILE\"\,\"$CUTSELECTION\"\,\"EtaPrime\"\,\"$SUFFIX\"\,\"$ENERGY\"\,\"$DIRECTPHOTON\"\,$BINSPTETAPRIME\,$MODE\)
+#                        fi
                     fi
                 fi
                 if [ "$SUFFIX" == "pdf" ]; then

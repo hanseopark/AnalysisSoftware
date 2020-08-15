@@ -332,7 +332,8 @@ void ExtractSignalV2(
     if(HistosGammaConversion != NULL){
       JetContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s Jet histograms",fCutSelectionRead.Data()));
       if(JetContainer != NULL){
-        fDoJetAnalysis = kTRUE;
+        fDoJetAnalysis = kFALSE;//kTRUE;
+        //fDoJetAnalysis = kTRUE;
       }
     }
 
@@ -358,7 +359,7 @@ void ExtractSignalV2(
         return;
     }
 
-    if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
+    //if(fDoJetAnalysis && (fUsingUnfolding_AsData || fUsingUnfolding_Missed || fUsingUnfolding_Reject)) fDoJetAnalysis = kFALSE;
 
     // set global variables for rap and BG number
     TString rapidityRange;
@@ -518,11 +519,11 @@ void ExtractSignalV2(
         if(fUsingUnfolding_AsData) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_AsData");
         if(fUsingUnfolding_Missed) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Missed");
         if(fUsingUnfolding_Reject) fGammaGammaInvMassVSPt              = (TH2D*)TrueJetContainer->FindObject("Unfolding_Reject");
-        fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
+        //fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+		fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
       }else{
-        fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
-        //fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
-        fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
+      fGammaGammaInvMassVSPt              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
+      fBckInvMassVSPt                     = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
       }
     } else{
       fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
@@ -3011,6 +3012,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
           }else{
             fHistoMotherZM = (TH2D*)motherContainer->FindObject("ESD_Mother_InvMass_Pt");
             //fHistoBckZM = (TH2D*)backgroundContainer->FindObject("ESD_Background_InvMass_Pt");
+            fHistoMotherZM              = (TH2D*)JetContainer->FindObject("ESD_Pi0inJet_Mother_InvMass_Pt");
             fHistoBckZM = (TH2D*)JetContainer->FindObject("ESD_Jet_Background_InvMass_Pt");
           }
         }else{

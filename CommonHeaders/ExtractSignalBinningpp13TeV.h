@@ -73,12 +73,6 @@
         9.00, 9.2, 9.40, 9.6, 9.80, 10.0,10.5,11.0, 11.5,12.0,
         13.0, 14.0, 15.0, 16.0, 18.0, 20.0 };
 
-    std::vector<Double_t> fBinsPi013TeVEMCTrigINT7PtJets { // size: 26
-        0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.4,
-        2.8, 3.2, 3.6, 4.0 ,5.0, 6.0, 7.0, 8.0, 9.0, 10.,
-        12., 14., 16.0, 20., 25., 30.
-    };
-
     std::vector<Int_t>    fBinsPi013TeVEMCTrigINT7PtRebin { // size: 105
         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -92,13 +86,16 @@
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 10, 10, 10, 10 };
 
-    std::vector<Int_t> fBinsPi013TeVEMCTrigINT7PtJetsRebin { // size: 25
-        10, 10, 8, 8, 8, 8, 8, 8, 8, 8,
-        8,  8,  8, 8, 8 ,8, 8, 8, 8, 8,
-        10, 16, 22, 22, 22
-    };
-
-    // PCM-Dal
+    std::vector<Double_t> fBinsPi013TeVEMCTrigINT7PtJets { // size: 22 //variation 2 NEW
+	    0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.4,
+		3.2, 4.0 ,4.8, 5.6, 6.4, 7.2, 8.0, 9.0, 10.,
+		12., 14., 16.0, 20.0};
+    std::vector<Int_t>    fBinsPi013TeVEMCTrigINT7PtJetsRebin { // size: 21 //variation 2 NEW
+	    10, 10, 8, 8, 8, 8, 4, 4, 4,
+		4,  4,  4, 4, 4 ,8, 8, 8, 8,
+		10, 12, 22};
+    
+	// PCM-Dal
     std::vector<Double_t> fBinsPi013TeVDalitzPt {      // size: 23
         0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
         2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.5, 5.0, 6.0,
@@ -318,7 +315,16 @@
         8, 8, 8, 8, 8, 8, 8, 10, 10, 10,
         10, 10, 10, 10, 10, 10, 10, 10 };
 
-    std::vector<Double_t> fBinsPi013TeVPCMEMCTrigEG2Pt { // size: 116
+    std::vector<Double_t> fBinsPi013TeVEMCTrigEG2PtJets {      // size: 15
+        6.6, 7.4, 8.2, 9.0, 9.8, 10.6, 11.4, 12.2,
+        13., 13.8, 15, 17.5, 20.0
+        };
+    std::vector<Int_t>    fBinsPi013TeVEMCTrigEG2PtJetsRebin { // size: 14
+		8, 8, 8, 8, 8,8, 8, 8,
+		8, 12, 16, 16,
+		};
+    
+	std::vector<Double_t> fBinsPi013TeVPCMEMCTrigEG2Pt { // size: 116
         0.0, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8,
         3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8,
         4.9, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8,
@@ -395,7 +401,15 @@
         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 12 };
-    // PCM-EMC
+    
+	std::vector<Double_t> fBinsPi013TeVEMCTrigEG1PtJets {      // size: 9
+       10., 10.6, 11.4,12.0, 13.,14.0, 16, 20
+       };
+	std::vector<Int_t>    fBinsPi013TeVEMCTrigEG1PtJetsRebin { // size: 8
+       8, 8, 8, 12, 12, 16, 16
+       };
+    
+	// PCM-EMC
     std::vector<Double_t> fBinsPi013TeVPCMEMCTrigEG1Pt {      // size: 120
         0.0, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8,
         7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8,
@@ -517,21 +531,26 @@
         4.8, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0,
         10.0, 12.0, 16.0, 20.0, 25.0 };
 
-    std::vector<Double_t> fBinsEta13TeVEMCTrigINT7PtJets { // size: 12
-        1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0, 20.0, 25.0, 30.0,
-        35.0, 40.0
-    };
 
     std::vector<Int_t>    fBinsEta13TeVEMCTrigINT7PtRebin { // size: 34
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 10, 10, 10, 10, 10,
         12, 12, 12, 12, 12, 16, 16, 16, 16, 16,
         16, 16, 20, 20 };
-    std::vector<Int_t>    fBinsEta13TeVEMCTrigINT7PtJetsRebin { // size: 11
-        12, 12, 12, 12, 20, 20, 23, 23, 23, 23,
-        23};
 
-    // PCM-Dal (mode 1)
+    // In jet
+    std::vector<Double_t> fBinsEta13TeVEMCTrigINT7PtJets { // size: 10
+      1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 12.0, 16.0,
+      20.0, 25.0}; //, 30.0, 35.0, 40.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigINT7PtJetsRebin { // size: 9
+      12, 12, 12, 16, 16,20, 20, 20, 23, 23};//, 23, 23, 23};
+
+    std::vector<Double_t> fBinsEta13TeVEMCTrigINT7PtJetsUnfolding { // size: 10
+      2.0, 4.0, 8.0, 16, 25.0}; //, 30.0, 35.0, 40.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigINT7PtJetsUnfoldingRebin { // size: 9
+      12, 16, 20, 30};//, 23, 23, 23};
+    
+	// PCM-Dal (mode 1)
     std::vector<Double_t> fBinsEta13TeVDalitzTrigINT7Pt {      // size: 10
         0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
     std::vector<Int_t>    fBinsEta13TeVDalitzTrigINT7PtRebin { // size: 9
@@ -652,7 +671,21 @@
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 10, 10, 20 };
-    // PCM-EMC
+    
+	std::vector<Double_t> fBinsEta13TeVEMCTrigEG2PtJets { // size: 11
+        6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 20.0, 25.0, 30.0,
+        40.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG2PtJetsRebin { // size: 10
+		12, 12, 16, 16, 16, 20, 20, 20, 23
+		};
+    std::vector<Double_t> fBinsEta13TeVEMCTrigEG2PtJetsUnfolding { // size: 11
+        6.0, 8.0, 12.0, 16.0, 20.0, 25.0, 30.0,
+        40.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG2PtJetsUnfoldingRebin { // size: 10
+		12, 16, 16, 20, 20, 20, 23
+		};
+     
+	// PCM-EMC
     std::vector<Double_t> fBinsEta13TeVPCMEMCTrigEG2Pt {      // size: 81
         0.0, 4.2, 4.3, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1,
         5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1,
@@ -706,7 +739,18 @@
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8,16,16,16,
         16 };
-    // PCM-EMC
+    
+    std::vector<Double_t> fBinsEta13TeVEMCTrigEG1PtJets { // size: 7
+      10.0, 10.6,12.0, 13.8, 16.9, 20.0, 25.0, 30.0, 40.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG1PtJetsRebin { // size: 6
+      16, 16, 16, 16, 16, 20, 20, 23};
+
+    std::vector<Double_t> fBinsEta13TeVEMCTrigEG1PtJetsUnfolding { // size: 7
+      10.6, 16.0, 20.0, 25.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG1PtJetsUnfoldingRebin { // size: 6
+      24, 24, 24, 24};
+	
+	// PCM-EMC
     // std::vector<Double_t> fBinsEta13TeVPCMEMCTrigEG1Pt {      // size: 114
         // 0.0, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3,
         // 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0, 9.1, 9.2, 9.3,

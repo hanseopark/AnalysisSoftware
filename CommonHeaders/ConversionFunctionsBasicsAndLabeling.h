@@ -14,7 +14,7 @@
     //********************* Enums *************************************************************************************
     // ****************************************************************************************************************
     enum Mesons {
-        kPi0,
+        kPi01,
         kEta,
         kEtaPrime,
         kOmega,
@@ -24,7 +24,7 @@
         kRho0,
         kPhi,
         kK0Star,
-        kProton
+        kProton1
     };
     enum Modes {
         // Standard gamma-gamma analysis modes
@@ -125,7 +125,7 @@
         }
     }
     Mesons ReturnMesonEnum( TString meson ) {
-        if (meson.EqualTo("Pi0"))      return kPi0;
+        if (meson.EqualTo("Pi0"))      return kPi01;
         if (meson.EqualTo("Eta"))      return kEta;
         if (meson.EqualTo("EtaPrim"))  return kEtaPrime;
         if (meson.EqualTo("EtaPrime")) return kEtaPrime;
@@ -136,9 +136,9 @@
         if (meson.EqualTo("Rho0"))     return kRho0;
         if (meson.EqualTo("Phi"))      return kPhi;
         if (meson.EqualTo("K0Star"))   return kK0Star;
-        if (meson.EqualTo("Proton"))   return kProton;
+        if (meson.EqualTo("Proton"))   return kProton1;
         std::cout << "Warning: particle \"" << meson << "\" not defined" << std:: endl;
-        return kPi0;
+        return kPi01;
     }
 
 
@@ -911,7 +911,7 @@
     //************************************************************************************
     const char* ReturnMesonPlainString ( Mesons meson ){
         switch(meson) {
-            case kPi0      : return "Pi0";
+            case kPi01      : return "Pi0";
             case kEta      : return "Eta";
             case kEtaPrime : return "EtaPrime";
             case kOmega    : return "Omega";
@@ -921,7 +921,7 @@
             case kRho0     : return "Rho0";
             case kPhi      : return "Phi";
             case kK0Star   : return "K0Star";
-            case kProton   : return "Proton";
+            case kProton1   : return "Proton";
             default :
                 std::cout << "ERROR: meson enum " << meson << " not defined" << std::endl;
                 return "";

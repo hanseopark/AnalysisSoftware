@@ -166,34 +166,34 @@ void SelectExampleBin(TString optionEnergy, TString useSameBinningPi0Eta){
     if(optionEnergy.CompareTo("7TeV") == 0){
         fExampleBinPi0     = 4;
         fExampleBinEta     = 6;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 3;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("5TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 3;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 4;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("900GeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 2;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("pPb_5.023TeV") == 0 ) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 4;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("PbPb_2.76TeV") == 0 ) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 6;
     } else if( optionEnergy.CompareTo("13TeV") == 0 ) {
         fExampleBinPi0     = 2;
         fExampleBinEta     = 2;
-        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+        if (!(useSameBinningPi0Eta.CompareTo("")==0))fExampleBinPi0 = fExampleBinEta;
     }
 }
 // ****** FUNCTION TO PLOT MASS AND FWHM TOGETHER ********
@@ -540,7 +540,7 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 
     // Create Canvas with three possible sizes depending on plot
     Int_t canvasSize		=900;
-    if(plotName.Contains("Raw")||plotName.Contains("Corr")&&!plotName.Contains("Ratio"))canvasSize=1350;
+    if((plotName.Contains("Raw")||plotName.Contains("Corr"))&&!plotName.Contains("Ratio"))canvasSize=1350;
     if(plotName.Contains("EtaToPi0"))canvasSize=915;
 	TCanvas* canvasPlotFinal     = new TCanvas("canvasPlotFinal","",0,0,1000,canvasSize);
 
@@ -663,7 +663,7 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 		if(histoData){
 			if(histoMC && plotName.Contains("AccEff")){histoData->Multiply(histoMC);histoMC=NULL;}
 			histoData->DrawCopy("e1,same");
-			if(!plotName.Contains("Acc")&&!plotName.Contains("Eff")||plotName.Contains("Comb"))legendPlot->AddEntry(histoData, Form("%s %s %s",period.Data(),strPi0Both.Data(),dataStr.Data()), "p");
+			if((!(plotName.Contains("Acc"))&&!(plotName.Contains("Eff")))||plotName.Contains("Comb"))legendPlot->AddEntry(histoData, Form("%s %s %s",period.Data(),strPi0Both.Data(),dataStr.Data()), "p");
 		}
 		if(histoData2){
 			if(histoMC2 && plotName.Contains("AccEff")){histoData2->Multiply(histoMC2);histoMC2=NULL;}
