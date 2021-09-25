@@ -44,6 +44,16 @@
             4, 8, 8, 8, 8,      8, 8,16,16,32,
            32,32,32,32};
 
+    std::vector<Double_t> fBinsPi013TeVPCMTrigINT7PtJets { // size: 22 //variation 2 NEW
+	    0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.4,
+		3.2, 4.0 ,4.8, 5.6, 6.4, 7.2, 8.0, 9.0, 10.,
+		12., 14., 16.0, 20.0};
+    std::vector<Int_t>    fBinsPi013TeVPCMTrigINT7PtJetsRebin { // size: 21 //variation 2 NEW
+	    10, 10, 8, 8, 8, 8, 4, 4, 4,
+		4,  4,  4, 4, 4 ,8, 8, 8, 8,
+		10, 12, 22};
+    
+
     // PCM binning fir Pi0 in RBins
     std::vector<Double_t> fBinsPi013TeVPCMTrigINT7RBinsPt {      // size: 19
       0.0, 0.3, 0.4, 0.6, 0.8, 1., 1.4, 1.8,  2.2, 2.6, 3., 4.0,
@@ -210,6 +220,17 @@
             2, 2, 2, 2, 2,      4, 4, 4, 4, 4,
             4, 8, 8, 8, 8,      8, 8,16,16,16,
            32,32,32,32};
+			// injet
+		std::vector<Double_t> fBinsPi013TeVPHOSTrigINT7PtJets {      // size: 85, same as Binning PCM 13TeV
+			0.0, 0.6, 0.8, 1.0, 1.2,	1.4, 1.6, 1.8, 2.0, 2.2,
+			2.4, 2.6, 2.8, 3.0, 3.2,	3.4, 3.6, 3.8, 4.0, 4.4,
+			4.8, 5.2, 5.6, 6.0, 6.4,	6.8, 7.2, 7.6, 8.0, 10.0,
+			12.0,16.0,20.0};
+        std::vector<Int_t>    fBinsPi013TeVPHOSTrigINT7PtJetsRebin { // size: 84
+            4, 4, 4, 4, 4,      4, 4, 6, 6, 6,
+            6, 6, 6, 6, 6,      6, 6, 6, 8, 8,
+            8, 8, 8, 10,10,    10,10,10,12,12,
+            16,16};
 
     // ---------------------------------------------------------
     // L0 EMC trigger (EMC7, ~2 GeV) - pi0
@@ -315,13 +336,15 @@
         8, 8, 8, 8, 8, 8, 8, 10, 10, 10,
         10, 10, 10, 10, 10, 10, 10, 10 };
 
-    std::vector<Double_t> fBinsPi013TeVEMCTrigEG2PtJets {      // size: 15
-        6.6, 7.4, 8.2, 9.0, 9.8, 10.6, 11.4, 12.2,
-        13., 13.8, 15, 17.5, 20.0
+    std::vector<Double_t> fBinsPi013TeVEMCTrigEG2PtJets {      // size: 13
+        6.6, 7.4, 8.2, 9.0, 9.8,
+		10.6, 11.4, 12.2, 13., 13.8, 
+		15, 17.5, 20.0
         };
     std::vector<Int_t>    fBinsPi013TeVEMCTrigEG2PtJetsRebin { // size: 14
-		8, 8, 8, 8, 8,8, 8, 8,
-		8, 12, 16, 16,
+		8, 8, 8, 8, 8,
+		8, 8, 8, 8, 12, 
+		16, 16
 		};
     
 	std::vector<Double_t> fBinsPi013TeVPCMEMCTrigEG2Pt { // size: 116
@@ -403,10 +426,12 @@
         8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 12 };
     
 	std::vector<Double_t> fBinsPi013TeVEMCTrigEG1PtJets {      // size: 9
-       10., 10.6, 11.4,12.0, 13.,14.0, 16, 20
+       //10., 10.6, 11.4,12.0, 13.,14.0, 16, 20
+       10., 10.6, 12.0, 14.0, 16, 20, 25
        };
 	std::vector<Int_t>    fBinsPi013TeVEMCTrigEG1PtJetsRebin { // size: 8
-       8, 8, 8, 12, 12, 16, 16
+       //8, 8, 8, 12, 12, 16, 16
+       8, 8, 12, 16, 16, 16
        };
     
 	// PCM-EMC
@@ -512,6 +537,14 @@
         5, 5, 5, 5, 5, 5, 5, 6, 8, 8,
        16,16,16,16,16,16,16,32,32};
 
+	    // In jet
+    std::vector<Double_t> fBinsEta13TeVPCMTrigINT7PtJets { // size: 10
+      1.0, 2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 25.0, 30.0, 40.0}; //, 30.0, 35.0, 40.0};
+
+    std::vector<Int_t>    fBinsEta13TeVPCMTrigINT7PtJetsRebin { // size: 9
+      12, 16, 16, 20, 20, 23, 23, 23, 23};//, 23, 23, 23};
+
+
     // PCM binning  in RBins
     std::vector<Double_t> fBinsEta13TeVPCMTrigINT7RBinsPt {      // size: 19
       0.0, 0.3, 0.4, 0.6, 0.8, 1., 1.4, 1.8,  2.2, 2.6, 3., 4.0,
@@ -540,10 +573,10 @@
 
     // In jet
     std::vector<Double_t> fBinsEta13TeVEMCTrigINT7PtJets { // size: 10
-      1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 12.0, 16.0,
-      20.0, 25.0}; //, 30.0, 35.0, 40.0};
+      1.0, 2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 25.0, 30.0, 40.0}; //, 30.0, 35.0, 40.0};
+
     std::vector<Int_t>    fBinsEta13TeVEMCTrigINT7PtJetsRebin { // size: 9
-      12, 12, 12, 16, 16,20, 20, 20, 23, 23};//, 23, 23, 23};
+      12, 16, 16, 20, 20, 23, 23, 23, 23};//, 23, 23, 23};
 
     std::vector<Double_t> fBinsEta13TeVEMCTrigINT7PtJetsUnfolding { // size: 10
       2.0, 4.0, 8.0, 16, 25.0}; //, 30.0, 35.0, 40.0};
@@ -619,6 +652,15 @@
        16,16,16, 8, 8, 8, 8, 8, 8, 8,
         5, 5, 5, 5, 5, 5, 5, 6, 8, 8,
        16,16,16,16,16,16,16,32,32};
+
+		// In jet
+	std::vector<Double_t> fBinsEta13TeVPHOSTrigINT7PtJets {      // size: 85, same as Binning PCM 13TeV
+		0.0, 0.6, 0.8, 1.0, 1.2,	1.6, 2.0, 2.4, 2.8, 3.2,
+		3.6, 4.0, 5.0, 6.0, 7.0,	8.0, 10.0,12.0};
+    std::vector<Int_t>    fBinsEta13TeVPHOSTrigINT7PtJetsRebin { // size: 84
+		16,16,16,16,16,		16,16,16,16,16,
+		16,16,16,16,16,		16,16};
+
     // Eta->pi+pi-pi0 PCM
     std::vector<Double_t> fBinsEtaPiPlPiMiPiZero13TevPtPCM {      // size: 20
         0, 1, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 3,
@@ -673,11 +715,11 @@
         8, 8, 10, 10, 20 };
     
 	std::vector<Double_t> fBinsEta13TeVEMCTrigEG2PtJets { // size: 11
-        6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 20.0, 25.0, 30.0,
-        40.0};
-    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG2PtJetsRebin { // size: 10
-		12, 12, 16, 16, 16, 20, 20, 20, 23
-		};
+        6.0, 8.0, 12.0, 16.0, 20.0, 
+		25.0, 30.0};
+    std::vector<Int_t>    fBinsEta13TeVEMCTrigEG2PtJetsRebin { // size: 10, 16
+		12, 16, 16, 20, 20,
+		20};
     std::vector<Double_t> fBinsEta13TeVEMCTrigEG2PtJetsUnfolding { // size: 11
         6.0, 8.0, 12.0, 16.0, 20.0, 25.0, 30.0,
         40.0};
@@ -741,9 +783,12 @@
         16 };
     
     std::vector<Double_t> fBinsEta13TeVEMCTrigEG1PtJets { // size: 7
-      10.0, 10.6,12.0, 13.8, 16.9, 20.0, 25.0, 30.0, 40.0};
+      10.0, 10.6, 12.0, 16.0, 20.0, 
+	  25.0, 30.0, 35.0, 40.0, 50.0};
     std::vector<Int_t>    fBinsEta13TeVEMCTrigEG1PtJetsRebin { // size: 6
-      16, 16, 16, 16, 16, 20, 20, 23};
+      16, 16, 16, 16, 20, 
+	  20, 20, 20, 20};
+      //16, 16, 16, 16, 20, 20, 32};
 
     std::vector<Double_t> fBinsEta13TeVEMCTrigEG1PtJetsUnfolding { // size: 7
       10.6, 16.0, 20.0, 25.0};
@@ -841,7 +886,7 @@
         5, 5, 5, 5, 5, 5, 5, 6, 8, 8 };
 
     // EMC
-    std::vector<Int_t> fBinsPi0Eta13TeVPtEMCTrigINT7Rebin { // size: 34
+    std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigINT7PtRebin { // size: 34
         4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 4, 4, 4, 4, 4, 4, 4, 4,
         4, 4, 5, 5, 5, 8, 8, 8, 8, 8,
@@ -865,6 +910,13 @@
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 16, 16, 16,
         16 };
+	// EMC in Jet	
+    std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigINT7PtJetsRebin { // size: 34
+    12, 16, 16, 20, 20, 23, 23, 23, 23};//, 23, 23, 23};
+    std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigEG2PtJetsRebin { // size: 75
+	12, 16, 16, 20, 20, 20};
+    std::vector<Int_t> fBinsPi0Eta13TeVEMCTrigEG1PtJetsRebin { // size: 81
+    16, 16, 16, 16, 20, 20};
     // PCM-EMC
     std::vector<Int_t> fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin { // size: 39
         4, 2, 2, 2, 2, 2, 2, 2, 2, 2,

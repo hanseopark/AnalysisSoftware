@@ -332,7 +332,7 @@ void ExtractSignalV2(
     if(HistosGammaConversion != NULL){
       JetContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s Jet histograms",fCutSelectionRead.Data()));
       if(JetContainer != NULL){
-        fDoJetAnalysis = kFALSE;//kTRUE;
+        fDoJetAnalysis = kFALSE;
         //fDoJetAnalysis = kTRUE;
       }
     }
@@ -1156,7 +1156,7 @@ void ExtractSignalV2(
             }
 
             fFitTrueSignalInvMassPtReweightedBin[iPt]   = 0x00;
-            //cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
+            cout << "Debug; ExtractSignalV2.C, line " << __LINE__ << endl;
             if(fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]){
                 cout << "Using exp fit"<<endl;
                 fFileErrLog << "Using exp fit"<<endl;

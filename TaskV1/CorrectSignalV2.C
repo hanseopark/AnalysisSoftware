@@ -460,6 +460,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     //TFile *Jet_Unfolding = (TFile*)Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode);
     TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i.root",optionEnergy.Data(),mode), "read"); //First time Jet_Unfolding loading
+    //TFile *Jet_Unfolding = new TFile(Form("RooUnfold/Jet_Unfolding_Corrections_%s_%i_Default.root",optionEnergy.Data(),mode), "read"); // For no unfolding using constant function
     if(DoJetAnalysis){
       TF1* unfolding_fit;
       if(nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){

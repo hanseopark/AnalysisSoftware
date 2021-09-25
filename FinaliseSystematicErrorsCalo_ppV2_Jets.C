@@ -122,27 +122,24 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
 //    Bool_t bsmoothINT7Pi0[13]               = { 0, 1, 1, 1, 1, // standard
 //                                                1, 1, 1, 1, 1,
 //                                                1, 1, 0 };
-    Bool_t bsmoothINT7Pi0[13]               = { 0, 0, 0, 0, 0, // varitation 1
-                                                0, 0, 1, 1, 0,
+    Bool_t bsmoothINT7Pi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+                                                0, 0, 1, 0, 0,
                                                 1, 1, 1 };
-//    Bool_t bsmoothINT7Pi0[13]               = { 0, 0, 1, 1, 1, // variation 2
-//                                                1, 1, 1, 1, 1,
-//                                                1, 1, 1 };
 //    Bool_t bsmoothINT7Eta[13]               = { 0, 1, 1, 1, 1, // standard
 //                                                1, 1, 1, 1, 1,
 //                                                1, 1, 0 };
-    Bool_t bsmoothINT7Eta[13]               = { 0, 0, 0, 0, 0, // varitation 1
-                                                0, 0, 1, 1, 0,
+    Bool_t bsmoothINT7Eta[13]               = { 0, 0, 0, 0, 1, // varitation 1
+                                                0, 0, 1, 0, 0,
                                                 1, 1, 1 };
 //    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 1, 1, 1, 1, // standard
 //                                                1, 1, 1, 1, 1,
 //                                                1, 1, 0 };
-    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 0, 0, 0, 0, // varitation 1
-                                                0, 0, 1, 1, 0,
+    Bool_t bsmoothINT7EtaToPi0[13]          = { 0, 0, 0, 0, 1, // varitation 1
+                                                0, 0, 1, 0, 0,
                                                 1, 1, 1 };
     Bool_t bsmoothEMC1Pi0[13]               = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
-                                                1, 1, 0 };                                                
+                                                1, 0, 0 };                                                
     Bool_t bsmoothEMC1Eta[13]               = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
@@ -158,28 +155,43 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     Bool_t bsmoothEMC7EtaToPi0[13]          = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };                           
-    Bool_t bsmoothEG2Pi0[13]                = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Pi0[13]                = { 0, 1, 1, 1, 1, // Standard
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEG2Eta[13]                = { 1, 1, 1, 1, 1,
+//    Bool_t bsmoothEG2Pi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//                                                0, 0, 1, 1, 0,
+//                                                1, 1, 1 };
+    Bool_t bsmoothEG2Eta[13]                = { 1, 1, 1, 1, 1, // Standard
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEG2EtaToPi0[13]           = { 1, 1, 1, 1, 1,
+//    Bool_t bsmoothEG2Eta[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//                                                0, 0, 1, 1, 0,
+//                                                1, 1, 1 };
+    Bool_t bsmoothEG2EtaToPi0[13]           = { 1, 1, 1, 1, 1, // Standard
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 1 };
-//    Bool_t bsmoothEG1Pi0[13]                = { 1, 1, 1, 1, 1, // Standard
-//                                                1, 1, 1, 1, 1,
-//                                                1, 1, 0 };
-    Bool_t bsmoothEG1Pi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
-                                                0, 0, 1, 1, 0,
-                                                1, 1, 1 };
-	Bool_t bsmoothEG1Eta[13]                = { 1, 1, 1, 1, 1,
+//    Bool_t bsmoothEG2EtaToPi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//							                        0, 0, 1, 1, 0,
+//								                    1, 1, 1 };
+    Bool_t bsmoothEG1Pi0[13]                = { 0, 1, 1, 1, 1, // Standard
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 0 };
-    Bool_t bsmoothEG1EtaToPi0[13]           = { 1, 1, 1, 1, 1,
+//    Bool_t bsmoothEG1Pi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//                                                0, 0, 1, 1, 0,
+//                                                1, 1, 1 };
+	Bool_t bsmoothEG1Eta[13]                = { 0, 1, 1, 1, 1, // Standard
+                                                1, 1, 1, 1, 1,
+                                                1, 1, 0 };
+//    Bool_t bsmoothEG1Eta[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//                                                0, 0, 1, 1, 0,
+//                                                1, 1, 1 };
+	Bool_t bsmoothEG1EtaToPi0[13]           = { 0, 1, 1, 1, 1, // Standard
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 1 };
-                          
+//    Bool_t bsmoothEG1EtaToPi0[13]               = { 0, 0, 0, 0, 1, // varitation 1
+//													0, 0, 1, 1, 0,
+//													1, 1, 1 };
+                     
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
             bsmooth[i]                      = bsmoothMBPi0[i];
@@ -315,7 +327,6 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
 //            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 //            
 		if (i == 0 || i ==4 || i == 7 || i == 8 || i == 10 || i == 11){
-		//if (i == 0 || i == 4 || i == 8){
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
 			if (meson.CompareTo("EtaToPi0") !=0){
@@ -328,9 +339,22 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( i == 12) { // special treatment for eta to pi0 ratio    
+            TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+            TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+            graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else {// read graphs from input file
-            TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
-            TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+			TString nameGraphPos	="";
+			TString nameGraphNeg	="";
+			//if (meson.CompareTo("EtaToPi0") !=0){
+            nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+            nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+//			} else {
+//			nameGraphPos    = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+//			nameGraphNeg    = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+//			}
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -426,6 +450,21 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                       if (ptBins[k] > 12.0 && meson.Contains("Pi0")) error = 1.5 + 0.4*(ptBins[k]-12)*(ptBins[k]-12);
                       if ( meson.CompareTo("Eta") == 0 ) error = 0;
                     }
+					if(energy.CompareTo("13TeV") == 0){
+						if (additionalNameOutput.CompareTo("EG1")==0  ) {
+							if(meson.CompareTo("Pi0") == 0) error = 15.2; 
+							if(meson.CompareTo("Eta") == 0) error = 24.0; 
+							if(meson.CompareTo("EtaToPi0" == 0)) error = TMath::Sqrt(15.2*15.2+24.0*24.0);
+						} else if (additionalNameOutput.CompareTo("EG2")==0) {
+							if(meson.CompareTo("Pi0") == 0) error = 45.6; 
+							if(meson.CompareTo("Eta") == 0) error = 39.1; 
+							if(meson.CompareTo("EtaToPi0" == 0)) error = TMath::Sqrt(45.6*45.6+39.1*39.1);
+						} else {
+							if(meson.CompareTo("Pi0") == 0) error = 3.983; 
+							if(meson.CompareTo("Eta") == 0) error = 23.004; 
+							if(meson.CompareTo("EtaToPi0" == 0)) error = TMath::Sqrt(3.983*3.983+23.004*23.004);
+						}
+					}
                     if(mode == 5) error = 1;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -458,7 +497,7 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
                       }
-                    }
+                    } 
                 } else if(meson.CompareTo("EtaToPi0") == 0){
                     Double_t error      = 0;
                     Double_t errorPi0   = 0;
@@ -471,7 +510,12 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                         errorPi0                = 1.13+55/pow(6.4,ptBins[k]);   
                         errorEta                = (1.13+55/pow(6.4,ptBins[k]))*1.5;   
                         error                   = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
-                        errorsMean[i][k]        = error;
+						if (energy.CompareTo("13TeV") == 0) {
+							if (additionalNameOutput.CompareTo("EG1")==0  ) error = TMath::Sqrt(16.9*16.9+18.2*18.2);
+							else if(additionalNameOutput.CompareTo("EG2")==0) error = TMath::Sqrt(47.5*47.5+35.5*35.5); 
+							else error = TMath::Sqrt(4.669*4.669+20.153*20.153);
+						}	
+						errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
@@ -481,12 +525,17 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                     Double_t error = 0;
                     for (Int_t k = 0;k < nPtBins;k++){
                         error                   = 1.13+55/pow(6.4,ptBins[k]);   
+						if (energy.CompareTo("13TeV") == 0){
+							if (additionalNameOutput.CompareTo("EG1")==0  ) error = 18.2;
+							else if(additionalNameOutput.CompareTo("EG2")==0) error = 47.5; 
+							else error = 4.669;
+						}
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
                     }
-                } else {
+           		} else {
                     Double_t error = 0;
 //                     if (additionalNameOutput.CompareTo("")==0     || 
 //                         additionalNameOutput.CompareTo("INT7")==0 )
@@ -494,12 +543,16 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                     
                     for (Int_t k = 0;k < nPtBins;k++){
                         error                   = (1.13+55/pow(6.4,ptBins[k]))*1.5;   
+						if (energy.CompareTo("13TeV") == 0) {
+							if (additionalNameOutput.CompareTo("EG1")==0  ) error = 16.9;
+							else if(additionalNameOutput.CompareTo("EG2")==0) error = 35.5; 
+							else error = 20.153;
+						}
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
                     }
-                    
                 }   
             }
             // manual smoothing for minimum number of cells in cluster errors - variation 3
@@ -508,11 +561,43 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 1.5;
                     if (meson.CompareTo("EtaToPi0") == 0 )
-                        error                   = 0.5;
+                        //error                   = 0.5;
                     if(mode == 5){
                       error = 9.07510e+00 + -2.92084e+00*ptBins[k] + 3.22314e-01*ptBins[k]*ptBins[k];
                       if(ptBins[k]>4) error = 9.07510e+00 + -2.92084e+00*4 + 3.22314e-01*4*4;
                     }
+					if (energy.CompareTo("13TeV") == 0){
+						if (additionalNameOutput.CompareTo("EG1")==0  ){
+//							if (meson.CompareTo("Pi0") == 0) error = 91.1;
+//							if (meson.CompareTo("Eta") == 0) error = 67.5; 
+//							Double_t errorPi0 = 91.1; 
+//							Double_t errorEta = 67.5; 
+//							Double_t errorEtaToPi0 = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
+//							if (meson.CompareTo("EtaToPi0") == 0) error = errorEtaToPi0;
+
+							if (meson.CompareTo("Pi0") == 0) error = 1.1;
+							if (meson.CompareTo("Eta") == 0) error = 1.5; 
+							Double_t errorPi0 = 1.1; 
+							Double_t errorEta = 1.5; 
+							Double_t errorEtaToPi0 = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
+							if (meson.CompareTo("EtaToPi0") == 0) error = errorEtaToPi0;
+
+						} else{
+							if (meson.CompareTo("Pi0") == 0){
+								//							if (ptBins[k]>8){
+								//							error = 11.014; 
+								//							} else {
+								//							error = ((1.29793e+00 + -0.0292956e+00*ptBins[k] + 7.27747e-04*ptBins[k]*ptBins[k])-1)*100;
+								//							}
+								error = 11.633;
+							}
+							if (meson.CompareTo("Eta") == 0) error = 25.384; 
+							Double_t errorPi0 = 11.633; 
+							Double_t errorEta = 25.384; 
+							Double_t errorEtaToPi0 = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
+							if (meson.CompareTo("EtaToPi0") == 0) error = errorEtaToPi0;
+						}
+					}
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -564,7 +649,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                 }
             }
             // manual smoothing for cluster matching errors - variation 5
-            if (nameCutVariationSC[i].CompareTo("ClusterTrackMatchingCalo")==0 ){
+            //if (nameCutVariationSC[i].CompareTo("ClusterTrackMatchingCalo")==0 ){
+            if (nameCutVariationSC[i].CompareTo("ClusterTrackMatching")==0 ){
                 cout << "Cluster track matching smoothing" << endl;
                 
                 
@@ -584,6 +670,15 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                           error = 1.32874;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                         }
+						if(energy.CompareTo("13TeV") == 0){
+							if (additionalNameOutput.CompareTo("EG1")==0  ) {
+								if (meson.CompareTo("Pi0") == 0) error = 21.5;
+								if (meson.CompareTo("EtaToPi0") == 0) error = TMath::Sqrt(21.5*21.5+29.6*29.6);
+							} else{
+								if (meson.CompareTo("Pi0") == 0) error = 3.952;
+								if (meson.CompareTo("EtaToPi0") == 0) error = TMath::Sqrt(3.952*3.952+24.675*24.675);
+							}
+						} 
                         if(mode == 5){
                             error              = 8.87986e-01 + -3.02748e-01*ptBins[k] + 0.76291e-01*ptBins[k]*ptBins[k];
                             if(ptBins[k] >= 11) error = 6;
@@ -610,6 +705,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                           error = 1.32874 * 2.;
                           if(ptBins[k] > 12.0) error = 1.32874 + 0.16*(ptBins[k]-12)*(ptBins[k]-12);
                         }
+						if(energy.CompareTo("13TeV") == 0) error =24.675;
+						if(energy.CompareTo("13TeV") == 0 || additionalNameOutput.CompareTo("EG1") == 0) error =29.6;
                         if(mode == 5){
                            error   = 8.87986e-01 + -3.02748e-01*ptBins[k] + 1.56291e-01*ptBins[k]*ptBins[k];
                            error   = 1.5* error;  
@@ -630,6 +727,23 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                       error = 2.4+(0.01)*ptBins[k]*ptBins[k];
                       if(meson.Contains("Eta")) error = error * 1.2;
                     }
+					if(energy.CompareTo("13TeV") == 0){
+						if (additionalNameOutput.CompareTo("EG1")==0  ) {
+							if(meson.CompareTo("Pi0") == 0) error = 15.1; 
+							if(meson.CompareTo("Eta") == 0) error = 35.7; 
+							Double_t errorPi0 = 15.1;
+							Double_t errorEta = 35.7; 
+							Double_t errorEtaToPi0 = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
+							if(meson.CompareTo("EtaToPi0") == 0) error = errorEtaToPi0;
+						} else{
+							if(meson.CompareTo("Pi0") == 0) error = 4.547; 
+							if(meson.CompareTo("Eta") == 0) error = 19.423; 
+							Double_t errorPi0 = 4.547;
+							Double_t errorEta = 19.423; 
+							Double_t errorEtaToPi0 = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
+							if(meson.CompareTo("EtaToPi0") == 0) error = errorEtaToPi0;
+						}
+					}
                     if(mode == 5) error = 3.17665e+00;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -684,7 +798,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             }
 
             // manual smoothing for cell time uncertainties - variation 9
-            if (nameCutVariationSC[i].CompareTo("CellTiming") == 0){
+            //if (nameCutVariationSC[i].CompareTo("CellTiming") == 0){
+            if (nameCutVariationSC[i].CompareTo("ClusterTiming") == 0){
                 cout << "Cell time smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 0.;
@@ -704,6 +819,17 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                     if (meson.CompareTo("EtaToPi0") == 0){
                         error   = 0.;
                     }    
+					if (energy.CompareTo("13TeV") == 0){
+						if (additionalNameOutput.CompareTo("EG1")==0) {
+							if (meson.CompareTo("Pi0") == 0) error = 13.3; 
+							if (meson.CompareTo("Eta") == 0) error = 16.5; 
+							if (meson.CompareTo("EtaToPi0") == 0) error = TMath::Sqrt(13.3*13.3+16.5*16.5);
+						} else{
+							if (meson.CompareTo("Pi0") == 0) error = 3.889; 
+							if (meson.CompareTo("Eta") == 0) error = 25.384; 
+							if (meson.CompareTo("EtaToPi0") == 0) error = TMath::Sqrt(3.889*3.889+25.384*25.384);
+						} 
+					}
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -789,7 +915,6 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
                     } else {
                         error   = errorEta; 
                     }  
-					error = 0.1; 
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -826,7 +951,6 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         positiveErrorsCorr[i]   = new TGraphErrors(nPtBins,ptBins ,errorsPosCorr[i] ,ptBinsErr ,errorsPosErrCorr[i] );
         
     }
-   
 	//} //special treatment
  
     Int_t nMaterialError    = -1;
@@ -906,7 +1030,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         if (meson.Contains("Pi0") ){
             histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,60.);
         } else {
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,65.);
+            //histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,65.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,80.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -968,8 +1093,9 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
             labelTrig= new TLatex(0.75,0.84,Form("EG1 LHC13g"));
         }
         if(energy.CompareTo("5TeV2017") == 0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
-        if(energy.CompareTo("13TeV") == 0 || additionalNameOutput.CompareTo("INT7")==0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
-        if(energy.CompareTo("13TeV") == 0 || additionalNameOutput.CompareTo("EG1")==0) labelTrig= new TLatex(0.75,0.84,Form("EG1"));
+        if(energy.CompareTo("13TeV") == 0 && additionalNameOutput.CompareTo("INT7")==0) labelTrig= new TLatex(0.75,0.84,Form("INT7"));
+        if(energy.CompareTo("13TeV") == 0 && additionalNameOutput.CompareTo("EG1")==0) labelTrig= new TLatex(0.75,0.84,Form("EG1"));
+        if(energy.CompareTo("13TeV") == 0 && additionalNameOutput.CompareTo("EG2")==0) labelTrig= new TLatex(0.75,0.84,Form("EG2"));
         SetStyleTLatex( labelTrig, 0.038,4);
         labelTrig->Draw();
         
@@ -987,8 +1113,9 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
-        if (meson.Contains("Eta")){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,50.);
+        if (meson.Contains("Eta") && meson.Contains("EtaToPi0")){
+            //histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,50.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,80.);
         } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,55.);
         }
@@ -1170,7 +1297,8 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
         if (meson.Contains("Pi0") ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,60.);
         } else {
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
+            //histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,80.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1238,7 +1366,22 @@ void FinaliseSystematicErrorsCalo_ppV2_Jets(     const char* nameDataFileErrors 
     canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     delete canvasSummedErrMean;
-// 
+
+	TFile *myFile = new TFile ("MyAnalysisDir/SystematicErrorForSmooth.root", "Update"); 
+	for (Int_t i =0; i < nCuts; i++){
+    Double_t minPt = startPtSys;
+    Double_t maxPt = ptBins[nPtBins-2]+1;
+    //TF1* pol2 = new TF1("pol2","[0]+[1]*x+[2]*x*x",minPt,maxPt-1);//
+    TF1* pol2 = new TF1("pol2","[0]+[1]*(x-27.5)*(x-27.5)",minPt,maxPt);//
+    meanErrorsCorr[i]->Fit(pol2,"R","",minPt,maxPt);
+	meanErrorsCorr[i]->Write(Form("%s_%s",meson.Data(), nameCutVariationSC[i].Data()));
+	//cout << nameCutVariationSC[i] << ": "<<pol2->GetParameter(0) << "+" << pol2->GetParameter(1)<<"*x +"<<pol2->GetParameter(2) << "*x^2" <<endl; 
+	cout << nameCutVariationSC[i] << ": "<<pol2->GetParameter(0) << "+" <<pol2->GetParameter(1) << "*x^2" <<endl; 
+	pol2->Write(Form("Fitting_%s_%s",meson.Data(), nameCutVariationSC[i].Data()));
+	}
+	myFile->Write();
+	myFile->Close();
+ 
 //  
 //  
 //  const char *SysErrDatnameMeanPaper = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedPaper_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());

@@ -158,7 +158,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 	if(optionEnergy.CompareTo("13TeV_Jets") == 0){
 	optionEnergy = "13TeV";
 	fDoJetAnalysis = kTRUE;
-	fDoRejectionFactorOfMeson = kTRUE;
+	//fDoRejectionFactorOfMeson = kTRUE;
 	}
 
     Double_t maxPtGlobalCluster     = 25;
@@ -2993,7 +2993,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         canvasWeights->SaveAs(Form("%s/%s_WeightsPi0Triggers.%s",outputDir.Data(), isMC.Data(), suffix.Data()));
         delete canvasWeights;
-
         // Calculating relative error for pi0
         for (Int_t i = 0; i < MaxNumberOfFiles; i++){
             if (histoStatPi0[i])
@@ -3337,7 +3336,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //  **************************************** Combine+write detailed Systematics ******************************************
         //  **********************************************************************************************************************
 
-        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+		const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
         fstream SysErrDatAverSingle;
         SysErrDatAverSingle.precision(4);
         cout << SysErrDatnameMeanSingleErr << endl;
@@ -3363,8 +3362,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 SysErrDatAverSingle << endl;
 
             }
-        }
         SysErrDatAverSingle.close();
+        }
 
         // ***************************************************************************************************
         // ********************* Plot all mean erros separately after smoothing ******************************
@@ -4800,7 +4799,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 4){
             minAccEta = 0.05;
             maxAccEta = 0.3;
-            if (optionEnergy.Contains("5TeV2017") ){
+            if (optionEnergy.Contains("5TeV2017") || optionEnergy.Contains("13TeV")){
                 minAccEta = 0.15;
                 maxAccEta = 0.45;
             }
@@ -5097,22 +5096,23 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TH1D*     histoCorrectedYieldEtaScaled                  [MaxNumberOfFiles];
         TH1D*     histoCorrectedYieldEtaScaledMasked            [MaxNumberOfFiles];
         histoCorrectedYieldEtaScaled[0]                         = (TH1D*)histoCorrectedYieldEta[0]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[0].Data()));
-//		if(fDoRejectionFactorOfMeson){
-//			for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
-//				fileFitsOutput << triggerName[i].Data() << endl;
-//				histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
-//				histoCorrectedYieldEtaScaled[i]->Sumw2();
-//				histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[i][trigSteps[i][0]]);
-//				if (trigSteps[i][1]!= trigSteps[i][0]){
-//					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << endl;
-//					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]]);
-//				}
-//				if (trigSteps[i][2]!= trigSteps[i][1]){
-//					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]] << endl;
-//					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]]);
-//				}
-//			}
-//		} else{
+		//fDoRejectionFactorOfMeson with ratio of yield, Yield
+		if(fDoRejectionFactorOfMeson){
+			for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
+				fileFitsOutput << triggerName[i].Data() << endl;
+				histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
+				histoCorrectedYieldEtaScaled[i]->Sumw2();
+				histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[i][trigSteps[i][0]]);
+				if (trigSteps[i][1]!= trigSteps[i][0]){
+					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << endl;
+					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]]);
+				}
+				if (trigSteps[i][2]!= trigSteps[i][1]){
+					fileFitsOutput << triggRejecFacEta[i][trigSteps[i][0]] << "\t" << triggRejecFacEta[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]] << endl;
+					histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFacEta[trigSteps[i][1]][trigSteps[i][2]]);
+				}
+			}
+		} else{
 			for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
 				fileFitsOutput << triggerName[i].Data() << endl;
 				histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
@@ -5128,7 +5128,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 				}
 			}
 
-//		}
+		}
         // prepare arrays for systematics
         Double_t xValueFinalEta                                 [400];
         Double_t xErrorLowFinalEta                              [400];
